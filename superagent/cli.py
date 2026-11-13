@@ -61,6 +61,7 @@ def main() -> None:
     run.add_argument("--api-url", help="OpenAI-compatible chat-completions URL for --planner llm")
     run.add_argument("--api-key-file", help="UTF-8 API key file for --planner llm")
     run.add_argument("--model", help="Provider model ID for --planner llm")
+    run.add_argument("--llm-budget-rmb", type=float, default=20.0, help="Maximum LLM cost per task, in RMB")
     run.set_defaults(handler=_run)
     predict = subcommands.add_parser("predict", help="Use a frozen selected model to write test predictions without reading labels")
     predict.add_argument("task_package", help="Original task zip archive")

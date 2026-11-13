@@ -55,7 +55,8 @@ class RunLogger:
             "model": None,
             "input_tokens": 0,
             "output_tokens": 0,
-            "note": "No LLM call was made in this local baseline run; billing is disabled.",
+            "cost_rmb": 0.0,
+            "note": "No LLM call was made in this local baseline run.",
         }
         self.usage_path.write_text(json.dumps(record, ensure_ascii=False) + "\n", encoding="utf-8")
 

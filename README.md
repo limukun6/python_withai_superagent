@@ -55,11 +55,30 @@ that no test labels were read or evaluated.
 
 The default planner is local and costs nothing.  To make each next-experiment
 decision with a permitted OpenAI-compatible Qwen or DeepSeek API, pass
-`--planner llm` with the endpoint, model and key path. Billing is currently
-disabled: the client appends actual input/output Token counts, but does not
-calculate or enforce any cost. It is
+`--planner llm` with the endpoint, model and key path. The client records
+actual input/output Token counts, charges them using the configured RMB-per-1M
+prices, and stops LLM planning before the default RMB 20 budget would be
+exceeded. It is
 constrained to choose one untried local candidate;
 it cannot request test data or arbitrary code execution.
+
+The current audited price configuration is in `superagent/pricing.py`, based
+on the HPC AI Computing Platform table supplied on 2026-11-13:
+
+| Model | Input RMB / 1M Tokens | Output RMB / 1M Tokens | Availability |
+| --- | ---: | ---: | --- |
+| DeepSeek-V4-Pro | 2.25 | 6.75 | enabled |
+| DeepSeek-V4.1-Flash-1017 | 0.50 | 2.00 | enabled |
+| Qwen3.8-27B-w8a8 | 0.10 | 0.34 | held until release-date evidence is recorded |
+
+For example:
+
+```powershell
+python -m superagent run "TASK.zip" --planner llm `
+  --api-url "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions" `
+  --api-key-file "D:\\path\\to\\api_key.txt" `
+  --model DeepSeek-V4.1-Flash-1017
+```
 
 ## Design boundary
 

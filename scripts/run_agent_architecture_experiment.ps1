@@ -7,13 +7,14 @@ param(
     [ValidateSet("Pilot", "Main")]
     [string]$Mode = "Pilot",
 
-    [string]$Task1 = "D:\学校\python with ai\Released_Task1-In_Vehicle_Coupon_Recommendation.zip",
-    [string]$Task2 = "D:\学校\python with ai\Released_Task2-Headlines_CTR.zip",
+    [string]$Task1 = "",
+    [string]$Task2 = "",
     [string]$ApiUrl = "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions",
     [ValidateSet("DeepSeek-V4-Pro", "DeepSeek-V4.1-Flash-1017")]
     [string]$Model = "DeepSeek-V4-Pro",
     [ValidateRange(0.01, 20.0)]
-    [double]$BatchBudgetRmb = 2.0
+    [double]$BatchBudgetRmb = 2.0,
+    [switch]$ValidateOnly
 )
 
 Set-StrictMode -Version Latest
@@ -21,6 +22,9 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $python = Join-Path $repoRoot ".venv\Scripts\python.exe"
+$dataRoot = Join-Path $repoRoot "data"
+if (-not $Task1) { $Task1 = Join-Path $dataRoot "released_task1.zip" }
+if (-not $Task2) { $Task2 = Join-Path $dataRoot "released_task2.zip" }
 if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
     throw "Python virtual environment not found: $python. Run setup first."
 }
@@ -28,6 +32,10 @@ foreach ($task in @($Task1, $Task2)) {
     if (-not (Test-Path -LiteralPath $task -PathType Leaf)) {
         throw "Task package not found: $task"
     }
+}
+if ($ValidateOnly) {
+    Write-Host "Preflight passed. Python, API key, and ASCII task paths are available." -ForegroundColor Green
+    exit 0
 }
 
 if ($Mode -eq "Pilot") {

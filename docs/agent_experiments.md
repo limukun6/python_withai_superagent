@@ -32,21 +32,27 @@ to choose an architecture. Subsequent transfer evaluation needs new datasets.
 After disconnecting VPN, run the PowerShell wrapper from the repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run_agent_architecture_experiment.ps1 -ApiKeyFile "D:\\学校\\python with ai\\api\\api_key.txt" -Mode Pilot
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_agent_architecture_experiment.ps1 -ApiKeyFile .\api_key.txt -ValidateOnly
+
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_agent_architecture_experiment.ps1 -ApiKeyFile .\api_key.txt -Mode Pilot
 ```
 
-`Pilot` uses seed 11 and caps the shared batch estimate at RMB 2. Check that
+The first command only checks the environment and makes no API call. `Pilot`
+uses seed 11 and caps the shared batch estimate at RMB 2. Check that
 the run has no `planner_fallback`, `unresolved_call` or `missing_usage` event
 before starting the main comparison. Then run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run_agent_architecture_experiment.ps1 -ApiKeyFile "D:\\学校\\python with ai\\api\\api_key.txt" -Mode Main -BatchBudgetRmb 10
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_agent_architecture_experiment.ps1 -ApiKeyFile .\api_key.txt -Mode Main -BatchBudgetRmb 10
 ```
 
 `Main` fixes seeds 11, 22 and 33. The shared budget setting caps this entire
 benchmark batch; it does not replace the course's per-task RMB 20 limit.
 
-Equivalent direct commands, useful when changing an explicit task path, are:
+The script uses `data/released_task1.zip` and `data/released_task2.zip`, both
+ASCII file names. Copy the API key to the repository root as `api_key.txt`;
+that file and the data directory are ignored by Git. Equivalent direct commands,
+useful when changing an explicit task path, are:
 
 ```powershell
 .\.venv\Scripts\python.exe -m superagent.benchmark "TASK1.zip" "TASK2.zip" --strategies random --seeds 11 22 33

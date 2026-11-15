@@ -12,6 +12,11 @@ Use `powershell -ExecutionPolicy Bypass -File
 scripts/run_agent_architecture_experiment.ps1 ...` for reproducible Pilot and
 Main runs after the school API is reachable.
 
+For Windows PowerShell compatibility, the wrapper reads task packages from
+`data/released_task1.zip` and `data/released_task2.zip`, and reads the API key
+from an ASCII-named `api_key.txt` in the repository root. Both are ignored by
+Git. Copy them into place before running the wrapper.
+
 Price note: values transcribed from platform screenshots are provisional
 platform estimates. They have not been verified against the course's required
 historical official standard prices; formal results require that verification.

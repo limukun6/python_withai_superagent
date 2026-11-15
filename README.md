@@ -1,5 +1,21 @@
 # General Algorithm SuperAgent
 
+## Agent architecture comparisons
+
+The controlled comparison entry point is `python -m superagent.benchmark`.
+It supports random, one-shot, feedback and reviewed planning, a 14-configuration
+search space, bounded trial counts, inner training splits and post-selection
+official-validation evaluation. See [the protocol](docs/agent_experiments.md)
+for commands, fairness controls, artifacts and limitations. The original `run`
+command below is a legacy exhaustive-portfolio baseline, not this experiment.
+Use `powershell -ExecutionPolicy Bypass -File
+scripts/run_agent_architecture_experiment.ps1 ...` for reproducible Pilot and
+Main runs after the school API is reachable.
+
+Price note: values transcribed from platform screenshots are provisional
+platform estimates. They have not been verified against the course's required
+historical official standard prices; formal results require that verification.
+
 This repository contains a reproducible first version of the AIAA 3102
 classification SuperAgent.  It detects supported task formats from their
 schema, profiles only development data, runs a small autonomous candidate

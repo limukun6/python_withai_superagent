@@ -162,6 +162,8 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     if kind == "categorical_tabular":
         return np.asarray(model.predict(_clean_categories(inputs))).reshape(-1)
     if kind == "pair_text":
+        if isinstance(model, DummyClassifier):
+            return np.asarray(model.predict(np.zeros((len(inputs), 1)))).reshape(-1)
         if len(model) == 2:
             vectorizer, classifier = model
             matrix = _difference_features(vectorizer, inputs, fit=False)
@@ -174,5 +176,31 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
         else:
             raise ValueError("Unrecognised saved pair-text model structure.")
         return np.asarray(classifier.predict(matrix)).reshape(-1)
+    raise ValueError(f"Unsupported task kind: {kind}")
+
+
+def search_candidates(kind: str) -> list[Candidate]:
+    """Common search space, deliberately larger than a benchmark trial budget."""
+    if kind == "categorical_tabular":
+        return [
+            Candidate(f"logistic_C{c}", {"C": c}, partial(_logistic_tabular, c=c))
+            for c in (0.05, 0.25, 1.0, 4.0)
+        ] + [
+            Candidate(f"extra_trees_leaf{leaf}", {"min_samples_leaf": leaf, "n_estimators": 400},
+                      partial(_extra_trees_tabular, min_samples_leaf=leaf))
+            for leaf in (1, 2, 4, 8)
+        ] + [
+            Candidate(f"catboost_depth{depth}_reg{reg}",
+                      {"depth": depth, "l2_leaf_reg": reg, "iterations": 600, "learning_rate": 0.05},
+                      partial(_catboost_tabular, depth=depth, l2_leaf_reg=reg))
+            for depth in (4, 6, 8) for reg in (3.0, 10.0)
+        ]
+    if kind == "pair_text":
+        return [
+            Candidate(f"{name}_C{c}", {"C": c, "representation": name, "swap_augmentation": True},
+                      partial(function, c=c))
+            for name, function in (("word", _word_difference_text), ("word_char", _word_char_difference_text))
+            for c in (0.05, 0.1, 0.3, 0.7, 1.5, 3.0, 10.0)
+        ]
     raise ValueError(f"Unsupported task kind: {kind}")
 

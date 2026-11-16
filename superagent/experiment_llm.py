@@ -14,6 +14,12 @@ from .pricing import resolve_pricing
 
 
 class ExperimentLLM:
+    # DeepSeek-V4-Pro may use part of the completion budget for visible
+    # reasoning before producing its final JSON.  2048 frequently cut off
+    # one-shot plans with a null final content field, so keep enough room for
+    # both its reasoning and the short structured answer.
+    max_output_tokens = 4096
+
     def __init__(self, api_url: str, key_file: str, model: str, batch_budget: float):
         if not math.isfinite(batch_budget) or not 0 < batch_budget <= 20:
             raise ValueError("Batch budget must be finite and in (0, 20].")
@@ -42,13 +48,14 @@ class ExperimentLLM:
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
-                   * self.price.input_rmb_per_million + 2048 * self.price.output_rmb_per_million) / 1e6
+                   * self.price.input_rmb_per_million + self.max_output_tokens * self.price.output_rmb_per_million) / 1e6
         if self.spent + reserve > self.budget:
             raise RuntimeError("Batch estimated cost ceiling reached.")
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve)
         try:
             response = self.session.post(self.api_url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.key}"},
-                json={"model": self.model, "messages": messages, "temperature": 0, "max_tokens": 2048},
+                json={"model": self.model, "messages": messages, "temperature": 0,
+                      "max_tokens": self.max_output_tokens},
                 timeout=60)
             if not response.ok:
                 logger.event("llm_http_failure", role=role, status_code=response.status_code)
@@ -76,8 +83,15 @@ class ExperimentLLM:
                      input_tokens=inp, output_tokens=out, raw_usage=usage, cost_rmb=cost,
                      batch_estimated_cost_rmb=self.spent, price_source=self.price.source,
                      price_status="provisional_platform_price_not_course_verified")
-        content = body.get("choices", [{}])[0].get("message", {}).get("content")
-        logger.event("llm_response", role=role, content=content)
+        choice = body.get("choices", [{}])[0]
+        message = choice.get("message", {})
+        content = message.get("content")
+        # Do not treat reasoning_content as the final answer: it is not a
+        # structured response.  Log its presence and finish reason so a
+        # cutoff can be distinguished from a malformed agent policy.
+        logger.event("llm_response", role=role, content=content,
+                     finish_reason=choice.get("finish_reason"),
+                     reasoning_content_present=bool(message.get("reasoning_content")))
         if not isinstance(content, str):
             raise ValueError("Missing text response.")
         if content.strip().startswith("```"):

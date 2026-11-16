@@ -103,6 +103,19 @@ class BenchmarkTests(unittest.TestCase):
         client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
         self.assertFalse(client.session.trust_env)
 
+    def test_llm_reserves_room_for_reasoning_and_final_json(self):
+        key = self.root / "key.txt"
+        key.write_text("test-not-a-real-key", encoding="utf-8")
+        client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
+        with patch.object(client.session, "post") as post:
+            post.return_value.ok = True
+            post.return_value.json.return_value = {
+                "choices": [{"finish_reason": "stop", "message": {"content": "{}"}}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1},
+            }
+            self.assertEqual(client.ask({}, self.logger, "planner"), {})
+        self.assertEqual(post.call_args.kwargs["json"]["max_tokens"], 4096)
+
 
 if __name__ == "__main__":
     unittest.main()

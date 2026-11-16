@@ -28,6 +28,10 @@ class ExperimentLLM:
         self.budget = batch_budget
         self.spent = 0.0
         self.blocked = False
+        # A stale local VPN proxy can remain in HTTP(S)_PROXY after disconnect.
+        # The school endpoint is reached directly, as verified by the preflight.
+        self.session = requests.Session()
+        self.session.trust_env = False
 
     def ask(self, payload: dict, logger: RunLogger, role: str) -> dict:
         if self.blocked:
@@ -43,7 +47,7 @@ class ExperimentLLM:
             raise RuntimeError("Batch estimated cost ceiling reached.")
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve)
         try:
-            response = requests.post(self.api_url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.key}"},
+            response = self.session.post(self.api_url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.key}"},
                 json={"model": self.model, "messages": messages, "temperature": 0, "max_tokens": 2048},
                 timeout=60)
             if not response.ok:

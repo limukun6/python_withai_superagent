@@ -86,7 +86,7 @@ class BenchmarkTests(unittest.TestCase):
         key = self.root / "key.txt"
         key.write_text("test-not-a-real-key", encoding="utf-8")
         client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        with patch("superagent.experiment_llm.requests.post") as post:
+        with patch.object(client.session, "post") as post:
             post.return_value.ok = True
             post.return_value.json.return_value = {"choices": [{"message": {"content": "{}"}}]}
             with self.assertRaises(RuntimeError):
@@ -96,6 +96,12 @@ class BenchmarkTests(unittest.TestCase):
             self.assertEqual(post.call_count, 1)
         usage = [json.loads(line) for line in self.logger.usage_path.read_text().splitlines()]
         self.assertIsNone(usage[-1]["cost_rmb"])
+
+    def test_llm_ignores_stale_proxy_environment(self):
+        key = self.root / "key.txt"
+        key.write_text("test-not-a-real-key", encoding="utf-8")
+        client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
+        self.assertFalse(client.session.trust_env)
 
 
 if __name__ == "__main__":

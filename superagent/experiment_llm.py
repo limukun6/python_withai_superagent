@@ -43,16 +43,22 @@ class ExperimentLLM:
             raise RuntimeError("Batch estimated cost ceiling reached.")
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve)
         try:
-            response = requests.post(self.api_url, headers={"Authorization": f"Bearer {self.key}"},
+            response = requests.post(self.api_url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.key}"},
                 json={"model": self.model, "messages": messages, "temperature": 0, "max_tokens": 2048},
-                timeout=(15, 60))
+                timeout=60)
             if not response.ok:
                 logger.event("llm_http_failure", role=role, status_code=response.status_code)
             response.raise_for_status()
             body = response.json()
-        except Exception:
+        except requests.RequestException as error:
             self.blocked = True
-            logger.usage(event="unresolved_call", role=role, usage_known=False, cost_rmb=None)
+            details = {"exception_type": type(error).__name__, "message": str(error)}
+            response = getattr(error, "response", None)
+            if response is not None:
+                details["status_code"] = response.status_code
+                details["response_excerpt"] = response.text[:1000]
+            logger.event("llm_transport_failure", role=role, **details)
+            logger.usage(event="unresolved_call", role=role, usage_known=False, cost_rmb=None, **details)
             raise RuntimeError("API request failed; further batch calls stopped. See HTTP status in events.") from None
         usage = body.get("usage") or {}
         inp, out = usage.get("prompt_tokens"), usage.get("completion_tokens")

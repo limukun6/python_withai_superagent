@@ -1,16 +1,23 @@
 # General Algorithm SuperAgent
 
-## Agent architecture comparisons
+## Current execution core
 
-The controlled comparison entry point is `python -m superagent.benchmark`.
-It supports random, one-shot, feedback and reviewed planning, a 14-configuration
-search space, bounded trial counts, inner training splits and post-selection
-official-validation evaluation. See [the protocol](docs/agent_experiments.md)
-for commands, fairness controls, artifacts and limitations. The original `run`
-command below is a legacy exhaustive-portfolio baseline, not this experiment.
-Use `powershell -ExecutionPolicy Bypass -File
-scripts/run_agent_architecture_experiment.ps1 ...` for reproducible Pilot and
-Main runs after the school API is reachable.
+`python -m superagent run` and `python -m superagent.benchmark` now share the
+same audited runtime. It builds a task contract from the supplied instructions,
+records the actual preprocessing/model pipeline for every candidate, trains only
+on an inner fit split, selects on an inner search split, independently reloads
+and accepts the frozen model, then evaluates the supplied validation split.
+
+The controlled comparison entry point supports `random`, `deterministic`,
+`oneshot`, `feedback`, `reviewed`, and the structured-claim `scientist`
+strategy. The new runtime is deliberately binary-only and supports the released
+categorical-table and ordered-headline-pair schemas. It does not claim support
+for arbitrary files, multiclass tasks, images, or unrestricted code generation.
+
+See [the comparison protocol](docs/agent_experiments.md), [the evidence-driven
+search plan](docs/evidence_driven_agent_design.md), and [the overall architecture
+plan](docs/system_agent_architecture.md). `legacy-run` retains the old exhaustive
+portfolio baseline for historical artifacts only.
 
 For Windows PowerShell compatibility, the wrapper reads task packages from
 `data/released_task1.zip` and `data/released_task2.zip`, and reads the API key
@@ -21,11 +28,10 @@ Price note: values transcribed from platform screenshots are provisional
 platform estimates. They have not been verified against the course's required
 historical official standard prices; formal results require that verification.
 
-This repository contains a reproducible first version of the AIAA 3102
-classification SuperAgent.  It detects supported task formats from their
-schema, profiles only development data, runs a small autonomous candidate
-portfolio, selects a model using validation accuracy, and records every
-decision and metric.
+Each new run writes a task contract, pipeline registry, split indices, decisions,
+trial results, model hash, acceptance report, and usage ledger. A run is marked
+complete only after the frozen artifact reloads in a separate process and passes
+prediction count, label, batch/single-row, and row-order checks.
 
 ## Setup
 
@@ -45,9 +51,18 @@ python -m superagent run "D:\\学校\\python with ai\\Released_Task1-In_Vehicle_
 python -m superagent run "D:\\学校\\python with ai\\Released_Task2-Headlines_CTR.zip"
 ```
 
-Each command creates a timestamped directory below `runs/` containing the
-task specification, data profile, candidate metrics, JSONL event log, zero
-LLM-usage ledger, selected model and the fitted preprocessing pipeline.
+Each command creates a timestamped directory below `runs/`. The default
+`deterministic` strategy makes no API calls. To use an LLM policy, choose a
+strategy and supply a key:
+
+```powershell
+python -m superagent run "TASK.zip" --strategy scientist `
+  --api-key-file ".\api_key.txt" --model DeepSeek-V4-Pro
+```
+
+The `scientist` policy must cite exact recorded measurements for a follow-up
+hypothesis. A malformed, invented, or unavailable claim triggers a logged
+recovery and the run is not counted as a valid pure-policy run.
 
 ## Candidate portfolios
 
@@ -60,8 +75,8 @@ and several regularisation strengths.
 
 ## Frozen-model prediction
 
-Only after model selection is frozen, write test predictions without opening
-test labels:
+Only after model selection is frozen **and independent acceptance passes**, write
+test predictions without opening test labels:
 
 ```powershell
 python -m superagent predict "D:\\学校\\python with ai\\Released_Task1-In_Vehicle_Coupon_Recommendation.zip" `
@@ -74,14 +89,11 @@ that no test labels were read or evaluated.
 
 ## Optional LLM planning
 
-The default planner is local and costs nothing.  To make each next-experiment
-decision with a permitted OpenAI-compatible Qwen or DeepSeek API, pass
-`--planner llm` with the endpoint, model and key path. The client records
-actual input/output Token counts, charges them using the configured RMB-per-1M
-prices, and stops LLM planning before the default RMB 20 budget would be
-exceeded. It is
-constrained to choose one untried local candidate;
-it cannot request test data or arbitrary code execution.
+The shared client records actual input/output token counts. If a request fails
+before usage is known, it stops further paid calls rather than automatically
+retrying a potentially billed request. The screenshot prices below remain
+development estimates; formal reports require the course-mandated historical
+official price verification.
 
 The current audited price configuration is in `superagent/pricing.py`, based
 on the HPC AI Computing Platform table supplied on 2026-11-13:
@@ -95,7 +107,7 @@ on the HPC AI Computing Platform table supplied on 2026-11-13:
 For example:
 
 ```powershell
-python -m superagent run "TASK.zip" --planner llm `
+python -m superagent run "TASK.zip" --strategy feedback `
   --api-url "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions" `
   --api-key-file "D:\\path\\to\\api_key.txt" `
   --model DeepSeek-V4.1-Flash-1017
@@ -103,7 +115,7 @@ python -m superagent run "TASK.zip" --planner llm `
 
 ## Design boundary
 
-`run` is a development command.  It deliberately does not access a test
-split.  A later final-evaluation command will be added only after the
-selection policy and task contract are frozen.
+`run` is a development command. It never loads test features or labels. The
+separate `predict` command reads test features only after the artifact has
+passed acceptance; it has no test-label evaluator.
 

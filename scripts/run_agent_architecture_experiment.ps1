@@ -54,7 +54,11 @@ $arguments = @(
     "--seeds"
 ) + $seeds + @(
     "--max-trials", "3",
-    "--time-limit", "600",
+    # 600 s was too tight for the reviewed strategy: its six reasoned calls took
+    # 557 s of the 600 s budget in the 2026-11-17 pilot, truncating the third
+    # training at 42.9 s. Raised for every strategy so the predeclared "3 trials
+    # each" comparison actually holds; recorded in the handoff note.
+    "--time-limit", "1200",
     "--trial-timeout", "120",
     "--output-dir", $outputRoot,
     "--api-url", $ApiUrl,

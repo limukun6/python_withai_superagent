@@ -40,6 +40,16 @@ def _read_csv(archive: zipfile.ZipFile, member: str) -> list[dict[str, str]]:
     return list(csv.DictReader(io.StringIO(content)))
 
 
+def _instructions(archive: zipfile.ZipFile, names: list[str]) -> dict[str, str]:
+    """Read task instructions as evidence; never read test members here."""
+    readmes = [n for n in names if n.rsplit("/", 1)[-1].lower() == "readme.md"]
+    if len(readmes) != 1:
+        return {"instructions": "", "instruction_source": "unavailable"}
+    member = readmes[0]
+    return {"instructions": archive.read(member).decode("utf-8-sig", errors="replace"),
+            "instruction_source": member}
+
+
 def _load_archive(path: Path) -> DevelopmentTask:
     if not zipfile.is_zipfile(path):
         raise TaskFormatError(f"Only zip task packages are supported for now: {path}")
@@ -75,6 +85,7 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
         "feature_count": int(x_train.shape[1]),
         "label_values": sorted(map(str, np.unique(y_train))),
         "source_metadata": info,
+        **_instructions(archive, names),
         "test_accessed": False,
     }
     return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val, spec)
@@ -96,6 +107,7 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
         "train_rows": int(len(y_train)),
         "validation_rows": int(len(y_val)),
         "input_fields": ["headline_A", "headline_B"],
+        **_instructions(archive, names),
         "label_values": sorted(map(str, np.unique(y_train))),
         "test_accessed": False,
     }

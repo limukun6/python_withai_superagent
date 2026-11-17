@@ -17,7 +17,8 @@ def main() -> None:
     training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
     train_accuracy = float(accuracy_score(payload["y_train"], training_predictions))
     search_accuracy = float(accuracy_score(payload["y_search"], predictions))
-    joblib.dump({"model": model, "metrics": {
+    joblib.dump({"model": model, "search_predictions": predictions,
+                "search_row_indices": payload["search_indices"], "metrics": {
         "train_accuracy": train_accuracy,
         "search_accuracy": search_accuracy,
         "generalization_gap": train_accuracy - search_accuracy,

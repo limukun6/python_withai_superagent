@@ -2,8 +2,9 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import numpy as np
+import requests
 from sklearn.dummy import DummyClassifier
 
 from superagent.benchmark import Policy, inner_split, run_one
@@ -64,18 +65,18 @@ class BenchmarkTests(unittest.TestCase):
         directory = self.root / "run"
         def fake_train(payload_path, candidate, output, timeout):
             payload = __import__("joblib").load(payload_path)
-            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search"})
+            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search", "search_indices"})
             self.assertFalse((directory / "selection.json").exists())
             model = DummyClassifier().fit(np.zeros((10, 1)), np.tile([0, 1], 5))
             return model, {"status": "completed", "search_accuracy": .5}
         def score_final(kind, model, inputs):
             self.assertTrue((directory / "selection.json").exists())
             return np.zeros(len(inputs), dtype=int)
-        with patch("superagent.benchmark.train_candidate", side_effect=fake_train) as train:
-            with patch("superagent.benchmark.predict_with_model", side_effect=score_final) as score:
+        with patch("superagent.runtime.train_candidate", side_effect=fake_train) as train:
+            with patch("superagent.runtime.predict_with_model", side_effect=score_final) as score:
                 result = run_one(task, "random", 11, directory, None, max_trials=2)
         self.assertEqual(train.call_count, 2)
-        self.assertEqual(score.call_count, 1)
+        self.assertEqual(score.call_count, 2)  # inner acceptance probe, then official validation
         self.assertTrue(result["valid_policy_run"])
 
     def test_text_dummy_reload_prediction(self):
@@ -114,7 +115,70 @@ class BenchmarkTests(unittest.TestCase):
                 "usage": {"prompt_tokens": 1, "completion_tokens": 1},
             }
             self.assertEqual(client.ask({}, self.logger, "planner"), {})
-        self.assertEqual(post.call_args.kwargs["json"]["max_tokens"], 4096)
+        self.assertEqual(
+            post.call_args.kwargs["json"]["max_tokens"], ExperimentLLM.max_output_tokens
+        )
+        # 4096 was still truncated on the longest planner call of a run
+        # (finish_reason=length, content=null), so the reservation must stay
+        # strictly above the value that failed.
+        self.assertGreater(ExperimentLLM.max_output_tokens, 4096)
+
+
+    # ---- unknown usage must not trigger a second paid call -----------------
+
+    def _client(self):
+        key = self.root / "retry_key.txt"
+        key.write_text("test-not-a-real-key", encoding="utf-8")
+        return ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
+
+    @staticmethod
+    def _good_response():
+        response = MagicMock(ok=True)
+        response.json.return_value = {
+            "choices": [{"finish_reason": "stop", "message": {"content": "{}"}}],
+            "usage": {"prompt_tokens": 5, "completion_tokens": 5},
+        }
+        return response
+
+    def test_transport_failure_stops_without_automatic_paid_retry(self):
+        client = self._client()
+        with patch.object(
+            client.session, "post", side_effect=[requests.ConnectionError("reset"), self._good_response()]
+        ) as post:
+            with self.assertRaises(RuntimeError):
+                client.ask({}, self.logger, "planner")
+            with self.assertRaises(RuntimeError):
+                client.ask({}, self.logger, "planner")
+        self.assertEqual(post.call_count, 1)
+        self.assertTrue(client.blocked)
+        events = [json.loads(line) for line in (self.root / "events.jsonl").read_text(encoding="utf-8").splitlines()]
+        self.assertTrue(any(e["kind"] == "llm_transport_failure" for e in events))
+        usage = [json.loads(line) for line in (self.root / "llm_usage.jsonl").read_text(encoding="utf-8").splitlines()]
+        # The failed attempt stays visible as unknown usage: recovery must not erase the gap.
+        self.assertTrue(any(u["event"] == "unresolved_call" and u["usage_known"] is False for u in usage))
+
+    def test_transport_failure_after_retries_opens_circuit(self):
+        client = self._client()
+        with patch.object(client.session, "post", side_effect=requests.ConnectionError("reset")) as post, \
+                patch("superagent.experiment_llm.time.sleep"):
+            with self.assertRaises(RuntimeError):
+                client.ask({}, self.logger, "planner")
+        self.assertEqual(post.call_count, ExperimentLLM.max_transport_retries + 1)
+        self.assertTrue(client.blocked)
+        with self.assertRaises(RuntimeError):
+            client.ask({}, self.logger, "planner")
+        self.assertEqual(post.call_count, ExperimentLLM.max_transport_retries + 1)
+
+    def test_http_error_is_not_retried(self):
+        client = self._client()
+        bad = MagicMock(ok=False, status_code=400, text="bad request")
+        bad.raise_for_status.side_effect = requests.HTTPError("400 Client Error", response=bad)
+        with patch.object(client.session, "post", return_value=bad) as post, \
+                patch("superagent.experiment_llm.time.sleep"):
+            with self.assertRaises(RuntimeError):
+                client.ask({}, self.logger, "planner")
+        self.assertEqual(post.call_count, 1)
+        self.assertTrue(client.blocked)
 
 
 if __name__ == "__main__":

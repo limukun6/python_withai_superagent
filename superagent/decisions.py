@@ -4,6 +4,7 @@ from __future__ import annotations
 import math
 
 FACT_FIELDS = {"train_accuracy", "search_accuracy", "generalization_gap", "training_seconds", "status"}
+DIAGNOSTIC_FIELDS = {"accuracy", "error_rate", "disagreement_rate"}
 
 
 def fact_records(history):
@@ -11,7 +12,7 @@ def fact_records(history):
              **{k: row[k] for k in FACT_FIELDS if k in row}} for row in history]
 
 
-def validate_scientific_decision(answer, history):
+def validate_scientific_decision(answer, history, diagnostic_evidence=()):
     for field in ("hypothesis", "alternative_explanation", "changed_factor"):
         if not isinstance(answer.get(field), str) or not answer[field].strip():
             raise ValueError(f"Missing scientific decision field: {field}")
@@ -22,12 +23,16 @@ def validate_scientific_decision(answer, history):
     if not isinstance(observations, list):
         raise ValueError("observations must be a list of exact tool facts.")
     facts = {r["evidence_id"]: r for r in fact_records(history)}
+    for row in diagnostic_evidence:
+        if row.get("field") in DIAGNOSTIC_FIELDS:
+            facts[row["evidence_id"]] = {"evidence_id": row["evidence_id"],
+                                           row["field"]: row.get("value")}
     for observation in observations:
         if not isinstance(observation, dict):
             raise ValueError("Each observation must reference a tool fact.")
         source = facts.get(observation.get("evidence_id"))
         field = observation.get("field")
-        if source is None or field not in FACT_FIELDS or field not in source:
+        if source is None or field not in FACT_FIELDS | DIAGNOSTIC_FIELDS or field not in source:
             raise ValueError("Unknown evidence reference or metric.")
         actual, claimed = source[field], observation.get("value")
         if isinstance(actual, (int, float)):

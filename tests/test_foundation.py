@@ -15,8 +15,10 @@ from superagent.acceptance import accept_artifact, digest, load_accepted_model, 
 from superagent.contracts import build_contract, describe_candidate
 from superagent.data import DevelopmentTask
 from superagent.decisions import validate_scientific_decision, hypothesis_outcome
+from superagent.diagnostics import summarize, claim_facts
 from superagent.events import RunLogger
 from superagent.experiment_llm import ExperimentLLM
+from superagent.runtime import Policy
 from superagent.models import search_candidates
 
 
@@ -94,6 +96,54 @@ class FoundationTests(unittest.TestCase):
         decision, history = self.decision()
         outcome = hypothesis_outcome(decision, {"status": "timeout"}, history)
         self.assertEqual(outcome["state"], "execution_failed")
+
+    def test_aggregate_diagnostics_expose_exact_slice_facts_without_raw_text(self):
+        fit = [("short", "x"), ("one two three four", "x")] * 40
+        search = [("tiny", "x")] * 50 + [("one two three four five", "x")] * 50
+        labels = np.asarray([0] * 50 + [1] * 50)
+        joblib.dump({"search_predictions": np.asarray([0] * 50 + [0] * 50)}, self.root / "trial_1.joblib")
+        report = summarize("pair_text", fit, search, labels,
+                           [{"trial": 1, "candidate": "word_C0.3", "status": "completed"}], self.root)
+        self.assertEqual(report["scope"], "inner_search_only")
+        self.assertNotIn("tiny", json.dumps(report))
+        facts = claim_facts(report)
+        short = next(f for f in facts if f["evidence_id"].endswith("short_or_equal"))
+        self.assertEqual(short["field"], "accuracy")
+        self.assertEqual(short["value"], 1.0)
+
+    def test_diagnostic_fact_must_match_exactly(self):
+        history = [{"trial": 1, "candidate": "a", "status": "completed", "search_accuracy": .69}]
+        facts = [{"evidence_id": "diagnostic:trial:1:short", "field": "error_rate", "value": .3}]
+        decision = {"candidate": "b", "reason": "Target short-text errors", "observations": [
+            {"evidence_id": "diagnostic:trial:1:short", "field": "error_rate", "value": .3}],
+            "hypothesis": "Character features may improve short texts", "alternative_explanation": "Noise",
+            "changed_factor": "representation", "parent_candidate": "a",
+            "prediction": {"metric": "search_accuracy", "direction": "increase"}}
+        validate_scientific_decision(decision, history, facts)
+        decision["observations"][0]["value"] = .2
+        with self.assertRaises(ValueError):
+            validate_scientific_decision(decision, history, facts)
+
+    def test_scientist_can_use_exact_diagnostic_fact(self):
+        class Client:
+            def ask(self, payload, logger, role):
+                self.payload = payload
+                return {"candidate": "b", "reason": "Test character features", "observations": [
+                    {"evidence_id": "diagnostic:trial:1:short", "field": "error_rate", "value": .3}],
+                    "hypothesis": "Character features may help", "alternative_explanation": "Split noise",
+                    "changed_factor": "representation", "parent_candidate": "a",
+                    "prediction": {"metric": "search_accuracy", "direction": "increase"}}
+        client = Client()
+        logger = RunLogger(self.root)
+        logger.initialize_usage_ledger()
+        policy = Policy("scientist", 1, client, logger, 2)
+        history = [{"trial": 1, "candidate": "a", "status": "completed", "search_accuracy": .69}]
+        diagnostics = {"trial_reports": [], "pairwise_predictions": []}
+        with patch("superagent.runtime.diagnostic_claim_facts", return_value=[
+            {"evidence_id": "diagnostic:trial:1:short", "field": "error_rate", "value": .3}]):
+            chosen, _ = policy.choose({}, history, [{"id": "b"}], diagnostics=diagnostics)
+        self.assertEqual(chosen, "b")
+        self.assertEqual(client.payload["tool_facts"][-1]["value"], .3)
 
     def export_fixture(self):
         contract = build_contract(toy_task()).to_dict()

@@ -23,6 +23,7 @@ from .profile import profile
 from .contracts import build_contract, describe_candidate
 from .decisions import fact_records, validate_scientific_decision, hypothesis_outcome
 from .acceptance import accept_artifact, digest, check_predictions
+from .diagnostics import summarize as summarize_diagnostics, claim_facts as diagnostic_claim_facts
 
 STRATEGIES = ("random", "deterministic", "oneshot", "feedback", "reviewed", "scientist")
 RUNTIME_VERSION = "foundation-1"
@@ -48,7 +49,7 @@ class Policy:
         self.plan = None
         self.last_decision = {}
 
-    def choose(self, data_profile, history, available):
+    def choose(self, data_profile, history, available, diagnostics=None):
         ids = [item["id"] for item in available]
         if self.strategy in ("random", "deterministic"):
             chosen = self.rng.choice(ids) if self.strategy == "random" else ids[0]
@@ -70,7 +71,10 @@ class Policy:
                 self.plan = list(plan)
             answer = self.plan.pop(0)
         elif self.strategy == "scientist":
-            answer = self.client.ask({**context, "tool_facts": fact_records(history),
+            diagnostics = diagnostics or {}
+            diagnostic_facts = diagnostic_claim_facts(diagnostics)
+            answer = self.client.ask({**context, "tool_facts": fact_records(history) + diagnostic_facts,
+                "diagnostics": diagnostics,
                 "instruction": (
                     'Return one JSON object: {"candidate": exact_available_id, "reason": string, '
                     '"observations": [{"evidence_id": "trial:N", "field": exact_tool_field, "value": exact_tool_value}], '
@@ -82,7 +86,7 @@ class Policy:
                     'Describe multiple changed factors honestly; hypotheses are not established facts. '
                     'Use the actual task objective and estimator metadata; do not assume text pairs mean similarity.')},
                 self.logger, "scientist")
-            validate_scientific_decision(answer, history)
+            validate_scientific_decision(answer, history, diagnostic_facts)
         else:
             context["completed_experiments"] = history
             answer = self.client.ask({**context,
@@ -160,9 +164,12 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         try:
             if blocked_llm:
                 raise RuntimeError("Planner disabled after earlier failure.")
+            diagnostics = summarize_diagnostics(task.kind, payload["X_train"], payload["X_search"],
+                                                payload["y_search"], history, directory)
+            logger.write_json("diagnostics.json", diagnostics)
             if client is not None:
                 client.deadline = start + time_limit
-            chosen, reason = policy.choose(data_profile, history, available)
+            chosen, reason = policy.choose(data_profile, history, available, diagnostics=diagnostics)
             decision = policy.last_decision
         except Exception as error:
             blocked_llm = True
@@ -194,6 +201,10 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         history.append(row)
         logger.event("trial_result", **row)
         logger.write_json("trials.json", history)
+        # Refresh after every trial so the final artifact also includes the
+        # last experiment; the next planner turn consumes the same definition.
+        logger.write_json("diagnostics.json", summarize_diagnostics(
+            task.kind, payload["X_train"], payload["X_search"], payload["y_search"], history, directory))
     # Freeze before official validation is evaluated. No refit: all designs use the same protocol.
     logger.write_json("selection.json", {"candidate": best_id, "search_accuracy": best_score if best_model else None,
                       "selection_rule": "max inner accuracy; ties by candidate id", "refit": False})

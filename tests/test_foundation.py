@@ -19,6 +19,8 @@ from superagent.diagnostics import summarize, claim_facts
 from superagent.events import RunLogger
 from superagent.experiment_llm import ExperimentLLM
 from superagent.runtime import Policy
+from superagent.runtime import confirmation_split
+from superagent.selection import confirm_once
 from superagent.models import search_candidates
 
 
@@ -144,6 +146,52 @@ class FoundationTests(unittest.TestCase):
             chosen, _ = policy.choose({}, history, [{"id": "b"}], diagnostics=diagnostics)
         self.assertEqual(chosen, "b")
         self.assertEqual(client.payload["tool_facts"][-1]["value"], .3)
+
+    def test_confirmation_split_keeps_duplicates_in_one_partition(self):
+        x = np.repeat(np.asarray([[str(i), str(i % 4)] for i in range(50)]), 2, axis=0)
+        task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 50), x[:4], np.array([0, 1, 0, 1]), {})
+        fit, search, confirm = confirmation_split(task, 11)
+        self.assertFalse(set(fit) & set(search) or set(fit) & set(confirm) or set(search) & set(confirm))
+        partitions = [set(map(tuple, x[idx])) for idx in (fit, search, confirm)]
+        self.assertFalse(partitions[0] & partitions[1] or partitions[0] & partitions[2] or partitions[1] & partitions[2])
+
+    def test_confirmation_can_switch_only_between_frozen_top_two(self):
+        x = np.asarray([["a", "b"], ["c", "d"], ["e", "f"], ["g", "h"]])
+        y = np.asarray([1, 1, 1, 1])
+        zero = DummyClassifier(strategy="constant", constant=0).fit(np.zeros((2, 1)), [0, 1])
+        one = DummyClassifier(strategy="constant", constant=1).fit(np.zeros((2, 1)), [0, 1])
+        joblib.dump({"model": zero}, self.root / "trial_1.joblib")
+        joblib.dump({"model": one}, self.root / "trial_2.joblib")
+        history = [
+            {"trial": 1, "candidate": "logistic_C0.05", "status": "completed", "search_accuracy": .80},
+            {"trial": 2, "candidate": "logistic_C0.25", "status": "completed", "search_accuracy": .79},
+            {"trial": 3, "candidate": "logistic_C1.0", "status": "completed", "search_accuracy": .10},
+        ]
+        selected, _, report = confirm_once("categorical_tabular", history, self.root, x, y, True)
+        self.assertEqual(selected["candidate"], "logistic_C0.25")
+        self.assertTrue(report["switched"])
+        self.assertEqual([x["candidate"] for x in report["shortlist"]], ["logistic_C0.05", "logistic_C0.25"])
+        selected, _, report = confirm_once("categorical_tabular", history, self.root, None, None, False)
+        self.assertEqual(selected["candidate"], "logistic_C0.05")
+        self.assertFalse(report["switched"])
+
+    def test_confirmation_rows_are_never_written_to_worker_payload(self):
+        seen_payloads = []
+
+        def fake_train(payload_path, candidate, destination, timeout):
+            payload = joblib.load(payload_path)
+            seen_payloads.append(payload)
+            model = DummyClassifier(strategy="most_frequent").fit(np.zeros((4, 1)), [0, 0, 1, 1])
+            joblib.dump({"model": model}, destination)
+            return model, {"status": "completed", "search_accuracy": .50}
+
+        with patch("superagent.runtime.train_candidate", side_effect=fake_train):
+            result = runtime.run_task(toy_task(), "deterministic", 11, self.root / "run",
+                                      None, max_trials=2, confirmation=True)
+        self.assertTrue(result["completed"])
+        self.assertEqual(len(seen_payloads), 2)
+        self.assertTrue(all("confirmation" not in key for p in seen_payloads for key in p))
+        self.assertTrue(all(len(p["X_train"]) + len(p["X_search"]) < 80 for p in seen_payloads))
 
     def export_fixture(self):
         contract = build_contract(toy_task()).to_dict()

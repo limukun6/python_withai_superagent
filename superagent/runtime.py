@@ -24,6 +24,7 @@ from .contracts import build_contract, describe_candidate
 from .decisions import fact_records, validate_scientific_decision, hypothesis_outcome
 from .acceptance import accept_artifact, digest, check_predictions
 from .diagnostics import summarize as summarize_diagnostics, claim_facts as diagnostic_claim_facts
+from .selection import confirm_once
 
 STRATEGIES = ("random", "deterministic", "oneshot", "feedback", "reviewed", "scientist")
 RUNTIME_VERSION = "foundation-1"
@@ -33,13 +34,30 @@ def take(rows, indices):
     return rows[indices] if isinstance(rows, np.ndarray) else [rows[int(i)] for i in indices]
 
 
-def inner_split(task, seed):
+def _groups(task):
     # Identical rows (or reversed text pairs) stay together across the inner split.
     keys = [tuple(sorted(row)) if task.kind == "pair_text" else tuple(map(str, row)) for row in task.X_train]
-    groups = np.asarray([hashlib.sha256(repr(key).encode()).hexdigest() for key in keys])
+    return np.asarray([hashlib.sha256(repr(key).encode()).hexdigest() for key in keys])
+
+
+def inner_split(task, seed):
+    groups = _groups(task)
     splitter = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=seed)
     train, search = next(splitter.split(np.zeros(len(task.y_train)), task.y_train, groups))
     return train, search
+
+
+def confirmation_split(task, seed):
+    """Make disjoint fit/search/confirmation partitions from official train."""
+    groups = _groups(task)
+    splitter = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=seed)
+    folds = list(splitter.split(np.zeros(len(task.y_train)), task.y_train, groups))
+    confirmation = folds[0][1]
+    search = folds[1][1]
+    fit = np.asarray(sorted(set(range(len(task.y_train))) - set(confirmation) - set(search)))
+    if not len(fit) or set(fit) & set(search) or set(fit) & set(confirmation) or set(search) & set(confirmation):
+        raise ValueError("Unable to construct disjoint fit/search/confirmation partitions.")
+    return fit, search, confirmation
 
 
 class Policy:
@@ -116,7 +134,8 @@ def train_candidate(payload_path, candidate, destination, timeout):
     return artifact["model"], {"status": "completed", **artifact["metrics"]}
 
 
-def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=600, trial_timeout=120):
+def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=600, trial_timeout=120,
+             confirmation=False):
     if strategy not in STRATEGIES or not 1 <= max_trials <= 14:
         raise ValueError("Unknown strategy or trial limit outside 1..14.")
     if any(not math.isfinite(t) or t <= 0 for t in (time_limit, trial_timeout)):
@@ -136,12 +155,19 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
                       "source_sha256": source_hash.hexdigest(), "python": sys.version,
                       "strategy": strategy, "seed": seed, "max_trials": max_trials,
                       "search_time_limit": time_limit, "trial_timeout": trial_timeout,
-                      "split_protocol": "grouped_inner_80_20_no_confirmation_no_refit",
+                      "split_protocol": "grouped_fit_search_confirmation" if confirmation else "grouped_inner_80_20_no_confirmation",
                       "test_accessed": False})
     logger.event("state", state="SEARCH")
     start = time.monotonic()
-    train_idx, search_idx = inner_split(task, seed)
-    logger.write_json("split.json", {"seed": seed, "train_indices": train_idx.tolist(), "search_indices": search_idx.tolist()})
+    if confirmation:
+        train_idx, search_idx, confirmation_idx = confirmation_split(task, seed)
+    else:
+        train_idx, search_idx = inner_split(task, seed)
+        confirmation_idx = None
+    split_record = {"seed": seed, "train_indices": train_idx.tolist(), "search_indices": search_idx.tolist()}
+    if confirmation_idx is not None:
+        split_record["confirmation_indices"] = confirmation_idx.tolist()
+    logger.write_json("split.json", split_record)
     payload = {"kind": task.kind, "X_train": take(task.X_train, train_idx), "y_train": task.y_train[train_idx],
                "X_search": take(task.X_train, search_idx), "y_search": task.y_train[search_idx],
                "search_indices": search_idx.tolist()}
@@ -156,6 +182,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     logger.write_json("candidate_registry.json", available)
     policy = Policy(strategy, seed, client, logger, max_trials)
     history, best_model, best_id, best_score = [], None, None, -1.0
+    models_by_trial = {}
     fallbacks, blocked_llm = 0, False
     random_fallback = random.Random(seed)
     for index in range(max_trials):
@@ -191,6 +218,8 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
                                          min(trial_timeout, remaining_seconds))
         row = {"trial": index + 1, "candidate": chosen, "params": configuration["params"],
                "allowed_training_seconds": min(trial_timeout, remaining_seconds), **metrics}
+        if model is not None:
+            models_by_trial[index + 1] = model
         if model is not None and (metrics["search_accuracy"] > best_score or
             (metrics["search_accuracy"] == best_score and chosen < best_id)):
             best_score, best_id, best_model = metrics["search_accuracy"], chosen, model
@@ -205,9 +234,20 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         # last experiment; the next planner turn consumes the same definition.
         logger.write_json("diagnostics.json", summarize_diagnostics(
             task.kind, payload["X_train"], payload["X_search"], payload["y_search"], history, directory))
-    # Freeze before official validation is evaluated. No refit: all designs use the same protocol.
-    logger.write_json("selection.json", {"candidate": best_id, "search_accuracy": best_score if best_model else None,
-                      "selection_rule": "max inner accuracy; ties by candidate id", "refit": False})
+    # Freeze before sealed confirmation/official validation. No refit.
+    selected_row, selected_model, confirmation_record = confirm_once(
+        task.kind, history, directory,
+        take(task.X_train, confirmation_idx) if confirmation_idx is not None else None,
+        task.y_train[confirmation_idx] if confirmation_idx is not None else None,
+        confirmation, models_by_trial=models_by_trial)
+    logger.write_json("confirmation.json", confirmation_record)
+    best_id = None if selected_row is None else selected_row["candidate"]
+    best_score = None if selected_row is None else selected_row["search_accuracy"]
+    best_model = selected_model
+    logger.write_json("selection.json", {"candidate": best_id, "search_accuracy": best_score,
+                      "selection_rule": "sealed top-two confirmation" if confirmation else "max inner accuracy; ties by candidate id",
+                      "refit": False, "confirmation_enabled": confirmation,
+                      "confirmation_switched": confirmation_record.get("switched", False)})
     logger.event("state", state="FROZEN")
     official_accuracy = None
     acceptance = {"passed": False, "error": "No candidate completed."}
@@ -238,6 +278,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         "official_validation_accuracy": official_accuracy,
         "completed": acceptance["passed"], "valid_policy_run": acceptance["passed"] and fallbacks == 0,
         "acceptance_passed": acceptance["passed"], "runtime_version": RUNTIME_VERSION,
+        "confirmation_enabled": confirmation, "confirmation_switched": confirmation_record.get("switched", False),
         "fallback_count": fallbacks, "trials_attempted": len(history),
         "failed_trials": sum(r["status"] != "completed" for r in history),
         "elapsed_seconds": time.monotonic() - start,

@@ -43,6 +43,7 @@ def main():
     parser.add_argument("--max-trials", type=int, default=3)
     parser.add_argument("--time-limit", type=float, default=600)
     parser.add_argument("--trial-timeout", type=float, default=120)
+    parser.add_argument("--confirmation", action="store_true", help="Seal a third inner partition for one-time top-two selection.")
     parser.add_argument("--output-dir", default="runs/benchmarks")
     parser.add_argument("--api-url", default="https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions")
     parser.add_argument("--api-key-file")
@@ -75,7 +76,8 @@ def main():
             random.Random(seed).shuffle(order)
             for strategy in order:
                 directory = destination / f"task{task_index}_{task.kind}_{strategy}_{seed}"
-                summary = run_one(task, strategy, seed, directory, client, args.max_trials, args.time_limit, args.trial_timeout)
+                summary = run_one(task, strategy, seed, directory, client, args.max_trials, args.time_limit, args.trial_timeout,
+                                  confirmation=args.confirmation)
                 rows.append(summary)
                 (destination / "summaries.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
                 write_report(destination, rows)

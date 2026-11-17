@@ -57,7 +57,7 @@ def _run(args: argparse.Namespace) -> int:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     directory = Path(args.output_dir).resolve() / stamp
     summary = run_task(task, args.strategy, args.seed, directory, client,
-                       args.max_trials, args.time_limit, args.trial_timeout)
+                       args.max_trials, args.time_limit, args.trial_timeout, args.confirmation)
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     return 0 if summary["completed"] else 1
 
@@ -80,6 +80,7 @@ def main() -> None:
     run.add_argument("--max-trials", type=int, default=3)
     run.add_argument("--time-limit", type=float, default=1200)
     run.add_argument("--trial-timeout", type=float, default=120)
+    run.add_argument("--confirmation", action="store_true", help="Use a sealed third inner partition for one-time top-two selection")
     run.add_argument("--api-url", default="https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions")
     run.add_argument("--api-key-file", help="UTF-8 API key file; never written to run artifacts")
     run.add_argument("--model", default="DeepSeek-V4-Pro")

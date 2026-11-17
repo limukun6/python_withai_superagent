@@ -88,6 +88,22 @@ only scores the frozen top two search candidates once and cannot reopen search.
 It is a selection mechanism, not an unbiased final metric. The formal Pilot is
 not yet complete merely because this command succeeds.
 
+When the campus API is reachable, the predeclared P0 batch can be launched
+without manually assembling arguments (run this from the repository root):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\run_v2_pilot.ps1" `
+  -ApiKeyFile ".\api_key.txt" -ValidateOnly
+# Remove -ValidateOnly only after checking the printed fixed protocol.
+```
+
+After a completed batch, summarize it directly from its immutable run files:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\analyze_agent_architecture.py "runs\v2_pilot\BATCH_TIMESTAMP" `
+  --out "runs\v2_pilot\BATCH_TIMESTAMP\analysis.md"
+```
+
 ## Candidate portfolios
 
 Candidate selection depends on detected data schema rather than a task or

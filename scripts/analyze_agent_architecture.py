@@ -16,7 +16,7 @@ import statistics
 import sys
 from pathlib import Path
 
-STRATEGIES = ["random", "oneshot", "feedback", "reviewed"]
+DEFAULT_STRATEGIES = ["random", "oneshot", "feedback", "reviewed"]
 
 
 def read_jsonl(path: Path) -> list[dict]:
@@ -84,6 +84,7 @@ def main() -> int:
     protocol, rows = load_batch(batch)
     tasks = sorted({r["task_kind"] for r in rows})
     seeds = sorted({r["seed"] for r in rows})
+    strategies = protocol.get("strategies") or DEFAULT_STRATEGIES
     lines: list[str] = []
     add = lines.append
 
@@ -93,8 +94,8 @@ def main() -> int:
         f"max_trials={protocol.get('max_trials')}；time_limit={protocol.get('time_limit')}s；"
         f"trial_timeout={protocol.get('trial_timeout')}s；批次预算上限 RMB {protocol.get('batch_budget_rmb')}")
     add(f"- source_sha256：`{protocol.get('source_sha256')}`")
-    add(f"- 计划运行数：{len(tasks)} 任务 × {len(seeds)} seed × {len(STRATEGIES)} 策略 = "
-        f"{len(tasks) * len(seeds) * len(STRATEGIES)}；实际记录：{len(rows)}")
+    add(f"- 计划运行数：{len(tasks)} 任务 × {len(seeds)} seed × {len(strategies)} 策略 = "
+        f"{len(tasks) * len(seeds) * len(strategies)}；实际记录：{len(rows)}")
     add("")
 
     # ---------- 结果表 ----------
@@ -124,7 +125,7 @@ def main() -> int:
         "有效子集样本SD | 平均秒 | tokens | RMB  | 训练失败 | 训练超时 |")
     add("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for task in tasks:
-        for strategy in STRATEGIES:
+        for strategy in strategies:
             group = [r for r in rows if r["task_kind"] == task and r["strategy"] == strategy]
             if not group:
                 add(f"| {task} | {strategy} | 0/{len(seeds)} | 0/{len(seeds)} | N/A | N/A | N/A | — | — | — | — | — |")
@@ -149,7 +150,9 @@ def main() -> int:
     add("")
     add("| 任务 | 对比 | 可用配对 | 每 seed 差值 | 均值 | 样本SD |")
     add("|---|---|---:|---|---:|---:|")
-    pairs = [("oneshot", "random"), ("feedback", "random"), ("reviewed", "random"), ("reviewed", "feedback")]
+    v2_pairs = [("r", "f"), ("f", "o"), ("o", "d")]
+    legacy_pairs = [("oneshot", "random"), ("feedback", "random"), ("reviewed", "random"), ("reviewed", "feedback")]
+    pairs = v2_pairs if set(v2_pairs[0]).issubset(strategies) else legacy_pairs
     for task in tasks:
         for a, b in pairs:
             deltas, detail = [], []

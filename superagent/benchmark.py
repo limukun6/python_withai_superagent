@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .data import load_development_task
 from .experiment_llm import ExperimentLLM
-from .runtime import run_task as run_one, Policy, inner_split, STRATEGIES, RUNTIME_VERSION
+from .runtime import run_task as run_one, Policy, inner_split, STRATEGIES, RUNTIME_VERSION, LLM_FREE_STRATEGIES
 
 
 def write_report(destination, rows):
@@ -55,7 +55,7 @@ def main():
     strategies = list(dict.fromkeys(args.strategies))
     seeds = list(dict.fromkeys(args.seeds))
     client = None
-    if any(s not in ("random", "deterministic") for s in strategies):
+    if any(s not in LLM_FREE_STRATEGIES for s in strategies):
         if not args.api_key_file:
             parser.error("LLM strategies require --api-key-file.")
         client = ExperimentLLM(args.api_url, args.api_key_file, args.model, args.batch_budget_rmb)

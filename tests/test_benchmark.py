@@ -52,6 +52,62 @@ class BenchmarkTests(unittest.TestCase):
             self.assertEqual(client.requests[0][1]["completed_experiments"], history)
             self.assertEqual(result[0], "b" if strategy == "reviewed" else "a")
 
+    def test_v2_one_shot_plans_once_after_shared_baselines(self):
+        class Client:
+            def __init__(self):
+                self.calls = []
+
+            def ask(self, payload, logger, role):
+                self.calls.append((role, payload))
+                return {"plan": [
+                    {"candidate": "a", "reason": "first"},
+                    {"candidate": "b", "reason": "second"},
+                ]}
+
+        client = Client()
+        policy = Policy("o", 1, client, self.logger, 2)
+        profile = {"task_kind": "pair_text"}
+        warm_history = [{"trial": 1, "status": "completed", "search_accuracy": .6}]
+        self.assertEqual(policy.choose(profile, warm_history, [{"id": "a"}, {"id": "b"}])[0], "a")
+        self.assertEqual(policy.choose(profile, warm_history, [{"id": "b"}])[0], "b")
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual(client.calls[0][0], "v2_one_shot_plan")
+
+    def test_v2_rich_feedback_receives_diagnostics_scalar_does_not(self):
+        class Client:
+            def __init__(self):
+                self.payloads = []
+
+            def ask(self, payload, logger, role):
+                self.payloads.append((role, payload))
+                return {"candidate": "a", "reason": "test"}
+
+        diagnostics = {"scope": "inner_search_only", "trial_reports": []}
+        profile = {"task_kind": "pair_text"}
+        history = [{"trial": 1, "status": "completed", "search_accuracy": .6}]
+        for strategy, expected_role in (("f", "v2_scalar_feedback"), ("r", "v2_rich_feedback")):
+            client = Client()
+            Policy(strategy, 1, client, self.logger, 2).choose(profile, history, [{"id": "a"}], diagnostics)
+            role, payload = client.payloads[0]
+            self.assertEqual(role, expected_role)
+            self.assertEqual("diagnostics" in payload, strategy == "r")
+
+    def test_v2_d_uses_shared_warm_start_then_frozen_coverage_order(self):
+        x = np.asarray([[str(i), str(i % 3)] for i in range(80)])
+        task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 40), x[:10], np.tile([0, 1], 5), {})
+        selected = []
+
+        def fake_train(payload_path, candidate, output, timeout):
+            selected.append(candidate)
+            model = DummyClassifier().fit(np.zeros((10, 1)), np.tile([0, 1], 5))
+            return model, {"status": "completed", "search_accuracy": .5}
+
+        with patch("superagent.runtime.train_candidate", side_effect=fake_train):
+            result = run_one(task, "d", 11, self.root / "v2d", None, max_trials=4)
+        self.assertTrue(result["valid_policy_run"])
+        self.assertEqual(selected, ["logistic_C1.0", "catboost_depth4_reg10.0",
+                                    "extra_trees_leaf2", "catboost_depth6_reg3.0"])
+
     def test_split_keeps_duplicate_features_together(self):
         x = np.repeat(np.asarray([[str(i), str(i % 3)] for i in range(50)]), 2, axis=0)
         task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 50), x[:4], np.array([0, 1, 0, 1]), {})

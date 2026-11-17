@@ -8,11 +8,17 @@ records the actual preprocessing/model pipeline for every candidate, trains only
 on an inner fit split, selects on an inner search split, independently reloads
 and accepts the frozen model, then evaluates the supplied validation split.
 
-The controlled comparison entry point supports `random`, `deterministic`,
+The controlled comparison entry point retains `random`, `deterministic`,
 `oneshot`, `feedback`, `reviewed`, and the structured-claim `scientist`
-strategy. The new runtime is deliberately binary-only and supports the released
-categorical-table and ordered-headline-pair schemas. It does not claim support
-for arbitrary files, multiclass tasks, images, or unrestricted code generation.
+strategies for the archived comparison. It also implements the preregistered
+v2 policies `d`, `o`, `f`, `r`, and `g`: all begin with the same two warm-start
+trials; `d` follows a fixed coverage order, `o` plans remaining trials once,
+`f` receives scalar feedback, `r` additionally receives deterministic
+aggregate diagnostics, and `g` replans only after an initial queue, a failure,
+or a predefined stagnation trigger. The runtime is deliberately binary-only
+and supports the released categorical-table and ordered-headline-pair schemas.
+It does not claim support for arbitrary files, multiclass tasks, images, or
+unrestricted code generation.
 
 See [the comparison protocol](docs/agent_experiments.md), [the evidence-driven
 search plan](docs/evidence_driven_agent_design.md), and [the overall architecture
@@ -63,6 +69,24 @@ python -m superagent run "TASK.zip" --strategy scientist `
 The `scientist` policy must cite exact recorded measurements for a follow-up
 hypothesis. A malformed, invented, or unavailable claim triggers a logged
 recovery and the run is not counted as a valid pure-policy run.
+
+## v2 controlled-policy pilot
+
+The following no-API command is the safe first feasibility check. It uses six
+training starts (two common warm starts plus four frozen `d` choices), seals a
+third inner confirmation partition, and never opens test data:
+
+```powershell
+python -m superagent run "TASK.zip" --strategy d --seed 101 `
+  --max-trials 6 --trial-timeout 180 --time-limit 3600 --confirmation
+```
+
+For the paid comparison, use the same command with `--strategy o`, `f`, `r`,
+or `g` and add `--api-key-file`; do not compare runs with different trial
+limits, splits, candidate registries, or confirmation settings. `confirmation`
+only scores the frozen top two search candidates once and cannot reopen search.
+It is a selection mechanism, not an unbiased final metric. The formal Pilot is
+not yet complete merely because this command succeeds.
 
 ## Candidate portfolios
 

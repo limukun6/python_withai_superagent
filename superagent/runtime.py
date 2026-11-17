@@ -26,8 +26,32 @@ from .acceptance import accept_artifact, digest, check_predictions
 from .diagnostics import summarize as summarize_diagnostics, claim_facts as diagnostic_claim_facts
 from .selection import confirm_once
 
-STRATEGIES = ("random", "deterministic", "oneshot", "feedback", "reviewed", "scientist")
+LEGACY_STRATEGIES = ("random", "deterministic", "oneshot", "feedback", "reviewed", "scientist")
+# v2 policies share two task-type baselines.  They differ only in the evidence
+# exposed after those baselines and in when a new LLM planning request is made.
+V2_STRATEGIES = ("d", "o", "f", "r", "g")
+STRATEGIES = LEGACY_STRATEGIES + V2_STRATEGIES
+LLM_FREE_STRATEGIES = ("random", "deterministic", "d")
 RUNTIME_VERSION = "foundation-1"
+
+
+def warm_start_ids(kind):
+    """Frozen shared starting trials for the v2 policy comparison."""
+    starts = {
+        "categorical_tabular": ("logistic_C1.0", "catboost_depth4_reg10.0"),
+        "pair_text": ("word_C0.7", "word_char_C0.7"),
+    }
+    return starts[kind]
+
+
+def deterministic_remainder_ids(kind):
+    """Frozen post-baseline coverage order for v2 deterministic policy."""
+    plans = {
+        "categorical_tabular": ("extra_trees_leaf2", "catboost_depth6_reg3.0",
+                                "logistic_C0.25", "catboost_depth6_reg10.0"),
+        "pair_text": ("word_C1.5", "word_char_C1.5", "word_C0.3", "word_char_C0.3"),
+    }
+    return plans[kind]
 
 
 def take(rows, indices):
@@ -66,6 +90,31 @@ class Policy:
         self.rng = random.Random(seed)
         self.plan = None
         self.last_decision = {}
+        self.actions_taken = 0
+        self.handled_triggers = set()
+
+    def _planned_candidates(self, answer, ids, remaining):
+        plan = answer.get("plan") if isinstance(answer, dict) else None
+        if not isinstance(plan, list) or len(plan) != remaining:
+            raise ValueError("Planned policy must return exactly the remaining trial slots.")
+        selected = [item.get("candidate") for item in plan if isinstance(item, dict)]
+        if len(selected) != remaining or len(set(selected)) != remaining or not set(selected) <= set(ids):
+            raise ValueError("Invalid, duplicate, or unavailable planned candidate.")
+        if any(not isinstance(item.get("reason"), str) or not item["reason"].strip() for item in plan):
+            raise ValueError("Every planned candidate needs a non-empty hypothesis.")
+        return list(plan)
+
+    def _gated_trigger(self, history):
+        if self.plan is None:
+            return "initial_queue"
+        if history and history[-1].get("status") != "completed":
+            return f"execution_failure:trial:{history[-1].get('trial')}"
+        completed = [row for row in history if row.get("status") == "completed"]
+        if len(completed) >= 2:
+            latest, previous = completed[-1], completed[-2]
+            if latest["search_accuracy"] <= previous["search_accuracy"] + .005:
+                return f"stagnation:trial:{previous['trial']}:{latest['trial']}"
+        return None
 
     def choose(self, data_profile, history, available, diagnostics=None):
         ids = [item["id"] for item in available]
@@ -74,7 +123,57 @@ class Policy:
             reason = "Uniform random draw without replacement." if self.strategy == "random" else "Next candidate in the fixed registry order."
             self.last_decision = {"candidate": chosen, "reason": reason, "mode": self.strategy}
             return chosen, reason
+        if self.strategy == "d":
+            preferred = [candidate for candidate in deterministic_remainder_ids(data_profile["task_kind"])
+                         if candidate in ids]
+            chosen = preferred[0] if preferred else ids[0]
+            reason = "Next candidate in the pre-registered deterministic v2 coverage order."
+            self.actions_taken += 1
+            self.last_decision = {"candidate": chosen, "reason": reason, "mode": "v2_d"}
+            return chosen, reason
         context = {"profile": data_profile, "available_candidates": available, "max_trials": self.limit}
+        if self.strategy in ("o", "g"):
+            trigger = None if self.strategy == "o" else self._gated_trigger(history)
+            if self.strategy == "o" and self.plan is None:
+                trigger = "one_shot_after_shared_warm_start"
+            if trigger and trigger not in self.handled_triggers:
+                remaining = min(len(ids), self.limit - self.actions_taken)
+                if remaining <= 0:
+                    raise RuntimeError("No remaining v2 policy trial slots.")
+                visibility = ("The shared warm-start trials are visible. Do not assume diagnostics beyond the supplied facts."
+                              if self.strategy == "o" else
+                              "Use supplied aggregate diagnostics only; a trigger caused this bounded replan.")
+                answer = self.client.ask({**context, "completed_experiments": history,
+                    "diagnostics": diagnostics if self.strategy == "g" else None,
+                    "trigger": trigger, "instruction": (
+                        "Return {plan: [{candidate: id, reason: testable hypothesis}]} with exactly "
+                        f"{remaining} distinct available candidates in execution order. {visibility}")},
+                    self.logger, "v2_one_shot_plan" if self.strategy == "o" else "v2_gated_plan")
+                self.plan = self._planned_candidates(answer, ids, remaining)
+                self.handled_triggers.add(trigger)
+            if not self.plan:
+                raise RuntimeError("V2 plan unexpectedly empty before its trial budget was consumed.")
+            answer = self.plan.pop(0)
+            self.actions_taken += 1
+            self.last_decision = {**answer, "mode": f"v2_{self.strategy}"}
+            return answer["candidate"], answer["reason"]
+        if self.strategy in ("f", "r"):
+            payload = {**context, "completed_experiments": history}
+            if self.strategy == "r":
+                payload["diagnostics"] = diagnostics
+                payload["instruction"] = ("Choose one next experiment from available candidates. Use only supplied "
+                                          "aggregate diagnostics and completed metrics; return {candidate: id, reason: testable hypothesis}.")
+                role = "v2_rich_feedback"
+            else:
+                payload["instruction"] = ("Choose one next experiment from available candidates using only completed "
+                                          "scalar metrics; return {candidate: id, reason: testable hypothesis}.")
+                role = "v2_scalar_feedback"
+            answer = self.client.ask(payload, self.logger, role)
+            if answer.get("candidate") not in ids or not isinstance(answer.get("reason"), str) or not answer["reason"].strip():
+                raise ValueError("Invalid v2 feedback decision.")
+            self.actions_taken += 1
+            self.last_decision = {**answer, "mode": f"v2_{self.strategy}"}
+            return answer["candidate"], answer["reason"]
         if self.strategy == "oneshot":
             if self.plan is None:
                 answer = self.client.ask({**context,
@@ -140,7 +239,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         raise ValueError("Unknown strategy or trial limit outside 1..14.")
     if any(not math.isfinite(t) or t <= 0 for t in (time_limit, trial_timeout)):
         raise ValueError("Time limits must be finite and positive.")
-    if strategy not in ("random", "deterministic") and client is None:
+    if strategy not in LLM_FREE_STRATEGIES and client is None:
         raise ValueError("This strategy requires a configured LLM client.")
     contract = build_contract(task)
     directory = Path(directory).resolve()
@@ -156,6 +255,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
                       "strategy": strategy, "seed": seed, "max_trials": max_trials,
                       "search_time_limit": time_limit, "trial_timeout": trial_timeout,
                       "split_protocol": "grouped_fit_search_confirmation" if confirmation else "grouped_inner_80_20_no_confirmation",
+                      "policy_protocol": "v2_shared_warm_start" if strategy in V2_STRATEGIES else "legacy",
                       "test_accessed": False})
     logger.event("state", state="SEARCH")
     start = time.monotonic()
@@ -180,7 +280,9 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     logger.write_json("data_profile.json", data_profile)
     available = [describe_candidate(task.kind, c) for c in search_candidates(task.kind)]
     logger.write_json("candidate_registry.json", available)
-    policy = Policy(strategy, seed, client, logger, max_trials)
+    warm_starts = list(warm_start_ids(task.kind)) if strategy in V2_STRATEGIES else []
+    warm_starts = warm_starts[:max_trials]
+    policy = Policy(strategy, seed, client, logger, max_trials - len(warm_starts))
     history, best_model, best_id, best_score = [], None, None, -1.0
     models_by_trial = {}
     fallbacks, blocked_llm = 0, False
@@ -188,23 +290,30 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     for index in range(max_trials):
         if time.monotonic() - start >= time_limit:
             break
-        try:
-            if blocked_llm:
-                raise RuntimeError("Planner disabled after earlier failure.")
-            diagnostics = summarize_diagnostics(task.kind, payload["X_train"], payload["X_search"],
-                                                payload["y_search"], history, directory)
-            logger.write_json("diagnostics.json", diagnostics)
-            if client is not None:
-                client.deadline = start + time_limit
-            chosen, reason = policy.choose(data_profile, history, available, diagnostics=diagnostics)
-            decision = policy.last_decision
-        except Exception as error:
-            blocked_llm = True
-            fallbacks += 1
-            chosen = random_fallback.choice(available)["id"]
-            reason = "Random recovery after planner failure; this is not a valid pure LLM run."
-            logger.event("planner_fallback", error=str(error), chosen=chosen)
-            decision = {"candidate": chosen, "reason": reason, "mode": "random_recovery"}
+        if index < len(warm_starts):
+            chosen = warm_starts[index]
+            if chosen not in [item["id"] for item in available]:
+                raise RuntimeError(f"Configured warm-start candidate unavailable: {chosen}")
+            reason = "Shared v2 warm-start candidate; identical across all v2 policies."
+            decision = {"candidate": chosen, "reason": reason, "mode": "v2_shared_warm_start"}
+        else:
+            try:
+                if blocked_llm:
+                    raise RuntimeError("Planner disabled after earlier failure.")
+                diagnostics = summarize_diagnostics(task.kind, payload["X_train"], payload["X_search"],
+                                                    payload["y_search"], history, directory)
+                logger.write_json("diagnostics.json", diagnostics)
+                if client is not None:
+                    client.deadline = start + time_limit
+                chosen, reason = policy.choose(data_profile, history, available, diagnostics=diagnostics)
+                decision = policy.last_decision
+            except Exception as error:
+                blocked_llm = True
+                fallbacks += 1
+                chosen = random_fallback.choice(available)["id"]
+                reason = "Random recovery after planner failure; this is not a valid pure LLM run."
+                logger.event("planner_fallback", error=str(error), chosen=chosen)
+                decision = {"candidate": chosen, "reason": reason, "mode": "random_recovery"}
         remaining_seconds = time_limit - (time.monotonic() - start)
         if remaining_seconds <= 0:
             break

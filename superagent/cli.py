@@ -15,7 +15,7 @@ from .planner import make_planner
 from .predict import create_predictions
 from .profile import profile
 from .runner import run_portfolio, save_selected_model
-from .runtime import run_task, STRATEGIES
+from .runtime import run_task, STRATEGIES, LLM_FREE_STRATEGIES
 from .experiment_llm import ExperimentLLM
 
 
@@ -50,7 +50,7 @@ def _legacy_run(args: argparse.Namespace) -> int:
 def _run(args: argparse.Namespace) -> int:
     task = load_development_task(args.task_package)
     client = None
-    if args.strategy not in ("deterministic", "random"):
+    if args.strategy not in LLM_FREE_STRATEGIES:
         if not args.api_key_file:
             raise ValueError("LLM strategies require --api-key-file.")
         client = ExperimentLLM(args.api_url, args.api_key_file, args.model, args.llm_budget_rmb)

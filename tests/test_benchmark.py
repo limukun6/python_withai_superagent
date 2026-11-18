@@ -179,6 +179,17 @@ class BenchmarkTests(unittest.TestCase):
         # strictly above the value that failed.
         self.assertGreater(ExperimentLLM.max_output_tokens, 4096)
 
+    def test_flash_uses_current_api_name_and_sixty_second_timeout(self):
+        key = self.root / "key.txt"
+        key.write_text("test-not-a-real-key", encoding="utf-8")
+        for name in ("DeepSeek-V4.1-Flash", "DeepSeek-V4.1-Flash-1017"):
+            client = ExperimentLLM("https://example.invalid/api", str(key), name, 1)
+            with patch.object(client.session, "post", return_value=self._good_response()) as post:
+                client.ask({}, self.logger, "planner")
+            self.assertEqual(post.call_args.kwargs["json"]["model"], "DeepSeek-V4.1-Flash")
+            self.assertEqual(post.call_args.kwargs["timeout"], 60)
+            self.assertFalse(client.session.trust_env)
+
 
     # ---- unknown usage must not trigger a second paid call -----------------
 

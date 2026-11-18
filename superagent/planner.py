@@ -44,7 +44,7 @@ class OpenAICompatiblePlanner:
         self.api_key = Path(api_key_file).read_text(encoding="utf-8").strip()
         if not self.api_key:
             raise ValueError("API key file is empty.")
-        self.model = model
+        self.model = pricing.model_id
         self.pricing = pricing
         self.budget_rmb = budget_rmb
         self.max_output_tokens = max_output_tokens

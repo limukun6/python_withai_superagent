@@ -10,7 +10,7 @@ param(
     [string]$Task1 = "",
     [string]$Task2 = "",
     [string]$ApiUrl = "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions",
-    [ValidateSet("DeepSeek-V4-Pro", "DeepSeek-V4.1-Flash-1017")]
+    [ValidateSet("DeepSeek-V4-Pro", "DeepSeek-V4.1-Flash")]
     [string]$Model = "DeepSeek-V4-Pro",
     [ValidateRange(0.01, 20.0)]
     [double]$BatchBudgetRmb = 2.0,

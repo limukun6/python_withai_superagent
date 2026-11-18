@@ -22,9 +22,9 @@ CATALOG: dict[str, ModelPricing] = {
         "DeepSeek-V4-Pro", 2.25, 6.75,
         "HPC AI Computing Platform price table, image supplied 2026-11-13", True,
     ),
-    "deepseek-v4.1-flash-1017": ModelPricing(
-        "DeepSeek-V4.1-Flash-1017", 0.50, 2.00,
-        "HPC AI Computing Platform price table, image supplied 2026-11-13", True,
+    "deepseek-v4.1-flash": ModelPricing(
+        "DeepSeek-V4.1-Flash", 0.50, 2.00,
+        "Provisional price from 2026-11-13 screenshot; API name corrected per AGENTS.md 2026-11-18", True,
     ),
     "qwen3.8-27b-w8a8": ModelPricing(
         "Qwen3.8-27B-w8a8", 0.10, 0.34,
@@ -38,8 +38,10 @@ def resolve_pricing(model: str) -> ModelPricing:
     normalized = model.casefold().strip()
     aliases = {
         "deepseek-v4-pro": "deepseek-v4-pro",
-        "deepseek-v4.1-flash-1017": "deepseek-v4.1-flash-1017",
-        "deepseek-v4-1-flash-1017": "deepseek-v4.1-flash-1017",
+        "deepseek-v4.1-flash": "deepseek-v4.1-flash",
+        # Retain old configuration compatibility, but never send the old ID.
+        "deepseek-v4.1-flash-1017": "deepseek-v4.1-flash",
+        "deepseek-v4-1-flash-1017": "deepseek-v4.1-flash",
         "qwen3.8-27b-w8a8": "qwen3.8-27b-w8a8",
     }
     try:

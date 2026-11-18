@@ -141,7 +141,7 @@ on the HPC AI Computing Platform table supplied on 2026-11-13:
 | Model | Input RMB / 1M Tokens | Output RMB / 1M Tokens | Availability |
 | --- | ---: | ---: | --- |
 | DeepSeek-V4-Pro | 2.25 | 6.75 | enabled |
-| DeepSeek-V4.1-Flash-1017 | 0.50 | 2.00 | enabled |
+| DeepSeek-V4.1-Flash | 0.50 | 2.00 | enabled; price carried over provisionally from screenshot |
 | Qwen3.8-27B-w8a8 | 0.10 | 0.34 | held until release-date evidence is recorded |
 
 For example:
@@ -150,7 +150,7 @@ For example:
 python -m superagent run "TASK.zip" --strategy feedback `
   --api-url "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions" `
   --api-key-file "D:\\path\\to\\api_key.txt" `
-  --model DeepSeek-V4.1-Flash-1017
+  --model DeepSeek-V4.1-Flash
 ```
 
 ## Design boundary

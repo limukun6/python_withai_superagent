@@ -17,9 +17,9 @@ from .pricing import resolve_pricing
 
 
 class ExperimentLLM:
-    # Retain the output/timeout settings validated by the November 17 main run.
+    # Keep reasoning-token headroom; network timeout follows local AGENTS.md.
     max_output_tokens = 16384
-    request_timeout_seconds = 720
+    request_timeout_seconds = 60
     max_transport_retries = 0
 
     def __init__(self, api_url: str, key_file: str, model: str, batch_budget: float):
@@ -31,8 +31,8 @@ class ExperimentLLM:
         self.key = Path(key_file).read_text(encoding="utf-8").strip()
         if not self.key:
             raise ValueError("Empty API key file.")
-        self.model = model
         self.price = resolve_pricing(model)
+        self.model = self.price.model_id
         self.budget = batch_budget
         self.spent = 0.0
         self.blocked = False

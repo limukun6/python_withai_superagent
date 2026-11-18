@@ -48,6 +48,7 @@ $arguments = @(
     "--time-limit", "3600",
     "--trial-timeout", "180",
     "--confirmation",
+    "--stop-on-unknown-usage",
     "--output-dir", $outputRoot,
     "--api-url", $ApiUrl,
     "--api-key-file", $ApiKeyFile,

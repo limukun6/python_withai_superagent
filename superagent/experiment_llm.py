@@ -36,6 +36,7 @@ class ExperimentLLM:
         self.budget = batch_budget
         self.spent = 0.0
         self.blocked = False
+        self.unresolved_usage = False
         self.deadline = None
         self.session = requests.Session()
         self.session.trust_env = False
@@ -73,6 +74,7 @@ class ExperimentLLM:
             body = response.json()
         except requests.RequestException as error:
             self.blocked = True
+            self.unresolved_usage = True
             details = {"exception_type": type(error).__name__, "message": str(error),
                        "elapsed_seconds": time.monotonic() - started}
             logger.event("llm_transport_failure", role=role, **details)
@@ -81,12 +83,14 @@ class ExperimentLLM:
             raise RuntimeError("API request failed with unknown usage; paid calls stopped without retry.") from None
         if not isinstance(body, dict):
             self.blocked = True
+            self.unresolved_usage = True
             logger.usage(event="missing_usage", role=role, usage_known=False, cost_rmb=None)
             raise RuntimeError("Malformed API response; accounting unknown.")
         usage = body.get("usage") or {}
-        inp, out = usage.get("prompt_tokens"), usage.get("completion_tokens")
+        inp, out = (usage.get("prompt_tokens"), usage.get("completion_tokens")) if isinstance(usage, dict) else (None, None)
         if any(type(v) is not int or v < 0 for v in (inp, out)):
             self.blocked = True
+            self.unresolved_usage = True
             logger.usage(event="missing_usage", role=role, raw_usage=usage, usage_known=False, cost_rmb=None)
             raise RuntimeError("API response lacks valid token usage; accounting is unknown, not zero.")
         cost = (inp * self.price.input_rmb_per_million + out * self.price.output_rmb_per_million) / 1e6

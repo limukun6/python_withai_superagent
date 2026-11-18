@@ -252,7 +252,7 @@ def train_candidate(payload_path, candidate, destination, timeout):
 
 
 def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=600, trial_timeout=120,
-             confirmation=False):
+             confirmation=False, stop_on_unknown_usage=False):
     if strategy not in STRATEGIES or not 1 <= max_trials <= 14:
         raise ValueError("Unknown strategy or trial limit outside 1..14.")
     if any(not math.isfinite(t) or t <= 0 for t in (time_limit, trial_timeout)):
@@ -304,6 +304,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     history, best_model, best_id, best_score = [], None, None, -1.0
     models_by_trial = {}
     fallbacks, blocked_llm = 0, False
+    stopped_on_unknown_usage = False
     random_fallback = random.Random(seed)
     for index in range(max_trials):
         if time.monotonic() - start >= time_limit:
@@ -327,6 +328,11 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
                 decision = policy.last_decision
             except Exception as error:
                 blocked_llm = True
+                if stop_on_unknown_usage and getattr(client, "unresolved_usage", False):
+                    stopped_on_unknown_usage = True
+                    logger.event("planner_stopped", trial=index + 1, error=str(error),
+                                 reason="unresolved_api_usage")
+                    break
                 fallbacks += 1
                 chosen = random_fallback.choice(available)["id"]
                 reason = "Random recovery after planner failure; this is not a valid pure LLM run."
@@ -403,7 +409,9 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     summary = {"strategy": strategy, "seed": seed, "task_kind": task.kind,
         "selected_candidate": best_id, "search_accuracy": best_score if best_model else None,
         "official_validation_accuracy": official_accuracy,
-        "completed": acceptance["passed"], "valid_policy_run": acceptance["passed"] and fallbacks == 0,
+        "completed": acceptance["passed"],
+        "valid_policy_run": acceptance["passed"] and fallbacks == 0 and not stopped_on_unknown_usage,
+        "stopped_on_unknown_usage": stopped_on_unknown_usage,
         "acceptance_passed": acceptance["passed"], "runtime_version": RUNTIME_VERSION,
         "confirmation_enabled": confirmation, "confirmation_switched": confirmation_record.get("switched", False),
         "fallback_count": fallbacks, "trials_attempted": len(history),

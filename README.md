@@ -98,6 +98,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\run_v2_pilot.ps1"
 # Remove -ValidateOnly only after checking the printed fixed protocol.
 ```
 
+If a request has unknown usage, the P0 runner saves the current run and stops
+the batch. The error is recorded in that run's `llm_usage.jsonl`, and the
+report keeps the remaining runs in the planned total.
+
 After a completed batch, summarize it directly from its immutable run files:
 
 ```powershell

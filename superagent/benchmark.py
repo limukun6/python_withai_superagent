@@ -44,6 +44,8 @@ def main():
     parser.add_argument("--time-limit", type=float, default=600)
     parser.add_argument("--trial-timeout", type=float, default=120)
     parser.add_argument("--confirmation", action="store_true", help="Seal a third inner partition for one-time top-two selection.")
+    parser.add_argument("--stop-on-unknown-usage", action="store_true",
+                        help="Keep completed artifacts and stop the batch on an API call with unknown usage.")
     parser.add_argument("--output-dir", default="runs/benchmarks")
     parser.add_argument("--api-url", default="https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions")
     parser.add_argument("--api-key-file")
@@ -77,11 +79,14 @@ def main():
             for strategy in order:
                 directory = destination / f"task{task_index}_{task.kind}_{strategy}_{seed}"
                 summary = run_one(task, strategy, seed, directory, client, args.max_trials, args.time_limit, args.trial_timeout,
-                                  confirmation=args.confirmation)
+                                  confirmation=args.confirmation,
+                                  stop_on_unknown_usage=args.stop_on_unknown_usage)
                 rows.append(summary)
                 (destination / "summaries.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
                 write_report(destination, rows)
                 print(json.dumps(summary), flush=True)
+                if args.stop_on_unknown_usage and not summary["usage_complete"]:
+                    parser.exit(1, f"Batch stopped after unresolved API usage. See {directory / 'llm_usage.jsonl'}\n")
     print(f"Comparison: {destination / 'comparison.md'}", flush=True)
 
 

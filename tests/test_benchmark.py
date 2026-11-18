@@ -132,6 +132,23 @@ class BenchmarkTests(unittest.TestCase):
         self.assertEqual(selected, ["logistic_C1.0", "catboost_depth4_reg10.0",
                                     "extra_trees_leaf2", "catboost_depth6_reg3.0"])
 
+    def test_pilot_stops_search_after_unknown_usage_and_keeps_incumbent(self):
+        x = np.asarray([[str(i), str(i % 3)] for i in range(80)])
+        task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 40), x[:10], np.tile([0, 1], 5), {})
+        client = self._client()
+        model = DummyClassifier().fit(np.zeros((10, 1)), np.tile([0, 1], 5))
+        with patch.object(client.session, "post", side_effect=requests.ReadTimeout("read timeout")) as post, \
+             patch("superagent.runtime.train_candidate", return_value=(model, {
+                 "status": "completed", "search_accuracy": .5})) as train:
+            result = run_one(task, "r", 101, self.root / "stopped", client,
+                             max_trials=6, stop_on_unknown_usage=True)
+        self.assertEqual(train.call_count, 2)
+        self.assertEqual(post.call_count, 1)
+        self.assertTrue(result["acceptance_passed"])
+        self.assertFalse(result["valid_policy_run"])
+        self.assertFalse(result["usage_complete"])
+        self.assertTrue(result["stopped_on_unknown_usage"])
+
     def test_split_keeps_duplicate_features_together(self):
         x = np.repeat(np.asarray([[str(i), str(i % 3)] for i in range(50)]), 2, axis=0)
         task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 50), x[:4], np.array([0, 1, 0, 1]), {})

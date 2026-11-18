@@ -6,6 +6,7 @@
 
 - [预算复验和当前发布验证](docs/search_budget_replication_results_zh.md)
 - [搜索分数反馈与实际复核耗时的配对协议](docs/current_stage_10h_zh.md)
+- [搜索反馈与复核开销的实测结果](docs/feedback_value_results_zh.md)
 - [历史决策证据复核](docs/decision_evidence_audit_zh.md)
 
 从仓库根目录使用同一个配置处理任务包。训练和正式预测是独立命令。按课程安排取得正式预测输入后执行第二条。两个命令分别需要新的运行目录和预测文件路径。

@@ -92,6 +92,30 @@ class BenchmarkTests(unittest.TestCase):
             self.assertEqual(role, expected_role)
             self.assertEqual("diagnostics" in payload, strategy == "r")
 
+    def test_v2_gate_checks_stagnation_against_best_and_requires_two_trials(self):
+        policy = Policy("g", 1, None, self.logger, 4)
+        policy.plan = []
+        history = [{"trial": i, "status": "completed", "search_accuracy": score}
+                   for i, score in enumerate((.80, .72, .75), start=1)]
+        self.assertIsNone(policy._gated_trigger(history[:2], {}))
+        self.assertEqual(policy._gated_trigger(history, {}), "stagnation:trial:2:3")
+        history[-1]["search_accuracy"] = .805
+        self.assertIsNone(policy._gated_trigger(history, {}))
+
+    def test_v2_gate_requires_same_eligible_slice_in_two_trials(self):
+        policy = Policy("g", 1, None, self.logger, 4)
+        policy.plan = []
+        history = [{"trial": i, "status": "completed", "search_accuracy": score}
+                   for i, score in enumerate((.70, .72), start=1)]
+        reports = [{"evidence_id": f"diagnostic:trial:{i}", "available": True, "slices": [
+            {"slice_id": "short", "available": True, "error_rate": .40}]}
+            for i in (1, 2)]
+        diagnostics = {"trial_reports": reports}
+        self.assertEqual(policy._gated_trigger(history, diagnostics),
+                         "persistent_slice_error:short:trial:1:2")
+        reports[-1]["slices"][0]["available"] = False
+        self.assertIsNone(policy._gated_trigger(history, diagnostics))
+
     def test_v2_d_uses_shared_warm_start_then_frozen_coverage_order(self):
         x = np.asarray([[str(i), str(i % 3)] for i in range(80)])
         task = DevelopmentTask("categorical_tabular", "", x, np.tile([0, 1], 40), x[:10], np.tile([0, 1], 5), {})

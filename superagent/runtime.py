@@ -104,16 +104,34 @@ class Policy:
             raise ValueError("Every planned candidate needs a non-empty hypothesis.")
         return list(plan)
 
-    def _gated_trigger(self, history):
+    def _gated_trigger(self, history, diagnostics):
         if self.plan is None:
             return "initial_queue"
         if history and history[-1].get("status") != "completed":
             return f"execution_failure:trial:{history[-1].get('trial')}"
         completed = [row for row in history if row.get("status") == "completed"]
-        if len(completed) >= 2:
-            latest, previous = completed[-1], completed[-2]
-            if latest["search_accuracy"] <= previous["search_accuracy"] + .005:
-                return f"stagnation:trial:{previous['trial']}:{latest['trial']}"
+        if len(completed) < 2:
+            return None
+        previous, latest = completed[-2:]
+        trial_pair = f"trial:{previous['trial']}:{latest['trial']}"
+        if len(completed) >= 3:
+            best_before = max(row["search_accuracy"] for row in completed[:-2])
+            first_gain = previous["search_accuracy"] - best_before
+            second_gain = latest["search_accuracy"] - max(best_before, previous["search_accuracy"])
+            if max(first_gain, second_gain) < .005 - 1e-12:
+                return f"stagnation:{trial_pair}"
+        reports = {report["evidence_id"]: report for report in (diagnostics or {}).get("trial_reports", [])
+                   if report.get("available")}
+
+        def high_error_slices(row):
+            report = reports.get(f"diagnostic:trial:{row['trial']}", {})
+            cutoff = 1 - row["search_accuracy"] + .10
+            return {item["slice_id"] for item in report.get("slices", [])
+                    if item.get("available") and item["error_rate"] >= cutoff - 1e-12}
+
+        common = high_error_slices(previous) & high_error_slices(latest)
+        if common:
+            return f"persistent_slice_error:{min(common)}:{trial_pair}"
         return None
 
     def choose(self, data_profile, history, available, diagnostics=None):
@@ -133,7 +151,7 @@ class Policy:
             return chosen, reason
         context = {"profile": data_profile, "available_candidates": available, "max_trials": self.limit}
         if self.strategy in ("o", "g"):
-            trigger = None if self.strategy == "o" else self._gated_trigger(history)
+            trigger = None if self.strategy == "o" else self._gated_trigger(history, diagnostics)
             if self.strategy == "o" and self.plan is None:
                 trigger = "one_shot_after_shared_warm_start"
             if trigger and trigger not in self.handled_triggers:

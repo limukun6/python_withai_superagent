@@ -14,8 +14,9 @@ strategies for the archived comparison. It also implements the preregistered
 v2 policies `d`, `o`, `f`, `r`, and `g`: all begin with the same two warm-start
 trials; `d` follows a fixed coverage order, `o` plans remaining trials once,
 `f` receives scalar feedback, `r` additionally receives deterministic
-aggregate diagnostics, and `g` replans only after an initial queue, a failure,
-or a predefined stagnation trigger. The runtime is deliberately binary-only
+aggregate diagnostics, and `g` builds an initial queue and replans on a trial
+failure, two trials without meaningful progress, or a persistent slice error.
+The runtime is deliberately binary-only
 and supports the released categorical-table and ordered-headline-pair schemas.
 It does not claim support for arbitrary files, multiclass tasks, images, or
 unrestricted code generation.

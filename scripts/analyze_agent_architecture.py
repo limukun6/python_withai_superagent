@@ -12,9 +12,10 @@ Rules enforced here (from docs/deepseek_experiment_handoff.md):
 from __future__ import annotations
 
 import json
+import re
 import statistics
 import sys
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 DEFAULT_STRATEGIES = ["random", "oneshot", "feedback", "reviewed"]
 
@@ -48,9 +49,14 @@ def sd_or_none(values):
 
 def load_batch(batch: Path) -> tuple[dict, list[dict]]:
     protocol = json.loads((batch / "protocol.json").read_text(encoding="utf-8"))
-    summaries = json.loads((batch / "summaries.json").read_text(encoding="utf-8"))
+    summary_path = batch / "summaries.json"
+    summaries = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else []
     for row in summaries:
         run_dir = Path(row["run_directory"])
+        if (batch / run_dir.name).is_dir():
+            run_dir = batch / run_dir.name
+        match = re.match(r"task(\d+)_", run_dir.name)
+        row["_task"] = int(match[1]) if match and protocol.get("packages") else row["task_kind"]
         row["_trials"] = json.loads((run_dir / "trials.json").read_text(encoding="utf-8")) if (run_dir / "trials.json").exists() else []
         row["_events"] = read_jsonl(run_dir / "events.jsonl")
         row["_usage"] = read_jsonl(run_dir / "llm_usage.jsonl")
@@ -82,9 +88,14 @@ def main() -> int:
         out_path = Path(sys.argv[sys.argv.index("--out") + 1]).resolve()
 
     protocol, rows = load_batch(batch)
-    tasks = sorted({r["task_kind"] for r in rows})
-    seeds = sorted({r["seed"] for r in rows})
+    packages = protocol.get("packages", [])
+    tasks = list(range(len(packages))) if packages else sorted({r["_task"] for r in rows})
+    task_labels = {i: f"task{i}: {PureWindowsPath(package).stem}"
+                   for i, package in enumerate(packages)} if packages else {task: task for task in tasks}
+    seeds = sorted(set(protocol.get("seeds") or [r["seed"] for r in rows]))
     strategies = protocol.get("strategies") or DEFAULT_STRATEGIES
+    indexed = {(r["_task"], r["strategy"], r["seed"]): r for r in rows}
+    planned = [(task, strategy, seed) for task in tasks for strategy in strategies for seed in seeds]
     lines: list[str] = []
     add = lines.append
 
@@ -104,10 +115,15 @@ def main() -> int:
     add("| 任务 | 策略 | seed | 选中候选 | search_acc | **val_acc** | valid | fallback | "
         "trials | failed_trials | 秒 | LLM调用 | tokens | RMB  | usage完整 |")
     add("|---|---|---:|---|---:|---:|:--:|---:|---:|---:|---:|---:|---:|---:|:--:|")
-    for row in sorted(rows, key=lambda r: (r["task_kind"], r["strategy"], r["seed"])):
+    for key in planned:
+        task, strategy, seed = key
+        row = indexed.get(key)
+        if row is None:
+            add(f"| {task_labels[task]} | {strategy} | {seed} | 缺少运行记录 | — | — | — | — | — | — | — | — | — | — | — |")
+            continue
         add("| {task} | {strategy} | {seed} | `{cand}` | {search} | **{val}** | {valid} | {fb} | "
             "{trials}/{want} | {failed} | {secs} | {calls} | {tokens} | {cost} | {usage} |".format(
-                task=row["task_kind"], strategy=row["strategy"], seed=row["seed"],
+                task=task_labels[task], strategy=strategy, seed=seed,
                 cand=row["selected_candidate"], search=fmt(row["search_accuracy"]),
                 val=fmt(row["official_validation_accuracy"]),
                 valid="✅" if row["valid_policy_run"] else "❌",
@@ -126,22 +142,22 @@ def main() -> int:
     add("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for task in tasks:
         for strategy in strategies:
-            group = [r for r in rows if r["task_kind"] == task and r["strategy"] == strategy]
+            group = [indexed[(task, strategy, seed)] for seed in seeds if (task, strategy, seed) in indexed]
             if not group:
-                add(f"| {task} | {strategy} | 0/{len(seeds)} | 0/{len(seeds)} | N/A | N/A | N/A | — | — | — | — | — |")
+                add(f"| {task_labels[task]} | {strategy} | 0/{len(seeds)} | 0/{len(seeds)} | N/A | N/A | N/A | — | — | — | — | — |")
                 continue
             valid = [r for r in group if r["valid_policy_run"]]
             completed = [r for r in group if r["completed"]]
             vals_valid = [r["official_validation_accuracy"] for r in valid if r["official_validation_accuracy"] is not None]
             vals_all = [r["official_validation_accuracy"] for r in group if r["official_validation_accuracy"] is not None]
             add("| {task} | {strategy} | {comp}/{n} | {nv}/{n} | {mv} | {ma} | {sd} | {secs} | {tok} | {cost} | {tf} | {tt} |".format(
-                task=task, strategy=strategy, comp=len(completed), n=len(group),
+                task=task_labels[task], strategy=strategy, comp=len(completed), n=len(seeds),
                 nv=len(valid), mv=fmt(mean_or_none(vals_valid)), ma=fmt(mean_or_none(vals_all)),
                 sd=fmt(sd_or_none(vals_valid), 4),
                 secs=fmt(mean_or_none([r["elapsed_seconds"] for r in group]), 1),
                 tok=sum(r["tokens"] for r in group),
                 cost=fmt(sum(r["estimated_cost_rmb"] for r in group), 6),
-                tf=sum(r["failed_trials"] for r in group),
+                tf=sum(r["_training_failed"] for r in group),
                 tt=sum(r["_training_timeouts"] for r in group)))
     add("")
 
@@ -150,22 +166,22 @@ def main() -> int:
     add("")
     add("| 任务 | 对比 | 可用配对 | 每 seed 差值 | 均值 | 样本SD |")
     add("|---|---|---:|---|---:|---:|")
-    v2_pairs = [("r", "f"), ("f", "o"), ("o", "d")]
+    v2_pairs = [("r", "f"), ("f", "o"), ("o", "d"), ("g", "r")]
     legacy_pairs = [("oneshot", "random"), ("feedback", "random"), ("reviewed", "random"), ("reviewed", "feedback")]
-    pairs = v2_pairs if set(v2_pairs[0]).issubset(strategies) else legacy_pairs
+    pairs = [(a, b) for a, b in v2_pairs + legacy_pairs if a in strategies and b in strategies]
     for task in tasks:
         for a, b in pairs:
             deltas, detail = [], []
             for seed in seeds:
-                ra = next((r for r in rows if r["task_kind"] == task and r["strategy"] == a and r["seed"] == seed), None)
-                rb = next((r for r in rows if r["task_kind"] == task and r["strategy"] == b and r["seed"] == seed), None)
+                ra = indexed.get((task, a, seed))
+                rb = indexed.get((task, b, seed))
                 if ra and rb and ra["valid_policy_run"] and rb["valid_policy_run"]:
                     va, vb = ra["official_validation_accuracy"], rb["official_validation_accuracy"]
                     if va is not None and vb is not None:
                         deltas.append(va - vb)
                         detail.append(f"{seed}:{va - vb:+.4f}")
             n_note = f"{len(deltas)}/{len(seeds)}"
-            add(f"| {task} | {a} − {b} | {n_note} | {', '.join(detail) or '—'} | "
+            add(f"| {task_labels[task]} | {a} − {b} | {n_note} | {', '.join(detail) or '—'} | "
                 f"{fmt(mean_or_none(deltas))} | {fmt(sd_or_none(deltas))} |")
     add("")
 

@@ -35,6 +35,16 @@ def write_report(destination, rows):
     (destination / "comparison.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def strategy_order(strategies, seed, task_index, seed_index, balanced):
+    if balanced and len(strategies) == 4:
+        # A balanced four-policy order over each block of four seeds.
+        shift = (task_index + seed_index) % 4
+        return [strategies[(index + shift) % 4] for index in (0, 1, 3, 2)]
+    order = strategies.copy()
+    random.Random(seed).shuffle(order)
+    return order
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("packages", nargs="+")
@@ -43,7 +53,10 @@ def main():
     parser.add_argument("--max-trials", type=int, default=3)
     parser.add_argument("--time-limit", type=float, default=600)
     parser.add_argument("--trial-timeout", type=float, default=120)
-    parser.add_argument("--confirmation", action="store_true", help="Seal a third inner partition for one-time top-two selection.")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--confirmation", action="store_true", help="Seal a third inner partition for one-time top-two selection.")
+    selection.add_argument("--reserve-confirmation", action="store_true",
+                           help="Keep the third partition sealed and freeze the shortlist for offline replay.")
     parser.add_argument("--stop-on-unknown-usage", action="store_true",
                         help="Keep completed artifacts and stop the batch on an API call with unknown usage.")
     parser.add_argument("--output-dir", default="runs/benchmarks")
@@ -67,20 +80,22 @@ def main():
     for path in sorted(Path(__file__).parent.glob("*.py")):
         source_hash.update(path.name.encode() + path.read_bytes())
     config = {k: v for k, v in vars(args).items() if k != "api_key_file"}
+    plan = [[strategy_order(strategies, seed, i, j, args.reserve_confirmation)
+             for j, seed in enumerate(seeds)] for i in range(len(args.packages))]
     config.update({"source_sha256": source_hash.hexdigest(), "python": sys.version, "runtime_version": RUNTIME_VERSION,
+                   "execution_order_by_package_and_seed": plan,
                    "price_status": "provisional_platform_price", "test_accessed": False})
     (destination / "protocol.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
     rows = []
     for task_index, package in enumerate(args.packages):
         task = load_development_task(package)
-        for seed in seeds:
-            order = strategies.copy()
-            random.Random(seed).shuffle(order)
-            for strategy in order:
+        for seed_index, seed in enumerate(seeds):
+            for strategy in plan[task_index][seed_index]:
                 directory = destination / f"task{task_index}_{task.kind}_{strategy}_{seed}"
                 summary = run_one(task, strategy, seed, directory, client, args.max_trials, args.time_limit, args.trial_timeout,
                                   confirmation=args.confirmation,
-                                  stop_on_unknown_usage=args.stop_on_unknown_usage)
+                                  stop_on_unknown_usage=args.stop_on_unknown_usage,
+                                  reserve_confirmation=args.reserve_confirmation)
                 rows.append(summary)
                 (destination / "summaries.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
                 write_report(destination, rows)

@@ -22,6 +22,7 @@ from superagent.runtime import Policy
 from superagent.runtime import confirmation_split
 from superagent.selection import confirm_once
 from superagent.models import search_candidates
+from superagent.replay_confirmation import replay
 
 
 PAIR_INSTRUCTIONS = "The target `label_pairwise` is `1` if A had the higher rate and `0` if B did."
@@ -192,6 +193,34 @@ class FoundationTests(unittest.TestCase):
         self.assertEqual(len(seen_payloads), 2)
         self.assertTrue(all("confirmation" not in key for p in seen_payloads for key in p))
         self.assertTrue(all(len(p["X_train"]) + len(p["X_search"]) < 80 for p in seen_payloads))
+
+    def test_reserved_confirmation_replays_frozen_models_and_detects_tampering(self):
+        task = toy_task()
+        task.y_val[:] = 1
+        fit, search, sealed = np.arange(72), np.arange(72, 80, 2), np.arange(73, 80, 2)
+        models = [DummyClassifier(strategy="constant", constant=label).fit(np.zeros((2, 1)), [0, 1])
+                  for label in (0, 1)]
+        run = self.root / "reserved"
+
+        def fake_train(_, candidate, destination, timeout):
+            trial = int(destination.stem.split("_")[1])
+            model = models[trial - 1]
+            joblib.dump({"model": model}, destination)
+            return model, {"status": "completed", "search_accuracy": .9 - trial / 10}
+
+        with patch("superagent.runtime.confirmation_split", return_value=(fit, search, sealed)), \
+             patch("superagent.runtime.train_candidate", side_effect=fake_train):
+            summary = runtime.run_task(task, "deterministic", 11, run, None, max_trials=2,
+                                       reserve_confirmation=True)
+        source_hash = json.loads((run / "runtime_manifest.json").read_text())["source_sha256"]
+        self.assertEqual(summary["official_validation_accuracy"], 0.0)
+        result = replay(task, run, summary, source_hash)
+        self.assertTrue(result["switched"])
+        self.assertEqual(result["c_on_validation"], 1.0)
+        with (run / "trial_2.joblib").open("ab") as file:
+            file.write(b"changed")
+        with self.assertRaisesRegex(ValueError, "Frozen candidate artifact changed"):
+            replay(task, run, summary, source_hash)
 
     def export_fixture(self):
         contract = build_contract(toy_task()).to_dict()

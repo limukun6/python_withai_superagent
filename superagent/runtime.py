@@ -252,7 +252,7 @@ def train_candidate(payload_path, candidate, destination, timeout):
 
 
 def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=600, trial_timeout=120,
-             confirmation=False, stop_on_unknown_usage=False):
+             confirmation=False, stop_on_unknown_usage=False, reserve_confirmation=False):
     if strategy not in STRATEGIES or not 1 <= max_trials <= 14:
         raise ValueError("Unknown strategy or trial limit outside 1..14.")
     if any(not math.isfinite(t) or t <= 0 for t in (time_limit, trial_timeout)):
@@ -272,12 +272,12 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
                       "source_sha256": source_hash.hexdigest(), "python": sys.version,
                       "strategy": strategy, "seed": seed, "max_trials": max_trials,
                       "search_time_limit": time_limit, "trial_timeout": trial_timeout,
-                      "split_protocol": "grouped_fit_search_confirmation" if confirmation else "grouped_inner_80_20_no_confirmation",
+                      "split_protocol": "grouped_fit_search_confirmation" if confirmation or reserve_confirmation else "grouped_inner_80_20_no_confirmation",
                       "policy_protocol": "v2_shared_warm_start" if strategy in V2_STRATEGIES else "legacy",
                       "test_accessed": False})
     logger.event("state", state="SEARCH")
     start = time.monotonic()
-    if confirmation:
+    if confirmation or reserve_confirmation:
         train_idx, search_idx, confirmation_idx = confirmation_split(task, seed)
     else:
         train_idx, search_idx = inner_split(task, seed)
@@ -370,9 +370,14 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
     # Freeze before sealed confirmation/official validation. No refit.
     selected_row, selected_model, confirmation_record = confirm_once(
         task.kind, history, directory,
-        take(task.X_train, confirmation_idx) if confirmation_idx is not None else None,
-        task.y_train[confirmation_idx] if confirmation_idx is not None else None,
+        take(task.X_train, confirmation_idx) if confirmation else None,
+        task.y_train[confirmation_idx] if confirmation else None,
         confirmation, models_by_trial=models_by_trial)
+    if reserve_confirmation:
+        confirmation_record["reserved_for_replay"] = True
+        confirmation_record["split_sha256"] = digest(directory / "split.json")
+        for candidate in confirmation_record["shortlist"]:
+            candidate["artifact_sha256"] = digest(directory / f"trial_{candidate['trial']}.joblib")
     logger.write_json("confirmation.json", confirmation_record)
     best_id = None if selected_row is None else selected_row["candidate"]
     best_score = None if selected_row is None else selected_row["search_accuracy"]
@@ -414,6 +419,7 @@ def run_task(task, strategy, seed, directory, client, max_trials=3, time_limit=6
         "stopped_on_unknown_usage": stopped_on_unknown_usage,
         "acceptance_passed": acceptance["passed"], "runtime_version": RUNTIME_VERSION,
         "confirmation_enabled": confirmation, "confirmation_switched": confirmation_record.get("switched", False),
+        "confirmation_reserved": reserve_confirmation,
         "fallback_count": fallbacks, "trials_attempted": len(history),
         "failed_trials": sum(r["status"] != "completed" for r in history),
         "elapsed_seconds": time.monotonic() - start,

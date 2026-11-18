@@ -17,7 +17,8 @@ from superagent.splits import effective_grouping, grouped_partition, overlap_aud
 from tools.expanded_feedback_pilot import RESERVE_SEED, RUN_OPTIONS, SEARCH_SEED, frozen_control, prepare_task, protocol
 
 
-SEEDS = (42011, 42017)
+DEVELOPMENT_SEEDS = (42011, 42017)
+REPLICATION_SEEDS = (42041, 42053, 42067)
 
 
 def read(path):
@@ -106,14 +107,14 @@ def predict(record, features, labels):
     return values
 
 
-def compare_case(folder, reused_control, task, features, labels, seed):
+def compare_case(folder, reused_control, task, features, labels, challenger_first, replay_enabled=True):
     folder.mkdir(parents=True)
     control = reused_control or folder / "search4_confirm3"
     expanded = folder / "search6_confirm2"
     if reused_control:
         frozen_control(control)
         run_arm(task, expanded, 6, 2)
-    elif seed == SEEDS[1]:
+    elif challenger_first:
         run_arm(task, expanded, 6, 2)
         run_arm(task, control, 4, 3)
     else:
@@ -123,8 +124,11 @@ def compare_case(folder, reused_control, task, features, labels, seed):
     challenger = arm_record(expanded)
     if baseline["path"] != challenger["path"][:4]:
         raise ValueError("The shared four-step prefix did not match")
-    replay = replay_two_finalists(control, baseline, folder)
-    arms = {"4_3": baseline, "4_2": replay, "6_2": challenger}
+    arms = {"4_3": baseline, "6_2": challenger}
+    pairs = [("4_3", "6_2")]
+    if replay_enabled:
+        arms["4_2"] = replay_two_finalists(control, baseline, folder)
+        pairs.extend([("4_3", "4_2"), ("4_2", "6_2")])
     save(folder / "frozen_arms.json", arms)
     predictions = {name: predict(record, features, labels) for name, record in arms.items()}
     correct = {name: values == labels for name, values in predictions.items()}
@@ -132,7 +136,7 @@ def compare_case(folder, reused_control, task, features, labels, seed):
         record.update(correct=int(correct[name].sum()), accuracy=float(correct[name].mean()))
     save(folder / "outer_predictions.json", {name: values.tolist() for name, values in predictions.items()})
     comparisons = {}
-    for left, right in (("4_3", "4_2"), ("4_2", "6_2"), ("4_3", "6_2")):
+    for left, right in pairs:
         comparisons[f"{right}_minus_{left}"] = duel(correct[left], correct[right]) | dict(
             disagreeing_predictions=int((predictions[left] != predictions[right]).sum()))
     new = challenger["path"][4:]
@@ -145,31 +149,42 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("task1", "task2", "pilot", "output"):
         parser.add_argument(f"--{name}", type=Path, required=True)
+    parser.add_argument("--stage", choices=("development", "replication"), default="development")
     args = parser.parse_args()
     paths = {name: getattr(args, name).resolve() for name in ("task1", "task2")}
     pilot = args.pilot.resolve()
     root = args.output.resolve()
+    development = args.stage == "development"
+    seeds = DEVELOPMENT_SEEDS if development else REPLICATION_SEEDS
     first = {name: prepare_task(path) for name, path in paths.items()}
     frozen_protocol = read(pilot / "pilot_protocol.json")
     if protocol(first) != frozen_protocol:
         raise ValueError("Frozen baseline archive, environment, source or split mismatch")
     cases = {}
-    for seed in SEEDS:
+    for index, seed in enumerate(seeds):
         for name, path in paths.items():
             task, features, labels, partition = outer_partition(path, seed)
-            if seed == SEEDS[0] and any(value != first[name][3][key] for key, value in partition.items()):
+            if seed == DEVELOPMENT_SEEDS[0] and any(value != first[name][3][key] for key, value in partition.items()):
                 raise ValueError(f"Expected to reproduce the frozen baseline partition for {name}")
-            cases[name, seed] = task, features, labels, partition
+            # Replication's two tasks start with opposite arms, then alternate by seed.
+            challenger_first = bool((index + (name == "task2" if not development else 0)) % 2)
+            cases[name, seed] = task, features, labels, partition, challenger_first
     root.mkdir(parents=True, exist_ok=False)
+    arm_options = {"4_3": [4, 3], "6_2": [6, 2]}
+    if development:
+        arm_options["4_2"] = [4, 2]
     save(root / "protocol.json", dict(frozen_protocol=frozen_protocol, runner_sha256=sha(Path(__file__)),
-         arm_options={"4_3": [4, 3], "4_2": [4, 2], "6_2": [6, 2]},
-         outer_partitions={f"{name}_{seed}": case[3] for (name, seed), case in cases.items()}))
+         stage=args.stage, seeds=seeds, arm_options=arm_options,
+         outer_partitions={f"{name}_{seed}": case[3] for (name, seed), case in cases.items()},
+         run_order={f"{name}_{seed}": ["6_2", "4_3"] if case[4] else ["4_3", "6_2"]
+                    for (name, seed), case in cases.items()}))
     results = []
-    for (name, seed), (task, features, labels, _) in cases.items():
+    for (name, seed), (task, features, labels, _, challenger_first) in cases.items():
         print(f"Starting {name} seed {seed}", flush=True)
-        fixed = pilot / name / "fixed" if seed == SEEDS[0] else None
+        fixed = pilot / name / "fixed" if seed == DEVELOPMENT_SEEDS[0] else None
         try:
-            record = compare_case(root / name / str(seed), fixed, task, features, labels, seed)
+            record = compare_case(root / name / str(seed), fixed, task, features, labels,
+                                  challenger_first, replay_enabled=development)
         except (ValueError, OSError) as error:
             record = dict(error=str(error))
         results.append(dict(task=name, seed=seed, **record))

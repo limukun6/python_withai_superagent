@@ -14,10 +14,10 @@ from superagent.experiment_llm import ExperimentLLM
 from superagent.task_budget import TaskBudgetAccount, TaskBudgetLedger
 
 
-def sse_frames(candidate, include_usage=True):
+def sse_frames(candidate, include_usage=True, finish_reason='stop'):
     answer = json.dumps({'candidate': candidate, 'reason': 'Test an alternative regularization strength'})
     yield b'data: ' + json.dumps({'model': CAMPUS_FLASH_MODEL, 'choices': [
-        {'index': 0, 'delta': {'content': answer}, 'finish_reason': 'stop'},
+        {'index': 0, 'delta': {'content': answer}, 'finish_reason': finish_reason},
     ]}).encode()
     if include_usage:
         yield b'data: {"choices":[],"usage":{"prompt_tokens":100,"completion_tokens":20}}'
@@ -81,3 +81,18 @@ class ExpandedFeedbackTests(unittest.TestCase):
             self.client.ask({}, logger, 'scalar_feedback')
         self.assertEqual(connection.post.call_count, 1)
         self.assertFalse(self.ledger.snapshot('task1')['accounting_complete'])
+
+    @patch('superagent.experiment_llm.requests.Session')
+    def test_truncated_stream_keeps_usage_and_never_returns_a_decision(self, session):
+        connection = session.return_value.__enter__.return_value
+        response = connection.post.return_value.__enter__.return_value
+        response.status_code = 200
+        response.iter_lines.return_value = sse_frames('logistic_C0.25', finish_reason='length')
+        logger = RunLogger(self.root)
+        logger.initialize_usage_ledger()
+        with self.assertRaisesRegex(ValueError, 'Output token limit reached'):
+            self.client.ask({}, logger, 'scalar_feedback')
+        self.assertEqual(connection.post.call_count, 1)
+        state = self.ledger.snapshot('task1')
+        self.assertTrue(state['accounting_complete'])
+        self.assertAlmostEqual(state['known_task_cost_rmb'], .00018)

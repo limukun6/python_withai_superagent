@@ -16,9 +16,50 @@ from .events import RunLogger
 from .pricing import resolve_pricing
 
 
+def read_chat_stream(response, deadline, started, progress):
+    """Collect a single OpenAI-compatible SSE completion and its final usage."""
+    parts = []
+    usage, finish_reason, served_model = None, None, None
+    reasoning_present = False
+    for line in response.iter_lines():
+        if deadline is not None and time.monotonic() >= deadline:
+            raise requests.Timeout("Search deadline reached before the stream finished.")
+        if not line.startswith(b"data:"):
+            continue
+        payload = line[5:].strip()
+        if payload == b"[DONE]":
+            break
+        elapsed = time.monotonic() - started
+        progress.setdefault("first_data_event_seconds", elapsed)
+        progress["last_data_event_seconds"] = elapsed
+        progress["data_events"] += 1
+        try:
+            chunk = json.loads(payload)
+            if not isinstance(chunk, dict) or chunk.get("error"):
+                raise ValueError
+            if chunk.get("model"):
+                served_model = chunk["model"]
+            if chunk.get("usage") is not None:
+                usage = chunk["usage"]
+            for choice in chunk.get("choices") or []:
+                if choice.get("index", 0) != 0:
+                    continue
+                delta = choice.get("delta") or {}
+                fragment = delta.get("content")
+                if isinstance(fragment, str):
+                    parts.append(fragment)
+                reasoning_present |= bool(delta.get("reasoning_content"))
+                if choice.get("finish_reason") is not None:
+                    finish_reason = choice["finish_reason"]
+        except (ValueError, TypeError, AttributeError):
+            raise requests.exceptions.ChunkedEncodingError("Invalid chat stream event.") from None
+    return "".join(parts) if parts else None, finish_reason, reasoning_present, served_model, usage
+
+
 class ExperimentLLM:
     # Keep reasoning-token headroom; network timeout follows local AGENTS.md.
     max_output_tokens = 16384
+    connect_timeout_seconds = 10
     request_timeout_seconds = 60
     max_transport_retries = 0
 
@@ -57,36 +98,40 @@ class ExperimentLLM:
         if self.spent + reserve > self.budget:
             raise RuntimeError("Batch estimated cost ceiling reached.")
         timeout = min(self.request_timeout_seconds, remaining)
-        logger.event("llm_request", role=role, model=self.model, messages=messages,
+        connect_timeout = min(self.connect_timeout_seconds, remaining)
+        logger.event("llm_request", role=role, model=self.model, streaming=True,
                      reserved_estimate_rmb=reserve, timeout_seconds=timeout,
+                     connect_timeout_seconds=connect_timeout,
                      max_output_tokens=self.max_output_tokens)
         started = time.monotonic()
+        progress = {"data_events": 0}
         try:
             response = self.session.post(
                 self.api_url,
                 headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.key}"},
                 json={"model": self.model, "messages": messages, "temperature": 0,
-                      "max_tokens": self.max_output_tokens},
-                timeout=timeout)
-            if not response.ok:
-                logger.event("llm_http_failure", role=role, status_code=response.status_code)
-            response.raise_for_status()
-            body = response.json()
+                      "max_tokens": self.max_output_tokens, "stream": True,
+                      "stream_options": {"include_usage": True}},
+                timeout=(connect_timeout, timeout), stream=True)
+            try:
+                progress["http_status"] = response.status_code
+                if not response.ok:
+                    logger.event("llm_http_failure", role=role, status_code=response.status_code)
+                response.raise_for_status()
+                content, finish_reason, reasoning_present, served_model, usage = read_chat_stream(
+                    response, self.deadline, started, progress)
+            finally:
+                response.close()
         except requests.RequestException as error:
             self.blocked = True
             self.unresolved_usage = True
             details = {"exception_type": type(error).__name__, "message": str(error),
                        "elapsed_seconds": time.monotonic() - started}
-            logger.event("llm_transport_failure", role=role, **details)
+            logger.event("llm_transport_failure", role=role, **details, **progress)
             logger.usage(event="unresolved_call", role=role, usage_known=False,
                          cost_rmb=None, reserved_estimate_rmb=reserve, **details)
             raise RuntimeError("API request failed with unknown usage; paid calls stopped without retry.") from None
-        if not isinstance(body, dict):
-            self.blocked = True
-            self.unresolved_usage = True
-            logger.usage(event="missing_usage", role=role, usage_known=False, cost_rmb=None)
-            raise RuntimeError("Malformed API response; accounting unknown.")
-        usage = body.get("usage") or {}
+        usage = usage or {}
         inp, out = (usage.get("prompt_tokens"), usage.get("completion_tokens")) if isinstance(usage, dict) else (None, None)
         if any(type(v) is not int or v < 0 for v in (inp, out)):
             self.blocked = True
@@ -95,7 +140,7 @@ class ExperimentLLM:
             raise RuntimeError("API response lacks valid token usage; accounting is unknown, not zero.")
         cost = (inp * self.price.input_rmb_per_million + out * self.price.output_rmb_per_million) / 1e6
         self.spent += cost
-        logger.usage(event="llm_call", role=role, requested_model=self.model, served_model=body.get("model"),
+        logger.usage(event="llm_call", role=role, requested_model=self.model, served_model=served_model,
                      input_tokens=inp, output_tokens=out, raw_usage=usage, cost_rmb=cost,
                      elapsed_seconds=time.monotonic() - started,
                      batch_estimated_cost_rmb=self.spent, price_source=self.price.source,
@@ -103,17 +148,13 @@ class ExperimentLLM:
         if self.spent >= self.budget:
             self.blocked = True
             logger.event("llm_budget_reached", actual_cost_rmb=self.spent, budget_rmb=self.budget)
-        choices = body.get("choices")
-        if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
-            raise ValueError("Missing completion choice.")
-        choice = choices[0]
-        message = choice.get("message") or {}
-        content = message.get("content")
         logger.event("llm_response", role=role, content=content,
-                     finish_reason=choice.get("finish_reason"),
-                     reasoning_content_present=bool(message.get("reasoning_content")))
-        if choice.get("finish_reason") == "length":
+                     finish_reason=finish_reason, reasoning_content_present=reasoning_present,
+                     **progress)
+        if finish_reason == "length":
             raise ValueError("Completion was truncated; final decision is not accepted.")
+        if finish_reason != "stop":
+            raise ValueError("Completion stream did not finish normally.")
         if not isinstance(content, str):
             raise ValueError("Missing text response.")
         if content.strip().startswith("```"):

@@ -184,9 +184,8 @@ class BenchmarkTests(unittest.TestCase):
         key = self.root / "key.txt"
         key.write_text("test-not-a-real-key", encoding="utf-8")
         client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        with patch.object(client.session, "post") as post:
-            post.return_value.ok = True
-            post.return_value.json.return_value = {"choices": [{"message": {"content": "{}"}}]}
+        response = self._stream_response({"choices": [{"delta": {"content": "{}"}, "finish_reason": "stop"}]})
+        with patch.object(client.session, "post", return_value=response) as post:
             with self.assertRaises(RuntimeError):
                 client.ask({}, self.logger, "planner")
             with self.assertRaises(RuntimeError):
@@ -205,13 +204,9 @@ class BenchmarkTests(unittest.TestCase):
         key = self.root / "key.txt"
         key.write_text("test-not-a-real-key", encoding="utf-8")
         client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        with patch.object(client.session, "post") as post:
-            post.return_value.ok = True
-            post.return_value.json.return_value = {
-                "choices": [{"finish_reason": "stop", "message": {"content": "{}"}}],
-                "usage": {"prompt_tokens": 1, "completion_tokens": 1},
-            }
-            self.assertEqual(client.ask({}, self.logger, "planner"), {})
+        response = self._good_response()
+        with patch.object(client.session, "post", return_value=response) as post:
+            self.assertEqual(client.ask({}, self.logger, "planner"), {"decision": "继续"})
         self.assertEqual(
             post.call_args.kwargs["json"]["max_tokens"], ExperimentLLM.max_output_tokens
         )
@@ -219,6 +214,9 @@ class BenchmarkTests(unittest.TestCase):
         # (finish_reason=length, content=null), so the reservation must stay
         # strictly above the value that failed.
         self.assertGreater(ExperimentLLM.max_output_tokens, 4096)
+        response.close.assert_called_once()
+        usage = [json.loads(line) for line in self.logger.usage_path.read_text().splitlines()]
+        self.assertEqual((usage[-1]["input_tokens"], usage[-1]["output_tokens"]), (5, 5))
 
     def test_flash_uses_current_api_name_and_sixty_second_timeout(self):
         key = self.root / "key.txt"
@@ -228,7 +226,9 @@ class BenchmarkTests(unittest.TestCase):
             with patch.object(client.session, "post", return_value=self._good_response()) as post:
                 client.ask({}, self.logger, "planner")
             self.assertEqual(post.call_args.kwargs["json"]["model"], "DeepSeek-V4.1-Flash")
-            self.assertEqual(post.call_args.kwargs["timeout"], 60)
+            self.assertEqual(post.call_args.kwargs["timeout"], (10, 60))
+            self.assertTrue(post.call_args.kwargs["stream"])
+            self.assertEqual(post.call_args.kwargs["json"]["stream_options"], {"include_usage": True})
             self.assertFalse(client.session.trust_env)
 
 
@@ -240,13 +240,56 @@ class BenchmarkTests(unittest.TestCase):
         return ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
 
     @staticmethod
-    def _good_response():
-        response = MagicMock(ok=True)
-        response.json.return_value = {
-            "choices": [{"finish_reason": "stop", "message": {"content": "{}"}}],
-            "usage": {"prompt_tokens": 5, "completion_tokens": 5},
-        }
+    def _stream_response(*chunks):
+        response = MagicMock(ok=True, status_code=200)
+        response.iter_lines.return_value = iter([
+            b": heartbeat",
+            *(b"data: " + json.dumps(chunk, ensure_ascii=False).encode("utf-8") for chunk in chunks),
+            b"data: [DONE]",
+        ])
         return response
+
+    def _good_response(self):
+        return self._stream_response(
+            {"model": "DeepSeek-V4-Pro", "choices": [{"delta": {"reasoning_content": "think"}}]},
+            {"choices": [{"delta": {"content": '{"decision":'}}]},
+            {"choices": [{"delta": {"content": '"继续"}'}, "finish_reason": "stop"}]},
+            {"choices": [], "usage": {"prompt_tokens": 5, "completion_tokens": 5}},
+        )
+
+    def test_sse_midstream_timeout_closes_response_and_blocks_paid_calls(self):
+        def interrupted_lines():
+            yield b'data: {"choices":[{"delta":{"reasoning_content":"first chunk"}}]}'
+            raise requests.ConnectionError("Read timed out.")
+
+        client = self._client()
+        response = MagicMock(ok=True, status_code=200)
+        response.iter_lines.side_effect = interrupted_lines
+        with patch.object(client.session, "post", return_value=response) as post:
+            with self.assertRaisesRegex(RuntimeError, "unknown usage"):
+                client.ask({}, self.logger, "planner")
+            with self.assertRaisesRegex(RuntimeError, "circuit open"):
+                client.ask({}, self.logger, "planner")
+        self.assertEqual(post.call_count, 1)
+        response.close.assert_called_once()
+        self.assertTrue(client.unresolved_usage)
+        events = [json.loads(line) for line in (self.root / "events.jsonl").read_text(encoding="utf-8").splitlines()]
+        self.assertEqual(events[-1]["data_events"], 1)
+        self.assertEqual(events[-1]["http_status"], 200)
+
+    def test_sse_token_limit_is_charged_but_decision_is_rejected(self):
+        client = self._client()
+        response = self._stream_response(
+            {"choices": [{"delta": {}, "finish_reason": "length"}]},
+            {"choices": [], "usage": {"prompt_tokens": 10, "completion_tokens": 16384}},
+        )
+        with patch.object(client.session, "post", return_value=response):
+            with self.assertRaisesRegex(ValueError, "truncated"):
+                client.ask({}, self.logger, "planner")
+        usage = [json.loads(line) for line in self.logger.usage_path.read_text().splitlines()]
+        self.assertEqual(usage[-1]["output_tokens"], 16384)
+        self.assertGreater(usage[-1]["cost_rmb"], 0)
+        self.assertFalse(client.unresolved_usage)
 
     def test_transport_failure_stops_without_automatic_paid_retry(self):
         client = self._client()

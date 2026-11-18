@@ -16,11 +16,24 @@ def _label_counts(values: np.ndarray) -> dict[str, int]:
 
 def profile(task: DevelopmentTask) -> dict[str, Any]:
     result: dict[str, Any] = {
-        "task_kind": task.kind,
+        "task_kind": task.kind,"primary_metric":task.spec.get("metric","accuracy"),
         "train_label_counts": _label_counts(task.y_train),
-        "validation_label_counts": _label_counts(task.y_val),
+        "validation_label_counts": _label_counts(task.y_val) if task.y_val is not None else {},
         "test_accessed": False,
+        "class_count": int(len(np.unique(task.y_train))),
     }
+    if task.kind in ('numeric_tabular','mixed_tabular','text_tabular','image'):
+        x=task.X_train
+        result.update(train_rows=len(x),feature_shape=list(x.shape[1:]))
+        if task.kind=='image':result['pixel_dtype']=str(x.dtype)
+        elif task.kind=='numeric_tabular':
+            result.update(feature_count=x.shape[1],missing_values_per_column=np.isnan(x).sum(axis=0).tolist())
+        else:
+            texts=getattr(x,'text_columns',())
+            result.update(feature_count=x.shape[1],numeric_columns=list(x.numeric_columns),
+                          categorical_column_count=x.shape[1]-len(x.numeric_columns)-len(texts))
+            if texts:result['text_column_count']=len(texts)
+        return result
     if task.kind == "categorical_tabular":
         x_train = task.X_train
         unique_per_column = [int(len(set(map(str, x_train[:, index])))) for index in range(x_train.shape[1])]
@@ -36,7 +49,7 @@ def profile(task: DevelopmentTask) -> dict[str, Any]:
             "duplicate_train_feature_rows": int(len(x_train) - len(set(map(tuple, x_train.tolist())))),
         })
     else:
-        all_train_text = [text for pair in task.X_train for text in pair]
+        all_train_text = list(task.X_train) if task.kind=='single_text' else [text for pair in task.X_train for text in pair]
         lengths = sorted(len(text.split()) for text in all_train_text)
         result.update({
             "input_pair_count": len(task.X_train),
@@ -48,5 +61,6 @@ def profile(task: DevelopmentTask) -> dict[str, Any]:
                 "max": lengths[-1],
             },
         })
+        if task.kind=='single_text':result['document_count']=result.pop('input_pair_count')
     return result
 

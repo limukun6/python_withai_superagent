@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import partial
 from typing import Any, Callable
+import re
 
 import numpy as np
 from scipy.sparse import hstack
@@ -13,7 +14,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 @dataclass
@@ -79,7 +80,7 @@ def _catboost_tabular(
         depth=depth,
         learning_rate=0.05,
         l2_leaf_reg=l2_leaf_reg,
-        loss_function="Logloss",
+        loss_function="Logloss" if len(np.unique(y_train))==2 else "MultiClass",
         eval_metric="Accuracy",
         verbose=False,
         random_seed=42,
@@ -97,11 +98,13 @@ def _dummy_text(x_train: list[tuple[str, str]], y_train: np.ndarray, x_val: list
 
 
 def _difference_features(vectorizer: TfidfVectorizer, pairs: list[tuple[str, str]], fit: bool) -> Any:
-    left = [pair[0] for pair in pairs]
-    right = [pair[1] for pair in pairs]
-    if fit:
-        vectorizer.fit(left + right)
-    return vectorizer.transform(left) - vectorizer.transform(right)
+    from .feature_cache import paired_features
+    def compute():
+        left = [pair[0] for pair in pairs]
+        right = [pair[1] for pair in pairs]
+        if fit:vectorizer.fit(left + right)
+        return vectorizer.transform(left) - vectorizer.transform(right)
+    return paired_features(vectorizer,pairs,fit,compute)
 
 
 def _word_difference_text(
@@ -133,7 +136,80 @@ def _word_char_difference_text(
     return (word, char, model), model.predict(val_matrix)
 
 
+def _char_difference_text(x_train, y_train, x_val, c=1.0):
+    from scipy.sparse import vstack
+    vectorizer=TfidfVectorizer(analyzer="char_wb",ngram_range=(3,5),min_df=2,sublinear_tf=True,max_features=60_000)
+    matrix=_difference_features(vectorizer,x_train,True)
+    classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
+    classifier.fit(vstack([matrix,-matrix]),np.concatenate([y_train,1-y_train]))
+    return (vectorizer,classifier),classifier.predict(_difference_features(vectorizer,x_val,False))
+
+
+def text_statistics(text):
+    """Language-agnostic shape/count features; no label or task-specific word list."""
+    words=re.findall(r"\b\w+\b",text,flags=re.UNICODE)
+    n_chars,n_words=max(1,len(text)),max(1,len(words))
+    counts=[len(text),len(words),sum(map(len,words))/n_words,
+            sum(any(c.isdigit() for c in word) for word in words),
+            text.count('?'),text.count('!'),text.count(','),text.count(':'),text.count(';'),
+            text.count('"')+text.count("'"),sum(text.count(c) for c in '()[]{}')]
+    ratios=[sum(c.isdigit() for c in text)/n_chars,
+            sum(c.isupper() for c in text)/n_chars,
+            sum(c.isspace() for c in text)/n_chars,
+            len({word.casefold() for word in words})/n_words,
+            sum(word[0].isupper() for word in words)/n_words]
+    return np.asarray([*np.log1p(counts),*ratios],dtype=float)
+
+
+def style_differences(pairs):
+    return np.asarray([text_statistics(a)-text_statistics(b) for a,b in pairs])
+
+
+@dataclass
+class StylePairModel:
+    word: Any
+    char: Any
+    scaler: Any
+    classifier: Any
+
+    @property
+    def classes_(self): return self.classifier.classes_
+
+    def transform(self,pairs):
+        from scipy.sparse import csr_matrix
+        styles=self.scaler.transform(style_differences(pairs))
+        styles=styles/np.sqrt(styles.shape[1])
+        return hstack([_difference_features(self.word,pairs,False),
+                       _difference_features(self.char,pairs,False),csr_matrix(styles)]).tocsr()
+
+    def predict(self,pairs): return self.classifier.predict(self.transform(pairs))
+
+    def predict_proba(self,pairs): return self.classifier.predict_proba(self.transform(pairs))
+
+
+def _word_char_stats_text(x_train,y_train,x_val,c=1.0,edit=False):
+    from scipy.sparse import csr_matrix,vstack
+    word=TfidfVectorizer(ngram_range=(1,2),min_df=2,sublinear_tf=True,max_features=40_000)
+    char=TfidfVectorizer(analyzer="char_wb",ngram_range=(3,5),min_df=2,sublinear_tf=True,max_features=40_000)
+    word_matrix=_difference_features(word,x_train,True)
+    char_matrix=_difference_features(char,x_train,True)
+    raw_styles=style_differences(x_train)
+    scaler=StandardScaler(with_mean=False).fit(np.vstack([raw_styles,-raw_styles]))
+    styles=scaler.transform(raw_styles)/np.sqrt(raw_styles.shape[1])
+    matrix=hstack([word_matrix,char_matrix,csr_matrix(styles)]).tocsr()
+    if edit:
+        from .challengers import EditPairModel, edit_features
+        matrix=hstack([matrix,edit_features(x_train)]).tocsr()
+    classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
+    classifier.fit(vstack([matrix,-matrix]),np.concatenate([y_train,1-y_train]))
+    model=(EditPairModel if edit else StylePairModel)(word,char,scaler,classifier)
+    return model,model.predict(x_val)
+
+
 def candidates_for(kind: str) -> list[Candidate]:
+    if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
+        from .general_models import generic_candidates
+        return generic_candidates(kind)
     if kind == "categorical_tabular":
         return [
             Candidate("majority_baseline", {}, _dummy_tabular),
@@ -159,6 +235,21 @@ def candidates_for(kind: str) -> list[Candidate]:
 
 def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     """Apply an already-fitted portfolio model without accessing labels."""
+    from .generated_pipeline import GeneratedModel
+    if isinstance(model,GeneratedModel):return np.asarray(model.predict(inputs)).reshape(-1)
+    from .trainable_pair import NeuralPairModel, LearnedPairStack
+    if isinstance(model, (NeuralPairModel, LearnedPairStack)):
+        return np.asarray(model.predict(inputs)).reshape(-1)
+    from .recipe_models import RecipeTextModel
+    if isinstance(model,RecipeTextModel):return np.asarray(model.predict(inputs)).reshape(-1)
+    from .supervised_text import NBPairModel
+    from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
+    if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.predict(inputs)
+    if isinstance(model,NBPairModel):return model.predict(inputs)
+    if isinstance(model, (SoftVoteModel,StylePairModel)):
+        return model.predict(inputs)
+    if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
+        return np.asarray(model.predict(inputs)).reshape(-1)
     if kind == "categorical_tabular":
         return np.asarray(model.predict(_clean_categories(inputs))).reshape(-1)
     if kind == "pair_text":
@@ -179,10 +270,80 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     raise ValueError(f"Unsupported task kind: {kind}")
 
 
-def search_candidates(kind: str) -> list[Candidate]:
-    """Common search space, deliberately larger than a benchmark trial budget."""
+def probability_with_model(kind, model, inputs):
+    """Return fitted class labels with probability columns in that same order."""
+    from .generated_pipeline import GeneratedModel
+    if isinstance(model,GeneratedModel):return model.classes_,model.predict_proba(inputs)
+    from .trainable_pair import NeuralPairModel, LearnedPairStack
+    if isinstance(model, (NeuralPairModel, LearnedPairStack)):
+        return model.classes_, model.predict_proba(inputs)
+    from .recipe_models import RecipeTextModel
+    if isinstance(model,RecipeTextModel):return model.classes_,model.predict_proba(inputs)
+    from .supervised_text import NBPairModel
+    from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
+    if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.classes_,model.predict_proba(inputs)
+    if isinstance(model,NBPairModel):return model.classes_,model.predict_proba(inputs)
+    if isinstance(model, (SoftVoteModel,StylePairModel)):
+        return model.classes_, model.predict_proba(inputs)
+    if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
+        if not hasattr(model,'predict_proba'):raise ValueError('Selected classifier has no probability output')
+        return model.classes_,model.predict_proba(inputs)
     if kind == "categorical_tabular":
-        return [
+        classifier, matrix = model, _clean_categories(inputs)
+    elif kind == "pair_text":
+        if isinstance(model, DummyClassifier):
+            classifier, matrix = model, np.zeros((len(inputs), 1))
+        elif len(model) == 2:
+            vectorizer, classifier = model
+            matrix = _difference_features(vectorizer, inputs, False)
+        elif len(model) == 3:
+            word, char, classifier = model
+            matrix = hstack([_difference_features(word, inputs, False), _difference_features(char, inputs, False)])
+        else:
+            raise ValueError("Unrecognised saved pair-text model structure")
+    else:
+        raise ValueError(f"Unsupported task kind: {kind}")
+    classes = np.asarray(classifier.classes_)
+    probabilities = np.asarray(classifier.predict_proba(matrix), dtype=float)
+    if (probabilities.shape != (len(inputs), len(classes)) or not np.all(np.isfinite(probabilities))
+        or np.any(probabilities < 0) or not np.allclose(probabilities.sum(axis=1), 1.)):
+        raise ValueError("Invalid class probabilities")
+    return classes, probabilities
+
+
+@dataclass
+class SoftVoteModel:
+    """A fixed equal-weight vote, including explicit class-column alignment."""
+    kind: str
+    models: list[Any]
+    classes_: np.ndarray
+
+    def predict_proba(self, inputs):
+        if len(self.models) < 2:
+            raise ValueError("Soft voting requires at least two models")
+        values = []
+        for model in self.models:
+            classes, probabilities = probability_with_model(self.kind, model, inputs)
+            if set(classes.tolist()) != set(self.classes_.tolist()):
+                raise ValueError("Ensemble components have different fitted classes")
+            order = [classes.tolist().index(label) for label in self.classes_.tolist()]
+            values.append(probabilities[:, order])
+        return np.mean(values, axis=0)
+
+    def predict(self, inputs):
+        return self.classes_[np.argmax(self.predict_proba(inputs), axis=1)]
+
+
+def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]:
+    """Common search space, deliberately larger than a benchmark trial budget."""
+    if portfolio not in ("original","expanded","research","nonlinear","adaptive","semantic","learned","challenger","all"):
+        raise ValueError("Unknown portfolio")
+    if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
+        from .general_models import generic_candidates
+        from .recipe_models import semantic_candidates
+        return generic_candidates(kind) + (semantic_candidates(kind) if portfolio in ("semantic","all") else [])
+    if kind == "categorical_tabular":
+        base = [
             Candidate(f"logistic_C{c}", {"C": c}, partial(_logistic_tabular, c=c))
             for c in (0.05, 0.25, 1.0, 4.0)
         ] + [
@@ -195,12 +356,40 @@ def search_candidates(kind: str) -> list[Candidate]:
                       partial(_catboost_tabular, depth=depth, l2_leaf_reg=reg))
             for depth in (4, 6, 8) for reg in (3.0, 10.0)
         ]
+        if portfolio in ('challenger','all'):
+            from .challengers import cross_candidate
+            base=base+[cross_candidate()]
+        if portfolio in ('adaptive','all'):
+            from .adaptive_tabular import adaptive_candidates
+            return base+adaptive_candidates()
+        return base
     if kind == "pair_text":
-        return [
+        original = [
             Candidate(f"{name}_C{c}", {"C": c, "representation": name, "swap_augmentation": True},
                       partial(function, c=c))
             for name, function in (("word", _word_difference_text), ("word_char", _word_char_difference_text))
             for c in (0.05, 0.1, 0.3, 0.7, 1.5, 3.0, 10.0)
         ]
+        if portfolio=="original": return original
+        expanded = original + [
+            Candidate(f"{name}_C{c}", {"C":c,"representation":name,"swap_augmentation":True},partial(function,c=c))
+            for name,function in (("char",_char_difference_text),("word_char_stats",_word_char_stats_text))
+            for c in (0.1,0.3,1.0,3.0)]
+        if portfolio in ('research','all'):
+            from .supervised_text import research_candidates
+            expanded=expanded+research_candidates()
+        if portfolio in ('nonlinear','all'):
+            from .nonlinear_text import nonlinear_candidates
+            expanded=expanded+nonlinear_candidates()
+        if portfolio in ('semantic','all'):
+            from .recipe_models import semantic_candidates
+            expanded=expanded+semantic_candidates(kind)
+        if portfolio in ('learned','all'):
+            from .trainable_pair import trainable_candidates
+            expanded=expanded+trainable_candidates(kind)
+        if portfolio in ('challenger','all'):
+            expanded=expanded+[Candidate('edit_pair_C0.3',{'C':0.3,'representation':'word_char_stats_plus_aligned_edits',
+                'swap_augmentation':True,'hash_bins':65536},partial(_word_char_stats_text,c=0.3,edit=True))]
+        return expanded
     raise ValueError(f"Unsupported task kind: {kind}")
 

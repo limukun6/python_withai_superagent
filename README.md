@@ -1,109 +1,43 @@
-# General Algorithm SuperAgent
+# AIAA 3102 · General Algorithm SuperAgent
 
-## Agent architecture comparisons
+v0.42 · 课程开发验证快照 · 两个任务共用代码、预算和策略，无按任务名称选择解法。主交付是在验证前指定的 **fixed**：根据训练内反馈探索四个候选，在三个训练内划分复核前三名，再用完整训练集重训。**adaptive** 是比较组，按已有证据探索、复核或停止。两者均为本地规则规划，本次不需要 API key。
 
-The controlled comparison entry point is `python -m superagent.benchmark`.
-It supports random, one-shot, feedback and reviewed planning, a 14-configuration
-search space, bounded trial counts, inner training splits and post-selection
-official-validation evaluation. See [the protocol](docs/agent_experiments.md)
-for commands, fairness controls, artifacts and limitations. The original `run`
-command below is a legacy exhaustive-portfolio baseline, not this experiment.
-Use `powershell -ExecutionPolicy Bypass -File
-scripts/run_agent_architecture_experiment.ps1 ...` for reproducible Pilot and
-Main runs after the school API is reachable.
+| 任务 | 验证行数 | fixed | adaptive | 拟合次数（含重训） |
+|---|---:|---:|---:|---:|
+| Task1 · 车内优惠券推荐 | 2,030 | 1,516 正确 · 74.68% | 1,516 正确 · 74.68% | 11 / 10 |
+| Task2 · 成对标题偏好 | 940 | 656 正确 · 69.79% | 656 正确 · 69.79% | 11 / 10 |
 
-For Windows PowerShell compatibility, the wrapper reads task packages from
-`data/released_task1.zip` and `data/released_task2.zip`, and reads the API key
-from an ASCII-named `api_key.txt` in the repository root. Both are ignored by
-Git. Copy them into place before running the wrapper.
+两个任务都是逐行预测相同。本次验证集历史上已用于开发；这些成绩不是盲测或正式测试。已在训练内观察到自适应规则会过早排除有竞争力的候选，因此保留固定策略作为主交付。
 
-Price note: values transcribed from platform screenshots are provisional
-platform estimates. They have not been verified against the course's required
-historical official standard prices; formal results require that verification.
+## 从这里开始
 
-This repository contains a reproducible first version of the AIAA 3102
-classification SuperAgent.  It detects supported task formats from their
-schema, profiles only development data, runs a small autonomous candidate
-portfolio, selects a model using validation accuracy, and records every
-decision and metric.
+- [本轮报告（PDF）](report.pdf) · [精确计数和费用](validation/scores.json) · [验证前冻结的协议与源码哈希](validation/protocol.json)
+- **可直接预测的模型**：`solutions/task1/fixed/` 和 `solutions/task2/fixed/`，各有模型（含预处理）、模型说明及逐行验证预测。相邻的 `adaptive/` 保存比较组，而非按任务择优拼装的提交。
+- `validation/task*/` 是本轮四次训练的决策、划分、冻结记录和访问日志。训练进程没有验证数据，其 summary 验证字段为空是预期行为；最终评分在上述独立 scores.json。公开日志中的本机路径已替换为相对路径，未改分数或决策。
+- [三组训练内对照](research/inner/REPORT.txt) · [内部复核结果](research/inner/verification.json) · [AI 使用说明](AI_USAGE.md) · [代理功能文档](AGENT_GUIDE.md)
 
-## Setup
+## 环境与复跑
 
-```powershell
+在项目根目录执行。实测 Python 3.14，基础依赖的确切版本见 requirements-tested.txt；普通安装也可使用 requirements.txt。大模型服务和神经网络不是重放本次结果的前提。
+
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+source .venv/bin/activate
+python -m pip install -r requirements-tested.txt
+python -m superagent --help
 ```
 
-## Development run
+将课程原始 ZIP 放在你有权使用的本地目录，保持原文件名。在下列命令中替换 `/path/to/course-zips`。使用一个不存在的输出目录，避免覆盖结果：
 
-The command below reads **only** `train` and `val`; it does not load test
-features or test labels.
-
-```powershell
-python -m superagent run "D:\\学校\\python with ai\\Released_Task1-In_Vehicle_Coupon_Recommendation.zip"
-python -m superagent run "D:\\学校\\python with ai\\Released_Task2-Headlines_CTR.zip"
+```bash
+python tools/released_validation.py freeze --packages "/path/to/course-zips" --out runs/reproduction
+python tools/released_validation.py task1 --packages "/path/to/course-zips" --out runs/reproduction
+python tools/released_validation.py task2 --packages "/path/to/course-zips" --out runs/reproduction
+python tools/released_validation.py score --packages "/path/to/course-zips" --out runs/reproduction
 ```
 
-Each command creates a timestamped directory below `runs/` containing the
-task specification, data profile, candidate metrics, JSONL event log, zero
-LLM-usage ledger, selected model and the fitted preprocessing pipeline.
+四个模型全部冻结后才打开课程验证成员；不读取正式测试输入或标签。在相同环境比较输出行和正确数，不要求新训练的文件哈希相同。
 
-## Candidate portfolios
+**直接复核随包模型**（不训练）：`python tools/check_saved.py --packages "/path/to/course-zips"`。它用课程验证成员复算四份结果，并把仅含验证特征的临时包交给标准预测入口，验证导出的逐行预测。临时包的内部成员名遵循预测接口约定，与课程正式测试集无关。将来获准对新输入做正式预测时，入口为 `python -m superagent predict INPUT.zip --run-dir solutions/task1/fixed --output predictions.csv`，替换为相应任务目录。
 
-Candidate selection depends on detected data schema rather than a task or
-dataset name. Categorical tables use a majority baseline, regularised One-hot
-logistic regression, ExtraTrees with two leaf sizes, and CatBoost with two
-depth/regularisation settings. Pair-text inputs use a majority baseline plus
-word and word/character TF-IDF difference classifiers with swap augmentation
-and several regularisation strengths.
-
-## Frozen-model prediction
-
-Only after model selection is frozen, write test predictions without opening
-test labels:
-
-```powershell
-python -m superagent predict "D:\\学校\\python with ai\\Released_Task1-In_Vehicle_Coupon_Recommendation.zip" `
-  --run-dir runs\\categorical_tabular_YYYYMMDD_HHMMSS `
-  --output final_predictions\\task1_predictions.csv
-```
-
-The output directory also receives `prediction_manifest.json`, which records
-that no test labels were read or evaluated.
-
-## Optional LLM planning
-
-The default planner is local and costs nothing.  To make each next-experiment
-decision with a permitted OpenAI-compatible Qwen or DeepSeek API, pass
-`--planner llm` with the endpoint, model and key path. The client records
-actual input/output Token counts, charges them using the configured RMB-per-1M
-prices, and stops LLM planning before the default RMB 20 budget would be
-exceeded. It is
-constrained to choose one untried local candidate;
-it cannot request test data or arbitrary code execution.
-
-The current audited price configuration is in `superagent/pricing.py`, based
-on the HPC AI Computing Platform table supplied on 2026-11-13:
-
-| Model | Input RMB / 1M Tokens | Output RMB / 1M Tokens | Availability |
-| --- | ---: | ---: | --- |
-| DeepSeek-V4-Pro | 2.25 | 6.75 | enabled |
-| DeepSeek-V4.1-Flash-1017 | 0.50 | 2.00 | enabled |
-| Qwen3.8-27B-w8a8 | 0.10 | 0.34 | held until release-date evidence is recorded |
-
-For example:
-
-```powershell
-python -m superagent run "TASK.zip" --planner llm `
-  --api-url "https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions" `
-  --api-key-file "D:\\path\\to\\api_key.txt" `
-  --model DeepSeek-V4.1-Flash-1017
-```
-
-## Design boundary
-
-`run` is a development command.  It deliberately does not access a test
-split.  A later final-evaluation command will be added only after the
-selection policy and task contract are frozen.
-
+**回归测试**：安装 `requirements-neural-tested.txt` 后运行 `python -m unittest discover -s tests`。本轮冻结代码的完整回归为 280 项通过。使用文件包时请先核对 SHA256SUMS；只加载可信的模型文件。本轮报告与日志只覆盖已声明实验，不包含历史项目的 API 总账、原始课程数据、密钥、缓存或正式测试预测。

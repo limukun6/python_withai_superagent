@@ -38,7 +38,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_agent_architec
 ```
 
 The first command only checks the environment and makes no API call. `Pilot`
-uses seed 11 and caps the shared batch estimate at RMB 2. Check that
+uses seed 11 and caps the shared batch course budget at RMB 2. Check that
 the run has no `planner_fallback`, `unresolved_call` or `missing_usage` event
 before starting the main comparison. Then run:
 
@@ -64,9 +64,12 @@ Start with one seed to verify feasibility. Then predeclare seeds 11, 22, 33
 for the main 4 x 2 x 3 comparison. Do not keep rerunning until a preferred
 architecture wins. Small seed counts do not establish statistical significance.
 
-The benchmark shares one estimated-cost ceiling across all tasks, policies
-and seeds in a batch. It uses the supplied platform screenshot prices, not
-verified course-standard historical prices. Preserve raw usage for repricing.
+The benchmark shares one course-cost ceiling across all tasks, policies
+and seeds in a batch. It uses the updated official DeepSeek off-peak rates
+checked on 2026-11-16, regardless of request time and without cache discounts.
+See [the pricing record](deepseek_pricing.md). Preserve raw usage and the
+price snapshot for independent recalculation. Pre-call token usage is still
+estimated; actual platform debits are distinct from course accounting.
 Unknown usage and ambiguous transport errors open a circuit and prevent further
 batch API calls; they are never counted as zero-cost successes. There is no
 automatic billing retry. No API credentials are stored in run artifacts.

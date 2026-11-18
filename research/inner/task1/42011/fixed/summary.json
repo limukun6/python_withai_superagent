@@ -1,0 +1,554 @@
+{
+  "strategy": "local_interleaved_routes",
+  "seed": 707,
+  "task_kind": "categorical_tabular",
+  "selected_candidate": "catboost_depth8_reg3.0",
+  "primary_best_candidate": "catboost_depth6_reg3.0",
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "exact_rows",
+    "seeds": [
+      707,
+      10707,
+      20707
+    ],
+    "shortlist": [
+      "catboost_depth6_reg3.0",
+      "catboost_depth8_reg3.0",
+      "extra_trees_leaf2"
+    ],
+    "primary_candidate": "catboost_depth6_reg3.0",
+    "selection_rule": "mean accuracy across all confirmation splits; ties by candidate id",
+    "candidates": [
+      {
+        "candidate": "catboost_depth6_reg3.0",
+        "primary_accuracy": 0.7155255544840887,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.7155255544840887,
+            "search_accuracy": 0.7155255544840887,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.8009125840537944,
+            "search_score": 0.7232401157184185,
+            "train_metrics": {
+              "accuracy": 0.8009125840537944,
+              "macro_f1": 0.7918468909446514,
+              "primary_metric": "accuracy",
+              "score": 0.8009125840537944,
+              "rows": 4164
+            },
+            "search_metrics": {
+              "accuracy": 0.7232401157184185,
+              "macro_f1": 0.7129869916958628,
+              "primary_metric": "accuracy",
+              "score": 0.7232401157184185,
+              "rows": 1037
+            },
+            "score_gap": 0.07767246833537589,
+            "train_accuracy": 0.8009125840537944,
+            "search_accuracy": 0.7232401157184185,
+            "generalization_gap": 0.07767246833537589,
+            "class_recall": [
+              0.6008676789587852,
+              0.8211805555555556
+            ],
+            "training_seconds": 4.018108749995008,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "catboost_depth6_reg3.0",
+              "params": {
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 5.574972542002797,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.8070639115809707,
+            "search_score": 0.7054860442733397,
+            "train_metrics": {
+              "accuracy": 0.8070639115809707,
+              "macro_f1": 0.7985629627334796,
+              "primary_metric": "accuracy",
+              "score": 0.8070639115809707,
+              "rows": 4162
+            },
+            "search_metrics": {
+              "accuracy": 0.7054860442733397,
+              "macro_f1": 0.698782373405489,
+              "primary_metric": "accuracy",
+              "score": 0.7054860442733397,
+              "rows": 1039
+            },
+            "score_gap": 0.10157786730763096,
+            "train_accuracy": 0.8070639115809707,
+            "search_accuracy": 0.7054860442733397,
+            "generalization_gap": 0.10157786730763096,
+            "class_recall": [
+              0.6162046908315565,
+              0.7789473684210526
+            ],
+            "training_seconds": 3.8702495410107076,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "catboost_depth6_reg3.0",
+              "params": {
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 4.909352332819253,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.7155255544840887,
+        "mean_score": 0.714750571491949,
+        "mean_accuracy": 0.714750571491949,
+        "sample_sd": 0.008902371155923567
+      },
+      {
+        "candidate": "catboost_depth8_reg3.0",
+        "primary_accuracy": 0.7107039537126326,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.7107039537126326,
+            "search_accuracy": 0.7107039537126326,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.8467819404418828,
+            "search_score": 0.7242044358727098,
+            "train_metrics": {
+              "accuracy": 0.8467819404418828,
+              "macro_f1": 0.8406630104647983,
+              "primary_metric": "accuracy",
+              "score": 0.8467819404418828,
+              "rows": 4164
+            },
+            "search_metrics": {
+              "accuracy": 0.7242044358727098,
+              "macro_f1": 0.7143085577775209,
+              "primary_metric": "accuracy",
+              "score": 0.7242044358727098,
+              "rows": 1037
+            },
+            "score_gap": 0.12257750456917305,
+            "train_accuracy": 0.8467819404418828,
+            "search_accuracy": 0.7242044358727098,
+            "generalization_gap": 0.12257750456917305,
+            "class_recall": [
+              0.6052060737527115,
+              0.8194444444444444
+            ],
+            "training_seconds": 6.6731037080753595,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "catboost_depth8_reg3.0",
+              "params": {
+                "depth": 8,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 8.206151542020962,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.8431042767900048,
+            "search_score": 0.7112608277189605,
+            "train_metrics": {
+              "accuracy": 0.8431042767900048,
+              "macro_f1": 0.8370066987845128,
+              "primary_metric": "accuracy",
+              "score": 0.8431042767900048,
+              "rows": 4162
+            },
+            "search_metrics": {
+              "accuracy": 0.7112608277189605,
+              "macro_f1": 0.7056857324147934,
+              "primary_metric": "accuracy",
+              "score": 0.7112608277189605,
+              "rows": 1039
+            },
+            "score_gap": 0.13184344907104428,
+            "train_accuracy": 0.8431042767900048,
+            "search_accuracy": 0.7112608277189605,
+            "generalization_gap": 0.13184344907104428,
+            "class_recall": [
+              0.6353944562899787,
+              0.7736842105263158
+            ],
+            "training_seconds": 7.307890832889825,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "catboost_depth8_reg3.0",
+              "params": {
+                "depth": 8,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 8.425017749890685,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.7107039537126326,
+        "mean_score": 0.7153897391014343,
+        "mean_accuracy": 0.7153897391014343,
+        "sample_sd": 0.007638827563303265
+      },
+      {
+        "candidate": "extra_trees_leaf2",
+        "primary_accuracy": 0.6634522661523626,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.6634522661523626,
+            "search_accuracy": 0.6634522661523626,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9884726224783862,
+            "search_score": 0.6595949855351977,
+            "train_metrics": {
+              "accuracy": 0.9884726224783862,
+              "macro_f1": 0.988263369536623,
+              "primary_metric": "accuracy",
+              "score": 0.9884726224783862,
+              "rows": 4164
+            },
+            "search_metrics": {
+              "accuracy": 0.6595949855351977,
+              "macro_f1": 0.6532754797687752,
+              "primary_metric": "accuracy",
+              "score": 0.6595949855351977,
+              "rows": 1037
+            },
+            "score_gap": 0.3288776369431885,
+            "train_accuracy": 0.9884726224783862,
+            "search_accuracy": 0.6595949855351977,
+            "generalization_gap": 0.3288776369431885,
+            "class_recall": [
+              0.5900216919739696,
+              0.7152777777777778
+            ],
+            "training_seconds": 2.6480184588581324,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "extra_trees_leaf2",
+              "params": {
+                "min_samples_leaf": 2,
+                "n_estimators": 400
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 3.5686629170086235,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9899086977414705,
+            "search_score": 0.6679499518768046,
+            "train_metrics": {
+              "accuracy": 0.9899086977414705,
+              "macro_f1": 0.9897060205681723,
+              "primary_metric": "accuracy",
+              "score": 0.9899086977414705,
+              "rows": 4162
+            },
+            "search_metrics": {
+              "accuracy": 0.6679499518768046,
+              "macro_f1": 0.6628327299303852,
+              "primary_metric": "accuracy",
+              "score": 0.6679499518768046,
+              "rows": 1039
+            },
+            "score_gap": 0.3219587458646659,
+            "train_accuracy": 0.9899086977414705,
+            "search_accuracy": 0.6679499518768046,
+            "generalization_gap": 0.3219587458646659,
+            "class_recall": [
+              0.603411513859275,
+              0.7210526315789474
+            ],
+            "training_seconds": 3.2961957918014377,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [],
+              "builds": 0,
+              "disk_hits": 0,
+              "in_process_training_reuses": 0
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "extra_trees_leaf2",
+              "params": {
+                "min_samples_leaf": 2,
+                "n_estimators": 400
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 4.652645667083561,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6634522661523626,
+        "mean_score": 0.6636657345214549,
+        "mean_accuracy": 0.6636657345214549,
+        "sample_sd": 0.00418157173809064
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "catboost_depth8_reg3.0",
+    "selection_score": 0.7153897391014343,
+    "changed": true,
+    "new_fits_attempted": 6,
+    "new_fits_completed": 6,
+    "training_seconds": 27.81356708263047,
+    "classifier_fits_completed": 6,
+    "failed_attempts_with_unknown_component_count": 0
+  },
+  "portfolio": "expanded",
+  "evaluation_protocol": {
+    "grouping": "exact_rows",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 5095,
+      "train_groups": 4075,
+      "heldout_groups": 1020,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 4164,
+    "search_rows": 1037,
+    "search_duplicate_rows": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "mean_confirmation_accuracy",
+      "confirmation_repeats": 3,
+      "confirmation_top_k": 3,
+      "confirmation_grouping": "exact_rows",
+      "maximum_additional_confirmation_fits": 6,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": true,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    }
+  },
+  "primary_metric": "accuracy",
+  "search_score": 0.7107039537126326,
+  "search_accuracy": 0.7107039537126326,
+  "official_validation_accuracy": null,
+  "completed": true,
+  "valid_policy_run": true,
+  "fallback_count": 0,
+  "trials_attempted": 4,
+  "failed_trials": 0,
+  "elapsed_seconds": 64.70908150007017,
+  "llm_calls": 0,
+  "tokens": 0,
+  "course_cost_rmb": 0,
+  "actual_cost_rmb": 0.0,
+  "usage_complete": true,
+  "anchor_first": true,
+  "anchor_policy": "catalog",
+  "anchor_candidate": "logistic_C0.05",
+  "hypotheses_evaluated": 0,
+  "expectations_met": 0,
+  "test_accessed": false,
+  "run_directory": "research/inner/task1/42011/fixed",
+  "official_validation_score": null,
+  "pre_refit_validation_score": null,
+  "single_model_validation_score": null,
+  "pre_refit_validation_accuracy": null,
+  "single_model_validation_accuracy": null,
+  "refit_requested": true,
+  "refit_succeeded": true,
+  "refit_failure": null,
+  "final_training_rows": 5201,
+  "ensemble_selected": false,
+  "ensemble_evaluations": 0,
+  "full_refits_attempted": 1,
+  "full_refits_completed": 1,
+  "refit_classifier_fits_completed": 1,
+  "refit_training_seconds": 7.265473959036171,
+  "ensemble_failure": null,
+  "provided_validation_available": false,
+  "decision_architecture": {
+    "architecture": "single",
+    "enabled": false,
+    "review_fallback_count": 0,
+    "all_requested_decisions_valid": true
+  },
+  "refinement": {
+    "enabled": false,
+    "mode": "off",
+    "requested_mode": "off",
+    "generated_candidates": 0,
+    "reason": null
+  },
+  "prediction_evidence_audit": {
+    "comparisons_completed": 3,
+    "comparisons_unavailable": 1,
+    "invalid_comparisons": 0,
+    "integrity_valid": true
+  },
+  "explanation_review": {
+    "audited_decisions": 0,
+    "decisions_flagged": 0,
+    "warning_count": 0,
+    "freeform_prose_fully_verified": false,
+    "valid_policy_run_scope": "Completed execution without planner fallback; not certification of all prose claims"
+  },
+  "route_actions": {
+    "start": 0,
+    "continue": 0,
+    "revisit": 0
+  },
+  "search_training_seconds": 14.66857770900242,
+  "runtime_budget": {
+    "mode": "shared",
+    "duration_basis": "observed worker wall time, including process startup",
+    "fit_safety_multiplier": 1.5,
+    "full_refit_multiplier": 2.0,
+    "output_margin_seconds": 0.0,
+    "hard_total_wall_clock_guarantee": false,
+    "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+    "search_stop_reason": "trial_limit_reached",
+    "requested_primary_trials": 4,
+    "actual_primary_trials": 4,
+    "confirmation_deadline_elapsed_seconds": 300,
+    "elapsed_exceeded_requested_limit": false
+  },
+  "feature_cache": {
+    "enabled": true,
+    "directory": "research/inner/task1/42011/fixed/feature_cache",
+    "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+  },
+  "classifier_fit_accounting": {
+    "completed_classifier_fits": 11,
+    "failed_candidate_attempts_with_unknown_component_count": 0,
+    "complete_count_known": true,
+    "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "task_kind": "pair_text",
+  "primary_metric": "accuracy",
+  "train_label_counts": {
+    "1": 3373,
+    "0": 3287
+  },
+  "validation_label_counts": {
+    "0": 839,
+    "1": 802
+  },
+  "test_accessed": false,
+  "class_count": 2,
+  "input_pair_count": 6660,
+  "empty_text_count": 0,
+  "word_count": {
+    "min": 1,
+    "median": 15,
+    "p95": 19,
+    "max": 26
+  },
+  "evaluation_protocol": {
+    "grouping": "shared_text",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 6119,
+      "train_groups": 4898,
+      "heldout_groups": 1221,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 6660,
+    "search_rows": 1641,
+    "search_rows_sharing_text": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "mean_confirmation_accuracy",
+      "confirmation_repeats": 3,
+      "confirmation_top_k": 3,
+      "confirmation_grouping": "shared_text",
+      "maximum_additional_confirmation_fits": 6,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": true,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    }
+  }
+}

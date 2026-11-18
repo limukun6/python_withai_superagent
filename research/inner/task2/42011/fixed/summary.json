@@ -1,0 +1,686 @@
+{
+  "strategy": "local_interleaved_routes",
+  "seed": 707,
+  "task_kind": "pair_text",
+  "selected_candidate": "word_char_stats_C0.3",
+  "primary_best_candidate": "word_char_stats_C0.3",
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text",
+    "seeds": [
+      707,
+      10707,
+      20707
+    ],
+    "shortlist": [
+      "word_char_stats_C0.3",
+      "char_C3.0",
+      "char_C1.0"
+    ],
+    "primary_candidate": "word_char_stats_C0.3",
+    "selection_rule": "mean accuracy across all confirmation splits; ties by candidate id",
+    "candidates": [
+      {
+        "candidate": "word_char_stats_C0.3",
+        "primary_accuracy": 0.6824196597353497,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.6824196597353497,
+            "search_accuracy": 0.6824196597353497,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9106930221481305,
+            "search_score": 0.6676056338028169,
+            "train_metrics": {
+              "accuracy": 0.9106930221481305,
+              "macro_f1": 0.9106709528346602,
+              "primary_metric": "accuracy",
+              "score": 0.9106930221481305,
+              "rows": 4199
+            },
+            "search_metrics": {
+              "accuracy": 0.6676056338028169,
+              "macro_f1": 0.6675560995224221,
+              "primary_metric": "accuracy",
+              "score": 0.6676056338028169,
+              "rows": 1065
+            },
+            "score_gap": 0.24308738834531363,
+            "train_accuracy": 0.9106930221481305,
+            "search_accuracy": 0.6676056338028169,
+            "generalization_gap": 0.24308738834531363,
+            "class_recall": [
+              0.681640625,
+              0.6546112115732369
+            ],
+            "training_seconds": 2.6958215839695185,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "built",
+                  "key": "e7e775fbc86052e63c5d9bf5336e0dfc1509fcc30254004eef0ee002d9c45977",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218",
+                  "training_rows": 4199,
+                  "matrix_shape": [
+                    4199,
+                    21566
+                  ],
+                  "elapsed_seconds": 0.4793080829549581,
+                  "artifact_sha256": "42efee9427e86f0e91e25ea5eb6eda54ef5a5b25a2c4b4c47cb6b17e8ad43b68"
+                },
+                {
+                  "event": "built",
+                  "key": "310ddc9cfcda4ae2a83c8479f91b5ce7e2d567553abb36e7634a5886fffa2bb9",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218",
+                  "training_rows": 4199,
+                  "matrix_shape": [
+                    4199,
+                    37644
+                  ],
+                  "elapsed_seconds": 1.0832630840595812,
+                  "artifact_sha256": "06fc8cf2cc46c981e9576c683e5eb25bb549c4d614aab81ec6ec421ebadd0e77"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218"
+                }
+              ],
+              "builds": 2,
+              "disk_hits": 0,
+              "in_process_training_reuses": 2
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "word_char_stats_C0.3",
+              "params": {
+                "C": 0.3,
+                "representation": "word_char_stats",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 3.8698641657829285,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9138219145380759,
+            "search_score": 0.6744186046511628,
+            "train_metrics": {
+              "accuracy": 0.9138219145380759,
+              "macro_f1": 0.913799199765013,
+              "primary_metric": "accuracy",
+              "score": 0.9138219145380759,
+              "rows": 4189
+            },
+            "search_metrics": {
+              "accuracy": 0.6744186046511628,
+              "macro_f1": 0.6743371625224177,
+              "primary_metric": "accuracy",
+              "score": 0.6744186046511628,
+              "rows": 1075
+            },
+            "score_gap": 0.23940330988691316,
+            "train_accuracy": 0.9138219145380759,
+            "search_accuracy": 0.6744186046511628,
+            "generalization_gap": 0.23940330988691316,
+            "class_recall": [
+              0.6807692307692308,
+              0.6684684684684684
+            ],
+            "training_seconds": 3.189220249885693,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "built",
+                  "key": "66333f7ac38b889f423ec9a3c0a5100fc82fd8e12856377b34f70a14ccebcba8",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0",
+                  "training_rows": 4189,
+                  "matrix_shape": [
+                    4189,
+                    21582
+                  ],
+                  "elapsed_seconds": 0.43511433294042945,
+                  "artifact_sha256": "c89969ac8c84d5124d770a281db4d303f7e81bcedbd49fd5331504c8e2c6103c"
+                },
+                {
+                  "event": "built",
+                  "key": "9cc4d3eeb3af5e2553614472417b89fac0b592e5e152f067e3469538ecff3cd4",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0",
+                  "training_rows": 4189,
+                  "matrix_shape": [
+                    4189,
+                    37491
+                  ],
+                  "elapsed_seconds": 1.7983909170143306,
+                  "artifact_sha256": "b55ef620b4f4f2b66d37da484ef97c6c391811d58a504ee1c9d05692013e1993"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0"
+                }
+              ],
+              "builds": 2,
+              "disk_hits": 0,
+              "in_process_training_reuses": 2
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "word_char_stats_C0.3",
+              "params": {
+                "C": 0.3,
+                "representation": "word_char_stats",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 4.47665737522766,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6824196597353497,
+        "mean_score": 0.6748146327297765,
+        "mean_accuracy": 0.6748146327297765,
+        "sample_sd": 0.007414949073441184
+      },
+      {
+        "candidate": "char_C3.0",
+        "primary_accuracy": 0.6710775047258979,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.6710775047258979,
+            "search_accuracy": 0.6710775047258979,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9497499404620148,
+            "search_score": 0.6553990610328638,
+            "train_metrics": {
+              "accuracy": 0.9497499404620148,
+              "macro_f1": 0.9497444222564637,
+              "primary_metric": "accuracy",
+              "score": 0.9497499404620148,
+              "rows": 4199
+            },
+            "search_metrics": {
+              "accuracy": 0.6553990610328638,
+              "macro_f1": 0.6553005950254917,
+              "primary_metric": "accuracy",
+              "score": 0.6553990610328638,
+              "rows": 1065
+            },
+            "score_gap": 0.29435087942915095,
+            "train_accuracy": 0.9497499404620148,
+            "search_accuracy": 0.6553990610328638,
+            "generalization_gap": 0.29435087942915095,
+            "class_recall": [
+              0.6640625,
+              0.6473779385171791
+            ],
+            "training_seconds": 1.8424512499477714,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "built",
+                  "key": "3fab550dd8c94a6f495b3129b87cbcbee774f7713d2d8baa6a6113f07a345761",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218",
+                  "training_rows": 4199,
+                  "matrix_shape": [
+                    4199,
+                    37644
+                  ],
+                  "elapsed_seconds": 1.610261125024408,
+                  "artifact_sha256": "7e84bc5ed6d4a77be84727017424b9169f1da81df6084f03e25a7b01f37a9b20"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218"
+                }
+              ],
+              "builds": 1,
+              "disk_hits": 0,
+              "in_process_training_reuses": 1
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "char_C3.0",
+              "params": {
+                "C": 3.0,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 3.1471499579492956,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.9503461446645978,
+            "search_score": 0.6353488372093024,
+            "train_metrics": {
+              "accuracy": 0.9503461446645978,
+              "macro_f1": 0.9503362927091741,
+              "primary_metric": "accuracy",
+              "score": 0.9503461446645978,
+              "rows": 4189
+            },
+            "search_metrics": {
+              "accuracy": 0.6353488372093024,
+              "macro_f1": 0.6350453465250497,
+              "primary_metric": "accuracy",
+              "score": 0.6353488372093024,
+              "rows": 1075
+            },
+            "score_gap": 0.3149973074552954,
+            "train_accuracy": 0.9503461446645978,
+            "search_accuracy": 0.6353488372093024,
+            "generalization_gap": 0.3149973074552954,
+            "class_recall": [
+              0.6269230769230769,
+              0.6432432432432432
+            ],
+            "training_seconds": 1.8503503750544041,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "built",
+                  "key": "ec1b0bc22889d829fe1126171eb6a5ceb42f61e7b14a3b46fe74c4d6fc155392",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0",
+                  "training_rows": 4189,
+                  "matrix_shape": [
+                    4189,
+                    37491
+                  ],
+                  "elapsed_seconds": 1.6138534580823034,
+                  "artifact_sha256": "5e59a28dd15cc379686f72a73c94169ff14f7c28c7c2fc39c3b7bc76697d82ca"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0"
+                }
+              ],
+              "builds": 1,
+              "disk_hits": 0,
+              "in_process_training_reuses": 1
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "char_C3.0",
+              "params": {
+                "C": 3.0,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 3.281899250112474,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6710775047258979,
+        "mean_score": 0.6539418009893547,
+        "mean_accuracy": 0.6539418009893547,
+        "sample_sd": 0.017908856070493823
+      },
+      {
+        "candidate": "char_C1.0",
+        "primary_accuracy": 0.6691871455576559,
+        "measurements": [
+          {
+            "seed": 707,
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "search_score": 0.6691871455576559,
+            "search_accuracy": 0.6691871455576559,
+            "origin": "primary_search",
+            "new_fit": false
+          },
+          {
+            "seed": 10707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.893069778518695,
+            "search_score": 0.647887323943662,
+            "train_metrics": {
+              "accuracy": 0.893069778518695,
+              "macro_f1": 0.8930365579502018,
+              "primary_metric": "accuracy",
+              "score": 0.893069778518695,
+              "rows": 4199
+            },
+            "search_metrics": {
+              "accuracy": 0.647887323943662,
+              "macro_f1": 0.6476437679596909,
+              "primary_metric": "accuracy",
+              "score": 0.647887323943662,
+              "rows": 1065
+            },
+            "score_gap": 0.24518245457503296,
+            "train_accuracy": 0.893069778518695,
+            "search_accuracy": 0.647887323943662,
+            "generalization_gap": 0.24518245457503296,
+            "class_recall": [
+              0.646484375,
+              0.6491862567811935
+            ],
+            "training_seconds": 0.7152945001143962,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "disk_hit",
+                  "key": "3fab550dd8c94a6f495b3129b87cbcbee774f7713d2d8baa6a6113f07a345761",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218",
+                  "training_rows": 4199,
+                  "matrix_shape": [
+                    4199,
+                    37644
+                  ],
+                  "elapsed_seconds": 0.4784607079345733,
+                  "artifact_sha256": "7e84bc5ed6d4a77be84727017424b9169f1da81df6084f03e25a7b01f37a9b20"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "85ccb29752cefed27cb8f468c87cfb3b0adf596c0763a276bfc19265d3e43218"
+                }
+              ],
+              "builds": 0,
+              "disk_hits": 1,
+              "in_process_training_reuses": 1
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "char_C1.0",
+              "params": {
+                "C": 1.0,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 1.9390528749208897,
+            "new_fit": true
+          },
+          {
+            "seed": 20707,
+            "origin": "confirmation",
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "train_score": 0.896872761995703,
+            "search_score": 0.6372093023255814,
+            "train_metrics": {
+              "accuracy": 0.896872761995703,
+              "macro_f1": 0.896853664219704,
+              "primary_metric": "accuracy",
+              "score": 0.896872761995703,
+              "rows": 4189
+            },
+            "search_metrics": {
+              "accuracy": 0.6372093023255814,
+              "macro_f1": 0.6368243243243243,
+              "primary_metric": "accuracy",
+              "score": 0.6372093023255814,
+              "rows": 1075
+            },
+            "score_gap": 0.2596634596701216,
+            "train_accuracy": 0.896872761995703,
+            "search_accuracy": 0.6372093023255814,
+            "generalization_gap": 0.2596634596701216,
+            "class_recall": [
+              0.625,
+              0.6486486486486487
+            ],
+            "training_seconds": 0.42089941701851785,
+            "feature_cache": {
+              "enabled": true,
+              "scope": "same run, unsupervised paired TF-IDF only",
+              "events": [
+                {
+                  "event": "disk_hit",
+                  "key": "ec1b0bc22889d829fe1126171eb6a5ceb42f61e7b14a3b46fe74c4d6fc155392",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0",
+                  "training_rows": 4189,
+                  "matrix_shape": [
+                    4189,
+                    37491
+                  ],
+                  "elapsed_seconds": 0.19322329200804234,
+                  "artifact_sha256": "5e59a28dd15cc379686f72a73c94169ff14f7c28c7c2fc39c3b7bc76697d82ca"
+                },
+                {
+                  "event": "in_process_training_reuse",
+                  "training_input_sha256": "3cb0d3628610a0234b9179997bb6f3b94938d09f0182f8292930a7b4ac850aa0"
+                }
+              ],
+              "builds": 0,
+              "disk_hits": 1,
+              "in_process_training_reuses": 1
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "resolved_configuration": {
+              "id": "char_C1.0",
+              "params": {
+                "C": 1.0,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null
+            },
+            "worker_wall_seconds": 1.8356792500708252,
+            "new_fit": true
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6691871455576559,
+        "mean_score": 0.6514279239422998,
+        "mean_accuracy": 0.6514279239422998,
+        "sample_sd": 0.016280279503330063
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "word_char_stats_C0.3",
+    "selection_score": 0.6748146327297765,
+    "changed": false,
+    "new_fits_attempted": 6,
+    "new_fits_completed": 6,
+    "training_seconds": 10.714037375990301,
+    "classifier_fits_completed": 6,
+    "failed_attempts_with_unknown_component_count": 0
+  },
+  "portfolio": "expanded",
+  "evaluation_protocol": {
+    "grouping": "shared_text",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 3887,
+      "train_groups": 3107,
+      "heldout_groups": 780,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 4206,
+    "search_rows": 1058,
+    "search_rows_sharing_text": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "mean_confirmation_accuracy",
+      "confirmation_repeats": 3,
+      "confirmation_top_k": 3,
+      "confirmation_grouping": "shared_text",
+      "maximum_additional_confirmation_fits": 6,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": true,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    }
+  },
+  "primary_metric": "accuracy",
+  "search_score": 0.6824196597353497,
+  "search_accuracy": 0.6824196597353497,
+  "official_validation_accuracy": null,
+  "completed": true,
+  "valid_policy_run": true,
+  "fallback_count": 0,
+  "trials_attempted": 4,
+  "failed_trials": 0,
+  "elapsed_seconds": 40.11683866591193,
+  "llm_calls": 0,
+  "tokens": 0,
+  "course_cost_rmb": 0,
+  "actual_cost_rmb": 0.0,
+  "usage_complete": true,
+  "anchor_first": true,
+  "anchor_policy": "catalog",
+  "anchor_candidate": "word_C0.05",
+  "hypotheses_evaluated": 0,
+  "expectations_met": 0,
+  "test_accessed": false,
+  "run_directory": "research/inner/task2/42011/fixed",
+  "official_validation_score": null,
+  "pre_refit_validation_score": null,
+  "single_model_validation_score": null,
+  "pre_refit_validation_accuracy": null,
+  "single_model_validation_accuracy": null,
+  "refit_requested": true,
+  "refit_succeeded": true,
+  "refit_failure": null,
+  "final_training_rows": 5264,
+  "ensemble_selected": false,
+  "ensemble_evaluations": 0,
+  "full_refits_attempted": 1,
+  "full_refits_completed": 1,
+  "refit_classifier_fits_completed": 1,
+  "refit_training_seconds": 3.5000799170229584,
+  "ensemble_failure": null,
+  "provided_validation_available": false,
+  "decision_architecture": {
+    "architecture": "single",
+    "enabled": false,
+    "review_fallback_count": 0,
+    "all_requested_decisions_valid": true
+  },
+  "refinement": {
+    "enabled": false,
+    "mode": "off",
+    "requested_mode": "off",
+    "generated_candidates": 0,
+    "reason": null
+  },
+  "prediction_evidence_audit": {
+    "comparisons_completed": 3,
+    "comparisons_unavailable": 1,
+    "invalid_comparisons": 0,
+    "integrity_valid": true
+  },
+  "explanation_review": {
+    "audited_decisions": 0,
+    "decisions_flagged": 0,
+    "warning_count": 0,
+    "freeform_prose_fully_verified": false,
+    "valid_policy_run_scope": "Completed execution without planner fallback; not certification of all prose claims"
+  },
+  "route_actions": {
+    "start": 0,
+    "continue": 0,
+    "revisit": 0
+  },
+  "search_training_seconds": 6.632784122833982,
+  "runtime_budget": {
+    "mode": "shared",
+    "duration_basis": "observed worker wall time, including process startup",
+    "fit_safety_multiplier": 1.5,
+    "full_refit_multiplier": 2.0,
+    "output_margin_seconds": 0.0,
+    "hard_total_wall_clock_guarantee": false,
+    "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+    "search_stop_reason": "trial_limit_reached",
+    "requested_primary_trials": 4,
+    "actual_primary_trials": 4,
+    "confirmation_deadline_elapsed_seconds": 300,
+    "elapsed_exceeded_requested_limit": false
+  },
+  "feature_cache": {
+    "enabled": true,
+    "directory": "research/inner/task2/42011/fixed/feature_cache",
+    "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+  },
+  "classifier_fit_accounting": {
+    "completed_classifier_fits": 11,
+    "failed_candidate_attempts_with_unknown_component_count": 0,
+    "complete_count_known": true,
+    "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+  }
+}

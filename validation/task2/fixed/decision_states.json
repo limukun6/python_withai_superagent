@@ -1,0 +1,1465 @@
+[
+  {
+    "contract_version": 1,
+    "next_trial": 1,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "shared_text",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 6119,
+          "train_groups": 4898,
+          "heldout_groups": 1221,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6660,
+        "search_rows": 1641,
+        "search_rows_sharing_text": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "shared_text",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "pair_text",
+      "train_label_counts": {
+        "1": 3373,
+        "0": 3287
+      },
+      "validation_label_counts": {
+        "0": 839,
+        "1": 802
+      },
+      "input_pair_count": 6660,
+      "empty_text_count": 0,
+      "word_count": {
+        "min": 1,
+        "median": 15,
+        "p95": 19,
+        "max": 26
+      }
+    },
+    "history": [],
+    "available_candidates": [
+      {
+        "id": "word_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 0,
+      "remaining": 4
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "word",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 7
+        },
+        {
+          "route": "word_char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 7
+        },
+        {
+          "route": "word_char_stats",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 2,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "shared_text",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 6119,
+          "train_groups": 4898,
+          "heldout_groups": 1221,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6660,
+        "search_rows": 1641,
+        "search_rows_sharing_text": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "shared_text",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "pair_text",
+      "train_label_counts": {
+        "1": 3373,
+        "0": 3287
+      },
+      "validation_label_counts": {
+        "0": 839,
+        "1": 802
+      },
+      "input_pair_count": 6660,
+      "empty_text_count": 0,
+      "word_count": {
+        "min": 1,
+        "median": 15,
+        "p95": 19,
+        "max": 26
+      }
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "word_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8145645645645646,
+        "search_score": 0.6227909811090798,
+        "train_accuracy": 0.8145645645645646,
+        "search_accuracy": 0.6227909811090798,
+        "score_gap": 0.1917735834554848,
+        "generalization_gap": 0.1917735834554848,
+        "training_seconds": 0.6226350001525134,
+        "class_recall": [
+          0.6281287246722288,
+          0.6172069825436409
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 1,
+      "remaining": 3
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "word",
+          "status": "active",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6227909811090798,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6227909811090798,
+          "remaining_configurations": 6
+        },
+        {
+          "route": "word_char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 7
+        },
+        {
+          "route": "word_char_stats",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 3,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "shared_text",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 6119,
+          "train_groups": 4898,
+          "heldout_groups": 1221,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6660,
+        "search_rows": 1641,
+        "search_rows_sharing_text": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "shared_text",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "pair_text",
+      "train_label_counts": {
+        "1": 3373,
+        "0": 3287
+      },
+      "validation_label_counts": {
+        "0": 839,
+        "1": 802
+      },
+      "input_pair_count": 6660,
+      "empty_text_count": 0,
+      "word_count": {
+        "min": 1,
+        "median": 15,
+        "p95": 19,
+        "max": 26
+      }
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "word_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8145645645645646,
+        "search_score": 0.6227909811090798,
+        "train_accuracy": 0.8145645645645646,
+        "search_accuracy": 0.6227909811090798,
+        "score_gap": 0.1917735834554848,
+        "generalization_gap": 0.1917735834554848,
+        "training_seconds": 0.6226350001525134,
+        "class_recall": [
+          0.6281287246722288,
+          0.6172069825436409
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 2,
+        "candidate": "char_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "char",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8617117117117117,
+        "search_score": 0.6624009750152346,
+        "train_accuracy": 0.8617117117117117,
+        "search_accuracy": 0.6624009750152346,
+        "score_gap": 0.19931073669647703,
+        "generalization_gap": 0.19931073669647703,
+        "training_seconds": 2.0257220841012895,
+        "class_recall": [
+          0.66626936829559,
+          0.6583541147132169
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 2,
+          "reference_trial": 1,
+          "current_candidate": "char_C1.0",
+          "reference_candidate": "word_C0.05",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e96a9a95324d3f3d6a459a8047b48ba397139b4f8a06966025e042827302b261",
+          "evaluated_rows": 1641,
+          "current_correct": 1087,
+          "reference_correct": 1022,
+          "both_correct": 842,
+          "newly_correct": 245,
+          "newly_wrong": 180,
+          "both_wrong": 374,
+          "prediction_disagreement_rows": 425,
+          "net_correct_change": 65,
+          "accuracy_change": 0.039609993906154786,
+          "single_row_accuracy_step": 0.0006093845216331506,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": 0.03960999390615483,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 2,
+      "remaining": 2
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "char",
+          "status": "active",
+          "attempted_trials": [
+            2
+          ],
+          "best_trial": 2,
+          "best_search_accuracy": 0.6624009750152346,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6624009750152346,
+          "remaining_configurations": 3
+        },
+        {
+          "route": "word",
+          "status": "paused",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6227909811090798,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6227909811090798,
+          "remaining_configurations": 6
+        },
+        {
+          "route": "word_char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 7
+        },
+        {
+          "route": "word_char_stats",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 4,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "shared_text",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 6119,
+          "train_groups": 4898,
+          "heldout_groups": 1221,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6660,
+        "search_rows": 1641,
+        "search_rows_sharing_text": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "shared_text",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "pair_text",
+      "train_label_counts": {
+        "1": 3373,
+        "0": 3287
+      },
+      "validation_label_counts": {
+        "0": 839,
+        "1": 802
+      },
+      "input_pair_count": 6660,
+      "empty_text_count": 0,
+      "word_count": {
+        "min": 1,
+        "median": 15,
+        "p95": 19,
+        "max": 26
+      }
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "word_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8145645645645646,
+        "search_score": 0.6227909811090798,
+        "train_accuracy": 0.8145645645645646,
+        "search_accuracy": 0.6227909811090798,
+        "score_gap": 0.1917735834554848,
+        "generalization_gap": 0.1917735834554848,
+        "training_seconds": 0.6226350001525134,
+        "class_recall": [
+          0.6281287246722288,
+          0.6172069825436409
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 2,
+        "candidate": "char_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "char",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8617117117117117,
+        "search_score": 0.6624009750152346,
+        "train_accuracy": 0.8617117117117117,
+        "search_accuracy": 0.6624009750152346,
+        "score_gap": 0.19931073669647703,
+        "generalization_gap": 0.19931073669647703,
+        "training_seconds": 2.0257220841012895,
+        "class_recall": [
+          0.66626936829559,
+          0.6583541147132169
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 2,
+          "reference_trial": 1,
+          "current_candidate": "char_C1.0",
+          "reference_candidate": "word_C0.05",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e96a9a95324d3f3d6a459a8047b48ba397139b4f8a06966025e042827302b261",
+          "evaluated_rows": 1641,
+          "current_correct": 1087,
+          "reference_correct": 1022,
+          "both_correct": 842,
+          "newly_correct": 245,
+          "newly_wrong": 180,
+          "both_wrong": 374,
+          "prediction_disagreement_rows": 425,
+          "net_correct_change": 65,
+          "accuracy_change": 0.039609993906154786,
+          "single_row_accuracy_step": 0.0006093845216331506,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": 0.03960999390615483,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 3,
+        "candidate": "char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "char",
+          "swap_augmentation": true
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.9424924924924925,
+        "search_score": 0.6569165143205362,
+        "train_accuracy": 0.9424924924924925,
+        "search_accuracy": 0.6569165143205362,
+        "score_gap": 0.28557597817195624,
+        "generalization_gap": 0.28557597817195624,
+        "training_seconds": 0.46190562518313527,
+        "class_recall": [
+          0.6555423122765197,
+          0.6583541147132169
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 3,
+          "reference_trial": 2,
+          "current_candidate": "char_C3.0",
+          "reference_candidate": "char_C1.0",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e96a9a95324d3f3d6a459a8047b48ba397139b4f8a06966025e042827302b261",
+          "evaluated_rows": 1641,
+          "current_correct": 1078,
+          "reference_correct": 1087,
+          "both_correct": 1022,
+          "newly_correct": 56,
+          "newly_wrong": 65,
+          "both_wrong": 498,
+          "prediction_disagreement_rows": 121,
+          "net_correct_change": -9,
+          "accuracy_change": -0.005484460694698354,
+          "single_row_accuracy_step": 0.0006093845216331506,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": -0.005484460694698434,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C1.5",
+        "params": {
+          "C": 1.5,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_C10.0",
+        "params": {
+          "C": 10.0,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "char",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C1.0",
+        "params": {
+          "C": 1.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      },
+      {
+        "id": "word_char_stats_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 3,
+      "remaining": 1
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "char",
+          "status": "active",
+          "attempted_trials": [
+            2,
+            3
+          ],
+          "best_trial": 2,
+          "best_search_accuracy": 0.6624009750152346,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6624009750152346,
+          "remaining_configurations": 2
+        },
+        {
+          "route": "word",
+          "status": "paused",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6227909811090798,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6227909811090798,
+          "remaining_configurations": 6
+        },
+        {
+          "route": "word_char",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 7
+        },
+        {
+          "route": "word_char_stats",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  }
+]

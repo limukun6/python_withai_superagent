@@ -1,0 +1,3372 @@
+{
+  "scope": "Offline regression fixtures from actual v0.33 decisions, not new model responses",
+  "cases": [
+    {
+      "id": "single_trial2",
+      "original_round": "v0.33",
+      "architecture": "single",
+      "trial": 2,
+      "original_source_sha256": "cd19a18688b18986b7d31ee1b49614fd14386e86e4f8a85273677d76044b86dd",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 2,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5155819589272141,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 1,
+          "remaining": 2
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "active",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6
+            },
+            {
+              "route": "word_char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 7
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.3",
+        "reason": "Word-only trial 1 shows a large train-search gap (0.192) at strong regularization; with two attempts left, testing a richer word+char representation is a stronger bet than another adjacent C step on the same route.",
+        "hypothesis": "Word+char TF-IDF at moderate C will exceed trial 1 search accuracy 0.6228 by at least 0.02.",
+        "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 1,
+          "direction": "increase",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "no_comparison",
+          "fact_ids": [
+            "t1.search_score",
+            "t1.train_score",
+            "t1.score_gap",
+            "t1.status"
+          ],
+          "interpretation": "The 0.192 train-search gap suggests word-only features may underrepresent pair differences; adding character n-grams could capture lexical overlap missed by word tokens.",
+          "uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.train_score",
+            "trial": 1,
+            "metric": "train_score",
+            "value": 0.8145645645645646
+          },
+          {
+            "id": "t1.score_gap",
+            "trial": 1,
+            "metric": "score_gap",
+            "value": 0.1917735834554848
+          },
+          {
+            "id": "t1.status",
+            "trial": 1,
+            "metric": "status",
+            "value": "completed"
+          }
+        ],
+        "route_plan": {
+          "next_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength.",
+          "revisit_previous_if": "If word+char underperforms trial 1, return to the word route and try weaker regularization (higher C)."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "start",
+          "next_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength.",
+          "paused_routes": [
+            {
+              "route": "word",
+              "resume_if": "If word+char underperforms trial 1, return to the word route and try weaker regularization (higher C)."
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": null,
+      "expected_direction_warning": false
+    },
+    {
+      "id": "single_trial3",
+      "original_round": "v0.33",
+      "architecture": "single",
+      "trial": 3,
+      "original_source_sha256": "cd19a18688b18986b7d31ee1b49614fd14386e86e4f8a85273677d76044b86dd",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 3,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5155819589272141,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          },
+          {
+            "trial": 2,
+            "candidate": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.9042042042042042,
+            "search_score": 0.6569165143205362,
+            "train_accuracy": 0.9042042042042042,
+            "search_accuracy": 0.6569165143205362,
+            "score_gap": 0.247287689883668,
+            "generalization_gap": 0.247287689883668,
+            "training_seconds": 2.2772610841784626,
+            "class_recall": [
+              0.6555423122765197,
+              0.6583541147132169
+            ],
+            "hypothesis_check": {
+              "status": "supported",
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "reference_value": 0.6227909811090798,
+              "observed_value": 0.6569165143205362,
+              "observed_delta": 0.034125533211456394,
+              "direction": "increase",
+              "required_delta": 0.02
+            },
+            "paired_error_comparison": {
+              "status": "completed",
+              "current_trial": 2,
+              "reference_trial": 1,
+              "current_candidate": "word_char_C0.3",
+              "reference_candidate": "word_C0.05",
+              "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+              "scope": "same ordered training-internal search partition",
+              "evaluation_payload_sha256": "3bc691aaef462571dcbf7f4db7b2e9e5f5aa29b9a58d16c9cf81cbc6cb05109a",
+              "evaluated_rows": 1641,
+              "current_correct": 1078,
+              "reference_correct": 1022,
+              "both_correct": 906,
+              "newly_correct": 172,
+              "newly_wrong": 116,
+              "both_wrong": 447,
+              "prediction_disagreement_rows": 288,
+              "net_correct_change": 56,
+              "accuracy_change": 0.03412553321145643,
+              "single_row_accuracy_step": 0.0006093845216331506,
+              "statistical_test_performed": false,
+              "causal_effect_established": false,
+              "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+              "primary_metric": "accuracy",
+              "primary_score_change": 0.034125533211456394,
+              "accuracy_change_is_primary_metric_change": true
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.6227909811090798,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.6227909811090798,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal accuracy score is 62.279098%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                },
+                {
+                  "id": "t1.status",
+                  "trial": 1,
+                  "metric": "status",
+                  "value": "completed"
+                }
+              ],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "word_C0.05",
+                "reference_status": "completed",
+                "reference_rule": "structured_expectation_reference",
+                "selected_candidate": "word_char_C0.3",
+                "selected_status": null,
+                "reference_route": "word",
+                "selected_route": "word_char",
+                "same_declared_route": false,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.05,
+                    "after": 0.3,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": false,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                    }
+                  },
+                  {
+                    "parameter": "representation",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": "word",
+                    "after": "word_char",
+                    "parameter_effect": null
+                  }
+                ],
+                "single_declared_parameter_change": false,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+              },
+              "selected_candidate": "word_char_C0.3",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Word+char TF-IDF at moderate C will exceed trial 1 search accuracy 0.6228 by at least 0.02.",
+                "expected_change": {
+                  "metric": "search_accuracy",
+                  "reference_trial": 1,
+                  "direction": "increase",
+                  "min_delta": 0.02
+                }
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Word-only trial 1 shows a large train-search gap (0.192) at strong regularization; with two attempts left, testing a richer word+char representation is a stronger bet than another adjacent C step on the same route.",
+                  "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+                  "assessment.interpretation": "The 0.192 train-search gap suggests word-only features may underrepresent pair differences; adding character n-grams could capture lexical overlap missed by word tokens.",
+                  "assessment.uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route."
+                }
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            },
+            "proposal": {
+              "candidate": "word_char_C0.3",
+              "reason": "Word-only trial 1 shows a large train-search gap (0.192) at strong regularization; with two attempts left, testing a richer word+char representation is a stronger bet than another adjacent C step on the same route.",
+              "hypothesis": "Word+char TF-IDF at moderate C will exceed trial 1 search accuracy 0.6228 by at least 0.02.",
+              "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "assessment": {
+                "reading": "no_comparison",
+                "fact_ids": [
+                  "t1.search_score",
+                  "t1.train_score",
+                  "t1.score_gap",
+                  "t1.status"
+                ],
+                "interpretation": "The 0.192 train-search gap suggests word-only features may underrepresent pair differences; adding character n-grams could capture lexical overlap missed by word tokens.",
+                "uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route.",
+                "reading_source": "executor"
+              },
+              "cited_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                },
+                {
+                  "id": "t1.status",
+                  "trial": 1,
+                  "metric": "status",
+                  "value": "completed"
+                }
+              ],
+              "route_plan": {
+                "next_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength.",
+                "revisit_previous_if": "If word+char underperforms trial 1, return to the word route and try weaker regularization (higher C)."
+              },
+              "route_update": {
+                "selected_route": "word_char",
+                "action": "start",
+                "next_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength.",
+                "paused_routes": [
+                  {
+                    "route": "word",
+                    "resume_if": "If word+char underperforms trial 1, return to the word route and try weaker regularization (higher C)."
+                  }
+                ]
+              }
+            },
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 2,
+          "remaining": 1
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [
+            {
+              "id": "h2",
+              "proposed_before_trial": 2,
+              "tested_by_trial": 2,
+              "candidate": "word_char_C0.3",
+              "route": "word_char",
+              "text": "Word+char TF-IDF at moderate C will exceed trial 1 search accuracy 0.6228 by at least 0.02.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "status": "measurement_supported",
+              "measurement_check": {
+                "status": "supported",
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "reference_value": 0.6227909811090798,
+                "observed_value": 0.6569165143205362,
+                "observed_delta": 0.034125533211456394,
+                "direction": "increase",
+                "required_delta": 0.02
+              },
+              "causal_explanation_verified": false,
+              "pending_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength."
+            }
+          ],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "paused",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6,
+              "resume_if": "If word+char underperforms trial 1, return to the word route and try weaker regularization (higher C)."
+            },
+            {
+              "route": "word_char",
+              "status": "active",
+              "attempted_trials": [
+                2
+              ],
+              "best_trial": 2,
+              "best_search_accuracy": 0.6569165143205362,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6569165143205362,
+              "remaining_configurations": 6,
+              "next_check": "If word+char helps, test a nearby C to see whether the gain is robust to regularization strength."
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.1",
+        "reason": "Final adaptive attempt; word_char leads at 0.6569 and a nearby stronger-regularization C is the most direct robustness check, though untried char/word_char_stats routes remain alternatives.",
+        "hypothesis": "Word+char at C=0.1 will match or exceed trial 2 search accuracy 0.6569, testing robustness of the word_char gain to stronger regularization.",
+        "review": "Trial 2 improved over trial 1 by 0.0341 on reused internal rows; no significance test, and route plus C changed together, so attribution is unclear.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.0
+        },
+        "assessment": {
+          "reading": "improved",
+          "fact_ids": [
+            "t2.search_score",
+            "t2.delta_vs_prior_best",
+            "t2.score_gap",
+            "t1.search_score"
+          ],
+          "interpretation": "Word+char features may capture complementary signal beyond word-only, but the larger train-search gap suggests some overfitting risk.",
+          "uncertainty": "Whether the gain is robust to C, generalizes to confirmation splits, or stems from representation versus regularization is unknown.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t2.search_score",
+            "trial": 2,
+            "metric": "search_score",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394,
+            "primary_metric": "accuracy"
+          },
+          {
+            "id": "t2.score_gap",
+            "trial": 2,
+            "metric": "score_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char at C=0.1 retain the trial 2 search accuracy advantage?",
+          "revisit_previous_if": "If C=0.1 drops well below trial 2, reconsider weaker regularization or the untried char route."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "continue",
+          "next_check": "Does word_char at C=0.1 retain the trial 2 search accuracy advantage?",
+          "paused_routes": []
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": null,
+      "expected_direction_warning": false
+    },
+    {
+      "id": "self_review_trial2",
+      "original_round": "v0.33",
+      "architecture": "self_review",
+      "trial": 2,
+      "original_source_sha256": "57e75819dd95bf8b65119c4e452bd6f03b3c2f2884eaaf6956d2a0dde1eb5c5e",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 2,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5345336669124663,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 1,
+          "remaining": 2
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "active",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6
+            },
+            {
+              "route": "word_char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 7
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.3",
+        "reason": "Word-only trial 1 shows a large train-search gap (0.815 vs 0.623), suggesting the word representation may be too weak; with only 2 attempts left, testing a combined word+char representation is a stronger use of budget than another adjacent C step on the same route.",
+        "hypothesis": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues missed by word-only features.",
+        "review": "Trial 1 completed with search accuracy 0.6228 and a 0.1918 generalization gap; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 1,
+          "direction": "increase",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "no_comparison",
+          "fact_ids": [
+            "t1.search_score",
+            "t1.score_gap",
+            "t1.train_score"
+          ],
+          "interpretation": "The word-only model fits training moderately but generalizes poorly, so richer subword features may help; the gap could also reflect regularization or data noise.",
+          "uncertainty": "Unknown whether char features will close the gap or whether the low search score stems from the representation versus regularization strength; one trial cannot establish significance.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.score_gap",
+            "trial": 1,
+            "metric": "score_gap",
+            "value": 0.1917735834554848
+          },
+          {
+            "id": "t1.train_score",
+            "trial": 1,
+            "metric": "train_score",
+            "value": 0.8145645645645646
+          }
+        ],
+        "route_plan": {
+          "next_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization.",
+          "revisit_previous_if": "If word_char underperforms word-only, return to the word route and test weaker regularization (higher C) to address the large gap."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "start",
+          "next_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization.",
+          "paused_routes": [
+            {
+              "route": "word",
+              "resume_if": "If word_char underperforms word-only, return to the word route and test weaker regularization (higher C) to address the large gap."
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": {
+        "action": "keep",
+        "reason": "The proposal is defensible: with one prior word-only baseline and two attempts left, starting the untried word_char route tests a distinct representation rather than another adjacent C step. The hypothesis is testable against trial 1's search accuracy, and the revisit condition is concrete. Minor concern: the large train-search gap could reflect regularization or noise, not representation weakness, but the proposal acknowledges this uncertainty and does not overclaim.",
+        "fact_ids": [
+          "t1.search_score",
+          "t1.score_gap",
+          "t1.train_score",
+          "t1.status"
+        ],
+        "cited_facts": [
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.score_gap",
+            "trial": 1,
+            "metric": "score_gap",
+            "value": 0.1917735834554848
+          },
+          {
+            "id": "t1.train_score",
+            "trial": 1,
+            "metric": "train_score",
+            "value": 0.8145645645645646
+          },
+          {
+            "id": "t1.status",
+            "trial": 1,
+            "metric": "status",
+            "value": "completed"
+          }
+        ],
+        "replacement": null
+      },
+      "expected_direction_warning": false
+    },
+    {
+      "id": "self_review_trial3",
+      "original_round": "v0.33",
+      "architecture": "self_review",
+      "trial": 3,
+      "original_source_sha256": "57e75819dd95bf8b65119c4e452bd6f03b3c2f2884eaaf6956d2a0dde1eb5c5e",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 3,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5345336669124663,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          },
+          {
+            "trial": 2,
+            "candidate": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.9042042042042042,
+            "search_score": 0.6569165143205362,
+            "train_accuracy": 0.9042042042042042,
+            "search_accuracy": 0.6569165143205362,
+            "score_gap": 0.247287689883668,
+            "generalization_gap": 0.247287689883668,
+            "training_seconds": 2.0472811250947416,
+            "class_recall": [
+              0.6555423122765197,
+              0.6583541147132169
+            ],
+            "hypothesis_check": {
+              "status": "supported",
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "reference_value": 0.6227909811090798,
+              "observed_value": 0.6569165143205362,
+              "observed_delta": 0.034125533211456394,
+              "direction": "increase",
+              "required_delta": 0.02
+            },
+            "paired_error_comparison": {
+              "status": "completed",
+              "current_trial": 2,
+              "reference_trial": 1,
+              "current_candidate": "word_char_C0.3",
+              "reference_candidate": "word_C0.05",
+              "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+              "scope": "same ordered training-internal search partition",
+              "evaluation_payload_sha256": "a9316880385abcf5a2d07f91f90451e2950f0868b8d0705183287668e8178992",
+              "evaluated_rows": 1641,
+              "current_correct": 1078,
+              "reference_correct": 1022,
+              "both_correct": 906,
+              "newly_correct": 172,
+              "newly_wrong": 116,
+              "both_wrong": 447,
+              "prediction_disagreement_rows": 288,
+              "net_correct_change": 56,
+              "accuracy_change": 0.03412553321145643,
+              "single_row_accuracy_step": 0.0006093845216331506,
+              "statistical_test_performed": false,
+              "causal_effect_established": false,
+              "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+              "primary_metric": "accuracy",
+              "primary_score_change": 0.034125533211456394,
+              "accuracy_change_is_primary_metric_change": true
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.6227909811090798,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.6227909811090798,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal accuracy score is 62.279098%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                }
+              ],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "word_C0.05",
+                "reference_status": "completed",
+                "reference_rule": "structured_expectation_reference",
+                "selected_candidate": "word_char_C0.3",
+                "selected_status": null,
+                "reference_route": "word",
+                "selected_route": "word_char",
+                "same_declared_route": false,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.05,
+                    "after": 0.3,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": false,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                    }
+                  },
+                  {
+                    "parameter": "representation",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": "word",
+                    "after": "word_char",
+                    "parameter_effect": null
+                  }
+                ],
+                "single_declared_parameter_change": false,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+              },
+              "selected_candidate": "word_char_C0.3",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues missed by word-only features.",
+                "expected_change": {
+                  "metric": "search_accuracy",
+                  "reference_trial": 1,
+                  "direction": "increase",
+                  "min_delta": 0.02
+                }
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Word-only trial 1 shows a large train-search gap (0.815 vs 0.623), suggesting the word representation may be too weak; with only 2 attempts left, testing a combined word+char representation is a stronger use of budget than another adjacent C step on the same route.",
+                  "review": "Trial 1 completed with search accuracy 0.6228 and a 0.1918 generalization gap; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+                  "assessment.interpretation": "The word-only model fits training moderately but generalizes poorly, so richer subword features may help; the gap could also reflect regularization or data noise.",
+                  "assessment.uncertainty": "Unknown whether char features will close the gap or whether the low search score stems from the representation versus regularization strength; one trial cannot establish significance."
+                }
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            },
+            "proposal": {
+              "candidate": "word_char_C0.3",
+              "reason": "Word-only trial 1 shows a large train-search gap (0.815 vs 0.623), suggesting the word representation may be too weak; with only 2 attempts left, testing a combined word+char representation is a stronger use of budget than another adjacent C step on the same route.",
+              "hypothesis": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues missed by word-only features.",
+              "review": "Trial 1 completed with search accuracy 0.6228 and a 0.1918 generalization gap; no prior comparison exists, so this is a baseline, not a proven ceiling.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "assessment": {
+                "reading": "no_comparison",
+                "fact_ids": [
+                  "t1.search_score",
+                  "t1.score_gap",
+                  "t1.train_score"
+                ],
+                "interpretation": "The word-only model fits training moderately but generalizes poorly, so richer subword features may help; the gap could also reflect regularization or data noise.",
+                "uncertainty": "Unknown whether char features will close the gap or whether the low search score stems from the representation versus regularization strength; one trial cannot establish significance.",
+                "reading_source": "executor"
+              },
+              "cited_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                }
+              ],
+              "route_plan": {
+                "next_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization.",
+                "revisit_previous_if": "If word_char underperforms word-only, return to the word route and test weaker regularization (higher C) to address the large gap."
+              },
+              "route_update": {
+                "selected_route": "word_char",
+                "action": "start",
+                "next_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization.",
+                "paused_routes": [
+                  {
+                    "route": "word",
+                    "resume_if": "If word_char underperforms word-only, return to the word route and test weaker regularization (higher C) to address the large gap."
+                  }
+                ]
+              }
+            },
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 2,
+          "remaining": 1
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [
+            {
+              "id": "h2",
+              "proposed_before_trial": 2,
+              "tested_by_trial": 2,
+              "candidate": "word_char_C0.3",
+              "route": "word_char",
+              "text": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues missed by word-only features.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "status": "measurement_supported",
+              "measurement_check": {
+                "status": "supported",
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "reference_value": 0.6227909811090798,
+                "observed_value": 0.6569165143205362,
+                "observed_delta": 0.034125533211456394,
+                "direction": "increase",
+                "required_delta": 0.02
+              },
+              "causal_explanation_verified": false,
+              "pending_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization."
+            }
+          ],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "paused",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6,
+              "resume_if": "If word_char underperforms word-only, return to the word route and test weaker regularization (higher C) to address the large gap."
+            },
+            {
+              "route": "word_char",
+              "status": "active",
+              "attempted_trials": [
+                2
+              ],
+              "best_trial": 2,
+              "best_search_accuracy": 0.6569165143205362,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6569165143205362,
+              "remaining_configurations": 6,
+              "next_check": "If word_char improves, probe its C around 0.3 to see if the gain is stable across regularization."
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.1",
+        "reason": "Final adaptive attempt; word_char leads at 0.6569 and stronger regularization (smaller C) is the most promising adjacent check for final accuracy, outweighing an untried route with no evidence.",
+        "hypothesis": "Lowering C to 0.1 on word_char will reduce the 0.247 train-search gap and raise search accuracy above 0.6569 by at least 0.01.",
+        "review": "Trial 2 improved over trial 1 by 0.0341 with 172 newly correct and 116 newly wrong; no significance test, and route plus C changed together.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.01
+        },
+        "assessment": {
+          "reading": "improved",
+          "fact_ids": [
+            "t2.search_score",
+            "t2.score_gap",
+            "t2.delta_vs_prior_best",
+            "t2.newly_correct"
+          ],
+          "interpretation": "Word_char at C=0.3 beats word-only, but its larger train-search gap suggests weaker regularization may help; smaller C is untested here.",
+          "uncertainty": "No significance test; route and C changed together, so the gain's source and whether C=0.1 helps remain unknown.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t2.search_score",
+            "trial": 2,
+            "metric": "search_score",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.score_gap",
+            "trial": 2,
+            "metric": "score_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394,
+            "primary_metric": "accuracy"
+          },
+          {
+            "id": "t2.newly_correct",
+            "trial": 2,
+            "metric": "newly_correct",
+            "value": 172,
+            "reference_trial": 1,
+            "scope": "same ordered internal search rows; descriptive only"
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char at C=0.1 improve search accuracy over 0.6569 while narrowing the train-search gap?",
+          "revisit_previous_if": "If C=0.1 drops search accuracy, reconsider C=0.3 or a word_char_stats route for added shape features."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "continue",
+          "next_check": "Does word_char at C=0.1 improve search accuracy over 0.6569 while narrowing the train-search gap?",
+          "paused_routes": []
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": {
+        "action": "keep",
+        "reason": "Final adaptive attempt; word_char leads and C=0.1 is a defensible adjacent regularization check. The proposal correctly notes route and C changed together in trial 2, so it does not over-attribute the gain. It states a concrete revisit condition. Untried routes remain uncertain, but the leading route's adjacent check is reasonable for final quality.",
+        "fact_ids": [
+          "t2.search_score",
+          "t2.score_gap",
+          "t2.delta_vs_prior_best",
+          "t2.newly_correct"
+        ],
+        "cited_facts": [
+          {
+            "id": "t2.search_score",
+            "trial": 2,
+            "metric": "search_score",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.score_gap",
+            "trial": 2,
+            "metric": "score_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394,
+            "primary_metric": "accuracy"
+          },
+          {
+            "id": "t2.newly_correct",
+            "trial": 2,
+            "metric": "newly_correct",
+            "value": 172,
+            "reference_trial": 1,
+            "scope": "same ordered internal search rows; descriptive only"
+          }
+        ],
+        "replacement": null
+      },
+      "expected_direction_warning": true
+    },
+    {
+      "id": "reviewer_trial2",
+      "original_round": "v0.33",
+      "architecture": "reviewer",
+      "trial": 2,
+      "original_source_sha256": "58560a823e5945943194329f3636fe7bd75d543c89fb1048fb48d416a4acaff9",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 2,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5734626669436693,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 1,
+          "remaining": 2
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "active",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6
+            },
+            {
+              "route": "word_char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 7
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.3",
+        "reason": "Word-only trial 1 shows a large train-search gap (0.19) at strong regularization; with 2 attempts left, testing a combined word+char representation is a higher-value alternative to another adjacent C step on the same route.",
+        "hypothesis": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues word-only features miss.",
+        "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not evidence against the word route.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 1,
+          "direction": "increase",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "no_comparison",
+          "fact_ids": [
+            "t1.search_score",
+            "t1.train_score",
+            "t1.score_gap"
+          ],
+          "interpretation": "The 0.19 train-search gap suggests word-only features may not transfer well; a combined representation could reduce this by adding character-level signal.",
+          "uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.train_score",
+            "trial": 1,
+            "metric": "train_score",
+            "value": 0.8145645645645646
+          },
+          {
+            "id": "t1.score_gap",
+            "trial": 1,
+            "metric": "score_gap",
+            "value": 0.1917735834554848
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?",
+          "revisit_previous_if": "If word_char underperforms, return to word route and test weaker regularization (higher C) to address the large gap."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "start",
+          "next_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?",
+          "paused_routes": [
+            {
+              "route": "word",
+              "resume_if": "If word_char underperforms, return to word route and test weaker regularization (higher C) to address the large gap."
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": {
+        "action": "keep",
+        "reason": "The proposal is defensible: trial 1's 0.19 train-search gap and 0.6228 search accuracy leave the word route unresolved, but with only two attempts left, testing an untried combined word+char representation at moderate C is a reasonable higher-value alternative to another adjacent C step. The hypothesis is testable against the 0.6228 baseline, and the revisit condition for the word route is concrete.",
+        "fact_ids": [
+          "t1.search_score",
+          "t1.train_score",
+          "t1.score_gap",
+          "t1.status"
+        ],
+        "cited_facts": [
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.train_score",
+            "trial": 1,
+            "metric": "train_score",
+            "value": 0.8145645645645646
+          },
+          {
+            "id": "t1.score_gap",
+            "trial": 1,
+            "metric": "score_gap",
+            "value": 0.1917735834554848
+          },
+          {
+            "id": "t1.status",
+            "trial": 1,
+            "metric": "status",
+            "value": "completed"
+          }
+        ],
+        "replacement": null
+      },
+      "expected_direction_warning": false
+    },
+    {
+      "id": "reviewer_trial3",
+      "original_round": "v0.33",
+      "architecture": "reviewer",
+      "trial": 3,
+      "original_source_sha256": "58560a823e5945943194329f3636fe7bd75d543c89fb1048fb48d416a4acaff9",
+      "state": {
+        "contract_version": 1,
+        "next_trial": 3,
+        "feedback_visible": true,
+        "profile": {
+          "evaluation_protocol": {
+            "grouping": "shared_text",
+            "selection_data": "training_partition_only",
+            "train_rows": 6660,
+            "search_rows": 1641,
+            "search_rows_sharing_text": 0,
+            "planned_final_selection": {
+              "primary_metric": "accuracy",
+              "search_measurement": "single_split_accuracy",
+              "final_metric": "mean_confirmation_accuracy",
+              "confirmation_repeats": 3,
+              "confirmation_top_k": 3,
+              "confirmation_grouping": "shared_text",
+              "maximum_additional_confirmation_fits": 6,
+              "incomplete_confirmation_fallback": "retain_primary_best",
+              "full_train_refit_after_selection": true,
+              "fixed_ensemble_check": false,
+              "provided_validation_role": "score_only_after_selection_and_model_freeze"
+            }
+          },
+          "primary_metric": "accuracy",
+          "class_count": 2,
+          "task_kind": "pair_text",
+          "train_label_counts": {
+            "1": 3373,
+            "0": 3287
+          },
+          "validation_label_counts": {
+            "0": 839,
+            "1": 802
+          },
+          "input_pair_count": 6660,
+          "empty_text_count": 0,
+          "word_count": {
+            "min": 1,
+            "median": 15,
+            "p95": 19,
+            "max": 26
+          }
+        },
+        "history": [
+          {
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "score_gap": 0.1917735834554848,
+            "generalization_gap": 0.1917735834554848,
+            "training_seconds": 0.5734626669436693,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "paired_error_comparison": {
+              "status": "unavailable",
+              "reason": "no_prior_completed_trial"
+            },
+            "explanation_audit": null,
+            "proposal": null,
+            "selected_iterations": null,
+            "classifier_fits": 1
+          },
+          {
+            "trial": 2,
+            "candidate": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "status": "completed",
+            "primary_metric": "accuracy",
+            "train_score": 0.9042042042042042,
+            "search_score": 0.6569165143205362,
+            "train_accuracy": 0.9042042042042042,
+            "search_accuracy": 0.6569165143205362,
+            "score_gap": 0.247287689883668,
+            "generalization_gap": 0.247287689883668,
+            "training_seconds": 2.2544031250290573,
+            "class_recall": [
+              0.6555423122765197,
+              0.6583541147132169
+            ],
+            "hypothesis_check": {
+              "status": "supported",
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "reference_value": 0.6227909811090798,
+              "observed_value": 0.6569165143205362,
+              "observed_delta": 0.034125533211456394,
+              "direction": "increase",
+              "required_delta": 0.02
+            },
+            "paired_error_comparison": {
+              "status": "completed",
+              "current_trial": 2,
+              "reference_trial": 1,
+              "current_candidate": "word_char_C0.3",
+              "reference_candidate": "word_C0.05",
+              "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+              "scope": "same ordered training-internal search partition",
+              "evaluation_payload_sha256": "6f1964b7ba89e470d4bcbd3ed0c258498599c08f08fd6cc48a58eeafaadb1241",
+              "evaluated_rows": 1641,
+              "current_correct": 1078,
+              "reference_correct": 1022,
+              "both_correct": 906,
+              "newly_correct": 172,
+              "newly_wrong": 116,
+              "both_wrong": 447,
+              "prediction_disagreement_rows": 288,
+              "net_correct_change": 56,
+              "accuracy_change": 0.03412553321145643,
+              "single_row_accuracy_step": 0.0006093845216331506,
+              "statistical_test_performed": false,
+              "causal_effect_established": false,
+              "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+              "primary_metric": "accuracy",
+              "primary_score_change": 0.034125533211456394,
+              "accuracy_change_is_primary_metric_change": true
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.6227909811090798,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.6227909811090798,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal accuracy score is 62.279098%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                }
+              ],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "word_C0.05",
+                "reference_status": "completed",
+                "reference_rule": "structured_expectation_reference",
+                "selected_candidate": "word_char_C0.3",
+                "selected_status": null,
+                "reference_route": "word",
+                "selected_route": "word_char",
+                "same_declared_route": false,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.05,
+                    "after": 0.3,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": false,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                    }
+                  },
+                  {
+                    "parameter": "representation",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": "word",
+                    "after": "word_char",
+                    "parameter_effect": null
+                  }
+                ],
+                "single_declared_parameter_change": false,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+              },
+              "selected_candidate": "word_char_C0.3",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues word-only features miss.",
+                "expected_change": {
+                  "metric": "search_accuracy",
+                  "reference_trial": 1,
+                  "direction": "increase",
+                  "min_delta": 0.02
+                }
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Word-only trial 1 shows a large train-search gap (0.19) at strong regularization; with 2 attempts left, testing a combined word+char representation is a higher-value alternative to another adjacent C step on the same route.",
+                  "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not evidence against the word route.",
+                  "assessment.interpretation": "The 0.19 train-search gap suggests word-only features may not transfer well; a combined representation could reduce this by adding character-level signal.",
+                  "assessment.uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route."
+                }
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            },
+            "proposal": {
+              "candidate": "word_char_C0.3",
+              "reason": "Word-only trial 1 shows a large train-search gap (0.19) at strong regularization; with 2 attempts left, testing a combined word+char representation is a higher-value alternative to another adjacent C step on the same route.",
+              "hypothesis": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues word-only features miss.",
+              "review": "Trial 1 completed with search accuracy 0.6228 and train 0.8146; no prior comparison exists, so this is a baseline, not evidence against the word route.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "assessment": {
+                "reading": "no_comparison",
+                "fact_ids": [
+                  "t1.search_score",
+                  "t1.train_score",
+                  "t1.score_gap"
+                ],
+                "interpretation": "The 0.19 train-search gap suggests word-only features may not transfer well; a combined representation could reduce this by adding character-level signal.",
+                "uncertainty": "Unknown whether the gap reflects representation limits or split variance; one trial cannot establish significance or rule out the word route.",
+                "reading_source": "executor"
+              },
+              "cited_facts": [
+                {
+                  "id": "t1.search_score",
+                  "trial": 1,
+                  "metric": "search_score",
+                  "value": 0.6227909811090798
+                },
+                {
+                  "id": "t1.train_score",
+                  "trial": 1,
+                  "metric": "train_score",
+                  "value": 0.8145645645645646
+                },
+                {
+                  "id": "t1.score_gap",
+                  "trial": 1,
+                  "metric": "score_gap",
+                  "value": 0.1917735834554848
+                }
+              ],
+              "route_plan": {
+                "next_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?",
+                "revisit_previous_if": "If word_char underperforms, return to word route and test weaker regularization (higher C) to address the large gap."
+              },
+              "route_update": {
+                "selected_route": "word_char",
+                "action": "start",
+                "next_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?",
+                "paused_routes": [
+                  {
+                    "route": "word",
+                    "resume_if": "If word_char underperforms, return to word route and test weaker regularization (higher C) to address the large gap."
+                  }
+                ]
+              }
+            },
+            "selected_iterations": null,
+            "classifier_fits": 1
+          }
+        ],
+        "available_candidates": [
+          {
+            "id": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C1.5",
+            "params": {
+              "C": 1.5,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_C10.0",
+            "params": {
+              "C": 10.0,
+              "representation": "word_char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "char_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "char",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C1.0",
+            "params": {
+              "C": 1.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          },
+          {
+            "id": "word_char_stats_C3.0",
+            "params": {
+              "C": 3.0,
+              "representation": "word_char_stats",
+              "swap_augmentation": true
+            }
+          }
+        ],
+        "trial_budget": {
+          "maximum": 3,
+          "attempted": 2,
+          "remaining": 1
+        },
+        "memory": {
+          "schema_version": 1,
+          "primary_metric": "accuracy",
+          "hypotheses": [
+            {
+              "id": "h2",
+              "proposed_before_trial": 2,
+              "tested_by_trial": 2,
+              "candidate": "word_char_C0.3",
+              "route": "word_char",
+              "text": "Combining word and char TF-IDF at moderate C will raise search accuracy above 0.6228 by capturing subword cues word-only features miss.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": {
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "direction": "increase",
+                "min_delta": 0.02
+              },
+              "status": "measurement_supported",
+              "measurement_check": {
+                "status": "supported",
+                "metric": "search_accuracy",
+                "reference_trial": 1,
+                "reference_value": 0.6227909811090798,
+                "observed_value": 0.6569165143205362,
+                "observed_delta": 0.034125533211456394,
+                "direction": "increase",
+                "required_delta": 0.02
+              },
+              "causal_explanation_verified": false,
+              "pending_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?"
+            }
+          ],
+          "routes": [
+            {
+              "route": "char",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            },
+            {
+              "route": "word",
+              "status": "paused",
+              "attempted_trials": [
+                1
+              ],
+              "best_trial": 1,
+              "best_search_accuracy": 0.6227909811090798,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6227909811090798,
+              "remaining_configurations": 6,
+              "resume_if": "If word_char underperforms, return to word route and test weaker regularization (higher C) to address the large gap."
+            },
+            {
+              "route": "word_char",
+              "status": "active",
+              "attempted_trials": [
+                2
+              ],
+              "best_trial": 2,
+              "best_search_accuracy": 0.6569165143205362,
+              "primary_metric": "accuracy",
+              "best_search_score": 0.6569165143205362,
+              "remaining_configurations": 6,
+              "next_check": "Does word_char at C0.3 beat 0.6228 search accuracy, and does its train-search gap shrink?"
+            },
+            {
+              "route": "word_char_stats",
+              "status": "untried",
+              "attempted_trials": [],
+              "best_trial": null,
+              "best_search_accuracy": null,
+              "primary_metric": "accuracy",
+              "best_search_score": null,
+              "remaining_configurations": 4
+            }
+          ],
+          "failures": [],
+          "open_hypotheses": [],
+          "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+        },
+        "task_spec": {
+          "contract_version": 1,
+          "objective": "classification",
+          "kind": "pair_text",
+          "metric": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "input_schema": {},
+          "selection_data": "training-derived partitions only",
+          "formal_test_available_to_agent": false
+        }
+      },
+      "proposal": {
+        "candidate": "word_char_C0.1",
+        "reason": "Final attempt; word_char leads at 0.6569 but shows a large train-search gap (0.247). Stronger regularization (lower C) is the most direct lever to improve generalization on the leading route rather than spending the last trial on an untried family.",
+        "hypothesis": "Lowering C to 0.1 on word_char will reduce the train-search gap and raise search accuracy above 0.6569.",
+        "review": "Trial 2 improved over trial 1 by 0.0341 but changed both representation and C, so the gain cannot be attributed to one factor; the gap widened, suggesting overfitting worth testing.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.01
+        },
+        "assessment": {
+          "reading": "improved",
+          "fact_ids": [
+            "t2.search_score",
+            "t2.score_gap",
+            "t1.search_score",
+            "t2.delta_vs_prior_best"
+          ],
+          "interpretation": "Word_char at C0.3 beats word-only, but its larger train-search gap hints weaker regularization may generalize better on the same representation.",
+          "uncertainty": "No significance test; the trial-2 gain conflates representation and C, and it is unknown whether lower C helps or underfits.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t2.search_score",
+            "trial": 2,
+            "metric": "search_score",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.score_gap",
+            "trial": 2,
+            "metric": "score_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394,
+            "primary_metric": "accuracy"
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char at C0.1 exceed 0.6569 search accuracy while narrowing the train-search gap?",
+          "revisit_previous_if": "If C0.1 underfits and drops search accuracy, reconsider word_char at higher C or the word route."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "continue",
+          "next_check": "Does word_char at C0.1 exceed 0.6569 search accuracy while narrowing the train-search gap?",
+          "paused_routes": []
+        }
+      },
+      "candidate": {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        }
+      },
+      "original_review": {
+        "action": "keep",
+        "reason": "The proposal is a defensible final-attempt continuation: it changes only C on the leading word_char route, directly tests whether stronger regularization narrows the large train-search gap, and does not misattribute the trial-2 gain to one factor. The untried char and word_char_stats routes remain alternatives, but the leading route's gap makes a regularization check a reasonable use of the last trial.",
+        "fact_ids": [
+          "t2.search_score",
+          "t2.score_gap",
+          "t1.search_score",
+          "t2.delta_vs_prior_best"
+        ],
+        "cited_facts": [
+          {
+            "id": "t2.search_score",
+            "trial": 2,
+            "metric": "search_score",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.score_gap",
+            "trial": 2,
+            "metric": "score_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t1.search_score",
+            "trial": 1,
+            "metric": "search_score",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394,
+            "primary_metric": "accuracy"
+          }
+        ],
+        "replacement": null
+      },
+      "expected_direction_warning": true
+    }
+  ]
+}

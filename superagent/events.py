@@ -56,7 +56,9 @@ class RunLogger:
             "input_tokens": 0,
             "output_tokens": 0,
             "cost_rmb": 0.0,
-            "note": "No LLM call was made in this local baseline run.",
+            "course_cost_rmb": 0.0,
+            "actual_cost_rmb": 0.0,
+            "note": "Ledger initialized; no model call has been recorded yet.",
         }
         self.usage_path.write_text(json.dumps(record, ensure_ascii=False) + "\n", encoding="utf-8")
 

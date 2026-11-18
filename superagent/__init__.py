@@ -1,4 +1,1 @@
-"""Schema-driven, reproducible classification SuperAgent."""
-
-__version__ = "0.1.0"
-
+__version__ = "0.42.0"

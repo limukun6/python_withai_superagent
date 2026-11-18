@@ -1,0 +1,1317 @@
+[
+  {
+    "contract_version": 1,
+    "next_trial": 1,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "exact_rows",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 7961,
+          "train_groups": 6369,
+          "heldout_groups": 1592,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6495,
+        "search_rows": 1622,
+        "search_duplicate_rows": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "exact_rows",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "categorical_tabular",
+      "train_label_counts": {
+        "0": 2815,
+        "1": 3680
+      },
+      "validation_label_counts": {
+        "0": 688,
+        "1": 934
+      },
+      "feature_count": 21,
+      "unique_values_per_column": [
+        3,
+        5,
+        5,
+        2,
+        2,
+        8,
+        5,
+        2,
+        6,
+        25,
+        9,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "missing_values_per_column": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        47,
+        103,
+        73,
+        69,
+        97,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "constant_columns": [
+        16
+      ],
+      "duplicate_train_feature_rows": 123
+    },
+    "history": [],
+    "available_candidates": [
+      {
+        "id": "logistic_C0.05",
+        "params": {
+          "C": 0.05
+        }
+      },
+      {
+        "id": "logistic_C0.25",
+        "params": {
+          "C": 0.25
+        }
+      },
+      {
+        "id": "logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "logistic_C4.0",
+        "params": {
+          "C": 4.0
+        }
+      },
+      {
+        "id": "extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf2",
+        "params": {
+          "min_samples_leaf": 2,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf4",
+        "params": {
+          "min_samples_leaf": 4,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf8",
+        "params": {
+          "min_samples_leaf": 8,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "catboost_depth4_reg3.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth4_reg10.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg10.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 0,
+      "remaining": 4
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "catboost",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 6
+        },
+        {
+          "route": "extra_trees",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "logistic",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 2,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "exact_rows",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 7961,
+          "train_groups": 6369,
+          "heldout_groups": 1592,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6495,
+        "search_rows": 1622,
+        "search_duplicate_rows": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "exact_rows",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "categorical_tabular",
+      "train_label_counts": {
+        "0": 2815,
+        "1": 3680
+      },
+      "validation_label_counts": {
+        "0": 688,
+        "1": 934
+      },
+      "feature_count": 21,
+      "unique_values_per_column": [
+        3,
+        5,
+        5,
+        2,
+        2,
+        8,
+        5,
+        2,
+        6,
+        25,
+        9,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "missing_values_per_column": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        47,
+        103,
+        73,
+        69,
+        97,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "constant_columns": [
+        16
+      ],
+      "duplicate_train_feature_rows": 123
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "logistic_C0.05",
+        "params": {
+          "C": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.6788298691301001,
+        "search_score": 0.6652281134401973,
+        "train_accuracy": 0.6788298691301001,
+        "search_accuracy": 0.6652281134401973,
+        "score_gap": 0.01360175568990285,
+        "generalization_gap": 0.01360175568990285,
+        "training_seconds": 0.29934266582131386,
+        "class_recall": [
+          0.5436046511627907,
+          0.7548179871520343
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "logistic_C0.25",
+        "params": {
+          "C": 0.25
+        }
+      },
+      {
+        "id": "logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "logistic_C4.0",
+        "params": {
+          "C": 4.0
+        }
+      },
+      {
+        "id": "extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf2",
+        "params": {
+          "min_samples_leaf": 2,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf4",
+        "params": {
+          "min_samples_leaf": 4,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf8",
+        "params": {
+          "min_samples_leaf": 8,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "catboost_depth4_reg3.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth4_reg10.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg10.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 1,
+      "remaining": 3
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "catboost",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 6
+        },
+        {
+          "route": "extra_trees",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "logistic",
+          "status": "active",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6652281134401973,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6652281134401973,
+          "remaining_configurations": 3
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 3,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "exact_rows",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 7961,
+          "train_groups": 6369,
+          "heldout_groups": 1592,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6495,
+        "search_rows": 1622,
+        "search_duplicate_rows": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "exact_rows",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "categorical_tabular",
+      "train_label_counts": {
+        "0": 2815,
+        "1": 3680
+      },
+      "validation_label_counts": {
+        "0": 688,
+        "1": 934
+      },
+      "feature_count": 21,
+      "unique_values_per_column": [
+        3,
+        5,
+        5,
+        2,
+        2,
+        8,
+        5,
+        2,
+        6,
+        25,
+        9,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "missing_values_per_column": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        47,
+        103,
+        73,
+        69,
+        97,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "constant_columns": [
+        16
+      ],
+      "duplicate_train_feature_rows": 123
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "logistic_C0.05",
+        "params": {
+          "C": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.6788298691301001,
+        "search_score": 0.6652281134401973,
+        "train_accuracy": 0.6788298691301001,
+        "search_accuracy": 0.6652281134401973,
+        "score_gap": 0.01360175568990285,
+        "generalization_gap": 0.01360175568990285,
+        "training_seconds": 0.29934266582131386,
+        "class_recall": [
+          0.5436046511627907,
+          0.7548179871520343
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8157043879907622,
+        "search_score": 0.752157829839704,
+        "train_accuracy": 0.8157043879907622,
+        "search_accuracy": 0.752157829839704,
+        "score_gap": 0.06354655815105814,
+        "generalization_gap": 0.06354655815105814,
+        "training_seconds": 4.142428874969482,
+        "class_recall": [
+          0.6468023255813954,
+          0.8297644539614561
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 2,
+          "reference_trial": 1,
+          "current_candidate": "catboost_depth6_reg3.0",
+          "reference_candidate": "logistic_C0.05",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e60282c4ee23f1f27270330e1efb6b4dfd77aaf1b52f65cd24b6f4b7fb947a4f",
+          "evaluated_rows": 1622,
+          "current_correct": 1220,
+          "reference_correct": 1079,
+          "both_correct": 985,
+          "newly_correct": 235,
+          "newly_wrong": 94,
+          "both_wrong": 308,
+          "prediction_disagreement_rows": 329,
+          "net_correct_change": 141,
+          "accuracy_change": 0.08692971639950678,
+          "single_row_accuracy_step": 0.0006165228113440197,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": 0.08692971639950675,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "logistic_C0.25",
+        "params": {
+          "C": 0.25
+        }
+      },
+      {
+        "id": "logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "logistic_C4.0",
+        "params": {
+          "C": 4.0
+        }
+      },
+      {
+        "id": "extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf2",
+        "params": {
+          "min_samples_leaf": 2,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf4",
+        "params": {
+          "min_samples_leaf": 4,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf8",
+        "params": {
+          "min_samples_leaf": 8,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "catboost_depth4_reg3.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth4_reg10.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg10.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 2,
+      "remaining": 2
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "catboost",
+          "status": "active",
+          "attempted_trials": [
+            2
+          ],
+          "best_trial": 2,
+          "best_search_accuracy": 0.752157829839704,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.752157829839704,
+          "remaining_configurations": 5
+        },
+        {
+          "route": "extra_trees",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "logistic",
+          "status": "paused",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6652281134401973,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6652281134401973,
+          "remaining_configurations": 3
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "contract_version": 1,
+    "next_trial": 4,
+    "feedback_visible": true,
+    "profile": {
+      "evaluation_protocol": {
+        "grouping": "exact_rows",
+        "selection_data": "training_partition_only",
+        "split_resource": {
+          "folds": 5,
+          "heldout_fold": 0,
+          "total_groups": 7961,
+          "train_groups": 6369,
+          "heldout_groups": 1592,
+          "class_domain_preserved": true,
+          "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+          "small_data_reduction": false
+        },
+        "train_rows": 6495,
+        "search_rows": 1622,
+        "search_duplicate_rows": 0,
+        "planned_final_selection": {
+          "primary_metric": "accuracy",
+          "search_measurement": "single_split_accuracy",
+          "final_metric": "mean_confirmation_accuracy",
+          "confirmation_repeats": 3,
+          "confirmation_top_k": 3,
+          "confirmation_grouping": "exact_rows",
+          "maximum_additional_confirmation_fits": 6,
+          "incomplete_confirmation_fallback": "retain_primary_best",
+          "full_train_refit_after_selection": true,
+          "fixed_ensemble_check": false,
+          "provided_validation_role": "score_only_after_selection_and_model_freeze"
+        }
+      },
+      "primary_metric": "accuracy",
+      "class_count": 2,
+      "task_kind": "categorical_tabular",
+      "train_label_counts": {
+        "0": 2815,
+        "1": 3680
+      },
+      "validation_label_counts": {
+        "0": 688,
+        "1": 934
+      },
+      "feature_count": 21,
+      "unique_values_per_column": [
+        3,
+        5,
+        5,
+        2,
+        2,
+        8,
+        5,
+        2,
+        6,
+        25,
+        9,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "missing_values_per_column": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        47,
+        103,
+        73,
+        69,
+        97,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "constant_columns": [
+        16
+      ],
+      "duplicate_train_feature_rows": 123
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "logistic_C0.05",
+        "params": {
+          "C": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.6788298691301001,
+        "search_score": 0.6652281134401973,
+        "train_accuracy": 0.6788298691301001,
+        "search_accuracy": 0.6652281134401973,
+        "score_gap": 0.01360175568990285,
+        "generalization_gap": 0.01360175568990285,
+        "training_seconds": 0.29934266582131386,
+        "class_recall": [
+          0.5436046511627907,
+          0.7548179871520343
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "unavailable",
+          "reason": "no_prior_completed_trial"
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8157043879907622,
+        "search_score": 0.752157829839704,
+        "train_accuracy": 0.8157043879907622,
+        "search_accuracy": 0.752157829839704,
+        "score_gap": 0.06354655815105814,
+        "generalization_gap": 0.06354655815105814,
+        "training_seconds": 4.142428874969482,
+        "class_recall": [
+          0.6468023255813954,
+          0.8297644539614561
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 2,
+          "reference_trial": 1,
+          "current_candidate": "catboost_depth6_reg3.0",
+          "reference_candidate": "logistic_C0.05",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e60282c4ee23f1f27270330e1efb6b4dfd77aaf1b52f65cd24b6f4b7fb947a4f",
+          "evaluated_rows": 1622,
+          "current_correct": 1220,
+          "reference_correct": 1079,
+          "both_correct": 985,
+          "newly_correct": 235,
+          "newly_wrong": 94,
+          "both_wrong": 308,
+          "prediction_disagreement_rows": 329,
+          "net_correct_change": 141,
+          "accuracy_change": 0.08692971639950678,
+          "single_row_accuracy_step": 0.0006165228113440197,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": 0.08692971639950675,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      },
+      {
+        "trial": 3,
+        "candidate": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.8526558891454965,
+        "search_score": 0.7540073982737361,
+        "train_accuracy": 0.8526558891454965,
+        "search_accuracy": 0.7540073982737361,
+        "score_gap": 0.09864849087176042,
+        "generalization_gap": 0.09864849087176042,
+        "training_seconds": 6.067204334074631,
+        "class_recall": [
+          0.6409883720930233,
+          0.8372591006423983
+        ],
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "paired_error_comparison": {
+          "status": "completed",
+          "current_trial": 3,
+          "reference_trial": 2,
+          "current_candidate": "catboost_depth8_reg3.0",
+          "reference_candidate": "catboost_depth6_reg3.0",
+          "reference_rule": "highest earlier completed primary score; earliest trial breaks ties",
+          "scope": "same ordered training-internal search partition",
+          "evaluation_payload_sha256": "e60282c4ee23f1f27270330e1efb6b4dfd77aaf1b52f65cd24b6f4b7fb947a4f",
+          "evaluated_rows": 1622,
+          "current_correct": 1223,
+          "reference_correct": 1220,
+          "both_correct": 1165,
+          "newly_correct": 58,
+          "newly_wrong": 55,
+          "both_wrong": 344,
+          "prediction_disagreement_rows": 113,
+          "net_correct_change": 3,
+          "accuracy_change": 0.0018495684340320592,
+          "single_row_accuracy_step": 0.0006165228113440197,
+          "statistical_test_performed": false,
+          "causal_effect_established": false,
+          "interpretation": "Descriptive paired counts on reused training data; not uncertainty bounds, independent confirmation, or evidence that an ensemble will improve.",
+          "primary_metric": "accuracy",
+          "primary_score_change": 0.0018495684340320562,
+          "accuracy_change_is_primary_metric_change": true
+        },
+        "explanation_audit": null,
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "logistic_C0.25",
+        "params": {
+          "C": 0.25
+        }
+      },
+      {
+        "id": "logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "logistic_C4.0",
+        "params": {
+          "C": 4.0
+        }
+      },
+      {
+        "id": "extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf2",
+        "params": {
+          "min_samples_leaf": 2,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf4",
+        "params": {
+          "min_samples_leaf": 4,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "extra_trees_leaf8",
+        "params": {
+          "min_samples_leaf": 8,
+          "n_estimators": 400
+        }
+      },
+      {
+        "id": "catboost_depth4_reg3.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth4_reg10.0",
+        "params": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      },
+      {
+        "id": "catboost_depth8_reg10.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 4,
+      "attempted": 3,
+      "remaining": 1
+    },
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "routes": [
+        {
+          "route": "catboost",
+          "status": "active",
+          "attempted_trials": [
+            2,
+            3
+          ],
+          "best_trial": 3,
+          "best_search_accuracy": 0.7540073982737361,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.7540073982737361,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "extra_trees",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 4
+        },
+        {
+          "route": "logistic",
+          "status": "paused",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6652281134401973,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6652281134401973,
+          "remaining_configurations": 3
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    },
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  }
+]

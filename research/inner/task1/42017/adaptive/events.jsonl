@@ -1,0 +1,18 @@
+{"event": "request", "number": 1, "candidate": "logistic_C0.05", "split": 0, "reason": "shared_anchor"}
+{"event": "observed", "number": 1, "candidate": "logistic_C0.05", "split": 0, "accuracy": 0.7129094412331407}
+{"event": "request", "number": 2, "candidate": "catboost_depth6_reg3.0", "split": 0, "reason": "interleaved_explore_route"}
+{"event": "observed", "number": 2, "candidate": "catboost_depth6_reg3.0", "split": 0, "accuracy": 0.7572254335260116}
+{"event": "screen", "reference": "logistic_C0.05", "candidate": "catboost_depth6_reg3.0", "plausible": true, "n": 1038, "fixed": 109, "lost": 63, "delta": 0.04431599229287091}
+{"event": "request", "number": 3, "candidate": "logistic_C0.05", "split": 1, "reason": "paired_recheck_on_another_partition"}
+{"event": "observed", "number": 3, "candidate": "logistic_C0.05", "split": 1, "accuracy": 0.6721311475409836}
+{"event": "request", "number": 4, "candidate": "catboost_depth6_reg3.0", "split": 1, "reason": "paired_recheck_on_another_partition"}
+{"event": "observed", "number": 4, "candidate": "catboost_depth6_reg3.0", "split": 1, "accuracy": 0.7502410800385728}
+{"event": "duel", "reference": "logistic_C0.05", "candidate": "catboost_depth6_reg3.0", "deltas": [0.04431599229287091, 0.0781099324975892], "promoted": true, "first_gain_failed_recheck": false}
+{"event": "request", "number": 5, "candidate": "catboost_depth8_reg3.0", "split": 0, "reason": "interleaved_feedback_priority"}
+{"event": "observed", "number": 5, "candidate": "catboost_depth8_reg3.0", "split": 0, "accuracy": 0.7466281310211946}
+{"event": "screen", "reference": "catboost_depth6_reg3.0", "candidate": "catboost_depth8_reg3.0", "plausible": false, "n": 1038, "fixed": 32, "lost": 43, "delta": -0.010597302504816955}
+{"event": "request", "number": 6, "candidate": "extra_trees_leaf2", "split": 0, "reason": "interleaved_explore_route"}
+{"event": "observed", "number": 6, "candidate": "extra_trees_leaf2", "split": 0, "accuracy": 0.7148362235067437}
+{"event": "screen", "reference": "catboost_depth6_reg3.0", "candidate": "extra_trees_leaf2", "plausible": false, "n": 1038, "fixed": 96, "lost": 140, "delta": -0.04238921001926782}
+{"event": "stop", "selected": "catboost_depth6_reg3.0", "reason": "two_uncompetitive_or_rejected_challenges", "search_fits": 6, "distinct_candidates": 4}
+{"event": "selection_frozen", "candidate": "catboost_depth6_reg3.0"}

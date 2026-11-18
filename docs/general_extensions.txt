@@ -1,0 +1,13 @@
+v0.39 输入与评估边界
+
+主指标支持accuracy、macro_f1、weighted_f1、micro_f1、binary_f1、balanced_accuracy、roc_auc。AUC使用保存的概率及类别列顺序；二分类正类默认排序后的最后一类，可在manifest声明positive_label；多分类采用macro OVR。没有每个类别的评估分区时AUC明确无定义，保存已冻结模型和部分结果，不改成accuracy。预测阶段为AUC输出score_0...列和class_order元数据。
+
+无外部validation的任务可完成训练内搜索、确认和全训练重训；没有外部验证成绩或伪造validation_predictions。predict仍只能在模型和任务契约冻结后读取测试输入，不评估测试标签。内部估计不是课程指定验证分数。
+
+text_tabular包括多文本字段、文本+数值/类别字段、显式pair_semantics=relation的双文本关系分类。每个文本字段单独训练char_wb TF-IDF，数值填补/标准化、类别填补/one-hot；所有步骤随模型保存。原pair_text左右偏好仍要求0/1及pair_label_one=left，并沿用交换语义，不把三分类关系当左右偏好。
+
+新增ZIP中的train/class/PNG或JPEG目录识别，可有validation/val/valid目录；默认RGB64×64双线性缩放，固定契约和Pillow版本。若需不同处理，用显式manifest。测试目录只加载输入，不推断目标供训练或选型。TIFF、视频、检测/分割及任意目录格式不在本功能范围。
+
+分组划分按不依赖模型分数的规则在2至5折间选择，先保证两侧都有训练类别。记录实际折数/组数和选择规则；独立组太少或类别分别只存在一个组时仍会拒绝。三次预定种子不保证小数据下有三个独立划分。显式时间/实体评估协议目前未实现，会明确拒绝，不偷偷用随机划分替代。
+
+这些是通用接口能力，不保证所有常见任务都能取得高分；任务目标仍限于当前支持的分类合同。联网研究和代码生成不属于本版本；见后续版本的独立协议与验证记录。

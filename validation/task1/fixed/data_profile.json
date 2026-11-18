@@ -1,0 +1,95 @@
+{
+  "task_kind": "categorical_tabular",
+  "primary_metric": "accuracy",
+  "train_label_counts": {
+    "0": 2815,
+    "1": 3680
+  },
+  "validation_label_counts": {
+    "0": 688,
+    "1": 934
+  },
+  "test_accessed": false,
+  "class_count": 2,
+  "feature_count": 21,
+  "unique_values_per_column": [
+    3,
+    5,
+    5,
+    2,
+    2,
+    8,
+    5,
+    2,
+    6,
+    25,
+    9,
+    6,
+    6,
+    6,
+    6,
+    6,
+    1,
+    2,
+    2,
+    2,
+    2
+  ],
+  "missing_values_per_column": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    47,
+    103,
+    73,
+    69,
+    97,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "constant_columns": [
+    16
+  ],
+  "duplicate_train_feature_rows": 123,
+  "evaluation_protocol": {
+    "grouping": "exact_rows",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 7961,
+      "train_groups": 6369,
+      "heldout_groups": 1592,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 6495,
+    "search_rows": 1622,
+    "search_duplicate_rows": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "mean_confirmation_accuracy",
+      "confirmation_repeats": 3,
+      "confirmation_top_k": 3,
+      "confirmation_grouping": "exact_rows",
+      "maximum_additional_confirmation_fits": 6,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": true,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    }
+  }
+}

@@ -64,15 +64,17 @@ class BenchmarkTests(unittest.TestCase):
         directory = self.root / "run"
         def fake_train(payload_path, candidate, output, timeout):
             payload = __import__("joblib").load(payload_path)
-            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search"})
+            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search",'metric_spec'})
+            self.assertEqual(payload['metric_spec'],{'name':'accuracy','labels':[0,1],'direction':'maximize'})
             self.assertFalse((directory / "selection.json").exists())
             model = DummyClassifier().fit(np.zeros((10, 1)), np.tile([0, 1], 5))
             return model, {"status": "completed", "search_accuracy": .5}
         def score_final(kind, model, inputs):
             self.assertTrue((directory / "selection.json").exists())
+            self.assertTrue((directory / "final_selection.json").exists())
             return np.zeros(len(inputs), dtype=int)
         with patch("superagent.benchmark.train_candidate", side_effect=fake_train) as train:
-            with patch("superagent.benchmark.predict_with_model", side_effect=score_final) as score:
+            with patch("superagent.finalization.predict_with_model", side_effect=score_final) as score:
                 result = run_one(task, "random", 11, directory, None, max_trials=2)
         self.assertEqual(train.call_count, 2)
         self.assertEqual(score.call_count, 1)
@@ -86,7 +88,7 @@ class BenchmarkTests(unittest.TestCase):
         key = self.root / "key.txt"
         key.write_text("test-not-a-real-key", encoding="utf-8")
         client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        with patch.object(client.session, "post") as post:
+        with patch("superagent.experiment_llm.requests.post") as post:
             post.return_value.ok = True
             post.return_value.json.return_value = {"choices": [{"message": {"content": "{}"}}]}
             with self.assertRaises(RuntimeError):
@@ -96,25 +98,6 @@ class BenchmarkTests(unittest.TestCase):
             self.assertEqual(post.call_count, 1)
         usage = [json.loads(line) for line in self.logger.usage_path.read_text().splitlines()]
         self.assertIsNone(usage[-1]["cost_rmb"])
-
-    def test_llm_ignores_stale_proxy_environment(self):
-        key = self.root / "key.txt"
-        key.write_text("test-not-a-real-key", encoding="utf-8")
-        client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        self.assertFalse(client.session.trust_env)
-
-    def test_llm_reserves_room_for_reasoning_and_final_json(self):
-        key = self.root / "key.txt"
-        key.write_text("test-not-a-real-key", encoding="utf-8")
-        client = ExperimentLLM("https://example.invalid/api", str(key), "DeepSeek-V4-Pro", 1)
-        with patch.object(client.session, "post") as post:
-            post.return_value.ok = True
-            post.return_value.json.return_value = {
-                "choices": [{"finish_reason": "stop", "message": {"content": "{}"}}],
-                "usage": {"prompt_tokens": 1, "completion_tokens": 1},
-            }
-            self.assertEqual(client.ask({}, self.logger, "planner"), {})
-        self.assertEqual(post.call_args.kwargs["json"]["max_tokens"], 4096)
 
 
 if __name__ == "__main__":

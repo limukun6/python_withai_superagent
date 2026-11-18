@@ -1,0 +1,981 @@
+{
+  "provenance": {
+    "path": "work/superagent_v09/results/pilot/trials.json",
+    "sha256": "c5e29dac286a5fa2c1ad98e3ef74ebf436ffdb9ce43e180c828e93869b8c3ece",
+    "stage": "real v0.9 decisions, copied after completion without editing originals"
+  },
+  "cases": [
+    {
+      "trial": 2,
+      "history_before_decision": [
+        {
+          "trial": 1,
+          "candidate": "word_C0.05",
+          "params": {
+            "C": 0.05,
+            "representation": "word",
+            "swap_augmentation": true
+          },
+          "proposal": null,
+          "status": "completed",
+          "train_accuracy": 0.8145645645645646,
+          "search_accuracy": 0.6227909811090798,
+          "generalization_gap": 0.1917735834554848,
+          "class_recall": [
+            0.6281287246722288,
+            0.6172069825436409
+          ],
+          "training_seconds": 0.42994487495161593,
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "best_search_accuracy": 0.6227909811090798,
+          "elapsed_seconds": 1.9426561249420047
+        }
+      ],
+      "proposal": {
+        "candidate": "word_char_C0.3",
+        "reason": "Word route shows a large train-search gap; testing a combined word+char representation may capture subword cues and reduce the gap rather than another adjacent C step.",
+        "hypothesis": "Combining word and character TF-IDF at moderate regularization will improve search accuracy over word-only C0.05 by capturing morphological cues.",
+        "review": "Trial 1 word C0.05 completed with search 0.623 and gap 0.192; no comparison yet. Word route has 6 configs left but adjacent C steps may be low-value versus an untried representation.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 1,
+          "direction": "increase",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "no_comparison",
+          "fact_ids": [
+            "t1.status",
+            "t1.search_accuracy",
+            "t1.generalization_gap",
+            "t1.train_accuracy"
+          ],
+          "interpretation": "Large train-search gap suggests word features may overfit or miss subword signal; combined representation could help.",
+          "uncertainty": "Unknown whether char features add signal or noise; one trial cannot establish route quality or significance.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t1.status",
+            "trial": 1,
+            "metric": "status",
+            "value": "completed"
+          },
+          {
+            "id": "t1.search_accuracy",
+            "trial": 1,
+            "metric": "search_accuracy",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t1.generalization_gap",
+            "trial": 1,
+            "metric": "generalization_gap",
+            "value": 0.1917735834554848
+          },
+          {
+            "id": "t1.train_accuracy",
+            "trial": 1,
+            "metric": "train_accuracy",
+            "value": 0.8145645645645646
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+          "revisit_previous_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "start",
+          "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+          "paused_routes": [
+            {
+              "route": "word",
+              "resume_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "history_before_decision": [
+        {
+          "trial": 1,
+          "candidate": "word_C0.05",
+          "params": {
+            "C": 0.05,
+            "representation": "word",
+            "swap_augmentation": true
+          },
+          "proposal": null,
+          "status": "completed",
+          "train_accuracy": 0.8145645645645646,
+          "search_accuracy": 0.6227909811090798,
+          "generalization_gap": 0.1917735834554848,
+          "class_recall": [
+            0.6281287246722288,
+            0.6172069825436409
+          ],
+          "training_seconds": 0.42994487495161593,
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "best_search_accuracy": 0.6227909811090798,
+          "elapsed_seconds": 1.9426561249420047
+        },
+        {
+          "trial": 2,
+          "candidate": "word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_C0.3",
+            "reason": "Word route shows a large train-search gap; testing a combined word+char representation may capture subword cues and reduce the gap rather than another adjacent C step.",
+            "hypothesis": "Combining word and character TF-IDF at moderate regularization will improve search accuracy over word-only C0.05 by capturing morphological cues.",
+            "review": "Trial 1 word C0.05 completed with search 0.623 and gap 0.192; no comparison yet. Word route has 6 configs left but adjacent C steps may be low-value versus an untried representation.",
+            "evidence_trials": [
+              1
+            ],
+            "expected_change": {
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "direction": "increase",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "no_comparison",
+              "fact_ids": [
+                "t1.status",
+                "t1.search_accuracy",
+                "t1.generalization_gap",
+                "t1.train_accuracy"
+              ],
+              "interpretation": "Large train-search gap suggests word features may overfit or miss subword signal; combined representation could help.",
+              "uncertainty": "Unknown whether char features add signal or noise; one trial cannot establish route quality or significance.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t1.status",
+                "trial": 1,
+                "metric": "status",
+                "value": "completed"
+              },
+              {
+                "id": "t1.search_accuracy",
+                "trial": 1,
+                "metric": "search_accuracy",
+                "value": 0.6227909811090798
+              },
+              {
+                "id": "t1.generalization_gap",
+                "trial": 1,
+                "metric": "generalization_gap",
+                "value": 0.1917735834554848
+              },
+              {
+                "id": "t1.train_accuracy",
+                "trial": 1,
+                "metric": "train_accuracy",
+                "value": 0.8145645645645646
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "revisit_previous_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+            },
+            "route_update": {
+              "selected_route": "word_char",
+              "action": "start",
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "paused_routes": [
+                {
+                  "route": "word",
+                  "resume_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+                }
+              ]
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.9042042042042042,
+          "search_accuracy": 0.6569165143205362,
+          "generalization_gap": 0.247287689883668,
+          "class_recall": [
+            0.6555423122765197,
+            0.6583541147132169
+          ],
+          "training_seconds": 2.3734627501107752,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "search_accuracy",
+            "reference_trial": 1,
+            "reference_value": 0.6227909811090798,
+            "observed_value": 0.6569165143205362,
+            "observed_delta": 0.034125533211456394,
+            "direction": "increase",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6569165143205362,
+          "elapsed_seconds": 21.092128708027303
+        }
+      ],
+      "proposal": {
+        "candidate": "word_char_C0.1",
+        "reason": "word_char improved search accuracy by 0.034 over word-only, but the gap widened; a stronger-regularization step tests whether that gain persists with less overfitting before spending budget on an untried route.",
+        "hypothesis": "Lowering C to 0.1 on word_char will reduce the generalization gap while retaining or improving search accuracy versus trial 2.",
+        "review": "Trial 2 beat trial 1 on search accuracy but had a larger train-search gap; smaller C means stronger regularization, which may curb that gap.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": {
+          "metric": "generalization_gap",
+          "reference_trial": 2,
+          "direction": "decrease",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "improved",
+          "fact_ids": [
+            "t2.search_accuracy",
+            "t2.generalization_gap",
+            "t1.search_accuracy",
+            "t2.delta_vs_prior_best"
+          ],
+          "interpretation": "Combining word and char features likely added useful signal, but the wider gap suggests the model may be fitting training-specific cues that stronger regularization could temper.",
+          "uncertainty": "Whether the search gain is robust or noise, and whether stronger regularization helps or underfits, is unknown from two trials.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t2.search_accuracy",
+            "trial": 2,
+            "metric": "search_accuracy",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t2.generalization_gap",
+            "trial": 2,
+            "metric": "generalization_gap",
+            "value": 0.247287689883668
+          },
+          {
+            "id": "t1.search_accuracy",
+            "trial": 1,
+            "metric": "search_accuracy",
+            "value": 0.6227909811090798
+          },
+          {
+            "id": "t2.delta_vs_prior_best",
+            "trial": 2,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 1,
+            "value": 0.034125533211456394
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+          "revisit_previous_if": "If stronger regularization drops search accuracy below trial 2, reconsider weaker regularization or an untried char/word_char_stats route."
+        },
+        "route_update": {
+          "selected_route": "word_char",
+          "action": "continue",
+          "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+          "paused_routes": []
+        }
+      }
+    },
+    {
+      "trial": 4,
+      "history_before_decision": [
+        {
+          "trial": 1,
+          "candidate": "word_C0.05",
+          "params": {
+            "C": 0.05,
+            "representation": "word",
+            "swap_augmentation": true
+          },
+          "proposal": null,
+          "status": "completed",
+          "train_accuracy": 0.8145645645645646,
+          "search_accuracy": 0.6227909811090798,
+          "generalization_gap": 0.1917735834554848,
+          "class_recall": [
+            0.6281287246722288,
+            0.6172069825436409
+          ],
+          "training_seconds": 0.42994487495161593,
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "best_search_accuracy": 0.6227909811090798,
+          "elapsed_seconds": 1.9426561249420047
+        },
+        {
+          "trial": 2,
+          "candidate": "word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_C0.3",
+            "reason": "Word route shows a large train-search gap; testing a combined word+char representation may capture subword cues and reduce the gap rather than another adjacent C step.",
+            "hypothesis": "Combining word and character TF-IDF at moderate regularization will improve search accuracy over word-only C0.05 by capturing morphological cues.",
+            "review": "Trial 1 word C0.05 completed with search 0.623 and gap 0.192; no comparison yet. Word route has 6 configs left but adjacent C steps may be low-value versus an untried representation.",
+            "evidence_trials": [
+              1
+            ],
+            "expected_change": {
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "direction": "increase",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "no_comparison",
+              "fact_ids": [
+                "t1.status",
+                "t1.search_accuracy",
+                "t1.generalization_gap",
+                "t1.train_accuracy"
+              ],
+              "interpretation": "Large train-search gap suggests word features may overfit or miss subword signal; combined representation could help.",
+              "uncertainty": "Unknown whether char features add signal or noise; one trial cannot establish route quality or significance.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t1.status",
+                "trial": 1,
+                "metric": "status",
+                "value": "completed"
+              },
+              {
+                "id": "t1.search_accuracy",
+                "trial": 1,
+                "metric": "search_accuracy",
+                "value": 0.6227909811090798
+              },
+              {
+                "id": "t1.generalization_gap",
+                "trial": 1,
+                "metric": "generalization_gap",
+                "value": 0.1917735834554848
+              },
+              {
+                "id": "t1.train_accuracy",
+                "trial": 1,
+                "metric": "train_accuracy",
+                "value": 0.8145645645645646
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "revisit_previous_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+            },
+            "route_update": {
+              "selected_route": "word_char",
+              "action": "start",
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "paused_routes": [
+                {
+                  "route": "word",
+                  "resume_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+                }
+              ]
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.9042042042042042,
+          "search_accuracy": 0.6569165143205362,
+          "generalization_gap": 0.247287689883668,
+          "class_recall": [
+            0.6555423122765197,
+            0.6583541147132169
+          ],
+          "training_seconds": 2.3734627501107752,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "search_accuracy",
+            "reference_trial": 1,
+            "reference_value": 0.6227909811090798,
+            "observed_value": 0.6569165143205362,
+            "observed_delta": 0.034125533211456394,
+            "direction": "increase",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6569165143205362,
+          "elapsed_seconds": 21.092128708027303
+        },
+        {
+          "trial": 3,
+          "candidate": "word_char_C0.1",
+          "params": {
+            "C": 0.1,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_C0.1",
+            "reason": "word_char improved search accuracy by 0.034 over word-only, but the gap widened; a stronger-regularization step tests whether that gain persists with less overfitting before spending budget on an untried route.",
+            "hypothesis": "Lowering C to 0.1 on word_char will reduce the generalization gap while retaining or improving search accuracy versus trial 2.",
+            "review": "Trial 2 beat trial 1 on search accuracy but had a larger train-search gap; smaller C means stronger regularization, which may curb that gap.",
+            "evidence_trials": [
+              1,
+              2
+            ],
+            "expected_change": {
+              "metric": "generalization_gap",
+              "reference_trial": 2,
+              "direction": "decrease",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "improved",
+              "fact_ids": [
+                "t2.search_accuracy",
+                "t2.generalization_gap",
+                "t1.search_accuracy",
+                "t2.delta_vs_prior_best"
+              ],
+              "interpretation": "Combining word and char features likely added useful signal, but the wider gap suggests the model may be fitting training-specific cues that stronger regularization could temper.",
+              "uncertainty": "Whether the search gain is robust or noise, and whether stronger regularization helps or underfits, is unknown from two trials.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t2.search_accuracy",
+                "trial": 2,
+                "metric": "search_accuracy",
+                "value": 0.6569165143205362
+              },
+              {
+                "id": "t2.generalization_gap",
+                "trial": 2,
+                "metric": "generalization_gap",
+                "value": 0.247287689883668
+              },
+              {
+                "id": "t1.search_accuracy",
+                "trial": 1,
+                "metric": "search_accuracy",
+                "value": 0.6227909811090798
+              },
+              {
+                "id": "t2.delta_vs_prior_best",
+                "trial": 2,
+                "metric": "delta_vs_prior_best",
+                "reference_trial": 1,
+                "value": 0.034125533211456394
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+              "revisit_previous_if": "If stronger regularization drops search accuracy below trial 2, reconsider weaker regularization or an untried char/word_char_stats route."
+            },
+            "route_update": {
+              "selected_route": "word_char",
+              "action": "continue",
+              "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+              "paused_routes": []
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.8537537537537537,
+          "search_accuracy": 0.6526508226691042,
+          "generalization_gap": 0.2011029310846495,
+          "class_recall": [
+            0.6555423122765197,
+            0.6496259351620948
+          ],
+          "training_seconds": 2.3149063328746706,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "generalization_gap",
+            "reference_trial": 2,
+            "reference_value": 0.247287689883668,
+            "observed_value": 0.2011029310846495,
+            "observed_delta": -0.04618475879901851,
+            "direction": "decrease",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6569165143205362,
+          "elapsed_seconds": 39.52193554188125
+        }
+      ],
+      "proposal": {
+        "candidate": "word_char_stats_C0.3",
+        "reason": "Two trials left; word_char C0.1 only tied trial 2's accuracy while shrinking gap, so a different representation (adding shape/count stats) may yield more than another adjacent C step on the same route.",
+        "hypothesis": "Adding generic shape/count features to word_char at moderate C will improve search accuracy over the word_char best (trial 2) by capturing pair-level structural cues.",
+        "review": "word_char improved over word (t2 +0.034), but C0.1 (t3) fell slightly below t2; untried word_char_stats route may add signal beyond lexical features.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.02
+        },
+        "assessment": {
+          "reading": "lower",
+          "fact_ids": [
+            "t2.search_accuracy",
+            "t3.search_accuracy",
+            "t3.delta_vs_prior_best",
+            "t3.generalization_gap"
+          ],
+          "interpretation": "word_char is the strongest route so far; t3's small drop is not significant, and added stats features could capture structure word/char TF-IDF miss.",
+          "uncertainty": "Whether shape/count stats add signal or just noise is unknown; t3's drop may be noise rather than a real regularization effect.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t2.search_accuracy",
+            "trial": 2,
+            "metric": "search_accuracy",
+            "value": 0.6569165143205362
+          },
+          {
+            "id": "t3.search_accuracy",
+            "trial": 3,
+            "metric": "search_accuracy",
+            "value": 0.6526508226691042
+          },
+          {
+            "id": "t3.delta_vs_prior_best",
+            "trial": 3,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 2,
+            "value": -0.00426569165143198
+          },
+          {
+            "id": "t3.generalization_gap",
+            "trial": 3,
+            "metric": "generalization_gap",
+            "value": 0.2011029310846495
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char_stats_C0.3 beat trial 2's search accuracy, and if so, is a lower-C stats variant worth the final attempt?",
+          "revisit_previous_if": "If word_char_stats underperforms trial 2, return to word_char and test a weaker-regularization C0.7 to probe the accuracy/gap tradeoff."
+        },
+        "route_update": {
+          "selected_route": "word_char_stats",
+          "action": "start",
+          "next_check": "Does word_char_stats_C0.3 beat trial 2's search accuracy, and if so, is a lower-C stats variant worth the final attempt?",
+          "paused_routes": [
+            {
+              "route": "word_char",
+              "resume_if": "If word_char_stats underperforms trial 2, return to word_char and test a weaker-regularization C0.7 to probe the accuracy/gap tradeoff."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "trial": 5,
+      "history_before_decision": [
+        {
+          "trial": 1,
+          "candidate": "word_C0.05",
+          "params": {
+            "C": 0.05,
+            "representation": "word",
+            "swap_augmentation": true
+          },
+          "proposal": null,
+          "status": "completed",
+          "train_accuracy": 0.8145645645645646,
+          "search_accuracy": 0.6227909811090798,
+          "generalization_gap": 0.1917735834554848,
+          "class_recall": [
+            0.6281287246722288,
+            0.6172069825436409
+          ],
+          "training_seconds": 0.42994487495161593,
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "best_search_accuracy": 0.6227909811090798,
+          "elapsed_seconds": 1.9426561249420047
+        },
+        {
+          "trial": 2,
+          "candidate": "word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_C0.3",
+            "reason": "Word route shows a large train-search gap; testing a combined word+char representation may capture subword cues and reduce the gap rather than another adjacent C step.",
+            "hypothesis": "Combining word and character TF-IDF at moderate regularization will improve search accuracy over word-only C0.05 by capturing morphological cues.",
+            "review": "Trial 1 word C0.05 completed with search 0.623 and gap 0.192; no comparison yet. Word route has 6 configs left but adjacent C steps may be low-value versus an untried representation.",
+            "evidence_trials": [
+              1
+            ],
+            "expected_change": {
+              "metric": "search_accuracy",
+              "reference_trial": 1,
+              "direction": "increase",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "no_comparison",
+              "fact_ids": [
+                "t1.status",
+                "t1.search_accuracy",
+                "t1.generalization_gap",
+                "t1.train_accuracy"
+              ],
+              "interpretation": "Large train-search gap suggests word features may overfit or miss subword signal; combined representation could help.",
+              "uncertainty": "Unknown whether char features add signal or noise; one trial cannot establish route quality or significance.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t1.status",
+                "trial": 1,
+                "metric": "status",
+                "value": "completed"
+              },
+              {
+                "id": "t1.search_accuracy",
+                "trial": 1,
+                "metric": "search_accuracy",
+                "value": 0.6227909811090798
+              },
+              {
+                "id": "t1.generalization_gap",
+                "trial": 1,
+                "metric": "generalization_gap",
+                "value": 0.1917735834554848
+              },
+              {
+                "id": "t1.train_accuracy",
+                "trial": 1,
+                "metric": "train_accuracy",
+                "value": 0.8145645645645646
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "revisit_previous_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+            },
+            "route_update": {
+              "selected_route": "word_char",
+              "action": "start",
+              "next_check": "Does word_char beat word-only search accuracy, and does the generalization gap shrink?",
+              "paused_routes": [
+                {
+                  "route": "word",
+                  "resume_if": "If word_char underperforms word C0.05, revisit word route with a weaker regularization step."
+                }
+              ]
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.9042042042042042,
+          "search_accuracy": 0.6569165143205362,
+          "generalization_gap": 0.247287689883668,
+          "class_recall": [
+            0.6555423122765197,
+            0.6583541147132169
+          ],
+          "training_seconds": 2.3734627501107752,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "search_accuracy",
+            "reference_trial": 1,
+            "reference_value": 0.6227909811090798,
+            "observed_value": 0.6569165143205362,
+            "observed_delta": 0.034125533211456394,
+            "direction": "increase",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6569165143205362,
+          "elapsed_seconds": 21.092128708027303
+        },
+        {
+          "trial": 3,
+          "candidate": "word_char_C0.1",
+          "params": {
+            "C": 0.1,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_C0.1",
+            "reason": "word_char improved search accuracy by 0.034 over word-only, but the gap widened; a stronger-regularization step tests whether that gain persists with less overfitting before spending budget on an untried route.",
+            "hypothesis": "Lowering C to 0.1 on word_char will reduce the generalization gap while retaining or improving search accuracy versus trial 2.",
+            "review": "Trial 2 beat trial 1 on search accuracy but had a larger train-search gap; smaller C means stronger regularization, which may curb that gap.",
+            "evidence_trials": [
+              1,
+              2
+            ],
+            "expected_change": {
+              "metric": "generalization_gap",
+              "reference_trial": 2,
+              "direction": "decrease",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "improved",
+              "fact_ids": [
+                "t2.search_accuracy",
+                "t2.generalization_gap",
+                "t1.search_accuracy",
+                "t2.delta_vs_prior_best"
+              ],
+              "interpretation": "Combining word and char features likely added useful signal, but the wider gap suggests the model may be fitting training-specific cues that stronger regularization could temper.",
+              "uncertainty": "Whether the search gain is robust or noise, and whether stronger regularization helps or underfits, is unknown from two trials.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t2.search_accuracy",
+                "trial": 2,
+                "metric": "search_accuracy",
+                "value": 0.6569165143205362
+              },
+              {
+                "id": "t2.generalization_gap",
+                "trial": 2,
+                "metric": "generalization_gap",
+                "value": 0.247287689883668
+              },
+              {
+                "id": "t1.search_accuracy",
+                "trial": 1,
+                "metric": "search_accuracy",
+                "value": 0.6227909811090798
+              },
+              {
+                "id": "t2.delta_vs_prior_best",
+                "trial": 2,
+                "metric": "delta_vs_prior_best",
+                "reference_trial": 1,
+                "value": 0.034125533211456394
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+              "revisit_previous_if": "If stronger regularization drops search accuracy below trial 2, reconsider weaker regularization or an untried char/word_char_stats route."
+            },
+            "route_update": {
+              "selected_route": "word_char",
+              "action": "continue",
+              "next_check": "Does word_char_C0.1 keep search accuracy near trial 2 while shrinking the generalization gap?",
+              "paused_routes": []
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.8537537537537537,
+          "search_accuracy": 0.6526508226691042,
+          "generalization_gap": 0.2011029310846495,
+          "class_recall": [
+            0.6555423122765197,
+            0.6496259351620948
+          ],
+          "training_seconds": 2.3149063328746706,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "generalization_gap",
+            "reference_trial": 2,
+            "reference_value": 0.247287689883668,
+            "observed_value": 0.2011029310846495,
+            "observed_delta": -0.04618475879901851,
+            "direction": "decrease",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6569165143205362,
+          "elapsed_seconds": 39.52193554188125
+        },
+        {
+          "trial": 4,
+          "candidate": "word_char_stats_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "word_char_stats",
+            "swap_augmentation": true
+          },
+          "proposal": {
+            "candidate": "word_char_stats_C0.3",
+            "reason": "Two trials left; word_char C0.1 only tied trial 2's accuracy while shrinking gap, so a different representation (adding shape/count stats) may yield more than another adjacent C step on the same route.",
+            "hypothesis": "Adding generic shape/count features to word_char at moderate C will improve search accuracy over the word_char best (trial 2) by capturing pair-level structural cues.",
+            "review": "word_char improved over word (t2 +0.034), but C0.1 (t3) fell slightly below t2; untried word_char_stats route may add signal beyond lexical features.",
+            "evidence_trials": [
+              1,
+              2,
+              3
+            ],
+            "expected_change": {
+              "metric": "search_accuracy",
+              "reference_trial": 2,
+              "direction": "increase",
+              "min_delta": 0.02
+            },
+            "assessment": {
+              "reading": "lower",
+              "fact_ids": [
+                "t2.search_accuracy",
+                "t3.search_accuracy",
+                "t3.delta_vs_prior_best",
+                "t3.generalization_gap"
+              ],
+              "interpretation": "word_char is the strongest route so far; t3's small drop is not significant, and added stats features could capture structure word/char TF-IDF miss.",
+              "uncertainty": "Whether shape/count stats add signal or just noise is unknown; t3's drop may be noise rather than a real regularization effect.",
+              "reading_source": "executor"
+            },
+            "cited_facts": [
+              {
+                "id": "t2.search_accuracy",
+                "trial": 2,
+                "metric": "search_accuracy",
+                "value": 0.6569165143205362
+              },
+              {
+                "id": "t3.search_accuracy",
+                "trial": 3,
+                "metric": "search_accuracy",
+                "value": 0.6526508226691042
+              },
+              {
+                "id": "t3.delta_vs_prior_best",
+                "trial": 3,
+                "metric": "delta_vs_prior_best",
+                "reference_trial": 2,
+                "value": -0.00426569165143198
+              },
+              {
+                "id": "t3.generalization_gap",
+                "trial": 3,
+                "metric": "generalization_gap",
+                "value": 0.2011029310846495
+              }
+            ],
+            "route_plan": {
+              "next_check": "Does word_char_stats_C0.3 beat trial 2's search accuracy, and if so, is a lower-C stats variant worth the final attempt?",
+              "revisit_previous_if": "If word_char_stats underperforms trial 2, return to word_char and test a weaker-regularization C0.7 to probe the accuracy/gap tradeoff."
+            },
+            "route_update": {
+              "selected_route": "word_char_stats",
+              "action": "start",
+              "next_check": "Does word_char_stats_C0.3 beat trial 2's search accuracy, and if so, is a lower-C stats variant worth the final attempt?",
+              "paused_routes": [
+                {
+                  "route": "word_char",
+                  "resume_if": "If word_char_stats underperforms trial 2, return to word_char and test a weaker-regularization C0.7 to probe the accuracy/gap tradeoff."
+                }
+              ]
+            }
+          },
+          "status": "completed",
+          "train_accuracy": 0.9001501501501501,
+          "search_accuracy": 0.6812918951858623,
+          "generalization_gap": 0.2188582549642878,
+          "class_recall": [
+            0.6901072705601907,
+            0.672069825436409
+          ],
+          "training_seconds": 3.5336867079604417,
+          "hypothesis_check": {
+            "status": "supported",
+            "metric": "search_accuracy",
+            "reference_trial": 2,
+            "reference_value": 0.6569165143205362,
+            "observed_value": 0.6812918951858623,
+            "observed_delta": 0.02437538086532609,
+            "direction": "increase",
+            "required_delta": 0.02
+          },
+          "best_search_accuracy": 0.6812918951858623,
+          "elapsed_seconds": 63.976783541962504
+        }
+      ],
+      "proposal": {
+        "candidate": "word_char_stats_C1.0",
+        "reason": "Final attempt: word_char_stats C0.3 is the best model; a weaker-regularization variant is the most direct way to improve final quality rather than spending the last trial on an untried char route.",
+        "hypothesis": "Raising C to 1.0 on word_char_stats will reduce underfitting and improve search accuracy over trial 4 by at least 0.01.",
+        "review": "Trial 4 improved search accuracy over trial 2 by 0.024 with a similar gap; C0.3 may still be over-regularized, so a moderate C increase is a plausible final gain.",
+        "evidence_trials": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "expected_change": {
+          "metric": "search_accuracy",
+          "reference_trial": 4,
+          "direction": "increase",
+          "min_delta": 0.01
+        },
+        "assessment": {
+          "reading": "improved",
+          "fact_ids": [
+            "t4.search_accuracy",
+            "t4.delta_vs_prior_best",
+            "t4.generalization_gap",
+            "t3.search_accuracy"
+          ],
+          "interpretation": "word_char_stats at C0.3 beat the prior best, and word_char C0.1 nearly tied C0.3, suggesting regularization strength may not be optimal yet.",
+          "uncertainty": "Whether C1.0 improves or overfits is unknown; the 0.024 gain is small and not significance, and no holdout is available.",
+          "reading_source": "executor"
+        },
+        "cited_facts": [
+          {
+            "id": "t4.search_accuracy",
+            "trial": 4,
+            "metric": "search_accuracy",
+            "value": 0.6812918951858623
+          },
+          {
+            "id": "t4.delta_vs_prior_best",
+            "trial": 4,
+            "metric": "delta_vs_prior_best",
+            "reference_trial": 2,
+            "value": 0.02437538086532609
+          },
+          {
+            "id": "t4.generalization_gap",
+            "trial": 4,
+            "metric": "generalization_gap",
+            "value": 0.2188582549642878
+          },
+          {
+            "id": "t3.search_accuracy",
+            "trial": 3,
+            "metric": "search_accuracy",
+            "value": 0.6526508226691042
+          }
+        ],
+        "route_plan": {
+          "next_check": "Does word_char_stats_C1.0 exceed trial 4 search accuracy without a much larger generalization gap?",
+          "revisit_previous_if": "If C1.0 overfits or drops accuracy, the kept trial 4 model remains best; no further trials remain."
+        },
+        "route_update": {
+          "selected_route": "word_char_stats",
+          "action": "continue",
+          "next_check": "Does word_char_stats_C1.0 exceed trial 4 search accuracy without a much larger generalization gap?",
+          "paused_routes": []
+        }
+      }
+    }
+  ]
+}

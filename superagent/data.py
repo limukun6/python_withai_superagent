@@ -6,7 +6,7 @@ import csv
 import io
 import json
 import zipfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +28,40 @@ class DevelopmentTask:
     spec: dict[str, Any]
 
 
+@dataclass
+class TrainingTask:
+    kind: str
+    X_train: Any
+    y_train: np.ndarray
+    spec: dict[str, Any] = field(default_factory=dict)
+
+
+def load_training_task(path: str | Path) -> TrainingTask:
+    """Train-only capability for selection studies; never opens val or test."""
+    with zipfile.ZipFile(Path(path).expanduser().resolve()) as archive:
+        from .schema import read_manifest,load_manifest_split
+        manifest=read_manifest(archive)
+        if manifest is None:
+            from .native_schema import infer_manifest
+            manifest=infer_manifest(archive)
+        if manifest is not None:
+            kind,x,y,spec=load_manifest_split(archive,manifest,'train')
+            if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')
+            return TrainingTask(kind,x,y,spec)
+        names = [n for n in archive.namelist() if not n.startswith("__MACOSX/")]
+        if any(n.endswith("C_train.npy") for n in names):
+            x = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"C_train.npy"))), allow_pickle=True)
+            y = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"y_train.npy"))), allow_pickle=True)
+            if x.ndim != 2 or len(x) != len(y):
+                raise TaskFormatError("Training feature/label dimensions do not agree")
+            return TrainingTask("categorical_tabular", x, y)
+        rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
+        if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
+            raise TaskFormatError("Unsupported training CSV schema")
+        return TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
+                            np.asarray([int(r["label_pairwise"]) for r in rows]))
+
+
 def _member_by_suffix(names: list[str], suffix: str) -> str:
     matches = [name for name in names if name.replace("\\", "/").endswith(suffix)]
     if len(matches) != 1:
@@ -45,6 +79,25 @@ def _load_archive(path: Path) -> DevelopmentTask:
         raise TaskFormatError(f"Only zip task packages are supported for now: {path}")
 
     with zipfile.ZipFile(path) as archive:
+        from .schema import read_manifest,load_manifest_split
+        manifest=read_manifest(archive)
+        if manifest is None:
+            from .native_schema import infer_manifest,add_native_split
+            manifest=infer_manifest(archive)
+            if manifest is not None:add_native_split(archive,manifest,'validation')
+        if manifest is not None:
+            kind,x,y,spec=load_manifest_split(archive,manifest,'train')
+            x_val=y_val=None
+            if 'validation' in manifest.get('splits',{}):
+                val_kind,x_val,y_val,val_spec=load_manifest_split(archive,manifest,'validation')
+                if kind!=val_kind:raise TaskFormatError('Train and validation schemas differ')
+                if spec.get('feature_shape')!=val_spec.get('feature_shape'):
+                    raise TaskFormatError('Train and validation feature dimensions differ')
+            if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')
+            spec.update(train_rows=len(y),validation_rows=len(y_val) if y_val is not None else 0,
+                        provided_validation_available=y_val is not None,class_count=len(np.unique(y)),
+                        task_kind=kind+'_classification',model_kind=kind)
+            return DevelopmentTask(kind,str(path),x,y,x_val,y_val,spec)
         names = [name for name in archive.namelist() if not name.startswith("__MACOSX/")]
         lower = {name.lower() for name in names}
         if any(name.endswith("c_train.npy") for name in lower):
@@ -55,7 +108,10 @@ def _load_archive(path: Path) -> DevelopmentTask:
 
 
 def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[str]) -> DevelopmentTask:
-    required = {f"C_{split}.npy" for split in ("train", "val")} | {f"y_{split}.npy" for split in ("train", "val")}
+    required={'C_train.npy','y_train.npy'}
+    present=[any(n.endswith(suffix) for n in names) for suffix in ('C_val.npy','y_val.npy')]
+    if any(present) and not all(present):raise TaskFormatError('Validation features and labels must both be supplied')
+    if all(present):required.update({'C_val.npy','y_val.npy'})
     members = {suffix: _member_by_suffix(names, suffix) for suffix in required}
     arrays = {
         suffix: np.load(io.BytesIO(archive.read(member)), allow_pickle=True)
@@ -63,15 +119,16 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
     }
     info_members = [name for name in names if name.endswith("info.json")]
     info = json.loads(archive.read(info_members[0]).decode("utf-8")) if len(info_members) == 1 else {}
-    x_train, x_val = arrays["C_train.npy"], arrays["C_val.npy"]
-    y_train, y_val = arrays["y_train.npy"], arrays["y_val.npy"]
-    if x_train.ndim != 2 or len(x_train) != len(y_train) or len(x_val) != len(y_val):
+    x_train, x_val = arrays["C_train.npy"], arrays.get("C_val.npy")
+    y_train, y_val = arrays["y_train.npy"], arrays.get("y_val.npy")
+    if x_train.ndim != 2 or len(x_train) != len(y_train) or x_val is not None and len(x_val) != len(y_val):
         raise TaskFormatError("Tabular feature/label dimensions do not agree.")
     spec = {
         "task_kind": "categorical_tabular_binary",
         "metric": "accuracy",
         "train_rows": int(len(y_train)),
-        "validation_rows": int(len(y_val)),
+        "validation_rows": int(len(y_val)) if y_val is not None else 0,
+        'provided_validation_available':y_val is not None,
         "feature_count": int(x_train.shape[1]),
         "label_values": sorted(map(str, np.unique(y_train))),
         "source_metadata": info,
@@ -82,19 +139,20 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
 
 def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> DevelopmentTask:
     train = _read_csv(archive, _member_by_suffix(names, "train.csv"))
-    val = _read_csv(archive, _member_by_suffix(names, "val.csv"))
+    val = _read_csv(archive, _member_by_suffix(names, "val.csv")) if any(n.endswith('val.csv') for n in names) else None
     required = {"headline_A", "headline_B", "label_pairwise"}
-    if not train or not val or not required.issubset(train[0]) or not required.issubset(val[0]):
+    if not train or not required.issubset(train[0]) or val is not None and (not val or not required.issubset(val[0])):
         raise TaskFormatError("CSV task must contain headline_A, headline_B and label_pairwise.")
     x_train = [(row["headline_A"], row["headline_B"]) for row in train]
-    x_val = [(row["headline_A"], row["headline_B"]) for row in val]
+    x_val = [(row["headline_A"], row["headline_B"]) for row in val] if val is not None else None
     y_train = np.asarray([int(row["label_pairwise"]) for row in train])
-    y_val = np.asarray([int(row["label_pairwise"]) for row in val])
+    y_val = np.asarray([int(row["label_pairwise"]) for row in val]) if val is not None else None
     spec = {
         "task_kind": "pair_text_binary",
         "metric": "accuracy",
         "train_rows": int(len(y_train)),
-        "validation_rows": int(len(y_val)),
+        "validation_rows": int(len(y_val)) if y_val is not None else 0,
+        'provided_validation_available':y_val is not None,
         "input_fields": ["headline_A", "headline_B"],
         "label_values": sorted(map(str, np.unique(y_train))),
         "test_accessed": False,
@@ -107,7 +165,7 @@ def load_development_task(path: str | Path) -> DevelopmentTask:
     return _load_archive(Path(path).expanduser().resolve())
 
 
-def load_prediction_features(path: str | Path, kind: str) -> Any:
+def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> Any:
     """Load test inputs only after development has frozen a selected model.
 
     This function never opens ``y_test.npy`` and, for CSV data, extracts only
@@ -117,6 +175,31 @@ def load_prediction_features(path: str | Path, kind: str) -> Any:
     if not zipfile.is_zipfile(archive_path):
         raise TaskFormatError(f"Only zip task packages are supported for now: {archive_path}")
     with zipfile.ZipFile(archive_path) as archive:
+        from .schema import read_manifest,load_manifest_split
+        manifest=read_manifest(archive)
+        if frozen_spec and frozen_spec.get('input_schema'):
+            if manifest is None:
+                from .native_schema import prediction_manifest
+                manifest=prediction_manifest(archive,frozen_spec)
+            else:
+                expected=frozen_spec['input_schema']
+                for key in ('modality','columns','pair_label_one','pair_semantics','image_preprocessing'):
+                    if manifest.get(key)!=expected.get(key):raise TaskFormatError('Prediction schema differs from frozen training schema')
+            if frozen_spec.get('image_decoder_policy'):
+                from .image_files import DECODER_POLICY
+                from importlib.metadata import version
+                if frozen_spec['image_decoder_policy']!=DECODER_POLICY:
+                    raise TaskFormatError('Image decoder differs from the frozen training contract')
+                if frozen_spec.get('image_decoder_version')!=version('Pillow'):
+                    raise TaskFormatError('Pillow version differs from the frozen image decoder')
+                if manifest.get('splits',{}).get('test',{}).get('format') not in ('csv','image_folder'):
+                    raise TaskFormatError('Image-file prediction must use the frozen CSV path interface')
+        if manifest is not None:
+            detected,x,_,spec=load_manifest_split(archive,manifest,'test',include_labels=False)
+            if detected!=kind:raise TaskFormatError('Prediction modality does not match frozen model')
+            if frozen_spec and 'feature_shape' in frozen_spec and frozen_spec['feature_shape']!=spec.get('feature_shape'):
+                raise TaskFormatError('Prediction dimensions differ from frozen training schema')
+            return x
         names = [name for name in archive.namelist() if not name.startswith("__MACOSX/")]
         if kind == "categorical_tabular":
             member = _member_by_suffix(names, "C_test.npy")

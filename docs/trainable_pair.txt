@@ -1,0 +1,13 @@
+v0.38 可选本地训练工具
+
+安装requirements-neural.txt后，统一run入口的--portfolio learned在expanded的22项成对文本候选上增加2项小网络和1项条件融合。其他模态保持原通用候选。默认expanded不变。Torch仅在训练/预测神经组件时加载；没有下载权重或请求外部API。
+
+neural_pair_dim32/64从随机初始化学习词向量。词表与截断规则使用当前训练输入，共享词袋平均编码和非线性成对交互头输出反对称logit，因此交换左右的概率互补。它没有预训练语言知识，有限数据可能明显弱于TF-IDF。先在当前训练内部按shared_text连通组拆分，按logloss选epoch（最多24，耐心4），随后从头重训整个当前训练分区；两次分类器训练都计数。选轮数和建词表不使用外层search或指定validation标签。
+
+learned_stack_C0.1固定包含word_char_stats_C1.0、char_C1.0和neural_pair_dim32。先做训练内3折shared_text分组预测，记录全部折模型、索引和预测；词表、选轮数只看各折训练部分。所有样本恰有一个OOF预测。若至少5%样本意见不同且oracle正确率比最好组件高至少2个百分点，才用OOF logit训练C0.1无截距Logistic融合器并在全当前训练上重训组件。oracle只表示事后挑对答案的上界，不能作为实际成绩。未达标时保留OOF最好组件并重训，不训练融合头。
+
+记录最多17次分类器训练：三折每折两个线性组件+神经内部选轮/重训，共12；融合头1；全训练两个线性+神经选轮/重训，共4。未过门槛时为13或14次，取决于保留的组件。失败worker可能已完成部分训练，继续按未知部分记录，不虚报零。OOF预测上训练融合头的分数不能作为无偏验证分数，外层指标只能在模型选定并冻结后测量。
+
+模型、词表和预处理一起保存，可由现有predict命令加载。模型训练是SuperAgent输出分类器的过程；本功能没有自行训练或微调语言模型，没有规避Qwen/DeepSeek调用计费。开发实验与完整自主运行需分别列明，最后报告仍需使用同一最终版本并保留指定test供最终评估。
+
+参考：PyTorch EmbeddingBag https://docs.pytorch.org/docs/2.14/generated/torch.nn.EmbeddingBag.html；BCEWithLogitsLoss https://docs.pytorch.org/docs/2.14/generated/torch.nn.BCEWithLogitsLoss.html；scikit-learn StratifiedGroupKFold https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html。

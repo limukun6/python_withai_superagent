@@ -103,10 +103,7 @@ class OpenAICompatiblePlanner:
         usage = body.get("usage", {})
         input_tokens = int(usage.get("prompt_tokens", 0))
         output_tokens = int(usage.get("completion_tokens", 0))
-        call_cost = (
-            input_tokens * self.pricing.input_rmb_per_million
-            + output_tokens * self.pricing.output_rmb_per_million
-        ) / 1_000_000
+        call_cost = self.pricing.course_cost(input_tokens, output_tokens)
         self.cost_rmb += call_cost
         self.logger.usage(
             event="llm_call", provider_url=self.api_url, model=self.model,
@@ -114,8 +111,13 @@ class OpenAICompatiblePlanner:
             input_rmb_per_million=self.pricing.input_rmb_per_million,
             output_rmb_per_million=self.pricing.output_rmb_per_million,
             price_source=self.pricing.source,
+            price_status=self.pricing.price_basis,
+            pricing=self.pricing.metadata(),
+            raw_usage=usage,
             estimated_pre_call_cost_rmb=estimated_cost,
             cost_rmb=call_cost,
+            course_cost_rmb=call_cost,
+            actual_cost_rmb=None,
             cumulative_cost_rmb=self.cost_rmb,
             budget_rmb=self.budget_rmb,
         )

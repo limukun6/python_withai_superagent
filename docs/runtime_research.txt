@@ -1,0 +1,17 @@
+v0.40 可选运行时文献研究与生成候选
+
+统一入口增加--refinement research。首版要求--planner llm、single架构、original/expanded候选库、shared时间策略、至少4次主实验。两次已观察试验后，Researcher可决定搜索或跳过；最多一次研究机会、两次额外模型调用，所有角色共用现有每任务账本和本次运行预算。源码客户端最大请求数=普通决策次数+2；不加训练试验次数。默认关闭。
+
+实际检索工具发送通用方法查询给arXiv；失败或无结果时最多一次Crossref后备查询，每次最多3个结果、256KiB、连接8秒/读取15秒、下载循环25秒软限。只读取文献元数据与摘要，不是全网浏览或完整论文阅读。独立HTTP会话不读取模型密钥或发送学校Authorization，不发送训练行；URL、时间、字节、响应哈希、原始body、摘要和来源ID保存供审计。网页内容是未受信任的证据，不获得改变目标/数据分区的权限。
+
+方法生成器收到已观察结果、来源和当前安装的sklearn分类器清单，输出一段build_model(kind)工厂代码、假设、理由及来源/试验引用。动态清单不是预先注册的候选ID；当前环境可发现约29个单一分类器类型，具体由安装版本决定。生成的新参数组合与管线使用内容哈希ID，通过普通worker训练、确认和重训，Planner随后能看到真实结果并继续选下一步；原有候选与优胜者保留。
+
+执行语言有明确边界：只有import声明、一个return Pipeline([trusted make_preprocessor(kind), classifier(literal params)])；验证后去掉import声明，以已导入可信构造器和空builtins建立工厂。禁止任意语句、属性访问、装饰器、泛型参数、文件路径、网络、自定义类/函数、外部权重和新依赖。限制n_jobs、max_iter、n_estimators等，排除需要另计组件的meta/CV分类器和隐式SVC概率校准。它是受限构造语言，不能称为任意Python代码生成或完整操作系统沙箱。训练仍受现有worker超时约束；不承诺硬总时限或任意大数据内存安全。
+
+预处理由任务合同控制：数值/类别/混合/多文本/图像对应已验证的转换；左右偏好文本采用差分TF-IDF并交换增强。一般文本关系不会误用偏好交换标签。模型与预处理一起保存，预测不需要导入运行时生成的.py模块。AUC生成候选必须能输出所需概率，不能偷偷换指标。
+
+检索失败、生成代码/引用不合规时不重试、不删除原优胜者，保留原始回复/代码和失败原因，将研究标为未完成。Researcher可合理跳过；生成后Planner也可能不使用新候选，报告必须列明实际执行数量。引用存在和代码格式正确不等于科学解释成立，来源适用性仍未自动证明。模拟证据必须显式mock，不可当真实检索。所有新增真实模型调用照常记输入/输出token、单价、持久结算及未知用量。
+
+官方检索接口： https://info.arxiv.org/help/api/user-manual.html
+https://www.crossref.org/documentation/retrieve-metadata/rest-api/
+动态分类器清单： https://scikit-learn.org/stable/modules/generated/sklearn.utils.discovery.all_estimators.html

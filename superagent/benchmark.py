@@ -28,7 +28,7 @@ from .splits import take, inner_split, grouped_partition, effective_grouping, ov
 from .profile import profile
 from .pricing import DEEPSEEK_PRICE_BASIS, DEEPSEEK_PRICE_VERSION
 from .runtime_budget import RuntimeBudget, PlanningTimeExhausted
-from .metrics import score_of
+from .metrics import completed, score_of
 from .contracts import TaskSpec,ExperimentProposal,ExperimentResult,DecisionState,ExistingPolicyAdapter
 
 
@@ -54,6 +54,25 @@ class Policy:
             return chosen,reason
         if self.strategy == "random":
             return self.rng.choice(ids), "Uniform random draw without replacement."
+        if self.strategy == "scalar_feedback":
+            metric = data_profile["primary_metric"]
+            observations = [
+                {"candidate": row["candidate"], "status": row["status"],
+                 "search_score": score_of(row) if completed(row) else None}
+                for row in history
+            ]
+            answer = self.client.ask({
+                "primary_metric_to_maximize": metric,
+                "available_candidates": available,
+                "observed_trials": observations,
+                "remaining_trials": self.limit + 1 - len(history),
+                "instruction": "Choose one available candidate using observed search scores. "
+                "Return {candidate: id, reason: a short testable hypothesis}.",
+            }, self.logger, "scalar_feedback")
+            candidate, reason = answer.get("candidate"), answer.get("reason")
+            if candidate not in ids or not isinstance(reason, str) or not reason.strip():
+                raise ValueError("Invalid scalar-feedback decision or unavailable candidate.")
+            return candidate, reason
         context = {"profile": data_profile, "available_candidates": available, "max_trials": self.limit}
         if self.strategy == "oneshot":
             if self.plan is None:
@@ -107,6 +126,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog'):
     from .decision_architecture import ArchitecturePolicy,calls_per_decision
     calls_per_decision(decision_architecture)
+    if strategy == 'scalar_feedback' and (client is None or not anchor_first or max_trials < 2
+            or refinement != 'off' or error_feedback or decision_policy is not None):
+        raise ValueError('Scalar feedback requires an LLM, a shared anchor and a fixed candidate catalog')
     if anchor_policy not in ('catalog','schema') or (anchor_policy=='schema' and not anchor_first):
         raise ValueError('Schema anchor requires an enabled first trial')
     if decision_architecture!='single' and (strategy!='budget_routes' or client is None or decision_policy is not None):
@@ -212,6 +234,8 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         if needs_planner and time_policy=='reserve':
             if not hasattr(client,'set_deadline'):raise ValueError('Reserved-time LLM clients must implement set_deadline')
             client.set_deadline(window['planner_deadline'])
+        elif needs_planner and strategy == 'scalar_feedback':
+            client.set_deadline(start + time_limit)
         if time_policy=='reserve':
             data_profile['evaluation_protocol']['runtime_budget']={**runtime.description(),**window}
         proposal = None
@@ -234,6 +258,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             stop_reason='planning_window_expired_without_request'
             logger.event('search_stopped_for_time',reason=stop_reason,trials_attempted=len(history));break
         except Exception as error:
+            if strategy == 'scalar_feedback':
+                logger.event('scalar_feedback_stopped', error=str(error), trial=index+1)
+                raise
             blocked_llm = True
             fallbacks += 1
             chosen = random_fallback.choice(available)["id"]

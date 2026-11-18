@@ -23,12 +23,23 @@ from .task_budget import TaskBudgetLedger,TaskBudgetAccount
 from .contracts import TaskSpec
 from .decision_architecture import ARCHITECTURES,calls_per_decision
 
+CAMPUS_CHAT_ENDPOINT = 'https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions'
+CAMPUS_FLASH_MODEL = 'DeepSeek-V4.1-Flash'
+
 
 def _sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _validate(args):
     calls_per_decision(args.architecture)
+    if args.planner == 'scalar-feedback':
+        if (args.architecture != 'single' or args.refinement != 'off' or args.error_feedback
+                or args.portfolio != 'expanded' or args.anchor != 'catalog'):
+            raise ValueError('Scalar feedback uses the catalog anchor, expanded portfolio and score-only feedback')
+        args.api_url = args.api_url or CAMPUS_CHAT_ENDPOINT
+        args.model = args.model or CAMPUS_FLASH_MODEL
+        if args.api_url != CAMPUS_CHAT_ENDPOINT or args.model != CAMPUS_FLASH_MODEL:
+            raise ValueError(f'Scalar feedback requires the campus endpoint and {CAMPUS_FLASH_MODEL}')
     if args.anchor=='schema' and (args.allocation!='off' or args.portfolio=='original'):
         raise ValueError('Schema anchor needs an expanded catalog and allocation off')
     if args.refinement=='research' and (args.planner!='llm' or args.architecture!='single' or args.portfolio not in ('original','expanded') or args.time_policy!='shared' or args.trials<4):
@@ -87,7 +98,9 @@ def _run(args):
     source_files={p.relative_to(source).as_posix():_sha(p) for p in sorted(source.rglob('*.py'))}
     source_hash=hashlib.sha256(json.dumps(source_files,sort_keys=True).encode()).hexdigest()
     local_policy=args.policy or 'balanced_blind'
-    strategy='local_'+local_policy if args.planner=='local' else 'budget_routes'
+    scalar_feedback = args.planner == 'scalar-feedback'
+    strategy = {'local': 'local_' + local_policy, 'llm': 'budget_routes',
+                'scalar-feedback': 'scalar_feedback'}[args.planner]
     budget=0. if pricing is None else (.10 if args.llm_budget_rmb is None else args.llm_budget_rmb)
     maximum_requests=((args.trials-1)*calls_per_decision(args.architecture)+(2 if args.refinement=='research' else 0)) if pricing else 0
     endpoint=urlsplit(args.api_url) if args.api_url else None
@@ -120,8 +133,12 @@ def _run(args):
         manifest['budget_ledger_path']=str(ledger.path)
         account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
         allowed={args.model,pricing.model_id,pricing.official_model_version}
-        client=ExperimentLLM(args.api_url,args.api_key_file,args.model,budget,reasoning_effort='none',
-            disable_template_thinking=True,max_requests=maximum_requests,allowed_served_models=allowed,account=account)
+        if scalar_feedback:
+            client=ExperimentLLM(args.api_url,args.api_key_file,args.model,budget,
+                max_requests=maximum_requests,allowed_served_models=allowed,account=account,streaming=True)
+        else:
+            client=ExperimentLLM(args.api_url,args.api_key_file,args.model,budget,reasoning_effort='none',
+                disable_template_thinking=True,max_requests=maximum_requests,allowed_served_models=allowed,account=account)
     if args.allocation=='off':execute=run_one
     else:
         from functools import partial
@@ -208,7 +225,8 @@ def build_parser():
     run.add_argument('task_package')
     run.add_argument('--run-dir',help='New output directory, never overwritten')
     run.add_argument('--output-dir',help='Parent directory for an automatically named new run')
-    run.add_argument('--planner',choices=['local','llm'],default='local')
+    run.add_argument('--planner',choices=['local','llm','scalar-feedback'],default='local',
+        help='Use local search, structured LLM planning, or campus Flash with scalar search feedback')
     run.add_argument('--architecture',choices=ARCHITECTURES,default='single',
         help='LLM mode: single proposal, same-planner self-review, or Planner plus Reviewer; shares the run allowance')
     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')

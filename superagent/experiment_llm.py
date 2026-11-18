@@ -17,9 +17,43 @@ from .pricing import resolve_pricing
 from .runtime_budget import PlanningTimeExhausted
 
 
+def read_chat_stream(response, deadline, started, progress):
+    """Collect choice zero and the final usage event from a campus SSE response."""
+    body = {}
+    parts = []
+    finish_reason = None
+    for line in response.iter_lines():
+        if deadline is not None and time.monotonic() >= deadline:
+            raise requests.Timeout('Planning deadline expired while receiving the stream')
+        if not line.startswith(b'data:'):
+            continue
+        payload = line[5:].strip()
+        if payload == b'[DONE]':
+            break
+        elapsed = time.monotonic() - started
+        progress.setdefault('first_event_seconds', elapsed)
+        progress['last_event_seconds'] = elapsed
+        progress['data_events'] += 1
+        chunk = json.loads(payload)
+        if not isinstance(chunk, dict) or chunk.get('error'):
+            raise ValueError('Invalid chat stream event')
+        for key in ('id', 'model', 'usage'):
+            if chunk.get(key) is not None:
+                body[key] = chunk[key]
+        for choice in chunk.get('choices') or []:
+            if choice.get('index', 0) == 0:
+                fragment = (choice.get('delta') or {}).get('content')
+                if isinstance(fragment, str):
+                    parts.append(fragment)
+                finish_reason = choice.get('finish_reason') or finish_reason
+    body['choices'] = [{'finish_reason': finish_reason, 'message': {'content': ''.join(parts)}}]
+    return body
+
+
 class ExperimentLLM:
     def __init__(self, api_url: str, key_file: str, model: str, batch_budget: float, thinking_mode=None, reasoning_effort=None,
-                 disable_template_thinking=False, max_requests=None, allowed_served_models=None, account=None):
+                 disable_template_thinking=False, max_requests=None, allowed_served_models=None, account=None,
+                 streaming=False):
         if not math.isfinite(batch_budget) or not 0 < batch_budget <= 20:
             raise ValueError("Batch budget must be finite and in (0, 20].")
         endpoint=urlsplit(api_url)
@@ -31,6 +65,8 @@ class ExperimentLLM:
             any(not isinstance(m,str) or not m.strip() for m in allowed_served_models)):
             raise ValueError('allowed_served_models must contain nonempty model identifiers')
         self.api_url = api_url
+        self.streaming = streaming
+        self.direct = streaming or endpoint.hostname == 'aigc-api.hkust-gz.edu.cn'
         self.model = model
         self.price = resolve_pricing(model)
         self.budget = batch_budget
@@ -65,46 +101,69 @@ class ExperimentLLM:
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
+        max_tokens = 16384 if self.streaming else 2048
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
-                   * self.price.input_rmb_per_million + 2048 * self.price.output_rmb_per_million) / 1e6
+                   * self.price.input_rmb_per_million + max_tokens * self.price.output_rmb_per_million) / 1e6
         effective_ceiling = min(self.budget, cost_ceiling) if cost_ceiling is not None else self.budget
         if self.spent + reserve > effective_ceiling:
             raise RuntimeError("Run or batch estimated cost ceiling reached.")
-        request_body = {"model": self.model, "messages": messages, "temperature": 0, "max_tokens": 2048,
+        request_body = {"model": self.model, "messages": messages, "temperature": 0, "max_tokens": max_tokens,
                         "response_format": {"type": "json_object"}, "cache": {"no-cache": True, "no-store": True}}
+        if self.streaming:
+            request_body.pop('response_format')
+            request_body.pop('cache')
+            request_body.update(stream=True, stream_options={'include_usage': True})
         if self.thinking_mode is not None:
             request_body["thinking"] = {"type": self.thinking_mode}
         if self.reasoning_effort is not None:
             request_body["reasoning_effort"] = self.reasoning_effort
         if self.disable_template_thinking:
             request_body["chat_template_kwargs"] = {"thinking": False, "enable_thinking": False}
-        timeout=(15,90)
+        timeout=(10,60)
         if self.deadline is not None:
             remaining=self.deadline-time.monotonic()
             if remaining<=.05:raise PlanningTimeExhausted('No time remains for a new API request')
-            timeout=(min(15.,remaining/4),min(90.,remaining*3/4))
+            timeout=(min(10.,remaining/4),min(60.,remaining*3/4))
         ticket=self.account.reserve(reserve,self.model) if self.account is not None else None
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve,
                      budget_request_id=ticket,
                      request_timeout_seconds=timeout,planning_deadline_monotonic=self.deadline,
                      thinking_mode=self.thinking_mode, reasoning_effort=self.reasoning_effort,
-                     chat_template_kwargs=request_body.get("chat_template_kwargs"), cache=request_body["cache"], max_tokens=2048)
+                     chat_template_kwargs=request_body.get("chat_template_kwargs"), cache=request_body.get("cache"),
+                     max_tokens=max_tokens, streaming=self.streaming)
         request_started = time.monotonic()
+        progress = {'data_events': 0} if self.streaming else {}
         self.request_count+=1
         try:
-            response = requests.post(self.api_url, headers={"Authorization": f"Bearer {self.key}"},
-                json=request_body, timeout=timeout, allow_redirects=False)
-            if not response.ok:
-                logger.event("llm_http_failure", role=role, status_code=response.status_code)
-            response.raise_for_status()
-            body = response.json()
-        except Exception:
+            options = dict(headers={"Authorization": f"Bearer {self.key}"}, json=request_body,
+                           timeout=timeout, allow_redirects=False)
+            if self.direct:
+                with requests.Session() as session:
+                    session.trust_env = False
+                    with session.post(self.api_url, stream=self.streaming, **options) as response:
+                        progress['http_status'] = response.status_code
+                        if not response.ok:
+                            logger.event('llm_http_failure', role=role, status_code=response.status_code)
+                        response.raise_for_status()
+                        if not 200 <= response.status_code < 300:
+                            raise requests.HTTPError(f'Unexpected HTTP status {response.status_code}')
+                        body = (read_chat_stream(response, self.deadline, request_started, progress)
+                                if self.streaming else response.json())
+            else:
+                response = requests.post(self.api_url, **options)
+                if not response.ok:
+                    logger.event('llm_http_failure', role=role, status_code=response.status_code)
+                response.raise_for_status()
+                body = response.json()
+        except Exception as error:
             self.blocked = True
+            details = f'{type(error).__name__}: {error}'.replace(self.key, '[redacted]')
+            logger.event('llm_transport_failure', role=role, error=details, **progress)
             if ticket is not None:self.account.unknown(ticket,'transport_or_response_parse_failure')
             logger.usage(event="unresolved_call", role=role, usage_known=False, cost_rmb=None,
                          budget_request_id=ticket,
                          course_cost_rmb=None, actual_cost_rmb=None, pricing=self.price.metadata())
-            raise RuntimeError("API request failed; further batch calls stopped. See HTTP status in events.") from None
+            raise RuntimeError(f'API request failed; further batch calls stopped. {details}') from None
         if not isinstance(body,dict):
             self.blocked=True
             if ticket is not None:self.account.unknown(ticket,'invalid_response_body')
@@ -161,9 +220,11 @@ class ExperimentLLM:
             raise RuntimeError("Metered usage exceeded the estimate; further batch calls stopped.")
         message=first.get('message')
         content=message.get('content') if isinstance(message,dict) else None
-        logger.event("llm_response", role=role, content=content)
+        logger.event("llm_response", role=role, content=content, **progress)
         if first.get("finish_reason") == "length":
             raise ValueError("Output token limit reached; response is incomplete; no automatic retry")
+        if self.streaming and first.get('finish_reason') != 'stop':
+            raise ValueError('Completion stream did not finish normally')
         if not isinstance(content, str):
             raise ValueError("Missing text response.")
         if content.strip().startswith("```"):

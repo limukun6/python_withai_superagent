@@ -1,5 +1,29 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 整合分支的实验与复现入口
+
+当前统一配置为本地 `interleaved_routes`、四次搜索、前三名三划分复核、全训练集重训。两个发布任务使用相同配置。整合分支的发布验证、本地复验和阶段性实验协议见下列文档。此节之后的 v0.42 结果对应仓库随附的历史模型和报告。
+
+- [预算复验和当前发布验证](docs/search_budget_replication_results_zh.md)
+- [搜索分数反馈与实际复核耗时的配对协议](docs/current_stage_10h_zh.md)
+- [历史决策证据复核](docs/decision_evidence_audit_zh.md)
+
+从仓库根目录使用同一个配置处理任务包。训练和正式预测是独立命令。按课程安排取得正式预测输入后执行第二条。两个命令分别需要新的运行目录和预测文件路径。
+
+```powershell
+python -m superagent run 'TASK.zip' --run-dir 'runs/reproduction' --planner local --policy interleaved_routes --portfolio expanded --trials 4 --seed 707 --trial-timeout 90 --time-limit 600 --feature-cache run
+python -m superagent predict 'TASK.zip' --run-dir 'runs/reproduction' --output 'predictions.csv'
+```
+
+配对实验和发布验证使用 Python 3.14.4、NumPy 2.5.4、SciPy 1.18.1、scikit-learn 1.9.1、joblib 1.6.0、CatBoost 1.2.10、Requests 2.34.2 和 Pillow 13.0.0。运行前核对输出目录的 `protocol.json` 与本机依赖。按以下顺序执行两阶段对照，复验自动读取开发阶段的事前门槛判定。
+
+```powershell
+python -m tools.feedback_value_study --task1 'TASK1.zip' --task2 'TASK2.zip' --output 'runs/feedback_value' --stage development
+python -m tools.feedback_value_study --task1 'TASK1.zip' --task2 'TASK2.zip' --output 'runs/feedback_value' --stage replication
+```
+
+## v0.42 历史交付快照
+
 v0.42 · 课程开发验证快照 · 两个任务共用代码、预算和策略，无按任务名称选择解法。主交付是在验证前指定的 **fixed**：根据训练内反馈探索四个候选，在三个训练内划分复核前三名，再用完整训练集重训。**adaptive** 是比较组，按已有证据探索、复核或停止。两者均为本地规则规划，本次不需要 API key。
 
 | 任务 | 验证行数 | fixed | adaptive | 拟合次数（含重训） |

@@ -80,6 +80,12 @@ def _validate(args):
 
 
 def _run(args):
+    pretrained = None
+    if args.pretrained_config:
+        if args.planner != 'local' or args.policy not in (None,'interleaved_routes') or args.allocation != 'off' or args.refinement != 'off' or args.trials < 4:
+            raise ValueError('Pretrained choice requires local interleaved routes, allocation/refinement off and >=4 trials')
+        args.policy = 'interleaved_routes'
+        pretrained = json.loads(Path(args.pretrained_config).read_text())
     pricing=_validate(args)
     if args.allocation != "off" and (args.planner != "local" or args.refinement != "off"):
         raise ValueError("Resource allocation requires local mode and refinement off")
@@ -144,7 +150,8 @@ def _run(args):
         from functools import partial
         from .resource_allocation import run_allocated
         execute=partial(run_allocated,mode=args.allocation)
-    summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,
+    extra = {'pretrained_config': pretrained} if pretrained is not None else {}
+    summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,**extra,
         time_limit=args.time_limit,trial_timeout=args.trial_timeout,anchor_first=True,anchor_policy=args.anchor,refit_full_train=True,
         confirmation_repeats=3,confirmation_top_k=3,confirmation_grouping='shared_text',
         search_grouping='shared_text',portfolio=args.portfolio,run_metadata=manifest,time_policy=args.time_policy,
@@ -241,6 +248,7 @@ def build_parser():
     run.add_argument('--refinement',choices=['off','midpoints','compose','research'],default='off',help='Optional feedback candidates; research adds bounded literature retrieval and checked sklearn code generation')
     run.add_argument('--allocation',choices=['off','uniform','successive'],default='off',help='Experimental local resource study; counts all screening fits')
     run.add_argument('--error-feedback',action='store_true',help='Expose train-thresholded descriptive error slices to feedback planners')
+    run.add_argument('--pretrained-config',help='Local Qwen weight folder, existing ledger, scope and per-run course cap in JSON')
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')
     run.add_argument('--model')

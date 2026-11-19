@@ -123,7 +123,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             anchor_first=False, refit_full_train=False, ensemble_selection=False,
             confirmation_repeats=1, confirmation_top_k=3, confirmation_grouping="exact_rows", search_grouping="exact_rows",
             portfolio="original",run_metadata=None,time_policy='shared',feature_cache=False,refinement='off',decision_policy=None,
-            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog'):
+            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog',pretrained_config=None):
     from .decision_architecture import ArchitecturePolicy,calls_per_decision
     calls_per_decision(decision_architecture)
     if strategy == 'scalar_feedback' and (client is None or not anchor_first or max_trials < 2
@@ -216,6 +216,12 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
              ArchitecturePolicy(client,logger,decision_architecture) if strategy=='budget_routes' else
              ExistingPolicyAdapter(policy))
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
+    if pretrained_config is not None:
+        from .pretrained_choice import CANDIDATE, PARAMS, consider
+        if strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials < 4:
+            raise ValueError('Pretrained choice uses the interleaved local policy and at least four trials')
+        pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
+        logger.write_json('pretrained_runtime.json', pretrained_config)
     states=[];proposals=[];result_records=[]
     history, best_model, best_id, best_score = [], None, None, -1.0
     fallbacks, blocked_llm = 0, False
@@ -240,11 +246,20 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             data_profile['evaluation_protocol']['runtime_budget']={**runtime.description(),**window}
         proposal = None
         declared=None
+        use_pretrained = False
+        if pretrained_config is not None and index == 3:
+            decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config)
+            logger.write_json('pretrained_decision.json', decision)
+            use_pretrained = decision['decision'] == 'try'
+            if use_pretrained:
+                available.append({'id': CANDIDATE, 'params': PARAMS})
         state=DecisionState.build(data_profile,history,available,max_trials,feedback_visible,task_contract)
         states.append(state.record());logger.write_json('decision_states.json',states)
         planning_start=time.monotonic()
         try:
-            if anchor_first and index == 0:
+            if use_pretrained:
+                chosen, reason = CANDIDATE, decision['reason']
+            elif anchor_first and index == 0:
                 chosen, reason = anchor_id, f"{anchor_policy} first configuration; counts toward the trial limit."
             else:
                 if blocked_llm:
@@ -352,7 +367,8 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         "fallback_count": fallbacks, "trials_attempted": len(history),
         "failed_trials": sum(r["status"] != "completed" for r in history),
         "elapsed_seconds": time.monotonic() - start,
-        "llm_calls": sum(u["event"] != "ledger_initialized" for u in usage),
+        "llm_calls": sum(u["event"] not in ("ledger_initialized","local_forward") for u in usage),
+        "local_model_forwards":sum(u["event"] == "local_forward" for u in usage),
         "tokens": sum(u.get("input_tokens", 0) + u.get("output_tokens", 0) for u in usage),
         "course_cost_rmb": course_cost,
         "actual_cost_rmb": actual_cost,

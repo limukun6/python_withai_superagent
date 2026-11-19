@@ -1,0 +1,254 @@
+"""Optional, feedback-triggered local text transfer. No dataset identity enters the gate."""
+import hashlib
+import json
+import math
+import os
+import sqlite3
+import tempfile
+import uuid
+from pathlib import Path
+
+import joblib
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+
+from .pricing import resolve_pricing
+from .task_budget import BudgetStateError, LIMIT, SHARED, TaskBudgetLedger, encoded, now
+from .usage_audit import money_units
+
+MODEL = 'qwen3-0.6b'
+CANDIDATE = 'pretrained_qwen3_context_C0.3'
+PARAMS = {'model': MODEL, 'C': 0.3, 'pooling': 'mean_final_hidden_l2', 'max_tokens': 64}
+FILES = {
+    'config.json': ('0ce186d90797c4c5cfefb0d3695517b37d02dd3a', '660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd', 726),
+    'tokenizer.json': ('0ce186d90797c4c5cfefb0d3695517b37d02dd3a', 'aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4', 11422654),
+    'model.safetensors': ('d033240f3f8fbdda767f6c43ba6d856b6871eaa6', 'f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b', 1503300328),
+}
+
+
+def digest(path):
+    with Path(path).open('rb') as source:
+        return hashlib.file_digest(source, 'sha256').hexdigest()
+
+
+def acquire(directory):
+    import requests
+    directory.mkdir(parents=True, exist_ok=True)
+    fetched = []
+    for name, (revision, sha, size) in FILES.items():
+        dest = directory / name
+        if dest.is_file() and dest.stat().st_size == size and digest(dest) == sha:
+            continue
+        url = f'https://modelscope.cn/models/Qwen/Qwen3-0.6B/resolve/{revision}/{name}'
+        with tempfile.NamedTemporaryFile(dir=directory, delete=False) as stream:
+            tmp = Path(stream.name)
+            try:
+                with requests.get(url, stream=True, timeout=(12, 40)) as response:
+                    response.raise_for_status()
+                    for chunk in response.iter_content(1024 * 1024):
+                        stream.write(chunk)
+                        if stream.tell() > size:
+                            raise ValueError('Model file exceeds the pinned size')
+                stream.flush()
+                if tmp.stat().st_size != size or digest(tmp) != sha:
+                    raise ValueError('Model file does not match official SHA-256')
+                os.replace(tmp, dest)
+                fetched.append(name)
+            finally:
+                tmp.unlink(missing_ok=True)
+    return fetched
+
+
+def budget(config, tokens, reserve=False):
+    """Atomically check both limits against the existing project ledger."""
+    ledger = TaskBudgetLedger(config['ledger'])
+    price = resolve_pricing(MODEL)
+    units = money_units(price.course_cost(tokens, 0))
+    scope, run = config['scope'], config['run']
+    ledger._scope(scope)
+    cap = config['cap_rmb']
+    if not math.isfinite(cap) or not 0 < cap <= 20:
+        raise ValueError('Invalid local model allowance')
+    with ledger._db() as db:
+        db.execute('BEGIN IMMEDIATE')
+        rows = db.execute('SELECT id,status,course_units FROM requests WHERE scope IN (?,?)', (scope, SHARED)).fetchall()
+        unknown = {r['id'] for r in rows if r['status'] == 'unknown'}
+        if any(r['status'] == 'reserved' for r in rows) or not unknown <= set(config.get('deferred_ids', [])):
+            raise BudgetStateError('An unaccounted request is outside the declared historical deferral')
+        used = db.execute("SELECT COALESCE(SUM(course_units),0) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id')=?", (scope, run)).fetchone()[0]
+        if used + units > money_units(cap):
+            raise BudgetStateError('Local run token allowance exhausted')
+        if sum(r['course_units'] or 0 for r in rows) + len(unknown) * 3_000_000_000 + units > LIMIT:
+            raise BudgetStateError('Task capacity including historical deferral buffer is insufficient')
+        if not reserve:
+            return
+        key = str(uuid.uuid4())
+        payload = encoded(dict(run_id=run, requested_model=MODEL, reserved_at=now(), input_tokens=tokens,
+                               deferred_ids=sorted(unknown), historical_buffer_rmb=3*len(unknown)))
+        db.execute('INSERT INTO requests VALUES (?,?,?,?,?,?)', (key, scope, 'reserved', units, None, payload))
+        db.execute('INSERT INTO transitions(request_id,event,time_utc,payload) VALUES (?,?,?,?)',
+                   (key, 'reserved', now(), payload))
+        db.commit()
+        return key
+
+
+def consider(kind, history, directory, labels, config):
+    report = {'kind': kind, 'trial': len(history)+1, 'decision': 'skip', 'inner_rows': len(labels)}
+    if kind not in ('single_text', 'pair_text'):
+        return dict(report, reason='no_supported_text_input')
+    successes = [r for r in history if r['status'] == 'completed']
+    if len(successes) < 2:
+        return dict(report, reason='insufficient_completed_comparisons')
+    common = np.ones(len(labels), dtype=bool)
+    for r in successes:
+        predicted = joblib.load(directory / f"trial_{r['trial']}.joblib")['search_predictions']
+        if np.shape(predicted) != np.shape(labels):
+            raise ValueError('Search predictions do not align with labels')
+        common &= np.asarray(predicted) != labels
+    threshold = max(8, math.ceil(.05 * len(labels)))
+    report.update(common_errors=int(common.sum()), required_errors=threshold,
+                  observations=[{'candidate': r['candidate'], 'score': r['search_score']} for r in successes])
+    if common.sum() < threshold:
+        return dict(report, reason='few_shared_errors')
+    try:
+        budget(config, 1)
+    except BudgetStateError as exc:
+        return dict(report, reason=str(exc))
+    return dict(report, decision='try', reason='text_routes_share_errors; test a frozen contextual representation')
+
+
+class Encoder:
+    def __init__(self, runtime):
+        self.runtime = Path(os.environ.get('SUPERAGENT_PRETRAINED_RUNTIME') or runtime)
+        self.config = json.loads(self.runtime.read_text())
+        self.folder = self.runtime.parent
+        self.db_path = self.folder / 'context_vectors.sqlite'
+        self.tokenizer = self.model = None
+
+    def load(self):
+        import torch
+        from tokenizers import Tokenizer
+        from transformers import Qwen3Model
+        directory = Path(self.config['weights'])
+        new_files = acquire(directory)
+        self.tokenizer = Tokenizer.from_file(str(directory / 'tokenizer.json'))
+        self.device = 'mps' if torch.backends.mps.is_available() else 'cpu'
+        torch.set_num_threads(min(6, torch.get_num_threads()))
+        dtype = torch.float16 if self.device == 'mps' else torch.float32
+        self.model = Qwen3Model.from_pretrained(str(directory), local_files_only=True,
+                    use_safetensors=True, torch_dtype=dtype, attn_implementation='sdpa').eval().to(self.device)
+        with (self.folder / 'model_loads.jsonl').open('a') as log:
+            log.write(json.dumps(dict(model=MODEL, files=FILES, downloaded=new_files, device=self.device, utc=now()))+'\n')
+
+    def forward(self, ids):
+        import torch
+        n = sum(map(len, ids))
+        width = max(map(len, ids))
+        matrix = torch.zeros(len(ids), width, dtype=torch.long)
+        mask = torch.zeros_like(matrix)
+        for i, seq in enumerate(ids):
+            matrix[i, :len(seq)] = torch.tensor(seq)
+            mask[i, :len(seq)] = 1
+        ledger = TaskBudgetLedger(self.config['ledger'])
+        key = budget(self.config, n, reserve=True)
+        try:
+            with torch.inference_mode():
+                mask = mask.to(self.device)
+                hidden = self.model(input_ids=matrix.to(self.device), attention_mask=mask, use_cache=False).last_hidden_state
+                pooled = (hidden.float()*mask.unsqueeze(-1)).sum(1) / mask.sum(1,keepdim=True)
+                result = torch.nn.functional.normalize(pooled, dim=1).cpu().numpy()
+            if not np.isfinite(result).all():
+                raise ValueError('Non-finite representation')
+        except BaseException:
+            ledger.mark_unknown(key, 'Local forward interrupted', input_token_count_before_forward=n)
+            raise
+        ledger.settle(key, MODEL, n, 0)
+        from .events import RunLogger
+        RunLogger(self.folder).usage(event='local_forward', model=MODEL, request_id=key, input_tokens=n,
+            output_tokens=0, padded_positions=int(matrix.numel()-n), course_cost_rmb=resolve_pricing(MODEL).course_cost(n,0),
+            actual_cost_rmb=0., usage_known=True, sequences=len(ids))
+        return result
+
+    def encode(self, texts):
+        texts = list(texts)
+        unique = dict.fromkeys(texts)
+        keys = {t: hashlib.sha256(t.encode()).hexdigest() for t in unique}
+        vectors = {}
+        with sqlite3.connect(self.db_path) as db:
+            db.execute('CREATE TABLE IF NOT EXISTS vectors(id TEXT PRIMARY KEY, v BLOB NOT NULL)')
+            for t,k in keys.items():
+                row = db.execute('SELECT v FROM vectors WHERE id=?',(k,)).fetchone()
+                if row:
+                    vectors[t] = np.frombuffer(row[0], dtype='<f4')
+            missing = [t for t in unique if t not in vectors]
+            if missing:
+                if self.model is None:
+                    self.load()
+                entries = [(t, e.ids[:64] or [151643]) for t,e in zip(missing, self.tokenizer.encode_batch(missing, add_special_tokens=False))]
+                entries.sort(key=lambda pair: len(pair[1]))
+                for off in range(0, len(entries), 32):
+                    chunk = entries[off:off+32]
+                    values = self.forward([s for _,s in chunk])
+                    for (t,_),v in zip(chunk, values):
+                        vectors[t] = v
+                        db.execute('INSERT OR REPLACE INTO vectors VALUES (?,?)',(keys[t],v.astype('<f4').tobytes()))
+                    db.commit()
+        return np.stack([vectors[t] for t in texts])
+
+
+class ContextClassifier:
+    def __init__(self, kind, runtime):
+        self.kind, self.runtime = kind, str(runtime)
+        self.encoder = None
+
+    def __getstate__(self):
+        return {**self.__dict__, 'encoder': None}
+
+    def features(self, rows, fit=False):
+        from scipy.sparse import csr_matrix, hstack
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.preprocessing import StandardScaler
+        from .models import _difference_features, style_differences
+        if self.encoder is None:
+            self.encoder = Encoder(self.runtime)
+        if fit:
+            self.word = TfidfVectorizer(ngram_range=(1,2), min_df=2, sublinear_tf=True, max_features=40_000)
+            self.char = TfidfVectorizer(analyzer='char_wb',ngram_range=(3,5), min_df=2, sublinear_tf=True, max_features=40_000)
+        if self.kind == 'pair_text':
+            combined = self.encoder.encode([text for pair in rows for text in pair])
+            dense = combined[::2]-combined[1::2]
+            styles = style_differences(rows)
+            if fit:
+                self.scaler = StandardScaler(with_mean=False).fit(np.vstack([styles, -styles]))
+            matrices = [_difference_features(v, rows, fit) for v in (self.word,self.char)]
+            matrices.append(csr_matrix(self.scaler.transform(styles)/np.sqrt(styles.shape[1])))
+        else:
+            dense = self.encoder.encode(rows)
+            matrices = [(v.fit_transform(rows) if fit else v.transform(rows)) for v in (self.word,self.char)]
+        return hstack([*matrices, csr_matrix(dense)]).tocsr()
+
+    def fit(self, rows, labels):
+        from scipy.sparse import vstack
+        features = self.features(rows, fit=True)
+        if self.kind == 'pair_text':
+            features = vstack([features,-features])
+            labels = np.concatenate([labels,1-labels])
+        self.classifier = LogisticRegression(C=.3, max_iter=2000, random_state=42).fit(features,labels)
+        self.classes_ = self.classifier.classes_
+        return self
+
+    def predict(self, rows):
+        return self.classifier.predict(self.features(rows))
+
+    def predict_proba(self, rows):
+        return self.classifier.predict_proba(self.features(rows))
+
+
+def candidate(kind, runtime):
+    from .models import Candidate
+    def fit(train, labels, search):
+        model = ContextClassifier(kind, runtime).fit(train, labels)
+        return model, model.predict(search)
+    if kind not in ('pair_text','single_text'):
+        raise ValueError('Context transfer requires text input')
+    return Candidate(CANDIDATE, PARAMS, fit)

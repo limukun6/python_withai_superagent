@@ -24,7 +24,11 @@ def main() -> None:
     payload_sha256=hashlib.sha256(payload_bytes).hexdigest()
     metric=MetricSpec.from_payload(payload)
     registry_sha256=None;origin='static'
-    if len(sys.argv)==5:
+    from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
+    if candidate_id == CANDIDATE:
+        candidate = contextual_candidate(payload["kind"], Path(output_path).parent / 'pretrained_runtime.json')
+        origin = 'verified_pretrained'
+    elif len(sys.argv)==5:
         from .candidate_refinement import resolve_registered
         registry_bytes=Path(sys.argv[4]).read_bytes();document=json.loads(registry_bytes)
         candidate=resolve_registered(payload['kind'],candidate_id,document)

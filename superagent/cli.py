@@ -81,8 +81,14 @@ def _validate(args):
 
 def _run(args):
     pretrained = None
+    method_choice=getattr(args,'method_choice',None)
+    if method_choice:
+        if (args.planner!='local' or args.policy not in (None,'interleaved_routes') or args.trials!=7
+                or args.refinement!='off' or args.allocation!='off' or args.anchor!='catalog'):
+            raise ValueError('Method choice requires seven local interleaved trials and catalog anchor')
+        args.policy='interleaved_routes'
     if args.pretrained_config:
-        if args.planner != 'local' or args.policy not in (None,'interleaved_routes') or args.allocation != 'off' or args.refinement != 'off' or args.trials != 5 or args.anchor != 'catalog':
+        if not method_choice and (args.planner != 'local' or args.policy not in (None,'interleaved_routes') or args.allocation != 'off' or args.refinement != 'off' or args.trials != 5 or args.anchor != 'catalog'):
             raise ValueError('Pretrained choice requires local interleaved routes, allocation/refinement off, catalog anchor and exactly 5 trials')
         args.policy = 'interleaved_routes'
         pretrained = json.loads(Path(args.pretrained_config).read_text())
@@ -92,7 +98,7 @@ def _run(args):
     task_path=Path(args.task_package).expanduser().resolve()
     task=load_development_task(task_path)
     task_contract=TaskSpec.from_task(task)
-    if args.trials>len(search_candidates(task.kind,args.portfolio)):
+    if args.trials>len(search_candidates(task.kind,args.portfolio))+(2 if method_choice else 0):
         raise ValueError('Requested trials exceed the declared candidate catalog')
     if args.run_dir:
         directory=Path(args.run_dir).expanduser().resolve()
@@ -110,11 +116,11 @@ def _run(args):
     budget=0. if pricing is None else (.10 if args.llm_budget_rmb is None else args.llm_budget_rmb)
     maximum_requests=((args.trials-1)*calls_per_decision(args.architecture)+(2 if args.refinement=='research' else 0)) if pricing else 0
     endpoint=urlsplit(args.api_url) if args.api_url else None
-    finalists = 2 if pretrained is not None else 3
+    finalists = 2 if pretrained is not None and not method_choice else 3
     manifest={'agent_version':__version__,'entrypoint':'superagent run (experiment is an alias)',
         'invoked_as':args.command,'planner_mode':args.planner,'strategy':strategy,'decision_architecture':args.architecture,
         'seed':args.seed,'model_training_seed':42,'primary_trials_including_anchor':args.trials,
-        'portfolio':args.portfolio,'anchor_policy':args.anchor,'search_grouping':'shared_text_for_pairs_exact_features_otherwise',
+        'portfolio':args.portfolio,'method_choice':method_choice,'anchor_policy':args.anchor,'search_grouping':'shared_text_for_pairs_exact_features_otherwise',
         'confirmation_repeats':3,'confirmation_top_k':finalists,'full_train_refit':True,
         'time_limit_seconds':args.time_limit,'trial_timeout_seconds':args.trial_timeout,
         'time_policy':args.time_policy,
@@ -152,6 +158,7 @@ def _run(args):
         from .resource_allocation import run_allocated
         execute=partial(run_allocated,mode=args.allocation)
     extra = {'pretrained_config': pretrained} if pretrained is not None else {}
+    if method_choice:extra['method_choice']=method_choice
     summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,**extra,
         time_limit=args.time_limit,trial_timeout=args.trial_timeout,anchor_first=True,anchor_policy=args.anchor,refit_full_train=True,
         confirmation_repeats=3,confirmation_top_k=finalists,confirmation_grouping='shared_text',
@@ -191,6 +198,7 @@ def _run(args):
         'prediction_evidence_audit':summary.get('prediction_evidence_audit'),
         'refinement':summary.get('refinement'),'resource_allocation':summary.get('resource_allocation'),'error_feedback':args.error_feedback,
         'new_api_requests':client.request_count if client else 0,'local_model_forwards':summary.get('local_model_forwards',0),
+        'downstream_feature_forwards':summary.get('downstream_feature_forwards',0),'downstream_feature_input_tokens':summary.get('downstream_feature_input_tokens',0),
         'metered_responses':sum(row['event']=='llm_call' for row in ledger),
         'known_course_cost_rmb':sum(row.get('course_cost_rmb') or 0. for row in ledger),
         'complete_course_cost_rmb':summary['course_cost_rmb'],'unresolved_calls':unknown,
@@ -249,7 +257,8 @@ def build_parser():
     run.add_argument('--refinement',choices=['off','midpoints','compose','research'],default='off',help='Optional feedback candidates; research adds bounded literature retrieval and checked sklearn code generation')
     run.add_argument('--allocation',choices=['off','uniform','successive'],default='off',help='Experimental local resource study; counts all screening fits')
     run.add_argument('--error-feedback',action='store_true',help='Expose train-thresholded descriptive error slices to feedback planners')
-    run.add_argument('--pretrained-config',help='Optional feedback-selected Qwen transfer. JSON with weights (text) and/or tabular_weights (named categories), ledger, scope and cap_rmb')
+    run.add_argument('--method-choice',choices=['adaptive','fixed'],help='Allocate two search slots after five ordinary trials, including a local MiniLM feature option; use --trials 7')
+    run.add_argument('--pretrained-config',help='Optional paths and allowances: minilm_weights for local frozen features (null disables); weights/tabular_weights, ledger, scope and cap_rmb for metered Qwen transfer')
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')
     run.add_argument('--model')

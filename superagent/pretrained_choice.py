@@ -40,6 +40,8 @@ def acquire(directory, repository='Qwen/Qwen3-0.6B', files=None):
         dest = directory / name
         if dest.is_file() and dest.stat().st_size == size and digest(dest) == sha:
             continue
+        if os.environ.get('SUPERAGENT_OFFLINE') == '1':
+            raise ValueError(f'Offline run requires the verified local file {dest.name}')
         url = f'https://modelscope.cn/models/{repository}/resolve/{revision}/{name}'
         with tempfile.NamedTemporaryFile(dir=directory, delete=False) as stream:
             tmp = Path(stream.name)
@@ -197,6 +199,13 @@ class Encoder:
             actual_cost_rmb=0., usage_known=True, sequences=len(ids))
         return result
 
+    def token_ids(self, texts):
+        encoded_texts = self.tokenizer.encode_batch(texts, add_special_tokens=self.last_token)
+        return [entry.ids[:64] or [151643] for entry in encoded_texts]
+
+    def check_tokens(self, count):
+        budget(self.config, count, model_id=self.model_id)
+
     def encode(self, texts):
         texts = list(texts)
         unique = dict.fromkeys(texts)
@@ -212,9 +221,8 @@ class Encoder:
             if missing:
                 if self.model is None:
                     self.load()
-                encoded_texts = self.tokenizer.encode_batch(missing, add_special_tokens=self.last_token)
-                entries = [(t, e.ids[:64] or [151643]) for t,e in zip(missing, encoded_texts)]
-                budget(self.config, sum(len(ids) for _, ids in entries), model_id=self.model_id)
+                entries = list(zip(missing, self.token_ids(missing), strict=True))
+                self.check_tokens(sum(len(ids) for _, ids in entries))
                 entries.sort(key=lambda pair: len(pair[1]))
                 for off in range(0, len(entries), 32):
                     chunk = entries[off:off+32]

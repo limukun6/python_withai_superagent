@@ -123,7 +123,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             anchor_first=False, refit_full_train=False, ensemble_selection=False,
             confirmation_repeats=1, confirmation_top_k=3, confirmation_grouping="exact_rows", search_grouping="exact_rows",
             portfolio="original",run_metadata=None,time_policy='shared',feature_cache=False,refinement='off',decision_policy=None,
-            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog',pretrained_config=None):
+            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog',pretrained_config=None,method_choice=None):
     from .decision_architecture import ArchitecturePolicy,calls_per_decision
     calls_per_decision(decision_architecture)
     if strategy == 'scalar_feedback' and (client is None or not anchor_first or max_trials < 2
@@ -216,9 +216,16 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
              ArchitecturePolicy(client,logger,decision_architecture) if strategy=='budget_routes' else
              ExistingPolicyAdapter(policy))
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
+    if method_choice is not None:
+        if (method_choice not in ('adaptive','fixed') or strategy!='local_interleaved_routes' or max_trials!=7
+                or confirmation_top_k!=3 or confirmation_repeats!=3 or not anchor_first or anchor_policy!='catalog'
+                or refinement!='off' or decision_policy is not None):
+            raise ValueError('Method choice needs seven interleaved trials and three confirmed finalists')
+        pretrained_config={'minilm_weights':str((directory.parent/'.superagent-weights'/'all-MiniLM-L6-v2').resolve()), **(pretrained_config or {})}
+        logger.write_json('method_policy.json',dict(mode=method_choice, protected_initial_trials=5, optional_slots=2))
     if pretrained_config is not None:
         from .pretrained_choice import CANDIDATE, PARAMS, consider
-        if strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog':
+        if method_choice is None and (strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog'):
             raise ValueError('Pretrained choice uses the interleaved local policy and four protected original trials, one optional trial, and two finalists')
         pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
         logger.write_json('pretrained_runtime.json', pretrained_config)
@@ -228,7 +235,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     stop_reason='trial_limit_reached'
     random_fallback = random.Random(seed)
     for index in range(max_trials):
-        if not available:
+        if not available and not (method_choice and index>=5):
             stop_reason='candidate_catalog_exhausted';break
         needs_planner=client is not None and not blocked_llm and not (anchor_first and index==0)
         window=runtime.search_window(history,needs_planner)
@@ -247,7 +254,21 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         proposal = None
         declared=None
         use_pretrained = False
-        if pretrained_config is not None and index == 4:
+        if method_choice and index>=5:
+            from .method_choice import plan, SEMANTIC, CANDIDATE
+            decision=plan(task.kind,history,directory,payload,pretrained_config,method_choice)
+            logger.write_json(f'method_decision_{index+1}.json',decision)
+            use_pretrained=decision['decision']=='try'
+            if use_pretrained:
+                pretrained_id=decision['candidate']
+                available.append({'id':pretrained_id,'params':decision['params']})
+                logger.write_json(f'method_{pretrained_id}.json',decision)
+                if pretrained_id in (SEMANTIC,CANDIDATE):
+                    logger.write_json('pretrained_decision.json',decision['transfer'] | {'protected_incumbent':decision['protected_incumbent']})
+            elif not available:
+                stop_reason='candidate_catalog_exhausted'
+                break
+        elif pretrained_config is not None and index == 4 and not method_choice:
             decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config,
                                 train_features=payload['X_train'], search_features=payload['X_search'])
             from .confirmation import shortlist
@@ -359,7 +380,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                          refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory)
     usage = [json.loads(line) for line in logger.usage_path.read_text(encoding="utf-8").splitlines()]
     local_outstanding = 0
-    if pretrained_config is not None:
+    if pretrained_config is not None and pretrained_config.get('ledger'):
         from .task_budget import TaskBudgetLedger
         local_ledger = TaskBudgetLedger(pretrained_config['ledger'])
         with local_ledger._db() as db:
@@ -369,7 +390,10 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     course_cost = sum(u.get("course_cost_rmb", u.get("cost_rmb")) or 0 for u in usage) if usage_complete else None
     actual_cost = (sum(u["actual_cost_rmb"] for u in usage)
                    if all(u.get("actual_cost_rmb") is not None for u in usage) else None)
-    summary = {"strategy": strategy, "seed": seed, "task_kind": task.kind,
+    feature_log=directory/'downstream_usage.jsonl'
+    feature_usage=[json.loads(line) for line in feature_log.read_text().splitlines()] if feature_log.exists() else []
+    summary = {'downstream_feature_forwards':len(feature_usage),'downstream_feature_input_tokens':sum(r['input_tokens'] for r in feature_usage),
+        "strategy": strategy, "seed": seed, "task_kind": task.kind,
         "selected_candidate": best_id, "primary_best_candidate": primary_best_id,
         "confirmation": confirmation, "portfolio":portfolio,"evaluation_protocol":evaluation_protocol,
         'primary_metric':metric.name,'search_score':best_score if best_model is not None else None,

@@ -26,7 +26,11 @@ def main() -> None:
     registry_sha256=None;origin='static'
     from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
     from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
-    if candidate_id in (SEMANTIC, PERMUTED):
+    from .method_choice import NEURAL, COOCCUR, MINILM, candidate as method_candidate
+    if candidate_id in (NEURAL,COOCCUR,MINILM):
+        candidate=method_candidate(payload['kind'],candidate_id,Path(output_path).parent)
+        origin='frozen_downstream_encoder' if candidate_id==MINILM else 'training_only_method'
+    elif candidate_id in (SEMANTIC, PERMUTED):
         candidate = level_candidate(payload["kind"], candidate_id, Path(output_path).parent / 'pretrained_runtime.json')
         origin = 'verified_pretrained'
     elif candidate_id == CANDIDATE:

@@ -218,8 +218,8 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
     if pretrained_config is not None:
         from .pretrained_choice import CANDIDATE, PARAMS, consider
-        if strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials < 4:
-            raise ValueError('Pretrained choice uses the interleaved local policy and at least four trials')
+        if strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog':
+            raise ValueError('Pretrained choice uses the interleaved local policy and four protected original trials, one optional trial, and two finalists')
         pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
         logger.write_json('pretrained_runtime.json', pretrained_config)
     states=[];proposals=[];result_records=[]
@@ -247,8 +247,11 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         proposal = None
         declared=None
         use_pretrained = False
-        if pretrained_config is not None and index == 3:
+        if pretrained_config is not None and index == 4:
             decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config)
+            from .confirmation import shortlist
+            leader = shortlist(history, 1)
+            decision['protected_incumbent'] = leader[0]['candidate'] if leader else None
             logger.write_json('pretrained_decision.json', decision)
             use_pretrained = decision['decision'] == 'try'
             if use_pretrained:
@@ -353,7 +356,14 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                          logger, train_candidate, start, time_limit-runtime.margin, trial_timeout,
                          refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory)
     usage = [json.loads(line) for line in logger.usage_path.read_text(encoding="utf-8").splitlines()]
-    usage_complete = not any(u.get("usage_known") is False for u in usage)
+    local_outstanding = 0
+    if pretrained_config is not None:
+        from .task_budget import TaskBudgetLedger
+        local_ledger = TaskBudgetLedger(pretrained_config['ledger'])
+        with local_ledger._db() as db:
+            local_outstanding = db.execute("SELECT COUNT(*) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id')=? AND status != 'known'",
+                    (pretrained_config['scope'],pretrained_config['run'])).fetchone()[0]
+    usage_complete = not local_outstanding and not any(u.get("usage_known") is False for u in usage)
     course_cost = sum(u.get("course_cost_rmb", u.get("cost_rmb")) or 0 for u in usage) if usage_complete else None
     actual_cost = (sum(u["actual_cost_rmb"] for u in usage)
                    if all(u.get("actual_cost_rmb") is not None for u in usage) else None)

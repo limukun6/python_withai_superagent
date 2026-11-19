@@ -17,9 +17,9 @@ from superagent.models import predict_with_model
 from superagent.pretrained_choice import MODEL, FILES
 from superagent.pricing import resolve_pricing
 
-SEED = 44219
-OPTIONS = {**RUN_OPTIONS, 'time_limit': 2000, 'trial_timeout': 1500}
-CAP = .15
+SEED = 44231
+OPTIONS = {**RUN_OPTIONS, 'time_limit': 2000, 'trial_timeout': 1500, 'max_trials': 5, 'confirmation_top_k': 2}
+CAP = .075
 ORDER = [('task2','choice'),('task2','control'),('task1','control'),('task1','choice')]
 
 
@@ -52,6 +52,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for item in ('task1','task2','output','ledger','weights'):
         p.add_argument('--'+item, required=True, type=Path)
+    p.add_argument('--prior-paired-root', type=Path,help='Frozen earlier pilot, to enforce the shared campaign limit in the same task ledger')
     p.add_argument('--historical-protocol',type=Path,help='Existing user-deferred requests; no new unknown is permitted')
     args=p.parse_args()
     root=args.output.resolve()
@@ -68,11 +69,12 @@ def main():
             task, features, labels, partitions[name]=outer_partition(path, SEED)
         data[name]=(task,features,labels)
     protocol=dict(seed=SEED, search_seed=SEARCH_SEED, options=OPTIONS, cap_per_arm_rmb=CAP,
-        action='At trial 4, try only for supported text with >=2 successful trials and jointly wrong on >=max(8,5% of search). Replace one search slot. Select by original confirmation rule.',
+        campaign_cap_per_task_rmb=.15,
+        action='Retain all four original actions. At slot five, optionally use one pretrained candidate when >=2 successful originals share >=max(8,5%) errors on text. Top two of five always include the original four-step leader. Confirm both across three splits; refit winner.',
         order=ORDER, partitions=partitions, opened=accesses, weights=FILES, price=resolve_pricing(MODEL).metadata(),
         source={str(k.relative_to(repo)):sha(k) for k in [*sorted((repo/'superagent').glob('*.py')),Path(__file__),repo/'tools/search_budget_study.py',repo/'tools/expanded_feedback_pilot.py']},
         archives={k:sha(getattr(args,k)) for k in data}, python=platform.python_version(),
-        historical_deferral_protocol=sha(args.historical_protocol) if args.historical_protocol else None,
+        previous_root=str(args.prior_paired_root.resolve()) if args.prior_paired_root else None, historical_deferral_protocol=sha(args.historical_protocol) if args.historical_protocol else None,
         evaluation='First paired train-only outer fold; no promotion from one seed.')
     protocol_path=root/'protocol.json'
     if protocol_path.exists():
@@ -89,7 +91,8 @@ def main():
         task,_,_=data[name]
         deferred=[v for v in historical if v['scope']==name and v['package_sha256']==protocol['archives'][name]]
         config=dict(weights=str(args.weights.resolve()),ledger=str(args.ledger.resolve()),scope=name,cap_rmb=CAP,
-                    deferred_ids=deferred[0]['legacy_unknown_ids'] if deferred else [])
+                    deferred_ids=deferred[0]['legacy_unknown_ids'] if deferred else [],
+                    campaign_cap_rmb=.15, previous_run_ids=[str(args.prior_paired_root.resolve()/name/a) for a in ('choice','control')] if args.prior_paired_root else [])
         print('Starting',name,arm,flush=True)
         summary=run_one(task,'local_interleaved_routes',SEARCH_SEED,dest,None,**OPTIONS,
                         pretrained_config=config if arm=='choice' else None)
@@ -98,7 +101,7 @@ def main():
             fits=summary['classifier_fit_accounting']['completed_classifier_fits'], elapsed=summary['elapsed_seconds'],
             trials=[(r['candidate'],r['status'],r.get('search_score')) for r in trials],
             failure_details=[r.get('error') for r in trials if r['status']!='completed'],
-            complete=summary['trials_attempted']==4 and summary['failed_trials']==0 and summary['refit_succeeded']
+            complete=summary['trials_attempted']==5 and summary['failed_trials']==0 and summary['refit_succeeded']
                 and summary['confirmation']['valid_confirmation'] and summary['fallback_count']==0)
         if frozen['model_sha256']!=read(dest/'final_selection.json')['model_sha256']:
             raise ValueError('Final model hash mismatch')
@@ -126,7 +129,13 @@ def main():
                 raise ValueError('Local inference ledger mismatch')
             arms[arm]=dict(**frozen,correct=score, accuracy=score/len(labels),forwards=len(local),input_tokens=tokens,
                 output_tokens=0,course_rmb=cost, remote_model_calls=0,decision=read(dest/'pretrained_decision.json') if arm=='choice' else None)
-        if arms['control']['trials'][:3]!=arms['choice']['trials'][:3]:
+        for arm_name, result in arms.items():
+            original = sorted(result['trials'][:4], key=lambda row:(-row[2],row[0]))[0][0]
+            finalists = read(root/name/arm_name/'confirmation.json')['shortlist']
+            if original not in finalists or len(finalists)!=2 or result['fits']!=10:
+                raise ValueError('Original incumbent or equal fit budget was lost')
+            result.update(protected_incumbent=original, finalists=finalists)
+        if arms['control']['trials'][:4]!=arms['choice']['trials'][:4]:
             raise ValueError('Shared observations diverged before the decision')
         first,second=predictions['control'],predictions['choice']
         report[name]=dict(rows=len(labels),arms=arms,corrected=int(np.sum((first!=labels)&(second==labels))),

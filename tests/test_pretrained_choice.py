@@ -44,3 +44,24 @@ class PretrainedTests(unittest.TestCase):
             ledger.mark_unknown(key,'interruption')
             with self.assertRaises(BudgetStateError):
                 budget(config,1)
+
+    def test_campaign_cap_survives_a_new_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'ledger.sqlite'
+            ledger = TaskBudgetLedger.initialize(path,new_project=True)
+            first = dict(ledger=path,scope='fixture',run='pilot',cap_rmb=.1)
+            ledger.settle(budget(first,100,reserve=True),MODEL,100,0)
+            second = dict(first,run='replication',previous_run_ids=['pilot'],campaign_cap_rmb=.000033)
+            with self.assertRaises(BudgetStateError):
+                budget(second,11)
+            ledger.settle(budget(second,10,reserve=True),MODEL,10,0)
+            self.assertAlmostEqual(ledger.snapshot('fixture')['known_task_cost_rmb'],.000033)
+
+    def test_a_single_new_candidate_cannot_displace_four_step_leader_from_confirmation(self):
+        from superagent.confirmation import shortlist
+        rows = [dict(candidate=key,status='completed',primary_metric='accuracy',search_score=s)
+                for key,s in zip('dcba',(.6,.5,.8,.8))]
+        incumbent=shortlist(rows,1)[0]['candidate']
+        for challenger_score in (.4,.8,.9):
+            challenger=dict(rows[0],candidate=CANDIDATE,search_score=challenger_score)
+            self.assertIn(incumbent,[r['candidate'] for r in shortlist(rows+[challenger],2)])

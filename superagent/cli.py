@@ -82,8 +82,8 @@ def _validate(args):
 def _run(args):
     pretrained = None
     if args.pretrained_config:
-        if args.planner != 'local' or args.policy not in (None,'interleaved_routes') or args.allocation != 'off' or args.refinement != 'off' or args.trials < 4:
-            raise ValueError('Pretrained choice requires local interleaved routes, allocation/refinement off and >=4 trials')
+        if args.planner != 'local' or args.policy not in (None,'interleaved_routes') or args.allocation != 'off' or args.refinement != 'off' or args.trials != 5 or args.anchor != 'catalog':
+            raise ValueError('Pretrained choice requires local interleaved routes, allocation/refinement off, catalog anchor and exactly 5 trials')
         args.policy = 'interleaved_routes'
         pretrained = json.loads(Path(args.pretrained_config).read_text())
     pricing=_validate(args)
@@ -110,11 +110,12 @@ def _run(args):
     budget=0. if pricing is None else (.10 if args.llm_budget_rmb is None else args.llm_budget_rmb)
     maximum_requests=((args.trials-1)*calls_per_decision(args.architecture)+(2 if args.refinement=='research' else 0)) if pricing else 0
     endpoint=urlsplit(args.api_url) if args.api_url else None
+    finalists = 2 if pretrained is not None else 3
     manifest={'agent_version':__version__,'entrypoint':'superagent run (experiment is an alias)',
         'invoked_as':args.command,'planner_mode':args.planner,'strategy':strategy,'decision_architecture':args.architecture,
         'seed':args.seed,'model_training_seed':42,'primary_trials_including_anchor':args.trials,
         'portfolio':args.portfolio,'anchor_policy':args.anchor,'search_grouping':'shared_text_for_pairs_exact_features_otherwise',
-        'confirmation_repeats':3,'confirmation_top_k':3,'full_train_refit':True,
+        'confirmation_repeats':3,'confirmation_top_k':finalists,'full_train_refit':True,
         'time_limit_seconds':args.time_limit,'trial_timeout_seconds':args.trial_timeout,
         'time_policy':args.time_policy,
         'feature_cache':args.feature_cache,
@@ -153,7 +154,7 @@ def _run(args):
     extra = {'pretrained_config': pretrained} if pretrained is not None else {}
     summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,**extra,
         time_limit=args.time_limit,trial_timeout=args.trial_timeout,anchor_first=True,anchor_policy=args.anchor,refit_full_train=True,
-        confirmation_repeats=3,confirmation_top_k=3,confirmation_grouping='shared_text',
+        confirmation_repeats=3,confirmation_top_k=finalists,confirmation_grouping='shared_text',
         search_grouping='shared_text',portfolio=args.portfolio,run_metadata=manifest,time_policy=args.time_policy,
         feature_cache=args.feature_cache=='run',refinement=args.refinement,decision_architecture=args.architecture,error_feedback=args.error_feedback)
     current={p.relative_to(source).as_posix():_sha(p) for p in sorted(source.rglob('*.py'))}
@@ -189,7 +190,7 @@ def _run(args):
         'classifier_fit_accounting':summary.get('classifier_fit_accounting'),
         'prediction_evidence_audit':summary.get('prediction_evidence_audit'),
         'refinement':summary.get('refinement'),'resource_allocation':summary.get('resource_allocation'),'error_feedback':args.error_feedback,
-        'new_api_requests':client.request_count if client else 0,
+        'new_api_requests':client.request_count if client else 0,'local_model_forwards':summary.get('local_model_forwards',0),
         'metered_responses':sum(row['event']=='llm_call' for row in ledger),
         'known_course_cost_rmb':sum(row.get('course_cost_rmb') or 0. for row in ledger),
         'complete_course_cost_rmb':summary['course_cost_rmb'],'unresolved_calls':unknown,

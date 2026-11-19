@@ -76,6 +76,15 @@ def budget(config, tokens, reserve=False):
         if any(r['status'] == 'reserved' for r in rows) or not unknown <= set(config.get('deferred_ids', [])):
             raise BudgetStateError('An unaccounted request is outside the declared historical deferral')
         used = db.execute("SELECT COALESCE(SUM(course_units),0) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id')=?", (scope, run)).fetchone()[0]
+        if 'campaign_cap_rmb' in config:
+            campaign_cap = config['campaign_cap_rmb']
+            if not math.isfinite(campaign_cap) or not 0 < campaign_cap <= 20:
+                raise ValueError('Invalid cumulative experiment allowance')
+            runs = set(config['previous_run_ids']) | {run}
+            placeholders = ','.join('?' for _ in runs)
+            campaign = db.execute(f"SELECT COALESCE(SUM(course_units),0) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id') IN ({placeholders})", (scope,*runs)).fetchone()[0]
+            if campaign + units > money_units(campaign_cap):
+                raise BudgetStateError('Cumulative experiment token allowance exhausted')
         if used + units > money_units(cap):
             raise BudgetStateError('Local run token allowance exhausted')
         if sum(r['course_units'] or 0 for r in rows) + len(unknown) * 3_000_000_000 + units > LIMIT:
@@ -185,6 +194,7 @@ class Encoder:
                 if self.model is None:
                     self.load()
                 entries = [(t, e.ids[:64] or [151643]) for t,e in zip(missing, self.tokenizer.encode_batch(missing, add_special_tokens=False))]
+                budget(self.config, sum(len(ids) for _, ids in entries))
                 entries.sort(key=lambda pair: len(pair[1]))
                 for off in range(0, len(entries), 32):
                     chunk = entries[off:off+32]

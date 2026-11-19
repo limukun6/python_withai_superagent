@@ -56,12 +56,14 @@ def select_action(evidence, feasible, mode, used):
             reason = 'The semantic challenger lost by over one point; explore a different source of features.'
         elif can_pool or evidence['kind'] in ('pair_text','single_text'):
             priorities = [*aligned, COOCCUR, NEURAL]
-            reason = 'Shared errors persist on text or lower-support names; try a compatible frozen encoder.'
+            reason = 'Shared errors persist on text or lower-support names, giving compatible frozen encoders first priority.'
         else:
             priorities = [COOCCUR, NEURAL]
             reason = 'Limited evidence for semantic transfer; learn features from training rows.'
     for name in priorities:
         if name in feasible and name not in used:
+            if name!=priorities[0]:
+                reason+=f' Earlier choices in this order were unavailable or already tried. Selected {name}.'
             return name, reason
     return None, 'No eligible untried alternative supported by the observations.'
 

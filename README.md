@@ -9,6 +9,8 @@
 - [搜索反馈与复核开销的实测结果](docs/feedback_value_results_zh.md)
 - [历史决策证据复核](docs/decision_evidence_audit_zh.md)
 
+分类方法的研究分支可用 `--method-choice paired --trials 7`。本地规划器按各次试验改对和改错的样本选择下一步，可用从零训练的神经网络，以及冻结的 MiniLM 或 Qwen 特征。神经网络训练前会实测可用设备。[使用方法与分工](docs/method_choice_zh.md) · [Task1 同预算对照](docs/task1_method_device_results_zh.md)
+
 从仓库根目录使用同一个配置处理任务包。训练和正式预测是独立命令。按课程安排取得正式预测输入后执行第二条。两个命令分别需要新的运行目录和预测文件路径。
 
 ```powershell

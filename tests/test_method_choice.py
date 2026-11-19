@@ -33,6 +33,9 @@ class MethodRoutingTests(unittest.TestCase):
         self.assertEqual(action(mode='fixed',shared_errors=3),MINILM)
         self.assertEqual(action([MINILM],mode='fixed',nonlinear_gain=1.),SEMANTIC)
         self.assertNotEqual(select_action(evidence,{MINILM},'adaptive',[])[0],NEURAL)
+        choice,reason=select_action(evidence|dict(nonlinear_gain=0.),{NEURAL},'adaptive',[])
+        self.assertEqual(choice,NEURAL)
+        self.assertIn('Selected scratch_neural_classifier.',reason)
 
     def test_pair_policy_resolves_equal_scores_differently_from_discordant_rows(self):
         ev=dict(kind='categorical_tabular',semantic=SEMANTIC,shared_errors=90,required_shared_errors=50,

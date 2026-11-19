@@ -92,13 +92,15 @@ def _run(args):
             raise ValueError('Pretrained choice requires local interleaved routes, allocation/refinement off, catalog anchor and exactly 5 trials')
         args.policy = 'interleaved_routes'
         pretrained = json.loads(Path(args.pretrained_config).read_text())
+        if not method_choice and not (pretrained.get('weights') or pretrained.get('tabular_weights')):
+            raise ValueError('A MiniLM-only configuration uses --method-choice adaptive (or paired) --trials 7')
     pricing=_validate(args)
     if args.allocation != "off" and (args.planner != "local" or args.refinement != "off"):
         raise ValueError("Resource allocation requires local mode and refinement off")
     task_path=Path(args.task_package).expanduser().resolve()
     task=load_development_task(task_path)
     task_contract=TaskSpec.from_task(task)
-    if args.trials>len(search_candidates(task.kind,args.portfolio))+(2 if method_choice else 0):
+    if not method_choice and args.trials>len(search_candidates(task.kind,args.portfolio)):
         raise ValueError('Requested trials exceed the declared candidate catalog')
     if args.run_dir:
         directory=Path(args.run_dir).expanduser().resolve()
@@ -171,7 +173,9 @@ def _run(args):
     model_available=bool(summary['selected_candidate'])
     task_budget_after=account.snapshot() if account is not None else None
     planned_primary=summary.get('resource_allocation',{}).get('final_primary_trials_planned',args.trials)
-    primary_completed=summary['trials_attempted']==planned_primary
+    ordinary_stop=summary.get('runtime_budget',{}).get('search_stop_reason')
+    exhausted=bool(method_choice and ordinary_stop in ('method_candidates_exhausted','method_budget_exhausted'))
+    primary_completed=summary['trials_attempted']==planned_primary or exhausted
     confirmation_completed=summary['confirmation'].get('valid_confirmation',False)
     refit_completed=summary['refit_succeeded']
     validation_available=task.X_val is not None and task.y_val is not None
@@ -190,7 +194,7 @@ def _run(args):
         'provided_validation_available':validation_available,'evaluation_completed':evaluation_completed,
         'validation_failure':summary.get('validation_failure'),
         'primary_trials_attempted':summary['trials_attempted'],'fallback_count':summary['fallback_count'],
-        'primary_horizon_completed':primary_completed,'confirmation_completed':confirmation_completed,
+        'method_options_exhausted':exhausted,'search_stop_reason':ordinary_stop,'primary_horizon_completed':primary_completed,'confirmation_completed':confirmation_completed,
         'full_refit_completed':refit_completed,
         'runtime_budget':summary.get('runtime_budget'),
         'feature_cache':summary.get('feature_cache'),
@@ -257,7 +261,7 @@ def build_parser():
     run.add_argument('--refinement',choices=['off','midpoints','compose','research'],default='off',help='Optional feedback candidates; research adds bounded literature retrieval and checked sklearn code generation')
     run.add_argument('--allocation',choices=['off','uniform','successive'],default='off',help='Experimental local resource study; counts all screening fits')
     run.add_argument('--error-feedback',action='store_true',help='Expose train-thresholded descriptive error slices to feedback planners')
-    run.add_argument('--method-choice',choices=['adaptive','fixed'],help='Allocate two search slots after five ordinary trials, including a local MiniLM feature option; use --trials 7')
+    run.add_argument('--method-choice',choices=['adaptive','fixed','paired'],help='Allocate two search slots after five ordinary trials, including a local MiniLM feature option; use --trials 7')
     run.add_argument('--pretrained-config',help='Optional paths and allowances: minilm_weights for local frozen features (null disables); weights/tabular_weights, ledger, scope and cap_rmb for metered Qwen transfer')
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')

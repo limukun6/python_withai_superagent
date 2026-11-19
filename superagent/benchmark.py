@@ -193,6 +193,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         if not catalog_ids or len(set(catalog_ids))!=len(catalog_ids) or not set(catalog_ids)<={c['id'] for c in available}:
             raise ValueError('Resource candidate pool must be a distinct static subset')
         available=[next(c for c in available if c['id']==name) for name in catalog_ids]
+    protected_count=min(5,len(available))
     anchor_id=available[0]['id']
     if anchor_policy=='schema':
         target={'pair_text':'word_char_stats_C0.3','categorical_tabular':'catboost_depth8_reg10.0'}.get(task.kind)
@@ -217,12 +218,12 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
              ExistingPolicyAdapter(policy))
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
     if method_choice is not None:
-        if (method_choice not in ('adaptive','fixed') or strategy!='local_interleaved_routes' or max_trials!=7
+        if (method_choice not in ('adaptive','fixed','paired') or strategy!='local_interleaved_routes' or max_trials!=7
                 or confirmation_top_k!=3 or confirmation_repeats!=3 or not anchor_first or anchor_policy!='catalog'
                 or refinement!='off' or decision_policy is not None):
             raise ValueError('Method choice needs seven interleaved trials and three confirmed finalists')
         pretrained_config={'minilm_weights':str((directory.parent/'.superagent-weights'/'all-MiniLM-L6-v2').resolve()), **(pretrained_config or {})}
-        logger.write_json('method_policy.json',dict(mode=method_choice, protected_initial_trials=5, optional_slots=2))
+        logger.write_json('method_policy.json',dict(mode=method_choice, protected_initial_trials=protected_count, optional_slots=2))
     if pretrained_config is not None:
         from .pretrained_choice import CANDIDATE, PARAMS, consider
         if method_choice is None and (strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog'):
@@ -235,7 +236,10 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     stop_reason='trial_limit_reached'
     random_fallback = random.Random(seed)
     for index in range(max_trials):
-        if not available and not (method_choice and index>=5):
+        if method_choice and index>=protected_count+2:
+            stop_reason='method_budget_exhausted'
+            break
+        if not available and not (method_choice and index>=protected_count):
             stop_reason='candidate_catalog_exhausted';break
         needs_planner=client is not None and not blocked_llm and not (anchor_first and index==0)
         window=runtime.search_window(history,needs_planner)
@@ -254,9 +258,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         proposal = None
         declared=None
         use_pretrained = False
-        if method_choice and index>=5:
+        if method_choice and index>=protected_count:
             from .method_choice import plan, SEMANTIC, CANDIDATE
-            decision=plan(task.kind,history,directory,payload,pretrained_config,method_choice)
+            decision=plan(task.kind,history,directory,payload,pretrained_config,method_choice,protected_count)
             logger.write_json(f'method_decision_{index+1}.json',decision)
             use_pretrained=decision['decision']=='try'
             if use_pretrained:
@@ -266,7 +270,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                 if pretrained_id in (SEMANTIC,CANDIDATE):
                     logger.write_json('pretrained_decision.json',decision['transfer'] | {'protected_incumbent':decision['protected_incumbent']})
             elif not available:
-                stop_reason='candidate_catalog_exhausted'
+                stop_reason='method_candidates_exhausted'
                 break
         elif pretrained_config is not None and index == 4 and not method_choice:
             decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config,

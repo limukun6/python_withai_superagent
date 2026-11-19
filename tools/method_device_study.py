@@ -30,7 +30,14 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('archive','output','ledger','weights','minilm-weights','historical-protocol'):
         p.add_argument('--'+k,required=True,type=Path)
+    p.add_argument('--phase',choices=('main','paired'),default='main')
+    p.add_argument('--prior-study',type=Path,help='First study sharing the same token ceiling')
+    p.add_argument('--protocol-only',action='store_true')
     a=p.parse_args()
+    if a.phase=='paired' and not a.prior_study:p.error('The second phase shares the first phase budget; provide --prior-study')
+    arms=ARMS if a.phase=='main' else ('classic','adaptive','paired')
+    target=arms[-1]
+    seed=SEED if a.phase=='main' else 46919
     root=a.output.resolve()
     root.mkdir(parents=True,exist_ok=True)
     repo=Path(__file__).resolve().parents[1]
@@ -39,25 +46,36 @@ def main():
     keep,reserve,_=grouped_partition(whole,RESERVE_SEED)
     pool=TrainingTask(whole.kind,take(whole.X_train,keep),whole.y_train[keep],whole.spec)
     groups=sample_groups(pool)
-    splits=list(StratifiedGroupKFold(n_splits=5,shuffle=True,random_state=SEED).split(np.zeros(len(keep)),pool.y_train,groups))
-    ids=[str(root/f'fold_{i}'/arm) for i in range(len(splits)) for arm in ARMS]
+    splits=list(StratifiedGroupKFold(n_splits=5,shuffle=True,random_state=seed).split(np.zeros(len(keep)),pool.y_train,groups))
+    assert len(set(np.concatenate([h for _,h in splits])))==len(keep)
+    if a.phase=='paired':splits=splits[:3]
+    ids=[str(root/f'fold_{i}'/arm) for i in range(len(splits)) for arm in arms]
+    previous=None
+    if a.prior_study:
+        previous=read(a.prior_study/'protocol.json')
+        if previous['archive_sha256']!=digest(a.archive) or previous['campaign_cap']!=CAMPAIGN:
+            raise ValueError('Prior budget refers to a different study or task')
+        ids.extend(str(a.prior_study.resolve()/f'fold_{i}'/arm) for i,order in enumerate(previous['order']) for arm in order)
     archive_sha=digest(a.archive)
     scope=next(r for r in read(a.historical_protocol)['tasks'] if r['package_sha256']==archive_sha and r['scope']=='task1')
     sources=[*sorted((repo/'superagent').glob('*.py')),Path(__file__),repo/'tools/tabular_encoder_study.py',repo/'tools/pretrained_study.py',repo/'tools/expanded_feedback_pilot.py']
-    orders=[ARMS[i%3:]+ARMS[:i%3] for i in range(5)]
-    plan=dict(seed=SEED,search_seed=SEARCH_SEED,reserve_seed=RESERVE_SEED,reserve_count=len(reserve),options=OPTIONS,
+    orders=[arms[i%3:]+arms[:i%3] for i in range(len(splits))]
+    plan=dict(phase=a.phase,seed=seed,primary_policy=target,prior_protocol_sha256=digest(a.prior_study/'protocol.json') if previous else None,search_seed=SEARCH_SEED,reserve_seed=RESERVE_SEED,reserve_count=len(reserve),options=OPTIONS,
         order=orders,opened=opened,archive_sha256=archive_sha,source={str(p.relative_to(repo)):digest(p) for p in sources},
         dependencies={k:version(k) for k in ('torch','numpy','scikit-learn','catboost','transformers')},platform=platform.platform(),
         arm_cap=CAP,campaign_cap=CAMPAIGN,minilm_files=MINI_FILES,qwen_files=QWEN_FILES,
         fixed_policy="Try frozen MiniLM followed by Qwen for compatible categorical tables. Both attach to the five-trial leader. Adaptive may instead train a neural network, learn co-occurrence, or continue ordinary search.",
         secondary="Compare both frozen encoder trials and the matched ordinary incumbent on identical fitting rows. Replay decisions with outcome evidence removed. Audit actual CPU vs accelerator training on the first inner split after all winners freeze.",
-        purpose='Compare complete policies. Adoption requires adaptive beating both controls on pooled rows and on at least three of five folds against each; otherwise keep existing default. All methods chosen without outer labels.',
+        purpose='Compare complete policies. A Task1 candidate must beat both comparison arms on pooled rows and a strict majority of folds. No change to the team default without a cross-task comparison.',
+        paired_policy='Accuracy objectives only: probe semantics first for concentrated lower-support errors. On the next decision use corrected/lost rows relative to the original leader. Other metrics keep the existing score-based policy.',
         indices=[dict(train=keep[t].tolist(),outer=keep[h].tolist(),audit=overlap_audit(pool,t,h)) for t,h in splits])
-    assert len(set(np.concatenate([h for _,h in splits])))==len(keep)
     assert all(f['audit']['search_duplicate_rows']==0 for f in plan['indices'])
     if (root/'protocol.json').exists():
         if read(root/'protocol.json')!=json.loads(json.dumps(plan)):raise ValueError('Frozen protocol changed')
     else:write(root/'protocol.json',plan)
+    if a.protocol_only:
+        print('Frozen without fitting',root/'protocol.json',flush=True)
+        return
     for i,(train,held) in enumerate(splits):
         task=DevelopmentTask(pool.kind,'training_partition',take(pool.X_train,train),pool.y_train[train],None,None,pool.spec)
         for arm in orders[i]:
@@ -99,8 +117,8 @@ def main():
         truth=pool.y_train[held]
         dest=root/f'fold_{i}'
         predictions={}
-        arms={}
-        for arm in ARMS:
+        records={}
+        for arm in arms:
             folder=dest/arm
             rec=read(folder/'receipt.json')
             assert digest(folder/'selected_model.joblib')==rec['sha256']==read(folder/'final_selection.json')['model_sha256']
@@ -108,17 +126,18 @@ def main():
             pred=predict_with_model(pool.kind,model['model'],take(pool.X_train,held))
             assert pred.shape==truth.shape
             predictions[arm]=pred
-            arms[arm]=dict(**rec,correct=int((pred==truth).sum()),accuracy=float((pred==truth).mean()))
-            if rec['trials'][:5]!=arms['classic']['trials'][:5]:raise ValueError('Different initial evidence')
-        gains={a:paired(predictions[a],predictions['adaptive'],truth) for a in ('classic','fixed')}
-        results.append(dict(rows=len(truth),arms=arms,adaptive_vs=gains))
+            records[arm]=dict(**rec,correct=int((pred==truth).sum()),accuracy=float((pred==truth).mean()))
+            if rec['trials'][:5]!=records['classic']['trials'][:5]:raise ValueError('Different initial evidence')
+        gains={a:paired(predictions[a],predictions[target],truth) for a in arms[:-1]}
+        results.append(dict(rows=len(truth),arms=records,**{target+'_vs':gains}))
         write(dest/'outer_predictions.json',dict(rows=keep[held].tolist(),truth=truth.tolist(),**{k:v.tolist() for k,v in predictions.items()}))
-    totals={a:sum(f['arms'][a]['correct'] for f in results) for a in ARMS}
-    wins={a:sum(f['arms']['adaptive']['correct']>f['arms'][a]['correct'] for f in results) for a in ('classic','fixed')}
+    totals={a:sum(f['arms'][a]['correct'] for f in results) for a in arms}
+    wins={a:sum(f['arms'][target]['correct']>f['arms'][a]['correct'] for f in results) for a in arms[:-1]}
     cost=sum(v['usage']['course_rmb'] for f in results for v in f['arms'].values())
     assert cost<=CAMPAIGN
-    out=dict(rows=len(keep),correct=totals,accuracy={a:c/len(keep) for a,c in totals.items()},folds=results,
-             wins=wins,promote=all(totals['adaptive']>totals[a] and wins[a]>=3 for a in wins),course_rmb=cost)
+    rows=sum(r['rows'] for r in results)
+    out=dict(rows=rows,correct=totals,accuracy={a:c/rows for a,c in totals.items()},folds=results,
+             wins=wins,promote=all(totals[target]>totals[a] and wins[a]>len(results)/2 for a in wins),course_rmb=cost)
     write(root/'results.json',out)
     print({k:v for k,v in out.items() if k!='folds'},flush=True)
 

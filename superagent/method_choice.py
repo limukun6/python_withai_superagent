@@ -30,7 +30,23 @@ def select_action(evidence, feasible, mode, used):
     else:
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
-        if not used and evidence['nonlinear_gain']>=.025:
+        pair_aware = mode=='paired' and evidence.get('primary_metric')=='accuracy'
+        if (pair_aware and not used and can_pool and evidence['rare_enrichment']>=1.
+                and any(name in feasible for name in aligned)):
+            priorities = [*aligned, COOCCUR, NEURAL]
+            reason = 'Shared errors disproportionately include lower-support names; probe category semantics before a new classifier.'
+        elif pair_aware and used and evidence['discordant']>=max(8,.02*evidence['search_rows']):
+            a,b=evidence['corrected'],evidence['lost']
+            boundary=math.sqrt(a+b)
+            if a-b>=boundary:
+                return None, 'The challenger has more paired gains than losses by one discordant-count standard deviation; protect it and continue ordinary search.'
+            if b-a>=boundary and used[-1] in (SEMANTIC,MINILM):
+                priorities=[COOCCUR,NEURAL]
+                reason='The last encoder introduced materially more paired losses; switch feature family.'
+            else:
+                priorities=[*aligned, COOCCUR, NEURAL]
+                reason='The last candidate changes individual predictions; test an untried compatible representation.'
+        elif not used and evidence['nonlinear_gain']>=.025:
             priorities = [NEURAL, *aligned, COOCCUR]
             reason = 'Nonlinear models lead linear models by at least 2.5 points; test learned nonlinear features.'
         elif used and evidence['previous_delta']>=evidence['margin']:
@@ -59,23 +75,26 @@ def weights_available(config, key, files):
     return all((folder/k).is_file() and (folder/k).stat().st_size==size for k,(_,_,size) in files.items())
 
 
-def plan(kind, history, folder, payload, config, mode):
-    originals = shortlist(history[:5],5)
+def plan(kind, history, folder, payload, config, mode, protected_count=5):
+    originals = shortlist(history[:protected_count],protected_count)
     if not originals:
         return dict(decision='ordinary',reason='No successful baseline.')
     incumbent = originals[0]
     labels = np.asarray(payload['y_search'])
     shared = np.ones(len(labels),bool)
+    reference_predictions=None
     for row in originals:
         predictions = joblib.load(folder/f"trial_{row['trial']}.joblib")['search_predictions']
         if np.shape(predictions)!=labels.shape: raise ValueError('Misaligned prediction evidence')
         shared &= predictions!=labels
+        if row['candidate']==incumbent['candidate']:reference_predictions=predictions
     x, held = payload['X_train'], payload['X_search']
     semantic = SEMANTIC if kind=='categorical_tabular' else CANDIDATE
     transfer = dict(decision='skip',reason='No compatible Qwen input and weights.')
     eligible = {}
-    if kind in ('pair_text','single_text') and config and config.get('weights'):
-        transfer=consider(kind,history[:5],folder,labels,config,train_features=x,search_features=held)
+    encoder_installed=all(importlib.util.find_spec(name) is not None for name in ('torch','transformers','tokenizers','safetensors'))
+    if kind in ('pair_text','single_text') and encoder_installed and config and config.get('weights'):
+        transfer=consider(kind,history[:protected_count],folder,labels,config,train_features=x,search_features=held)
         if transfer['decision']=='try': eligible[semantic]=PARAMS
     n = len(payload['y_train'])
     feature_count = int(x.shape[1]) if hasattr(x,'shape') and len(x.shape)>1 else 1
@@ -99,9 +118,9 @@ def plan(kind, history, folder, payload, config, mode):
             names={s for _,counts in cols for s in counts}
             short_latin_share=sum(s.isascii() and any(c.isalpha() for c in s) and len(s.split())<=16 for s in names)/len(names)
             low_errors=int((mask & shared).sum())
-            if torch_available and weights_available(config,'minilm_weights',MINI_FILES):
+            if encoder_installed and weights_available(config,'minilm_weights',MINI_FILES):
                 eligible[MINILM]=dict(base,model=MINI_MODEL)
-            if torch_available and weights_available(config,'tabular_weights',QWEN_FILES):
+            if encoder_installed and weights_available(config,'tabular_weights',QWEN_FILES):
                 allowance=sum(min(64,len(s.encode())+2) for s in names)
                 try:
                     budget(config,allowance,model_id=QWEN)
@@ -112,14 +131,21 @@ def plan(kind, history, folder, payload, config, mode):
                     transfer=dict(decision='skip',reason=str(exc))
     linear=[r['search_score'] for r in originals if any(p in r['candidate'] for p in ('logistic','word','char'))]
     nonlinear=[r['search_score'] for r in originals if any(p in r['candidate'] for p in ('trees','catboost','rbf'))]
-    extra=history[5:]
+    extra=history[protected_count:]
+    corrected=lost=0
+    if extra and extra[-1]['status']=='completed':
+        after=joblib.load(folder/f"trial_{extra[-1]['trial']}.joblib")['search_predictions']
+        if after.shape!=labels.shape:raise ValueError('Misaligned challenger predictions')
+        corrected=int(np.sum((reference_predictions!=labels)&(after==labels)))
+        lost=int(np.sum((reference_predictions==labels)&(after!=labels)))
     used=[r['candidate'] for r in extra]
     delta=(extra[-1]['search_score']-incumbent['search_score'] if extra and extra[-1]['status']=='completed' else -1.)
     ev=dict(rows=n, kind=kind, class_count=len(np.unique(payload['y_train'])), semantic=semantic,
             shared_errors=int(shared.sum()), required_shared_errors=max(8,math.ceil(.05*len(labels))),
             nonlinear_gain=max(nonlinear)-max(linear) if nonlinear and linear else 0.,rare_enrichment=rare_fraction,
             previous_delta=delta if extra else 0.,margin=.01,torch_available=torch_available,
-            short_latin_share=short_latin_share,low_support_shared_errors=low_errors)
+            short_latin_share=short_latin_share,low_support_shared_errors=low_errors,primary_metric=incumbent['primary_metric'],
+            corrected=corrected,lost=lost,discordant=corrected+lost,search_rows=len(labels))
     name,reason=select_action(ev,eligible,mode,used)
     return dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,

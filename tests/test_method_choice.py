@@ -34,6 +34,18 @@ class MethodRoutingTests(unittest.TestCase):
         self.assertEqual(action([MINILM],mode='fixed',nonlinear_gain=1.),SEMANTIC)
         self.assertNotEqual(select_action(evidence,{MINILM},'adaptive',[])[0],NEURAL)
 
+    def test_pair_policy_resolves_equal_scores_differently_from_discordant_rows(self):
+        ev=dict(kind='categorical_tabular',semantic=SEMANTIC,shared_errors=90,required_shared_errors=50,
+                short_latin_share=1.,low_support_shared_errors=65,nonlinear_gain=.06,rare_enrichment=1.1,
+                previous_delta=.01,margin=.01,primary_metric='accuracy',search_rows=1000,
+                corrected=25,lost=15,discordant=40)
+        catalog={NEURAL,MINILM,SEMANTIC,COOCCUR}
+        self.assertEqual(select_action(ev,catalog,'paired',[])[0],MINILM)
+        self.assertIsNone(select_action(ev,catalog,'paired',[MINILM])[0])
+        self.assertEqual(select_action(ev|dict(corrected=110,lost=100,discordant=210),catalog,'paired',[MINILM])[0],SEMANTIC)
+        self.assertEqual(select_action(ev|dict(corrected=10,lost=35,discordant=45),catalog,'paired',[MINILM])[0],COOCCUR)
+        self.assertEqual(select_action(ev|dict(primary_metric='macro_f1'),catalog,'paired',[])[0],NEURAL)
+
     def test_offline_missing_weights_ineligible(self):
         with tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ',{'SUPERAGENT_OFFLINE':'1'}):
             key='minilm_weights'; files={'config.json':('rev','sha',2)}

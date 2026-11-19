@@ -79,6 +79,26 @@ def compare_devices(folder):
                 scope='Four separate full fits in CPU/accelerator/accelerator/CPU order where an accelerator is available.')
 
 
+def check_paired_evidence(folder, decision, trials, first):
+    labels=joblib.load(folder/'inner_data.joblib')['y_search']
+    shared=np.logical_and.reduce([p!=labels for p in first])
+    evidence=decision['evidence']
+    assert evidence['shared_errors']==int(shared.sum()) and evidence['search_rows']==len(labels)
+    ordinary=next(r for r in trials[:5] if r['candidate']==decision['protected_incumbent'])
+    before=first[ordinary['trial']-1]
+    tested=decision['previous_methods']
+    if tested:
+        challenger=trials[5+len(tested)-1]
+        assert challenger['candidate']==tested[-1] and challenger['status']=='completed'
+        after=joblib.load(folder/f"trial_{challenger['trial']}.joblib")['search_predictions']
+        changes=paired(before,after,labels)
+    else:
+        changes=dict(corrected=0,lost=0)
+    corrected,lost=changes['corrected'],changes['lost']
+    assert (corrected,lost,corrected+lost)==(evidence['corrected'],evidence['lost'],evidence['discordant'])
+    return dict(corrected=corrected,lost=lost,shared_errors=int(shared.sum()),rows=len(labels))
+
+
 def main():
     from tokenizers import Tokenizer
     p=argparse.ArgumentParser(description=__doc__)
@@ -99,7 +119,10 @@ def main():
     tokenizer.enable_truncation(max_length=256)
     opened=[]
     with train_only(a.archive,opened):whole=load_training_task(a.archive)
+    arms=protocol['order'][0]
+    target=arms[-1]
     seen=set()
+    verified_correct={arm:0 for arm in arms}
     counts=dict(fits=0,final_models_reloaded=0,first_five_prediction_matches=0,replayed_actual_decisions=0,
                 masked_paths_with_measured_outcomes=0,minilm_tokens=0,minilm_forwards=0,minilm_weight_downloads=0,
                 qwen_tokens=0,qwen_forwards=0)
@@ -114,7 +137,7 @@ def main():
         np.testing.assert_array_equal(y,outer['truth'])
         log={}
         initial_preds=None
-        for arm in ('classic','fixed','adaptive'):
+        for arm in arms:
             folder=directory/arm
             receipt=read(folder/'receipt.json')
             assert receipt['complete'] and digest(folder/'selected_model.joblib')==receipt['sha256']
@@ -122,6 +145,9 @@ def main():
             assert receipt['winner']==bundle['candidate']
             pred=predict_with_model(whole.kind,bundle['model'],x)
             np.testing.assert_array_equal(pred,outer[arm])
+            correct=int((pred==y).sum())
+            assert correct==study['folds'][i]['arms'][arm]['correct']
+            verified_correct[arm]+=correct
             counts['final_models_reloaded']+=1
             counts['fits']+=receipt['fits']
             trials=read(folder/'trials.json')
@@ -147,8 +173,16 @@ def main():
                 assert matches_record(actual,decision)
                 counts['replayed_actual_decisions']+=1
                 masked,_=select_action(dict(ev,nonlinear_gain=0.,previous_delta=0.),eligible,'adaptive',used)
-                log[arm].append(dict(actual=actual,without_score_deltas=masked,previous_methods=used,
-                                     protected_incumbent=decision['protected_incumbent']))
+                entry=dict(actual=actual,without_score_deltas=masked,previous_methods=used,
+                           protected_incumbent=decision['protected_incumbent'])
+                if 'discordant' in ev:
+                    entry['recomputed_inner_changes']=check_paired_evidence(folder,decision,trials,first)
+                log[arm].append(entry)
+        if 'fixed' not in arms:
+            changes={a:paired(np.asarray(outer[a]),np.asarray(outer[target]),y) for a in arms[:-1]}
+            assert changes==study['folds'][i][target+'_vs']
+            folds.append(dict(fold=i+1,rows=len(y),decision_replays=log,paired_vs=changes))
+            continue
         # Actual rows for the projected policy can be reused only if its entire path matches.
         masked_measured=all(t['actual']==t['without_score_deltas'] and t['actual'] is not None for t in log['fixed'])
         if masked_measured:counts['masked_paths_with_measured_outcomes']+=1
@@ -167,13 +201,19 @@ def main():
                           adaptive_vs_masked=paired(np.asarray(outer['fixed']),np.asarray(outer['adaptive']),y) if masked_measured else None,
                           matched_correct={k:int((v==y).sum()) for k,v in matched.items()},
                           minilm_vs_qwen=paired(matched['qwen'],matched['minilm'],y) if {'qwen','minilm'}<=matched.keys() else None))
-    assert len(seen)==study['rows'] and counts['fits']==14*len(folds)*3
+    assert len(seen)==study['rows'] and counts['fits']==14*len(folds)*len(arms)
+    assert verified_correct==study['correct']
     summary=dict(counts=counts,folds=folds,training_members_opened=opened,api_generation_requests=0,actual_api_charge_rmb=0.,
                  qwen_conservative_rmb=study['course_rmb'],source_hashes_verified=True,
                  masked_policy='Keep initial five steps, gate, incumbent parameters and final confirmation. Project only nonlinear-minus-linear gain and previous-minus-incumbent score to zero at the two extra decisions.')
     if a.device_check:
         summary['device_check']=compare_devices(root/'fold_0'/'adaptive')
-    write(root/'decision_and_device_audit.json',summary)
+    if 'fixed' not in arms:
+        prior=root/'protocol.json'
+        summary.update(verified_correct=verified_correct,method='Reloaded every outer prediction and recomputed inner paired changes from the saved search predictions.',
+                       frozen_protocol_sha256=digest(prior))
+        summary.pop('masked_policy')
+    write(root/('decision_and_device_audit.json' if 'fixed' in arms else 'verification.json'),summary)
     print(counts,flush=True)
     if a.device_check:print(summary['device_check'],flush=True)
 

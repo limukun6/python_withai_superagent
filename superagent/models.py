@@ -42,7 +42,7 @@ def _logistic_tabular(
 ) -> tuple[Any, np.ndarray]:
     model = Pipeline([
         ("one_hot", OneHotEncoder(handle_unknown="ignore")),
-        ("model", LogisticRegression(max_iter=2000, C=c, random_state=42)),
+        ("model", _tabular_logistic(c)),
     ])
     model.fit(_clean_categories(x_train), y_train)
     return model, model.predict(_clean_categories(x_val))
@@ -53,29 +53,24 @@ def _extra_trees_tabular(
 ) -> tuple[Any, np.ndarray]:
     model = Pipeline([
         ("one_hot", OneHotEncoder(handle_unknown="ignore")),
-        ("model", ExtraTreesClassifier(
-            n_estimators=400, min_samples_leaf=min_samples_leaf, max_features=0.8,
-            n_jobs=-1, random_state=42, class_weight="balanced",
-        )),
+        ("model", _tabular_trees(min_samples_leaf)),
     ])
     model.fit(_clean_categories(x_train), y_train)
     return model, model.predict(_clean_categories(x_val))
 
 
-def _catboost_tabular(
-    x_train: np.ndarray,
-    y_train: np.ndarray,
-    x_val: np.ndarray,
-    depth: int = 7,
-    l2_leaf_reg: float = 3.0,
-) -> tuple[Any, np.ndarray]:
-    # Imported lazily so a missing optional accelerator does not prevent the
-    # transparent sklearn fallback portfolio from completing.
-    from catboost import CatBoostClassifier
+def _tabular_logistic(c):
+    return LogisticRegression(max_iter=2000, C=c, random_state=42)
 
-    x_train_clean = _clean_categories(x_train)
-    x_val_clean = _clean_categories(x_val)
-    model = CatBoostClassifier(
+
+def _tabular_trees(min_samples_leaf):
+    return ExtraTreesClassifier(n_estimators=400, min_samples_leaf=min_samples_leaf, max_features=.8,
+                                n_jobs=-1, random_state=42, class_weight="balanced")
+
+
+def _tabular_catboost(y_train, depth, l2_leaf_reg):
+    from catboost import CatBoostClassifier
+    return CatBoostClassifier(
         iterations=600,
         depth=depth,
         learning_rate=0.05,
@@ -87,6 +82,15 @@ def _catboost_tabular(
         thread_count=-1,
         allow_writing_files=False,
     )
+
+
+def _catboost_tabular(
+    x_train: np.ndarray, y_train: np.ndarray, x_val: np.ndarray,
+    depth: int = 7, l2_leaf_reg: float = 3.0,
+) -> tuple[Any, np.ndarray]:
+    x_train_clean = _clean_categories(x_train)
+    x_val_clean = _clean_categories(x_val)
+    model = _tabular_catboost(y_train, depth, l2_leaf_reg)
     model.fit(x_train_clean, y_train, cat_features=list(range(x_train_clean.shape[1])))
     return model, model.predict(x_val_clean).reshape(-1)
 

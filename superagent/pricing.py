@@ -57,6 +57,12 @@ class ModelPricing:
 # and free credits do not reduce course costs. Qwen uses separately verified
 # official original-model Beijing standard prices, not the school gateway tariff.
 CATALOG: dict[str, ModelPricing] = {
+    "qwen3-embedding-0.6b": ModelPricing(
+        "qwen3-embedding-0.6b", 5.0, 0.0,
+        "https://help.aliyun.com/zh/open-search/ai-search-open-platform/billing-methods-and-billing-items", True,
+        "official_opensearch_shanghai_first_tier_input_tokens", "ops-qwen3-embedding-0.6b-first-tier",
+        "2026-11-19", "Qwen/Qwen3-Embedding-0.6B",
+    ),
     "qwen3-0.6b": ModelPricing(
         "qwen3-0.6b", .30, 1.20, "https://help.aliyun.com/zh/document_detail/3023262.html", True,
         "official_standard_non_thinking_no_cache_discount", "aliyun-2026-03-17",
@@ -83,6 +89,8 @@ def resolve_pricing(model: str) -> ModelPricing:
     """Return a configured price only for a named model with known evidence."""
     normalized = model.casefold().strip()
     aliases = {
+        "qwen3-embedding-0.6b": "qwen3-embedding-0.6b",
+        "ops-qwen3-embedding-0.6b": "qwen3-embedding-0.6b",
         "qwen3-0.6b": "qwen3-0.6b",
         "deepseek-v4-pro": "deepseek-v4-pro",
         "deepseek-v4-pro-0813": "deepseek-v4-pro",

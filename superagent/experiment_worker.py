@@ -25,7 +25,11 @@ def main() -> None:
     metric=MetricSpec.from_payload(payload)
     registry_sha256=None;origin='static'
     from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
-    if candidate_id == CANDIDATE:
+    from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
+    if candidate_id in (SEMANTIC, PERMUTED):
+        candidate = level_candidate(payload["kind"], candidate_id, Path(output_path).parent / 'pretrained_runtime.json')
+        origin = 'verified_pretrained'
+    elif candidate_id == CANDIDATE:
         candidate = contextual_candidate(payload["kind"], Path(output_path).parent / 'pretrained_runtime.json')
         origin = 'verified_pretrained'
     elif len(sys.argv)==5:

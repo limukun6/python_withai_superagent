@@ -67,4 +67,4 @@ python tools/released_validation.py score --packages "/path/to/course-zips" --ou
 
 **回归测试**：安装 `requirements-neural-tested.txt` 后运行 `python -m unittest discover -s tests`。本轮冻结代码的完整回归为 280 项通过。使用文件包时请先核对 SHA256SUMS；只加载可信的模型文件。本轮报告与日志只覆盖已声明实验，不包含历史项目的 API 总账、原始课程数据、密钥、缓存或正式测试预测。
 
-An optional local policy can request a verified pretrained text encoder after observing shared errors. [Setup, decision rule and paired study](docs/pretrained_choice.md)
+After observing shared errors, the local policy can try frozen Qwen representations of text or readable category names. The original leader remains eligible for confirmation. [Setup and decision rules](docs/pretrained_choice.md) · [Task1 five-fold results](docs/task1_category_encoder_results_zh.md)

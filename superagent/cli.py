@@ -249,7 +249,7 @@ def build_parser():
     run.add_argument('--refinement',choices=['off','midpoints','compose','research'],default='off',help='Optional feedback candidates; research adds bounded literature retrieval and checked sklearn code generation')
     run.add_argument('--allocation',choices=['off','uniform','successive'],default='off',help='Experimental local resource study; counts all screening fits')
     run.add_argument('--error-feedback',action='store_true',help='Expose train-thresholded descriptive error slices to feedback planners')
-    run.add_argument('--pretrained-config',help='Local Qwen weight folder, existing ledger, scope and per-run course cap in JSON')
+    run.add_argument('--pretrained-config',help='Optional feedback-selected Qwen transfer. JSON with weights (text) and/or tabular_weights (named categories), ledger, scope and cap_rmb')
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')
     run.add_argument('--model')

@@ -35,6 +35,7 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    if candidate in ('pretrained_qwen3_levels','ablation_permuted_qwen3_levels'):return 'pretrained_category_levels'
     if candidate == "pretrained_qwen3_context_C0.3":return "pretrained_qwen3_context"
     if candidate.startswith('generated_'):return candidate.rsplit('_',1)[0]
     if candidate.startswith("recipe_"):return candidate.rsplit("_",1)[0]

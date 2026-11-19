@@ -31,15 +31,16 @@ def digest(path):
         return hashlib.file_digest(source, 'sha256').hexdigest()
 
 
-def acquire(directory):
+def acquire(directory, repository='Qwen/Qwen3-0.6B', files=None):
     import requests
+    files = FILES if files is None else files
     directory.mkdir(parents=True, exist_ok=True)
     fetched = []
-    for name, (revision, sha, size) in FILES.items():
+    for name, (revision, sha, size) in files.items():
         dest = directory / name
         if dest.is_file() and dest.stat().st_size == size and digest(dest) == sha:
             continue
-        url = f'https://modelscope.cn/models/Qwen/Qwen3-0.6B/resolve/{revision}/{name}'
+        url = f'https://modelscope.cn/models/{repository}/resolve/{revision}/{name}'
         with tempfile.NamedTemporaryFile(dir=directory, delete=False) as stream:
             tmp = Path(stream.name)
             try:
@@ -59,10 +60,10 @@ def acquire(directory):
     return fetched
 
 
-def budget(config, tokens, reserve=False):
+def budget(config, tokens, reserve=False, model_id=MODEL):
     """Atomically check both limits against the existing project ledger."""
     ledger = TaskBudgetLedger(config['ledger'])
-    price = resolve_pricing(MODEL)
+    price = resolve_pricing(model_id)
     units = money_units(price.course_cost(tokens, 0))
     scope, run = config['scope'], config['run']
     ledger._scope(scope)
@@ -92,7 +93,7 @@ def budget(config, tokens, reserve=False):
         if not reserve:
             return
         key = str(uuid.uuid4())
-        payload = encoded(dict(run_id=run, requested_model=MODEL, reserved_at=now(), input_tokens=tokens,
+        payload = encoded(dict(run_id=run, requested_model=model_id, reserved_at=now(), input_tokens=tokens,
                                deferred_ids=sorted(unknown), historical_buffer_rmb=3*len(unknown)))
         db.execute('INSERT INTO requests VALUES (?,?,?,?,?,?)', (key, scope, 'reserved', units, None, payload))
         db.execute('INSERT INTO transitions(request_id,event,time_utc,payload) VALUES (?,?,?,?)',
@@ -101,10 +102,13 @@ def budget(config, tokens, reserve=False):
         return key
 
 
-def consider(kind, history, directory, labels, config):
+def consider(kind, history, directory, labels, config, train_features=None, search_features=None):
     report = {'kind': kind, 'trial': len(history)+1, 'decision': 'skip', 'inner_rows': len(labels)}
-    if kind not in ('single_text', 'pair_text'):
+    tabular = kind == 'categorical_tabular' and bool(config.get('tabular_weights'))
+    if not tabular and kind not in ('single_text', 'pair_text'):
         return dict(report, reason='no_supported_text_input')
+    if not tabular and not config.get('weights') and config.get('tabular_weights'):
+        return dict(report, reason='text_weights_not_configured')
     successes = [r for r in history if r['status'] == 'completed']
     if len(successes) < 2:
         return dict(report, reason='insufficient_completed_comparisons')
@@ -119,6 +123,9 @@ def consider(kind, history, directory, labels, config):
                   observations=[{'candidate': r['candidate'], 'score': r['search_score']} for r in successes])
     if common.sum() < threshold:
         return dict(report, reason='few_shared_errors')
+    if tabular:
+        from .tabular_encoder import decide_level_transfer
+        return decide_level_transfer(report, history, common, train_features, search_features, config)
     try:
         budget(config, 1)
     except BudgetStateError as exc:
@@ -127,27 +134,36 @@ def consider(kind, history, directory, labels, config):
 
 
 class Encoder:
+    model_id = MODEL
+    repository = 'Qwen/Qwen3-0.6B'
+    files = FILES
+    weight_key = 'weights'
+    cache_name = 'context_vectors.sqlite'
+    last_token = False
+
     def __init__(self, runtime):
         self.runtime = Path(os.environ.get('SUPERAGENT_PRETRAINED_RUNTIME') or runtime)
         self.config = json.loads(self.runtime.read_text())
         self.folder = self.runtime.parent
-        self.db_path = self.folder / 'context_vectors.sqlite'
+        self.db_path = self.folder / self.cache_name
         self.tokenizer = self.model = None
 
     def load(self):
         import torch
         from tokenizers import Tokenizer
         from transformers import Qwen3Model
-        directory = Path(self.config['weights'])
-        new_files = acquire(directory)
+        directory = Path(self.config[self.weight_key])
+        new_files = acquire(directory, self.repository, self.files)
         self.tokenizer = Tokenizer.from_file(str(directory / 'tokenizer.json'))
+        if self.last_token:
+            self.tokenizer.enable_truncation(max_length=64)
         self.device = 'mps' if torch.backends.mps.is_available() else 'cpu'
         torch.set_num_threads(min(6, torch.get_num_threads()))
         dtype = torch.float16 if self.device == 'mps' else torch.float32
         self.model = Qwen3Model.from_pretrained(str(directory), local_files_only=True,
                     use_safetensors=True, torch_dtype=dtype, attn_implementation='sdpa').eval().to(self.device)
         with (self.folder / 'model_loads.jsonl').open('a') as log:
-            log.write(json.dumps(dict(model=MODEL, files=FILES, downloaded=new_files, device=self.device, utc=now()))+'\n')
+            log.write(json.dumps(dict(model=self.model_id, files=self.files, downloaded=new_files, device=self.device, utc=now()))+'\n')
 
     def forward(self, ids):
         import torch
@@ -159,22 +175,25 @@ class Encoder:
             matrix[i, :len(seq)] = torch.tensor(seq)
             mask[i, :len(seq)] = 1
         ledger = TaskBudgetLedger(self.config['ledger'])
-        key = budget(self.config, n, reserve=True)
+        key = budget(self.config, n, reserve=True, model_id=self.model_id)
         try:
             with torch.inference_mode():
                 mask = mask.to(self.device)
                 hidden = self.model(input_ids=matrix.to(self.device), attention_mask=mask, use_cache=False).last_hidden_state
-                pooled = (hidden.float()*mask.unsqueeze(-1)).sum(1) / mask.sum(1,keepdim=True)
+                if self.last_token:
+                    pooled = hidden[torch.arange(len(ids), device=self.device), mask.sum(1)-1].float()
+                else:
+                    pooled = (hidden.float()*mask.unsqueeze(-1)).sum(1) / mask.sum(1,keepdim=True)
                 result = torch.nn.functional.normalize(pooled, dim=1).cpu().numpy()
             if not np.isfinite(result).all():
                 raise ValueError('Non-finite representation')
         except BaseException:
             ledger.mark_unknown(key, 'Local forward interrupted', input_token_count_before_forward=n)
             raise
-        ledger.settle(key, MODEL, n, 0)
+        ledger.settle(key, self.model_id, n, 0)
         from .events import RunLogger
-        RunLogger(self.folder).usage(event='local_forward', model=MODEL, request_id=key, input_tokens=n,
-            output_tokens=0, padded_positions=int(matrix.numel()-n), course_cost_rmb=resolve_pricing(MODEL).course_cost(n,0),
+        RunLogger(self.folder).usage(event='local_forward', model=self.model_id, request_id=key, input_tokens=n,
+            output_tokens=0, padded_positions=int(matrix.numel()-n), course_cost_rmb=resolve_pricing(self.model_id).course_cost(n,0),
             actual_cost_rmb=0., usage_known=True, sequences=len(ids))
         return result
 
@@ -193,8 +212,9 @@ class Encoder:
             if missing:
                 if self.model is None:
                     self.load()
-                entries = [(t, e.ids[:64] or [151643]) for t,e in zip(missing, self.tokenizer.encode_batch(missing, add_special_tokens=False))]
-                budget(self.config, sum(len(ids) for _, ids in entries))
+                encoded_texts = self.tokenizer.encode_batch(missing, add_special_tokens=self.last_token)
+                entries = [(t, e.ids[:64] or [151643]) for t,e in zip(missing, encoded_texts)]
+                budget(self.config, sum(len(ids) for _, ids in entries), model_id=self.model_id)
                 entries.sort(key=lambda pair: len(pair[1]))
                 for off in range(0, len(entries), 32):
                     chunk = entries[off:off+32]

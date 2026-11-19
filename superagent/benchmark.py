@@ -248,20 +248,22 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         declared=None
         use_pretrained = False
         if pretrained_config is not None and index == 4:
-            decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config)
+            decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config,
+                                train_features=payload['X_train'], search_features=payload['X_search'])
             from .confirmation import shortlist
             leader = shortlist(history, 1)
             decision['protected_incumbent'] = leader[0]['candidate'] if leader else None
             logger.write_json('pretrained_decision.json', decision)
             use_pretrained = decision['decision'] == 'try'
             if use_pretrained:
-                available.append({'id': CANDIDATE, 'params': PARAMS})
+                pretrained_id = decision.get('candidate', CANDIDATE)
+                available.append({'id': pretrained_id, 'params': decision.get('params', PARAMS)})
         state=DecisionState.build(data_profile,history,available,max_trials,feedback_visible,task_contract)
         states.append(state.record());logger.write_json('decision_states.json',states)
         planning_start=time.monotonic()
         try:
             if use_pretrained:
-                chosen, reason = CANDIDATE, decision['reason']
+                chosen, reason = pretrained_id, decision['reason']
             elif anchor_first and index == 0:
                 chosen, reason = anchor_id, f"{anchor_policy} first configuration; counts toward the trial limit."
             else:

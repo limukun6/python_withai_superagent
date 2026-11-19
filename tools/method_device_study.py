@@ -30,11 +30,13 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('archive','output','ledger','weights','minilm-weights','historical-protocol'):
         p.add_argument('--'+k,required=True,type=Path)
-    p.add_argument('--phase',choices=('main','paired'),default='main')
+    p.add_argument('--phase',choices=('main','paired','remaining'),default='main')
     p.add_argument('--prior-study',type=Path,help='First study sharing the same token ceiling')
+    p.add_argument('--initial-study',type=Path,help='First five-fold comparison, needed to share its budget in the final two folds')
     p.add_argument('--protocol-only',action='store_true')
     a=p.parse_args()
-    if a.phase=='paired' and not a.prior_study:p.error('The second phase shares the first phase budget; provide --prior-study')
+    if a.phase!='main' and not a.prior_study:p.error('The second phase shares the first phase budget; provide --prior-study')
+    if a.phase=='remaining' and not a.initial_study:p.error('Supply both earlier study paths for the shared ceiling')
     arms=ARMS if a.phase=='main' else ('classic','adaptive','paired')
     target=arms[-1]
     seed=SEED if a.phase=='main' else 46919
@@ -49,6 +51,7 @@ def main():
     splits=list(StratifiedGroupKFold(n_splits=5,shuffle=True,random_state=seed).split(np.zeros(len(keep)),pool.y_train,groups))
     assert len(set(np.concatenate([h for _,h in splits])))==len(keep)
     if a.phase=='paired':splits=splits[:3]
+    if a.phase=='remaining':splits=splits[3:]
     ids=[str(root/f'fold_{i}'/arm) for i in range(len(splits)) for arm in arms]
     previous=None
     if a.prior_study:
@@ -56,6 +59,17 @@ def main():
         if previous['archive_sha256']!=digest(a.archive) or previous['campaign_cap']!=CAMPAIGN:
             raise ValueError('Prior budget refers to a different study or task')
         ids.extend(str(a.prior_study.resolve()/f'fold_{i}'/arm) for i,order in enumerate(previous['order']) for arm in order)
+    if a.phase=='remaining':
+        initial=read(a.initial_study/'protocol.json')
+        if (previous.get('phase')!='paired' or previous['prior_protocol_sha256']!=digest(a.initial_study/'protocol.json')
+                or previous['seed']!=seed or previous['options']!=OPTIONS or initial['campaign_cap']!=CAMPAIGN
+                or not read(a.prior_study/'results.json')['promote']):
+            raise ValueError('The first three completed paired folds must qualify before extending the unchanged experiment')
+        prior_rows={row for fold in previous['indices'] for row in fold['outer']}
+        new_rows={row for _,held in splits for row in keep[held]}
+        if prior_rows & new_rows or prior_rows|new_rows != set(keep):
+            raise ValueError('The last two folds must complete the same five-fold partition')
+        ids.extend(str(a.initial_study.resolve()/f'fold_{i}'/arm) for i,order in enumerate(initial['order']) for arm in order)
     archive_sha=digest(a.archive)
     scope=next(r for r in read(a.historical_protocol)['tasks'] if r['package_sha256']==archive_sha and r['scope']=='task1')
     sources=[*sorted((repo/'superagent').glob('*.py')),Path(__file__),repo/'tools/tabular_encoder_study.py',repo/'tools/pretrained_study.py',repo/'tools/expanded_feedback_pilot.py']
@@ -70,6 +84,13 @@ def main():
         paired_policy='Accuracy objectives only: probe semantics first for concentrated lower-support errors. On the next decision use corrected/lost rows relative to the original leader. Other metrics keep the existing score-based policy.',
         indices=[dict(train=keep[t].tolist(),outer=keep[h].tolist(),audit=overlap_audit(pool,t,h)) for t,h in splits])
     assert all(f['audit']['search_duplicate_rows']==0 for f in plan['indices'])
+    if a.phase=='remaining':
+        core={k:v for k,v in plan['source'].items() if k.startswith('superagent/')}
+        if (any(previous['source'][k]!=sha for k,sha in core.items())
+                or previous['dependencies']!=plan['dependencies'] or previous['reserve_seed']!=plan['reserve_seed']):
+            raise ValueError('Use exactly the same agent, dependencies and development pool as the first three folds')
+        plan.update(fold_numbers=[4,5],initial_protocol_sha256=digest(a.initial_study/'protocol.json'),
+                    continuation_rule='Apply the same rule to the new two-fold block on its own: higher pooled accuracy and a strict majority of fold wins versus each comparison arm. Also report all five jointly and every loss.')
     if (root/'protocol.json').exists():
         if read(root/'protocol.json')!=json.loads(json.dumps(plan)):raise ValueError('Frozen protocol changed')
     else:write(root/'protocol.json',plan)

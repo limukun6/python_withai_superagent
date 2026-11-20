@@ -6,7 +6,11 @@
 
 完整训练、权重目录配置和预测命令见[分类方法与训练设备](docs/method_choice_zh.md)。将选中的 MiniLM 文本分类器搬到其他机器后，可在预测命令中提供 `--minilm-weights /path/to/all-MiniLM-L6-v2`。预测输出旁的记录包含本次实际使用的特征 token 数。
 
-这版在发布训练集内部按组跑五折，Task1 答对 4,801/6,494（73.93%），Task2 答对 4,623/6,608（69.96%）。同一批行重新分组，分别为 4,779/6,494（73.59%）和 4,644/6,608（70.28%）。真实标题向量与保持其他训练步骤不变的纯文字分类器做过逐折对照。七次搜索的独立重跑、两个匿名公开任务的重复运行和四批匿名输入的资源记录可直接查阅。[统一版本复现记录](research/final_unified_policy_results.json)
+这版在发布训练集内部按组跑五折。三套划分中，表格主线各答对 4,801、4,779、4,788 行（每套 6,494 行），文本小模型主线各答对 4,623、4,644、4,609 行（每套 6,608 行）。同一批行换组会改变难度。真实标题向量与保持其他训练步骤不变的纯文字分类器另有逐折对照。[七次搜索的逐折结果](docs/mainline_iterations_zh.md)
+
+`--method-choice encoder-mixture` 允许 Agent 根据训练反馈尝试更深的编码器，并从三个内部划分学习怎样结合两个模型的概率。该选项和默认的 `auto` 均可独立训练、导出和预测。[运行与权重配置](docs/method_choice_zh.md)
+
+本包还附上同一版本 `auto` 用全部开发行重训后导出的模型。Task1 选中深度 6 的 CatBoost，Task2 选中 L6 句子向量加词和字符特征。两个目录均可直接作为 `predict --run-dir` 的输入。Task2 另传 `--minilm-weights /path/to/all-MiniLM-L6-v2`。每个模型都用 12 条新造的无标签输入核对过搬移前后的输出。正式课程评估依照发布安排另行执行。[Task1 模型](solutions/task1/development/) · [Task2 模型](solutions/task2/development/) · [训练与搬移记录](research/development_pool_models.json)
 
 ## 整合分支的实验与复现入口
 

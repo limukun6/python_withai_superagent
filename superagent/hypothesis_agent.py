@@ -108,6 +108,20 @@ def _number(value):
 
 
 def check_expectation(proposal, result, history):
+    overall = _check_overall_expectation(proposal, result, history)
+    expectation = (proposal or {}).get('slice_expectation')
+    if expectation is None:
+        return overall
+    from .targeted_feedback import check_slice_expectation
+    target = check_slice_expectation(expectation, result, history)
+    statuses = [c['status'] for c in (overall, target) if c['status'] != 'not_stated']
+    status = ('not_supported' if 'not_supported' in statuses else
+              'not_evaluable' if 'not_evaluable' in statuses else 'supported')
+    return {'status': status, 'overall_check': overall, 'slice_check': target,
+            'combination': 'all declared numerical expectations must be met'}
+
+
+def _check_overall_expectation(proposal, result, history):
     """Check a prediction against measurements, not the model's self-assessment.
 
     supported means this measurement met the predeclared numerical expectation;

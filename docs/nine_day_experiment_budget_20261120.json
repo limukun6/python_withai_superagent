@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "status": "planned_not_executed",
+  "created_date": "2026-11-20",
+  "research_days": 7,
+  "presentation_days": 2,
+  "human_hours_assumed": 56,
+  "default_model": "DeepSeek-V4.1-Flash",
+  "request_timeout_seconds": 60,
+  "automatic_api_retry": false,
+  "base_evaluation_budget": {
+    "classifier_fit_attempts": 11,
+    "final_refit_reserved": 1,
+    "llm_requests_max": 3
+  },
+  "experiments": [
+    {
+      "id": "A1",
+      "owner": "A",
+      "purpose": "semantic_and_evidence_contract_probes",
+      "fits_max": 8,
+      "api_requests_max": 0
+    },
+    {
+      "id": "A2",
+      "owner": "A",
+      "purpose": "same_history_action_quality",
+      "states": 12,
+      "contexts": 2,
+      "state_preparation_fits": 12,
+      "action_evaluation_splits": 2,
+      "fits_max": 60,
+      "api_requests_max": 24
+    },
+    {
+      "id": "B1",
+      "owner": "B",
+      "purpose": "development_budget_schedule",
+      "tasks": 4,
+      "splits": 2,
+      "arms": 2,
+      "paths": 16,
+      "fits_max": 176,
+      "api_requests_max": 0
+    },
+    {
+      "id": "Q",
+      "owner": "A_image_B_other_tasks",
+      "purpose": "frozen_version_method_coverage_and_quality",
+      "tasks": 5,
+      "splits": 1,
+      "arms": 2,
+      "paths": 10,
+      "fits_max": 110,
+      "api_requests_max": 0
+    },
+    {
+      "id": "C1",
+      "owner": "A_and_B_each_run_complete_task_blocks",
+      "purpose": "frozen_version_six_arm_autonomous_runs",
+      "tasks": 5,
+      "splits": 1,
+      "arms": 6,
+      "llm_arms": 4,
+      "paths": 30,
+      "fits_max": 330,
+      "api_requests_max": 60
+    },
+    {
+      "id": "H",
+      "owner": "A_H1_B_H2",
+      "purpose": "frozen_policy_unseen_real_tasks",
+      "tasks": 2,
+      "splits": 2,
+      "arms_max": 3,
+      "llm_arms_max": 2,
+      "paths_max": 12,
+      "fits_max": 132,
+      "api_requests_max": 24
+    },
+    {
+      "id": "Released",
+      "owner": "A_task1_B_task2",
+      "purpose": "final_autonomous_course_runs",
+      "tasks": 2,
+      "paths": 2,
+      "fits_max": 22,
+      "api_requests_max": 6
+    }
+  ],
+  "core_totals": {
+    "fits_max": 838,
+    "api_requests_max": 114
+  },
+  "engineering_reserve": {
+    "fits_max": 48,
+    "api_requests_max": 12
+  },
+  "with_reserve": {
+    "fits_max": 886,
+    "api_requests_max": 126
+  },
+  "optional_experiments": [
+    {
+      "id": "A3",
+      "fits_max": 48,
+      "api_requests_max": 24
+    },
+    {
+      "id": "B_fixed_6_2",
+      "fits_max": 88,
+      "api_requests_max": 0
+    },
+    {
+      "id": "B2",
+      "fits_max": 66,
+      "api_requests_max": 0
+    },
+    {
+      "id": "C1_second_split_subset",
+      "tasks": [
+        "numeric_tabular",
+        "single_text"
+      ],
+      "arms": [
+        "R0",
+        "E1"
+      ],
+      "fits_max": 44,
+      "api_requests_max": 12
+    }
+  ],
+  "optional_experiments_max_selected": 1,
+  "phase_hard_caps": {
+    "fit_attempts": 1000,
+    "api_requests": 180
+  },
+  "notes": [
+    "Costs require cumulative per-task historical ledger and course pricing; these are not completed results.",
+    "Fit counts assume one classifier per candidate evaluation; multi-fit candidates require accounting changes.",
+    "H dataset identities and exact partition IDs must be registered before execution.",
+    "C1 sources freeze D5; H policy freezes after C1 analysis and before H scoring.",
+    "A2 fixed-state diagnostics are not final autonomous task performance.",
+    "C1 now prioritizes five real development tasks including image over repeated splits; Q tests method coverage, separate from feedback ablation."
+  ],
+  "scope": "complete_classification_superagent_with_generalization_and_quality_evaluation",
+  "development_assistants": {
+    "A": "Codex",
+    "B": "Codex"
+  },
+  "heldout_task_types": [
+    "symmetric_pair_text",
+    "image_from_different_source_than_development"
+  ]
+}

@@ -1,0 +1,550 @@
+[
+  {
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.9652777777777778,
+        "search_score": 0.9444444444444444,
+        "train_accuracy": 0.9652777777777778,
+        "search_accuracy": 0.9444444444444444,
+        "score_gap": 0.02083333333333337,
+        "generalization_gap": 0.02083333333333337,
+        "class_recall": [
+          0.9,
+          1.0
+        ],
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null,
+        "estimator": {
+          "family": "logistic",
+          "class": "LogisticRegression",
+          "module": "sklearn.linear_model._logistic",
+          "parameters": {},
+          "source": "fitted_estimator"
+        }
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        }
+      },
+      {
+        "id": "numeric_tabular_extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "numeric_tabular_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C1.0",
+        "params": {
+          "C": 1.0,
+          "kernel": "rbf"
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C10.0",
+        "params": {
+          "C": 10.0,
+          "kernel": "rbf"
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 3,
+      "attempted": 1,
+      "remaining": 2
+    },
+    "candidate_facts": {
+      "numeric_tabular_logistic_C1.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C10.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_extra_trees_leaf1": {
+        "classifier": null,
+        "source": "injected_unknown",
+        "reason": "controlled missing metadata"
+      },
+      "numeric_tabular_extra_trees_leaf3": {
+        "classifier": "extra_trees",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C1.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C10.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      }
+    },
+    "instruction": "Select exactly one available candidate to maximize the task primary metric. Return JSON with candidate, task_kind, configuration_claim={classifier: registered classifier}, reason, review, hypothesis, evidence_trials, expected_change, slice_expectation. Keep reason, review and hypothesis each under 60 words. expected_change must be {metric:\"search_score\",reference_trial: an earlier completed trial, direction:\"increase\",min_delta:0.001}. slice_expectation may be null or {slice_id: an observed slice,reference_trial: its prior trial,min_delta:0.001}. Slices measure accuracy even if the task primary metric differs. Use actual observations and configuration facts. Unmet hypotheses remain unverified interpretations. A failed configuration does not invalidate its entire algorithm family. Review the latest completed measurement and explain what the next experiment tests. Actual estimator observations describe what ran; declarations and classifier names are not measurements. A repeated family is allowed with an evidence-based parameter change. No extra fits or API calls.",
+    "checks": [
+      {
+        "trial": 1,
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "configuration_fact_check": {
+          "declared": null,
+          "observed": "logistic",
+          "observed_class": "LogisticRegression",
+          "status": "not_declared",
+          "scope": "Declared classifier versus the fitted estimator of this trial"
+        },
+        "explanation_check": {
+          "warnings": [],
+          "freeform_prose_fully_verified": false
+        }
+      }
+    ],
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [],
+      "configuration_checks": [
+        {
+          "trial": 1,
+          "candidate": "numeric_tabular_logistic_C0.1",
+          "source": "worker_fitted_estimator_comparison",
+          "check": {
+            "declared": null,
+            "observed": "logistic",
+            "observed_class": "LogisticRegression",
+            "status": "not_declared",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          }
+        }
+      ],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "numeric_tabular_extra_trees",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 2
+        },
+        {
+          "route": "numeric_tabular_logistic",
+          "status": "active",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.9444444444444444,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.9444444444444444,
+          "remaining_configurations": 2
+        },
+        {
+          "route": "numeric_tabular_rbf_svm",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 2
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "task_spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    },
+    "history": [
+      {
+        "trial": 1,
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 0.9652777777777778,
+        "search_score": 0.9444444444444444,
+        "train_accuracy": 0.9652777777777778,
+        "search_accuracy": 0.9444444444444444,
+        "score_gap": 0.02083333333333337,
+        "generalization_gap": 0.02083333333333337,
+        "class_recall": [
+          0.9,
+          1.0
+        ],
+        "proposal": null,
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null,
+        "estimator": {
+          "family": "logistic",
+          "class": "LogisticRegression",
+          "module": "sklearn.linear_model._logistic",
+          "parameters": {},
+          "source": "fitted_estimator"
+        }
+      },
+      {
+        "trial": 2,
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 300
+        },
+        "status": "completed",
+        "primary_metric": "accuracy",
+        "train_score": 1.0,
+        "search_score": 0.9444444444444444,
+        "train_accuracy": 1.0,
+        "search_accuracy": 0.9444444444444444,
+        "score_gap": 0.05555555555555558,
+        "generalization_gap": 0.05555555555555558,
+        "class_recall": [
+          0.9,
+          1.0
+        ],
+        "proposal": {
+          "candidate": "numeric_tabular_extra_trees_leaf1",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "No explicit conflict was supplied.",
+          "review": "Controlled planner response, not an independent reasoning result.",
+          "hypothesis": "Trial 1 search accuracy was 99.99%.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": {
+            "metric": "search_score",
+            "reference_trial": 1,
+            "direction": "increase",
+            "min_delta": 0.99
+          },
+          "slice_expectation": null
+        },
+        "selected_iterations": null,
+        "classifier_fits": 1,
+        "error_slices": null,
+        "estimator": {
+          "family": "extra_trees",
+          "class": "ExtraTreesClassifier",
+          "module": "sklearn.ensemble._forest",
+          "parameters": {},
+          "source": "fitted_estimator"
+        }
+      }
+    ],
+    "available_candidates": [
+      {
+        "id": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        }
+      },
+      {
+        "id": "numeric_tabular_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C1.0",
+        "params": {
+          "C": 1.0,
+          "kernel": "rbf"
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C10.0",
+        "params": {
+          "C": 10.0,
+          "kernel": "rbf"
+        }
+      }
+    ],
+    "trial_budget": {
+      "maximum": 3,
+      "attempted": 2,
+      "remaining": 1
+    },
+    "candidate_facts": {
+      "numeric_tabular_logistic_C1.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C10.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_extra_trees_leaf3": {
+        "classifier": "extra_trees",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C1.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C10.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      }
+    },
+    "instruction": "Select exactly one available candidate to maximize the task primary metric. Return JSON with candidate, task_kind, configuration_claim={classifier: registered classifier}, reason, review, hypothesis, evidence_trials, expected_change, slice_expectation. Keep reason, review and hypothesis each under 60 words. expected_change must be {metric:\"search_score\",reference_trial: an earlier completed trial, direction:\"increase\",min_delta:0.001}. slice_expectation may be null or {slice_id: an observed slice,reference_trial: its prior trial,min_delta:0.001}. Slices measure accuracy even if the task primary metric differs. Use actual observations and configuration facts. Unmet hypotheses remain unverified interpretations. A failed configuration does not invalidate its entire algorithm family. Review the latest completed measurement and explain what the next experiment tests. Actual estimator observations describe what ran; declarations and classifier names are not measurements. A repeated family is allowed with an evidence-based parameter change. No extra fits or API calls.",
+    "checks": [
+      {
+        "trial": 1,
+        "hypothesis_check": {
+          "status": "not_stated"
+        },
+        "configuration_fact_check": {
+          "declared": null,
+          "observed": "logistic",
+          "observed_class": "LogisticRegression",
+          "status": "not_declared",
+          "scope": "Declared classifier versus the fitted estimator of this trial"
+        },
+        "explanation_check": {
+          "warnings": [],
+          "freeform_prose_fully_verified": false
+        }
+      },
+      {
+        "trial": 2,
+        "hypothesis_check": {
+          "status": "not_supported",
+          "metric": "search_score",
+          "reference_trial": 1,
+          "reference_value": 0.9444444444444444,
+          "observed_value": 0.9444444444444444,
+          "observed_delta": 0.0,
+          "direction": "increase",
+          "required_delta": 0.99
+        },
+        "configuration_fact_check": {
+          "declared": "logistic",
+          "observed": "extra_trees",
+          "observed_class": "ExtraTreesClassifier",
+          "status": "contradicted",
+          "scope": "Declared classifier versus the fitted estimator of this trial"
+        },
+        "explanation_check": {
+          "warnings": [
+            {
+              "code": "prose_claim_contradiction",
+              "field": "hypothesis",
+              "claim_kind": "percentage",
+              "matched_text": "99.99%",
+              "declared": 99.99,
+              "observed": 0.9444444444444444,
+              "review_note": "The quoted claim does not match the recorded facts for this proposal."
+            }
+          ],
+          "freeform_prose_fully_verified": false
+        }
+      }
+    ],
+    "memory": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h2",
+          "proposed_before_trial": 2,
+          "tested_by_trial": 2,
+          "candidate": "numeric_tabular_extra_trees_leaf1",
+          "route": "numeric_tabular_extra_trees",
+          "text": "Trial 1 search accuracy was 99.99%.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": {
+            "metric": "search_score",
+            "reference_trial": 1,
+            "direction": "increase",
+            "min_delta": 0.99
+          },
+          "status": "measurement_not_supported",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "not_supported",
+            "metric": "search_score",
+            "reference_trial": 1,
+            "reference_value": 0.9444444444444444,
+            "observed_value": 0.9444444444444444,
+            "observed_delta": 0.0,
+            "direction": "increase",
+            "required_delta": 0.99
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [
+        {
+          "trial": 1,
+          "candidate": "numeric_tabular_logistic_C0.1",
+          "source": "worker_fitted_estimator_comparison",
+          "check": {
+            "declared": null,
+            "observed": "logistic",
+            "observed_class": "LogisticRegression",
+            "status": "not_declared",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          }
+        },
+        {
+          "trial": 2,
+          "candidate": "numeric_tabular_extra_trees_leaf1",
+          "source": "worker_fitted_estimator_comparison",
+          "check": {
+            "declared": "logistic",
+            "observed": "extra_trees",
+            "observed_class": "ExtraTreesClassifier",
+            "status": "contradicted",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          }
+        }
+      ],
+      "explanation_checks": [
+        {
+          "trial": 2,
+          "candidate": "numeric_tabular_extra_trees_leaf1",
+          "source": "bounded_executor_prose_audit",
+          "warnings": [
+            {
+              "code": "prose_claim_contradiction",
+              "field": "hypothesis",
+              "claim_kind": "percentage",
+              "matched_text": "99.99%",
+              "declared": 99.99,
+              "observed": 0.9444444444444444,
+              "review_note": "The quoted claim does not match the recorded facts for this proposal."
+            }
+          ],
+          "fully_verified": false
+        }
+      ],
+      "routes": [
+        {
+          "route": "numeric_tabular_extra_trees",
+          "status": "active",
+          "attempted_trials": [
+            2
+          ],
+          "best_trial": 2,
+          "best_search_accuracy": 0.9444444444444444,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.9444444444444444,
+          "remaining_configurations": 1
+        },
+        {
+          "route": "numeric_tabular_logistic",
+          "status": "paused",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.9444444444444444,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.9444444444444444,
+          "remaining_configurations": 2
+        },
+        {
+          "route": "numeric_tabular_rbf_svm",
+          "status": "untried",
+          "attempted_trials": [],
+          "best_trial": null,
+          "best_search_accuracy": null,
+          "primary_metric": "accuracy",
+          "best_search_score": null,
+          "remaining_configurations": 2
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  }
+]

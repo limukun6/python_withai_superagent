@@ -31,7 +31,10 @@ def main() -> None:
         registry_sha256=hashlib.sha256(registry_bytes).hexdigest()
         if candidate_id in document['entries']:origin='registry'
     else:candidate = next(c for c in search_candidates(payload["kind"], "all") if c.family == candidate_id)
-    configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256}
+    from .task_semantics import validate_candidate_semantics
+    semantic_check=validate_candidate_semantics(payload['kind'],payload.get('pair_semantics'),candidate)
+    configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256,
+                   'semantic_check':semantic_check}
     start = time.perf_counter()
     with using_feature_cache(payload.get('feature_cache_dir')) as cache:
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
@@ -40,12 +43,14 @@ def main() -> None:
         cache_report=cache.report() if cache else {'enabled':False}
     training_metadata=getattr(model,'training_metadata',None)
     selected_iterations=training_metadata.get('selected_iterations') if training_metadata else None
+    from .estimator_facts import observed_classifier
+    observed=observed_classifier(model)
     if payload.get("mode") == "refit":
         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
                      'classifier_fits':int(getattr(model,'classifier_fits',1)),
                      'training_metadata':training_metadata,'selected_iterations':selected_iterations,
-                     'resolved_configuration':configuration}}, output_path)
+                     'estimator':observed,'resolved_configuration':configuration}}, output_path)
         return
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
@@ -69,7 +74,7 @@ def main() -> None:
         'feature_cache':cache_report,
         'classifier_fits':int(getattr(model,'classifier_fits',1)),
         'training_metadata':training_metadata,'selected_iterations':selected_iterations,
-        'resolved_configuration':configuration,
+        'estimator':observed,'resolved_configuration':configuration,
     }}, output_path)
 
 

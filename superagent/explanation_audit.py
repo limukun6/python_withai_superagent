@@ -31,7 +31,7 @@ def audit_explanation(proposal,history,candidate=None):
     facts={row['id']:row for row in measured_facts(history)}
     cited=proposal.get('assessment',{}).get('fact_ids',[])
     if any(fid not in facts for fid in cited):raise ValueError('Decision explanation cites an unavailable measured fact')
-    fields={key:proposal.get(key,'') for key in ('reason','review')}
+    fields={key:proposal.get(key,'') for key in ('reason','review','hypothesis')}
     fields.update({f'assessment.{key}':proposal.get('assessment',{}).get(key,'') for key in ('interpretation','uncertainty')})
     warnings=[]
     for field,text in fields.items():
@@ -49,13 +49,30 @@ def audit_explanation(proposal,history,candidate=None):
     change=proposal_change(proposal,history,candidate)
     consistency=direction_diagnostics(proposal,change)
     warnings.extend(consistency['warnings'])
+    from .prose_claims import check_prose
+    from .targeted_feedback import candidate_facts
+    facts_for_candidate=None
+    kind=proposal.get('task_kind')
+    if isinstance(candidate,dict) and isinstance(kind,str) and kind:
+        try:facts_for_candidate=candidate_facts(kind,candidate)
+        except ValueError:facts_for_candidate=None
+    prose=check_prose(fields,facts_for_candidate,history,kind)
+    for item in prose['items']:
+        if item['status']!='contradicted':continue
+        warnings.append({'code':'prose_claim_contradiction','field':item['field'],
+            'claim_kind':item['kind'],'matched_text':item['span'],'declared':item.get('claim'),
+            'observed':item.get('observed'),
+            'review_note':'The quoted claim does not match the recorded facts for this proposal.'})
     return {'executor_comparison':comparison,'cited_measured_facts':[deepcopy(facts[fid]) for fid in cited],
         'configuration_change':change,'direction_consistency':consistency,
         'selected_candidate':proposal['candidate'],'future_hypothesis':{'source':'LLM, unverified future hypothesis','text':proposal.get('hypothesis'),
             'expected_change':deepcopy(proposal.get('expected_change'))},
         'original_prose':{'source':'LLM, not certified as measured evidence','fields':deepcopy(fields)},
+        'prose_claims':prose,
         'warnings':warnings,'freeform_prose_fully_verified':False,
-        'check_scope':'Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose.',
+        'check_scope':'Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. '
+                      f"{prose['claims_checked']} machine-checkable claims inspected, {prose['contradicted']} contradicted, "
+                      f"{prose['unverifiable']} undecidable.",
         'changes_candidate':False,'triggers_api_retry':False}
 
 

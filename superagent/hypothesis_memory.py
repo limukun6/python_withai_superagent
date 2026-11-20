@@ -19,6 +19,7 @@ def build_memory(history,available,primary_metric=None):
             'candidate':row['candidate'],'route':route_of(row['candidate']),'text':proposal.get('hypothesis'),
             'evidence_trials':deepcopy(proposal.get('evidence_trials',[])),
             'expected_change':deepcopy(proposal.get('expected_change')),'status':mapped[status],
+            'slice_expectation':deepcopy(proposal.get('slice_expectation')),
             'measurement_check':check,'causal_explanation_verified':False,
             'pending_check':deepcopy(proposal.get('route_plan',{}).get('next_check'))})
     routes=route_board(history,available,name)
@@ -30,6 +31,13 @@ def build_memory(history,available,primary_metric=None):
     for route in routes:
         if route['route'] in revisit:route['resume_if']=revisit[route['route']]
     return {'schema_version':1,'primary_metric':name,'hypotheses':hypotheses,
+        'configuration_checks':[{'trial':r['trial'],'candidate':r['candidate'],
+            'source':'worker_fitted_estimator_comparison','check':deepcopy(r['configuration_fact_check'])}
+            for r in history if r.get('configuration_fact_check')],
+        'explanation_checks':[{'trial':r['trial'],'candidate':r['candidate'],
+            'source':'bounded_executor_prose_audit','warnings':deepcopy(r['explanation_audit'].get('warnings',[])),
+            'fully_verified':False}
+            for r in history if r.get('explanation_audit')],
         'routes':routes,
         'failures':[{'trial':r['trial'],'candidate':r['candidate'],'status':r['status']} for r in history if r['status']!='completed'],
         'open_hypotheses':[r['id'] for r in hypotheses if r['status'] in ('not_evaluable','no_numerical_expectation')],

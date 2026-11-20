@@ -25,6 +25,7 @@ from .decision_architecture import ARCHITECTURES,calls_per_decision
 
 CAMPUS_CHAT_ENDPOINT = 'https://aigc-api.hkust-gz.edu.cn/api/v2/chat/completions'
 CAMPUS_FLASH_MODEL = 'DeepSeek-V4.1-Flash'
+HISTORY_PLANNERS = ('raw-history','checked-history')
 
 
 def _sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -32,6 +33,12 @@ def _sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def _validate(args):
     calls_per_decision(args.architecture)
+    if args.planner in HISTORY_PLANNERS:
+        if (args.architecture!='single' or args.refinement!='off' or args.allocation!='off'
+                or args.anchor!='catalog' or args.portfolio!='expanded'):
+            raise ValueError('History planners require single architecture, expanded catalog anchor, refinement/allocation off')
+        args.api_url=args.api_url or CAMPUS_CHAT_ENDPOINT
+        args.model=args.model or CAMPUS_FLASH_MODEL
     if args.planner == 'scalar-feedback':
         if (args.architecture != 'single' or args.refinement != 'off' or args.error_feedback
                 or args.portfolio != 'expanded' or args.anchor != 'catalog'):
@@ -99,8 +106,10 @@ def _run(args):
     source_hash=hashlib.sha256(json.dumps(source_files,sort_keys=True).encode()).hexdigest()
     local_policy=args.policy or 'balanced_blind'
     scalar_feedback = args.planner == 'scalar-feedback'
+    history_feedback = args.planner in HISTORY_PLANNERS
     strategy = {'local': 'local_' + local_policy, 'llm': 'budget_routes',
-                'scalar-feedback': 'scalar_feedback'}[args.planner]
+                'scalar-feedback': 'scalar_feedback','raw-history':'local_interleaved_routes',
+                'checked-history':'local_interleaved_routes'}[args.planner]
     budget=0. if pricing is None else (.10 if args.llm_budget_rmb is None else args.llm_budget_rmb)
     maximum_requests=((args.trials-1)*calls_per_decision(args.architecture)+(2 if args.refinement=='research' else 0)) if pricing else 0
     endpoint=urlsplit(args.api_url) if args.api_url else None
@@ -117,6 +126,9 @@ def _run(args):
         'calls_per_adaptive_decision_maximum':calls_per_decision(args.architecture) if pricing else 0,
         'maximum_research_model_requests':2 if args.refinement=='research' else 0,
         'review_failure_policy':'retain_valid_original_for_current_trial_disable_future_architecture_calls_mark_impure',
+        'planner_failure_policy':'stop_without_retry_or_fallback' if history_feedback else 'existing_planner_policy',
+        'history_feedback':{'enabled':history_feedback,'checks_visible':args.planner=='checked-history',
+                            'context_version':'history-evidence-v2' if history_feedback else None},
         'model':args.model if pricing else None,'pricing':pricing.metadata() if pricing else None,
         'api_endpoint_origin_and_path':urlunsplit((endpoint.scheme,endpoint.netloc,endpoint.path,'','')) if endpoint else None,
         'credential_contents_logged':False,'automatic_api_retries':False,
@@ -133,7 +145,7 @@ def _run(args):
         manifest['budget_ledger_path']=str(ledger.path)
         account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
         allowed={args.model,pricing.model_id,pricing.official_model_version}
-        if scalar_feedback:
+        if scalar_feedback or history_feedback:
             client=ExperimentLLM(args.api_url,args.api_key_file,args.model,budget,
                 max_requests=maximum_requests,allowed_served_models=allowed,account=account,streaming=True)
         else:
@@ -144,14 +156,25 @@ def _run(args):
         from functools import partial
         from .resource_allocation import run_allocated
         execute=partial(run_allocated,mode=args.allocation)
-    summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,
+    execution_options={}
+    if history_feedback:
+        from .checked_history_policy import CheckedHistoryPolicy
+        from .events import RunLogger
+        execution_options['decision_policy']=CheckedHistoryPolicy(client,RunLogger(directory),args.planner=='checked-history')
+    try:
+        summary=execute(task,strategy,args.seed,directory,client,max_trials=args.trials,
         time_limit=args.time_limit,trial_timeout=args.trial_timeout,anchor_first=True,anchor_policy=args.anchor,refit_full_train=True,
         confirmation_repeats=3,confirmation_top_k=3,confirmation_grouping='shared_text',
         search_grouping='shared_text',portfolio=args.portfolio,run_metadata=manifest,time_policy=args.time_policy,
-        feature_cache=args.feature_cache=='run',refinement=args.refinement,decision_architecture=args.architecture,error_feedback=args.error_feedback)
+        feature_cache=args.feature_cache=='run',refinement=args.refinement,decision_architecture=args.architecture,error_feedback=args.error_feedback,
+        **execution_options)
+    except Exception as error:
+        if history_feedback and directory.is_dir():
+            _record_stopped_history_run(directory,args,client,account,error)
+        raise
     current={p.relative_to(source).as_posix():_sha(p) for p in sorted(source.rglob('*.py'))}
     unchanged=current==source_files
-    ledger=[json.loads(line) for line in (directory/'llm_usage.jsonl').read_text().splitlines()]
+    ledger=[json.loads(line) for line in (directory/'llm_usage.jsonl').read_text(encoding='utf-8').splitlines()]
     unknown=sum(row.get('usage_known') is False for row in ledger)
     model_available=bool(summary['selected_candidate'])
     task_budget_after=account.snapshot() if account is not None else None
@@ -189,10 +212,32 @@ def _run(args):
         'actual_account_debit_rmb':None if pricing else 0.,'source_unchanged':unchanged,'formal_test_accessed':False,
         'task_budget_after_run':task_budget_after,
         'scope':'Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals'}
-    (directory/'run_outcome.json').write_text(json.dumps(outcome,ensure_ascii=False,indent=2)+'\n')
+    (directory/'run_outcome.json').write_text(json.dumps(outcome,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(outcome,ensure_ascii=False))
     if not model_available:return 1
     return 0 if planner_completed else 2
+
+
+def _record_stopped_history_run(directory,args,client,account,error):
+    """Persist the partial result without further training, API calls, or random recovery."""
+    usage_path=directory/'llm_usage.jsonl'
+    usage=[json.loads(line) for line in usage_path.read_text(encoding='utf-8').splitlines()] if usage_path.is_file() else []
+    trials_path=directory/'trials.json'
+    trials=json.loads(trials_path.read_text(encoding='utf-8')) if trials_path.is_file() else []
+    known=sum(r.get('course_cost_rmb') or 0 for r in usage)
+    unknown=sum(r.get('usage_known') is False for r in usage)
+    budget=account.snapshot() if account is not None else None
+    complete=unknown==0 and (budget is None or budget['accounting_complete'])
+    outcome={'status':'stopped','planner_mode':args.planner,'requested_planner_completed':False,
+        'model_available':False,'final_model_available':False,
+        'retained_trial_artifacts':[str(p) for p in sorted(directory.glob('trial_*.joblib'))],
+        'primary_trials_attempted':len(trials),'completed_search_fits':sum(r.get('classifier_fits',1) for r in trials if r['status']=='completed'),
+        'fallback_count':0,'new_api_requests':client.request_count if client else 0,
+        'known_course_cost_rmb':known,'complete_course_cost_rmb':known if complete else None,
+        'actual_account_debit_rmb':None,'unresolved_calls':unknown,'task_budget_after_run':budget,
+        'error':f'{type(error).__name__}: {error}'.replace(client.key,'[redacted]') if client else str(error),
+        'scope':'Stopped run; retained trial models are partial artifacts, not a finalized prediction solution'}
+    (directory/'run_outcome.json').write_text(json.dumps(outcome,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 
 def _predict(args):
@@ -225,7 +270,7 @@ def build_parser():
     run.add_argument('task_package')
     run.add_argument('--run-dir',help='New output directory, never overwritten')
     run.add_argument('--output-dir',help='Parent directory for an automatically named new run')
-    run.add_argument('--planner',choices=['local','llm','scalar-feedback'],default='local',
+    run.add_argument('--planner',choices=['local','llm','scalar-feedback',*HISTORY_PLANNERS],default='local',
         help='Use local search, structured LLM planning, or campus Flash with scalar search feedback')
     run.add_argument('--architecture',choices=ARCHITECTURES,default='single',
         help='LLM mode: single proposal, same-planner self-review, or Planner plus Reviewer; shares the run allowance')

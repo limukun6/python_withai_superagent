@@ -84,6 +84,8 @@ def confirm_candidates(task, history, seed, directory, logger, train_candidate, 
         contents={"kind": task.kind, "X_train": take(task.X_train, train), "y_train": task.y_train[train],
                      "X_search": take(task.X_train, search), "y_search": task.y_train[search], "retain_model": False,
                      'metric_spec':metric.record()}
+        from .task_semantics import declared_semantics
+        contents['pair_semantics']=declared_semantics(task)
         if feature_cache_dir:contents['feature_cache_dir']=feature_cache_dir
         joblib.dump(contents,payload)
         for row in selected:

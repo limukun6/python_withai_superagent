@@ -146,10 +146,15 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     if confirmation_repeats > 1 and ensemble_selection:
         raise ValueError("Confirmation and single-split ensemble selection cannot be combined")
     task_contract=TaskSpec.from_task(task);metric=task_contract.metric
+    from .task_semantics import validate_task_semantics
+    semantics=validate_task_semantics(task,portfolio)
+    if semantics['status']=='rejected':
+        raise ValueError('Task semantics contract rejected: '+'; '.join(semantics['reasons']))
     directory.mkdir(parents=True, exist_ok=False)
     logger = RunLogger(directory)
     logger.initialize_usage_ledger()
     logger.write_json('task_contract.json',task_contract.record())
+    logger.write_json('task_semantics.json',semantics)
     if run_metadata is not None:
         logger.write_json('run_manifest.json',run_metadata)
         logger.event('run_manifest_frozen',source_sha256=run_metadata['source_sha256'])
@@ -175,7 +180,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                                     "evaluation_protocol":evaluation_protocol})
     payload = {"kind": task.kind, "X_train": take(task.X_train, train_idx), "y_train": task.y_train[train_idx],
                "X_search": take(task.X_train, search_idx), "y_search": task.y_train[search_idx],
-               'metric_spec':metric.record()}
+               'metric_spec':metric.record(),'pair_semantics':semantics['declared_semantics']}
     if error_feedback:payload["error_feedback"]=True
     payload_path = directory / "inner_data.joblib"
     cache_directory=str(directory/'feature_cache') if feature_cache else None
@@ -187,6 +192,10 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     data_profile = profile(inner)
     data_profile["evaluation_protocol"]=evaluation_protocol
     available = [{"id": c.family, "params": c.params} for c in search_candidates(task.kind,portfolio)]
+    if semantics['excluded_candidates']:
+        excluded=set(semantics['excluded_candidates'])
+        available=[row for row in available if row['id'] not in excluded]
+        logger.event('swap_augmentation_filtered',candidates=sorted(excluded),policy=semantics['swap_policy'])
     from .recipe_registry import RecipeRegistry
     from .research_registry import ResearchRegistry
     if catalog_ids is not None:
@@ -194,6 +203,10 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             raise ValueError('Resource candidate pool must be a distinct static subset')
         available=[next(c for c in available if c['id']==name) for name in catalog_ids]
     anchor_id=available[0]['id']
+    from .targeted_feedback import candidate_facts
+    data_profile['evaluation_protocol']['candidate_facts'] = {
+        row['id']: facts for row in available
+        if (facts := candidate_facts(task.kind, row)) is not None}
     if anchor_policy=='schema':
         target={'pair_text':'word_char_stats_C0.3','categorical_tabular':'catboost_depth8_reg10.0'}.get(task.kind)
         if target is not None and target not in {row['id'] for row in available}:
@@ -258,6 +271,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             stop_reason='planning_window_expired_without_request'
             logger.event('search_stopped_for_time',reason=stop_reason,trials_attempted=len(history));break
         except Exception as error:
+            if decision_policy is not None and getattr(decision_policy, 'stop_on_error', False):
+                logger.event('decision_policy_stopped', error=str(error), trial=index+1)
+                raise
             if strategy == 'scalar_feedback':
                 logger.event('scalar_feedback_stopped', error=str(error), trial=index+1)
                 raise
@@ -279,7 +295,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         logger.event('experiment_proposal_frozen',**declared.record())
         available = [item for item in available if item["id"] != chosen]
         explanation_audit=None
-        if proposal is not None and 'assessment' in proposal:
+        if proposal is not None:
             from .explanation_audit import audit_explanation
             explanation_audit=audit_explanation(proposal,history,configuration)
             logger.event('decision_evidence_report',trial=index+1,**explanation_audit)
@@ -294,6 +310,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         logger.event('paired_prediction_evidence',trial=index+1,comparison=row['paired_error_comparison'])
         row["hypothesis_check"] = check_expectation(proposal, row, history)
         logger.event("hypothesis_checked", trial=index + 1, **row["hypothesis_check"])
+        from .estimator_facts import verify_configuration_claim
+        row['configuration_fact_check']=verify_configuration_claim(proposal, metrics.get('estimator'))
+        logger.event('configuration_fact_checked',trial=index+1,**row['configuration_fact_check'])
         if model is not None and (score_of(row) > best_score or
             (score_of(row) == best_score and chosen < best_id)):
             best_score, best_id, best_model = score_of(row), chosen, model
@@ -334,6 +353,20 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         if confirmed["candidate"] != best_id:
             best_model = joblib.load(directory / f"trial_{confirmed['trial']}.joblib")["model"]
         best_id, best_score = confirmed["candidate"], score_of(confirmed)
+    from .task_semantics import expectations_for,probe_model_swap,declaration_consistency
+    swap_probe=None
+    if task.kind=='pair_text' and best_model is not None:
+        try: swap_probe=probe_model_swap(task.kind,best_model,payload['X_search'])
+        except Exception as error: swap_probe={'applicable':False,'reason':f'{type(error).__name__}: {error}'}
+        swap_probe.update(expectations_for(semantics['declared_semantics']))
+        selected=next((r for r in history if r['candidate']==best_id),None)
+        swap_probe['selected_candidate_assumes_flipping']=bool(
+            (selected or {}).get('params',{}).get('swap_augmentation'))
+        if swap_probe.get('selected_candidate_assumes_flipping'):
+            swap_probe['interpretation_note']=('This candidate trains on negated features with flipped '
+                'labels, so antisymmetry follows from the construction; a flips result is not evidence '
+                'that the task itself is a preference task')
+        swap_probe['consistent_with_declaration']=declaration_consistency(swap_probe)
     finalized = finalize(task, history, best_model, best_id, best_score, payload, directory,
                          logger, train_candidate, start, time_limit-runtime.margin, trial_timeout,
                          refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory)
@@ -363,6 +396,15 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         "expectations_met": sum(row["hypothesis_check"]["status"] == "supported" for row in history),
         "test_accessed": False, "run_directory": str(directory)}
     summary.update(finalized)
+    summary['task_semantics']=semantics
+    summary['swap_behavior']=swap_probe
+    fact_checks=[row.get('configuration_fact_check') or {} for row in history]
+    summary['configuration_facts']={
+        'declared_and_confirmed':sum(c.get('status')=='confirmed' for c in fact_checks),
+        'declared_and_contradicted':sum(c.get('status')=='contradicted' for c in fact_checks),
+        'declared_but_unverifiable':sum(c.get('status')=='unverified' for c in fact_checks),
+        'no_claim_made':sum(c.get('status')=='not_declared' for c in fact_checks),
+        'scope':'Declared classifier compared with the estimator actually fitted by the worker'}
     architecture=(decider.summary() if isinstance(decider,ArchitecturePolicy) else
                   {'architecture':'custom' if decision_policy is not None else 'single','enabled':False,
                    'review_fallback_count':0,'all_requested_decisions_valid':True})

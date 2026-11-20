@@ -98,6 +98,8 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
         first_row = task.X_train[:1]
         contents={"kind": task.kind, "mode": "refit", "X_train": task.X_train,
                      "y_train": task.y_train, "X_search": first_row,'metric_spec':metric.record()}
+        from .task_semantics import declared_semantics
+        contents['pair_semantics']=declared_semantics(task)
         if feature_cache_dir:contents['feature_cache_dir']=feature_cache_dir
         joblib.dump(contents,refit_payload)
         refit_success = {}

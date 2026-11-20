@@ -1,0 +1,215 @@
+{
+  "strategy": "local_interleaved_routes",
+  "seed": 707,
+  "task_kind": "numeric_tabular",
+  "selected_candidate": "numeric_tabular_extra_trees_leaf1",
+  "primary_best_candidate": "numeric_tabular_extra_trees_leaf1",
+  "confirmation": {
+    "enabled": false
+  },
+  "portfolio": "expanded",
+  "evaluation_protocol": {
+    "grouping": "exact_rows",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 180,
+      "train_groups": 144,
+      "heldout_groups": 36,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 144,
+    "search_rows": 36,
+    "search_duplicate_rows": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "single_split_accuracy",
+      "confirmation_repeats": 1,
+      "confirmation_top_k": 0,
+      "confirmation_grouping": null,
+      "maximum_additional_confirmation_fits": 0,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": false,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    },
+    "candidate_facts": {
+      "numeric_tabular_logistic_C0.1": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C1.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C10.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_extra_trees_leaf1": {
+        "classifier": null,
+        "source": "injected_unknown",
+        "reason": "controlled missing metadata"
+      },
+      "numeric_tabular_extra_trees_leaf3": {
+        "classifier": "extra_trees",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C1.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C10.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      }
+    }
+  },
+  "primary_metric": "accuracy",
+  "search_score": 0.9444444444444444,
+  "search_accuracy": 0.9444444444444444,
+  "official_validation_accuracy": null,
+  "completed": true,
+  "valid_policy_run": true,
+  "fallback_count": 0,
+  "trials_attempted": 3,
+  "failed_trials": 0,
+  "elapsed_seconds": 4.939823399996385,
+  "llm_calls": 0,
+  "tokens": 0,
+  "course_cost_rmb": 0,
+  "actual_cost_rmb": 0.0,
+  "usage_complete": true,
+  "anchor_first": true,
+  "anchor_policy": "catalog",
+  "anchor_candidate": "numeric_tabular_logistic_C0.1",
+  "hypotheses_evaluated": 2,
+  "expectations_met": 0,
+  "test_accessed": false,
+  "run_directory": "D:\\codex\\python_withai\\runs\\a1_03_fixed\\raw",
+  "official_validation_score": null,
+  "pre_refit_validation_score": null,
+  "single_model_validation_score": null,
+  "pre_refit_validation_accuracy": null,
+  "single_model_validation_accuracy": null,
+  "refit_requested": false,
+  "refit_succeeded": false,
+  "refit_failure": null,
+  "final_training_rows": 144,
+  "ensemble_selected": false,
+  "ensemble_evaluations": 0,
+  "full_refits_attempted": 0,
+  "full_refits_completed": 0,
+  "refit_classifier_fits_completed": 0,
+  "refit_training_seconds": 0.0,
+  "ensemble_failure": null,
+  "provided_validation_available": false,
+  "task_semantics": {
+    "task_kind": "numeric_tabular",
+    "portfolio": "expanded",
+    "declared_semantics": null,
+    "swap_policy": "unverified",
+    "swap_tolerance": 0.1,
+    "status": "undeclared",
+    "checks": [
+      {
+        "check": "semantics_declared",
+        "status": "undeclared",
+        "detail": "No pair_semantics in the package; swap behaviour is unverified"
+      },
+      {
+        "check": "swap_augmentation",
+        "status": "unverified",
+        "detail": "semantics does not imply a swap policy"
+      }
+    ],
+    "excluded_candidates": [],
+    "reasons": [],
+    "remaining_candidates": 7,
+    "candidate_swap_rules": {
+      "numeric_tabular_logistic_C0.1": "unknown",
+      "numeric_tabular_logistic_C1.0": "unknown",
+      "numeric_tabular_logistic_C10.0": "unknown",
+      "numeric_tabular_extra_trees_leaf1": "unknown",
+      "numeric_tabular_extra_trees_leaf3": "unknown",
+      "numeric_tabular_rbf_svm_C1.0": "unknown",
+      "numeric_tabular_rbf_svm_C10.0": "unknown"
+    },
+    "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+  },
+  "swap_behavior": null,
+  "configuration_facts": {
+    "declared_and_confirmed": 1,
+    "declared_and_contradicted": 1,
+    "declared_but_unverifiable": 0,
+    "no_claim_made": 1,
+    "scope": "Declared classifier compared with the estimator actually fitted by the worker"
+  },
+  "decision_architecture": {
+    "architecture": "custom",
+    "enabled": false,
+    "review_fallback_count": 0,
+    "all_requested_decisions_valid": true
+  },
+  "refinement": {
+    "enabled": false,
+    "mode": "off",
+    "requested_mode": "off",
+    "generated_candidates": 0,
+    "reason": null
+  },
+  "prediction_evidence_audit": {
+    "comparisons_completed": 2,
+    "comparisons_unavailable": 1,
+    "invalid_comparisons": 0,
+    "integrity_valid": true
+  },
+  "explanation_review": {
+    "audited_decisions": 2,
+    "decisions_flagged": 2,
+    "warning_count": 2,
+    "freeform_prose_fully_verified": false,
+    "valid_policy_run_scope": "Completed execution without planner fallback; not certification of all prose claims"
+  },
+  "route_actions": {
+    "start": 0,
+    "continue": 0,
+    "revisit": 0
+  },
+  "search_training_seconds": 0.26021240002592094,
+  "runtime_budget": {
+    "mode": "shared",
+    "duration_basis": "observed worker wall time, including process startup",
+    "fit_safety_multiplier": 1.5,
+    "full_refit_multiplier": 2.0,
+    "output_margin_seconds": 0.0,
+    "hard_total_wall_clock_guarantee": false,
+    "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+    "search_stop_reason": "trial_limit_reached",
+    "requested_primary_trials": 3,
+    "actual_primary_trials": 3,
+    "confirmation_deadline_elapsed_seconds": 180,
+    "elapsed_exceeded_requested_limit": false
+  },
+  "feature_cache": {
+    "enabled": false,
+    "directory": null,
+    "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+  },
+  "classifier_fit_accounting": {
+    "completed_classifier_fits": 3,
+    "failed_candidate_attempts_with_unknown_component_count": 0,
+    "complete_count_known": true,
+    "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+  }
+}

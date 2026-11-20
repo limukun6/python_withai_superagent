@@ -1,0 +1,134 @@
+[
+  {
+    "contract_version": 1,
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "status": "completed",
+    "measurements": {
+      "primary_metric": "accuracy",
+      "search_score": 0.9444444444444444,
+      "train_score": 0.9652777777777778,
+      "search_accuracy": 0.9444444444444444,
+      "train_accuracy": 0.9652777777777778,
+      "score_gap": 0.02083333333333337,
+      "generalization_gap": 0.02083333333333337,
+      "training_seconds": 0.0193202999944333,
+      "classifier_fits": 1,
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      }
+    },
+    "score_available": true,
+    "selection_score": 0.9444444444444444
+  },
+  {
+    "contract_version": 1,
+    "trial": 2,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "status": "completed",
+    "measurements": {
+      "primary_metric": "accuracy",
+      "search_score": 0.9444444444444444,
+      "train_score": 1.0,
+      "search_accuracy": 0.9444444444444444,
+      "train_accuracy": 1.0,
+      "score_gap": 0.05555555555555558,
+      "generalization_gap": 0.05555555555555558,
+      "training_seconds": 0.22136240001418628,
+      "classifier_fits": 1,
+      "hypothesis_check": {
+        "status": "not_supported",
+        "metric": "search_score",
+        "reference_trial": 1,
+        "reference_value": 0.9444444444444444,
+        "observed_value": 0.9444444444444444,
+        "observed_delta": 0.0,
+        "direction": "increase",
+        "required_delta": 0.99
+      },
+      "estimator": {
+        "family": "extra_trees",
+        "class": "ExtraTreesClassifier",
+        "module": "sklearn.ensemble._forest",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "configuration_fact_check": {
+        "declared": "logistic",
+        "observed": "extra_trees",
+        "observed_class": "ExtraTreesClassifier",
+        "status": "contradicted",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      }
+    },
+    "score_available": true,
+    "selection_score": 0.9444444444444444
+  },
+  {
+    "contract_version": 1,
+    "trial": 3,
+    "candidate": "numeric_tabular_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "status": "completed",
+    "measurements": {
+      "primary_metric": "accuracy",
+      "search_score": 0.9444444444444444,
+      "train_score": 0.9791666666666666,
+      "search_accuracy": 0.9444444444444444,
+      "train_accuracy": 0.9791666666666666,
+      "score_gap": 0.03472222222222221,
+      "generalization_gap": 0.03472222222222221,
+      "training_seconds": 0.019529700017301366,
+      "classifier_fits": 1,
+      "hypothesis_check": {
+        "status": "not_supported",
+        "metric": "search_score",
+        "reference_trial": 1,
+        "reference_value": 0.9444444444444444,
+        "observed_value": 0.9444444444444444,
+        "observed_delta": 0.0,
+        "direction": "increase",
+        "required_delta": 0.99
+      },
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "configuration_fact_check": {
+        "declared": "logistic",
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "confirmed",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      }
+    },
+    "score_available": true,
+    "selection_score": 0.9444444444444444
+  }
+]

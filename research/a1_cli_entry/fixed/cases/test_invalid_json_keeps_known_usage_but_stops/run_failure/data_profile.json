@@ -1,0 +1,93 @@
+{
+  "task_kind": "numeric_tabular",
+  "primary_metric": "accuracy",
+  "train_label_counts": {
+    "0": 16,
+    "1": 16,
+    "2": 16
+  },
+  "validation_label_counts": {
+    "0": 4,
+    "1": 4,
+    "2": 4
+  },
+  "test_accessed": false,
+  "class_count": 3,
+  "train_rows": 48,
+  "feature_shape": [
+    3
+  ],
+  "feature_count": 3,
+  "missing_values_per_column": [
+    0,
+    0,
+    0
+  ],
+  "evaluation_protocol": {
+    "grouping": "exact_rows",
+    "selection_data": "training_partition_only",
+    "split_resource": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 60,
+      "train_groups": 48,
+      "heldout_groups": 12,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    },
+    "train_rows": 48,
+    "search_rows": 12,
+    "search_duplicate_rows": 0,
+    "planned_final_selection": {
+      "primary_metric": "accuracy",
+      "search_measurement": "single_split_accuracy",
+      "final_metric": "mean_confirmation_accuracy",
+      "confirmation_repeats": 3,
+      "confirmation_top_k": 3,
+      "confirmation_grouping": "exact_rows",
+      "maximum_additional_confirmation_fits": 4,
+      "incomplete_confirmation_fallback": "retain_primary_best",
+      "full_train_refit_after_selection": true,
+      "fixed_ensemble_check": false,
+      "provided_validation_role": "score_only_after_selection_and_model_freeze"
+    },
+    "candidate_facts": {
+      "numeric_tabular_logistic_C0.1": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C1.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_logistic_C10.0": {
+        "classifier": "logistic",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_extra_trees_leaf1": {
+        "classifier": "extra_trees",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_extra_trees_leaf3": {
+        "classifier": "extra_trees",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C1.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      },
+      "numeric_tabular_rbf_svm_C10.0": {
+        "classifier": "rbf_svm",
+        "source": "registered_training_function",
+        "training_function": "_fit"
+      }
+    }
+  }
+}

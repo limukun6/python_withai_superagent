@@ -1,0 +1,615 @@
+[
+  {
+    "task": "task1",
+    "kind": "categorical_tabular",
+    "seed": 43911,
+    "arms": {
+      "local": {
+        "candidate": "catboost_depth8_reg3.0",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task1\\local\\selected_model.joblib",
+        "model_sha256": "6afb69960abdc16b48ea1e5fe0078556c9e7bdc8d8b667ab58e5192e56fac4da",
+        "logical_fits": 11,
+        "elapsed_seconds": 446.7989341999928,
+        "reused": false,
+        "path": [
+          "logistic_C0.05",
+          "catboost_depth6_reg3.0",
+          "catboost_depth8_reg3.0",
+          "extra_trees_leaf2"
+        ],
+        "searched_routes": [
+          "catboost",
+          "extra_trees",
+          "logistic"
+        ],
+        "finalist_ids": [
+          "catboost_depth6_reg3.0",
+          "catboost_depth8_reg3.0",
+          "logistic_C0.05"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "not_stated"
+            }
+          }
+        ],
+        "accuracy": 0.7228637413394919,
+        "correct": 939
+      },
+      "raw": {
+        "candidate": "catboost_depth8_reg10.0",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task1\\raw\\selected_model.joblib",
+        "model_sha256": "c0680611f04578e326e5a108d004981315faf250ba08e69d7e6c8fe1783fa0cb",
+        "logical_fits": 11,
+        "elapsed_seconds": 582.839029099996,
+        "reused": false,
+        "path": [
+          "logistic_C0.05",
+          "catboost_depth4_reg3.0",
+          "catboost_depth6_reg10.0",
+          "catboost_depth8_reg10.0"
+        ],
+        "searched_routes": [
+          "catboost",
+          "logistic"
+        ],
+        "finalist_ids": [
+          "catboost_depth8_reg10.0",
+          "catboost_depth6_reg10.0",
+          "catboost_depth4_reg3.0"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 1,
+                "reference_value": 0.7028846153846153,
+                "observed_value": 0.7163461538461539,
+                "observed_delta": 0.013461538461538525,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "supported",
+                "slice_id": "missing_fraction_high",
+                "reference_trial": 1,
+                "rows": 55,
+                "reference_accuracy": 0.6363636363636364,
+                "observed_accuracy": 0.7818181818181819,
+                "observed_delta": 0.1454545454545455,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.7163461538461539,
+                "observed_value": 0.7365384615384616,
+                "observed_delta": 0.02019230769230773,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "missing_fraction_high",
+                "reference_trial": 2,
+                "rows": 55,
+                "reference_accuracy": 0.7818181818181819,
+                "observed_accuracy": 0.7636363636363637,
+                "observed_delta": -0.018181818181818188,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 3,
+                "reference_value": 0.7365384615384616,
+                "observed_value": 0.7461538461538462,
+                "observed_delta": 0.009615384615384581,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "missing_fraction_high",
+                "reference_trial": 3,
+                "rows": 55,
+                "reference_accuracy": 0.7636363636363637,
+                "observed_accuracy": 0.7272727272727273,
+                "observed_delta": -0.036363636363636376,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          }
+        ],
+        "accuracy": 0.7244033872209392,
+        "correct": 941
+      },
+      "checked": {
+        "candidate": "catboost_depth6_reg10.0",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task1\\checked\\selected_model.joblib",
+        "model_sha256": "f3803e8f2bd3a60a9d0c7f84670cf5375ad5c4e8e0eb466eb55d08426a37b1f0",
+        "logical_fits": 11,
+        "elapsed_seconds": 527.3402315999847,
+        "reused": false,
+        "path": [
+          "logistic_C0.05",
+          "catboost_depth4_reg3.0",
+          "catboost_depth4_reg10.0",
+          "catboost_depth6_reg10.0"
+        ],
+        "searched_routes": [
+          "catboost",
+          "logistic"
+        ],
+        "finalist_ids": [
+          "catboost_depth6_reg10.0",
+          "catboost_depth4_reg10.0",
+          "catboost_depth4_reg3.0"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 1,
+                "reference_value": 0.7028846153846153,
+                "observed_value": 0.7163461538461539,
+                "observed_delta": 0.013461538461538525,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "supported",
+                "slice_id": "missing_fraction_high",
+                "reference_trial": 1,
+                "rows": 55,
+                "reference_accuracy": 0.6363636363636364,
+                "observed_accuracy": 0.7818181818181819,
+                "observed_delta": 0.1454545454545455,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.7163461538461539,
+                "observed_value": 0.7259615384615384,
+                "observed_delta": 0.009615384615384581,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "missing_fraction_high",
+                "reference_trial": 2,
+                "rows": 55,
+                "reference_accuracy": 0.7818181818181819,
+                "observed_accuracy": 0.7636363636363637,
+                "observed_delta": -0.018181818181818188,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "supported",
+              "metric": "search_score",
+              "reference_trial": 3,
+              "reference_value": 0.7259615384615384,
+              "observed_value": 0.7365384615384616,
+              "observed_delta": 0.01057692307692315,
+              "direction": "increase",
+              "required_delta": 0.001
+            }
+          }
+        ],
+        "accuracy": 0.7244033872209392,
+        "correct": 941
+      }
+    },
+    "comparisons": {
+      "raw_minus_local": {
+        "n": 1299,
+        "fixed": 42,
+        "lost": 40,
+        "delta": 0.001539645881447267
+      },
+      "checked_minus_local": {
+        "n": 1299,
+        "fixed": 47,
+        "lost": 45,
+        "delta": 0.001539645881447267
+      },
+      "checked_minus_raw": {
+        "n": 1299,
+        "fixed": 37,
+        "lost": 37,
+        "delta": 0.0
+      }
+    }
+  },
+  {
+    "task": "task2",
+    "kind": "pair_text",
+    "seed": 43911,
+    "arms": {
+      "local": {
+        "candidate": "word_char_stats_C0.3",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task2\\local\\selected_model.joblib",
+        "model_sha256": "9dd1e3584fda1f0784820ccea8f03eefda86f9cd1d40700ae71ec76a1133ab08",
+        "logical_fits": 11,
+        "elapsed_seconds": 32.29517850000411,
+        "reused": false,
+        "path": [
+          "word_C0.05",
+          "char_C1.0",
+          "char_C3.0",
+          "word_char_stats_C0.3"
+        ],
+        "searched_routes": [
+          "char",
+          "word",
+          "word_char_stats"
+        ],
+        "finalist_ids": [
+          "word_char_stats_C0.3",
+          "char_C3.0",
+          "char_C1.0"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "not_stated"
+            }
+          }
+        ],
+        "accuracy": 0.6970610399397137,
+        "correct": 925
+      },
+      "checked": {
+        "candidate": "word_char_stats_C0.3",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task2\\checked\\selected_model.joblib",
+        "model_sha256": "9dd1e3584fda1f0784820ccea8f03eefda86f9cd1d40700ae71ec76a1133ab08",
+        "logical_fits": 11,
+        "elapsed_seconds": 108.95750180000323,
+        "reused": false,
+        "path": [
+          "word_C0.05",
+          "word_char_C0.3",
+          "word_char_C0.1",
+          "word_char_stats_C0.3"
+        ],
+        "searched_routes": [
+          "word",
+          "word_char",
+          "word_char_stats"
+        ],
+        "finalist_ids": [
+          "word_char_stats_C0.3",
+          "word_char_C0.3",
+          "word_char_C0.1"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 1,
+                "reference_value": 0.6396989651928504,
+                "observed_value": 0.6594543744120414,
+                "observed_delta": 0.019755409219190945,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "supported",
+                "slice_id": "unseen_token_fraction_high",
+                "reference_trial": 1,
+                "rows": 649,
+                "reference_accuracy": 0.6425269645608629,
+                "observed_accuracy": 0.6718027734976888,
+                "observed_delta": 0.02927580893682591,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "not_supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.6594543744120414,
+                "observed_value": 0.6500470366886171,
+                "observed_delta": -0.00940733772342428,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "pair_token_overlap_high",
+                "reference_trial": 2,
+                "rows": 513,
+                "reference_accuracy": 0.645224171539961,
+                "observed_accuracy": 0.6393762183235867,
+                "observed_delta": -0.005847953216374324,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.6594543744120414,
+                "observed_value": 0.665098777046096,
+                "observed_delta": 0.005644402634054635,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "supported",
+                "slice_id": "pair_token_overlap_high",
+                "reference_trial": 2,
+                "rows": 513,
+                "reference_accuracy": 0.645224171539961,
+                "observed_accuracy": 0.6569200779727096,
+                "observed_delta": 0.011695906432748537,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          }
+        ],
+        "accuracy": 0.6970610399397137,
+        "correct": 925
+      },
+      "raw": {
+        "candidate": "word_char_stats_C0.1",
+        "model_file": "D:\\codex\\python_withai\\runs\\checked_loop_pilot_v1\\task2\\raw\\selected_model.joblib",
+        "model_sha256": "19f02b2494bd8ceb9fab6e0dbf1fcaadaa6a8cee682eb4071753dea6512d6adb",
+        "logical_fits": 11,
+        "elapsed_seconds": 124.1444582999975,
+        "reused": false,
+        "path": [
+          "word_C0.05",
+          "word_char_C0.1",
+          "word_char_C0.05",
+          "word_char_stats_C0.1"
+        ],
+        "searched_routes": [
+          "word",
+          "word_char",
+          "word_char_stats"
+        ],
+        "finalist_ids": [
+          "word_char_C0.1",
+          "word_char_C0.05",
+          "word_char_stats_C0.1"
+        ],
+        "checks": [
+          {
+            "trial": 1,
+            "check": {
+              "status": "not_stated"
+            }
+          },
+          {
+            "trial": 2,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "supported",
+                "metric": "search_score",
+                "reference_trial": 1,
+                "reference_value": 0.6396989651928504,
+                "observed_value": 0.6500470366886171,
+                "observed_delta": 0.010348071495766664,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "text_length_high",
+                "reference_trial": 1,
+                "rows": 455,
+                "reference_accuracy": 0.6593406593406593,
+                "observed_accuracy": 0.6461538461538462,
+                "observed_delta": -0.01318681318681314,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 3,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "not_supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.6500470366886171,
+                "observed_value": 0.6472248353715898,
+                "observed_delta": -0.002822201317027262,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "not_supported",
+                "slice_id": "unseen_token_fraction_high",
+                "reference_trial": 2,
+                "rows": 649,
+                "reference_accuracy": 0.6640986132511556,
+                "observed_accuracy": 0.6579352850539292,
+                "observed_delta": -0.006163328197226425,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          },
+          {
+            "trial": 4,
+            "check": {
+              "status": "not_supported",
+              "overall_check": {
+                "status": "not_supported",
+                "metric": "search_score",
+                "reference_trial": 2,
+                "reference_value": 0.6500470366886171,
+                "observed_value": 0.6406396989651929,
+                "observed_delta": -0.00940733772342417,
+                "direction": "increase",
+                "required_delta": 0.001
+              },
+              "slice_check": {
+                "status": "supported",
+                "slice_id": "pair_token_overlap_high",
+                "reference_trial": 2,
+                "rows": 513,
+                "reference_accuracy": 0.6393762183235867,
+                "observed_accuracy": 0.6471734892787524,
+                "observed_delta": 0.007797270955165692,
+                "required_delta": 0.001,
+                "scope": "same internal search partition and train-fitted slice definition"
+              },
+              "combination": "all declared numerical expectations must be met"
+            }
+          }
+        ],
+        "accuracy": 0.680482290881688,
+        "correct": 903
+      }
+    },
+    "comparisons": {
+      "raw_minus_local": {
+        "n": 1327,
+        "fixed": 33,
+        "lost": 55,
+        "delta": -0.016578749058025623
+      },
+      "checked_minus_local": {
+        "n": 1327,
+        "fixed": 0,
+        "lost": 0,
+        "delta": 0.0
+      },
+      "checked_minus_raw": {
+        "n": 1327,
+        "fixed": 55,
+        "lost": 33,
+        "delta": 0.016578749058025623
+      }
+    }
+  }
+]

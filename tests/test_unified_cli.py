@@ -62,7 +62,7 @@ class UnifiedCLITests(unittest.TestCase):
             args=build_parser().parse_args(['run',str(path),'--run-dir',str(root/'out'),'--trials','3'])
             with patch('superagent.cli.ExperimentLLM') as client,patch('superagent.cli.run_one',side_effect=fake),contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(_run(args),2);client.assert_not_called()
-            outcome=json.loads((root/'out/run_outcome.json').read_text())
+            outcome=json.loads((root/'out/run_outcome.json').read_text(encoding='utf-8'))
             self.assertTrue(outcome['model_available']);self.assertFalse(outcome['requested_planner_completed'])
             self.assertEqual(outcome['new_api_requests'],0);self.assertEqual(outcome['complete_course_cost_rmb'],0)
             with patch('superagent.cli.ExperimentLLM') as client:

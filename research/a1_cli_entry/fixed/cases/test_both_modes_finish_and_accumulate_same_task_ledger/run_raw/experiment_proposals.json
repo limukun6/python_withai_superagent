@@ -1,0 +1,58 @@
+[
+  {
+    "contract_version": 1,
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "reason": "catalog first configuration; counts toward the trial limit.",
+    "hypothesis": null,
+    "evidence_trials": [],
+    "expected_change": null,
+    "route_plan": null,
+    "source": "controller_or_local_rule",
+    "raw_proposal": null
+  },
+  {
+    "contract_version": 1,
+    "trial": 2,
+    "candidate": "numeric_tabular_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "reason": "Controlled experiment.",
+    "hypothesis": "Try this alternative.",
+    "evidence_trials": [
+      1
+    ],
+    "expected_change": {
+      "metric": "search_score",
+      "reference_trial": 1,
+      "direction": "increase",
+      "min_delta": 0.001
+    },
+    "route_plan": null,
+    "source": "agent",
+    "raw_proposal": {
+      "candidate": "numeric_tabular_logistic_C1.0",
+      "task_kind": "numeric_tabular",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Controlled experiment.",
+      "review": "Read the previous result.",
+      "hypothesis": "Try this alternative.",
+      "evidence_trials": [
+        1
+      ],
+      "expected_change": {
+        "metric": "search_score",
+        "reference_trial": 1,
+        "direction": "increase",
+        "min_delta": 0.001
+      },
+      "slice_expectation": null
+    }
+  }
+]

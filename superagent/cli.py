@@ -261,7 +261,8 @@ def build_parser():
     run.add_argument('--refinement',choices=['off','midpoints','compose','research'],default='off',help='Optional feedback candidates; research adds bounded literature retrieval and checked sklearn code generation')
     run.add_argument('--allocation',choices=['off','uniform','successive'],default='off',help='Experimental local resource study; counts all screening fits')
     run.add_argument('--error-feedback',action='store_true',help='Expose train-thresholded descriptive error slices to feedback planners')
-    run.add_argument('--method-choice',choices=['adaptive','fixed','paired'],help='Allocate two search slots after five ordinary trials, including a local MiniLM feature option; use --trials 7')
+    from .method_choice import MODES
+    run.add_argument('--method-choice',choices=MODES,help='Allocate two search slots after up to five ordinary trials. Use --trials 7.')
     run.add_argument('--pretrained-config',help='Optional paths and allowances: minilm_weights for local frozen features (null disables); weights/tabular_weights, ledger, scope and cap_rmb for metered Qwen transfer')
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')

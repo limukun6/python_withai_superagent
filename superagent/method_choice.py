@@ -18,11 +18,15 @@ from .pretrained_choice import consider, budget, CANDIDATE, PARAMS
 NEURAL = 'scratch_neural_classifier'
 COOCCUR = 'training_category_cooccurrence'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
+MODES = ('fixed', 'adaptive', 'paired', 'context-control')
 
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
-    if mode == 'fixed':
+    if mode == 'context-control' and evidence['kind']=='categorical_tabular':
+        priorities = [MINILM, COOCCUR]
+        reason = 'Fixed comparison using frozen semantic features followed by training-only category co-occurrence.'
+    elif mode == 'fixed':
         priorities = [MINILM, evidence['semantic'], NEURAL, COOCCUR]
         reason = 'Fixed ordering of feasible methods.'
     elif evidence['shared_errors'] < evidence['required_shared_errors']:
@@ -30,7 +34,7 @@ def select_action(evidence, feasible, mode, used):
     else:
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
-        pair_aware = mode=='paired' and evidence.get('primary_metric')=='accuracy'
+        pair_aware = mode in ('paired','context-control') and evidence.get('primary_metric')=='accuracy'
         if (pair_aware and not used and can_pool and evidence['rare_enrichment']>=1.
                 and any(name in feasible for name in aligned)):
             priorities = [*aligned, COOCCUR, NEURAL]

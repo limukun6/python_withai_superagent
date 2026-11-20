@@ -218,7 +218,8 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
              ExistingPolicyAdapter(policy))
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
     if method_choice is not None:
-        if (method_choice not in ('adaptive','fixed','paired') or strategy!='local_interleaved_routes' or max_trials!=7
+        from .method_choice import MODES
+        if (method_choice not in MODES or strategy!='local_interleaved_routes' or max_trials!=7
                 or confirmation_top_k!=3 or confirmation_repeats!=3 or not anchor_first or anchor_policy!='catalog'
                 or refinement!='off' or decision_policy is not None):
             raise ValueError('Method choice needs seven interleaved trials and three confirmed finalists')

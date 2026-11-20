@@ -84,6 +84,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--minilm-weights',type=Path,help='Also exercise real offline frozen features through the CLI without a ledger or credentials')
+    p.add_argument('--deep-minilm-weights',type=Path,help='Offer the verified L12 encoder in eligible text policies')
     p.add_argument('--policy',choices=MODES,help='Use the same named method policy on all anonymous fixtures')
     args=p.parse_args()
     root=args.output.resolve()
@@ -101,7 +102,9 @@ def main():
         flags=[]
         if args.minilm_weights and (kind=='categories' or args.policy and kind in ('text','pair')):
             settings=folder/'features.json'
-            write(settings,dict(minilm_weights=str(args.minilm_weights.resolve())))
+            cfg=dict(minilm_weights=str(args.minilm_weights.resolve()))
+            if args.deep_minilm_weights:cfg['deep_minilm_weights']=str(args.deep_minilm_weights.resolve())
+            write(settings,cfg)
             flags=['--pretrained-config',settings]
         policy=args.policy or ('fixed' if flags else 'paired')
         command(folder/'training.log','run',pkg,'--run-dir',run,'--method-choice',policy,*flags,
@@ -131,8 +134,9 @@ def main():
             cases[name]['minilm_api_rmb']=sum(r['api_rmb'] for r in forwards)
         elif feature_trace.exists():
             raise ValueError('Feature usage exists without a successful MiniLM trial')
-        if args.policy and outcome['selected_candidate'] in ('minilm_text_with_lexical_features','minilm_text_dense_only') and args.minilm_weights:
-            cases[name]['relocated_prediction_usage']=check_relocated_text_model(folder,args.minilm_weights)
+        if args.policy and kind in ('text','pair') and outcome['selected_candidate'].startswith('minilm_') and args.minilm_weights:
+            weights=args.deep_minilm_weights if outcome['selected_candidate']=='minilm_l12_text_with_lexical_features' else args.minilm_weights
+            cases[name]['relocated_prediction_usage']=check_relocated_text_model(folder,weights)
     write(root/'smoke_summary.json',cases)
     print({k:(v['kind'],v['trials'],v['winner'],v['predictions']) for k,v in cases.items()})
 

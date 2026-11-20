@@ -1,0 +1,183 @@
+{
+  "modes": {
+    "auto": {
+      "runs": 10,
+      "verified_decisions": 20,
+      "accuracy_decisions_tested": 10,
+      "same_score_different_action": 3,
+      "actual_differs_from_min_disagreement": 3,
+      "actual_differs_from_max_disagreement": 2
+    },
+    "encoder-depth": {
+      "runs": 15,
+      "verified_decisions": 30,
+      "accuracy_decisions_tested": 15,
+      "same_score_different_action": 6,
+      "actual_differs_from_min_disagreement": 5,
+      "actual_differs_from_max_disagreement": 1
+    },
+    "encoder-depth-control": {
+      "runs": 15,
+      "verified_decisions": 30,
+      "accuracy_decisions_tested": 15,
+      "same_score_different_action": 0,
+      "actual_differs_from_min_disagreement": 0,
+      "actual_differs_from_max_disagreement": 0
+    },
+    "encoder-mixture": {
+      "runs": 15,
+      "verified_decisions": 30,
+      "accuracy_decisions_tested": 15,
+      "same_score_different_action": 6,
+      "actual_differs_from_min_disagreement": 5,
+      "actual_differs_from_max_disagreement": 1
+    },
+    "encoder-mixture-wide": {
+      "runs": 15,
+      "verified_decisions": 30,
+      "accuracy_decisions_tested": 15,
+      "same_score_different_action": 0,
+      "actual_differs_from_min_disagreement": 0,
+      "actual_differs_from_max_disagreement": 0
+    },
+    "paired": {
+      "runs": 5,
+      "verified_decisions": 10,
+      "accuracy_decisions_tested": 5,
+      "same_score_different_action": 2,
+      "actual_differs_from_min_disagreement": 2,
+      "actual_differs_from_max_disagreement": 2
+    },
+    "representation": {
+      "runs": 5,
+      "verified_decisions": 10,
+      "accuracy_decisions_tested": 5,
+      "same_score_different_action": 0,
+      "actual_differs_from_min_disagreement": 0,
+      "actual_differs_from_max_disagreement": 0
+    },
+    "text-encoder": {
+      "runs": 15,
+      "verified_decisions": 30,
+      "accuracy_decisions_tested": 15,
+      "same_score_different_action": 6,
+      "actual_differs_from_min_disagreement": 5,
+      "actual_differs_from_max_disagreement": 1
+    }
+  },
+  "unique_runs": 95,
+  "matched_controls": {
+    "wide-live-47147/encoder-depth": [
+      {
+        "fold": 1,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1315
+      },
+      {
+        "fold": 2,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1322
+      },
+      {
+        "fold": 3,
+        "identical_slots": false,
+        "same_final_candidate": false,
+        "gain": -8,
+        "rows": 1287
+      },
+      {
+        "fold": 4,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1328
+      },
+      {
+        "fold": 5,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1356
+      }
+    ],
+    "wide-live-47381/encoder-depth": [
+      {
+        "fold": 1,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1343
+      },
+      {
+        "fold": 2,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1340
+      },
+      {
+        "fold": 3,
+        "identical_slots": false,
+        "same_final_candidate": false,
+        "gain": -9,
+        "rows": 1310
+      },
+      {
+        "fold": 4,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1325
+      },
+      {
+        "fold": 5,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1290
+      }
+    ],
+    "wide-live-89478/encoder-depth": [
+      {
+        "fold": 1,
+        "identical_slots": false,
+        "same_final_candidate": false,
+        "gain": 7,
+        "rows": 1392
+      },
+      {
+        "fold": 2,
+        "identical_slots": false,
+        "same_final_candidate": false,
+        "gain": 14,
+        "rows": 1333
+      },
+      {
+        "fold": 3,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1306
+      },
+      {
+        "fold": 4,
+        "identical_slots": false,
+        "same_final_candidate": false,
+        "gain": -14,
+        "rows": 1319
+      },
+      {
+        "fold": 5,
+        "identical_slots": true,
+        "same_final_candidate": true,
+        "gain": 0,
+        "rows": 1258
+      }
+    ]
+  },
+  "interpretation": "Sensitivity holds the class labels, five initial models, eligible candidates, previous method and measured accuracy gain fixed. The error overlap varies over the feasible minimum and maximum for that same accuracy. Only actions are replayed. All accuracy claims come from complete measured runs."
+}

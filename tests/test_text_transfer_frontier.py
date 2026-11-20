@@ -6,7 +6,7 @@ from unittest.mock import patch
 import joblib
 import numpy as np
 
-from superagent.method_choice import TEXT_MINILM, TEXT_MINILM_ONLY, select_action
+from superagent.method_choice import COOCCUR, MINILM, NEURAL, TEXT_MINILM, TEXT_MINILM_ONLY, resolved_mode, select_action
 from superagent.minilm_features import MiniLMTextClassifier, feature_usage
 from superagent.models import predict_with_model, probability_with_model
 
@@ -20,6 +20,21 @@ class StaticEncoder:
 
 
 class FrozenTextTests(unittest.TestCase):
+    def test_unified_policy_uses_available_capabilities_and_keeps_previous_categorical_decisions(self):
+        original={MINILM,NEURAL,COOCCUR}
+        text={TEXT_MINILM,TEXT_MINILM_ONLY}
+        ev=dict(kind="categorical_tabular",semantic="other",shared_errors=32,required_shared_errors=8,
+                low_support_shared_errors=15,short_latin_share=.95,rare_enrichment=1.2,
+                primary_metric="accuracy",corrected=3,lost=19,discordant=22,search_rows=300,
+                nonlinear_gain=.04,previous_delta=-.05,margin=.01)
+        self.assertEqual(resolved_mode("auto",original),"paired")
+        for used in ([],[MINILM]):
+            self.assertEqual(select_action(ev,original,"auto",used),select_action(ev,original,"paired",used))
+        self.assertEqual(resolved_mode("auto",text),"text-encoder")
+        for used in ([],[TEXT_MINILM]):
+            self.assertEqual(select_action(ev|{"kind":"pair_text"},text,"auto",used),
+                             select_action(ev|{"kind":"pair_text"},text,"text-encoder",used))
+
     def test_agent_can_decline_or_run_the_second_probe(self):
         evidence=dict(kind="pair_text",semantic="model",shared_errors=31,required_shared_errors=10,
                       short_latin_share=0.,low_support_shared_errors=0,primary_metric="accuracy",corrected=20,lost=5)

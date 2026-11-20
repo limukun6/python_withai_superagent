@@ -1,5 +1,4 @@
 """Evaluate one three-finalist majority vote on the same three confirmation splits."""
-from dataclasses import dataclass
 from pathlib import Path
 import math
 
@@ -12,23 +11,6 @@ def majority(predictions):
     if anchor.ndim!=1 or second.shape!=anchor.shape or third.shape!=anchor.shape:
         raise ValueError('Expected three aligned vectors')
     return np.where(second==third,second,anchor)
-
-
-@dataclass
-class ConfirmedVote:
-    kind: str
-    models: list
-    classes_: np.ndarray
-
-    def predict(self,inputs):
-        from .models import predict_with_model
-        return majority([predict_with_model(self.kind,m,inputs) for m in self.models])
-
-    def predict_proba(self,inputs):
-        from .models import predict_with_model
-        predictions=[predict_with_model(self.kind,m,inputs) for m in self.models]
-        shares=sum(weight*(p[:,None]==self.classes_) for weight,p in zip((1.000001,1.,1.),predictions,strict=True))
-        return shares/3.000001
 
 
 def decision(folder,history,confirmation):

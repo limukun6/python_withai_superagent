@@ -35,11 +35,18 @@ SINGLE_POSTERIOR = 'cross_fitted_category_single_effects'
 TEXT_MINILM = 'minilm_text_with_lexical_features'
 TEXT_MINILM_ONLY = 'minilm_text_dense_only'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto')
+
+
+def resolved_mode(mode, feasible):
+    if mode != 'auto':
+        return mode
+    return 'text-encoder' if TEXT_MINILM in feasible else 'paired'
 
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
+    mode=resolved_mode(mode,feasible)
     if mode=='text-encoder-control' and TEXT_MINILM in feasible:
         priorities=[TEXT_MINILM,TEXT_MINILM_ONLY]
         reason='The fixed text control compares lexical plus frozen sentence features and frozen features alone.'
@@ -213,7 +220,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     eligible = {}
     encoder_installed=all(importlib.util.find_spec(name) is not None for name in ('torch','transformers','tokenizers','safetensors'))
     text_latin_share=None
-    if mode in ('text-encoder','text-encoder-control') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
+    if mode in ('text-encoder','text-encoder-control','auto') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
         sampled=[x[i] for i in np.linspace(0,len(x)-1,min(256,len(x)),dtype=int)]
         texts=[s for pair in sampled for s in pair] if kind=='pair_text' else sampled
         letters=[c for s in texts for c in str(s)[:512] if c.isalpha()]
@@ -335,9 +342,12 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     if curve is not None:ev['boosting_curve']=curve
     if text_latin_share is not None:ev['sampled_ascii_letter_fraction']=text_latin_share
     name,reason=select_action(ev,eligible,mode,used)
-    return dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
+    result=dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
                 protected_incumbent=incumbent['candidate'],mode=mode)
+    if mode=='auto':
+        result['resolved_mode']=resolved_mode(mode,eligible)
+    return result
 
 
 class Cooccurrence:

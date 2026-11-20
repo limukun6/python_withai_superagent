@@ -62,20 +62,12 @@ def _extra_trees_tabular(
     return model, model.predict(_clean_categories(x_val))
 
 
-def _catboost_tabular(
-    x_train: np.ndarray,
-    y_train: np.ndarray,
-    x_val: np.ndarray,
-    depth: int = 7,
-    l2_leaf_reg: float = 3.0,
-) -> tuple[Any, np.ndarray]:
+def _tabular_catboost(y_train, depth, l2_leaf_reg):
     # Imported lazily so a missing optional accelerator does not prevent the
     # transparent sklearn fallback portfolio from completing.
     from catboost import CatBoostClassifier
 
-    x_train_clean = _clean_categories(x_train)
-    x_val_clean = _clean_categories(x_val)
-    model = CatBoostClassifier(
+    return CatBoostClassifier(
         iterations=600,
         depth=depth,
         learning_rate=0.05,
@@ -87,6 +79,12 @@ def _catboost_tabular(
         thread_count=-1,
         allow_writing_files=False,
     )
+
+
+def _catboost_tabular(x_train, y_train, x_val, depth=7, l2_leaf_reg=3.0):
+    x_train_clean = _clean_categories(x_train)
+    x_val_clean = _clean_categories(x_val)
+    model = _tabular_catboost(y_train, depth, l2_leaf_reg)
     model.fit(x_train_clean, y_train, cat_features=list(range(x_train_clean.shape[1])))
     return model, model.predict(x_val_clean).reshape(-1)
 
@@ -245,6 +243,8 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     from .supervised_text import NBPairModel
     from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
     if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.predict(inputs)
+    if kind == 'pair_text' and isinstance(model, Pipeline):
+        return np.asarray(model.predict(inputs)).reshape(-1)
     if isinstance(model,NBPairModel):return model.predict(inputs)
     if isinstance(model, (SoftVoteModel,StylePairModel)):
         return model.predict(inputs)
@@ -290,6 +290,8 @@ def probability_with_model(kind, model, inputs):
         return model.classes_,model.predict_proba(inputs)
     if kind == "categorical_tabular":
         classifier, matrix = model, _clean_categories(inputs)
+    elif kind == 'pair_text' and isinstance(model, Pipeline):
+        classifier, matrix = model, inputs
     elif kind == "pair_text":
         if isinstance(model, DummyClassifier):
             classifier, matrix = model, np.zeros((len(inputs), 1))
@@ -336,6 +338,14 @@ class SoftVoteModel:
 
 def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]:
     """Common search space, deliberately larger than a benchmark trial budget."""
+    if portfolio in ('ab-v1', 'all'):
+        from .ab_methods import additions
+        prior = 'expanded' if portfolio == 'ab-v1' else 'all'
+        return _legacy_candidates(kind, prior) + additions(kind)
+    return _legacy_candidates(kind, portfolio)
+
+
+def _legacy_candidates(kind: str, portfolio: str) -> list[Candidate]:
     if portfolio not in ("original","expanded","research","nonlinear","adaptive","semantic","learned","challenger","all"):
         raise ValueError("Unknown portfolio")
     if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):

@@ -245,7 +245,8 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     from .pretrained_choice import ContextClassifier
     from .scratch_classifier import ScratchClassifier
     from .category_posteriors import PosteriorCategoryClassifier
-    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier)):return np.asarray(model.predict(inputs)).reshape(-1)
+    from .encoder_mixture import EncoderMixture
+    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier,EncoderMixture)):return np.asarray(model.predict(inputs)).reshape(-1)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return np.asarray(model.predict(inputs)).reshape(-1)
@@ -295,7 +296,8 @@ def probability_with_model(kind, model, inputs):
     from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
     if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.classes_,model.predict_proba(inputs)
     if isinstance(model,NBPairModel):return model.classes_,model.predict_proba(inputs)
-    if isinstance(model, (SoftVoteModel,StylePairModel)):
+    from .encoder_mixture import EncoderMixture
+    if isinstance(model, (SoftVoteModel,StylePairModel,EncoderMixture)):
         return model.classes_, model.predict_proba(inputs)
     if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
         if not hasattr(model,'predict_proba'):raise ValueError('Selected classifier has no probability output')

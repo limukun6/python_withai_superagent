@@ -171,11 +171,12 @@ def main():
                     bundle=joblib.load(source/'selected_model.joblib')
                     usage_dir=source.parent/(arm+'_prediction_features')
                     from superagent.minilm_features import MiniLMTextClassifier,feature_usage
-                    cached=isinstance(bundle['model'],MiniLMTextClassifier)
+                    from superagent.encoder_mixture import EncoderMixture,bind_text_prediction
+                    cached=isinstance(bundle['model'],(MiniLMTextClassifier,EncoderMixture))
                     if cached:
                         before=feature_usage(usage_dir)
                         config=read(usage_dir/'pretrained_runtime.json')
-                        bundle['model'].bind_prediction_weights(config[bundle['model'].weight_setting],usage_dir)
+                        bind_text_prediction(bundle['model'],config,usage_dir)
                     predicted=predict_with_model(task.kind,bundle['model'],take(task.X_train,ids))
                     if cached:expect(before==feature_usage(usage_dir),'Audit encountered an uncached evaluation feature')
                     initial=[]

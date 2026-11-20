@@ -15,7 +15,7 @@ from .models import predict_with_model,probability_with_model
 from .metrics import MetricSpec
 
 
-def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path, minilm_weights=None) -> Path:
+def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path, minilm_weights=None, deep_minilm_weights=None) -> Path:
     run_path = Path(run_dir).resolve()
     selection = json.loads((run_path / "final_selection.json").read_text(encoding="utf-8"))
     specification = json.loads((run_path / "task_spec.json").read_text(encoding="utf-8"))
@@ -47,14 +47,16 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
     destination = Path(output_path).resolve()
     feature_dir = None
     from .minilm_features import MiniLMTextClassifier, feature_usage
-    if isinstance(model, MiniLMTextClassifier):
-        if minilm_weights is None:
-            config = run_path / 'pretrained_runtime.json'
-            if not config.exists():
-                raise ValueError('Supply --minilm-weights for this frozen text classifier')
-            minilm_weights = json.loads(config.read_text())[model.weight_setting]
+    from .encoder_mixture import EncoderMixture, bind_text_prediction
+    if isinstance(model, (MiniLMTextClassifier,EncoderMixture)):
+        config = run_path / 'pretrained_runtime.json'
+        settings = json.loads(config.read_text()) if config.exists() else {}
+        if minilm_weights is not None:
+            setting = model.weight_setting if isinstance(model,MiniLMTextClassifier) else 'minilm_weights'
+            settings[setting] = minilm_weights
+        if deep_minilm_weights is not None:settings['deep_minilm_weights'] = deep_minilm_weights
         feature_dir = destination.parent / (destination.name + '.features')
-        model.bind_prediction_weights(minilm_weights, feature_dir)
+        bind_text_prediction(model,settings,feature_dir)
         before = feature_usage(feature_dir)
     features = load_prediction_features(task_package, kind_to_loader[kind], specification)
     predictions = predict_with_model(kind_to_loader[kind], model, features)

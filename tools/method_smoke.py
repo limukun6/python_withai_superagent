@@ -59,7 +59,7 @@ def csv_package(path, kind):
     return ({'0','1'} if kind=='pair' else {'red','green','blue'}),15
 
 
-def check_relocated_text_model(folder,weights):
+def check_relocated_text_model(folder,weights,deep_weights=None):
     moved=folder/'relocated'
     moved.mkdir()
     bundle=moved/'model'
@@ -68,9 +68,12 @@ def check_relocated_text_model(folder,weights):
         shutil.copyfile(folder/'run'/name,bundle/name)
     output=moved/'predictions.csv'
     records=[]
+    flags=['--minilm-weights',Path(weights).resolve()]
+    if deep_weights:
+        flags.extend(['--deep-minilm-weights',Path(deep_weights).resolve()])
     for attempt in ('fresh','cached'):
         command(moved/(attempt+'.log'),'predict',folder/'anonymous.zip','--run-dir',bundle,
-                '--minilm-weights',Path(weights).resolve(),'--output',output)
+                *flags,'--output',output)
         assert output.read_bytes()==(folder/'predictions.csv').read_bytes()
         usage=read(moved/'prediction_manifest.json')['prediction_feature_usage']
         assert usage['remote_calls']==usage['api_rmb']==0
@@ -136,7 +139,7 @@ def main():
             raise ValueError('Feature usage exists without a successful MiniLM trial')
         if args.policy and kind in ('text','pair') and outcome['selected_candidate'].startswith('minilm_') and args.minilm_weights:
             weights=args.deep_minilm_weights if outcome['selected_candidate']=='minilm_l12_text_with_lexical_features' else args.minilm_weights
-            cases[name]['relocated_prediction_usage']=check_relocated_text_model(folder,weights)
+            cases[name]['relocated_prediction_usage']=check_relocated_text_model(folder,weights,args.deep_minilm_weights)
     write(root/'smoke_summary.json',cases)
     print({k:(v['kind'],v['trials'],v['winner'],v['predictions']) for k,v in cases.items()})
 

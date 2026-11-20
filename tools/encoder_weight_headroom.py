@@ -4,7 +4,7 @@ from pathlib import Path
 
 import joblib
 import numpy as np
-from scipy.optimize import brentq
+from superagent.encoder_mixture import fit_weight
 
 from superagent.data import TrainingTask, load_training_task
 from superagent.method_choice import TEXT_DEEP, TEXT_MINILM
@@ -14,36 +14,6 @@ from superagent.splits import sample_groups, take
 from tools.frontier_study import expect
 from tools.pretrained_study import read, train_only, write
 from tools.soft_vote_diagnostic import freeze_file
-
-
-def fit_weight(inner, ids, truth, groups):
-    """Overlapping inner splits give equal total weight to each distinct row."""
-    p, q = np.concatenate(inner).T
-    ids = np.concatenate(ids)
-    rows, inverse, visits = np.unique(ids,return_inverse=True,return_counts=True)
-    y = truth[ids]
-    p_true, q_true = np.where(y==1,p,1-p), np.where(y==1,q,1-q)
-    d = p_true-q_true
-    weights = 1/(len(rows)*visits[inverse])
-    def slope(w):
-        return -float(np.dot(weights,d/np.maximum(q_true+w*d,1e-15)))
-    if slope(1)<=0:
-        raw=1.
-    elif slope(0)>=0:
-        raw=0.
-    else:
-        raw=float(brentq(slope,0.,1.))
-    gain=(np.log(np.maximum(q_true+raw*d,1e-15))-np.log(np.maximum(p_true,1e-15)))
-    per_row=np.bincount(inverse,weights=gain)/visits
-    mean=float(per_row.mean())
-    _, cluster=np.unique(groups[rows],return_inverse=True)
-    sizes=np.bincount(cluster)
-    sums=np.bincount(cluster,weights=per_row)-mean*sizes
-    se=float(np.sqrt(len(sizes)/(len(sizes)-1)*np.sum(sums**2))/len(rows)) if len(sizes)>1 else None
-    acc=float(np.dot(weights,(((raw*p+(1-raw)*q)>.5)==y).astype(int)-((p>.5)==y)))
-    supported=se is not None and mean>=max(.002,se) and acc>=-.002
-    return dict(raw=raw,guarded=raw if supported else 1.,unique_rows=len(rows),visits=len(ids),groups=len(sizes),
-                loss_gain=mean,group_standard_error=se,accuracy_gain=acc)
 
 
 def binary_choices(p,q):

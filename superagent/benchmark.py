@@ -224,13 +224,15 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                 or refinement!='off' or decision_policy is not None):
             raise ValueError('Method choice needs seven interleaved trials and three confirmed finalists')
         pretrained_config={'minilm_weights':str((directory.parent/'.superagent-weights'/'all-MiniLM-L6-v2').resolve()), **(pretrained_config or {})}
+        if method_choice in ('encoder-depth','encoder-depth-control','encoder-mixture'):
+            pretrained_config.setdefault('deep_minilm_weights',str((directory.parent/'.superagent-weights'/'all-MiniLM-L12-v2').resolve()))
         logger.write_json('method_policy.json',dict(mode=method_choice, protected_initial_trials=protected_count, optional_slots=2))
     if pretrained_config is not None:
         from .pretrained_choice import CANDIDATE, PARAMS, consider
         if method_choice is None and (strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog'):
             raise ValueError('Pretrained choice uses the interleaved local policy and four protected original trials, one optional trial, and two finalists')
         pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
-        if method_choice in ('encoder-depth','encoder-depth-control'):
+        if method_choice in ('encoder-depth','encoder-depth-control','encoder-mixture'):
             pretrained_config['trial_timeout_seconds']=trial_timeout
         logger.write_json('pretrained_runtime.json', pretrained_config)
     states=[];proposals=[];result_records=[]
@@ -384,7 +386,8 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         best_id, best_score = confirmed["candidate"], score_of(confirmed)
     finalized = finalize(task, history, best_model, best_id, best_score, payload, directory,
                          logger, train_candidate, start, time_limit-runtime.margin, trial_timeout,
-                         refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory)
+                         refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory,
+                         encoder_mixture=method_choice=='encoder-mixture')
     usage = [json.loads(line) for line in logger.usage_path.read_text(encoding="utf-8").splitlines()]
     local_outstanding = 0
     if pretrained_config is not None and pretrained_config.get('ledger'):

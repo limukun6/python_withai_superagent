@@ -53,7 +53,7 @@ def propose_vote(kind, history, load_model, x_search, y_search, enabled,metric=N
 
 def finalize(task, history, best_model, best_id, best_score, payload, directory,
              logger, train_candidate, start, time_limit, trial_timeout,
-             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None):
+             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None,encoder_mixture=False):
     confirmation = confirmation or {"enabled": False}
     metric=MetricSpec.for_task(task)
     if confirmation.get("enabled") and ensemble_selection:
@@ -75,6 +75,11 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
     selection_rule = confirmation["selection_rule"] if confirmed else f"max inner {metric.name}; ties by candidate id"
     selection_metric = f"confirmation_mean_{metric.name}" if confirmed else f"inner_search_{metric.name}"
     selection_score = confirmation["selection_score"] if confirmed else best_score
+    mixture_evidence=None
+    if encoder_mixture:
+        from .encoder_mixture import learn_from_confirmations
+        mixture_evidence=learn_from_confirmations(task,history,confirmation,directory)
+        logger.write_json('encoder_mixture.json',mixture_evidence)
     def load_model(row):
         return best_model if row["candidate"] == best_id else joblib.load(directory / f"trial_{row['trial']}.joblib")["model"]
     vote, decision = propose_vote(task.kind, history, load_model, payload["X_search"],
@@ -82,11 +87,16 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
     if "predictions" in decision:
         logger.write_json("ensemble_search_predictions.json", decision.pop("predictions"))
     result["ensemble_evaluations"] = decision["evaluations"]
+    if mixture_evidence is not None:
+        result['confirmed_single_candidate']=best_id
+        result['encoder_mixture_evidence']=mixture_evidence
+        result['ensemble_evaluations']=int(mixture_evidence['eligible'])
     best_row=next(r for r in history if r['candidate']==best_id)
     logger.write_json("selection.json", {'primary_metric':metric.name,'search_score':best_score,
         "candidate": best_id, "search_accuracy": best_row['search_accuracy'],
         "selection_rule": selection_rule, "selection_metric": selection_metric, "selection_score": selection_score,
-        "refit_requested": refit_full_train, "ensemble": decision, "confirmation": confirmation})
+        "refit_requested": refit_full_train, "ensemble": decision, "confirmation": confirmation,
+        **({'encoder_mixture':mixture_evidence} if mixture_evidence is not None else {})})
     logger.event("selection_frozen", single=best_id, ensemble=decision, confirmation=confirmation)
     joblib.dump({"kind": task.kind, "candidate": best_id, "model": search_single},
                 directory / "search_selected_model.joblib")
@@ -127,9 +137,20 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
             else:
                 vote = None
                 result["ensemble_failure"] = "At least one full-train component refit failed; retain single model"
+    mixed=bool(mixture_evidence and mixture_evidence['eligible'] and mixture_evidence['raw']<1 and result['refit_succeeded'])
+    if mixed:
+        from .encoder_mixture import EncoderMixture, MIXTURE
+        other=joblib.load(directory/f"trial_{mixture_evidence['other_trial']}.joblib")['model']
+        vote=EncoderMixture(singles[best_id],other,mixture_evidence['raw'])
+        chosen_ids=[best_id,mixture_evidence['other']]
+        selection_metric='row_balanced_inner_accuracy'
+        decision['search_score']=mixture_evidence['inner_accuracy']
+        result['selected_candidate']=MIXTURE
+        result['ensemble_evaluations']=1
     final_model = vote if vote is not None else singles[best_id]
     result["ensemble_selected"] = vote is not None
     family = "equal_soft_vote" if vote is not None else best_id
+    if mixed:family=MIXTURE
     joblib.dump({"kind": task.kind, "candidate": family, "model": final_model}, directory / "selected_model.joblib")
     single_file = "selected_model.joblib"
     if vote is not None:
@@ -147,6 +168,7 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
         "selection_score": decision["search_score"] if vote is not None else selection_score,
         "model_file": "selected_model.joblib", "model_format": "candidate_bundle_v1",
         "ensemble_components": chosen_ids if vote is not None else [],
+        **({'mixture_weight_on_full_refit':mixture_evidence['raw'],'second_component_training':'retained_primary_fit'} if mixed else {}),
         "test_accessed": False, "refit": result["refit_succeeded"], "refit_requested": refit_full_train,
         "training_rows": result["final_training_rows"],
         "model_sha256": hashlib.sha256((directory / "selected_model.joblib").read_bytes()).hexdigest(),

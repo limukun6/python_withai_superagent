@@ -39,10 +39,12 @@ PAIR_ITEM = 'minilm_single_item_interactions'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
 TEXT_REGULARIZED = 'minilm_text_feedback_regularization'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth','encoder-depth-control','text-regularization')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth','encoder-depth-control','text-regularization','encoder-mixture')
 
 
 def resolved_mode(mode, feasible):
+    if mode=='encoder-mixture':
+        return 'encoder-depth' if TEXT_MINILM in feasible else 'paired'
     if mode != 'auto':
         return mode
     return 'text-encoder' if TEXT_MINILM in feasible else 'paired'
@@ -232,6 +234,9 @@ def weights_available(config, key, files):
 
 
 def plan(kind, history, folder, payload, config, mode, protected_count=5):
+    requested_mode=mode
+    if mode=='encoder-mixture':
+        mode='encoder-depth' if kind in ('single_text','pair_text') else 'paired'
     originals = shortlist(history[:protected_count],protected_count)
     if not originals:
         return dict(decision='ordinary',reason='No successful baseline.')
@@ -392,12 +397,12 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
         ev['residual_shared_errors']=int(np.sum((reference_predictions!=labels)&(after!=labels)))
     elif mode in ('opponent','item-control','encoder-depth'):
         ev['residual_shared_errors']=0
-    name,reason=select_action(ev,eligible,mode,used)
+    name,reason=select_action(ev,eligible,requested_mode,used)
     result=dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
-                protected_incumbent=incumbent['candidate'],mode=mode)
-    if mode=='auto':
-        result['resolved_mode']=resolved_mode(mode,eligible)
+                protected_incumbent=incumbent['candidate'],mode=requested_mode)
+    if requested_mode in ('auto','encoder-mixture'):
+        result['resolved_mode']=resolved_mode(requested_mode,eligible)
     return result
 
 

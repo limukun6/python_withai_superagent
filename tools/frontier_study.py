@@ -14,6 +14,7 @@ from superagent.benchmark import run_one
 from superagent.confirmation import shortlist
 from superagent.data import DevelopmentTask, TrainingTask, load_training_task
 from superagent.method_choice import MODES
+from superagent.encoder_mixture import EncoderMixture, bind_text_prediction
 from superagent.minilm_features import MiniLMTextClassifier,feature_usage
 from superagent.models import predict_with_model
 from superagent.pretrained_choice import digest
@@ -179,9 +180,9 @@ def main():
             bundle=joblib.load(folder/'selected_model.joblib')
             expect(bundle['candidate']==rec['winner'],'Winner differs from saved bundle')
             feature_dir=None
-            if isinstance(bundle['model'],MiniLMTextClassifier):
+            if isinstance(bundle['model'],(MiniLMTextClassifier,EncoderMixture)):
                 feature_dir=folder.parent/(arm+'_prediction_features')
-                bundle['model'].bind_prediction_weights(config[bundle['model'].weight_setting],feature_dir)
+                bind_text_prediction(bundle['model'],config,feature_dir)
                 before=feature_usage(feature_dir)
             pred[arm]=predict_with_model(whole.kind,bundle['model'],x)
             if feature_dir is not None:

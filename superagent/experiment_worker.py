@@ -27,8 +27,8 @@ def main() -> None:
     from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
     from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
     from .method_choice import (NEURAL, COOCCUR, MINILM, DIRECT, DIRECT_CONTEXT, TYPED, TYPED_DIRECT,
-                                RESIDUAL, RESIDUAL_DIRECT, PERMUTED_RESIDUAL, MARGINAL, HORIZON, SHRINKAGE, candidate as method_candidate)
-    if candidate_id in (NEURAL,COOCCUR,MINILM,DIRECT,DIRECT_CONTEXT,TYPED,TYPED_DIRECT,RESIDUAL,RESIDUAL_DIRECT,PERMUTED_RESIDUAL,MARGINAL,HORIZON,SHRINKAGE):
+                                RESIDUAL, RESIDUAL_DIRECT, PERMUTED_RESIDUAL, MARGINAL, HORIZON, SHRINKAGE, HIST, HIST_ADJUSTED, candidate as method_candidate)
+    if candidate_id in (NEURAL,COOCCUR,MINILM,DIRECT,DIRECT_CONTEXT,TYPED,TYPED_DIRECT,RESIDUAL,RESIDUAL_DIRECT,PERMUTED_RESIDUAL,MARGINAL,HORIZON,SHRINKAGE,HIST,HIST_ADJUSTED):
         candidate=method_candidate(payload['kind'],candidate_id,Path(output_path).parent)
         origin='frozen_downstream_encoder' if candidate_id==MINILM else 'training_only_method'
     elif candidate_id in (SEMANTIC, PERMUTED):

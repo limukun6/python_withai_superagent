@@ -28,8 +28,10 @@ PERMUTED_RESIDUAL = 'permuted_category_distributions'
 RESIDUAL_DIRECT = 'category_distributions_with_direct_splits'
 HORIZON = 'feedback_boosting_iterations'
 SHRINKAGE = 'boosting_smaller_steps'
+HIST = 'native_histogram_categories'
+HIST_ADJUSTED = 'feedback_histogram_categories'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram')
 
 
 def select_action(evidence, feasible, mode, used):
@@ -49,8 +51,19 @@ def select_action(evidence, feasible, mode, used):
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
-        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='boost-curve' and not used and SHRINKAGE in feasible:
+        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram')) and evidence.get('primary_metric')=='accuracy'
+        if mode=='histogram' and not used and HIST in feasible:
+            priorities=[HIST]
+            reason='Try a different tree learner that can partition categories into sets using training labels.'
+        elif mode=='histogram' and used and used[-1]==HIST and HIST_ADJUSTED in feasible:
+            a,b=evidence['corrected'],evidence['lost']
+            if pair_aware and b-a>=2*math.sqrt(max(1,a+b)) and COOCCUR in feasible:
+                priorities=[COOCCUR]
+                reason='The alternate tree learner lost many paired decisions. Return to the incumbent with different features.'
+            else:
+                priorities=[HIST_ADJUSTED,COOCCUR]
+                reason='The alternate tree learner remains competitive. Use its train-to-search gap to adjust leaf capacity.'
+        elif mode=='boost-curve' and not used and SHRINKAGE in feasible:
             priorities=[HORIZON,SHRINKAGE]
             reason='Use validation log loss at four stages of the existing tree model to choose its next training horizon.'
         elif mode=='boost-curve' and used and used[-1] in (HORIZON,SHRINKAGE):
@@ -170,6 +183,14 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     curve=None
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
+        if mode=='histogram' and n>=256 and 2<=feature_count<=64 and n*feature_count<=4000000:
+            leaf=max(15,min(40,math.ceil(n/220)))
+            eligible[HIST]=dict(iterations=320,leaf_nodes=31,minimum_leaf=leaf,l2=2.)
+            if len(history)>protected_count and history[-1]['candidate']==HIST and history[-1]['status']=='completed':
+                gap=history[-1]['train_score']-history[-1]['search_score']
+                tight=gap>=.08
+                eligible[HIST_ADJUSTED]=dict(iterations=320,leaf_nodes=15 if tight else 63,minimum_leaf=leaf*2 if tight else leaf,
+                                            l2=4. if tight else 2.,observed_gap=gap)
         if mode=='boost-curve' and incumbent['candidate'].startswith('catboost_depth'):
             from .boosting_curve import measured_curve,suggested_trees
             current=joblib.load(folder/f"trial_{incumbent['trial']}.joblib")['model']
@@ -289,6 +310,9 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
+        elif name in (HIST,HIST_ADJUSTED) and kind=='categorical_tabular':
+            from .histogram_categories import HistogramCategoryClassifier
+            model=HistogramCategoryClassifier(params).fit(rows,labels)
         elif name in (RESIDUAL,RESIDUAL_DIRECT,PERMUTED_RESIDUAL,MARGINAL) and kind=='categorical_tabular':
             from .distribution_features import DistributionClassifier
             model=DistributionClassifier(params).fit(rows,labels)

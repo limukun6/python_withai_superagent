@@ -131,6 +131,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('root','task1','task2','ledger','output'):p.add_argument('--'+k,type=Path,required=True)
     p.add_argument('--require',nargs='*',default=[])
+    p.add_argument('--require-diagnostic',nargs='*',default=[])
     args=p.parse_args()
     root=args.root.resolve()
     tasks={}
@@ -223,6 +224,7 @@ def main():
                                  comparisons=comparisons,qualified=output['qualified'],fold_correct=per_fold,arm_resources=arm_resources,
                                  protocol_sha256=digest(folder/'protocol.json'),results_sha256=digest(file))
     expect(set(args.require)<=stages.keys(),'A required comparison is absent')
+    expect(set(args.require_diagnostic)<=diagnostics.keys(),'A required diagnostic is absent')
     repeated=[]
     for (archive,base,arm),seeds in repeats.items():
         if len(seeds)<2:continue

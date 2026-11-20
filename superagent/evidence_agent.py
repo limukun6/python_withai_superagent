@@ -35,6 +35,7 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    if candidate in ('feedback_boosting_iterations','boosting_smaller_steps'):return 'boosting_training_curve'
     if candidate in ('category_conditional_distributions','permuted_category_distributions','category_distributions_with_direct_splits'):return 'category_distributions'
     if candidate=='category_marginal_frequency':return 'category_frequency'
     if candidate in ('typed_category_features','typed_features_with_direct_splits'):return 'typed_category_features'

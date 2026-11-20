@@ -26,8 +26,10 @@ RESIDUAL = 'category_conditional_distributions'
 MARGINAL = 'category_marginal_frequency'
 PERMUTED_RESIDUAL = 'permuted_category_distributions'
 RESIDUAL_DIRECT = 'category_distributions_with_direct_splits'
+HORIZON = 'feedback_boosting_iterations'
+SHRINKAGE = 'boosting_smaller_steps'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve')
 
 
 def select_action(evidence, feasible, mode, used):
@@ -47,8 +49,19 @@ def select_action(evidence, feasible, mode, used):
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
-        pair_aware = (repr_mode or mode in ('paired','context-control')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='distribution' and not used and RESIDUAL in feasible:
+        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve')) and evidence.get('primary_metric')=='accuracy'
+        if mode=='boost-curve' and not used and SHRINKAGE in feasible:
+            priorities=[HORIZON,SHRINKAGE]
+            reason='Use validation log loss at four stages of the existing tree model to choose its next training horizon.'
+        elif mode=='boost-curve' and used and used[-1] in (HORIZON,SHRINKAGE):
+            a,b=evidence['corrected'],evidence['lost']
+            if used[-1]==HORIZON and a-b>-math.sqrt(max(1,a+b)):
+                priorities=[SHRINKAGE,COOCCUR]
+                reason='The changed horizon was competitive. Test smaller boosting updates at matched nominal shrinkage.'
+            else:
+                priorities=[COOCCUR,MINILM]
+                reason='Explore different features after testing the boosting curve.'
+        elif mode=='distribution' and not used and RESIDUAL in feasible:
             priorities=[RESIDUAL]
             reason='Repeated categorical fields and common model errors make their training-only conditional distributions testable.'
         elif mode=='distribution' and used and used[-1]==RESIDUAL:
@@ -154,8 +167,19 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     if kind in SUPPORTED and n>=256 and feature_count<=2048 and torch_available and len(np.unique(payload['y_train']))<=256:
         eligible[NEURAL] = dict(hidden=64,epochs=22,batch_size=256,seed=42)
     rare_fraction, short_latin_share, low_errors = 0., 0., 0
+    curve=None
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
+        if mode=='boost-curve' and incumbent['candidate'].startswith('catboost_depth'):
+            from .boosting_curve import measured_curve,suggested_trees
+            current=joblib.load(folder/f"trial_{incumbent['trial']}.joblib")['model']
+            curve=measured_curve(current,held,labels)
+            horizon=suggested_trees(curve)
+            base=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'])
+            count=int(current.tree_count_)
+            rate=float(incumbent['params']['learning_rate'])
+            if horizon is not None and horizon!=count:eligible[HORIZON]=dict(base,iterations=horizon,learning_rate=rate)
+            eligible[SHRINKAGE]=dict(base,iterations=2*count,learning_rate=rate/2)
         if mode in ('representation','typed-values','distribution','distribution-control'):
             if mode.startswith('distribution') and incumbent['candidate'].startswith(BACKBONES) and feature_count<=40 and len(x)*feature_count<=2000000:
                 from .distribution_features import column_codes
@@ -228,6 +252,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             previous_delta=delta if extra else 0.,margin=.01,torch_available=torch_available,
             short_latin_share=short_latin_share,low_support_shared_errors=low_errors,primary_metric=incumbent['primary_metric'],
             corrected=corrected,lost=lost,discordant=corrected+lost,search_rows=len(labels))
+    if curve is not None:ev['boosting_curve']=curve
     name,reason=select_action(ev,eligible,mode,used)
     return dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
@@ -270,11 +295,11 @@ def candidate(kind, name, folder):
         elif name in (TYPED,TYPED_DIRECT) and kind=='categorical_tabular':
             from .typed_categories import TypedCategoryClassifier
             model=TypedCategoryClassifier(params).fit(rows,labels)
-        elif name==DIRECT and kind=='categorical_tabular':
+        elif name in (DIRECT,HORIZON,SHRINKAGE) and kind=='categorical_tabular':
             from .models import _tabular_catboost
             base=params['backbone_params']
             model=_tabular_catboost(labels,base['depth'],base['l2_leaf_reg'])
-            model.set_params(one_hot_max_size=params['one_hot_max_size'])
+            model.set_params(**{k:params[k] for k in ('one_hot_max_size','iterations','learning_rate') if k in params})
             model.fit(_clean_categories(rows),labels,cat_features=list(range(rows.shape[1])))
             return model,model.predict(_clean_categories(search)).reshape(-1)
         elif name in (COOCCUR,DIRECT_CONTEXT,MINILM) and kind=='categorical_tabular':

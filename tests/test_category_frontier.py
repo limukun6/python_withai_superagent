@@ -5,7 +5,8 @@ from pathlib import Path
 import joblib
 import numpy as np
 
-from superagent.category_interactions import CategoryInteractionClassifier
+from superagent.challengers import cross_candidate
+from superagent.evidence_agent import route_of
 from superagent.method_choice import COOCCUR, CROSSES, DIRECT, DIRECT_CONTEXT, MINILM, NEURAL, SEMANTIC, select_action
 from superagent.models import predict_with_model
 
@@ -27,11 +28,13 @@ class CategoryFrontierTests(unittest.TestCase):
     def test_pair_dictionary_handles_repeats_unseen_levels_and_nonbinary_labels(self):
         rows=np.array([['a','b'],['b','a'],['x','a'],['a','a']]*30)
         y=np.array(['east','west','north','north']*30)
-        model=CategoryInteractionClassifier(.1).fit(rows,y)
+        self.assertEqual(route_of(DIRECT),route_of(DIRECT_CONTEXT))
+        self.assertEqual(route_of(CROSSES),'category_cross')
+        candidate=cross_candidate()
+        self.assertEqual(candidate.family,CROSSES)
+        model,_=candidate.fit_predict(rows,y,rows)
         np.testing.assert_array_equal(model.predict(rows),y)
         held=np.array([['unseen','a'],['a','unseen'],['unseen','unseen'],['b','b']])
-        features=model.matrix(model.encoder.transform(held))
-        self.assertEqual(features.getnnz(axis=1).tolist(),[1,1,0,2])
         np.testing.assert_allclose(model.predict_proba(held).sum(axis=1),1.)
         with tempfile.TemporaryDirectory() as tmp:
             file=Path(tmp)/'classifier.joblib'

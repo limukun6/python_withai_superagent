@@ -19,7 +19,7 @@ NEURAL = 'scratch_neural_classifier'
 COOCCUR = 'training_category_cooccurrence'
 DIRECT = 'direct_category_splits'
 DIRECT_CONTEXT = 'direct_splits_with_category_context'
-CROSSES = 'frequent_category_interactions'
+CROSSES = 'category_cross_C0.1'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
 MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation')
 
@@ -125,7 +125,8 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
         if mode=='representation':
             pairs=feature_count*(feature_count-1)//2
             if 2<=feature_count<=32 and len(x)*(feature_count+pairs)<=6000000:
-                eligible[CROSSES]=dict(C=.1)
+                from .challengers import cross_candidate
+                eligible[CROSSES]=cross_candidate().params
             if incumbent['candidate'].startswith('catboost_depth'):
                 small=sum(3<=len(np.unique(column))<=64 for column in _clean_categories(x).T)
                 if small>=1:
@@ -217,9 +218,6 @@ def candidate(kind, name, folder):
             model.set_params(one_hot_max_size=params['one_hot_max_size'])
             model.fit(_clean_categories(rows),labels,cat_features=list(range(rows.shape[1])))
             return model,model.predict(_clean_categories(search)).reshape(-1)
-        elif name==CROSSES and kind=='categorical_tabular':
-            from .category_interactions import CategoryInteractionClassifier
-            model=CategoryInteractionClassifier(params['C']).fit(rows,labels)
         elif name in (COOCCUR,DIRECT_CONTEXT,MINILM) and kind=='categorical_tabular':
             encoder=MiniLMEncoder(Path(folder)/'pretrained_runtime.json') if name==MINILM else Cooccurrence(rows,params['columns'])
             model=LevelClassifier(params).fit(rows,labels,encoder)

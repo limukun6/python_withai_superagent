@@ -25,6 +25,16 @@ MiniLM 使用公开的 `sentence-transformers/all-MiniLM-L6-v2`，冻结 BERT �
 
 `auto` 根据可用表示选择表格或文本决策方式。另有可复查的深度对照。运行参数 `--method-choice encoder-depth` 让训练反馈决定是否试用 MiniLM-L12。在 `--pretrained-config` 的 JSON 中提供 `deep_minilm_weights` 的本机目录，例如 `{"deep_minilm_weights":".superagent-weights/all-MiniLM-L12-v2"}`。联网时，选中后才获取并核对缺失文件。使用离线模式时只考虑本地已有的权重。搬移文本模型后，预测的 `--minilm-weights` 应指向该模型实际选用的 L6 或 L12 目录。逐折成绩、下载量和额外试验的取舍见[主线实验记录](mainline_iterations_zh.md)。
 
+可选的 `--method-choice encoder-mixture` 使用同一套训练反馈分配试验名额。只有任务指标为二分类准确率、L6 和 L12 都进入三名复核，且其中一个胜出时，Agent 才考虑合用两者。它从三个内部划分保存的概率学习一个权重，最小化预测真实标签的对数损失。出现在多个内部划分的同一行，合计只计一次。权重确定后，Agent 用该折全部训练行重训胜者，并保留另一个编码器在首次搜索时拟合的分类器。每折依然有 14 次分类器拟合。使用两者时，首次预测需要分别计算两个模型的向量。训练目录的 `encoder_mixture.json` 给出决策所依据的行数、权重和入围方法。
+
+搬移组合模型时，复制 `selected_model.joblib`、`task_spec.json` 和 `final_selection.json`，然后将两个公开权重目录传给预测入口。
+
+```sh
+python -m superagent predict "/path/to/new-input.zip" --run-dir "/path/to/moved-model" \
+  --minilm-weights "/path/to/all-MiniLM-L6-v2" \
+  --deep-minilm-weights "/path/to/all-MiniLM-L12-v2" --output "/path/to/predictions.csv"
+```
+
 ## 复核与分工
 
 `method_decision_*.json` 保存每个额外试验开始前的可行方法、实际观测和选择原因。`trials.json`、`confirmation.json` 和 `final_selection.json` 可以连接实际训练配置、入围理由和重训产物。`downstream_usage.jsonl` 记录 MiniLM 的前向计算，`model_loads.jsonl` 记录下载和校验，`llm_usage.jsonl` 保留原有的 Qwen 账本凭据。

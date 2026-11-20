@@ -1,7 +1,9 @@
 """Audit a deeper encoder's request, local installation, observed token lengths and realized decisions."""
 import argparse
+from collections import Counter
 import csv
 import io
+import json
 from pathlib import Path
 import shutil
 import zipfile
@@ -17,7 +19,7 @@ from tools.pretrained_study import read, train_only, write
 from tools.submission_smoke import command
 
 
-def portable_predictions(source, weights, destination):
+def portable_predictions(source, weights, destination, deep_weights=None):
     destination.mkdir(parents=True, exist_ok=False)
     moved=destination/'relocated'
     moved.mkdir()
@@ -36,20 +38,38 @@ def portable_predictions(source, weights, destination):
     with zipfile.ZipFile(package,'w') as archive:archive.writestr('test.csv',content.getvalue())
     usage={}
     checksums=[]
+    per_model={}
+    flags=['--minilm-weights',weights]
+    if deep_weights is not None:
+        flags.extend(['--deep-minilm-weights',deep_weights])
+    def model_tokens(output):
+        ledger=destination/(output.name+'.features')/'downstream_usage.jsonl'
+        counts=Counter()
+        if ledger.exists():
+            for line in ledger.read_text().splitlines():
+                event=json.loads(line)
+                counts[event['model']]+=event['input_tokens']
+        return counts
     for label,model,filename in (('original',source,'original.csv'),('relocated',moved,'relocated.csv'),('cached',moved,'relocated.csv')):
         output=destination/filename
-        command(destination/(label+'.log'),'predict',package,'--run-dir',model,'--minilm-weights',weights,'--output',output)
+        before=model_tokens(output)
+        command(destination/(label+'.log'),'predict',package,'--run-dir',model,*flags,'--output',output)
         manifest=read(destination/'prediction_manifest.json')
         expect(manifest['prediction_count']==len(rows) and not manifest['test_labels_read'],'Synthetic prediction manifest changed')
         usage[label]=manifest['prediction_feature_usage']
+        per_model[label]=dict(model_tokens(output)-before)
+        expect(sum(per_model[label].values())==usage[label]['input_tokens'],'Model-level token counts differ')
         checksums.append(digest(output))
     expect(len(set(checksums))==1 and usage['original']['input_tokens']==usage['relocated']['input_tokens']>0
            and usage['cached']['input_tokens']==0,'Moved or cached prediction differs')
+    if deep_weights is not None:
+        expect(len(per_model['original'])==2 and per_model['original']==per_model['relocated'],
+               'Both components must run on new examples after relocation')
     with output.open() as f:predictions=list(csv.DictReader(f))
     expect([int(row['row_id']) for row in predictions]==list(range(len(rows))),'Synthetic rows changed order')
     flipped=sum(a['prediction']!=b['prediction'] for a,b in zip(predictions[::2],predictions[1::2],strict=True))
     return dict(rows=len(rows),swapped_pairs=len(subjects),opposite_predictions=flipped,prediction_sha256=checksums[0],
-                model_sha256=digest(moved/'selected_model.joblib'),usage=usage)
+                model_sha256=digest(moved/'selected_model.joblib'),usage=usage,input_tokens_by_model=per_model)
 
 
 def main():

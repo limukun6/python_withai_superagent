@@ -20,8 +20,10 @@ COOCCUR = 'training_category_cooccurrence'
 DIRECT = 'direct_category_splits'
 DIRECT_CONTEXT = 'direct_splits_with_category_context'
 CROSSES = 'category_cross_C0.1'
+TYPED = 'typed_category_features'
+TYPED_DIRECT = 'typed_features_with_direct_splits'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values')
 
 
 def select_action(evidence, feasible, mode, used):
@@ -37,11 +39,21 @@ def select_action(evidence, feasible, mode, used):
     else:
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
-        pair_aware = mode in ('paired','context-control','representation') and evidence.get('primary_metric')=='accuracy'
-        if mode=='representation' and not used and evidence['kind']=='categorical_tabular' and (DIRECT in feasible or CROSSES in feasible):
+        repr_mode=mode in ('representation','typed-values')
+        pair_aware = mode in ('paired','context-control','representation','typed-values') and evidence.get('primary_metric')=='accuracy'
+        if mode=='typed-values' and not used and TYPED in feasible:
+            priorities=[TYPED]
+            reason='The table has repeated values with a consistent quantity or clock scale. Test their numerical features on the leading classifier.'
+        elif mode=='typed-values' and used and used[-1]==TYPED:
+            a,b=evidence['corrected'],evidence['lost']
+            supported=pair_aware and a+b>=8 and a-b>=math.sqrt(a+b)
+            priorities=[TYPED_DIRECT,DIRECT,CROSSES,COOCCUR] if supported else [DIRECT,CROSSES,COOCCUR]
+            reason=('The numerical features show a paired gain. Retain them while testing direct splits.' if supported else
+                    'The numerical feature gain was inconclusive. Test a different categorical representation.')
+        elif repr_mode and not used and evidence['kind']=='categorical_tabular' and (DIRECT in feasible or CROSSES in feasible):
             priorities=[DIRECT,CROSSES]
             reason='The original models share errors on a bounded categorical table. Test a different way to represent repeated categories.'
-        elif mode=='representation' and used and used[-1]==DIRECT:
+        elif repr_mode and used and used[-1]==DIRECT:
             corrected,lost=evidence['corrected'],evidence['lost']
             supported=(pair_aware and corrected+lost>=8 and corrected-lost>=math.sqrt(corrected+lost))
             priorities=[DIRECT_CONTEXT,CROSSES] if supported else [CROSSES,COOCCUR]
@@ -122,7 +134,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     rare_fraction, short_latin_share, low_errors = 0., 0., 0
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
-        if mode=='representation':
+        if mode in ('representation','typed-values'):
             pairs=feature_count*(feature_count-1)//2
             if 2<=feature_count<=32 and len(x)*(feature_count+pairs)<=6000000:
                 from .challengers import cross_candidate
@@ -131,6 +143,14 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
                 small=sum(3<=len(np.unique(column))<=64 for column in _clean_categories(x).T)
                 if small>=1:
                     eligible[DIRECT]=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],one_hot_max_size=64)
+                if mode=='typed-values':
+                    from .typed_categories import column_types
+                    typed=column_types(x)
+                    if typed:
+                        params=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],
+                                    search_column_types={str(i):u for i,u in typed.items()})
+                        eligible[TYPED]=params
+                        if DIRECT in eligible:eligible[TYPED_DIRECT]=dict(params,one_hot_max_size=64)
         mask=np.zeros(len(labels),bool)
         for i,counts in cols:
             median=np.median(list(counts.values()))
@@ -211,6 +231,9 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
+        elif name in (TYPED,TYPED_DIRECT) and kind=='categorical_tabular':
+            from .typed_categories import TypedCategoryClassifier
+            model=TypedCategoryClassifier(params).fit(rows,labels)
         elif name==DIRECT and kind=='categorical_tabular':
             from .models import _tabular_catboost
             base=params['backbone_params']

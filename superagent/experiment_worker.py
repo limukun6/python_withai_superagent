@@ -64,9 +64,9 @@ def main() -> None:
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
     score_evidence={}
-    from .method_choice import TEXT_DEEP, TEXT_MINILM
+    from .method_choice import MIXTURE_POLICIES, TEXT_DEEP, TEXT_MINILM
     record_encoder=(candidate_id in (TEXT_DEEP,TEXT_MINILM) and (folder/'method_policy.json').is_file()
-                    and json.loads((folder/'method_policy.json').read_text()).get('mode')=='encoder-mixture')
+                    and json.loads((folder/'method_policy.json').read_text()).get('mode') in MIXTURE_POLICIES)
     if metric.requires_scores or record_encoder:
         classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
         score_evidence={'search_scores':scores,'score_classes':classes}

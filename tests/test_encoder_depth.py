@@ -24,3 +24,17 @@ class EncoderDepthTests(unittest.TestCase):
         self.assertIsNone(select_action(ev|{'residual_shared_errors':3},feasible,'encoder-depth',[TEXT_MINILM])[0])
         self.assertEqual(select_action(ev|{'corrected':8},feasible,'encoder-depth-control',[TEXT_MINILM])[0],TEXT_DEEP)
         self.assertIsNone(select_action(ev,{TEXT_MINILM},'encoder-depth-control',[TEXT_MINILM])[0])
+
+    def test_wider_mixture_requires_competitive_accuracy_and_residual_errors(self):
+        evidence=dict(kind='pair_text',semantic='s',shared_errors=35,required_shared_errors=10,
+                      short_latin_share=0.,low_support_shared_errors=0,primary_metric='accuracy',
+                      corrected=8,lost=9,residual_shared_errors=30,search_rows=400)
+        feasible={TEXT_DEEP,TEXT_MINILM}
+        def decide(mode,**changes):
+            return select_action(evidence|changes,feasible,mode,[TEXT_MINILM])[0]
+        self.assertEqual(decide('encoder-mixture-wide'),TEXT_DEEP)
+        self.assertIsNone(decide('encoder-mixture'))
+        self.assertIsNone(decide('encoder-mixture-wide',corrected=1,lost=12))
+        self.assertIsNone(decide('encoder-mixture-wide',residual_shared_errors=4))
+        self.assertIsNone(decide('encoder-mixture-wide',primary_metric='macro_f1'))
+        self.assertIsNone(select_action(evidence,{TEXT_MINILM},'encoder-mixture-wide',[TEXT_MINILM])[0])

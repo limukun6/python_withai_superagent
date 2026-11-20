@@ -39,11 +39,13 @@ PAIR_ITEM = 'minilm_single_item_interactions'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
 TEXT_REGULARIZED = 'minilm_text_feedback_regularization'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth','encoder-depth-control','text-regularization','encoder-mixture')
+MIXTURE_POLICIES = ('encoder-mixture', 'encoder-mixture-wide')
+DEPTH_POLICIES = ('encoder-depth', 'encoder-depth-control', *MIXTURE_POLICIES)
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','text-regularization',*DEPTH_POLICIES)
 
 
 def resolved_mode(mode, feasible):
-    if mode=='encoder-mixture':
+    if mode in MIXTURE_POLICIES:
         return 'encoder-depth' if TEXT_MINILM in feasible else 'paired'
     if mode != 'auto':
         return mode
@@ -52,6 +54,7 @@ def resolved_mode(mode, feasible):
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
+    relaxed_depth = mode == 'encoder-mixture-wide'
     mode=resolved_mode(mode,feasible)
     if mode=='encoder-depth-control' and TEXT_MINILM in feasible:
         priorities=[TEXT_MINILM,TEXT_DEEP]
@@ -86,11 +89,15 @@ def select_action(evidence, feasible, mode, used):
                 return None,'Search confidence gives no clear regularization direction. Continue ordinary search.'
         elif mode=='encoder-depth' and used and used[-1]==TEXT_MINILM:
             gain,loss=evidence['corrected'],evidence['lost']
-            justified=(evidence['primary_metric']=='accuracy' and gain+loss>=8 and gain-loss>=math.sqrt(gain+loss)
+            boundary = math.sqrt(gain+loss)
+            minimum_gain = -boundary if relaxed_depth else boundary
+            justified=(evidence['primary_metric']=='accuracy' and gain+loss>=8 and gain-loss>=minimum_gain
                        and evidence['residual_shared_errors']>=max(12,.05*evidence['search_rows']))
             if justified and TEXT_DEEP in feasible:
                 priorities=[TEXT_DEEP]
                 reason='The smaller frozen model gained paired decisions and shared errors remain. Test deeper public weights with the same classifier within the estimated trial time.'
+                if relaxed_depth:
+                    reason='The smaller encoder is competitive on paired decisions and both models still miss shared rows. Test deeper public weights within the measured time allowance.'
             else:
                 return None,'Evidence or the time and weight allowance does not justify a deeper encoder. Continue ordinary search.'
         elif mode in ('opponent','item-control') and used and used[-1]==TEXT_MINILM and PAIR_OPPONENT in feasible:
@@ -235,7 +242,7 @@ def weights_available(config, key, files):
 
 def plan(kind, history, folder, payload, config, mode, protected_count=5):
     requested_mode=mode
-    if mode=='encoder-mixture':
+    if mode in MIXTURE_POLICIES:
         mode='encoder-depth' if kind in ('single_text','pair_text') else 'paired'
     originals = shortlist(history[:protected_count],protected_count)
     if not originals:
@@ -401,8 +408,10 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     result=dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
                 protected_incumbent=incumbent['candidate'],mode=requested_mode)
-    if requested_mode in ('auto','encoder-mixture'):
+    if requested_mode == 'auto' or requested_mode in MIXTURE_POLICIES:
         result['resolved_mode']=resolved_mode(requested_mode,eligible)
+    if requested_mode in MIXTURE_POLICIES and result['resolved_mode']=='encoder-depth':
+        result['depth_gain_standard_errors_required'] = -1 if requested_mode=='encoder-mixture-wide' else 1
     return result
 
 

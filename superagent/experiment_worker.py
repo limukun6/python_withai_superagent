@@ -26,17 +26,18 @@ def main() -> None:
     registry_sha256=None;origin='static'
     from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
     from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
-    from .method_choice import (NEURAL, COOCCUR, MINILM, DIRECT, DIRECT_CONTEXT, TYPED, TYPED_DIRECT,
-                                RESIDUAL, RESIDUAL_DIRECT, PERMUTED_RESIDUAL, MARGINAL, HORIZON, SHRINKAGE, HIST, HIST_ADJUSTED, candidate as method_candidate)
-    if candidate_id in (NEURAL,COOCCUR,MINILM,DIRECT,DIRECT_CONTEXT,TYPED,TYPED_DIRECT,RESIDUAL,RESIDUAL_DIRECT,PERMUTED_RESIDUAL,MARGINAL,HORIZON,SHRINKAGE,HIST,HIST_ADJUSTED):
-        candidate=method_candidate(payload['kind'],candidate_id,Path(output_path).parent)
-        origin='frozen_downstream_encoder' if candidate_id==MINILM else 'training_only_method'
-    elif candidate_id in (SEMANTIC, PERMUTED):
+    from .method_choice import CROSSES, MINILM, TEXT_MINILM, TEXT_MINILM_ONLY, candidate as method_candidate
+    folder = Path(output_path).parent
+    if candidate_id in (SEMANTIC, PERMUTED):
         candidate = level_candidate(payload["kind"], candidate_id, Path(output_path).parent / 'pretrained_runtime.json')
         origin = 'verified_pretrained'
     elif candidate_id == CANDIDATE:
         candidate = contextual_candidate(payload["kind"], Path(output_path).parent / 'pretrained_runtime.json')
         origin = 'verified_pretrained'
+    elif (candidate_id != CROSSES and Path(candidate_id).name == candidate_id
+          and (folder / f'method_{candidate_id}.json').is_file()):
+        candidate = method_candidate(payload['kind'], candidate_id, folder)
+        origin = 'frozen_downstream_encoder' if candidate_id in (MINILM, TEXT_MINILM, TEXT_MINILM_ONLY) else 'training_only_method'
     elif len(sys.argv)==5:
         from .candidate_refinement import resolve_registered
         registry_bytes=Path(sys.argv[4]).read_bytes();document=json.loads(registry_bytes)

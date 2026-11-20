@@ -64,7 +64,8 @@ class BenchmarkTests(unittest.TestCase):
         directory = self.root / "run"
         def fake_train(payload_path, candidate, output, timeout):
             payload = __import__("joblib").load(payload_path)
-            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search",'metric_spec'})
+            self.assertEqual(set(payload), {"kind", "X_train", "y_train", "X_search", "y_search",'metric_spec','pair_semantics'})
+            self.assertIsNone(payload['pair_semantics'])
             self.assertEqual(payload['metric_spec'],{'name':'accuracy','labels':[0,1],'direction':'maximize'})
             self.assertFalse((directory / "selection.json").exists())
             model = DummyClassifier().fit(np.zeros((10, 1)), np.tile([0, 1], 5))

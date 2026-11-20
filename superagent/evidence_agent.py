@@ -35,6 +35,7 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    if candidate in ('minilm_text_with_lexical_features','minilm_text_dense_only'):return 'frozen_sentence_features'
     if candidate in ('cross_fitted_category_pair_effects','cross_fitted_category_single_effects'):return 'grouped_category_effects'
     if candidate in ('native_histogram_categories','feedback_histogram_categories'):return 'histogram_categories'
     if candidate in ('feedback_boosting_iterations','boosting_smaller_steps'):return 'boosting_training_curve'

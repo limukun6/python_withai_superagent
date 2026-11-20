@@ -216,7 +216,7 @@ def _run(args):
 
 
 def _predict(args):
-    destination=create_predictions(args.task_package,args.run_dir,args.output)
+    destination=create_predictions(args.task_package,args.run_dir,args.output,getattr(args,'minilm_weights',None))
     print(f'Predictions written to: {destination}')
     print('Prediction uses declared features; no target is used for evaluation.')
     return 0
@@ -275,6 +275,7 @@ def build_parser():
     predict.add_argument('task_package')
     predict.add_argument('--run-dir',required=True)
     predict.add_argument('--output',required=True)
+    predict.add_argument('--minilm-weights',help='Pinned local MiniLM files for a relocated frozen text classifier')
     predict.set_defaults(handler=_predict)
     initialize=commands.add_parser('budget-init',help='Import verified prior usage or explicitly initialize a new project; never overwrite')
     initialize.add_argument('ledger')

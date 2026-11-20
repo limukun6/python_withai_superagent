@@ -32,13 +32,18 @@ HIST = 'native_histogram_categories'
 HIST_ADJUSTED = 'feedback_histogram_categories'
 PAIR_POSTERIOR = 'cross_fitted_category_pair_effects'
 SINGLE_POSTERIOR = 'cross_fitted_category_single_effects'
+TEXT_MINILM = 'minilm_text_with_lexical_features'
+TEXT_MINILM_ONLY = 'minilm_text_dense_only'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control')
 
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
-    if mode=='anchored-control' and evidence['kind']=='categorical_tabular' and COOCCUR in feasible:
+    if mode=='text-encoder-control' and TEXT_MINILM in feasible:
+        priorities=[TEXT_MINILM,TEXT_MINILM_ONLY]
+        reason='The fixed text control compares lexical plus frozen sentence features and frozen features alone.'
+    elif mode=='anchored-control' and evidence['kind']=='categorical_tabular' and COOCCUR in feasible:
         priorities=[COOCCUR,DIRECT]
         reason='The matched control tests training-only co-occurrence first, then direct category splits.'
     elif mode=='distribution-control' and evidence['kind']=='categorical_tabular' and PERMUTED_RESIDUAL in feasible:
@@ -57,7 +62,17 @@ def select_action(evidence, feasible, mode, used):
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
         pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control','posteriors')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='posteriors' and not used and PAIR_POSTERIOR in feasible:
+        if mode=='text-encoder' and not used and TEXT_MINILM in feasible:
+            priorities=[TEXT_MINILM]
+            reason='Several text classifiers miss the same rows and the available frozen encoder matches the observed writing system. Test sentence features beside word and character features.'
+        elif mode=='text-encoder' and used and used[-1]==TEXT_MINILM:
+            gain,loss=evidence['corrected'],evidence['lost']
+            supported=evidence['primary_metric']=='accuracy' and gain+loss>=8 and gain-loss>=math.sqrt(gain+loss)
+            if not supported:
+                return None, 'The hybrid lacks a clear paired accuracy gain. Retain it for confirmation and spend the last trial on an ordinary alternative.'
+            priorities=[TEXT_MINILM_ONLY]
+            reason='The hybrid improves paired predictions. Test how much a classifier using sentence features alone can recover.'
+        elif mode=='posteriors' and not used and PAIR_POSTERIOR in feasible:
             priorities=[PAIR_POSTERIOR]
             reason='The available training groups support repeated category combinations. Test label effects estimated exclusively from other groups.'
         elif mode=='posteriors' and used and used[-1]==PAIR_POSTERIOR:
@@ -197,6 +212,16 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     transfer = dict(decision='skip',reason='No compatible Qwen input and weights.')
     eligible = {}
     encoder_installed=all(importlib.util.find_spec(name) is not None for name in ('torch','transformers','tokenizers','safetensors'))
+    text_latin_share=None
+    if mode in ('text-encoder','text-encoder-control') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
+        sampled=[x[i] for i in np.linspace(0,len(x)-1,min(256,len(x)),dtype=int)]
+        texts=[s for pair in sampled for s in pair] if kind=='pair_text' else sampled
+        letters=[c for s in texts for c in str(s)[:512] if c.isalpha()]
+        text_latin_share=sum(c.isascii() for c in letters)/max(1,len(letters))
+        if text_latin_share>=.8:
+            base=dict(model=MINI_MODEL,C=.3,dimensions=384,max_tokens=256)
+            eligible[TEXT_MINILM]=dict(base,dense_only=False)
+            eligible[TEXT_MINILM_ONLY]=dict(base,dense_only=True)
     if kind in ('pair_text','single_text') and encoder_installed and config and config.get('weights'):
         transfer=consider(kind,history[:protected_count],folder,labels,config,train_features=x,search_features=held)
         if transfer['decision']=='try': eligible[semantic]=PARAMS
@@ -308,6 +333,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             short_latin_share=short_latin_share,low_support_shared_errors=low_errors,primary_metric=incumbent['primary_metric'],
             corrected=corrected,lost=lost,discordant=corrected+lost,search_rows=len(labels))
     if curve is not None:ev['boosting_curve']=curve
+    if text_latin_share is not None:ev['sampled_ascii_letter_fraction']=text_latin_share
     name,reason=select_action(ev,eligible,mode,used)
     return dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
@@ -344,6 +370,9 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
+        elif name in (TEXT_MINILM,TEXT_MINILM_ONLY) and kind in ('pair_text','single_text'):
+            from .minilm_features import MiniLMTextClassifier
+            model=MiniLMTextClassifier(kind,Path(folder)/'pretrained_runtime.json',params['dense_only']).fit(rows,labels)
         elif name in (PAIR_POSTERIOR,SINGLE_POSTERIOR) and kind=='categorical_tabular':
             from .category_posteriors import PosteriorCategoryClassifier
             model=PosteriorCategoryClassifier(params).fit(rows,labels)

@@ -15,7 +15,7 @@ from .models import predict_with_model,probability_with_model
 from .metrics import MetricSpec
 
 
-def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path) -> Path:
+def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path, minilm_weights=None) -> Path:
     run_path = Path(run_dir).resolve()
     selection = json.loads((run_path / "final_selection.json").read_text(encoding="utf-8"))
     specification = json.loads((run_path / "task_spec.json").read_text(encoding="utf-8"))
@@ -44,11 +44,22 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         model = model["model"]
     elif model_format != "bare_model":
         raise ValueError(f"Unsupported model format: {model_format}")
+    destination = Path(output_path).resolve()
+    feature_dir = None
+    from .minilm_features import MiniLMTextClassifier, feature_usage
+    if isinstance(model, MiniLMTextClassifier):
+        if minilm_weights is None:
+            config = run_path / 'pretrained_runtime.json'
+            if not config.exists():
+                raise ValueError('Supply --minilm-weights for this frozen text classifier')
+            minilm_weights = json.loads(config.read_text())['minilm_weights']
+        feature_dir = destination.parent / (destination.name + '.features')
+        model.bind_prediction_weights(minilm_weights, feature_dir)
+        before = feature_usage(feature_dir)
     features = load_prediction_features(task_package, kind_to_loader[kind], specification)
     predictions = predict_with_model(kind_to_loader[kind], model, features)
     scores=classes=None
     if specification.get('metric','accuracy')=='roc_auc':classes,scores=probability_with_model(kind_to_loader[kind],model,features)
-    destination = Path(output_path).resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
@@ -63,6 +74,9 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         "prediction_file": str(destination),
         'score_class_order':classes.tolist() if classes is not None else None,
     }
+    if feature_dir is not None:
+        after = feature_usage(feature_dir)
+        manifest['prediction_feature_usage'] = {k:after[k]-before[k] for k in after}
     (destination.parent / "prediction_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
     )

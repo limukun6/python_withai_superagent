@@ -5,7 +5,7 @@ import time
 
 import numpy as np
 
-from .pretrained_choice import Encoder, acquire
+from .pretrained_choice import ContextClassifier, Encoder, acquire
 from .task_budget import now
 
 MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
@@ -68,3 +68,38 @@ class MiniLMEncoder(Encoder):
                 input_tokens=n,output_tokens=0,padded_positions=matrix.numel()-n,device='cpu',seconds=time.monotonic()-start,
                 remote_calls=0,api_rmb=0.0))+'\n')
         return vectors
+
+
+class MiniLMTextClassifier(ContextClassifier):
+    encoder_class = MiniLMEncoder
+
+    def __init__(self, kind, runtime, dense_only):
+        super().__init__(kind, runtime)
+        self.dense_only = dense_only
+
+    def features(self, rows, fit=False):
+        if self.dense_only:
+            from scipy.sparse import csr_matrix
+            return csr_matrix(self.dense_features(rows))
+        return super().features(rows, fit)
+
+    def bind_prediction_weights(self, weights, directory):
+        directory = Path(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        runtime = directory / 'pretrained_runtime.json'
+        settings = dict(minilm_weights=str(Path(weights).resolve()))
+        if runtime.exists() and json.loads(runtime.read_text()) != settings:
+            raise ValueError('Prediction cache belongs to a different encoder configuration')
+        if not runtime.exists():
+            runtime.write_text(json.dumps(settings))
+        self.runtime = str(runtime)
+        self.encoder = None
+
+
+def feature_usage(directory):
+    log = Path(directory) / 'downstream_usage.jsonl'
+    events = [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
+    if any(e['model'] != MODEL or e['remote_calls'] != 0 or e['api_rmb'] != 0 for e in events):
+        raise ValueError('Unexpected event in frozen feature ledger')
+    return dict(batches=len(events), input_tokens=sum(e['input_tokens'] for e in events),
+                output_tokens=0, api_rmb=0, remote_calls=0)

@@ -14,6 +14,7 @@ from superagent.benchmark import run_one
 from superagent.confirmation import shortlist
 from superagent.data import DevelopmentTask, TrainingTask, load_training_task
 from superagent.method_choice import MODES
+from superagent.minilm_features import MiniLMTextClassifier,feature_usage
 from superagent.models import predict_with_model
 from superagent.pretrained_choice import digest
 from superagent.splits import effective_grouping, grouped_partition, overlap_audit, sample_groups, take
@@ -172,7 +173,15 @@ def main():
             else:initial=first
             bundle=joblib.load(folder/'selected_model.joblib')
             expect(bundle['candidate']==rec['winner'],'Winner differs from saved bundle')
+            feature_dir=None
+            if isinstance(bundle['model'],MiniLMTextClassifier):
+                feature_dir=folder.parent/(arm+'_prediction_features')
+                bundle['model'].bind_prediction_weights(args.minilm_weights,feature_dir)
+                before=feature_usage(feature_dir)
             pred[arm]=predict_with_model(whole.kind,bundle['model'],x)
+            if feature_dir is not None:
+                after=feature_usage(feature_dir)
+                rec['prediction_features_this_pass']={k:after[k]-before[k] for k in after}
             if not folder.is_relative_to(root):
                 saved_predictions=folder.parent/'outer_predictions.json'
                 if saved_predictions.exists():

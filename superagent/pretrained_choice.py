@@ -240,6 +240,8 @@ class Encoder:
 
 
 class ContextClassifier:
+    encoder_class = Encoder
+
     def __init__(self, kind, runtime):
         self.kind, self.runtime = kind, str(runtime)
         self.encoder = None
@@ -247,26 +249,30 @@ class ContextClassifier:
     def __getstate__(self):
         return {**self.__dict__, 'encoder': None}
 
+    def dense_features(self, rows):
+        if self.encoder is None:
+            self.encoder = self.encoder_class(self.runtime)
+        if self.kind == 'pair_text':
+            combined = self.encoder.encode([text for pair in rows for text in pair])
+            return combined[::2]-combined[1::2]
+        return self.encoder.encode(rows)
+
     def features(self, rows, fit=False):
         from scipy.sparse import csr_matrix, hstack
         from sklearn.feature_extraction.text import TfidfVectorizer
         from sklearn.preprocessing import StandardScaler
         from .models import _difference_features, style_differences
-        if self.encoder is None:
-            self.encoder = Encoder(self.runtime)
+        dense = self.dense_features(rows)
         if fit:
             self.word = TfidfVectorizer(ngram_range=(1,2), min_df=2, sublinear_tf=True, max_features=40_000)
             self.char = TfidfVectorizer(analyzer='char_wb',ngram_range=(3,5), min_df=2, sublinear_tf=True, max_features=40_000)
         if self.kind == 'pair_text':
-            combined = self.encoder.encode([text for pair in rows for text in pair])
-            dense = combined[::2]-combined[1::2]
             styles = style_differences(rows)
             if fit:
                 self.scaler = StandardScaler(with_mean=False).fit(np.vstack([styles, -styles]))
             matrices = [_difference_features(v, rows, fit) for v in (self.word,self.char)]
             matrices.append(csr_matrix(self.scaler.transform(styles)/np.sqrt(styles.shape[1])))
         else:
-            dense = self.encoder.encode(rows)
             matrices = [(v.fit_transform(rows) if fit else v.transform(rows)) for v in (self.word,self.char)]
         return hstack([*matrices, csr_matrix(dense)]).tocsr()
 

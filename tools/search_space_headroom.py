@@ -13,6 +13,8 @@ from superagent.models import predict_with_model
 from superagent.pretrained_choice import digest
 from superagent.splits import take
 from tools.frontier_study import expect, receipt
+from tools.finalist_headroom import feature_weights, predict_finalist, scoring_cache
+from superagent.minilm_features import feature_usage
 from tools.pretrained_study import read, train_only, write
 from tools.soft_vote_diagnostic import freeze_file
 
@@ -22,6 +24,7 @@ def main():
     for arg in ("archive","reference","finalists","output"):
         parser.add_argument("--"+arg,required=True,type=Path)
     parser.add_argument("--arm",required=True)
+    parser.add_argument("--minilm-weights",type=Path)
     parser.add_argument("--freeze",action="store_true")
     args=parser.parse_args()
     os.environ["SUPERAGENT_OFFLINE"]="1"
@@ -48,6 +51,7 @@ def main():
     src=Path(__file__).resolve().parents[1]
     freeze_file(root/"protocol.json",dict(reference_sha256=digest(args.reference/"protocol.json"),
                 finalist_protocol_sha256=digest(args.finalists/"protocol.json"),records=records,arm=args.arm,
+                scoring_feature_weights=feature_weights(args.minilm_weights),
                 source={str(p.relative_to(src)):digest(p) for p in [Path(__file__),*sorted((src/'superagent').glob('*.py'))]},
                 rule="Refit all four candidates outside the original shortlist on exactly the same fitting rows. The best whole model per fold after opening its outer labels is a retrospective upper bound. Ties by candidate name. No production policy may use this oracle."))
     if args.freeze:return
@@ -90,7 +94,9 @@ def main():
             expect(digest(path)==rec["previous_full"][name],"Shortlisted model changed")
             models[name]=path
         models.update({n:dest/f"extra_{rec['trials'][n]}.joblib" for n in rec["extra"]})
-        preds={n:predict_with_model(task.kind,joblib.load(p)["model"],x) for n,p in models.items()}
+        cache=(scoring_cache(dest/'diagnostic_prediction_features',[old/'diagnostic_prediction_features',source.parent/(args.arm+'_prediction_features')])
+               if args.minilm_weights else None)
+        preds={n:predict_finalist(task.kind,joblib.load(p)["model"],x,args.minilm_weights,cache) for n,p in models.items()}
         before=read(old/"outer_predictions.json")
         for n in rec["shortlist"]:np.testing.assert_array_equal(before["full_finalists"][n],preds[n])
         scores={n:int((v==y).sum()) for n,v in preds.items()}
@@ -98,8 +104,10 @@ def main():
         names=dict(incumbent=winner,oracle_three=rank(rec["shortlist"]),oracle_seven=rank(scores))
         write(dest/"outer_predictions.json",dict(rows=ids,truth=y.tolist(),**{k:preds[n].tolist() for k,n in names.items()}))
         folds.append(dict(rows=len(ids),names=names,all_seven_correct=scores,correct={k:scores[n] for k,n in names.items()}))
+    usages=[feature_usage(root/f'fold_{i}'/'diagnostic_prediction_features') for i in range(len(folds))]
     result=dict(rows=sum(f["rows"] for f in folds),folds=folds,correct={k:sum(f["correct"][k] for f in folds) for k in folds[0]["correct"]},
-                additional_diagnostic_fits=4*len(folds),api_calls=0,additional_encoder_forwards=0,training_members=opened)
+                additional_diagnostic_fits=4*len(folds),api_calls=0,additional_encoder_forwards=sum(u['batches'] for u in usages),
+                additional_minilm_input_tokens=sum(u['input_tokens'] for u in usages),training_members=opened)
     write(root/"results.json",result)
     print(result["correct"],flush=True)
 

@@ -62,7 +62,7 @@ def main():
         protocol=read(path.parent/"protocol.json")
         if "locations" not in protocol:continue
         result=read(path)
-        for row,fold in zip(protocol["locations"],result["folds"],strict=True):
+        for row in protocol["locations"]:
             for arm,directory in row.items():
                 source=Path(directory)
                 if arm=="classic" or source in seen:continue
@@ -72,7 +72,8 @@ def main():
                     stats[arm]["verified_decisions"]+=1
                     if "lower" in decision:
                         stats[arm]["accuracy_decisions_tested"]+=1
-                        stats[arm]["same_score_different_action"]+=int(decision["lower"]!=decision["upper"])
+                        variants={decision[key] for key in ("actual","lower","upper")}
+                        stats[arm]["same_score_different_action"]+=int(len(variants)>1)
                         stats[arm]["actual_differs_from_min_disagreement"]+=int(decision["actual"]!=decision["lower"])
                         stats[arm]["actual_differs_from_max_disagreement"]+=int(decision["actual"]!=decision["upper"])
         for adaptive,fixed in (("paired","context-control"),("anchored","anchored-control"),("text-encoder","text-encoder-control")):

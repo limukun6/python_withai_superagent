@@ -12,6 +12,7 @@ import numpy as np
 from superagent.data import load_training_task
 from superagent.models import predict_with_model
 from superagent.pretrained_choice import digest
+from superagent.pricing import resolve_pricing
 from superagent.splits import effective_grouping,sample_groups,take
 from tools.frontier_study import expect,receipt
 from tools.pretrained_study import read,write,train_only
@@ -29,7 +30,7 @@ def paired_summary(difference,groups):
 
 def resource_totals(root,ledger):
     complete=partial=finished_fits=partial_fits=local_tokens=batches=mini_tokens=mini_batches=api_calls=0
-    request_ids=set()
+    event_prices={}
     entries=[]
     for path in sorted(root.glob('*/fold_*/*/trials.json')):
         folder=path.parent
@@ -37,12 +38,14 @@ def resource_totals(root,ledger):
         if (folder/'frontier_receipt.json').exists():
             rec=receipt(folder)
             complete+=1;finished_fits+=rec['fits'];api_calls+=rec['calls']
+            expect(rec['api_rmb']==0,'Unexpected service debit')
         else:
             trials=read(path)
             if summary.exists():
                 run=read(summary)
                 fits=run['classifier_fit_accounting']['completed_classifier_fits']
                 api_calls+=run['llm_calls']
+                expect(run['actual_cost_rmb']==0,'Unexpected service debit on unfinished run')
             else:
                 fits=sum(t.get('classifier_fits',0) for t in trials if t['status']=='completed')
                 if (folder/'confirmation.json').exists():
@@ -54,17 +57,21 @@ def resource_totals(root,ledger):
             for line in file.read_text().splitlines():
                 event=json.loads(line)
                 if event['event']=='local_forward':
-                    expect(event['request_id'] not in request_ids and event['output_tokens']==0,'Reused or unexpected local event')
-                    request_ids.add(event['request_id']);local_tokens+=event['input_tokens'];batches+=1
+                    key=event['request_id']
+                    price=resolve_pricing(event['model']).course_cost(event['input_tokens'],event['output_tokens'])
+                    expect(key not in event_prices and event['output_tokens']==0 and event['actual_cost_rmb']==0
+                           and abs(event['course_cost_rmb']-price)<1e-10,'Reused or unexpected local event')
+                    event_prices[key]=round(price*1e9)
+                    local_tokens+=event['input_tokens'];batches+=1
                 elif event['event']=='frozen_feature_forward':
                     expect(event['remote_calls']==event['api_rmb']==0,'Unexpected MiniLM service charge')
                     mini_tokens+=event['input_tokens'];mini_batches+=1
     with sqlite3.connect(f'file:{ledger.resolve()}?mode=ro',uri=True) as conn:
         rows=conn.execute("SELECT id,status,course_units,json_extract(payload,'$.run_id') FROM requests")
         known=[(key,status,cost) for key,status,cost,run in rows if run and Path(run).resolve().is_relative_to(root)]
-    expect({k for k,_,_ in known}==request_ids and all(s=='known' for _,s,_ in known),'Usage log and ledger differ')
+    expect({k:c for k,_,c in known}==event_prices and all(s=='known' for _,s,_ in known),'Usage log and ledger differ')
     rmb=sum(c for _,_,c in known)/1e9
-    expect(abs(rmb-local_tokens*5/1e6)<1e-9 and api_calls==0,'Unexpected inference or token price')
+    expect(api_calls==0,'Unexpected generation request')
     inference_tokens=inference_batches=0
     for log in root.glob('*/fold_*/*_prediction_features/downstream_usage.jsonl'):
         for line in log.read_text().splitlines():
@@ -209,6 +216,15 @@ def main():
                              **paired_summary(avg,tasks[archive][1][indices])))
     resources=resource_totals(root,args.ledger)
     resources['extra_diagnostic_fits']=sum(r.get('diagnostic_fits',r.get('additional_diagnostic_fits',0)) for r in diagnostics.values())
+    device_selections={}
+    for file in root.glob('*/fold_*/*/trials.json'):
+        for trial in read(file):
+            metadata=trial.get('training_metadata') or {}
+            choice=metadata.get('device_decision')
+            if choice:
+                device=choice['selected']
+                device_selections[device]=device_selections.get(device,0)+1
+    resources['primary_scratch_device_choices']=device_selections
     report=dict(stages=stages,diagnostics=diagnostics,repeated_seeds=repeated,unique_model_reloads=len(cache),resources=resources,
                 training_members={t[0].kind:t[2] for t in tasks.values()},
                 interval_scope='Approximate group-robust intervals conditional on these fitted predictions. Repeated seeds average correctness differences within each row before estimating uncertainty.')

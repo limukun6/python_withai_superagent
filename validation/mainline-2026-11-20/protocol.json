@@ -1,0 +1,59 @@
+{
+  "metric": "accuracy",
+  "split": "designated course validation",
+  "arms": {
+    "task1": {
+      "task": "task1",
+      "role": "default",
+      "model": "catboost_depth6_reg3.0",
+      "directory": "solutions/task1/development",
+      "files": {
+        "final_selection.json": "bf44ec637f29e63c769264bb3aa3bc1b80abb0e4d90cf0a506698abf147d1b73",
+        "selected_model.joblib": "069df80072cbfa9ec5e8621f47edfb070020ce7a16ca4e1c12ccaa9c05434ffd",
+        "task_spec.json": "eba8a6d322d55ca879ab48429ebffeb5b15647b25b50af9b4117383b2157f53e"
+      }
+    },
+    "task2": {
+      "task": "task2",
+      "role": "lightweight_default",
+      "model": "minilm_text_with_lexical_features",
+      "directory": "solutions/task2/development",
+      "files": {
+        "final_selection.json": "96a821fc34939627b689a8dfb0ee8f90b6096d0bd597a5664cabd0ed4949b707",
+        "selected_model.joblib": "9fa2c310d3ec7b1839674da5e47a488532c8525b05dfb00af6174163cd790a76",
+        "task_spec.json": "c5f32905cbd797d4b568a885deafdd4fe644f1ccd816d972fb11658d950de366"
+      }
+    },
+    "task2-wide": {
+      "task": "task2",
+      "role": "new_two_encoder_option",
+      "model": "minilm_confirmed_probability_mixture",
+      "directory": "solutions/task2/development-mixture",
+      "files": {
+        "final_selection.json": "9c6e96c8b73b1dee296b961e677dbb91c80915a7ac088bf786af587e8c881e35",
+        "selected_model.joblib": "53dff28afab87bbde9214bde22ad49d2dee879834b8ceb654cd1afc2982a6291",
+        "single_model.joblib": "baefd03cefe6350767b2d85a4d7c8b056aa2d06c1ee9b132c6a2fc6b5aa472e0",
+        "task_spec.json": "c5f32905cbd797d4b568a885deafdd4fe644f1ccd816d972fb11658d950de366"
+      }
+    }
+  },
+  "exports_sha256": "14a2a7dd1f0aeb386a83f2ffe7cb12a1aee7a04ead97f20fc53543fc3023d6ed",
+  "evaluator_sha256": "73e2298c367137cc3aebd4840d4aa885ac34db580ab58bd77aad9fc869c8af85",
+  "packages": {
+    "task1": {
+      "filename": "Released_Task1-In_Vehicle_Coupon_Recommendation.zip",
+      "sha256": "b64ab2938b3a96afb997b2e0ca4b0711df767f5e5c873453951e1c0e9bdfd6e5",
+      "features": "in_vehicle_coupon_recommendation/C_val.npy",
+      "labels": "in_vehicle_coupon_recommendation/y_val.npy"
+    },
+    "task2": {
+      "filename": "Released_Task2-Headlines_CTR.zip",
+      "sha256": "56b5439ea3f77c7b933d9c0bc49705f3759b3a1d302da49adee80031904834e4",
+      "features": "Released_Task2-Headlines_CTR/val.csv",
+      "labels": "Released_Task2-Headlines_CTR/val.csv"
+    }
+  },
+  "selection": "Score all three existing exports. Keep the published default and optional roles.",
+  "procedure": "Predict from validation features, seal all CSVs, then compare to the validation labels.",
+  "frozen_utc": "2026-11-20T05:48:29.648706+00:00"
+}

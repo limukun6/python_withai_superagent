@@ -22,6 +22,10 @@ class CategoryFrontierTests(unittest.TestCase):
         self.assertEqual(select_action(ev|dict(corrected=23),available,'representation',[DIRECT])[0],CROSSES)
         self.assertEqual(select_action(ev|dict(shared_errors=3),available,'representation',[])[0],None)
         self.assertEqual(select_action(ev|dict(shared_errors=3),available,'context-control',[MINILM])[0],COOCCUR)
+        self.assertEqual(select_action(ev,available,'anchored',[])[0],COOCCUR)
+        self.assertEqual(select_action(ev,available,'anchored',[COOCCUR])[0],DIRECT)
+        self.assertEqual(select_action(ev|dict(corrected=5),available,'anchored',[COOCCUR])[0],MINILM)
+        self.assertEqual(select_action(ev|dict(corrected=5),available,'anchored-control',[COOCCUR])[0],DIRECT)
         text=ev|dict(kind='pair_text',short_latin_share=0.)
         self.assertEqual(select_action(text,{NEURAL},'paired',[])[0],select_action(text,{NEURAL},'representation',[])[0])
 

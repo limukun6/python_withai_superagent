@@ -84,6 +84,11 @@ def budget(config, tokens, reserve=False, model_id=MODEL):
             if not math.isfinite(campaign_cap) or not 0 < campaign_cap <= 20:
                 raise ValueError('Invalid cumulative experiment allowance')
             runs = set(config['previous_run_ids']) | {run}
+            roots=[Path(p).resolve() for p in config.get('campaign_run_roots',[])]
+            if roots:
+                peers=db.execute("SELECT DISTINCT json_extract(payload,'$.run_id') FROM requests WHERE scope=?",(scope,))
+                runs.update(name for (name,) in peers if name and Path(name).is_absolute()
+                            and any(Path(name).resolve().is_relative_to(root) for root in roots))
             placeholders = ','.join('?' for _ in runs)
             campaign = db.execute(f"SELECT COALESCE(SUM(course_units),0) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id') IN ({placeholders})", (scope,*runs)).fetchone()[0]
             if campaign + units > money_units(campaign_cap):

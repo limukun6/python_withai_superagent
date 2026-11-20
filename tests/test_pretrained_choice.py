@@ -57,6 +57,17 @@ class PretrainedTests(unittest.TestCase):
             ledger.settle(budget(second,10,reserve=True),MODEL,10,0)
             self.assertAlmostEqual(ledger.snapshot('fixture')['known_task_cost_rmb'],.000033)
 
+    def test_campaign_discovers_a_peer_started_after_configuration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            path=root/'ledger.sqlite'
+            ledger=TaskBudgetLedger.initialize(path,new_project=True)
+            cfg=dict(ledger=path,scope='fixture',run=str(root/'current'),cap_rmb=.1,
+                     previous_run_ids=[],campaign_run_roots=[str(root)],campaign_cap_rmb=.000033)
+            ledger.settle(budget(dict(cfg,run=str(root/'later')),100,reserve=True),MODEL,100,0)
+            with self.assertRaises(BudgetStateError):budget(cfg,11)
+            ledger.settle(budget(cfg,10,reserve=True),MODEL,10,0)
+
     def test_a_single_new_candidate_cannot_displace_four_step_leader_from_confirmation(self):
         from superagent.confirmation import shortlist
         rows = [dict(candidate=key,status='completed',primary_metric='accuracy',search_score=s)

@@ -31,12 +31,15 @@ SHRINKAGE = 'boosting_smaller_steps'
 HIST = 'native_histogram_categories'
 HIST_ADJUSTED = 'feedback_histogram_categories'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control')
 
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
-    if mode=='distribution-control' and evidence['kind']=='categorical_tabular' and PERMUTED_RESIDUAL in feasible:
+    if mode=='anchored-control' and evidence['kind']=='categorical_tabular' and COOCCUR in feasible:
+        priorities=[COOCCUR,DIRECT]
+        reason='The matched control tests training-only co-occurrence first, then direct category splits.'
+    elif mode=='distribution-control' and evidence['kind']=='categorical_tabular' and PERMUTED_RESIDUAL in feasible:
         priorities=[PERMUTED_RESIDUAL,MARGINAL]
         reason='Matched diagnostic using shuffled category coordinates and marginal frequencies.'
     elif mode == 'context-control' and evidence['kind']=='categorical_tabular':
@@ -51,8 +54,20 @@ def select_action(evidence, feasible, mode, used):
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
-        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='histogram' and not used and HIST in feasible:
+        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control')) and evidence.get('primary_metric')=='accuracy'
+        if mode=='anchored' and not used and COOCCUR in feasible:
+            priorities=[COOCCUR]
+            reason='The ordinary models share errors. Test locally learned category context before allocating the final slot.'
+        elif mode=='anchored' and used and used[-1]==COOCCUR:
+            a,b=evidence['corrected'],evidence['lost']
+            harmed=pair_aware and a+b>=8 and b-a>=math.sqrt(a+b)
+            if harmed and can_pool and any(name in feasible for name in aligned):
+                priorities=[*aligned,DIRECT]
+                reason='Local context introduced more paired losses. Probe the independent meaning of repeated category names.'
+            else:
+                priorities=[DIRECT,*aligned]
+                reason='Keep the local candidate eligible and test an independent split representation.'
+        elif mode=='histogram' and not used and HIST in feasible:
             priorities=[HIST]
             reason='Try a different tree learner that can partition categories into sets using training labels.'
         elif mode=='histogram' and used and used[-1]==HIST and HIST_ADJUSTED in feasible:
@@ -201,7 +216,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             rate=float(incumbent['params']['learning_rate'])
             if horizon is not None and horizon!=count:eligible[HORIZON]=dict(base,iterations=horizon,learning_rate=rate)
             eligible[SHRINKAGE]=dict(base,iterations=2*count,learning_rate=rate/2)
-        if mode in ('representation','typed-values','distribution','distribution-control'):
+        if mode in ('representation','typed-values','distribution','distribution-control','anchored','anchored-control'):
             if mode.startswith('distribution') and incumbent['candidate'].startswith(BACKBONES) and feature_count<=40 and len(x)*feature_count<=2000000:
                 from .distribution_features import column_codes
                 encodable=column_codes(x)

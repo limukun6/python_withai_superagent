@@ -138,7 +138,8 @@ def main():
     fresh=[Path(v) for block in locations for v in block.values() if Path(v).is_relative_to(root)]
     config=dict(ledger=str(args.ledger.resolve()),scope=scope['scope'],minilm_weights=str(args.minilm_weights.resolve()),
                 tabular_weights=str(args.weights.resolve()),cap_rmb=CAP,campaign_cap_rmb=CAMPAIGN,
-                previous_run_ids=budget_ids(args.ledger,scope['scope'],paid_roots,fresh),deferred_ids=scope['legacy_unknown_ids'])
+                previous_run_ids=budget_ids(args.ledger,scope['scope'],paid_roots,fresh),campaign_run_roots=list(map(str,paid_roots)),
+                deferred_ids=scope['legacy_unknown_ids'])
     for i,split in enumerate(splits):
         task=DevelopmentTask(whole.kind,'training_partition',take(whole.X_train,split['train']),whole.y_train[split['train']],None,None,whole.spec)
         for arm in orders[i]:

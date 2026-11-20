@@ -20,6 +20,14 @@
 - history-evidence-v3已更新并检查两组共享字段一致，旧A2状态不能冒称v3的新证据。图像仅sklearn digits，不能声称自然图像泛化。
 - 所有小批计划/runner已保存，紧凑证据在research/a_window_20261121；给B的接入说明docs/A_TO_B_NEXT_HANDOFF_20261121.md。下一步接B适配器的匿名完整验收，再重新冻结A2状态并按账本条件启动真实模型实验。
 
+## A2-02：v3真实历史状态重建完成
+
+- 运行前协议batches/A2_02_plan.md，复用scripts/run_a2_state_study.py prepare；生产源码提交1d57fd4，source_unchanged=true。
+- 四任务12次真实fit、12冻结状态、97.100秒、真实API0；两组共同字段逐项相同。原始目录runs/a2_02_v3_states，脱敏JSON在research/a2_02_v3_state_preparation。
+- 仅完成prepare，真实ask及动作质量评价仍未执行。11条历史未知用量仍在，ready_to_call=false。
+- 加上前述73fit，本轮累计85真实分类器fit，其中流程/准备47、回归38；5模拟HTTP、真实API0。准备批未打破三小时计划49次实验fit上限，回归另登记。
+- 首轮代码/结果已推送1d57fd4；续跑说明A_LINE_RESUME_20261121.md。后续文档/证据提交不修改生产源码，保持这12个状态的生产指纹。
+
 ## A1-01：任务语义与实际训练一致性
 
 - 状态：已完成 baseline、修复、fixed 与回归，2026-11-20。

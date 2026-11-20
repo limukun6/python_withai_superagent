@@ -9,7 +9,7 @@ import joblib
 import numpy as np
 
 from superagent.benchmark import train_candidate
-from superagent.method_choice import PAIR_ITEM, PAIR_OPPONENT, PAIR_POSTERIOR, TEXT_MINILM, TEXT_MINILM_ONLY
+from superagent.method_choice import PAIR_ITEM, PAIR_OPPONENT, PAIR_POSTERIOR, TEXT_DEEP, TEXT_MINILM, TEXT_MINILM_ONLY
 
 
 class DownstreamWorkerDispatchTests(unittest.TestCase):
@@ -18,12 +18,13 @@ class DownstreamWorkerDispatchTests(unittest.TestCase):
             root=Path(tmp)
             (root/"pretrained_runtime.json").write_text("{}")
             words=["water boat","orange fruit","garden plant","blue ocean"]
-            with sqlite3.connect(root/"minilm_category_vectors.sqlite") as db:
-                db.execute("CREATE TABLE vectors(id TEXT PRIMARY KEY, v BLOB NOT NULL)")
-                for i,w in enumerate(words):
-                    db.execute("INSERT INTO vectors VALUES (?,?)",(hashlib.sha256(w.encode()).hexdigest(),
-                               np.eye(4,384,dtype="<f4")[i].tobytes()))
-            for name in (TEXT_MINILM,TEXT_MINILM_ONLY,PAIR_ITEM,PAIR_OPPONENT,PAIR_POSTERIOR):
+            for cache in ("minilm_category_vectors.sqlite","minilm_l12_vectors.sqlite"):
+                with sqlite3.connect(root/cache) as db:
+                    db.execute("CREATE TABLE vectors(id TEXT PRIMARY KEY, v BLOB NOT NULL)")
+                    for i,w in enumerate(words):
+                        db.execute("INSERT INTO vectors VALUES (?,?)",(hashlib.sha256(w.encode()).hexdigest(),
+                                   np.eye(4,384,dtype="<f4")[i].tobytes()))
+            for name in (TEXT_MINILM,TEXT_MINILM_ONLY,TEXT_DEEP,PAIR_ITEM,PAIR_OPPONENT,PAIR_POSTERIOR):
                 if name==PAIR_POSTERIOR:
                     kind="categorical_tabular"
                     x=np.asarray([[f"a{i%4}",f"b{i%7}"] for i in range(180)])

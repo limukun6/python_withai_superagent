@@ -79,6 +79,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for field in ('archive','output','ledger','minilm-weights','weights','historical-protocol'):
         parser.add_argument('--'+field,type=Path,required=True)
+    parser.add_argument('--deep-minilm-weights',type=Path)
     parser.add_argument('--arms',nargs='+',required=True,choices=('classic',*MODES))
     parser.add_argument('--seed',type=int,required=True)
     parser.add_argument('--folds',nargs='+',type=int,default=[1,2,3,4,5])
@@ -131,6 +132,9 @@ def main():
                   reference_protocols={str(p.resolve()):digest(p/'protocol.json') for p in args.references},
                   shared_budget_roots=list(map(str,paid_roots)),arm_cap=CAP,campaign_cap=CAMPAIGN,
                   promotion='Require at least 0.2 percentage points pooled gain and a strict majority of strict fold wins against every comparator. A candidate qualifying on explored data must replicate on a new grouped split before promotion.')
+    if args.deep_minilm_weights:
+        from superagent.minilm_features import DEEP_FILES
+        protocol['deep_minilm_files']={k:v[1] for k,v in DEEP_FILES.items()}
     if (root/'protocol.json').exists():expect(read(root/'protocol.json')==protocol,'Frozen protocol differs')
     else:write(root/'protocol.json',protocol)
     if args.freeze:
@@ -141,6 +145,7 @@ def main():
                 tabular_weights=str(args.weights.resolve()),cap_rmb=CAP,campaign_cap_rmb=CAMPAIGN,
                 previous_run_ids=budget_ids(args.ledger,scope['scope'],paid_roots,fresh),campaign_run_roots=list(map(str,paid_roots)),
                 deferred_ids=scope['legacy_unknown_ids'])
+    if args.deep_minilm_weights:config['deep_minilm_weights']=str(args.deep_minilm_weights.resolve())
     for i,split in enumerate(splits):
         task=DevelopmentTask(whole.kind,'training_partition',take(whole.X_train,split['train']),whole.y_train[split['train']],None,None,whole.spec)
         for arm in orders[i]:
@@ -176,7 +181,7 @@ def main():
             feature_dir=None
             if isinstance(bundle['model'],MiniLMTextClassifier):
                 feature_dir=folder.parent/(arm+'_prediction_features')
-                bundle['model'].bind_prediction_weights(args.minilm_weights,feature_dir)
+                bundle['model'].bind_prediction_weights(config[bundle['model'].weight_setting],feature_dir)
                 before=feature_usage(feature_dir)
             pred[arm]=predict_with_model(whole.kind,bundle['model'],x)
             if feature_dir is not None:

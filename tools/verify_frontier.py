@@ -165,7 +165,7 @@ def main():
                     if cached:
                         before=feature_usage(usage_dir)
                         config=read(usage_dir/'pretrained_runtime.json')
-                        bundle['model'].bind_prediction_weights(config['minilm_weights'],usage_dir)
+                        bundle['model'].bind_prediction_weights(config[bundle['model'].weight_setting],usage_dir)
                     predicted=predict_with_model(task.kind,bundle['model'],take(task.X_train,ids))
                     if cached:expect(before==feature_usage(usage_dir),'Audit encountered an uncached evaluation feature')
                     initial=[]

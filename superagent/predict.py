@@ -52,7 +52,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
             config = run_path / 'pretrained_runtime.json'
             if not config.exists():
                 raise ValueError('Supply --minilm-weights for this frozen text classifier')
-            minilm_weights = json.loads(config.read_text())['minilm_weights']
+            minilm_weights = json.loads(config.read_text())[model.weight_setting]
         feature_dir = destination.parent / (destination.name + '.features')
         model.bind_prediction_weights(minilm_weights, feature_dir)
         before = feature_usage(feature_dir)

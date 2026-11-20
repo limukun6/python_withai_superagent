@@ -1,6 +1,10 @@
 """Audit a deeper encoder's request, local installation, observed token lengths and realized decisions."""
 import argparse
+import csv
+import io
 from pathlib import Path
+import shutil
+import zipfile
 
 from tokenizers import Tokenizer
 
@@ -10,12 +14,49 @@ from superagent.minilm_features import DEEP_FILES, DEEP_MODEL, FILES
 from superagent.pretrained_choice import digest
 from tools.frontier_study import expect
 from tools.pretrained_study import read, train_only, write
+from tools.submission_smoke import command
+
+
+def portable_predictions(source, weights, destination):
+    destination.mkdir(parents=True, exist_ok=False)
+    moved=destination/'relocated'
+    moved.mkdir()
+    for name in ('selected_model.joblib','task_spec.json','final_selection.json'):
+        shutil.copyfile(source/name,moved/name)
+    subjects=('market','railway','museum','river','festival','school','garden','station')
+    rows=[]
+    for subject in subjects:
+        pair=(f'An update on the town {subject}',f'What changed at the {subject} this week?')
+        rows.extend([pair,pair[::-1]])
+    content=io.StringIO()
+    writer=csv.writer(content)
+    writer.writerow(['headline_A','headline_B'])
+    writer.writerows(rows)
+    package=destination/'synthetic.zip'
+    with zipfile.ZipFile(package,'w') as archive:archive.writestr('test.csv',content.getvalue())
+    usage={}
+    checksums=[]
+    for label,model,filename in (('original',source,'original.csv'),('relocated',moved,'relocated.csv'),('cached',moved,'relocated.csv')):
+        output=destination/filename
+        command(destination/(label+'.log'),'predict',package,'--run-dir',model,'--minilm-weights',weights,'--output',output)
+        manifest=read(destination/'prediction_manifest.json')
+        expect(manifest['prediction_count']==len(rows) and not manifest['test_labels_read'],'Synthetic prediction manifest changed')
+        usage[label]=manifest['prediction_feature_usage']
+        checksums.append(digest(output))
+    expect(len(set(checksums))==1 and usage['original']['input_tokens']==usage['relocated']['input_tokens']>0
+           and usage['cached']['input_tokens']==0,'Moved or cached prediction differs')
+    with output.open() as f:predictions=list(csv.DictReader(f))
+    expect([int(row['row_id']) for row in predictions]==list(range(len(rows))),'Synthetic rows changed order')
+    flipped=sum(a['prediction']!=b['prediction'] for a,b in zip(predictions[::2],predictions[1::2],strict=True))
+    return dict(rows=len(rows),swapped_pairs=len(subjects),opposite_predictions=flipped,prediction_sha256=checksums[0],
+                model_sha256=digest(moved/'selected_model.joblib'),usage=usage)
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for flag in ('stage','archive','small-weights','deep-weights','request','receipt','output'):
         parser.add_argument('--'+flag,type=Path,required=True)
+    parser.add_argument('--portability-output',type=Path,help='Use an exported L12 classifier on a new synthetic unlabeled prediction package')
     args=parser.parse_args()
     protocol=read(args.stage/'protocol.json')
     results=read(args.stage/'results.json')
@@ -55,6 +96,10 @@ def main():
                 texts_over_128=sum(length>128 for length in lengths),texts_over_256=sum(length>256 for length in lengths),
                 common_tokenizer_sha256=FILES['tokenizer.json'][1],folds=folds,correct=results['correct'],
                 training_members=opened)
+    if args.portability_output:
+        selected=next(i for i,fold in enumerate(folds) if fold['selected_deeper'])
+        report['portable']=portable_predictions(Path(protocol['locations'][selected]['encoder-depth']),
+                                                args.deep_weights.resolve(),args.portability_output.resolve())
     write(args.output,report)
     print(report['deep_trials'],report['deep_final_wins'],report['correct'],report['texts_over_128'])
 

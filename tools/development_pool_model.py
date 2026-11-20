@@ -12,7 +12,8 @@ import numpy as np
 
 from superagent.benchmark import run_one
 from superagent.data import DevelopmentTask, load_training_task
-from superagent.minilm_features import MiniLMTextClassifier
+from superagent.encoder_mixture import EncoderMixture
+from superagent.minilm_features import MiniLMTextClassifier, feature_usage
 from superagent.pretrained_choice import digest
 from superagent.splits import grouped_partition, take
 from tools.frontier_study import budget_ids, expect, receipt
@@ -46,6 +47,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('archive','reference','output','ledger','historical-protocol','weights','minilm-weights'):
         parser.add_argument('--'+name,type=Path,required=True)
+    parser.add_argument('--method-choice',choices=('auto','encoder-mixture','encoder-mixture-wide'),default='auto')
+    parser.add_argument('--deep-minilm-weights',type=Path)
     parser.add_argument('--freeze', action='store_true')
     args = parser.parse_args()
     os.environ['SUPERAGENT_OFFLINE']='1'
@@ -65,8 +68,8 @@ def main():
     run=folder/'run'
     protocol=dict(reference_protocol_sha256=digest(args.reference/'protocol.json'),archive_sha256=ref['archive_sha256'],
                   source_sha256=digest(Path(__file__)),search_seed=ref['search_seed'],reserve_seed=ref['reserve_seed'],
-                  rows=len(keep),reserved=len(reserve),accessed=opened,
-                  rule='Use the unchanged auto policy on all previously used development rows. No new performance estimate. Predict only on newly generated, unlabeled input to compare original and portable models.')
+                  rows=len(keep),reserved=len(reserve),accessed=opened,method_choice=args.method_choice,
+                  rule='Use the specified policy on all previously used development rows. No new performance estimate. Predict only on newly generated, unlabeled input to compare original and portable models.')
     freeze_file(folder/'protocol.json',protocol)
     if args.freeze:return
     task=DevelopmentTask(task.kind,'training_development_pool',take(task.X_train,keep),task.y_train[keep],None,None,task.spec)
@@ -76,9 +79,11 @@ def main():
                 tabular_weights=str(args.weights.resolve()),cap_rmb=ref['arm_cap'],campaign_cap_rmb=ref['campaign_cap'],
                 deferred_ids=previous['legacy_unknown_ids'],campaign_run_roots=list(map(str,roots)),
                 previous_run_ids=budget_ids(args.ledger,previous['scope'],roots,[run]))
+    if args.deep_minilm_weights:
+        config['deep_minilm_weights']=str(args.deep_minilm_weights.resolve())
     if not (run/'summary.json').exists():
         expect(not run.exists(),'Incomplete earlier run needs separate accounting')
-        run_one(task,'local_interleaved_routes',ref['search_seed'],run,None,**OPTIONS,pretrained_config=config,method_choice='auto')
+        run_one(task,'local_interleaved_routes',ref['search_seed'],run,None,**OPTIONS,pretrained_config=config,method_choice=args.method_choice)
     rec=receipt(run)
     portable=folder/'portable'
     portable.mkdir(exist_ok=True)
@@ -87,30 +92,43 @@ def main():
     model_name=selection['model_file']
     bundle=joblib.load(run/model_name)
     model=bundle['model']
-    if isinstance(model,MiniLMTextClassifier):
-        model.runtime='pretrained_runtime.json'
-        model.encoder=None
+    if isinstance(model,(MiniLMTextClassifier,EncoderMixture)):
+        parts=(model.anchor,model.other) if isinstance(model,EncoderMixture) else (model,)
+        for part in parts:
+            part.runtime='pretrained_runtime.json'
+            part.encoder=None
         joblib.dump(bundle,portable/model_name)
     else:
         shutil.copyfile(run/model_name,portable/model_name)
     shutil.copyfile(run/'task_spec.json',portable/'task_spec.json')
     selection['model_sha256']=digest(portable/model_name)
+    if isinstance(model,EncoderMixture):
+        single=joblib.load(run/selection['single_model_file'])
+        single['model'].runtime='pretrained_runtime.json'
+        single['model'].encoder=None
+        joblib.dump(single,portable/selection['single_model_file'])
     write(portable/'final_selection.json',selection)
     package=folder/'synthetic.zip'
     synthetic_package(package,task)
     checks=[]
+    feature_counts={}
+    flags=['--minilm-weights',args.minilm_weights.resolve()]
+    if args.deep_minilm_weights:
+        flags.extend(['--deep-minilm-weights',args.deep_minilm_weights.resolve()])
     for name,source in (('original',run),('portable',portable)):
         output=folder/(name+'.csv')
-        command(folder/(name+'.log'),'predict',package,'--run-dir',source,'--minilm-weights',args.minilm_weights.resolve(),'--output',output)
+        command(folder/(name+'.log'),'predict',package,'--run-dir',source,*flags,'--output',output)
         manifest=read(folder/'prediction_manifest.json')
         expect(manifest['prediction_count']==12 and not manifest['test_labels_read'],'Synthetic input check failed')
         checks.append(digest(output))
+        feature_counts[name]=feature_usage(folder/(name+'.csv.features'))
     expect(checks[0]==checks[1],'The moved model predicted differently')
     report=dict(development_training_rows=len(keep),reserved_rows=len(reserve),selected=rec['winner'],trial_6_7=rec['extras'],
                 fits=rec['fits'],generation_calls=rec['calls'],local_qwen_input_tokens=rec['qwen_tokens'],
                 minilm_training_input_tokens=rec['minilm_tokens'],course_reference_rmb=rec['course_rmb'],api_rmb=rec['api_rmb'],
                 original_model_sha256=rec['model_sha256'],portable_model_sha256=selection['model_sha256'],
-                synthetic_prediction_sha256=checks[0],synthetic_unlabeled_rows=12,
+                method_choice=args.method_choice, mixture_decision=read(run/'encoder_mixture.json') if (run/'encoder_mixture.json').is_file() else None,
+                synthetic_prediction_sha256=checks[0],synthetic_unlabeled_rows=12,synthetic_prediction_feature_usage=feature_counts,
                 development_protocol_sha256=digest(folder/'protocol.json'),course_validation_or_test_opened=False)
     write(folder/'results.json',report)
     print(report,flush=True)

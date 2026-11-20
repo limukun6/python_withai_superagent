@@ -35,6 +35,7 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    if candidate in ('direct_category_splits','direct_splits_with_category_context'):return 'direct_category_splits'
     if candidate in ('scratch_neural_classifier','training_category_cooccurrence','minilm_category_levels'):return candidate
     if candidate in ('pretrained_qwen3_levels','ablation_permuted_qwen3_levels'):return 'pretrained_category_levels'
     if candidate == "pretrained_qwen3_context_C0.3":return "pretrained_qwen3_context"

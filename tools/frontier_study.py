@@ -59,6 +59,8 @@ def old_runs(roots, fingerprint, seed):
         for i,split in enumerate(protocol['indices']):
             for arm in protocol['order'][i]:
                 folder=(Path(protocol['locations'][i][arm]) if 'locations' in protocol else root/f'fold_{i}'/arm)
+                if not any((folder/name).is_file() for name in ('frontier_receipt.json','receipt.json')):
+                    continue
                 key=(tuple(split['outer']),arm)
                 if key in locations:expect(locations[key][0]==folder,'Conflicting reference arms')
                 locations[key]=(folder,split['train'])
@@ -171,9 +173,14 @@ def main():
             expect(bundle['candidate']==rec['winner'],'Winner differs from saved bundle')
             pred[arm]=predict_with_model(whole.kind,bundle['model'],x)
             if not folder.is_relative_to(root):
-                historical=read(folder.parent/'outer_predictions.json')
-                expect(historical['rows']==held,'Historical prediction indices differ')
-                np.testing.assert_array_equal(historical[arm],pred[arm])
+                saved_predictions=folder.parent/'outer_predictions.json'
+                if saved_predictions.exists():
+                    historical=read(saved_predictions)
+                    expect(historical['rows']==held,'Historical prediction indices differ')
+                    np.testing.assert_array_equal(historical[arm],pred[arm])
+                else:
+                    prior=read(folder/'frontier_receipt.json')
+                    expect(prior['model_sha256']==rec['model_sha256'],'Partial study model differs from its frozen receipt')
             correct=int(np.sum(pred[arm]==truth))
             totals[arm]+=correct
             evidence[arm]=dict(**rec,correct=correct,reused=not folder.is_relative_to(root))

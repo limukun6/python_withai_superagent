@@ -24,9 +24,11 @@ class Candidate:
     fit_predict: Callable[[Any, np.ndarray, Any], tuple[Any, np.ndarray]]
 
 
-def _clean_categories(x: np.ndarray) -> np.ndarray:
+def _clean_categories(x: np.ndarray, *, full_marker: bool = False) -> np.ndarray:
     values = np.asarray(x, dtype=object).astype(str)
     missing = np.isin(np.char.lower(np.char.strip(values)), ["nan", "none", "null", "na", "?"])
+    if full_marker:
+        return np.where(missing, "__MISSING__", values)
     values[missing] = "__MISSING__"
     return values
 
@@ -242,7 +244,8 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     from .generated_pipeline import GeneratedModel
     from .pretrained_choice import ContextClassifier
     from .scratch_classifier import ScratchClassifier
-    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier)):return np.asarray(model.predict(inputs)).reshape(-1)
+    from .category_posteriors import PosteriorCategoryClassifier
+    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier)):return np.asarray(model.predict(inputs)).reshape(-1)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return np.asarray(model.predict(inputs)).reshape(-1)
@@ -281,7 +284,8 @@ def probability_with_model(kind, model, inputs):
     from .generated_pipeline import GeneratedModel
     from .pretrained_choice import ContextClassifier
     from .scratch_classifier import ScratchClassifier
-    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier)):return model.classes_,model.predict_proba(inputs)
+    from .category_posteriors import PosteriorCategoryClassifier
+    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier)):return model.classes_,model.predict_proba(inputs)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return model.classes_, model.predict_proba(inputs)

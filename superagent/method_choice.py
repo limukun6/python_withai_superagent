@@ -30,8 +30,10 @@ HORIZON = 'feedback_boosting_iterations'
 SHRINKAGE = 'boosting_smaller_steps'
 HIST = 'native_histogram_categories'
 HIST_ADJUSTED = 'feedback_histogram_categories'
+PAIR_POSTERIOR = 'cross_fitted_category_pair_effects'
+SINGLE_POSTERIOR = 'cross_fitted_category_single_effects'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors')
 
 
 def select_action(evidence, feasible, mode, used):
@@ -54,8 +56,17 @@ def select_action(evidence, feasible, mode, used):
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
-        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='anchored' and not used and COOCCUR in feasible:
+        pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control','posteriors')) and evidence.get('primary_metric')=='accuracy'
+        if mode=='posteriors' and not used and PAIR_POSTERIOR in feasible:
+            priorities=[PAIR_POSTERIOR]
+            reason='The available training groups support repeated category combinations. Test label effects estimated exclusively from other groups.'
+        elif mode=='posteriors' and used and used[-1]==PAIR_POSTERIOR:
+            gain,loss=evidence['corrected'],evidence['lost']
+            supported=pair_aware and gain+loss>=8 and gain-loss>=math.sqrt(gain+loss)
+            priorities=[SINGLE_POSTERIOR,COOCCUR] if supported else [COOCCUR,SINGLE_POSTERIOR]
+            reason=('The combination features improved paired predictions. Test whether single fields account for that improvement.'
+                    if supported else 'The combination features did not show a clear paired gain. Try category co-occurrence.')
+        elif mode=='anchored' and not used and COOCCUR in feasible:
             priorities=[COOCCUR]
             reason='The ordinary models share errors. Test locally learned category context before allocating the final slot.'
         elif mode=='anchored' and used and used[-1]==COOCCUR:
@@ -198,6 +209,14 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     curve=None
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
+        if mode=='posteriors' and incumbent['candidate'].startswith('catboost_depth') and n>=256 and 2<=feature_count<=32 and len(np.unique(payload['y_train']))<=8:
+            from itertools import combinations
+            counts=[len(np.unique(col)) for col in _clean_categories(x).T]
+            repeated=[count for count in counts if 2<=count<=256]
+            if any(a*b<=n//4 for a,b in combinations(repeated,2)):
+                base=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],prior_count=20)
+                eligible[PAIR_POSTERIOR]=dict(base,include_pairs=True)
+                eligible[SINGLE_POSTERIOR]=dict(base,include_pairs=False)
         if mode=='histogram' and n>=256 and 2<=feature_count<=64 and n*feature_count<=4000000:
             leaf=max(15,min(40,math.ceil(n/220)))
             eligible[HIST]=dict(iterations=320,leaf_nodes=31,minimum_leaf=leaf,l2=2.)
@@ -325,6 +344,9 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
+        elif name in (PAIR_POSTERIOR,SINGLE_POSTERIOR) and kind=='categorical_tabular':
+            from .category_posteriors import PosteriorCategoryClassifier
+            model=PosteriorCategoryClassifier(params).fit(rows,labels)
         elif name in (HIST,HIST_ADJUSTED) and kind=='categorical_tabular':
             from .histogram_categories import HistogramCategoryClassifier
             model=HistogramCategoryClassifier(params).fit(rows,labels)

@@ -32,6 +32,13 @@ def resource_totals(root,ledger):
     complete=partial=finished_fits=partial_fits=local_tokens=batches=mini_tokens=mini_batches=api_calls=0
     event_prices={}
     entries=[]
+    downstream_by_model={}
+    def add_feature(event,stage):
+        account=downstream_by_model.setdefault(event['model'],dict(training_tokens=0,training_batches=0,
+                                                scoring_tokens=0,scoring_batches=0,forward_seconds=0.))
+        account[stage+'_tokens']+=event['input_tokens']
+        account[stage+'_batches']+=1
+        account['forward_seconds']+=event.get('seconds',0.)
     for path in sorted(root.glob('*/fold_*/*/trials.json')):
         folder=path.parent
         summary=folder/'summary.json'
@@ -66,6 +73,7 @@ def resource_totals(root,ledger):
                 elif event['event']=='frozen_feature_forward':
                     expect(event['remote_calls']==event['api_rmb']==0,'Unexpected MiniLM service charge')
                     mini_tokens+=event['input_tokens'];mini_batches+=1
+                    add_feature(event,'training')
     with sqlite3.connect(f'file:{ledger.resolve()}?mode=ro',uri=True) as conn:
         rows=conn.execute("SELECT id,status,course_units,json_extract(payload,'$.run_id') FROM requests")
         known=[(key,status,cost) for key,status,cost,run in rows if run and Path(run).resolve().is_relative_to(root)]
@@ -79,11 +87,12 @@ def resource_totals(root,ledger):
             expect(event['event']=='frozen_feature_forward' and event['remote_calls']==event['api_rmb']==0,'Invalid scoring event')
             inference_tokens+=event['input_tokens']
             inference_batches+=1
+            add_feature(event,'scoring')
     return dict(physical_complete_runs=complete,complete_fits=finished_fits,partial_runs=partial,partial_fits=partial_fits,
                 partial_details=entries,qwen_input_tokens=local_tokens,qwen_batches=batches,qwen_reference_rmb=rmb,
                 minilm_training_input_tokens=mini_tokens,minilm_training_batches=mini_batches,
                 minilm_scoring_input_tokens=inference_tokens,minilm_scoring_batches=inference_batches,
-                generation_calls=api_calls,api_rmb=0.)
+                downstream_by_model=downstream_by_model,generation_calls=api_calls,api_rmb=0.)
 
 
 def diagnostic_summary(folder,protocol,output,reference,task):

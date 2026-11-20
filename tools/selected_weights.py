@@ -52,10 +52,27 @@ def main():
     expect(request['requested'] and request['model']==DEEP_MODEL and request['files']==pins,'No matching frozen weight request')
     expect(any(e['selected']==TEXT_DEEP and e['expected_seconds']<=e['limit_seconds'] for e in request['decisions']),
            'No eligible training decision')
-    downloaded=acquire(args.weights.resolve(),DEEP_MODEL,DEEP_FILES)
-    for name,(_,sha,size) in DEEP_FILES.items():
+    def verified(name):
+        _,sha,size=DEEP_FILES[name]
         file=args.weights/name
-        expect(file.stat().st_size==size and digest(file)==sha,'Public weight verification failed')
+        return file.is_file() and file.stat().st_size==size and digest(file)==sha
+    if args.record.exists():
+        existing=read(args.record)
+        expect(existing['request_sha256']==digest(args.request) and existing['pins']==pins and all(verified(n) for n in pins),
+               'Existing download receipt or weights no longer match')
+        print('Verified completed download',DEEP_MODEL,flush=True)
+        return
+    first=args.record.with_suffix('.initial.json')
+    if first.exists():
+        initial=read(first)
+        expect(initial['request_sha256']==digest(args.request),'Unfinished request differs')
+    else:
+        initial=dict(request_sha256=digest(args.request),missing=[n for n in pins if not verified(n)])
+        freeze_file(first,initial)
+    fetched=acquire(args.weights.resolve(),DEEP_MODEL,DEEP_FILES)
+    downloaded=[n for n in pins if n in initial['missing'] or n in fetched]
+    for name in DEEP_FILES:
+        expect(verified(name),'Public weight verification failed')
     freeze_file(args.record,dict(model=DEEP_MODEL,request_sha256=digest(args.request),pins=pins,downloaded=downloaded,
                                  downloaded_bytes=sum(DEEP_FILES[n][2] for n in downloaded),model_api_calls=0,api_rmb=0))
     print(DEEP_MODEL,downloaded,flush=True)

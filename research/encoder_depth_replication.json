@@ -1,0 +1,142 @@
+{
+  "archive_sha256": "56b5439ea3f77c7b933d9c0bc49705f3759b3a1d302da49adee80031904834e4",
+  "stage_sha256": "11dba718ae2f25665b7e40497d7669941ff42079dee903195220fde3efaa4c7a",
+  "requested_by_training_replay": 4,
+  "deep_trials": 4,
+  "deep_final_wins": 2,
+  "public_weight_download": {
+    "model": "sentence-transformers/all-MiniLM-L12-v2",
+    "request_sha256": "1de62a758e599446c4fd9e1cdeb65094de7e69afebdae847de717f557f7d0036",
+    "pins": {
+      "config.json": "bc451f333af67312ba0de5018ef1c9ba663cb18549443e568f0bd35262dc1c48",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542"
+    },
+    "downloaded": [
+      "config.json",
+      "tokenizer.json",
+      "model.safetensors"
+    ],
+    "downloaded_bytes": 133933166,
+    "model_api_calls": 0,
+    "api_rmb": 0
+  },
+  "local_on_disk_bytes": 133933166,
+  "pool_rows": 6608,
+  "unique_texts": 11505,
+  "maximum_tokens": 45,
+  "texts_over_128": 0,
+  "texts_over_256": 0,
+  "common_tokenizer_sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+  "folds": [
+    {
+      "fold": 1,
+      "chose_deeper": true,
+      "selected_deeper": false,
+      "corrected": 112,
+      "lost": 70,
+      "remaining_shared_errors": 269,
+      "seconds_estimate": 143.7042768341489,
+      "search": [
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "search_accuracy": 0.6846511627906977
+        },
+        {
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "search_accuracy": 0.6855813953488372
+        }
+      ],
+      "winner": "minilm_text_with_lexical_features"
+    },
+    {
+      "fold": 2,
+      "chose_deeper": true,
+      "selected_deeper": false,
+      "corrected": 122,
+      "lost": 80,
+      "remaining_shared_errors": 226,
+      "seconds_estimate": 93.53405291587114,
+      "search": [
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "search_accuracy": 0.7057692307692308
+        },
+        {
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "search_accuracy": 0.6932692307692307
+        }
+      ],
+      "winner": "minilm_text_with_lexical_features"
+    },
+    {
+      "fold": 3,
+      "chose_deeper": false,
+      "selected_deeper": false,
+      "corrected": 93,
+      "lost": 82,
+      "remaining_shared_errors": 255,
+      "seconds_estimate": 64.3988459999673,
+      "search": [
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "search_accuracy": 0.6820754716981132
+        },
+        {
+          "candidate": "word_char_stats_C1.0",
+          "search_accuracy": 0.6698113207547169
+        }
+      ],
+      "winner": "minilm_text_with_lexical_features"
+    },
+    {
+      "fold": 4,
+      "chose_deeper": true,
+      "selected_deeper": true,
+      "corrected": 116,
+      "lost": 68,
+      "remaining_shared_errors": 262,
+      "seconds_estimate": 83.6784001677297,
+      "search": [
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "search_accuracy": 0.6933085501858736
+        },
+        {
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "search_accuracy": 0.7091078066914498
+        }
+      ],
+      "winner": "minilm_l12_text_with_lexical_features"
+    },
+    {
+      "fold": 5,
+      "chose_deeper": true,
+      "selected_deeper": true,
+      "corrected": 110,
+      "lost": 89,
+      "remaining_shared_errors": 265,
+      "seconds_estimate": 35.44196883402765,
+      "search": [
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "search_accuracy": 0.6773017319963537
+        },
+        {
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "search_accuracy": 0.6864175022789426
+        }
+      ],
+      "winner": "minilm_l12_text_with_lexical_features"
+    }
+  ],
+  "correct": {
+    "text-encoder": 4644,
+    "encoder-depth": 4639,
+    "encoder-depth-control": 4648
+  },
+  "training_members": [
+    "Released_Task2-Headlines_CTR/train.csv",
+    "Released_Task2-Headlines_CTR/train.csv"
+  ]
+}

@@ -94,6 +94,7 @@ def main():
         parser.add_argument("--"+flag,type=Path,required=True)
     parser.add_argument("--additional-smoke",type=Path,nargs="*",default=[])
     parser.add_argument("--task2-reference-arm",default="text-encoder")
+    parser.add_argument("--public-repeat",type=Path,nargs=2,metavar=("EARLIER","CURRENT"))
     args=parser.parse_args()
     p1=read(args.task1/"protocol.json")
     p2=read(args.task2/"protocol.json")
@@ -141,7 +142,22 @@ def main():
         cases[label]=case
     expect(len(cases)==6,"Expected six different anonymous fixtures")
     accounts={root.name:smoke_resources(root) for root in [args.smoke,*args.additional_smoke]}
-    write(args.output,dict(tasks=runs,anonymous=cases,anonymous_resources=accounts,source=p1["source"],options=p1["options"]))
+    report=dict(tasks=runs,anonymous=cases,anonymous_resources=accounts,source=p1["source"],options=p1["options"])
+    if args.public_repeat:
+        earlier,current=args.public_repeat
+        before,now=[read(directory/"protocol.json") for directory in args.public_repeat]
+        expect(before["cases"]==now["cases"] and before["seed"]==now["seed"],"Public data or folds changed")
+        runtime={Path(name).name:sha for name,sha in p1["source"].items() if name.startswith("superagent/")}
+        expect(now["runtime"]==runtime,"Public and course runs used different runtimes")
+        published=[read(directory/"results.json") for directory in args.public_repeat]
+        expect(published[0]["cases"]==published[1]["cases"],"Public scores or prediction checksums changed")
+        for name,case in published[1]["cases"].items():
+            for i,fold in enumerate(case["folds"]):
+                for directory in args.public_repeat:
+                    expect(digest(directory/name/f"fold_{i}"/"predictions.csv")==fold["prediction_sha256"],"Public prediction file differs")
+        report["public_repeat"]=dict(earlier_protocol_sha256=digest(earlier/"protocol.json"),current_protocol_sha256=digest(current/"protocol.json"),
+            cases=published[1]["cases"],new_fits=sum(f["fits"] for c in published[1]["cases"].values() for f in c["folds"]))
+    write(args.output,report)
     print({k:(v["correct"],v["rows"],sum(f["changed_final_predictions"] for f in v["folds"])) for k,v in runs.items()},flush=True)
 
 

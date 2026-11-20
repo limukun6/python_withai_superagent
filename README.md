@@ -1,5 +1,11 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 七次搜索的统一实验入口
+
+使用 `--planner local --method-choice auto --trials 7 --portfolio expanded` 可以从相同的五次常规搜索开始，让 agent 根据数据和逐行试验反馈分配最后两个名额。符合条件的文本可以使用已冻结的 MiniLM 句子特征，普通分类路线始终参加搜索。两项课程任务在训练集内部的同预算对照、候选上限、费用及可重载模型验证见[七次搜索主线实验记录](docs/mainline_iterations_zh.md)。下文保留整合分支的四次搜索和先前发布成绩。
+
+完整训练、权重目录配置和预测命令见[分类方法与训练设备](docs/method_choice_zh.md)。将选中的 MiniLM 文本分类器搬到其他机器后，可在预测命令中提供 `--minilm-weights /path/to/all-MiniLM-L6-v2`。预测输出旁的记录包含本次实际使用的特征 token 数。
+
 ## 整合分支的实验与复现入口
 
 当前统一配置为本地 `interleaved_routes`、四次搜索、前三名三划分复核、全训练集重训。两个发布任务使用相同配置。整合分支的发布验证、本地复验和阶段性实验协议见下列文档。此节之后的 v0.42 结果对应仓库随附的历史模型和报告。

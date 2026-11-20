@@ -7,7 +7,10 @@ from pathlib import Path
 import joblib
 import numpy as np
 
+from superagent.data import load_prediction_features
 from superagent.method_choice import resolved_mode
+from superagent.minilm_features import MiniLMTextClassifier,feature_usage
+from superagent.models import predict_with_model
 from superagent.pretrained_choice import digest
 from tools.frontier_study import expect, receipt
 from tools.pretrained_study import read, write
@@ -91,19 +94,35 @@ def main():
         folder=args.smoke/label
         expect(read(folder/"run"/"method_policy.json")["mode"]=="auto","Smoke fixture used a different policy")
         manifest=read(folder/"prediction_manifest.json")
-        expect(digest(folder/"predictions.csv")==manifest["prediction_sha256"] and not manifest["test_labels_read"],
-               "Anonymous output changed or accessed a label")
+        output=folder/"predictions.csv"
+        checksum=digest(output)
+        expect(Path(manifest["prediction_file"]).resolve()==output.resolve() and not manifest["test_labels_read"],
+               "Anonymous output path or label access changed")
         with (folder/"predictions.csv").open() as f:
-            ids=[int(row["row_id"]) for row in csv.DictReader(f)]
+            rows=list(csv.DictReader(f))
+        ids=[int(row["row_id"]) for row in rows]
         expect(ids==list(range(smoke["predictions"])),"Anonymous output row order changed")
+        selection=read(folder/"run"/"final_selection.json")
+        model_path=folder/"run"/selection["model_file"]
+        expect(digest(model_path)==selection["model_sha256"],"Anonymous model changed")
+        bundle=joblib.load(model_path)
+        x=load_prediction_features(folder/"anonymous.zip",bundle["kind"],read(folder/"run"/"task_spec.json"))
+        if isinstance(bundle["model"],MiniLMTextClassifier):
+            cache=folder/"predictions.csv.features"
+            before=feature_usage(cache)
+            bundle["model"].bind_prediction_weights(read(cache/"pretrained_runtime.json")["minilm_weights"],cache)
+        y=predict_with_model(bundle["kind"],bundle["model"],x)
+        np.testing.assert_array_equal(y.astype(str),[row["prediction"] for row in rows])
+        if isinstance(bundle["model"],MiniLMTextClassifier):expect(feature_usage(cache)==before,"Additional inference in smoke verification")
         case={k:smoke[k] for k in ("kind","metric","trials","winner","predictions","stop","api_calls")}
+        case["prediction_sha256"]=checksum
         case["minilm_training_input_tokens"]=smoke.get("minilm_input_tokens",0)
         case["prediction_feature_usage"]=manifest.get("prediction_feature_usage")
         if (folder/"relocated"/"checks.json").exists():
             moved=read(folder/"relocated"/"checks.json")
             expect(moved["byte_identical"] and moved["cached"]["input_tokens"]==0 and moved["first"]["input_tokens"]>0,
                    "Relocated output did not pass both inference checks")
-            expect(digest(folder/"relocated"/"predictions.csv")==manifest["prediction_sha256"],"Moved output differs")
+            expect(digest(folder/"relocated"/"predictions.csv")==checksum,"Moved output differs")
             case["relocated"]=moved
         cases[label]=case
     expect(len(cases)==6,"Expected six different anonymous fixtures")

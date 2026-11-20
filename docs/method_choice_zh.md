@@ -8,7 +8,7 @@
 
 ```sh
 python -m superagent run "/path/to/task.zip" --run-dir "/path/to/run" \
-  --planner local --method-choice paired --trials 7 --portfolio expanded \
+  --planner local --method-choice auto --trials 7 --portfolio expanded \
   --time-limit 1600 --trial-timeout 480 --feature-cache run
 ```
 
@@ -21,7 +21,9 @@ python -m superagent run "/path/to/task.zip" --run-dir "/path/to/run" \
 - `fixed` 用固定优先次序填充可行方法。`adaptive` 看共同错误、非线性模型与线性模型的分数差，以及上一轮挑战者相对于原领先者的表现。`paired` 在准确率任务上还计算同一批样本的改正和新增错误数。相差一个百分点且改变 40 行与相差一个百分点且改变 210 行，可以触发不同的下一步。该规则是预先固定的探索策略。
 - MLP 随机初始化，仅用当前训练标签拟合。每次拟合先在 CPU 和可用的 CUDA 或 Apple MPS 设备上，按当前批次和网络形状测量前向、反向和参数更新。只有预计加速至少 10% 才采用加速器。训练后保存 NumPy 权重，可在 CPU 预测。其他预训练编码器的本地前向和神经网络的梯度训练分别记账。
 
-MiniLM 使用公开的 `sentence-transformers/all-MiniLM-L6-v2`，冻结 BERT 权重、掩码平均池化、L2 归一化，产生 384 维向量。每个类别名在一次运行中只编码一次。各划分单独在训练类别上拟合最多三个主成分。训练时没出现的类别在新增坐标上取零。已保存的表格分类器预测时可直接查表。当前 MiniLM 适配器用于有可读类别名的类别表。短拉丁字母名称的比例是语言适配的粗略判断。[模型卡及许可证](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+MiniLM 使用公开的 `sentence-transformers/all-MiniLM-L6-v2`，冻结 BERT 权重、掩码平均池化、L2 归一化，产生 384 维向量。类别表在每个划分的训练类别上拟合最多三个主成分，预测时可直接查表。单段文本使用句子向量，明确声明为偏好关系的文本对使用左右向量之差，保留词、字符和适用的样式特征。可读类别名和英文兼容文本的判断均只使用输入本身。[模型卡及许可证](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+
+`auto` 根据可用表示选择表格或文本决策方式。另有可复查的深度对照。运行参数 `--method-choice encoder-depth` 让训练反馈决定是否试用 MiniLM-L12。在 `--pretrained-config` 的 JSON 中提供 `deep_minilm_weights` 的本机目录，例如 `{"deep_minilm_weights":".superagent-weights/all-MiniLM-L12-v2"}`。联网时，选中后才获取并核对缺失文件。使用离线模式时只考虑本地已有的权重。搬移文本模型后，预测的 `--minilm-weights` 应指向该模型实际选用的 L6 或 L12 目录。逐折成绩、下载量和额外试验的取舍见[主线实验记录](mainline_iterations_zh.md)。
 
 ## 复核与分工
 

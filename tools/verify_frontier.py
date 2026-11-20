@@ -211,8 +211,16 @@ def main():
             else:repeat[protocol['seed']]=entry
         traces={name:[dict(winner=f['arms'][name]['winner'],trial_6_7=f['arms'][name]['extras']) for f in output['folds']]
                 for name in by_arm}
+        arm_resources={}
+        for name in by_arm:
+            rows=[f['arms'][name] for f in output['folds']]
+            arm_resources[name]=dict(including_reused_fits=sum(r['fits'] for r in rows),
+                new_fits=sum(r['fits'] for r in rows if not r['reused']),
+                generation_calls=sum(r['calls'] for r in rows),api_rmb=sum(r['api_rmb'] for r in rows),
+                qwen_input_tokens=sum(r['qwen_tokens'] for r in rows),course_reference_rmb=sum(r['course_rmb'] for r in rows),
+                minilm_training_tokens=sum(r['minilm_tokens'] for r in rows),seconds=[r['seconds'] for r in rows])
         stages[folder.name]=dict(seed=protocol['seed'],rows=len(rowids),correct=output['correct'],baseline=baseline,traces=traces,
-                                 comparisons=comparisons,qualified=output['qualified'],fold_correct=per_fold,
+                                 comparisons=comparisons,qualified=output['qualified'],fold_correct=per_fold,arm_resources=arm_resources,
                                  protocol_sha256=digest(folder/'protocol.json'),results_sha256=digest(file))
     expect(set(args.require)<=stages.keys(),'A required comparison is absent')
     repeated=[]

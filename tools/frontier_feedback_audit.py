@@ -39,6 +39,19 @@ def inspect_run(folder):
         gain=int(np.sum(measured & ~anchor_correct))
         loss=int(np.sum(~measured & anchor_correct))
         expect((gain,loss)==(ev["corrected"],ev["lost"]) and gain+loss==ev["discordant"],"Inconsistent paired errors")
+        if "residual_shared_errors" in ev:
+            expect(ev["residual_shared_errors"]==int((~measured & ~anchor_correct).sum()),"Incorrect number of shared residual errors")
+        if "text_confidence" in ev:
+            from superagent.method_choice import TEXT_REGULARIZED
+            from superagent.minilm_features import feature_usage
+            from superagent.text_confidence import observe_model
+            data=joblib.load(folder/"inner_data.joblib")
+            model=joblib.load(folder/f"trial_{history[5]['trial']}.joblib")["model"]
+            before=feature_usage(folder)
+            checked=observe_model(model,data["kind"],data["X_search"],truth)
+            expect(feature_usage(folder)==before and checked==ev["text_confidence"],"Grouped confidence does not reproduce")
+            if actual==TEXT_REGULARIZED:
+                expect(rec["params"]["C"]==checked["next_c"],"Regularization proposal differs from observed probabilities")
         delta=gain-loss
         expect(abs(delta/len(truth)-ev["previous_delta"])<1e-10,"Marginal accuracy changed")
         low=max(0,delta)

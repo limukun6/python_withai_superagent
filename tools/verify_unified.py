@@ -23,10 +23,23 @@ def verify_task(stage, reference, reference_arm):
            "Cannot compare unaligned runs")
     output=read(stage/"results.json")
     folds=[]
+    resources = dict(classifier_fits=0, generation_calls=0, local_qwen_input_tokens=0,
+                     course_reference_rmb=0., api_rmb=0., minilm_training_tokens=0,
+                     minilm_outer_tokens=0, training_wall_seconds=[])
     for i,locations in enumerate(protocol["locations"]):
         current=Path(locations["auto"])
         earlier=Path(original["locations"][i][reference_arm])
         now=receipt(current)
+        recorded=output["folds"][i]["arms"]["auto"]
+        expect(not recorded["reused"] and now["model_sha256"]==recorded["model_sha256"],"Unified run must be an independently fitted model")
+        resources["classifier_fits"]+=now["fits"]
+        resources["generation_calls"]+=now["calls"]
+        resources["local_qwen_input_tokens"]+=now["qwen_tokens"]
+        resources["course_reference_rmb"]+=now["course_rmb"]
+        resources["api_rmb"]+=now["api_rmb"]
+        resources["minilm_training_tokens"]+=now["minilm_tokens"]
+        resources["minilm_outer_tokens"]+=recorded.get("prediction_features_this_pass",{}).get("input_tokens",0)
+        resources["training_wall_seconds"].append(now["seconds"])
         past=receipt(earlier)
         history=read(current/"trials.json")
         before=read(earlier/"trials.json")
@@ -55,7 +68,7 @@ def verify_task(stage, reference, reference_arm):
                           changed_final_predictions=changes_outer,rows=len(held["rows"]),
                           correct=int(np.sum(np.asarray(held["auto"])==held["truth"]))))
     expect(sum(f["correct"] for f in folds)==output["correct"]["auto"],"Published unified score changed")
-    return dict(rows=output["rows"],correct=output["correct"]["auto"],reference_arm=reference_arm,folds=folds,
+    return dict(rows=output["rows"],correct=output["correct"]["auto"],reference_arm=reference_arm,folds=folds,resources=resources,
                 protocol_sha256=digest(stage/"protocol.json"),reference_protocol_sha256=digest(reference/"protocol.json"))
 
 

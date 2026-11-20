@@ -1,0 +1,72 @@
+[
+  {
+    "case": "valid",
+    "valid": true,
+    "accepted": true,
+    "passed": true,
+    "csv_created": true
+  },
+  {
+    "case": "short",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction output must contain one scalar per input row",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "unknown_label",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction contains a class outside the frozen training domain",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "matrix_prediction",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction output must contain one scalar per input row",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "nonfinite",
+    "valid": false,
+    "accepted": false,
+    "error": "Predicted labels must be finite scalar values",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "score_rows",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction probability rows or class columns disagree with frozen contract",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "score_domain",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction probability rows or class columns disagree with frozen contract",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "score_normalization",
+    "valid": false,
+    "accepted": false,
+    "error": "Prediction probabilities must be normalized",
+    "passed": true,
+    "csv_created": false
+  },
+  {
+    "case": "score_permuted_valid",
+    "valid": true,
+    "accepted": true,
+    "passed": true,
+    "csv_created": true
+  }
+]

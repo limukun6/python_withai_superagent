@@ -9,10 +9,38 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
+import numpy as np
 
 from .data import load_prediction_features
 from .models import predict_with_model,probability_with_model
 from .metrics import MetricSpec
+
+
+def validate_prediction_outputs(predictions, rows, specification, classes=None, scores=None):
+    """Check unlabeled delivery against the frozen training contract before writing."""
+    predictions=np.asarray(predictions)
+    if predictions.ndim!=1 or len(predictions)!=rows:
+        raise ValueError('Prediction output must contain one scalar per input row')
+    values=predictions.tolist()
+    if any(type(v) not in (str,int,float,bool) or isinstance(v,float) and not np.isfinite(v) for v in values):
+        raise ValueError('Predicted labels must be finite scalar values')
+    declared=specification.get('metric_spec')
+    metric=MetricSpec.from_payload({'metric_spec':declared}) if declared is not None else None
+    if metric is not None:
+        if metric.name!=specification.get('metric','accuracy'):raise ValueError('Frozen metric declarations disagree')
+        if not set(values)<=set(metric.labels):raise ValueError('Prediction contains a class outside the frozen training domain')
+    if specification.get('metric','accuracy')=='roc_auc':
+        if metric is None:raise ValueError('Probability export requires a frozen metric class domain')
+        order=np.asarray(classes)
+        matrix=np.asarray(scores,dtype=float)
+        if (order.ndim!=1 or matrix.shape!=(rows,len(metric.labels)) or len(order)!=len(metric.labels)
+                or len(set(order.tolist()))!=len(order) or set(order.tolist())!=set(metric.labels)
+                or not np.isfinite(matrix).all()):raise ValueError('Prediction probability rows or class columns disagree with frozen contract')
+        if np.any(matrix<0) or np.any(matrix>1) or not np.allclose(matrix.sum(axis=1),1.,atol=1e-6):
+            raise ValueError('Prediction probabilities must be normalized')
+        classes,scores=order,matrix
+    return predictions,classes,scores,{'row_count_checked':True,'label_domain_checked':metric is not None,
+                                      'probability_contract_checked':specification.get('metric','accuracy')=='roc_auc'}
 
 
 def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path) -> Path:
@@ -48,6 +76,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
     predictions = predict_with_model(kind_to_loader[kind], model, features)
     scores=classes=None
     if specification.get('metric','accuracy')=='roc_auc':classes,scores=probability_with_model(kind_to_loader[kind],model,features)
+    predictions,classes,scores,contract_check=validate_prediction_outputs(predictions,len(features),specification,classes,scores)
     destination = Path(output_path).resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", newline="", encoding="utf-8") as file:
@@ -62,6 +91,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         "test_labels_read": False,
         "prediction_file": str(destination),
         'score_class_order':classes.tolist() if classes is not None else None,
+        'prediction_contract':contract_check,
     }
     (destination.parent / "prediction_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"

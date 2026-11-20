@@ -13,6 +13,7 @@ class FeedbackLoopTests(unittest.TestCase):
             primary_metric='accuracy',train_score=.9,search_score=.6,train_accuracy=.9,search_accuracy=.6,
             estimator={'family':'logistic','class':'LogisticRegression','source':'fitted_estimator'},
             configuration_fact_check={'status':'contradicted','declared':'extra_trees','observed':'logistic'},
+            metric_spec=MetricSpec('accuracy',(0,1)).record(),metric_identity={'status':'confirmed'},
             hypothesis_check={'status':'not_supported'},proposal={'hypothesis':'a future idea','evidence_trials':[]},
             explanation_audit={'warnings':[{'code':'prose_claim_contradiction','field':'hypothesis'}]})
         self.available=[{'id':'numeric_tabular_logistic_C1.0','params':{'C':1.}}]
@@ -31,8 +32,10 @@ class FeedbackLoopTests(unittest.TestCase):
         state=self.state()
         raw=decision_context(state,False);checked=decision_context(state,True)
         for row in (raw['history'][0],checked['history'][0]):
-            for key in ('configuration_fact_check','hypothesis_check','explanation_audit'):
+            for key in ('configuration_fact_check','hypothesis_check','explanation_audit','metric_identity'):
                 self.assertNotIn(key,row)
+            self.assertEqual(row['metric_spec']['name'],'accuracy')
+        self.assertEqual(checked['checks'][0]['metric_identity']['status'],'confirmed')
         self.assertEqual(checked['checks'][0]['configuration_fact_check']['status'],'contradicted')
         self.assertEqual(checked['checks'][0]['explanation_check']['warnings'][0]['field'],'hypothesis')
         self.assertEqual(checked['memory']['configuration_checks'][0]['check']['status'],'contradicted')

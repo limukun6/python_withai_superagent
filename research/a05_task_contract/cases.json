@@ -1,0 +1,567 @@
+[
+  {
+    "id": "shape_1",
+    "group": "shape",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "kind": "numeric_tabular",
+      "x": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "metric": "accuracy"
+    }
+  },
+  {
+    "id": "shape_2",
+    "group": "shape",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        "one",
+        "two",
+        "three",
+        "four"
+      ],
+      "metric": "macro_f1"
+    }
+  },
+  {
+    "id": "shape_3",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ]
+      ],
+      "metric": "accuracy"
+    }
+  },
+  {
+    "id": "shape_4",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "kind": "numeric_tabular",
+      "x": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "metric": "accuracy"
+    }
+  },
+  {
+    "id": "shape_5",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "numeric_tabular",
+      "focus": "metric_source"
+    }
+  },
+  {
+    "id": "shape_6",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        "one",
+        "two",
+        "three",
+        "four"
+      ],
+      "focus": "metric_source"
+    }
+  },
+  {
+    "id": "positive_1",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "positive_label": "no"
+    }
+  },
+  {
+    "id": "positive_2",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "roc_auc",
+      "labels": [
+        3,
+        7,
+        3,
+        7
+      ],
+      "positive_label": 3
+    }
+  },
+  {
+    "id": "positive_3",
+    "group": "positive",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "positive_label": "absent"
+    }
+  },
+  {
+    "id": "positive_4",
+    "group": "positive",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        0,
+        1,
+        2,
+        0
+      ]
+    }
+  },
+  {
+    "id": "positive_5",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "focus": "positive_label"
+    }
+  },
+  {
+    "id": "positive_6",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "metric": "roc_auc",
+      "labels": [
+        3,
+        7,
+        3,
+        7
+      ],
+      "focus": "positive_label"
+    }
+  },
+  {
+    "id": "metric_1",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "accuracy"
+    }
+  },
+  {
+    "id": "metric_2",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "macro_f1"
+    }
+  },
+  {
+    "id": "metric_3",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "f1_unspecified"
+    }
+  },
+  {
+    "id": "metric_4",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "loss"
+    }
+  },
+  {
+    "id": "metric_5",
+    "group": "metric",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "focus": "metric_source"
+    }
+  },
+  {
+    "id": "metric_6",
+    "group": "metric",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "kind": "image",
+      "x": [
+        [
+          [
+            0
+          ]
+        ],
+        [
+          [
+            1
+          ]
+        ],
+        [
+          [
+            2
+          ]
+        ],
+        [
+          [
+            3
+          ]
+        ]
+      ],
+      "focus": "metric_source"
+    }
+  },
+  {
+    "id": "pair_1",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "semantics": "preference"
+    }
+  },
+  {
+    "id": "pair_2",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "semantics": "relation",
+      "kind": "text_tabular"
+    }
+  },
+  {
+    "id": "pair_3",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "semantics": "symmetric"
+    }
+  },
+  {
+    "id": "pair_4",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "semantics": "invalid"
+    }
+  },
+  {
+    "id": "pair_5",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {}
+  },
+  {
+    "id": "pair_6",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "text_tabular"
+    }
+  },
+  {
+    "id": "evidence_1",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "trial": 1,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    }
+  },
+  {
+    "id": "evidence_2",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "trial": 1,
+      "split": "train",
+      "metric": "accuracy",
+      "value": 0.9
+    }
+  },
+  {
+    "id": "evidence_3",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "trial": 1,
+      "split": "train",
+      "metric": "accuracy",
+      "value": 0.7
+    }
+  },
+  {
+    "id": "evidence_4",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "trial": 9,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    }
+  },
+  {
+    "id": "evidence_5",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "trial": 2,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    }
+  },
+  {
+    "id": "evidence_6",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "trial": 1,
+      "split": "search",
+      "metric": "roc_auc",
+      "value": 0.7
+    }
+  },
+  {
+    "id": "delivery_1",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "delivery_2",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "order": [
+        "yes",
+        "no"
+      ],
+      "scores": [
+        [
+          0.1,
+          0.9
+        ],
+        [
+          0.9,
+          0.1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "delivery_3",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "order": [
+        "no",
+        "other"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "delivery_4",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.9
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "delivery_5",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "order": null,
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "delivery_6",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": null
+    }
+  }
+]

@@ -305,6 +305,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                                          min(trial_timeout, remaining_seconds))
         row = {'primary_metric':metric.name,"trial": index + 1, "candidate": chosen, "params": configuration["params"],
                "proposal": proposal, "explanation_audit":explanation_audit, **metrics}
+        # Validate objective identity before a result can replace the incumbent.
+        row['metric_identity']=metric.check_identity(row.get('metric_spec'))
+        if row.get('primary_metric')!=metric.name:raise ValueError('Worker result uses a different task metric')
         from .prediction_evidence import comparison_for_trial
         row['paired_error_comparison']=comparison_for_trial(row,history,directory,payload['y_search'],payload_sha256,metric)
         logger.event('paired_prediction_evidence',trial=index+1,comparison=row['paired_error_comparison'])

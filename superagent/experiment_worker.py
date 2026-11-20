@@ -50,7 +50,7 @@ def main() -> None:
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
                      'classifier_fits':int(getattr(model,'classifier_fits',1)),
                      'training_metadata':training_metadata,'selected_iterations':selected_iterations,
-                     'estimator':observed,'resolved_configuration':configuration}}, output_path)
+                     'estimator':observed,'resolved_configuration':configuration,'metric_spec':metric.record()}}, output_path)
         return
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
@@ -64,7 +64,7 @@ def main() -> None:
                 **score_evidence,
                 "search_predictions": predictions,
                 'prediction_record':make_prediction_record(predictions,payload['y_search'],payload_sha256), "metrics": {
-        "error_slices":slices, "primary_metric":metric.name,"train_score":train_metrics["score"],"search_score":search_metrics["score"],
+        "error_slices":slices, "primary_metric":metric.name,'metric_spec':metric.record(),"train_score":train_metrics["score"],"search_score":search_metrics["score"],
         "train_metrics":train_metrics,"search_metrics":search_metrics,"score_gap":train_metrics["score"]-search_metrics["score"],
         "train_accuracy": train_accuracy,
         "search_accuracy": search_accuracy,

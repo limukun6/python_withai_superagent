@@ -128,7 +128,7 @@ def _run(args):
         'review_failure_policy':'retain_valid_original_for_current_trial_disable_future_architecture_calls_mark_impure',
         'planner_failure_policy':'stop_without_retry_or_fallback' if history_feedback else 'existing_planner_policy',
         'history_feedback':{'enabled':history_feedback,'checks_visible':args.planner=='checked-history',
-                            'context_version':'history-evidence-v2' if history_feedback else None},
+                            'context_version':'history-evidence-v3' if history_feedback else None},
         'model':args.model if pricing else None,'pricing':pricing.metadata() if pricing else None,
         'api_endpoint_origin_and_path':urlunsplit((endpoint.scheme,endpoint.netloc,endpoint.path,'','')) if endpoint else None,
         'credential_contents_logged':False,'automatic_api_retries':False,

@@ -72,6 +72,8 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
         return result
     search_single = best_model
     confirmed = confirmation.get("valid_confirmation", False)
+    if confirmed and confirmation.get('primary_metric','accuracy')!=metric.name:
+        raise ValueError('Final selection confirmation uses a different task metric')
     selection_rule = confirmation["selection_rule"] if confirmed else f"max inner {metric.name}; ties by candidate id"
     selection_metric = f"confirmation_mean_{metric.name}" if confirmed else f"inner_search_{metric.name}"
     selection_score = confirmation["selection_score"] if confirmed else best_score
@@ -112,6 +114,7 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
             else:
                 fitted, metrics = None, {"status": "timeout", "error": "No time remains for final refit"}
             logger.event("final_refit", candidate=candidate, **metrics)
+            metric.check_identity(metrics.get('metric_spec'))
             result["refit_training_seconds"] += metrics.get("training_seconds", 0.)
             refit_success[candidate] = fitted is not None
             if fitted is not None:

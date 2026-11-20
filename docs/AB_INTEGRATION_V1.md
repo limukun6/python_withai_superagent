@@ -1,5 +1,7 @@
 # A/B 共同接入约定 v1
 
+2026-11-21增量：A已补目标来源/metric_spec身份与导出校验；提供scheduler_bridge的动作校验及注入式分发（尚未接正式CLI）。新交接见A_TO_B_NEXT_HANDOFF_20261121.md，实验结果见batches/A_window_20261121_results.md。接口字段继续沿用本文v1。
+
 双方分工：我们 A 维护任务接入、标签/指标契约、事实核对、统一 CLI、执行日志与模型导出；B 维护方法库、强基线和 explore/confirm/stop 的调度。两人都实现与运行实验。该文档、examples/ab_v1/input.json 和 tools/export_b_handoff.py 是交接入口。
 
 ## 共同基线与提交

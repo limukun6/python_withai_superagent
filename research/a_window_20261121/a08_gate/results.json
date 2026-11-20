@@ -1,0 +1,293 @@
+[
+  {
+    "name": "explore",
+    "passed": true,
+    "admitted": true,
+    "plan": {
+      "action": {
+        "action": "explore",
+        "candidate_id": "b",
+        "split_id": "primary",
+        "reason": "Fixture explore",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      "candidate": {
+        "id": "b",
+        "params": {}
+      },
+      "split": {
+        "id": "primary",
+        "seed": 707
+      },
+      "expected_classifier_fits": 1,
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616",
+      "budget_before": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      }
+    }
+  },
+  {
+    "name": "confirm",
+    "passed": true,
+    "admitted": true,
+    "plan": {
+      "action": {
+        "action": "confirm",
+        "candidate_id": "a",
+        "split_id": "confirmation_1",
+        "reason": "Fixture explore",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      "candidate": {
+        "id": "a",
+        "params": {}
+      },
+      "split": {
+        "id": "confirmation_1",
+        "seed": 10707
+      },
+      "expected_classifier_fits": 1,
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616",
+      "budget_before": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      }
+    }
+  },
+  {
+    "name": "stop",
+    "passed": true,
+    "admitted": true,
+    "plan": {
+      "action": {
+        "action": "stop",
+        "candidate_id": null,
+        "split_id": null,
+        "reason": "Fixture explore",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 0
+      },
+      "candidate": null,
+      "expected_classifier_fits": 0,
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616",
+      "budget_before": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      },
+      "scope": "stop search; common finalization separately consumes reserved refit"
+    }
+  },
+  {
+    "name": "unknown_candidate",
+    "passed": true,
+    "admitted": false,
+    "error": "Candidate has no trusted executable capability"
+  },
+  {
+    "name": "repeated_explore",
+    "passed": true,
+    "admitted": false,
+    "error": "Explore requires a new available candidate on primary split"
+  },
+  {
+    "name": "confirm_failed",
+    "passed": true,
+    "admitted": false,
+    "error": "Confirm requires a completed candidate and a new split"
+  },
+  {
+    "name": "future_evidence",
+    "passed": true,
+    "admitted": false,
+    "error": "Action evidence must reference distinct observed trials"
+  },
+  {
+    "name": "bad_split",
+    "passed": true,
+    "admitted": false,
+    "error": "Split is not executor-registered"
+  },
+  {
+    "name": "false_cost",
+    "passed": true,
+    "admitted": false,
+    "error": "Scheduler cost disagrees with trusted candidate cost"
+  },
+  {
+    "name": "bool_cost",
+    "passed": true,
+    "admitted": false,
+    "error": "estimated fits must be an integer >= 0"
+  },
+  {
+    "name": "stop_selects_winner",
+    "passed": true,
+    "admitted": false,
+    "error": "Stop must hand selection back without specifying a winner or split"
+  },
+  {
+    "name": "inconsistent_remaining",
+    "passed": true,
+    "admitted": false,
+    "error": "Inconsistent actual fit budget"
+  },
+  {
+    "name": "unknown_attempts",
+    "passed": true,
+    "admitted": false,
+    "error": "attempted fits must be an integer >= 0"
+  },
+  {
+    "name": "unknown_failure",
+    "passed": true,
+    "admitted": false,
+    "error": "Unknown failed fit costs must be resolved before scheduling"
+  },
+  {
+    "name": "fit_cap",
+    "passed": true,
+    "admitted": false,
+    "error": "AB experiment cap exceeded"
+  },
+  {
+    "name": "llm_cap",
+    "passed": true,
+    "admitted": false,
+    "error": "AB experiment cap exceeded"
+  },
+  {
+    "name": "refit_reserved",
+    "passed": true,
+    "admitted": false,
+    "error": "Action would consume reserved refit budget"
+  },
+  {
+    "name": "repeated_confirmation",
+    "passed": true,
+    "admitted": false,
+    "error": "Candidate already observed on this split"
+  },
+  {
+    "name": "unknown_internal_fits",
+    "passed": true,
+    "admitted": false,
+    "error": "trusted classifier fits must be an integer >= 1"
+  },
+  {
+    "name": "larger_refit",
+    "passed": true,
+    "admitted": false,
+    "error": "Candidate cannot be refitted within the reserved budget"
+  },
+  {
+    "name": "modified_params",
+    "passed": true,
+    "admitted": false,
+    "error": "Candidate parameters differ from trusted capability"
+  },
+  {
+    "name": "dispatch_explore",
+    "passed": true,
+    "result": {
+      "observation": {
+        "status": "completed",
+        "classifier_fits": 0,
+        "simulated": true
+      },
+      "budget": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      },
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616"
+    }
+  },
+  {
+    "name": "dispatch_confirm",
+    "passed": true,
+    "result": {
+      "observation": {
+        "status": "completed",
+        "classifier_fits": 0,
+        "simulated": true
+      },
+      "budget": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      },
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616"
+    }
+  },
+  {
+    "name": "dispatch_stop",
+    "passed": true,
+    "result": {
+      "observation": {
+        "status": "completed",
+        "classifier_fits": 0,
+        "simulated": true
+      },
+      "budget": {
+        "fit_limit": 11,
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 1,
+        "remaining_fit_allowance": 9,
+        "reserved_final_refit": 1,
+        "llm_request_limit": 3,
+        "used_llm_requests": 0,
+        "unknown_failed_attempts": 0
+      },
+      "state_sha256": "f137c65567f1d517f8b8d29063566e76616cebbc6e8d102366425d859416e616"
+    }
+  },
+  {
+    "name": "execution_unknown",
+    "passed": true
+  },
+  {
+    "name": "execution_excess",
+    "passed": true
+  },
+  {
+    "name": "no_automatic_retry",
+    "passed": true
+  }
+]

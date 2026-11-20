@@ -8,7 +8,7 @@ def decision_context(state, checked):
     record = state.record()
     history = deepcopy(record['history'])
     for row in history:
-        for field in ('hypothesis_check', 'paired_error_comparison', 'explanation_audit','configuration_fact_check'):
+        for field in ('hypothesis_check', 'paired_error_comparison', 'explanation_audit','configuration_fact_check','metric_identity'):
             row.pop(field, None)
         # Wall clock is machine noise, not a property of the candidate. Two arms
         # that ran the same trials differ only in the fourth decimal here, and a
@@ -30,9 +30,11 @@ def decision_context(state, checked):
         'A failed configuration does not invalidate its entire algorithm family. '
         'Review the latest completed measurement and explain what the next experiment tests. '
         'Actual estimator observations describe what ran; declarations and classifier names are not measurements. '
+        'Task goal_resolution distinguishes declared objectives from executable defaults; unknown intent is not confirmed intent. '
         'A repeated family is allowed with an evidence-based parameter change. No extra fits or API calls.')
     if checked:
         context['checks'] = [{'trial':r['trial'], 'hypothesis_check':r.get('hypothesis_check'),
+                             'metric_identity':r.get('metric_identity'),
                              'configuration_fact_check':r.get('configuration_fact_check'),
                              'explanation_check':{
                                  'warnings':deepcopy((r.get('explanation_audit') or {}).get('warnings',[])),

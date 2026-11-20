@@ -126,6 +126,7 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
     spec = {
         "task_kind": "categorical_tabular_binary",
         "metric": "accuracy",
+        "goal_sources": {"primary_metric": "legacy_adapter_default"},
         "train_rows": int(len(y_train)),
         "validation_rows": int(len(y_val)) if y_val is not None else 0,
         'provided_validation_available':y_val is not None,
@@ -150,6 +151,7 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
     spec = {
         "task_kind": "pair_text_binary",
         "metric": "accuracy",
+        "goal_sources": {"primary_metric": "legacy_adapter_default"},
         "train_rows": int(len(y_train)),
         "validation_rows": int(len(y_val)) if y_val is not None else 0,
         'provided_validation_available':y_val is not None,

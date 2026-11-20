@@ -163,5 +163,7 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
         y=_validate_labels(y,len(x))
         if 'positive_label' in spec and y.dtype.kind in 'US':spec['positive_label']=str(spec['positive_label'])
     if len(x)==0:raise ValueError('Empty split')
+    spec['goal_sources']={'primary_metric':('default_accuracy' if manifest.get('_schema_origin')=='native_v1' or 'metric' not in manifest
+                                           else 'declared_manifest')}
     spec['kind']=kind
     return kind,x,y,spec

@@ -22,13 +22,20 @@ DIRECT_CONTEXT = 'direct_splits_with_category_context'
 CROSSES = 'category_cross_C0.1'
 TYPED = 'typed_category_features'
 TYPED_DIRECT = 'typed_features_with_direct_splits'
+RESIDUAL = 'category_conditional_distributions'
+MARGINAL = 'category_marginal_frequency'
+PERMUTED_RESIDUAL = 'permuted_category_distributions'
+RESIDUAL_DIRECT = 'category_distributions_with_direct_splits'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control')
 
 
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
-    if mode == 'context-control' and evidence['kind']=='categorical_tabular':
+    if mode=='distribution-control' and evidence['kind']=='categorical_tabular' and PERMUTED_RESIDUAL in feasible:
+        priorities=[PERMUTED_RESIDUAL,MARGINAL]
+        reason='Matched diagnostic using shuffled category coordinates and marginal frequencies.'
+    elif mode == 'context-control' and evidence['kind']=='categorical_tabular':
         priorities = [MINILM, COOCCUR]
         reason = 'Fixed comparison using frozen semantic features followed by training-only category co-occurrence.'
     elif mode == 'fixed':
@@ -39,9 +46,24 @@ def select_action(evidence, feasible, mode, used):
     else:
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
-        repr_mode=mode in ('representation','typed-values')
-        pair_aware = mode in ('paired','context-control','representation','typed-values') and evidence.get('primary_metric')=='accuracy'
-        if mode=='typed-values' and not used and TYPED in feasible:
+        repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
+        pair_aware = (repr_mode or mode in ('paired','context-control')) and evidence.get('primary_metric')=='accuracy'
+        if mode=='distribution' and not used and RESIDUAL in feasible:
+            priorities=[RESIDUAL]
+            reason='Repeated categorical fields and common model errors make their training-only conditional distributions testable.'
+        elif mode=='distribution' and used and used[-1]==RESIDUAL:
+            a,b=evidence['corrected'],evidence['lost']
+            boundary=math.sqrt(max(1,a+b))
+            if pair_aware and a+b>=8 and a-b>=boundary:
+                priorities=[RESIDUAL_DIRECT,MARGINAL]
+                reason='The new coordinates gained more rows than they lost. Try direct splits with the same coordinates.'
+            elif pair_aware and a+b>=8 and b-a>=boundary:
+                priorities=[COOCCUR,DIRECT,CROSSES]
+                reason='The new coordinates caused more errors. Return to a different representation.'
+            else:
+                priorities=[MARGINAL,COOCCUR]
+                reason='Net gains are uncertain. Test whether the frequency of each category alone is sufficient.'
+        elif mode=='typed-values' and not used and TYPED in feasible:
             priorities=[TYPED]
             reason='The table has repeated values with a consistent quantity or clock scale. Test their numerical features on the leading classifier.'
         elif mode=='typed-values' and used and used[-1]==TYPED:
@@ -134,7 +156,17 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     rare_fraction, short_latin_share, low_errors = 0., 0., 0
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
-        if mode in ('representation','typed-values'):
+        if mode in ('representation','typed-values','distribution','distribution-control'):
+            if mode.startswith('distribution') and incumbent['candidate'].startswith(BACKBONES) and feature_count<=40 and len(x)*feature_count<=2000000:
+                from .distribution_features import column_codes
+                encodable=column_codes(x)
+                if len(encodable)>=2 and any(len(v[0])>=3 for v in encodable.values()):
+                    base=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],prior_count=20.)
+                    eligible[MARGINAL]=dict(base,representation='frequency')
+                    if mode=='distribution-control':
+                        eligible[PERMUTED_RESIDUAL]=dict(base,representation='permuted')
+                    else:
+                        eligible[RESIDUAL]=dict(base,representation='conditional')
             pairs=feature_count*(feature_count-1)//2
             if 2<=feature_count<=32 and len(x)*(feature_count+pairs)<=6000000:
                 from .challengers import cross_candidate
@@ -143,6 +175,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
                 small=sum(3<=len(np.unique(column))<=64 for column in _clean_categories(x).T)
                 if small>=1:
                     eligible[DIRECT]=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],one_hot_max_size=64)
+                    if RESIDUAL in eligible:eligible[RESIDUAL_DIRECT]=dict(eligible[RESIDUAL],one_hot_max_size=64)
                 if mode=='typed-values':
                     from .typed_categories import column_types
                     typed=column_types(x)
@@ -231,6 +264,9 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
+        elif name in (RESIDUAL,RESIDUAL_DIRECT,PERMUTED_RESIDUAL,MARGINAL) and kind=='categorical_tabular':
+            from .distribution_features import DistributionClassifier
+            model=DistributionClassifier(params).fit(rows,labels)
         elif name in (TYPED,TYPED_DIRECT) and kind=='categorical_tabular':
             from .typed_categories import TypedCategoryClassifier
             model=TypedCategoryClassifier(params).fit(rows,labels)

@@ -35,6 +35,8 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    if candidate in ('category_conditional_distributions','permuted_category_distributions','category_distributions_with_direct_splits'):return 'category_distributions'
+    if candidate=='category_marginal_frequency':return 'category_frequency'
     if candidate in ('typed_category_features','typed_features_with_direct_splits'):return 'typed_category_features'
     if candidate in ('direct_category_splits','direct_splits_with_category_context'):return 'direct_category_splits'
     if candidate in ('scratch_neural_classifier','training_category_cooccurrence','minilm_category_levels'):return candidate

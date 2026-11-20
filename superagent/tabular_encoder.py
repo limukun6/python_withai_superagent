@@ -114,13 +114,16 @@ class LevelClassifier:
                 swapped[cycle] = coords[np.roll(cycle, 1)]
                 coords = swapped
             self.lookups[i] = dict(zip(levels, coords))
+        return self.fit_backbone(rows,labels)
+
+    def fit_backbone(self,rows,labels):
         p, backbone = self.params['backbone_params'], self.params['backbone']
         if backbone.startswith('catboost_depth'):
             self.one_hot = None
             self.classifier = _tabular_catboost(labels, p['depth'], p['l2_leaf_reg'])
             if 'one_hot_max_size' in self.params:
                 self.classifier.set_params(one_hot_max_size=self.params['one_hot_max_size'])
-            self.classifier.fit(self.features(rows), labels, cat_features=list(range(raw.shape[1])))
+            self.classifier.fit(self.features(rows), labels, cat_features=list(range(np.shape(rows)[1])))
         else:
             from sklearn.preprocessing import OneHotEncoder
             self.one_hot = OneHotEncoder(handle_unknown='ignore').fit(_clean_categories(rows))

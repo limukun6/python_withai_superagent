@@ -20,9 +20,9 @@ from sklearn.datasets import make_classification
 
 from superagent.ab_catalog import common_catalog
 from superagent.ab_methods import FIELDS, IMAGE, TEXT
-from superagent.ab_scheduler import CONFIRMATIONS, PRIMARY, ROW_SCOPE, next_action
+from superagent.ab_scheduler import CONFIRMATIONS, PRIMARY, ROW_SCOPE, next_action, selection_evidence
 from superagent.benchmark import train_candidate
-from superagent.confirmation import decide, shortlist
+from superagent.confirmation import decide
 from superagent.contracts import TaskSpec
 from superagent.data import DevelopmentTask, load_training_task
 from superagent.events import RunLogger
@@ -62,7 +62,8 @@ def trace(run):
 
 def sources():
     files = [*sorted((ROOT/'superagent').glob('*.py')),Path(__file__).resolve(),
-             ROOT/'scripts/ab_acceptance_guard/sitecustomize.py',ROOT/'docs/batches/B1_01_plan.md']
+             ROOT/'scripts/ab_acceptance_guard/sitecustomize.py',ROOT/'docs/batches/B1_01_plan.md',
+             ROOT/'docs/batches/B1_02_plan.md']
     return digest({str(p.relative_to(ROOT)):sha(p.read_bytes()) for p in files})
 
 
@@ -160,25 +161,23 @@ def observe(run,task,partitions,menu):
         evidence.append(dict(trial=trial,candidate_id=name,split_id=split,row_ids=partitions[split]['row_ids'],
                              row_id_scope=ROW_SCOPE,predictions=raw['predictions'].tolist(),
                              **{k:raw[k] for k in ('label_sha256','prediction_sha256','evaluation_payload_sha256')}))
-    return history,actions,began
+    return history,actions,began,selection_evidence(state,trusted_partitions=partitions)
 
 
-def finish(run,task,history,began):
+def finish(run,task,history,began,review):
     primary = [r for r in history if r['split_id']==PRIMARY]
-    ranked = shortlist(primary,2)
     by_candidate = {(r['candidate'],r['split_id']):r for r in history}
-    aligned = [PRIMARY]
-    for split in CONFIRMATIONS:
-        if len(ranked) != 2 or any((r['candidate'],split) not in by_candidate for r in ranked):
-            break
-        aligned.append(split)
-    selection = {}
-    if len(aligned)>1:
-        measurements = {r['candidate']:[dict(seed=SEEDS[s],**by_candidate[r['candidate'],s]) for s in aligned]
-                        for r in ranked}
-        selection = decide(ranked,measurements,[SEEDS[s] for s in aligned],'exact_rows')
-    chosen = selection.get('selected_candidate',ranked[0]['candidate'])
-    row = next(r for r in ranked if r['candidate'] == chosen)
+    chosen,aligned = review['incumbent'],review['basis']
+    last = review['promotions'][-1] if review['promotions'] else None
+    names = [last['previous'],chosen] if last else [chosen]
+    ranked = [by_candidate[name,PRIMARY] for name in names]
+    measurements = {name:[dict(seed=SEEDS[s],**by_candidate[name,s]) for s in aligned] for name in names}
+    selection = decide(ranked,measurements,[SEEDS[s] for s in aligned],'exact_rows')
+    if not selection['valid_confirmation'] or selection['selected_candidate'] != chosen:
+        raise ValueError('A selection and supported paired evidence disagree')
+    selection.update(b_scheduler_review=review,
+                     selection_rule='Best of initial three; replace on two paired wins and mean gain >= 0.002')
+    row = by_candidate[chosen,PRIMARY]
     frozen = joblib.load(run/f"trial_{row['trial']}.joblib")['model']
     before = len(trace(run))
     def worker(payload,name,dest,timeout):
@@ -189,6 +188,7 @@ def finish(run,task,history,began):
     if not metrics['refit_succeeded'] or len(trace(run)) != before+1 or len(trace(run)) > 11:
         raise RuntimeError('Full refit unsuccessful or budget violated')
     return dict(family=chosen,selection_splits=aligned,selection_rule=read(run/'selection.json')['selection_rule'],
+                incumbent_evidence=review,
                 selection_score=read(run/'final_selection.json')['selection_score'],search_fits=before,
                 full_refits=len(trace(run))-before,task_classifier_fits=len(trace(run)))
 
@@ -275,7 +275,7 @@ def main():
         partitions = freeze_partitions(task,run)
         menu = common_catalog(TaskSpec.from_task(task).record(),train_rows=len(task.y_train))
         tools = {k:version(k) for k in ('numpy','scipy','scikit-learn','joblib')}
-        protocol = dict(batch='B1-01',base=BASE,source_sha256=sources(),library_versions=tools,
+        protocol = dict(batch='B1-02',base=BASE,source_sha256=sources(),library_versions=tools,
                         python=sys.version.split()[0],frozen_utc=datetime.now(timezone.utc).isoformat(),
                         dataset='anonymous generated numeric classification',data_seed=932,query_seed=975,
                         auxiliary_fixture_seed=577,training_rows=len(task.y_train),training_classes=[0,1],seeds=SEEDS,
@@ -284,11 +284,11 @@ def main():
                         candidate_ids=[c['id'] for c in menu],catalog_sha256=digest(menu),fit_limit=11,
                         task_time_limit_s=WALL_SECONDS,worker_time_limit_s=TRIAL_SECONDS,
                         paid_requests_allowed=0,course_flash_cap=3,prediction_rows=len(query),
-                        initial_assets='Only locally verified optional dependencies',selection='A shortlist top two on primary; use A decide on their common completed split prefix including primary; otherwise primary leader')
+                        initial_assets='Only locally verified optional dependencies',selection='Protect initial best of three; two matched wins and mean gain >= 0.002; A decide on common evidence, A finalize')
         write(run/'protocol.json',protocol)
-        history,actions,began = observe(run,task,partitions,menu)
+        history,actions,began,review = observe(run,task,partitions,menu)
         result.update(actions=actions,observations=history)
-        result.update(finish(run,task,history,began))
+        result.update(finish(run,task,history,began,review))
         result['prediction'] = predict_twice(run,query)
         result['post_reload_task_elapsed_seconds'] = round(time.monotonic()-began,3)
         result['task_physical_fit_trace'] = trace(run)

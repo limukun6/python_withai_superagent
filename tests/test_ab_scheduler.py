@@ -91,7 +91,7 @@ class TestActionAdapter(unittest.TestCase):
     def test_both_sides_and_refit_must_fit_no_retry_on_failed_confirmation(self):
         state = competing()
         state['budget'].update(remaining_fit_allowance=2,attempted_classifier_fits=9)
-        self.assertEqual(next_action(state)['action'],'explore')
+        self.assertEqual(next_action(state)['action'],'stop')
         state = competing()
         action = next_action(state)
         state['history'].append(dict(trial=4,candidate=action['candidate_id'],split_id='confirmation_1',
@@ -105,8 +105,8 @@ class TestActionAdapter(unittest.TestCase):
         state['available_candidates'] = [state['available_candidates'][0],{'id':'unnamed','params':{}},
                                         {'id':'stack','params':{'maximum_classifier_fits_per_evaluation':5}}]
         self.assertEqual(next_action(state)['action'],'stop')
-        state['available_candidates'][-1]['params']['maximum_classifier_fits_per_evaluation'] = 3
-        self.assertEqual(next_action(state)['estimated_classifier_fits'],3)
+        state['available_candidates'][-1]['params']['maximum_classifier_fits_per_evaluation'] = 2
+        self.assertEqual(next_action(state)['estimated_classifier_fits'],2)
 
     def test_primary_metric_and_auc_are_not_replaced_by_accuracy(self):
         state = competing()

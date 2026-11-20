@@ -5,6 +5,7 @@ import math
 from pathlib import Path
 
 from .ab_methods import ROUTES
+from .ab_comparison import MIN_GAIN, incumbent_review, macro_f1_pair_spread
 from .evidence_agent import route_of
 from .metrics import MetricSpec, score_of
 from .prediction_evidence import fingerprint
@@ -97,18 +98,23 @@ def _cost(record, known_single):
     params = record.get('params') or {}
     declared = [v for v in (record.get('expected_classifier_fits'),
                 params.get('maximum_classifier_fits_per_evaluation'),
-                params.get('classifier_fits_per_evaluation'), record.get('classifier_fits')) if v is not None]
-    if declared and all(type(v) is int and v >= 1 for v in declared):
-        return max(declared)
-    return 1 if not declared and record.get('id',record.get('candidate')) in known_single else None
+                params.get('classifier_fits_per_evaluation')) if v is not None]
+    if not declared and record.get('id',record.get('candidate')) in known_single:
+        declared = [1]
+    if not declared or any(type(v) is not int or v < 1 for v in declared):
+        return None
+    observed = record.get('classifier_fits',0)
+    ceiling = max(declared)
+    return ceiling if type(observed) is int and 0 <= observed <= ceiling else None
 
 
-def _choose_contender(front, records, metric):
-    lead = front[0]
+def _contenders(lead, front, records, metric, trusted):
     pred = records.get(lead['trial'])
     if pred is None:
-        return None
-    for other in front[1:]:
+        return
+    for other in front:
+        if other['trial'] == lead['trial']:
+            continue
         second = records.get(other['trial'])
         if second is None:
             continue
@@ -116,23 +122,31 @@ def _choose_contender(front, records, metric):
         if not discordant and not metric.requires_scores:
             continue
         # A descriptive triage threshold, not a confidence bound or an efficacy test.
-        margin = max(.002, math.sqrt(discordant)/len(pred)) if metric.name == 'accuracy' else .02
+        if metric.name == 'accuracy':
+            margin = max(MIN_GAIN, math.sqrt(discordant)/len(pred))
+            screen = 'paired hard-label disagreement'
+        elif metric.name == 'macro_f1' and trusted is not None:
+            margin = max(MIN_GAIN,macro_f1_pair_spread(trusted['labels'],pred,second,metric.labels,
+                                                       trusted.get('groups')))
+            screen = 'paired local macro-F1 resampling'
+        else:
+            margin = MIN_GAIN
+            screen = 'practical primary-metric threshold'
         if score_of(lead) - score_of(other) <= margin:
-            return lead, other, discordant, len(pred)
-    return None
+            yield lead, other, discordant, len(pred), screen
 
 
 def _confirmation(pair, splits, attempted, measured, records, available, reserve, known_single, metric):
     if pair is None:
         return None
-    lead, rival, discordant, rows = pair
+    lead, rival, discordant, rows, screen = pair
     names = [r['candidate'] for r in (lead,rival)]
     refs = [lead['trial'], rival['trial']]
     costs = {r['candidate']:_cost(r,known_single) for r in (lead,rival)}
     if None in costs.values():
         return None
     reason = (f"Comparable primary {metric.name} {score_of(lead):.4f} and {score_of(rival):.4f}; "
-              f"hard predictions differ on {discordant}/{rows} aligned rows.")
+              f"hard predictions differ on {discordant}/{rows} aligned rows ({screen}).")
     for index, split in enumerate(splits):
         if index:
             previous = [measured.get((name,splits[index-1])) for name in names]
@@ -140,7 +154,8 @@ def _confirmation(pair, splits, attempted, measured, records, available, reserve
                 return None
             primary_gap = score_of(lead) - score_of(rival)
             previous_gap = score_of(previous[0]) - score_of(previous[1])
-            if (primary_gap > 0 and previous_gap > 0) or primary_gap == previous_gap == 0:
+            if (primary_gap*previous_gap > 0 and abs((primary_gap+previous_gap)/2) >= MIN_GAIN
+                    or primary_gap == previous_gap == 0):
                 return None
             refs.extend(r['trial'] for r in previous)
             reason += f" The first replication did not resolve the primary ordering (gap {previous_gap:+.4f})."
@@ -156,6 +171,18 @@ def _confirmation(pair, splits, attempted, measured, records, available, reserve
             return _action('confirm',reason + ' Complete a matched pair on ' + split + '.',
                            refs,name,split,costs[name])
     return None
+
+
+def selection_evidence(state, *, trusted_partitions=None):
+    """Local finalization input for A. The six-field stop action never designates a winner."""
+    metric = MetricSpec.from_payload({'metric_spec':state['task']['metric']})
+    splits = tuple(state.get('registered_confirmation_splits',CONFIRMATIONS))
+    if state.get('ab_schema_version') != 1 or splits != CONFIRMATIONS[:len(splits)]:
+        raise ValueError('Unsupported v1 partition declaration')
+    _, measured, records = _observations(state['history'],state['prediction_evidence'],metric,splits,trusted_partitions)
+    review = incumbent_review(measured,records,splits)
+    review['primary_metric'] = metric.name
+    return review
 
 
 def next_action(state, *, on_explore=None, trusted_partitions=None):
@@ -195,14 +222,18 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
     feasible = []
     for e in entries:
         name, cost = e['id'], _cost(e,known_single)
-        if (name,PRIMARY) not in attempted and cost and cost + max(reserve,cost) <= available:
+        minimum = 2*cost if cost and len(front)>=3 else cost
+        if (name,PRIMARY) not in attempted and cost and minimum + max(reserve,cost) <= available:
             if not metric.requires_scores or e.get('supports_probabilities', 'rbf_svm' not in name):
                 feasible.append((e,cost))
-    if front and (len(front) >= 3 or not feasible):
-        pair = _choose_contender(front,records,metric)
-        confirm = _confirmation(pair,splits,attempted,measured,records,available,reserve,known_single,metric)
-        if confirm:
-            return confirm
+    if any(r['trial'] in records for r in front) and (len(front) >= 3 or not feasible):
+        lead_id = incumbent_review(measured,records,splits)['incumbent']
+        lead = next(r for r in front if r['candidate']==lead_id)
+        local_primary = trusted_partitions.get(PRIMARY) if trusted_partitions is not None else None
+        for pair in _contenders(lead,front,records,metric,local_primary):
+            confirm = _confirmation(pair,splits,attempted,measured,records,available,reserve,known_single,metric)
+            if confirm:
+                return confirm
     if not feasible:
         return _action('stop','No eligible new fit or complete matched replication fits the shared budget.',
                        [r['trial'] for r in front[:2]])

@@ -34,8 +34,10 @@ PAIR_POSTERIOR = 'cross_fitted_category_pair_effects'
 SINGLE_POSTERIOR = 'cross_fitted_category_single_effects'
 TEXT_MINILM = 'minilm_text_with_lexical_features'
 TEXT_MINILM_ONLY = 'minilm_text_dense_only'
+PAIR_OPPONENT = 'minilm_opponent_interactions'
+PAIR_ITEM = 'minilm_single_item_interactions'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control')
 
 
 def resolved_mode(mode, feasible):
@@ -69,10 +71,18 @@ def select_action(evidence, feasible, mode, used):
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
         pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control','posteriors')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='text-encoder' and not used and TEXT_MINILM in feasible:
+        if mode in ('opponent','item-control') and used and used[-1]==TEXT_MINILM and PAIR_OPPONENT in feasible:
+            gain,loss=evidence['corrected'],evidence['lost']
+            enough=evidence['residual_shared_errors']>=max(12,.05*evidence['search_rows'])
+            if not enough or loss-gain>math.sqrt(max(1,gain+loss)):
+                return None,'The hybrid lacks either shared residual errors or competitive accuracy. Continue ordinary search.'
+            priorities=[PAIR_OPPONENT if mode=='opponent' else PAIR_ITEM]
+            reason=('The text models share residual errors. Test whether the two opposing texts interact.'
+                    if mode=='opponent' else 'With the same residual evidence, test nonlinear features of each item separately.')
+        elif mode in ('text-encoder','opponent','item-control') and not used and TEXT_MINILM in feasible:
             priorities=[TEXT_MINILM]
             reason='Several text classifiers miss the same rows and the available frozen encoder matches the observed writing system. Test sentence features beside word and character features.'
-        elif mode=='text-encoder' and used and used[-1]==TEXT_MINILM:
+        elif mode in ('text-encoder','opponent','item-control') and used and used[-1]==TEXT_MINILM:
             gain,loss=evidence['corrected'],evidence['lost']
             supported=evidence['primary_metric']=='accuracy' and gain+loss>=8 and gain-loss>=math.sqrt(gain+loss)
             if not supported:
@@ -220,7 +230,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     eligible = {}
     encoder_installed=all(importlib.util.find_spec(name) is not None for name in ('torch','transformers','tokenizers','safetensors'))
     text_latin_share=None
-    if mode in ('text-encoder','text-encoder-control','auto') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
+    if mode in ('text-encoder','text-encoder-control','auto','opponent','item-control') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
         sampled=[x[i] for i in np.linspace(0,len(x)-1,min(256,len(x)),dtype=int)]
         texts=[s for pair in sampled for s in pair] if kind=='pair_text' else sampled
         letters=[c for s in texts for c in str(s)[:512] if c.isalpha()]
@@ -229,6 +239,10 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             base=dict(model=MINI_MODEL,C=.3,dimensions=384,max_tokens=256)
             eligible[TEXT_MINILM]=dict(base,dense_only=False)
             eligible[TEXT_MINILM_ONLY]=dict(base,dense_only=True)
+            if mode in ('opponent','item-control') and kind=='pair_text' and len(x)>=256:
+                common=dict(base,rank=96,projection_seed=9181)
+                eligible[PAIR_OPPONENT]=dict(common,opponent_context=True)
+                eligible[PAIR_ITEM]=dict(common,opponent_context=False)
     if kind in ('pair_text','single_text') and encoder_installed and config and config.get('weights'):
         transfer=consider(kind,history[:protected_count],folder,labels,config,train_features=x,search_features=held)
         if transfer['decision']=='try': eligible[semantic]=PARAMS
@@ -341,6 +355,10 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             corrected=corrected,lost=lost,discordant=corrected+lost,search_rows=len(labels))
     if curve is not None:ev['boosting_curve']=curve
     if text_latin_share is not None:ev['sampled_ascii_letter_fraction']=text_latin_share
+    if mode in ('opponent','item-control') and extra and extra[-1]['status']=='completed':
+        ev['residual_shared_errors']=int(np.sum((reference_predictions!=labels)&(after!=labels)))
+    elif mode in ('opponent','item-control'):
+        ev['residual_shared_errors']=0
     name,reason=select_action(ev,eligible,mode,used)
     result=dict(decision='try' if name else 'ordinary',candidate=name,params=eligible.get(name),reason=reason,
                 evidence=ev,previous_methods=used,eligible=list(eligible),transfer=transfer,
@@ -383,6 +401,9 @@ def candidate(kind, name, folder):
         elif name in (TEXT_MINILM,TEXT_MINILM_ONLY) and kind in ('pair_text','single_text'):
             from .minilm_features import MiniLMTextClassifier
             model=MiniLMTextClassifier(kind,Path(folder)/'pretrained_runtime.json',params['dense_only']).fit(rows,labels)
+        elif name in (PAIR_OPPONENT,PAIR_ITEM) and kind=='pair_text':
+            from .sentence_interactions import NonlinearSentenceClassifier
+            model=NonlinearSentenceClassifier(Path(folder)/'pretrained_runtime.json',params).fit(rows,labels)
         elif name in (PAIR_POSTERIOR,SINGLE_POSTERIOR) and kind=='categorical_tabular':
             from .category_posteriors import PosteriorCategoryClassifier
             model=PosteriorCategoryClassifier(params).fit(rows,labels)

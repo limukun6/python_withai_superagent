@@ -26,7 +26,7 @@ def main() -> None:
     registry_sha256=None;origin='static'
     from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
     from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
-    from .method_choice import CROSSES, MINILM, TEXT_MINILM, TEXT_MINILM_ONLY, candidate as method_candidate
+    from .method_choice import CROSSES, candidate as method_candidate
     folder = Path(output_path).parent
     if candidate_id in (SEMANTIC, PERMUTED):
         candidate = level_candidate(payload["kind"], candidate_id, Path(output_path).parent / 'pretrained_runtime.json')
@@ -37,7 +37,7 @@ def main() -> None:
     elif (candidate_id != CROSSES and Path(candidate_id).name == candidate_id
           and (folder / f'method_{candidate_id}.json').is_file()):
         candidate = method_candidate(payload['kind'], candidate_id, folder)
-        origin = 'frozen_downstream_encoder' if candidate_id in (MINILM, TEXT_MINILM, TEXT_MINILM_ONLY) else 'training_only_method'
+        origin = 'frozen_downstream_encoder' if candidate_id.startswith('minilm_') else 'training_only_method'
     elif len(sys.argv)==5:
         from .candidate_refinement import resolve_registered
         registry_bytes=Path(sys.argv[4]).read_bytes();document=json.loads(registry_bytes)

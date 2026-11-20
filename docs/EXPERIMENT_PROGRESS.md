@@ -28,6 +28,13 @@
 - 加上前述73fit，本轮累计85真实分类器fit，其中流程/准备47、回归38；5模拟HTTP、真实API0。准备批未打破三小时计划49次实验fit上限，回归另登记。
 - 首轮代码/结果已推送1d57fd4；续跑说明A_LINE_RESUME_20261121.md。后续文档/证据提交不修改生产源码，保持这12个状态的生产指纹。
 
+## A2-03：封存决策的公平动作评价器
+
+- 计划/结果：batches/A2_03_plan.md、batches/A2_03_results.md。tools/a2_action_evaluation.py及run_a2_action_evaluation.py支持validate-only，真实完整24提案与fixture严格区分。
+- 两固定前缀的确定性动作小试：4真实fit、8逻辑评价、4复用，16.643秒、API0；同选结果一致，不同选两划分差值方向相反。是评价器验收，不是LLM反馈收益。
+- 13项输入拒绝检查通过；最终preflight通过，原始目录runs/a2_03_evaluator_smoke和a2_03_input_checks，脱敏证据research/a2_03_evaluator。
+- 本轮新增4fits，此前85累计89，真实API仍0。未修改superagent生产源码，A2-02状态仍保持原指纹。真实提案、动作质量正式结果与B调度自主验收仍待后续。
+
 ## A1-01：任务语义与实际训练一致性
 
 - 状态：已完成 baseline、修复、fixed 与回归，2026-11-20。

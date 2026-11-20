@@ -5,7 +5,7 @@ import math
 from pathlib import Path
 
 from .ab_methods import ROUTES
-from .ab_comparison import MIN_GAIN, incumbent_review, macro_f1_pair_spread
+from .ab_comparison import MIN_GAIN, MIN_PAIRED_WINS, incumbent_review, macro_f1_pair_spread
 from .evidence_agent import route_of
 from .metrics import MetricSpec, score_of
 from .prediction_evidence import fingerprint
@@ -136,6 +136,39 @@ def _contenders(lead, front, records, metric, trusted):
             yield lead, other, discordant, len(pred), screen
 
 
+def _promotion_block(incumbent, challenger, splits, attempted, records):
+    """An optimistic bound for this pair on the current registered partitions."""
+    possible_wins = 0
+    refs = []
+    for split in (PRIMARY, *splits):
+        leader = attempted.get((incumbent, split))
+        rival = attempted.get((challenger, split))
+        observed = [row for row in (leader, rival) if row is not None]
+        refs.extend(row['trial'] for row in observed)
+        # An attempted side without a verified prediction cannot produce a new matched win.
+        if any(row['trial'] not in records for row in observed):
+            continue
+        # The contract normalizes all primary metrics to [0, 1]. Give each missing
+        # side the score most favorable to the challenger, including half-finished pairs.
+        leader_floor = score_of(leader) if leader is not None else 0.
+        rival_ceiling = score_of(rival) if rival is not None else 1.
+        if rival_ceiling > leader_floor:
+            possible_wins += 1
+    if possible_wins >= MIN_PAIRED_WINS:
+        return None
+    reason = (f"Skipped replication of {challenger} against {incumbent}. At most "
+              f"{possible_wins} of the registered partitions could be strict wins. "
+              f"Promotion requires {MIN_PAIRED_WINS}.")
+    return reason, refs
+
+
+def _explain_skips(action, skipped):
+    for reason, refs in skipped:
+        action['reason'] += ' ' + reason
+        action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'], *refs]))
+    return action
+
+
 def _confirmation(pair, splits, attempted, measured, records, available, reserve, known_single, metric):
     if pair is None:
         return None
@@ -226,6 +259,7 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
         if (name,PRIMARY) not in attempted and cost and minimum + max(reserve,cost) <= available:
             if not metric.requires_scores or e.get('supports_probabilities', 'rbf_svm' not in name):
                 feasible.append((e,cost))
+    skipped = []
     if any(r['trial'] in records for r in front) and (len(front) >= 3 or not feasible):
         lead_id = incumbent_review(measured,records,splits)['incumbent']
         lead = next(r for r in front if r['candidate']==lead_id)
@@ -233,10 +267,15 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
         for pair in _contenders(lead,front,records,metric,local_primary):
             confirm = _confirmation(pair,splits,attempted,measured,records,available,reserve,known_single,metric)
             if confirm:
-                return confirm
+                block = _promotion_block(lead_id, pair[1]['candidate'], splits, attempted, records)
+                if block is None:
+                    return _explain_skips(confirm, skipped)
+                skipped.append(block)
     if not feasible:
-        return _action('stop','No eligible new fit or complete matched replication fits the shared budget.',
-                       [r['trial'] for r in front[:2]])
+        reason = ('No remaining eligible search or replication can advance selection.' if skipped else
+                  'No eligible new fit or complete matched replication fits the shared budget.')
+        action = _action('stop',reason,[r['trial'] for r in front[:2]])
+        return _explain_skips(action, skipped)
     def route(record):
         name = record.get('id',record.get('candidate'))
         if record.get('route'):
@@ -264,7 +303,8 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
             raise ValueError('Planner returned an ineligible candidate')
         entry,cost = next((e,c) for e,c in ordered if e['id'] == selected)
         why = 'Planner selected an eligible untried configuration within the shared allowance.'
-    return _action('explore',why,[r['trial'] for r in front[:2]],entry['id'],PRIMARY,cost)
+    action = _action('explore',why,[r['trial'] for r in front[:2]],entry['id'],PRIMARY,cost)
+    return _explain_skips(action, skipped)
 
 
 if __name__ == '__main__':

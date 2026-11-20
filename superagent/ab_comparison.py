@@ -5,6 +5,7 @@ import numpy as np
 
 PRIMARY = 'primary'
 MIN_GAIN = .002
+MIN_PAIRED_WINS = 2
 
 
 def macro_f1_pair_spread(labels, left, right, domain, groups=None):
@@ -63,11 +64,11 @@ def incumbent_review(measured, records, splits):
         supported = []
         for other in sorted(contenders):
             shared = [s for s in (PRIMARY,*splits) if (incumbent,s) in seen and (other,s) in seen]
-            if PRIMARY not in shared or len(shared)<2:
+            if PRIMARY not in shared or len(shared)<MIN_PAIRED_WINS:
                 continue
             differences = [score_of(seen[other,s])-score_of(seen[incumbent,s]) for s in shared]
             gain = statistics.mean(differences)
-            if sum(d>0 for d in differences)>=2 and gain>=MIN_GAIN:
+            if sum(d>0 for d in differences)>=MIN_PAIRED_WINS and gain>=MIN_GAIN:
                 refs = [seen[n,s]['trial'] for s in shared for n in (incumbent,other)]
                 supported.append(dict(previous=incumbent,candidate=other,splits=shared,gaps=differences,
                                       mean_gain=gain,evidence_trials=refs))

@@ -230,7 +230,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         if method_choice is None and (strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog'):
             raise ValueError('Pretrained choice uses the interleaved local policy and four protected original trials, one optional trial, and two finalists')
         pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
-        if method_choice=='encoder-depth':
+        if method_choice in ('encoder-depth','encoder-depth-control'):
             pretrained_config['trial_timeout_seconds']=trial_timeout
         logger.write_json('pretrained_runtime.json', pretrained_config)
     states=[];proposals=[];result_records=[]

@@ -22,3 +22,5 @@ class EncoderDepthTests(unittest.TestCase):
         self.assertIsNone(select_action(ev|{'corrected':8},feasible,'encoder-depth',[TEXT_MINILM])[0])
         self.assertIsNone(select_action(ev,{TEXT_MINILM},'encoder-depth',[TEXT_MINILM])[0])
         self.assertIsNone(select_action(ev|{'residual_shared_errors':3},feasible,'encoder-depth',[TEXT_MINILM])[0])
+        self.assertEqual(select_action(ev|{'corrected':8},feasible,'encoder-depth-control',[TEXT_MINILM])[0],TEXT_DEEP)
+        self.assertIsNone(select_action(ev,{TEXT_MINILM},'encoder-depth-control',[TEXT_MINILM])[0])

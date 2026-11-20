@@ -37,8 +37,9 @@ TEXT_MINILM_ONLY = 'minilm_text_dense_only'
 PAIR_OPPONENT = 'minilm_opponent_interactions'
 PAIR_ITEM = 'minilm_single_item_interactions'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
+TEXT_REGULARIZED = 'minilm_text_feedback_regularization'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation', 'typed-values','distribution','distribution-control','boost-curve','histogram','anchored','anchored-control','posteriors','text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth','encoder-depth-control','text-regularization')
 
 
 def resolved_mode(mode, feasible):
@@ -50,7 +51,10 @@ def resolved_mode(mode, feasible):
 def select_action(evidence, feasible, mode, used):
     """Return None to spend the slot on the ordinary next proposal."""
     mode=resolved_mode(mode,feasible)
-    if mode=='text-encoder-control' and TEXT_MINILM in feasible:
+    if mode=='encoder-depth-control' and TEXT_MINILM in feasible:
+        priorities=[TEXT_MINILM,TEXT_DEEP]
+        reason='The matched depth control tests the smaller and then deeper encoder when each fits the resource limit.'
+    elif mode=='text-encoder-control' and TEXT_MINILM in feasible:
         priorities=[TEXT_MINILM,TEXT_MINILM_ONLY]
         reason='The fixed text control compares lexical plus frozen sentence features and frozen features alone.'
     elif mode=='anchored-control' and evidence['kind']=='categorical_tabular' and COOCCUR in feasible:
@@ -72,7 +76,13 @@ def select_action(evidence, feasible, mode, used):
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
         repr_mode=mode in ('representation','typed-values','distribution','distribution-control')
         pair_aware = (repr_mode or mode in ('paired','context-control','boost-curve','histogram','anchored','anchored-control','posteriors')) and evidence.get('primary_metric')=='accuracy'
-        if mode=='encoder-depth' and used and used[-1]==TEXT_MINILM:
+        if mode=='text-regularization' and used and used[-1]==TEXT_MINILM:
+            if TEXT_REGULARIZED in feasible:
+                priorities=[TEXT_REGULARIZED]
+                reason='Grouped search probabilities support testing a different regularization strength with the same training features.'
+            else:
+                return None,'Search confidence gives no clear regularization direction. Continue ordinary search.'
+        elif mode=='encoder-depth' and used and used[-1]==TEXT_MINILM:
             gain,loss=evidence['corrected'],evidence['lost']
             justified=(evidence['primary_metric']=='accuracy' and gain+loss>=8 and gain-loss>=math.sqrt(gain+loss)
                        and evidence['residual_shared_errors']>=max(12,.05*evidence['search_rows']))
@@ -89,7 +99,7 @@ def select_action(evidence, feasible, mode, used):
             priorities=[PAIR_OPPONENT if mode=='opponent' else PAIR_ITEM]
             reason=('The text models share residual errors. Test whether the two opposing texts interact.'
                     if mode=='opponent' else 'With the same residual evidence, test nonlinear features of each item separately.')
-        elif mode in ('text-encoder','opponent','item-control','encoder-depth') and not used and TEXT_MINILM in feasible:
+        elif mode in ('text-encoder','opponent','item-control','encoder-depth','text-regularization') and not used and TEXT_MINILM in feasible:
             priorities=[TEXT_MINILM]
             reason='Several text classifiers miss the same rows and the available frozen encoder matches the observed writing system. Test sentence features beside word and character features.'
         elif mode in ('text-encoder','opponent','item-control') and used and used[-1]==TEXT_MINILM:
@@ -240,7 +250,8 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     eligible = {}
     encoder_installed=all(importlib.util.find_spec(name) is not None for name in ('torch','transformers','tokenizers','safetensors'))
     text_latin_share=None
-    if mode in ('text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
+    confidence=None
+    if mode in ('text-encoder','text-encoder-control','auto','opponent','item-control','encoder-depth','encoder-depth-control','text-regularization') and kind in ('pair_text','single_text') and encoder_installed and weights_available(config,'minilm_weights',MINI_FILES) and 128<=len(x)<=20000:
         sampled=[x[i] for i in np.linspace(0,len(x)-1,min(256,len(x)),dtype=int)]
         texts=[s for pair in sampled for s in pair] if kind=='pair_text' else sampled
         letters=[c for s in texts for c in str(s)[:512] if c.isalpha()]
@@ -249,7 +260,13 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             base=dict(model=MINI_MODEL,C=.3,dimensions=384,max_tokens=256)
             eligible[TEXT_MINILM]=dict(base,dense_only=False)
             eligible[TEXT_MINILM_ONLY]=dict(base,dense_only=True)
-            if mode=='encoder-depth' and history[-1]['candidate']==TEXT_MINILM and history[-1]['status']=='completed':
+            if mode=='text-regularization' and history[-1]['candidate']==TEXT_MINILM and history[-1]['status']=='completed':
+                from .text_confidence import observe_model
+                trained=joblib.load(folder/f"trial_{history[-1]['trial']}.joblib")['model']
+                confidence=observe_model(trained,kind,held,labels)
+                if confidence['next_c'] is not None:
+                    eligible[TEXT_REGULARIZED]=dict(base,C=confidence['next_c'],dense_only=False)
+            if mode in ('encoder-depth','encoder-depth-control') and history[-1]['candidate']==TEXT_MINILM and history[-1]['status']=='completed':
                 from .minilm_features import DEEP_MODEL,DEEP_FILES
                 estimated=2*history[-1]['worker_wall_seconds']
                 if estimated<=config.get('trial_timeout_seconds',90) and weights_available(config,'deep_minilm_weights',DEEP_FILES):
@@ -369,6 +386,7 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             short_latin_share=short_latin_share,low_support_shared_errors=low_errors,primary_metric=incumbent['primary_metric'],
             corrected=corrected,lost=lost,discordant=corrected+lost,search_rows=len(labels))
     if curve is not None:ev['boosting_curve']=curve
+    if confidence is not None:ev['text_confidence']=confidence
     if text_latin_share is not None:ev['sampled_ascii_letter_fraction']=text_latin_share
     if mode in ('opponent','item-control','encoder-depth') and extra and extra[-1]['status']=='completed':
         ev['residual_shared_errors']=int(np.sum((reference_predictions!=labels)&(after!=labels)))
@@ -413,9 +431,12 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
-        elif name in (TEXT_MINILM,TEXT_MINILM_ONLY) and kind in ('pair_text','single_text'):
+        elif name in (TEXT_MINILM,TEXT_MINILM_ONLY,TEXT_REGULARIZED) and kind in ('pair_text','single_text'):
             from .minilm_features import MiniLMTextClassifier
-            model=MiniLMTextClassifier(kind,Path(folder)/'pretrained_runtime.json',params['dense_only']).fit(rows,labels)
+            model=MiniLMTextClassifier(kind,Path(folder)/'pretrained_runtime.json',params['dense_only'])
+            if name==TEXT_REGULARIZED:
+                model.regularization=params['C']
+            model.fit(rows,labels)
         elif name==TEXT_DEEP and kind in ('pair_text','single_text'):
             from .minilm_features import DeeperMiniLMTextClassifier
             model=DeeperMiniLMTextClassifier(kind,Path(folder)/'pretrained_runtime.json',False).fit(rows,labels)

@@ -80,6 +80,7 @@ def main():
     for flag in ("task1","task2","task1-reference","task2-reference","smoke","output"):
         parser.add_argument("--"+flag,type=Path,required=True)
     parser.add_argument("--additional-smoke",type=Path,nargs="*",default=[])
+    parser.add_argument("--task2-reference-arm",default="text-encoder")
     args=parser.parse_args()
     p1=read(args.task1/"protocol.json")
     p2=read(args.task2/"protocol.json")
@@ -88,7 +89,7 @@ def main():
     for file,sha in p1["source"].items():
         expect(digest(repo/file)==sha,f"Source no longer matches the evaluated version: {file}")
     runs=dict(task1=verify_task(args.task1,args.task1_reference,"paired"),
-              task2=verify_task(args.task2,args.task2_reference,"text-encoder"))
+              task2=verify_task(args.task2,args.task2_reference,args.task2_reference_arm))
     cases={}
     for label,smoke in read(args.smoke/"smoke_summary.json").items():
         folder=args.smoke/label
@@ -110,7 +111,7 @@ def main():
         if isinstance(bundle["model"],MiniLMTextClassifier):
             cache=folder/"predictions.csv.features"
             before=feature_usage(cache)
-            bundle["model"].bind_prediction_weights(read(cache/"pretrained_runtime.json")["minilm_weights"],cache)
+            bundle["model"].bind_prediction_weights(read(cache/"pretrained_runtime.json")[bundle["model"].weight_setting],cache)
         y=predict_with_model(bundle["kind"],bundle["model"],x)
         np.testing.assert_array_equal(y.astype(str),[row["prediction"] for row in rows])
         if isinstance(bundle["model"],MiniLMTextClassifier):expect(feature_usage(cache)==before,"Additional inference in smoke verification")

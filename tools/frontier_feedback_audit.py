@@ -76,7 +76,7 @@ def main():
                         stats[arm]["same_score_different_action"]+=int(len(variants)>1)
                         stats[arm]["actual_differs_from_min_disagreement"]+=int(decision["actual"]!=decision["lower"])
                         stats[arm]["actual_differs_from_max_disagreement"]+=int(decision["actual"]!=decision["upper"])
-        for adaptive,fixed in (("paired","context-control"),("anchored","anchored-control"),("text-encoder","text-encoder-control")):
+        for adaptive,fixed in (("paired","context-control"),("anchored","anchored-control"),("text-encoder","text-encoder-control"),("encoder-depth","encoder-depth-control")):
             if not {adaptive,fixed}<=result["correct"].keys():continue
             matched=[]
             for fold in result["folds"]:

@@ -241,6 +241,7 @@ class Encoder:
 
 class ContextClassifier:
     encoder_class = Encoder
+    regularization = 0.3
 
     def __init__(self, kind, runtime):
         self.kind, self.runtime = kind, str(runtime)
@@ -282,7 +283,7 @@ class ContextClassifier:
         if self.kind == 'pair_text':
             features = vstack([features,-features])
             labels = np.concatenate([labels,1-labels])
-        self.classifier = LogisticRegression(C=.3, max_iter=2000, random_state=42).fit(features,labels)
+        self.classifier = LogisticRegression(C=self.regularization, max_iter=2000, random_state=42).fit(features,labels)
         self.classes_ = self.classifier.classes_
         return self
 

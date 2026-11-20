@@ -53,6 +53,7 @@ def main():
     parser.add_argument('--arm',required=True)
     parser.add_argument('--minilm-weights',type=Path)
     parser.add_argument('--freeze',action='store_true')
+    parser.add_argument('--score-frozen',metavar='PROTOCOL_SHA256',help='Score already frozen finalists without fitting, even after a scoring-only fix')
     args=parser.parse_args()
     os.environ['SUPERAGENT_OFFLINE']='1'
     os.environ.pop('SUPERAGENT_PRETRAINED_RUNTIME',None)
@@ -73,12 +74,19 @@ def main():
                policy='Compare the full-trained confirmation winner against a gated three-finalist vote using the two retained primary fits. Gate is frozen in confirmed_vote.py. Each alternative has 14 deployment fits.',
                ceiling='Also refit the other two finalists on all available fitting rows solely for a diagnostic ceiling. Report the best whole model per fold and the full-refit majority, labelled as diagnostics. Never select a deployable policy using outer labels.')
     if args.minilm_weights:setup['scoring_feature_weights']=feature_weights(args.minilm_weights)
-    if (root/'protocol.json').exists():expect(read(root/'protocol.json')==setup,'Frozen diagnostic changed')
+    if args.score_frozen:
+        expect(not args.freeze and digest(root/'protocol.json')==args.score_frozen,'Original diagnostic protocol differs')
+        original=read(root/'protocol.json')
+        source_name=str(Path(__file__).relative_to(repo))
+        expected_source=dict(original['source'])
+        expected_source[source_name]=setup['source'][source_name]
+        expect(setup==dict(original,source=expected_source),'Reference, runtime, policy or training payload changed')
+    elif (root/'protocol.json').exists():expect(read(root/'protocol.json')==setup,'Frozen diagnostic changed')
     else:write(root/'protocol.json',setup)
     if args.freeze:return
     opened=[]
     with train_only(args.archive,opened):whole=load_training_task(args.archive)
-    for i,record in enumerate(records):
+    for i,record in enumerate([] if args.score_frozen else records):
         folder=Path(record['folder'])
         dest=root/f'fold_{i}'
         dest.mkdir(exist_ok=True)
@@ -118,13 +126,19 @@ def main():
         folder=Path(record['folder']); dest=root/f'fold_{i}'
         keys={r['candidate']:r['trial'] for r in read(folder/'trials.json')}
         gate=read(dest/'decision.json')
+        if args.score_frozen:
+            expect(gate==decision(folder,read(folder/'trials.json'),read(folder/'confirmation.json')),'Inner decision differs')
         names=gate['components']
+        expect(set(read(dest/'fits.json'))==set(names[1:]),'Missing a frozen full-data finalist')
         held=protocol['indices'][i]['outer']
         x=take(whole.X_train,held); truth=whole.y_train[held]
         cache=scoring_cache(dest/'diagnostic_prediction_features',[folder.parent/(args.arm+'_prediction_features')]) if args.minilm_weights else None
         model=joblib.load(folder/'selected_model.joblib')['model']
         anchor=predict_finalist(whole.kind,model,x,args.minilm_weights,cache)
-        np.testing.assert_array_equal(anchor,read(folder.parent/'outer_predictions.json')[args.arm])
+        reference_rows=read(args.reference/f"fold_{protocol['fold_numbers'][i]-1}"/'outer_predictions.json')
+        expect(reference_rows['rows']==held,'Reference fold order differs')
+        np.testing.assert_array_equal(truth,reference_rows['truth'])
+        np.testing.assert_array_equal(anchor,reference_rows[args.arm])
         search_predictions=[anchor]
         full_predictions=[anchor]
         for num,name in enumerate(names[1:],1):
@@ -149,6 +163,8 @@ def main():
                  rows=sum(f['rows'] for f in results),training_members=opened,additional_diagnostic_fits=2*len(results),
                  api_calls=0,additional_encoder_forwards=sum(u['batches'] for u in usages),
                  additional_minilm_input_tokens=sum(u['input_tokens'] for u in usages))
+    if args.score_frozen:
+        summary['score_recovery']=dict(original_protocol_sha256=args.score_frozen,scorer_sha256=digest(Path(__file__)),new_fits=0)
     write(root/'results.json',summary)
     print({k:v for k,v in summary.items() if k!='folds'},flush=True)
 

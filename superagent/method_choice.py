@@ -9,7 +9,7 @@ import hashlib
 import joblib
 import numpy as np
 from .confirmation import shortlist
-from .models import Candidate
+from .models import Candidate, _clean_categories
 from .tabular_encoder import BACKBONES, SEMANTIC, LevelClassifier, MISSING, eligible_columns, MODEL as QWEN, FILES as QWEN_FILES
 from .minilm_features import MiniLMEncoder, CANDIDATE as MINILM, MODEL as MINI_MODEL, FILES as MINI_FILES
 from .task_budget import BudgetStateError
@@ -17,8 +17,11 @@ from .pretrained_choice import consider, budget, CANDIDATE, PARAMS
 
 NEURAL = 'scratch_neural_classifier'
 COOCCUR = 'training_category_cooccurrence'
+DIRECT = 'direct_category_splits'
+DIRECT_CONTEXT = 'direct_splits_with_category_context'
+CROSSES = 'frequent_category_interactions'
 SUPPORTED = {'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','pair_text','single_text','image'}
-MODES = ('fixed', 'adaptive', 'paired', 'context-control')
+MODES = ('fixed', 'adaptive', 'paired', 'context-control', 'representation')
 
 
 def select_action(evidence, feasible, mode, used):
@@ -34,8 +37,17 @@ def select_action(evidence, feasible, mode, used):
     else:
         aligned = [MINILM, evidence['semantic']] if evidence['short_latin_share']>=.8 else [evidence['semantic']]
         can_pool = evidence['low_support_shared_errors']>=max(4,math.ceil(.10*evidence['shared_errors']))
-        pair_aware = mode in ('paired','context-control') and evidence.get('primary_metric')=='accuracy'
-        if (pair_aware and not used and can_pool and evidence['rare_enrichment']>=1.
+        pair_aware = mode in ('paired','context-control','representation') and evidence.get('primary_metric')=='accuracy'
+        if mode=='representation' and not used and evidence['kind']=='categorical_tabular' and (DIRECT in feasible or CROSSES in feasible):
+            priorities=[DIRECT,CROSSES]
+            reason='The original models share errors on a bounded categorical table. Test a different way to represent repeated categories.'
+        elif mode=='representation' and used and used[-1]==DIRECT:
+            corrected,lost=evidence['corrected'],evidence['lost']
+            supported=(pair_aware and corrected+lost>=8 and corrected-lost>=math.sqrt(corrected+lost))
+            priorities=[DIRECT_CONTEXT,CROSSES] if supported else [CROSSES,COOCCUR]
+            reason=('Direct category splits gained more correct rows than they lost. Try context on that backbone.' if supported else
+                    'The improvement from direct splits was uncertain. Test a regularized model of category combinations.')
+        elif (pair_aware and not used and can_pool and evidence['rare_enrichment']>=1.
                 and any(name in feasible for name in aligned)):
             priorities = [*aligned, COOCCUR, NEURAL]
             reason = 'Shared errors disproportionately include lower-support names; probe category semantics before a new classifier.'
@@ -110,6 +122,14 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
     rare_fraction, short_latin_share, low_errors = 0., 0., 0
     if kind=='categorical_tabular':
         cols=eligible_columns(x)
+        if mode=='representation':
+            pairs=feature_count*(feature_count-1)//2
+            if 2<=feature_count<=32 and len(x)*(feature_count+pairs)<=6000000:
+                eligible[CROSSES]=dict(C=.1)
+            if incumbent['candidate'].startswith('catboost_depth'):
+                small=sum(3<=len(np.unique(column))<=64 for column in _clean_categories(x).T)
+                if small>=1:
+                    eligible[DIRECT]=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],one_hot_max_size=64)
         mask=np.zeros(len(labels),bool)
         for i,counts in cols:
             median=np.median(list(counts.values()))
@@ -121,6 +141,8 @@ def plan(kind, history, folder, payload, config, mode, protected_count=5):
             base=dict(backbone=incumbent['candidate'],backbone_params=incumbent['params'],
                 columns=[i for i,_ in cols],assignment='semantic',dimensions_per_column=3)
             eligible[COOCCUR]=base
+            if DIRECT in eligible:
+                eligible[DIRECT_CONTEXT]=dict(base,one_hot_max_size=64)
             names={s for _,counts in cols for s in counts}
             short_latin_share=sum(s.isascii() and any(c.isalpha() for c in s) and len(s.split())<=16 for s in names)/len(names)
             low_errors=int((mask & shared).sum())
@@ -188,7 +210,17 @@ def candidate(kind, name, folder):
         if name==NEURAL:
             from .scratch_classifier import ScratchClassifier
             model=ScratchClassifier(kind,params).fit(rows,labels)
-        elif name in (COOCCUR,MINILM) and kind=='categorical_tabular':
+        elif name==DIRECT and kind=='categorical_tabular':
+            from .models import _tabular_catboost
+            base=params['backbone_params']
+            model=_tabular_catboost(labels,base['depth'],base['l2_leaf_reg'])
+            model.set_params(one_hot_max_size=params['one_hot_max_size'])
+            model.fit(_clean_categories(rows),labels,cat_features=list(range(rows.shape[1])))
+            return model,model.predict(_clean_categories(search)).reshape(-1)
+        elif name==CROSSES and kind=='categorical_tabular':
+            from .category_interactions import CategoryInteractionClassifier
+            model=CategoryInteractionClassifier(params['C']).fit(rows,labels)
+        elif name in (COOCCUR,DIRECT_CONTEXT,MINILM) and kind=='categorical_tabular':
             encoder=MiniLMEncoder(Path(folder)/'pretrained_runtime.json') if name==MINILM else Cooccurrence(rows,params['columns'])
             model=LevelClassifier(params).fit(rows,labels,encoder)
         else:

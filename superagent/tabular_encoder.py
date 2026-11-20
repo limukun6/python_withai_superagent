@@ -118,6 +118,8 @@ class LevelClassifier:
         if backbone.startswith('catboost_depth'):
             self.one_hot = None
             self.classifier = _tabular_catboost(labels, p['depth'], p['l2_leaf_reg'])
+            if 'one_hot_max_size' in self.params:
+                self.classifier.set_params(one_hot_max_size=self.params['one_hot_max_size'])
             self.classifier.fit(self.features(rows), labels, cat_features=list(range(raw.shape[1])))
         else:
             from sklearn.preprocessing import OneHotEncoder

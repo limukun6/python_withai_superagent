@@ -75,12 +75,20 @@ def prepare(root, source, weights):
 def paired_counts(root, seed, arms=ARMS):
     def predictions(arm):
         with (root / f'{seed}_{arm}' / 'pred_0/rows.csv').open(newline='') as stream:
-            return [r['prediction'] for r in csv.DictReader(stream)]
+            rows = list(csv.DictReader(stream))
+        if [r['row_id'] for r in rows] != list(map(str, range(len(rows)))):
+            raise ValueError('Paired prediction rows are out of order')
+        return [r['prediction'] for r in rows]
     a, b = [predictions(arm) for arm in arms]
-    truth = joblib.load(root / str(seed) / 'holdout.joblib')['y']
+    # The official CSV exporter serializes each scalar class with str(), including numeric labels.
+    truth = np.asarray([str(y) for y in joblib.load(root / str(seed) / 'holdout.joblib')['y']])
     if len(a) != len(truth) or len(b) != len(truth):
         raise ValueError('Paired prediction lengths disagree')
     left, right = np.asarray(a) == truth, np.asarray(b) == truth
+    for arm, correct in zip(arms, (left, right), strict=True):
+        receipt = fixture.read(root / f'{seed}_{arm}' / 'verification.json')
+        if receipt['rows'] != len(truth) or round(receipt['accuracy'] * len(truth)) != int(correct.sum()):
+            raise ValueError('Paired row counts disagree with independent frozen-model verification for ' + arm)
     return dict(rows=len(a), **{arms[0] + '_correct': int(left.sum()), arms[1] + '_correct': int(right.sum())},
                 newly_correct=int((~left & right).sum()), newly_wrong=int((left & ~right).sum()),
                 both_correct=int((left & right).sum()), both_wrong=int((~left & ~right).sum()),

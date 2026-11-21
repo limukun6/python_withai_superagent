@@ -1,0 +1,1009 @@
+{
+  "paths": [
+    {
+      "scope": "baseline",
+      "outcome": {
+        "run_dir": "D:\\codex\\python_withai\\runs\\a17_photo_catalog_Q\\baseline",
+        "scheduler": "ab-v1",
+        "planner_mode": "local",
+        "requested_planner_completed": true,
+        "model_available": true,
+        "new_api_requests": 0,
+        "known_course_cost_rmb": 0,
+        "formal_test_accessed": false,
+        "automatic_retries": false,
+        "selected_candidate": "image_logistic_C0.1",
+        "primary_metric": "accuracy",
+        "full_refit_completed": true,
+        "confirmation": {
+          "primary_metric": "accuracy",
+          "enabled": true,
+          "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+          "seeds": [
+            707
+          ],
+          "shortlist": [
+            "image_logistic_C0.1"
+          ],
+          "primary_candidate": "image_logistic_C0.1",
+          "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+          "candidates": [
+            {
+              "candidate": "image_logistic_C0.1",
+              "primary_accuracy": 0.9692307692307692,
+              "measurements": [
+                {
+                  "seed": 707,
+                  "trial": 1,
+                  "candidate": "image_logistic_C0.1",
+                  "params": {
+                    "C": 0.1
+                  },
+                  "split_id": "primary",
+                  "proposal": null,
+                  "status": "completed",
+                  "error_slices": null,
+                  "primary_metric": "accuracy",
+                  "metric_spec": {
+                    "name": "accuracy",
+                    "labels": [
+                      "0",
+                      "1",
+                      "10",
+                      "11",
+                      "12",
+                      "13",
+                      "14",
+                      "15",
+                      "16",
+                      "17",
+                      "18",
+                      "19",
+                      "2",
+                      "20",
+                      "21",
+                      "22",
+                      "23",
+                      "24",
+                      "25",
+                      "26",
+                      "27",
+                      "28",
+                      "29",
+                      "3",
+                      "30",
+                      "31",
+                      "32",
+                      "33",
+                      "34",
+                      "35",
+                      "36",
+                      "37",
+                      "38",
+                      "39",
+                      "4",
+                      "5",
+                      "6",
+                      "7",
+                      "8",
+                      "9"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "train_score": 1.0,
+                  "search_score": 0.9692307692307692,
+                  "train_metrics": {
+                    "accuracy": 1.0,
+                    "macro_f1": 1.0,
+                    "primary_metric": "accuracy",
+                    "score": 1.0,
+                    "rows": 255
+                  },
+                  "search_metrics": {
+                    "accuracy": 0.9692307692307692,
+                    "macro_f1": 0.9533333333333334,
+                    "primary_metric": "accuracy",
+                    "score": 0.9692307692307692,
+                    "rows": 65
+                  },
+                  "score_gap": 0.03076923076923077,
+                  "train_accuracy": 1.0,
+                  "search_accuracy": 0.9692307692307692,
+                  "generalization_gap": 0.03076923076923077,
+                  "class_recall": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.5,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "training_seconds": 1.1124344000054407,
+                  "feature_cache": {
+                    "enabled": false
+                  },
+                  "classifier_fits": 1,
+                  "training_metadata": null,
+                  "selected_iterations": null,
+                  "estimator": {
+                    "family": "logistic",
+                    "class": "LogisticRegression",
+                    "module": "sklearn.linear_model._logistic",
+                    "parameters": {},
+                    "source": "fitted_estimator"
+                  },
+                  "resolved_configuration": {
+                    "id": "image_logistic_C0.1",
+                    "params": {
+                      "C": 0.1
+                    },
+                    "origin": "static",
+                    "registry_sha256": null,
+                    "semantic_check": {
+                      "candidate": "image_logistic_C0.1",
+                      "swap_label_rule": "unknown"
+                    }
+                  },
+                  "worker_wall_seconds": 2.8567162999970606,
+                  "metric_identity": {
+                    "status": "confirmed",
+                    "expected": {
+                      "name": "accuracy",
+                      "labels": [
+                        "0",
+                        "1",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "2",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "3",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                      ],
+                      "direction": "maximize"
+                    },
+                    "observed": {
+                      "name": "accuracy",
+                      "labels": [
+                        "0",
+                        "1",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "2",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "3",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                      ],
+                      "direction": "maximize"
+                    }
+                  },
+                  "configuration_fact_check": {
+                    "declared": null,
+                    "observed": "logistic",
+                    "observed_class": "LogisticRegression",
+                    "status": "not_declared",
+                    "scope": "Declared classifier versus the fitted estimator of this trial"
+                  },
+                  "hypothesis_check": {
+                    "status": "not_stated"
+                  },
+                  "explanation_audit": null
+                }
+              ],
+              "complete": true,
+              "primary_score": 0.9692307692307692,
+              "mean_score": 0.9692307692307692,
+              "mean_accuracy": 0.9692307692307692,
+              "sample_sd": null
+            }
+          ],
+          "valid_confirmation": true,
+          "selected_candidate": "image_logistic_C0.1",
+          "selection_score": 0.9692307692307692,
+          "changed": false,
+          "b_scheduler_review": {
+            "initial": "image_logistic_C0.1",
+            "incumbent": "image_logistic_C0.1",
+            "promotions": [],
+            "basis": [
+              "primary"
+            ],
+            "primary_metric": "accuracy"
+          },
+          "independent_confirmation_observed": false
+        },
+        "validation_score": null,
+        "finalization": {
+          "primary_metric": "accuracy",
+          "official_validation_score": null,
+          "pre_refit_validation_score": null,
+          "single_model_validation_score": null,
+          "official_validation_accuracy": null,
+          "pre_refit_validation_accuracy": null,
+          "single_model_validation_accuracy": null,
+          "refit_requested": true,
+          "refit_succeeded": true,
+          "refit_failure": null,
+          "final_training_rows": 320,
+          "ensemble_selected": false,
+          "ensemble_evaluations": 0,
+          "full_refits_attempted": 1,
+          "full_refits_completed": 1,
+          "refit_classifier_fits_completed": 1,
+          "refit_training_seconds": 1.0551806000003126,
+          "ensemble_failure": null,
+          "provided_validation_available": false
+        },
+        "elapsed_seconds": 22.745679499996186,
+        "source_unchanged": true,
+        "action_counts": {
+          "explore": 5,
+          "confirm": 4,
+          "stop": 1
+        },
+        "classifier_fit_accounting": {
+          "attempted_classifier_fits": 10,
+          "completed_classifier_fits": 10,
+          "unknown_failed_attempts": 0
+        },
+        "complete_course_cost_rmb": 0,
+        "unresolved_calls": 0,
+        "task_budget_after_run": null,
+        "partial_trial_models": [
+          "trial_1.joblib",
+          "trial_2.joblib",
+          "trial_3.joblib",
+          "trial_4.joblib",
+          "trial_5.joblib",
+          "trial_6.joblib",
+          "trial_7.joblib",
+          "trial_8.joblib",
+          "trial_9.joblib"
+        ],
+        "status": "completed"
+      },
+      "selection": {
+        "selected_experiment": "trial_1",
+        "family": "image_logistic_C0.1",
+        "single_candidate": "image_logistic_C0.1",
+        "single_model_file": "selected_model.joblib",
+        "primary_metric": "accuracy",
+        "selection_metric": "confirmation_mean_accuracy",
+        "selection_score": 0.9692307692307692,
+        "model_file": "selected_model.joblib",
+        "model_format": "candidate_bundle_v1",
+        "ensemble_components": [],
+        "test_accessed": false,
+        "refit": true,
+        "refit_requested": true,
+        "training_rows": 320,
+        "model_sha256": "0e3d13c2f956a7e2263c0746a106422cc09d8808bc162eba9e2d22298cf0e60f",
+        "task_spec_sha256": "15976160ec643c0ea008092ff7e79392099c44faa37a843b3346e4991d3458fe"
+      },
+      "train_process_seconds": 24.59470020000299,
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "image_logistic_C0.1",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_rbf_svm_C1.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "image_logistic_C0.1",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "image_extra_trees_leaf1",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            1,
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_logistic_C1.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "image_logistic_C1.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.9692 and 0.9538; hard predictions differ on 1/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            1,
+            6,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_extra_trees_leaf3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "image_extra_trees_leaf3",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            1,
+            8,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            1,
+            6
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "verification": {
+        "reload_identical": true,
+        "rows": 80,
+        "primary_metric": "accuracy",
+        "score": 0.975,
+        "accuracy": 0.975,
+        "heldout_scored": true,
+        "model_sha256": "0e3d13c2f956a7e2263c0746a106422cc09d8808bc162eba9e2d22298cf0e60f",
+        "original_row_ids_sha256": "e0eef2104eee576bfb43369d86213b69bbc0cb1567fa32773c4738e94ff33050",
+        "selected_candidate": "image_logistic_C0.1",
+        "scope": "Outer development holdout after model freeze; not official test"
+      },
+      "export_seconds": 5.215399900000193,
+      "migrated_prediction_identical": true
+    },
+    {
+      "scope": "full",
+      "outcome": {
+        "run_dir": "D:\\codex\\python_withai\\runs\\a17_photo_catalog_Q\\full",
+        "scheduler": "ab-v1",
+        "planner_mode": "local",
+        "requested_planner_completed": true,
+        "model_available": true,
+        "new_api_requests": 0,
+        "known_course_cost_rmb": 0,
+        "formal_test_accessed": false,
+        "automatic_retries": false,
+        "selected_candidate": "image_gradient_histograms_logistic",
+        "primary_metric": "accuracy",
+        "full_refit_completed": true,
+        "confirmation": {
+          "primary_metric": "accuracy",
+          "enabled": true,
+          "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+          "seeds": [
+            707
+          ],
+          "shortlist": [
+            "image_gradient_histograms_logistic"
+          ],
+          "primary_candidate": "image_gradient_histograms_logistic",
+          "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+          "candidates": [
+            {
+              "candidate": "image_gradient_histograms_logistic",
+              "primary_accuracy": 0.9846153846153847,
+              "measurements": [
+                {
+                  "seed": 707,
+                  "trial": 2,
+                  "candidate": "image_gradient_histograms_logistic",
+                  "params": {
+                    "grid": 4,
+                    "orientation_bins": 8,
+                    "C": 1.0,
+                    "representation": "gradient histograms and cell means"
+                  },
+                  "split_id": "primary",
+                  "proposal": null,
+                  "status": "completed",
+                  "error_slices": null,
+                  "primary_metric": "accuracy",
+                  "metric_spec": {
+                    "name": "accuracy",
+                    "labels": [
+                      "0",
+                      "1",
+                      "10",
+                      "11",
+                      "12",
+                      "13",
+                      "14",
+                      "15",
+                      "16",
+                      "17",
+                      "18",
+                      "19",
+                      "2",
+                      "20",
+                      "21",
+                      "22",
+                      "23",
+                      "24",
+                      "25",
+                      "26",
+                      "27",
+                      "28",
+                      "29",
+                      "3",
+                      "30",
+                      "31",
+                      "32",
+                      "33",
+                      "34",
+                      "35",
+                      "36",
+                      "37",
+                      "38",
+                      "39",
+                      "4",
+                      "5",
+                      "6",
+                      "7",
+                      "8",
+                      "9"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "train_score": 1.0,
+                  "search_score": 0.9846153846153847,
+                  "train_metrics": {
+                    "accuracy": 1.0,
+                    "macro_f1": 1.0,
+                    "primary_metric": "accuracy",
+                    "score": 1.0,
+                    "rows": 255
+                  },
+                  "search_metrics": {
+                    "accuracy": 0.9846153846153847,
+                    "macro_f1": 0.9666666666666666,
+                    "primary_metric": "accuracy",
+                    "score": 0.9846153846153847,
+                    "rows": 65
+                  },
+                  "score_gap": 0.01538461538461533,
+                  "train_accuracy": 1.0,
+                  "search_accuracy": 0.9846153846153847,
+                  "generalization_gap": 0.01538461538461533,
+                  "class_recall": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "training_seconds": 0.15535649999947054,
+                  "feature_cache": {
+                    "enabled": false
+                  },
+                  "classifier_fits": 1,
+                  "training_metadata": null,
+                  "selected_iterations": null,
+                  "estimator": {
+                    "family": "logistic",
+                    "class": "LogisticRegression",
+                    "module": "sklearn.linear_model._logistic",
+                    "parameters": {},
+                    "source": "fitted_estimator"
+                  },
+                  "resolved_configuration": {
+                    "id": "image_gradient_histograms_logistic",
+                    "params": {
+                      "grid": 4,
+                      "orientation_bins": 8,
+                      "C": 1.0,
+                      "representation": "gradient histograms and cell means"
+                    },
+                    "origin": "static",
+                    "registry_sha256": null,
+                    "semantic_check": {
+                      "candidate": "image_gradient_histograms_logistic",
+                      "swap_label_rule": "unknown"
+                    }
+                  },
+                  "worker_wall_seconds": 1.773172600005637,
+                  "metric_identity": {
+                    "status": "confirmed",
+                    "expected": {
+                      "name": "accuracy",
+                      "labels": [
+                        "0",
+                        "1",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "2",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "3",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                      ],
+                      "direction": "maximize"
+                    },
+                    "observed": {
+                      "name": "accuracy",
+                      "labels": [
+                        "0",
+                        "1",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "2",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "3",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                      ],
+                      "direction": "maximize"
+                    }
+                  },
+                  "configuration_fact_check": {
+                    "declared": null,
+                    "observed": "logistic",
+                    "observed_class": "LogisticRegression",
+                    "status": "not_declared",
+                    "scope": "Declared classifier versus the fitted estimator of this trial"
+                  },
+                  "hypothesis_check": {
+                    "status": "not_stated"
+                  },
+                  "explanation_audit": null
+                }
+              ],
+              "complete": true,
+              "primary_score": 0.9846153846153847,
+              "mean_score": 0.9846153846153847,
+              "mean_accuracy": 0.9846153846153847,
+              "sample_sd": null
+            }
+          ],
+          "valid_confirmation": true,
+          "selected_candidate": "image_gradient_histograms_logistic",
+          "selection_score": 0.9846153846153847,
+          "changed": false,
+          "b_scheduler_review": {
+            "initial": "image_gradient_histograms_logistic",
+            "incumbent": "image_gradient_histograms_logistic",
+            "promotions": [],
+            "basis": [
+              "primary"
+            ],
+            "primary_metric": "accuracy"
+          },
+          "independent_confirmation_observed": false
+        },
+        "validation_score": null,
+        "finalization": {
+          "primary_metric": "accuracy",
+          "official_validation_score": null,
+          "pre_refit_validation_score": null,
+          "single_model_validation_score": null,
+          "official_validation_accuracy": null,
+          "pre_refit_validation_accuracy": null,
+          "single_model_validation_accuracy": null,
+          "refit_requested": true,
+          "refit_succeeded": true,
+          "refit_failure": null,
+          "final_training_rows": 320,
+          "ensemble_selected": false,
+          "ensemble_evaluations": 0,
+          "full_refits_attempted": 1,
+          "full_refits_completed": 1,
+          "refit_classifier_fits_completed": 1,
+          "refit_training_seconds": 0.09859090000099968,
+          "ensemble_failure": null,
+          "provided_validation_available": false
+        },
+        "elapsed_seconds": 18.487948600006348,
+        "source_unchanged": true,
+        "action_counts": {
+          "explore": 8,
+          "stop": 1
+        },
+        "classifier_fit_accounting": {
+          "attempted_classifier_fits": 9,
+          "completed_classifier_fits": 9,
+          "unknown_failed_attempts": 0
+        },
+        "complete_course_cost_rmb": 0,
+        "unresolved_calls": 0,
+        "task_budget_after_run": null,
+        "partial_trial_models": [
+          "trial_1.joblib",
+          "trial_2.joblib",
+          "trial_3.joblib",
+          "trial_4.joblib",
+          "trial_5.joblib",
+          "trial_6.joblib",
+          "trial_7.joblib",
+          "trial_8.joblib"
+        ],
+        "status": "completed"
+      },
+      "selection": {
+        "selected_experiment": "trial_2",
+        "family": "image_gradient_histograms_logistic",
+        "single_candidate": "image_gradient_histograms_logistic",
+        "single_model_file": "selected_model.joblib",
+        "primary_metric": "accuracy",
+        "selection_metric": "confirmation_mean_accuracy",
+        "selection_score": 0.9846153846153847,
+        "model_file": "selected_model.joblib",
+        "model_format": "candidate_bundle_v1",
+        "ensemble_components": [],
+        "test_accessed": false,
+        "refit": true,
+        "refit_requested": true,
+        "training_rows": 320,
+        "model_sha256": "ecf22e58762015ce5edf5703b495daece6155603bd570bb4a9834f827571655c",
+        "task_spec_sha256": "15976160ec643c0ea008092ff7e79392099c44faa37a843b3346e4991d3458fe"
+      },
+      "train_process_seconds": 20.679541799996514,
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "image_logistic_C0.1",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_gradient_histograms_logistic",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_rbf_svm_C1.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_logistic_C1.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_extra_trees_leaf3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_rbf_svm_C10.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "image_logistic_C10.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "verification": {
+        "reload_identical": true,
+        "rows": 80,
+        "primary_metric": "accuracy",
+        "score": 0.975,
+        "accuracy": 0.975,
+        "heldout_scored": true,
+        "model_sha256": "ecf22e58762015ce5edf5703b495daece6155603bd570bb4a9834f827571655c",
+        "original_row_ids_sha256": "e0eef2104eee576bfb43369d86213b69bbc0cb1567fa32773c4738e94ff33050",
+        "selected_candidate": "image_gradient_histograms_logistic",
+        "scope": "Outer development holdout after model freeze; not official test"
+      },
+      "export_seconds": 5.262816699992982,
+      "migrated_prediction_identical": true
+    }
+  ],
+  "comparison": {
+    "score_delta": 0.0,
+    "disagreements": 3,
+    "full_only_correct": 1,
+    "baseline_only_correct": 1,
+    "scope": "One known development photo partition; catalogue effect, not LLM/scheduler efficacy"
+  }
+}

@@ -27,7 +27,7 @@ def resolve_goal(task, metric):
         shape_status='confirmed'
     sources=spec.get('goal_sources',{})
     metric_source=sources.get('primary_metric','declared_spec' if 'metric' in spec else 'default_accuracy')
-    metric_declared=metric_source in ('declared_manifest','declared_spec')
+    metric_declared=metric_source in ('declared_manifest','declared_spec','declared_task_readme')
     positive=spec.get('positive_label')
     applies=len(metric.labels)==2 and metric.name in ('binary_f1','roc_auc')
     pair=schema.get('pair_semantics')

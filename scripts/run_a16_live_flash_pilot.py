@@ -85,5 +85,5 @@ def run(args):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepared',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--ledger',type=Path,required=True)
-    p.add_argument('--api-key-file',type=Path,required=True);p.add_argument('--task-budget-id',default='sms-spam-dev')
+    p.add_argument('--api-key-file',type=Path,required=True);p.add_argument('--task-budget-id',default='sms_spam')
     p.add_argument('--execute',action='store_true');run(p.parse_args())

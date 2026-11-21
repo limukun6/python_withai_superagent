@@ -11,6 +11,14 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新A28：Flash网络恢复，真实SMS raw/checked两臂完成
+
+- 用户网络调整后新授权；连通1请求返回ok:true/有效usage，7.597秒、¥.000136。随后按预登记正式CLI执行两臂，无改生产代码/网络、无重试。实际源码同202a250且两臂source_unchanged，H/test未开。
+- SMS两臂首次请求去checks/memory后公共上下文相同，checked确实收到checks/memory；后续历史分叉。raw/checked最终均single_word_char_C3.0，826行外层macro-F1 .9459801186、逐行预测完全相同，两模型新进程重载导出通过；没有本批搬迁验证。
+- 各7fit＝6探索+1refit、3真实Flash，未触发confirm。raw136.101秒/6048输入3211输出/¥.018892；checked133.352秒/13638输入2595输出/¥.024018；两臂墙钟278.569秒。含连通全批7请求/14监督fit/19754输入5823输出/¥.043046，0新unknown/pending，响应ID无重复。累计A窗口463fit、模拟HTTP仍25。
+- 有真实“假设未支持→下轮读取下降→保留原赢家”的轨迹，但两臂都跑完6个候选，选择主要影响顺序，不能由这次平局断言反馈无效，也不能证明checked增益/未见迁移。下一批优先候选数大于探索次数的15/22候选任务，再按同版跑local/raw/checked，先落计划/runner；不追SMS seed。另记录正向涨分期望契约可能给诊断动作强配故事的限制，本批未改schema。
+- 当前ledger179行/known5.1708285元/原11历史unknown/pending0/完整费用null；研究模式课程预算仍未核验。学校API现已实际成功，不再等账单/排网络。结果batches/A28_flash_network_resume_results.md、证据research/a28_flash_network_resume、分析scripts/summarize_a28_flash.py。完整Q/A2/六组C1/H/Released仍待后续。
+
 ### 最新A26–A27：A已补对称方法，Flash新尝试仍DNS失败
 
 - 用户授权A直接补齐；新增训练内共享TF-IDF的绝对差+乘积/逻辑回归，word与word_char各C=.3/3共4候选，每评估/refit均1监督fit。AB目录只向明确symmetric开放；原偏好目录隔离，按实际已知执行函数认证preserves，不凭元数据flag。未改B调度。

@@ -1,5 +1,9 @@
 # A 线接跑入口
 
+最新A28优先：网络已实际恢复，Flash连通1请求成功，正式SMS raw/checked两臂也完成（各3请求7fit，826行macro-F1均.9459801186、预测相同）。总14fit/7请求/¥.043046/两臂278.569秒；首请求公共上下文一致，checked含checks/memory。每臂6探索+1refit，无confirm，两个模型新进程重载通过；只是单开发任务真实闭环，不是反馈精度收益或H迁移。详细batches/A28_flash_network_resume_results.md。
+
+当前累计A窗口463fit，ledger179行/known5.1708285元/原11unknown/pending0，课程总预算仍未核验。后续不要按下面旧“DNS阻塞”状态重复诊断或重复SMS追分；优先在候选多于预算的15/22候选开发任务做同版local/raw/checked，先保存计划/runner。H1已有4方法但仍封存。同步给队友最新累计账本，不能使用旧版172行快照继续真实调用。
+
 最新A26–A27：用户授权A补方法，已完成symmetric_text.py四个交换不变词法候选及AB目录/worker语义接入。H1候选0→4，H2仍8，H未训练评分。116项通过，正式匿名CLI5fit/24行搬迁+交换预测一致。A26共26监督fit含失败/回归；另回溯补旧10轮schema回归40fit，A窗口累计449，旧“383/0回归fit”以侧车更正为准，不修改原始日志。
 
 Flash按新授权只尝试1次0训练请求，DNS11001失败；校园IP443也超时，无重试。原请求未发出审计后ledger172行/11历史未知/pending0/known5.1277825元；不等待账单、总预算未核验。先看batches/A26_A27_results.md、CAMPUS_FLASH_A27_FAILURE_AND_TEST_20261121.md与A_TO_B_A26_SYMMETRIC_20261121.md。网络可达时可手动运行单次测试，成功后再开正式SMS两臂；不要自动重试或覆盖旧目录，也不要等待B重复对称基线。

@@ -1,0 +1,69 @@
+{
+  "batch": "BC1-01-prepare",
+  "production_source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "runner_sha256": "b4c2f14f09794f1c6e96a58fb59289e584d9e4acd38d39593f366dee565faf85",
+  "plan_sha256": "0f01abd54836e6164717a54ea5edf9692a57a94779e6d1c866aa3a976c2fbeaf",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "order_salt": "AIAA3102-C1-B-order-20261121",
+  "outer_seed": 45101,
+  "inner_seed": 707,
+  "groups": {
+    "L0": [
+      "local",
+      "fixed"
+    ],
+    "L1": [
+      "local",
+      "adaptive"
+    ],
+    "R0": [
+      "raw-history",
+      "fixed"
+    ],
+    "R1": [
+      "raw-history",
+      "adaptive"
+    ],
+    "E0": [
+      "checked-history",
+      "fixed"
+    ],
+    "E1": [
+      "checked-history",
+      "adaptive"
+    ]
+  },
+  "resources_per_arm": {
+    "fit_limit": 11,
+    "reserved_refit": 1,
+    "wall_seconds": 1200,
+    "trial_seconds": 300
+  },
+  "execution_budget_this_preparation": {
+    "classifier_fits": 0,
+    "model_api_requests": 0
+  }
+}

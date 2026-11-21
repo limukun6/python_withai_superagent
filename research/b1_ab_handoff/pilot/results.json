@@ -1,0 +1,514 @@
+{
+  "actions": [
+    {
+      "number": 1,
+      "state_sha256": "d3fa35669bb3b6117ce1841486fe84bc10d717df6fea01de59a3040cd68a468e",
+      "fits_before": 0,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_logistic_C0.1",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 2,
+      "state_sha256": "674095f7d2a59d37ccc98c1a43aced08a70b10f3e70db9703e8dae616834e34a",
+      "fits_before": 1,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 3,
+      "state_sha256": "cbfbde0dd21034641ede6ca2d3a7939b4615f30258eb0a5dd00309d3dba1a589",
+      "fits_before": 2,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 4,
+      "state_sha256": "4f9c6a75e615eacf30177e5091af9445943a3d2ecf2581ea25a646519fc5af94",
+      "fits_before": 3,
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows. Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 5,
+      "state_sha256": "5b750c1f6c5d29ad2b06a561ede2361624d68da991cea0ab9fc94073de7faebf",
+      "fits_before": 4,
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows. Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 6,
+      "state_sha256": "7d94cf9fc3738c438e39a7c2b770afc4584d45d527bf5f45db2d422c30c7e134",
+      "fits_before": 5,
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows. The first replication did not resolve the primary ordering (gap -0.0196). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        3,
+        2,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 7,
+      "state_sha256": "d03b516a7e73fa9999f7ae2c01895470a9850f4dd1796261355baf53c7f5db88",
+      "fits_before": 6,
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows. The first replication did not resolve the primary ordering (gap -0.0196). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        3,
+        2,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 8,
+      "state_sha256": "a5ecdb88299dd7c9605a2e8f63dba24efb4f96e7e99803b251e7ddbae0d98af9",
+      "fits_before": 7,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_rbf_svm_C10.0",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        3,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 9,
+      "state_sha256": "7cd6960a05dc1e97a10a0e701f6ebc3c03f36f6fe8022c5701d7cb6cdb027331",
+      "fits_before": 8,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_logistic_C1.0",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        8,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 10,
+      "state_sha256": "41f55b89d856b447be9c1bb6f8244ba8a01d21f54e43f6251bd013dc004c6673",
+      "fits_before": 9,
+      "action": "explore",
+      "candidate_id": "numeric_tabular_extra_trees_leaf3",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        8,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "number": 11,
+      "state_sha256": "e82282352f24c17a018720624b8996a2879aea13f93239d4e0525909586f3111",
+      "fits_before": 10,
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "observations": [
+    {
+      "trial": 1,
+      "candidate": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.5882352941176471,
+      "search_accuracy": 0.5882352941176471,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 2,
+      "candidate": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.5882352941176471,
+      "search_accuracy": 0.5882352941176471,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "extra_trees",
+        "class": "ExtraTreesClassifier",
+        "module": "sklearn.ensemble._forest",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 3,
+      "candidate": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.6274509803921569,
+      "search_accuracy": 0.6274509803921569,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "rbf_svm",
+        "class": "SVC",
+        "module": "sklearn.svm._classes",
+        "parameters": {
+          "kernel": "rbf"
+        },
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 4,
+      "candidate": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "split_id": "confirmation_1",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.6274509803921569,
+      "search_accuracy": 0.6274509803921569,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "rbf_svm",
+        "class": "SVC",
+        "module": "sklearn.svm._classes",
+        "parameters": {
+          "kernel": "rbf"
+        },
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 5,
+      "candidate": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "split_id": "confirmation_1",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.6470588235294118,
+      "search_accuracy": 0.6470588235294118,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "extra_trees",
+        "class": "ExtraTreesClassifier",
+        "module": "sklearn.ensemble._forest",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 6,
+      "candidate": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "split_id": "confirmation_2",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.7307692307692307,
+      "search_accuracy": 0.7307692307692307,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "rbf_svm",
+        "class": "SVC",
+        "module": "sklearn.svm._classes",
+        "parameters": {
+          "kernel": "rbf"
+        },
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 7,
+      "candidate": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "split_id": "confirmation_2",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.8076923076923077,
+      "search_accuracy": 0.8076923076923077,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "extra_trees",
+        "class": "ExtraTreesClassifier",
+        "module": "sklearn.ensemble._forest",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 8,
+      "candidate": "numeric_tabular_rbf_svm_C10.0",
+      "params": {
+        "C": 10.0,
+        "kernel": "rbf"
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.6862745098039216,
+      "search_accuracy": 0.6862745098039216,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "rbf_svm",
+        "class": "SVC",
+        "module": "sklearn.svm._classes",
+        "parameters": {
+          "kernel": "rbf"
+        },
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 9,
+      "candidate": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.5882352941176471,
+      "search_accuracy": 0.5882352941176471,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    },
+    {
+      "trial": 10,
+      "candidate": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "split_id": "primary",
+      "status": "completed",
+      "primary_metric": "accuracy",
+      "search_score": 0.5686274509803921,
+      "search_accuracy": 0.5686274509803921,
+      "classifier_fits": 1,
+      "estimator": {
+        "family": "extra_trees",
+        "class": "ExtraTreesClassifier",
+        "module": "sklearn.ensemble._forest",
+        "parameters": {},
+        "source": "fitted_estimator"
+      }
+    }
+  ],
+  "family": "numeric_tabular_rbf_svm_C10.0",
+  "selection_splits": [
+    "primary"
+  ],
+  "selection_rule": "max inner accuracy; ties by candidate id",
+  "selection_score": 0.6862745098039216,
+  "search_fits": 10,
+  "full_refits": 1,
+  "task_classifier_fits": 11,
+  "prediction": {
+    "fresh_interpreters": 2,
+    "rows_per_prediction": 31,
+    "matching_row_ids_and_labels": true,
+    "prediction_csv_sha256": "1bf8954752c5714a855b256af448214004d70d1d0fc677aa0fe731da2a2c9be8",
+    "model_sha256": "175c24b33dc49b861ab16728fddd4a1812c3b787a98da1206085fb88b58852d2",
+    "task_spec_sha256": "b4def1f1eff438a0c9292c87108a1eaa871a46433a294b6d32bfa267e8788b92",
+    "prediction_fixture_contains_labels": false
+  },
+  "post_reload_task_elapsed_seconds": 10.922,
+  "task_physical_fit_trace": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "numeric_tabular_logistic_C0.1"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C10.0"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "numeric_tabular_logistic_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf3"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C10.0"
+    }
+  ],
+  "capability_probes": [
+    {
+      "kind": "categorical_tabular",
+      "id": "supported_field_interactions",
+      "status": "passed",
+      "visible_before_training": true,
+      "estimator": "CatBoostClassifier",
+      "classifier_fits": 1,
+      "probability_shape": [
+        8,
+        2
+      ],
+      "worker_seconds": 1.756
+    },
+    {
+      "kind": "image",
+      "id": "image_gradient_histograms_logistic",
+      "status": "passed",
+      "visible_before_training": true,
+      "estimator": "LogisticRegression",
+      "classifier_fits": 1,
+      "probability_shape": [
+        8,
+        2
+      ],
+      "worker_seconds": 0.741
+    },
+    {
+      "kind": "single_text",
+      "id": "minilm_text_with_lexical_features",
+      "status": "passed",
+      "visible_before_training": true,
+      "estimator": "LogisticRegression",
+      "classifier_fits": 1,
+      "probability_shape": [
+        8,
+        2
+      ],
+      "worker_seconds": 3.324,
+      "checkpoint": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+      "device": "cpu",
+      "frozen_encoder": true,
+      "training_worker_tokens": 1088
+    },
+    {
+      "kind": "pair_text",
+      "id": "minilm_text_with_lexical_features",
+      "status": "passed",
+      "visible_before_training": true,
+      "estimator": "LogisticRegression",
+      "classifier_fits": 1,
+      "probability_shape": [
+        8,
+        2
+      ],
+      "worker_seconds": 2.652,
+      "swap_probabilities_complementary": true,
+      "checkpoint": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+      "device": "cpu",
+      "frozen_encoder": true,
+      "training_worker_tokens": 2317
+    }
+  ],
+  "total_observed_fits": 15,
+  "paid_requests": 0,
+  "input_api_tokens": 0,
+  "output_api_tokens": 0,
+  "api_rmb": 0,
+  "formal_data_accessed": false,
+  "observed_action_types": [
+    "confirm",
+    "explore",
+    "stop"
+  ]
+}

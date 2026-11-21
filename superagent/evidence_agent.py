@@ -35,6 +35,9 @@ PARAMETERS = {
 
 
 def route_of(candidate):
+    from .ab_methods import ROUTES
+    if candidate in ROUTES:
+        return ROUTES[candidate]
     if candidate.startswith('generated_'):return candidate.rsplit('_',1)[0]
     if candidate.startswith("recipe_"):return candidate.rsplit("_",1)[0]
     for name in ('edit_pair','category_cross','style_tree','style_blend','symmetric_stats','adaptive_catboost','neural_pair','learned_stack'):

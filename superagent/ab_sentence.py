@@ -1,0 +1,135 @@
+"""Pinned local MiniLM features for one supervised lexical classifier. No generation or network access."""
+from functools import lru_cache
+import hashlib
+from importlib.util import find_spec
+import os
+from pathlib import Path
+
+import numpy as np
+from scipy.sparse import csr_matrix,hstack,vstack
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from .models import style_differences
+
+
+MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
+REVISION = '524b52f1d626e9a5a16462e141fc9dffc25d5aeb'
+FILES = {
+    'config.json':(612,'953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41'),
+    'tokenizer.json':(466247,'be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037'),
+    'model.safetensors':(90868376,'53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db'),
+}
+
+
+@lru_cache(maxsize=16)
+def _checksum(path, identity):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream,'sha256').hexdigest()
+
+
+def verified_directory():
+    folder = os.environ.get('SUPERAGENT_MINILM_WEIGHTS')
+    if not folder or any(find_spec(p) is None for p in ('torch','transformers','tokenizers','safetensors')):
+        return None
+    root = Path(folder).resolve()
+    for name,(size,sha) in FILES.items():
+        path = root/name
+        if not path.is_file():
+            return None
+        s = path.stat()
+        if s.st_size!=size or _checksum(path,(s.st_size,s.st_ino,s.st_mtime_ns,s.st_ctime_ns))!=sha:
+            return None
+    return root
+
+
+@lru_cache(maxsize=1)
+def _encoder(root):
+    import torch
+    from tokenizers import Tokenizer
+    from transformers import BertModel
+    tokenizer=Tokenizer.from_file(str(root/'tokenizer.json'))
+    tokenizer.no_padding()
+    tokenizer.enable_truncation(max_length=256)
+    model,info=BertModel.from_pretrained(root,local_files_only=True,use_safetensors=True,
+                                         add_pooling_layer=False,output_loading_info=True)
+    if info['missing_keys'] or info['mismatched_keys'] or info['error_msgs']:
+        raise ValueError('Incomplete MiniLM checkpoint')
+    torch.set_num_threads(min(3,torch.get_num_threads()))
+    return tokenizer, model.eval().requires_grad_(False)
+
+
+def encode(texts):
+    import torch
+    root=verified_directory()
+    if root is None:
+        raise ValueError('Set SUPERAGENT_MINILM_WEIGHTS to the directory of the pinned local files')
+    tokenizer,model=_encoder(root)
+    unique=list(dict.fromkeys(texts))
+    encoded=tokenizer.encode_batch(unique)
+    lengths=np.array([len(x.ids) for x in encoded])
+    order=np.argsort(lengths,kind='stable')
+    vectors=np.empty((len(unique),384),dtype=np.float32)
+    with torch.inference_mode():
+        for offset in range(0,len(order),48):
+            idx=order[offset:offset+48]
+            tokens=torch.zeros((len(idx),int(lengths[idx].max())),dtype=torch.long)
+            mask=torch.zeros_like(tokens)
+            for row,j in enumerate(idx):
+                tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)
+                mask[row,:lengths[j]]=1
+            hidden=model(input_ids=tokens,attention_mask=mask).last_hidden_state
+            pooled=(hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
+            vectors[idx]=torch.nn.functional.normalize(pooled,dim=1).numpy()
+    if not np.isfinite(vectors).all():
+        raise ValueError('Nonfinite frozen features')
+    indices={s:i for i,s in enumerate(unique)}
+    return vectors[[indices[s] for s in texts]],int(lengths.sum())
+
+
+class SentenceFeatures(TransformerMixin,BaseEstimator):
+    def __init__(self,kind):
+        self.kind=kind
+
+    def fit(self,rows,y=None):
+        texts=[s for pair in rows for s in pair] if self.kind=='pair_text' else list(rows)
+        options=dict(min_df=2,sublinear_tf=True,max_features=40000)
+        self.word_=TfidfVectorizer(ngram_range=(1,2),**options).fit(texts)
+        self.char_=TfidfVectorizer(analyzer='char_wb',ngram_range=(3,5),**options).fit(texts)
+        if self.kind=='pair_text':
+            raw=style_differences(rows)
+            self.scaler_=StandardScaler(with_mean=False).fit(np.vstack([raw,-raw]))
+        self.usage_={'input_tokens':0,'feature_transform_calls':0,'api_calls':0,'api_rmb':0}
+        return self
+
+    def transform(self,rows):
+        if self.kind=='pair_text':
+            dense,n=encode([s for pair in rows for s in pair])
+            left, right = zip(*rows)
+            matrices=[v.transform(left)-v.transform(right) for v in (self.word_,self.char_)]
+            raw=self.scaler_.transform(style_differences(rows))
+            matrices.append(csr_matrix(raw/np.sqrt(raw.shape[1])))
+            dense=dense[::2]-dense[1::2]
+        else:
+            dense,n=encode(list(rows))
+            matrices=[v.transform(rows) for v in (self.word_,self.char_)]
+        self.usage_['input_tokens']+=n
+        self.usage_['feature_transform_calls']+=1
+        return hstack([*matrices,csr_matrix(dense)],format='csr')
+
+
+def fit_sentence(rows,labels,query,kind):
+    features=SentenceFeatures(kind).fit(rows)
+    x=features.transform(rows)
+    if kind=='pair_text':
+        if not np.array_equal(np.unique(labels),[0,1]):
+            raise ValueError('Preference labels must encode the declared binary sides')
+        x=vstack([x,-x])
+        labels=np.r_[labels,1-np.asarray(labels)]
+    classifier=LogisticRegression(C=.3,max_iter=2000,random_state=42).fit(x,labels)
+    model=Pipeline([('features',features),('classifier',classifier)])
+    model.training_metadata={'frozen_downstream_encoder':MODEL,'revision':REVISION,'usage':features.usage_}
+    return model, model.predict(query)

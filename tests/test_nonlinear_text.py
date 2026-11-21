@@ -29,7 +29,8 @@ class NonlinearTextTests(unittest.TestCase):
     def test_new_pool_preserves_old_catalogs_and_exposes_component_compute(self):
         base=search_candidates('pair_text','expanded');research=search_candidates('pair_text','research')
         nonlinear=search_candidates('pair_text','nonlinear');all_candidates=search_candidates('pair_text','all')
-        self.assertEqual([len(base),len(research),len(nonlinear),len(all_candidates)],[22,28,29,43])
+        from superagent.ab_methods import TEXT
+        self.assertEqual([len(base),len(research),len(nonlinear),sum(c.family != TEXT for c in all_candidates)],[22,28,29,43])
         self.assertEqual([(c.family,c.params) for c in base],[(c.family,c.params) for c in nonlinear[:22]])
         self.assertEqual({route_of(c.family) for c in nonlinear[22:]},{'style_tree','style_blend','symmetric_stats'})
         self.assertEqual(sum(c.params['classifier_fits_per_evaluation'] for c in nonlinear[22:]),11)

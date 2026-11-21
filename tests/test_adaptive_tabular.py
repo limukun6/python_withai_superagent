@@ -77,7 +77,8 @@ class AdaptiveTabularTests(unittest.TestCase):
         self.assertEqual([len(base),len(new)],[14,18]);self.assertEqual([(c.family,c.params) for c in base],[(c.family,c.params) for c in new[:14]])
         self.assertEqual({route_of(c.family) for c in new[14:]},{'adaptive_catboost'})
         self.assertTrue(all(c.params['classifier_fits_per_evaluation']==2 for c in new[14:]))
-        self.assertEqual(len(search_candidates('categorical_tabular','all')),19)
+        from superagent.ab_methods import FIELDS
+        self.assertEqual(len([c for c in search_candidates('categorical_tabular','all') if c.family != FIELDS]),19)
         self.assertEqual([c.family for c in search_candidates('pair_text','adaptive')],
             [c.family for c in search_candidates('pair_text','expanded')])
 

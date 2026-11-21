@@ -32,7 +32,8 @@ class NonlinearTextTests(unittest.TestCase):
         from superagent.ab_methods import TEXT
         from superagent.ab_sentence import verified_directory
         from superagent.ab_symmetric import CHANNELS, ENCODER
-        additions = list(CHANNELS)
+        from superagent.symmetric_text import candidates as tfidf_candidates
+        additions = [c.family for c in tfidf_candidates()] + list(CHANNELS)
         if verified_directory() is not None:
             additions.extend([ENCODER, TEXT])
         self.assertEqual([len(base), len(research), len(nonlinear)], [22, 28, 29])

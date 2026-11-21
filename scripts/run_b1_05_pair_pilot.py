@@ -118,6 +118,10 @@ def prepare_pairs(root, name, x, y, semantics, source, *, outer_seed):
     if semantics == 'symmetric':
         pair_package(path / 'reversed.zip', [(b, a) for a, b in test_x], None, semantics, 'test')
     joblib.dump(dict(X=test_x, y=y[held], row_ids=held.tolist()), path / 'holdout.joblib')
+    return register_prepared_task(path, source, semantics, len(y), train, held, resource, audit)
+
+
+def register_prepared_task(path, source, semantics, source_rows, train, held, resource, audit):
     task = load_development_task(path / 'train.zip')
     if task.X_val is not None or task.y_val is not None:
         raise ValueError('Optimizer received an outer validation set')
@@ -128,10 +132,10 @@ def prepare_pairs(root, name, x, y, semantics, source, *, outer_seed):
     ids = dict(outer=dict(train=train.tolist(), held=held.tolist()), inner={})
     for split in registered:
         record = fixture.read(partition_dir / (split + '_split.json'))
-        if record['search_rows_sharing_text']:
-            raise ValueError('A text occurs on both sides of an inner split')
+        if record.get('search_rows_sharing_text', record.get('search_duplicate_rows')) != 0:
+            raise ValueError('A group occurs on both sides of an inner split')
         ids['inner'][split] = {key: record[key] for key in ('train_indices', 'search_indices')}
-    return dict(name=name, semantics=semantics, source=source, source_rows=len(y), inner_input_rows=len(train),
+    return dict(name=path.name, semantics=semantics, source=source, source_rows=source_rows, inner_input_rows=len(train),
                 outer_rows=len(held), grouping=resource, overlap=audit, splits=registered,
                 row_ids_sha256=identities_file(path / 'row_ids.json.gz', ids),
                 files={p.name: fixture.sha(p.read_bytes()) for p in sorted(path.glob('*.zip'))},

@@ -7,8 +7,10 @@ from pathlib import Path
 
 import numpy as np
 from scipy.sparse import csr_matrix,hstack,vstack
+from scipy.spatial.distance import pdist
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -18,6 +20,9 @@ from .models import style_differences
 
 MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 REVISION = '524b52f1d626e9a5a16462e141fc9dffc25d5aeb'
+KERNEL_DIMENSIONS = 512
+KERNEL_SEED = 12271
+KERNEL_SAMPLE_LIMIT = 128
 FILES = {
     'config.json':(612,'953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41'),
     'tokenizer.json':(466247,'be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037'),
@@ -105,6 +110,10 @@ class SentenceFeatures(TransformerMixin,BaseEstimator):
         self.usage_={'input_tokens':0,'feature_transform_calls':0,'api_calls':0,'api_rmb':0}
         return self
 
+    def embedding_features(self,dense):
+        values = dense[::2]-dense[1::2] if self.kind=='pair_text' else dense
+        return [csr_matrix(values)]
+
     def transform(self,rows):
         if self.kind=='pair_text':
             dense,n=encode([s for pair in rows for s in pair])
@@ -112,17 +121,41 @@ class SentenceFeatures(TransformerMixin,BaseEstimator):
             matrices=[v.transform(left)-v.transform(right) for v in (self.word_,self.char_)]
             raw=self.scaler_.transform(style_differences(rows))
             matrices.append(csr_matrix(raw/np.sqrt(raw.shape[1])))
-            dense=dense[::2]-dense[1::2]
         else:
             dense,n=encode(list(rows))
             matrices=[v.transform(rows) for v in (self.word_,self.char_)]
         self.usage_['input_tokens']+=n
         self.usage_['feature_transform_calls']+=1
-        return hstack([*matrices,csr_matrix(dense)],format='csr')
+        return hstack([*matrices,*self.embedding_features(dense)],format='csr')
 
 
-def fit_sentence(rows,labels,query,kind):
-    features=SentenceFeatures(kind).fit(rows)
+class KernelSentenceFeatures(SentenceFeatures):
+    """Add a fixed-size nonlinear utility for each individual sentence."""
+    def fit(self,rows,y=None):
+        super().fit(rows,y)
+        texts = (text for pair in rows for text in pair) if self.kind=='pair_text' else iter(rows)
+        def sample_order(text):
+            return hashlib.sha256(text.encode('utf-8')).digest(),text
+        sample = sorted(set(texts),key=sample_order)[:KERNEL_SAMPLE_LIMIT]
+        vectors,tokens = encode(sample)
+        distances = pdist(vectors,metric='sqeuclidean')
+        positive = distances[distances>0]
+        self.median_squared_distance_ = float(np.median(positive)) if len(positive) else None
+        gamma = np.log(2.)/self.median_squared_distance_ if self.median_squared_distance_ is not None else 1.
+        self.kernel_ = RBFSampler(gamma=gamma,n_components=KERNEL_DIMENSIONS,random_state=KERNEL_SEED).fit(vectors)
+        self.usage_.update(bandwidth_sample_texts=len(sample),bandwidth_input_tokens=tokens)
+        self.usage_['input_tokens'] += tokens
+        return self
+
+    def embedding_features(self,dense):
+        original = super().embedding_features(dense)
+        nonlinear = self.kernel_.transform(dense)
+        extra = nonlinear[::2]-nonlinear[1::2] if self.kind=='pair_text' else nonlinear
+        return [*original,csr_matrix(extra)]
+
+
+def fit_sentence(rows,labels,query,kind,nonlinear=False):
+    features=(KernelSentenceFeatures(kind) if nonlinear else SentenceFeatures(kind)).fit(rows)
     x=features.transform(rows)
     if kind=='pair_text':
         if not np.array_equal(np.unique(labels),[0,1]):

@@ -1,0 +1,1232 @@
+{
+  "paths": [
+    {
+      "name": "45102_fixed",
+      "fits": 11,
+      "workers": [
+        {
+          "candidate": "logistic_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_10.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "logistic_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7,
+            8
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Search is closed; preserve the recorded final refit allowance.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 6,
+        "stop": 1
+      },
+      "model_sha256": "79c6f81a7ae8bcf8d79babe9f10f4b9f4d31a4881d0494b3bb46e10bf990cf66",
+      "selected": "supported_field_interactions",
+      "seconds": 41.2615330000408,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 1627,
+        "primary_metric": "accuracy",
+        "score": 0.7633681622618316,
+        "accuracy": 0.7633681622618316,
+        "heldout_scored": true,
+        "model_sha256": "79c6f81a7ae8bcf8d79babe9f10f4b9f4d31a4881d0494b3bb46e10bf990cf66",
+        "original_row_ids_sha256": "e39417803e266b72876eebdbe5fa85a25255ac64c52c95d9808edba14fb847ec",
+        "selected_candidate": "supported_field_interactions",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 1242,
+        "csv_sha256": "a3fd9d9da917ebf29ef8db095b62f8194456d7765b893d8d128b2a4e57d6c4d3"
+      }
+    },
+    {
+      "name": "45102_adaptive",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "logistic_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg10.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg10.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf2",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "logistic_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7448 and 0.7433; hard predictions differ on 90/1305 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7448 and 0.7433; hard predictions differ on 90/1305 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg10.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg10.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7448 and 0.7441; hard predictions differ on 85/1305 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            7,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf2",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            7
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 6,
+        "confirm": 3,
+        "stop": 1
+      },
+      "model_sha256": "3874d649fd57584d77c515c8c6eda1992867e204ea4455af7f9cf49e4f85e2e2",
+      "selected": "supported_field_interactions",
+      "seconds": 35.16838216711767,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 1627,
+        "primary_metric": "accuracy",
+        "score": 0.7633681622618316,
+        "accuracy": 0.7633681622618316,
+        "heldout_scored": true,
+        "model_sha256": "3874d649fd57584d77c515c8c6eda1992867e204ea4455af7f9cf49e4f85e2e2",
+        "original_row_ids_sha256": "e39417803e266b72876eebdbe5fa85a25255ac64c52c95d9808edba14fb847ec",
+        "selected_candidate": "supported_field_interactions",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 1242,
+        "csv_sha256": "a3fd9d9da917ebf29ef8db095b62f8194456d7765b893d8d128b2a4e57d6c4d3"
+      }
+    },
+    {
+      "name": "45103_adaptive",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "logistic_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg10.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg10.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf2",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "logistic_C0.25",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "logistic_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg10.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7583 and 0.7521; hard predictions differ on 74/1295 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg10.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7583 and 0.7521; hard predictions differ on 74/1295 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf2",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "logistic_C0.25",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 7,
+        "confirm": 2,
+        "stop": 1
+      },
+      "model_sha256": "2e985d9f1e5196ab16c4f60f3c1847ff2f6c0bb46059cebab558f85fdccba545",
+      "selected": "supported_field_interactions",
+      "seconds": 33.50063450005837,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 1623,
+        "primary_metric": "accuracy",
+        "score": 0.7455329636475663,
+        "accuracy": 0.7455329636475663,
+        "heldout_scored": true,
+        "model_sha256": "2e985d9f1e5196ab16c4f60f3c1847ff2f6c0bb46059cebab558f85fdccba545",
+        "original_row_ids_sha256": "9f002c48de11edac9c52c1e9a2292efdc6c9624a5a28c481760d40308130a5b3",
+        "selected_candidate": "supported_field_interactions",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 1210,
+        "csv_sha256": "ffeeb5fd793e787516e5364a6d3362168f890c2158c2e2872b02d678810c04f9"
+      }
+    },
+    {
+      "name": "45103_fixed",
+      "fits": 11,
+      "workers": [
+        {
+          "candidate": "logistic_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "extra_trees_leaf1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "ExtraTreesClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_10.joblib"
+        },
+        {
+          "candidate": "supported_field_interactions",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "CatBoostClassifier",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "logistic_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "confirmation_1",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "supported_field_interactions",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "catboost_depth4_reg3.0",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7,
+            8
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "extra_trees_leaf1",
+          "split_id": "confirmation_2",
+          "reason": "Fixed allocation replicates the best primary configurations on both registered splits.",
+          "evidence_trials": [
+            2,
+            4,
+            3,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Search is closed; preserve the recorded final refit allowance.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 6,
+        "stop": 1
+      },
+      "model_sha256": "4e5544ef9b22a5994a98822607b06b10e0d05de5afc3592cce2f1ab13cc15dda",
+      "selected": "supported_field_interactions",
+      "seconds": 41.85867816582322,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 1623,
+        "primary_metric": "accuracy",
+        "score": 0.7455329636475663,
+        "accuracy": 0.7455329636475663,
+        "heldout_scored": true,
+        "model_sha256": "4e5544ef9b22a5994a98822607b06b10e0d05de5afc3592cce2f1ab13cc15dda",
+        "original_row_ids_sha256": "9f002c48de11edac9c52c1e9a2292efdc6c9624a5a28c481760d40308130a5b3",
+        "selected_candidate": "supported_field_interactions",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 1210,
+        "csv_sha256": "ffeeb5fd793e787516e5364a6d3362168f890c2158c2e2872b02d678810c04f9"
+      }
+    }
+  ],
+  "paired_counts": {
+    "45102": {
+      "rows": 1627,
+      "fixed_correct": 1242,
+      "adaptive_correct": 1242,
+      "newly_correct": 0,
+      "newly_wrong": 0,
+      "both_correct": 1242,
+      "both_wrong": 385,
+      "difference_percentage_points": 0.0,
+      "primary_metric": "accuracy",
+      "fixed_score": 0.7633681622618316,
+      "adaptive_score": 0.7633681622618316,
+      "primary_difference_percentage_points": 0.0
+    },
+    "45103": {
+      "rows": 1623,
+      "fixed_correct": 1210,
+      "adaptive_correct": 1210,
+      "newly_correct": 0,
+      "newly_wrong": 0,
+      "both_correct": 1210,
+      "both_wrong": 413,
+      "difference_percentage_points": 0.0,
+      "primary_metric": "accuracy",
+      "fixed_score": 0.7455329636475663,
+      "adaptive_score": 0.7455329636475663,
+      "primary_difference_percentage_points": 0.0
+    }
+  },
+  "outer_holdout_shared_rows": 322
+}

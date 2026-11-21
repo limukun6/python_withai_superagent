@@ -1,0 +1,348 @@
+{
+  "batch": "B1-08-sms",
+  "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "tasks": {
+    "45102_fixed": {
+      "name": "45102_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "b32eca3b17c29334408f7bede877a88337c9707b4eee59dd478f2c5a9fa061e0",
+          "label_sha256": "7f89557403003207a96c756f47a5e45475e9a0ac3a1f700c6276139617e25d66",
+          "evaluation_payload_sha256": "3fcd4161df6bfb25af4e1a4411df44f8dff288882ed07848fb3c773868d1dce3"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "79e110db9df013408e488877bcde5fda34b9fb65318d52deacc9a95da3ca3faa",
+          "label_sha256": "55cd506d4d6490c1dd1ef11cf6d763ca82589c435ea4944497a63855e57af2c5",
+          "evaluation_payload_sha256": "fa89cfb23b4a4b92649f9ae79205a8f08d264bb39904d8c1c48c69d1dca39403"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "137f8fa3599d960dd08b0294226745e331fb570b0655c099fdaf43c9794b654e",
+          "label_sha256": "839ccc334f54469dfcf251183ecc277eac7bb3585a8110d79c260fd83107db6f",
+          "evaluation_payload_sha256": "86a6071ff7177276e08618163f0499a9c120603418dbbd01191a716cfad47af6"
+        }
+      },
+      "row_ids_sha256": "df2af392b35a352ad2266eff6d7ffa19c25e8f0ec8e859d78c4556102ec912d7",
+      "files": {
+        "features.zip": "ec5ddc4dd88ffb6ee8ebbd90c44a6998b7a342befbcc7be258c736418074f5a1",
+        "train.zip": "53124b916b544340423918070d862ccdcac23d7dc66ac706b611c80661264ba4"
+      },
+      "holdout_sha256": "3c2d4f4b74677d29783ccfd9eedc3cf67176018f1c802adac6844a169215afd6",
+      "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45102,
+      "allocation": "fixed"
+    },
+    "45102_adaptive": {
+      "name": "45102_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "b32eca3b17c29334408f7bede877a88337c9707b4eee59dd478f2c5a9fa061e0",
+          "label_sha256": "7f89557403003207a96c756f47a5e45475e9a0ac3a1f700c6276139617e25d66",
+          "evaluation_payload_sha256": "3fcd4161df6bfb25af4e1a4411df44f8dff288882ed07848fb3c773868d1dce3"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "79e110db9df013408e488877bcde5fda34b9fb65318d52deacc9a95da3ca3faa",
+          "label_sha256": "55cd506d4d6490c1dd1ef11cf6d763ca82589c435ea4944497a63855e57af2c5",
+          "evaluation_payload_sha256": "fa89cfb23b4a4b92649f9ae79205a8f08d264bb39904d8c1c48c69d1dca39403"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "137f8fa3599d960dd08b0294226745e331fb570b0655c099fdaf43c9794b654e",
+          "label_sha256": "839ccc334f54469dfcf251183ecc277eac7bb3585a8110d79c260fd83107db6f",
+          "evaluation_payload_sha256": "86a6071ff7177276e08618163f0499a9c120603418dbbd01191a716cfad47af6"
+        }
+      },
+      "row_ids_sha256": "df2af392b35a352ad2266eff6d7ffa19c25e8f0ec8e859d78c4556102ec912d7",
+      "files": {
+        "features.zip": "ec5ddc4dd88ffb6ee8ebbd90c44a6998b7a342befbcc7be258c736418074f5a1",
+        "train.zip": "53124b916b544340423918070d862ccdcac23d7dc66ac706b611c80661264ba4"
+      },
+      "holdout_sha256": "3c2d4f4b74677d29783ccfd9eedc3cf67176018f1c802adac6844a169215afd6",
+      "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45102,
+      "allocation": "adaptive"
+    },
+    "45103_fixed": {
+      "name": "45103_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "532ae84e9e2607e01d01a4b4e0bb49f0df7e0b310140ad39110f3127258f17e6",
+          "label_sha256": "193c0224d68b476e3d8bc590cf27eda982feb0058f09ce3843d67532e9f6615e",
+          "evaluation_payload_sha256": "932dd0ab02026e261c217a58d2d9004c920c5176d5e69a3bf2dfea4826d151bf"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "57db5862b83b9b240c80b865dc67c75918ebccf2ba813b97512aaa5c176d73ea",
+          "label_sha256": "203d8e741cc5238321b976f7310526c5fca7afe6e68472eb1ada5d671d6c88f0",
+          "evaluation_payload_sha256": "a2eb28e2eaeca58f347c9bdc9bf2fefcedab8a1f4ed37a5f8305c0eb5dedc3b0"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "e2b04ee17cf1829492bd1b73cfc243b76685f6a9070e9921686f579609b10213",
+          "label_sha256": "7bd1a6c1c8d98b7577fd936dfe19fbae1a93bc67c2f00cc93268c2c0cd85c627",
+          "evaluation_payload_sha256": "10e1e91f53d8185a498b0915628789bbe1adc103494841f505fc6d9a1e8306bb"
+        }
+      },
+      "row_ids_sha256": "cce85795ffd9565b42347d51bb69022e4a9cab4ba490fff0fc4a597896072448",
+      "files": {
+        "features.zip": "783e2abe9549ec279e23a973e4914bcc6d9f07aa63641774ba6103a405c6bb21",
+        "train.zip": "2d09d857ea09365963f1773ac1201b05fa0a038914480ae453f77fbc1ccc0f66"
+      },
+      "holdout_sha256": "c7d8caf8f744dbd6f21e9945565851ec2cebfba8e16970e05e8e36c604de162d",
+      "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45103,
+      "allocation": "fixed"
+    },
+    "45103_adaptive": {
+      "name": "45103_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "532ae84e9e2607e01d01a4b4e0bb49f0df7e0b310140ad39110f3127258f17e6",
+          "label_sha256": "193c0224d68b476e3d8bc590cf27eda982feb0058f09ce3843d67532e9f6615e",
+          "evaluation_payload_sha256": "932dd0ab02026e261c217a58d2d9004c920c5176d5e69a3bf2dfea4826d151bf"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "57db5862b83b9b240c80b865dc67c75918ebccf2ba813b97512aaa5c176d73ea",
+          "label_sha256": "203d8e741cc5238321b976f7310526c5fca7afe6e68472eb1ada5d671d6c88f0",
+          "evaluation_payload_sha256": "a2eb28e2eaeca58f347c9bdc9bf2fefcedab8a1f4ed37a5f8305c0eb5dedc3b0"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "e2b04ee17cf1829492bd1b73cfc243b76685f6a9070e9921686f579609b10213",
+          "label_sha256": "7bd1a6c1c8d98b7577fd936dfe19fbae1a93bc67c2f00cc93268c2c0cd85c627",
+          "evaluation_payload_sha256": "10e1e91f53d8185a498b0915628789bbe1adc103494841f505fc6d9a1e8306bb"
+        }
+      },
+      "row_ids_sha256": "cce85795ffd9565b42347d51bb69022e4a9cab4ba490fff0fc4a597896072448",
+      "files": {
+        "features.zip": "783e2abe9549ec279e23a973e4914bcc6d9f07aa63641774ba6103a405c6bb21",
+        "train.zip": "2d09d857ea09365963f1773ac1201b05fa0a038914480ae453f77fbc1ccc0f66"
+      },
+      "holdout_sha256": "c7d8caf8f744dbd6f21e9945565851ec2cebfba8e16970e05e8e36c604de162d",
+      "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45103,
+      "allocation": "adaptive"
+    }
+  },
+  "execution_order": [
+    [
+      45102,
+      "fixed"
+    ],
+    [
+      45102,
+      "adaptive"
+    ],
+    [
+      45103,
+      "adaptive"
+    ],
+    [
+      45103,
+      "fixed"
+    ]
+  ],
+  "driver_sha256": "9b3350fba52e915640165990434e28cbf469bf8c7ddc2cc2e0b5824586f78709",
+  "runner_sha256": "2d48a566bd2bebffc26c765ec1300fc83b3dfb08232578aac6b75f5dc99cb3f0",
+  "helper_sha256": "e25b3b83c0a5df048be9b635d914c7a9830fbbf76a629465a33dfaf5857fe77e",
+  "entry_sha256": "f4a56a6664c78d2c3ae7c5373bbd16bf6dee81c22aba1b79a6728ccbe9de52f4",
+  "source_builder_sha256": "05ec570ae37c1430dd18f92954ac3a7267f80cd3b543e3605fc7566e6846350a",
+  "plan_sha256": "42cb67d37eac4a94ebd481b2e696b30687e6b8294af2a6a76f2f3e444f9f861a",
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 44,
+  "inner_seed": 707,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "api_requests_allowed": 0
+}

@@ -125,7 +125,7 @@ def run(directory, output):
         source_sha256=sha(Path(__file__).read_bytes()), split_code_sha256=sha((ROOT/'superagent/splits.py').read_bytes()),
         plan_sha256=sha((ROOT/'docs/batches/BP_01_plan.md').read_bytes()), classifier_fit_limit=0, prediction_limit=0, api_limit=0))
     try:
-        results = {name:assess(directory/file,name,a,b) for name,file in FILES.items()}
+        results = {name:assess(directory/file,name,a[name],b) for name,file in FILES.items()}
         save(output/'results.json',results)
         save(output/'completion.json',dict(status='checked', tasks=len(results), fits=0, model_predictions=0, outer_model_scores=0, api_requests=0))
     except Exception as error:

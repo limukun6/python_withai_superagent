@@ -1,0 +1,79 @@
+{
+  "released": {
+    "coupon_baseline": {
+      "status": "identical",
+      "csv_sha256": "02b1d6b084e0b6c7e9f25893ca01054b853e2584c11602a3358a5dd0f71c8517",
+      "rows": 1627
+    },
+    "coupon_full": {
+      "status": "identical",
+      "csv_sha256": "835a4af58b7b957753dd439ccd9a7eba80d1f52d84ce6bbeb875eb6c381b7626",
+      "rows": 1627
+    },
+    "headlines_full": {
+      "status": "prediction_failed",
+      "exit_code": 1,
+      "exception": "KeyError: 'input_format'"
+    },
+    "headlines_baseline": {
+      "status": "prediction_failed",
+      "exit_code": 1,
+      "exception": "KeyError: 'input_format'"
+    }
+  },
+  "fresh_legacy_schema": {
+    "rows": 31,
+    "ordered_inputs_equal": true,
+    "input_format": "csv"
+  },
+  "H1_training_schema": {
+    "61411": {
+      "optimization_rows": 1599,
+      "native_full": [
+        "unordered_word",
+        "unordered_char",
+        "unordered_word_char",
+        "unordered_minilm_lexical"
+      ],
+      "without_weights": [
+        "unordered_word",
+        "unordered_char",
+        "unordered_word_char"
+      ],
+      "baseline_count": 0,
+      "swap_label_rule": "preserves",
+      "fit_per_trial": 1,
+      "final_refit_cost": 1
+    },
+    "61421": {
+      "optimization_rows": 1600,
+      "native_full": [
+        "unordered_word",
+        "unordered_char",
+        "unordered_word_char",
+        "unordered_minilm_lexical"
+      ],
+      "without_weights": [
+        "unordered_word",
+        "unordered_char",
+        "unordered_word_char"
+      ],
+      "baseline_count": 0,
+      "swap_label_rule": "preserves",
+      "fit_per_trial": 1,
+      "final_refit_cost": 1
+    }
+  },
+  "MRPC_frozen": {
+    "features.zip": {
+      "status": "identical",
+      "csv_sha256": "2d827883d47a4c45724c0cada58afc2df5125b7c7457e07b71d8292498a5f6a8",
+      "rows": 746
+    },
+    "reversed.zip": {
+      "status": "identical",
+      "csv_sha256": "2d827883d47a4c45724c0cada58afc2df5125b7c7457e07b71d8292498a5f6a8",
+      "rows": 746
+    }
+  }
+}

@@ -155,7 +155,11 @@ class TestCommonMenu(unittest.TestCase):
     def test_pair_semantics_and_missing_encoder(self):
         task = recorded()['task']
         task['kind'] = 'pair_text'
-        for pair in ('symmetric','relation',None):
+        task['input_schema'] = {'pair_semantics': 'symmetric'}
+        symmetric = common_catalog(task, train_rows=50)
+        self.assertTrue(symmetric)
+        self.assertTrue(all(r['swap_label_rule'] == 'preserves' for r in symmetric))
+        for pair in ('relation',None):
             task['input_schema'] = {'pair_semantics':pair}
             self.assertEqual(common_catalog(task,train_rows=50),[])
         task['input_schema']['pair_semantics'] = 'preference'

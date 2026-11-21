@@ -72,16 +72,16 @@ def prepare(root, source, weights):
     return entries
 
 
-def paired_counts(root, seed):
+def paired_counts(root, seed, arms=ARMS):
     def predictions(arm):
         with (root / f'{seed}_{arm}' / 'pred_0/rows.csv').open(newline='') as stream:
             return [r['prediction'] for r in csv.DictReader(stream)]
-    a, b = predictions('lexical'), predictions('extended')
+    a, b = [predictions(arm) for arm in arms]
     truth = joblib.load(root / str(seed) / 'holdout.joblib')['y']
     if len(a) != len(truth) or len(b) != len(truth):
         raise ValueError('Paired prediction lengths disagree')
     left, right = np.asarray(a) == truth, np.asarray(b) == truth
-    return dict(rows=len(a), lexical_correct=int(left.sum()), extended_correct=int(right.sum()),
+    return dict(rows=len(a), **{arms[0] + '_correct': int(left.sum()), arms[1] + '_correct': int(right.sum())},
                 newly_correct=int((~left & right).sum()), newly_wrong=int((left & ~right).sum()),
                 both_correct=int((left & right).sum()), both_wrong=int((~left & ~right).sum()),
                 difference_percentage_points=float(100 * (right.mean() - left.mean())))

@@ -147,9 +147,9 @@ def child(command, log, timeout):
         raise RuntimeError(f'{log.name} returned exit {result.returncode}')
 
 
-def train_one(path, entry, frozen):
+def train_one(path, entry, frozen, *, launcher=('-m', 'superagent', 'run')):
     run = path / 'run'
-    child(['-m', 'superagent', 'run', path / 'train.zip', '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
+    child([*launcher, path / 'train.zip', '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
            '--fit-limit', '11', '--seed', INNER_SEED, '--time-limit', WALL, '--trial-timeout', TRIAL,
            '--run-dir', run], path / 'train.log', WALL + 60)
     outcome = fixture.read(run / 'run_outcome.json')

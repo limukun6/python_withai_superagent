@@ -27,7 +27,7 @@ def compare(left, right):
         if key not in a or key not in b:
             raise ValueError('Required protocol field missing: ' + key)
         checks[key] = a[key] == b[key]
-    for key in ('runner_sha256', 'driver_sha256', 'helper_sha256', 'plan_sha256', 'outer_seed', 'inner_seed',
+    for key in ('runner_sha256', 'driver_sha256', 'helper_sha256', 'entry_sha256', 'plan_sha256', 'outer_seed', 'inner_seed',
                 'api_request_limit', 'api_requests_allowed', 'execution_order'):
         if key in a or key in b:
             checks[key] = key in a and key in b and a[key] == b[key]

@@ -4,13 +4,14 @@ from importlib.util import find_spec
 
 from .ab_methods import FIELDS, ROUTES, TEXT
 from .ab_symmetric import ENCODER
+from .ab_vision import NAME as VISION
 from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
-ADAPTER_VERSION = '1.3'
+ADAPTER_VERSION = '1.4'
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
@@ -27,6 +28,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
     menu = []
     for candidate in search_candidates(kind, 'ab-v1'):
         name, params = candidate.family, candidate.params
+        if name == VISION and (schema.get('image_preprocessing') or {}).get('mode') not in ('L', 'RGB'):
+            continue
         if kind == 'pair_text':
             rule = candidate_swap_rule(candidate)
             preference = pair == 'preference' or (pair is None and schema.get('pair_label_one') in ('left','right'))
@@ -60,7 +63,7 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
-                         resource='local_frozen_encoder_cpu' if name in (TEXT, ENCODER) else 'cpu',
+                         resource='local_frozen_encoder_cpu' if name in (TEXT, ENCODER, VISION) else 'cpu',
                          origin='b_port' if name in ROUTES else 'shared_baseline'))
     return menu
 

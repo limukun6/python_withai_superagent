@@ -10,13 +10,14 @@ from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
 from .ab_symmetric import CHANNELS, ENCODER, candidates as symmetric_candidates
+from . import ab_vision
 
 
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
-          **{name: name for name in CHANNELS}, ENCODER: ENCODER}
+          **{name: name for name in CHANNELS}, ENCODER: ENCODER, ab_vision.NAME:'frozen_image_features'}
 
 
 def _field_tree(rows, labels, query):
@@ -70,7 +71,11 @@ def additions(kind):
         return [Candidate(FIELDS,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
                           representation='training-selected categorical field interactions'),_field_tree)]
     if kind=='image':
-        return [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
+        methods = [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
+        if ab_vision.weights_file() is not None:
+            methods.append(Candidate(ab_vision.NAME,dict(encoder=ab_vision.WEIGHT_ID, weight_sha256=ab_vision.WEIGHT_SHA256,
+                C=10., representation='L2-normalized frozen 576-dimensional image features'),ab_vision.fit_vision))
+        return methods
     if kind in ('single_text','pair_text'):
         from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
         encoder_ready = verified_directory() is not None

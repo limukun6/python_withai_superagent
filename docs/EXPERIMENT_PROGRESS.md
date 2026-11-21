@@ -11,11 +11,12 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
-### A29准备就绪：两任务六组，尚未执行训练/请求
+### A29运行中；A30同历史动作审计已预登记
 
 - 用户要求连续推进。计划batches/A29_limited_choice_matrix_plan.md、runner scripts/run_a29_choice_matrix.py、独立worker观察器已落盘。
 - a29_choice_prepared重新冻结coupon15/preference22候选、只含训练成员的包、实际707/808/909划分和当前生产源码。准备6.234秒；a29_choice_preflight验证12路径命令/同一累计账本通过，0fit/请求。
-- 接下来运行a29_choice_matrix：两任务各L0/L1/R0/E0/R1/E1，最多132fit/24请求，任务规范scope task1/task2，保持历史未知。预登记顺序和全12模型先封存后评分；预计20–45分钟，不是已完成结果。运行状态以该目录checkpoint/completion为准，勿重复收费请求或覆盖目录。
+- a29_choice_matrix已启动：coupon L1 11fit/0请求/250.745秒、R0 11fit/3请求/414.426秒、E1 10fit/3请求/328.508秒已封存；尚未打开外层val。后续自动接L0/E0/R1及preference六条。实际树模型耗时较早期小试慢，中心估计更新约40–60分钟，原600秒/worker60/预算/顺序不变。当前运行状态以checkpoint/completion为准，勿重复收费请求或覆盖目录，不能把此中途快照当最终结果。
+- A30预登记batches/A30_first_choice_audit_plan.md与runner scripts/run_a30_first_choice_audit.py已保存：复用A29每任务四个首提案，严格检查去checks/memory后的共同历史一致，0新增API；A29完成后在17171/17181两新训练内划分测不同动作，最多16fit、相同动作去重。当前只验收“主批未完成则拒绝训练”保护，0fit/请求，未跑动作质量评价。不得并发训练影响A29耗时。
 
 ### 最新A28：Flash网络恢复，真实SMS raw/checked两臂完成
 

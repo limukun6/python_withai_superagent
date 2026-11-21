@@ -1,5 +1,7 @@
 # 正式六组运行入口与接续（2026-11-21）
 
+A17–A19更新：新增--catalog-scope baseline用于同版Q目录对照，六组C1始终使用full（默认）。照片Q两组均97.5%，不宣称分数提升。保守README声明读取已恢复课程Task1指标和Task2偏好语义；不改B算法。最新五任务30配置位于D:/codex/python_withai/runs/a18_c1_readiness_current，尚未执行C1。费用任务ID沿用task1/task2/dry_bean/sms_spam，照片olivetti_faces；A16默认sms_spam。实际历史11未知仍未对账。
+
 工作目录必须为D:/codex/python_withai/runs/integration；解释器D:/codex/python_withai/.venv/Scripts/python.exe。当前分支codex/expanded-feedback。模式由两参数组合，不需要研究脚本手工挑下一算法。
 
 | 计划组 | planner | scheduler | 真实请求上限 |

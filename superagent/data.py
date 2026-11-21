@@ -54,12 +54,14 @@ def load_training_task(path: str | Path) -> TrainingTask:
             y = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"y_train.npy"))), allow_pickle=True)
             if x.ndim != 2 or len(x) != len(y):
                 raise TaskFormatError("Training feature/label dimensions do not agree")
-            return TrainingTask("categorical_tabular", x, y)
+            from .task_readme import legacy_declarations
+            return TrainingTask("categorical_tabular", x, y, legacy_declarations(archive,'categorical_tabular',{}))
         rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
         if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
             raise TaskFormatError("Unsupported training CSV schema")
+        from .task_readme import legacy_declarations
         return TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
-                            np.asarray([int(r["label_pairwise"]) for r in rows]))
+                            np.asarray([int(r["label_pairwise"]) for r in rows]),legacy_declarations(archive,'pair_text',{}))
 
 
 def _member_by_suffix(names: list[str], suffix: str) -> str:
@@ -135,7 +137,9 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
         "source_metadata": info,
         "test_accessed": False,
     }
-    return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val, spec)
+    from .task_readme import legacy_declarations
+    return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val,
+                           legacy_declarations(archive,'categorical_tabular',spec))
 
 
 def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> DevelopmentTask:
@@ -159,7 +163,9 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
         "label_values": sorted(map(str, np.unique(y_train))),
         "test_accessed": False,
     }
-    return DevelopmentTask("pair_text", str(path), x_train, y_train, x_val, y_val, spec)
+    from .task_readme import legacy_declarations
+    return DevelopmentTask("pair_text", str(path), x_train, y_train, x_val, y_val,
+                           legacy_declarations(archive,'pair_text',spec))
 
 
 def load_development_task(path: str | Path) -> DevelopmentTask:

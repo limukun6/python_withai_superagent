@@ -11,6 +11,15 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新A17–A19：照片Q对照完成，C1五任务准备齐
+
+- A17同版新增--catalog-scope baseline/full（full默认），A执行器投影B目录，B方法/调度不改。照片7vs8候选、相同实际划分/11fit上限，2路径全封存后评分；两组均78/80=97.5%，不同3行（各独有正确1），无分数收益。baseline像素logistic10fits/22.746秒，full梯度9fits/18.488秒；两模型搬迁预测各自一致，整批19fits/56.029秒/API0。
+- DryBean/SMS本机两目录逐项相同，标去重、不重复训练。完整五任务最终Q尚待B子矩阵/版本冻结，不以零增益追seed。
+- A18发现课程旧适配器漏了README中的metric/标签含义，A19按唯一明示声明保守解析并保留来源。两加载入口一致，否定/冲突/多README/反向标签不猜，manifest优先；不是任务名路由。Task1/Task2目标确认，Task2从0到22个合法候选可见（未新增训练/方法）。
+- 最终C1准备runs/a18_c1_readiness_current：五任务full目录15/22/5/6/8候选，30配置；10local待执行、20Flash仍因账本blocked。实际行ID/源/依赖/README来源齐，formal_experiments_completed=0。费用scope修为task1/task2/dry_bean/sms_spam/olivetti_faces，旧*-dev配置作废且未产生真实API；A16默认同步sms_spam。
+- 初始81项catalog检查、三轮随代码补充的README86项回归通过，均0分类器fit/HTTP，共4预处理fit。本批新增19监督fits，A窗口累计280；模拟HTTP25未增，真实API0。Q保留修README前源码指纹，不冒称最终版Q。
+- 结果batches/A17_A19_progress_results.md；最终紧凑证据research/a17_a19_progress_final，初版归档保留于本机runs/a17_a19_archive_initial。计划/runner齐备。H1/H2未训练未评分；真实11未知未对账；B合法对称方法、完整Q/C1/H/Released仍待后续。
+
 ### 最新：本次连续推进A12–A16接续交付完成
 
 - A12：正式六组入口local/raw/checked×ab-fixed/ab-v1已接，ab-history-v1显式划分，三请求上限/失败停/累计账本；4成功+3故障场景通过，47fits/15模拟HTTP/0真实API，106.462秒，4模型两新进程含搬迁预测31行一致。R/E公共上下文一致，非真实Flash效果证据。

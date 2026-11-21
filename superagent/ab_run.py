@@ -35,6 +35,18 @@ def sources():
     return {p.relative_to(root).as_posix(): sha(p) for p in sorted(root.rglob('*.py'))}
 
 
+def registered_capabilities(task_spec, train_rows, scope='full'):
+    """A-owned study projection of B's registry; never constructs new methods."""
+    if scope not in ('baseline','full'):
+        raise ValueError('Unknown candidate catalogue scope')
+    caps=capabilities_for(task_spec,train_rows=train_rows)
+    if scope=='baseline':
+        if any(c.get('origin') not in ('shared_baseline','b_port') for c in caps.values()):
+            raise ValueError('Cannot define baseline from unknown candidate origins')
+        caps={name:cap for name,cap in caps.items() if cap['origin']=='shared_baseline'}
+    return caps
+
+
 def validate_options(args):
     if args.planner not in ('local','raw-history','checked-history'):
         raise ValueError('AB supports local, raw-history or checked-history planning')
@@ -195,9 +207,11 @@ def command(args):
                    requested_planner_completed=False, model_available=False, new_api_requests=0,
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
-        caps = capabilities_for(spec, train_rows=len(task.y_train))
+        caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
-            scheduler=args.scheduler, task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
+            scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+            task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
+            task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             decision_context_version='ab-history-v1' if history_mode else None,

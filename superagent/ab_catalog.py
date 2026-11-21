@@ -11,7 +11,7 @@ from .models import search_candidates
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
-ADAPTER_VERSION = '1.4'
+ADAPTER_VERSION = '1.5'
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):

@@ -11,6 +11,7 @@ from superagent.ab_symmetric import CHANNELS, ENCODER, UnorderedSentenceFeatures
 from superagent.contracts import TaskSpec
 from superagent.data import load_development_task, load_prediction_features
 from superagent.models import Candidate, predict_with_model, probability_with_model
+from superagent.symmetric_text import candidates as tfidf_candidates
 from superagent.task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
@@ -73,7 +74,8 @@ class TestInvariantPairMethods(unittest.TestCase):
             self.assertEqual(task.spec['input_schema']['pair_label_one'], 'equivalent')
             spec = TaskSpec.from_task(task).record()
             with patch.dict('os.environ', {'SUPERAGENT_MINILM_WEIGHTS': ''}):
-                self.assertEqual(set(capabilities_for(spec, train_rows=3)), set(CHANNELS))
+                expected = set(CHANNELS) | {candidate.family for candidate in tfidf_candidates()}
+                self.assertEqual(set(capabilities_for(spec, train_rows=3)), expected)
             spec['input_schema']['pair_label_one'] = 'left'
             self.assertFalse(capabilities_for(spec, train_rows=3))
             for meaning in ('relation', 'preference'):

@@ -1,5 +1,9 @@
 # A 线接跑入口
 
+最新A26–A27：用户授权A补方法，已完成symmetric_text.py四个交换不变词法候选及AB目录/worker语义接入。H1候选0→4，H2仍8，H未训练评分。116项通过，正式匿名CLI5fit/24行搬迁+交换预测一致。A26共26监督fit含失败/回归；另回溯补旧10轮schema回归40fit，A窗口累计449，旧“383/0回归fit”以侧车更正为准，不修改原始日志。
+
+Flash按新授权只尝试1次0训练请求，DNS11001失败；校园IP443也超时，无重试。原请求未发出审计后ledger172行/11历史未知/pending0/known5.1277825元；不等待账单、总预算未核验。先看batches/A26_A27_results.md、CAMPUS_FLASH_A27_FAILURE_AND_TEST_20261121.md与A_TO_B_A26_SYMMETRIC_20261121.md。网络可达时可手动运行单次测试，成功后再开正式SMS两臂；不要自动重试或覆盖旧目录，也不要等待B重复对称基线。
+
 最新A20–A25（优先于下方历史状态）：先读batches/A20_A25_results.md。五任务本地C1十路径完成，102fits/478.379秒，动态47vs固定55且五对同预测；不是最终六组C1。旧偏好对输入/预测契约已补。当前A窗口累计383监督fit、25模拟HTTP。
 
 用户无法取得历史账单，明确不等待继续研发。默认strict保留；显式`--history-policy incremental-research`可用真实非空历史继续，课程预算合规仍未核验，不能假称正式预算已核验。原11未知保留；新增unknown/pending停。真实SMS尝试1基线fit后DNS失败，没有HTTP/模型响应，没有重试；校园IP443也超时。原始失败保留，A25追加原请求未发出审计，当前ledger171行/known5.1277825元/11unknown/pending0。不是费用对账阻止当前网络访问。

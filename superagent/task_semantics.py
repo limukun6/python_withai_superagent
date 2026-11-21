@@ -38,11 +38,12 @@ def swap_augmented(candidates):
 def candidate_swap_rule(candidate):
     """Resolve known execution rules; absence of a flag is not evidence of safety."""
     from .recipe_models import fit_recipe
-    from .ab_symmetric import fit_symmetric_pair
+    from .ab_symmetric import fit_symmetric_pair as fit_hashed_pair
+    from .symmetric_text import fit_symmetric_pair as fit_tfidf_pair
     function = candidate.fit_predict
     while isinstance(function, partial):
         function = function.func
-    if function is fit_symmetric_pair:
+    if function is fit_hashed_pair or function is fit_tfidf_pair:
         return 'preserves'
     if function is fit_recipe and candidate.params.get('kind') == 'pair_text':
         return 'flips'

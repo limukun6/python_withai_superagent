@@ -11,6 +11,15 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新A26–A27：A已补对称方法，Flash新尝试仍DNS失败
+
+- 用户授权A直接补齐；新增训练内共享TF-IDF的绝对差+乘积/逻辑回归，word与word_char各C=.3/3共4候选，每评估/refit均1监督fit。AB目录只向明确symmetric开放；原偏好目录隔离，按实际已知执行函数认证preserves，不凭元数据flag。未改B调度。
+- 最终116项通过3.517秒，7监督fit；匿名正式CLI自主4探索+1refit=5fit，CLI8.570秒/整批15.454秒，原/搬迁/交换输入三个新进程CSV24行一致、概率交换差0。仅合成工程性质，非真实语义性能。只读封存注册Spec，H1合法候选0→4、H2仍8，H原包未开、未训练/评分。
+- 两轮失败保留：首轮旧测试仍期望空目录，7fit；第二轮观察器len(sparse)错误，3实际fit；最终7fit。修旧A09统计后93项再验收通过4.329秒、4fit。本批监督fit26＝7+3+7+5+4，回归21/CLI5。此前10轮schema回归硬编码0实漏40，按旧成功日志+未变代码回溯补记，原文件不改；A窗口383+40+26=449（非全项目/队友总数）。预处理次数未完整计数。上批103修为119含其4轮漏记16，A20性能102物理fit不变。
+- A27零训练单次真实SSE测试：初版scope预检0请求拒绝后修正sms_spam，预检通过；真实1attempt约1.515秒DNS NameResolutionError/getaddrinfo11001失败，无HTTP/流数据、0模型请求发出/响应，无重试。只读诊断6.102秒DNS失败、校园IP443超时，不改网络。
+- 原请求ticket/run/hash证明未发出后追加审计、保留原unknown链；当前ledger172行、known5.1277825元、原11unknown、pending0、完整费用null。显式研究模式继续，不等待平台账单；下一次只能在新目录按用户明确选择做测试，不能自动反复请求。
+- 结果batches/A26_A27_results.md；用户测试CAMPUS_FLASH_A27_FAILURE_AND_TEST_20261121.md；B交接A_TO_B_A26_SYMMETRIC_20261121.md；证据research/a26_a27_methods_and_flash。剩真实Flash闭环/A2、剩余Q、最终C1/H/Released，不再把“等B补H1词法基线”列作依赖。
+
 ### 最新A20–A25：五任务本地C1已跑，不再等待学校历史记录
 
 - 用户无法取得平台记录且明确“不用等，继续推进”。新增显式`--history-policy incremental-research`，保留历史unknown；默认strict仍拦截。新增unknown/pending立即停，结果标记课程总预算未核验/非预算合规正式报告。金额是估计预留与结算阈值，不是最终扣费硬上界；不承诺总费用已知。

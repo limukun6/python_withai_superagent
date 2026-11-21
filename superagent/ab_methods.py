@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
-from . import ab_vision
+from . import ab_vision, symmetric_text
 
 
 FIELDS = 'supported_field_interactions'
@@ -20,6 +20,8 @@ RELATION = 'ordered_text_pair_interactions'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
           RELATION:'ordered_text_interactions', **{name: name for name in CHANNELS}, ENCODER: ENCODER,
           ab_vision.NAME:'frozen_image_features'}
+ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
+               for representation in ('word','word_char') for c in (.3,3.)})
 
 
 def _field_tree(rows, labels, query):
@@ -98,7 +100,10 @@ def additions(kind):
     if kind in ('single_text','pair_text'):
         from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
         encoder_ready = verified_directory() is not None
-        extra = symmetric_candidates(include_encoder=encoder_ready) if kind == 'pair_text' else []
+        extra = []
+        if kind == 'pair_text':
+            extra.extend(symmetric_text.candidates())
+            extra.extend(symmetric_candidates(include_encoder=encoder_ready))
         if encoder_ready:
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))

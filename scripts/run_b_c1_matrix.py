@@ -13,7 +13,6 @@ from scripts import run_b1_ab_acceptance as rec, run_b1_05_pair_pilot as pilot
 from scripts.materialize_b_c1_rows import load_original
 from scripts.prepare_b_c1 import ARMS, TASKS, ORDER_SALT
 from superagent import ab_flash, ab_run
-from superagent.ab_catalog import capabilities_for
 from superagent.cli import build_parser
 from superagent.contracts import TaskSpec
 from superagent.data import load_development_task, load_prediction_features
@@ -24,6 +23,7 @@ from tools.ab_registered_rows import content_digest, registered_partitioner
 ROOT = rec.ROOT
 REFERENCE = ROOT / 'research/bc1_preparation'
 PORTABLE = ROOT / 'research/bp_02_materialization/environment_1/results.json'
+TASK_BUDGET_IDS = {'headlines':'task2', 'bean':'dry_bean'}
 
 
 def ordered(task):
@@ -33,7 +33,7 @@ def ordered(task):
 def options(taskfile, arm, destination):
     planner, allocation = ARMS[arm]
     return ['run',str(taskfile),'--planner',planner,'--scheduler','ab-fixed' if allocation=='fixed' else 'ab-v1',
-            '--portfolio','ab-v1','--fit-limit','11','--seed','707','--time-limit','1200','--trial-timeout','300',
+            '--portfolio','ab-v1','--catalog-scope','full','--fit-limit','11','--seed','707','--time-limit','1200','--trial-timeout','300',
             '--run-dir',str(destination)]
 
 
@@ -47,7 +47,7 @@ def freeze_inputs(portable):
             if ab_run.sha(file) != expected[file.name]:
                 raise ValueError('Registered input changed: '+name+'/'+file.name)
         data = load_development_task(train)
-        catalog = capabilities_for(TaskSpec.from_task(data).record(), train_rows=len(data.y_train))
+        catalog = ab_run.registered_capabilities(TaskSpec.from_task(data).record(), len(data.y_train), 'full')
         reference = old['tasks'][name]
         if (data.X_val is not None or data.y_val is not None or list(catalog) != reference['candidate_ids'] or
                 rec.digest(catalog) != reference['catalog_sha256'] or len(data.y_train) != packets[name]['training_rows']):
@@ -62,7 +62,8 @@ def freeze_inputs(portable):
             parsed = build_parser().parse_args(options(train,arm,Path('unstarted')))
             if ab_run.validate_options(parsed) != 11:
                 raise ValueError('Formal entry did not accept the registered cap')
-        tasks[name] = dict(order=arms,files=expected,catalog_sha256=rec.digest(catalog),anchor=next(iter(catalog)),
+        tasks[name] = dict(order=arms,files=expected,catalog_scope='full',task_budget_id=TASK_BUDGET_IDS[name],
+                           catalog_sha256=rec.digest(catalog),anchor=next(iter(catalog)),
                            splits=splits,held_rows=packets[name]['held_rows'],held_content=packets[name]['held_content_sha256'])
     helpers = ('scripts/run_b_c1_matrix.py','tools/ab_registered_rows.py','tools/ab_registered_run.py')
     return dict(batch='BC1',source=rec.digest(ab_run.sources()),runtime=pilot.environment(),tasks=tasks,
@@ -77,6 +78,7 @@ def verify_run(run, source, task, arm, *, funding=None):
     scheduler = 'ab-fixed' if allocation == 'fixed' else 'ab-v1'
     cap = 0 if planner == 'local' else 3
     if not (manifest['entrypoint']=='superagent run' and rec.digest(manifest['source_files'])==source and
+            ('catalog_scope' not in task or manifest.get('catalog_scope')==task['catalog_scope']) and
             manifest['task_archive_sha256']==task['files']['train.zip'] and rec.digest(manifest['capabilities'])==task['catalog_sha256'] and
             manifest['fit_limit']==11 and manifest['time_limit_seconds']==1200 and manifest['trial_timeout_seconds']==300 and
             manifest['seed']==707 and manifest['planner_mode']==result['planner_mode']==planner and
@@ -153,6 +155,8 @@ def frozen_models(matrix, protocol):
             funding = None
             if ARMS[arm][0]!='local':
                 finance = rec.read(matrix/'budget_context.json')
+                if finance['task_ids'][name]!=task['task_budget_id']:
+                    raise ValueError('Budget context differs from the registered cumulative task ID')
                 funding = dict(task_id=finance['task_ids'][name],allowance=finance['per_arm_rmb'])
             records[name][arm] = verify_run(folder/'official',protocol['source'],task,arm,funding=funding)
     return records
@@ -160,8 +164,8 @@ def frozen_models(matrix, protocol):
 
 def run_matrix(args, protocol):
     ids = {'headlines':args.headlines_id,'bean':args.bean_id}
-    if len(set(ids.values()))!=2:
-        raise ValueError('Use the existing distinct task IDs for the two development tasks')
+    if ids!={name:task['task_budget_id'] for name,task in protocol['tasks'].items()} or ids!=TASK_BUDGET_IDS:
+        raise ValueError('Use the registered cumulative task IDs: headlines=task2 and bean=dry_bean')
     finance = dict(ledger=str(args.ledger.resolve()),task_ids=ids,per_arm_rmb=args.allowance)
     context = args.matrix/'budget_context.json'
     if context.exists() and rec.read(context)!=finance:
@@ -253,8 +257,8 @@ def main():
         if mode=='run':
             for flag in ('api-key-file','ledger'):
                 p.add_argument('--'+flag,type=Path,required=True)
-            for flag in ('headlines-id','bean-id'):
-                p.add_argument('--'+flag,required=True)
+            for name,identifier in TASK_BUDGET_IDS.items():
+                p.add_argument('--'+name+'-id',default=identifier,choices=[identifier])
             p.add_argument('--allowance',type=float,default=.30)
         if mode=='score':
             for flag in ('headlines','bean','output'):

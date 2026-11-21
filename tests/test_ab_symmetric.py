@@ -61,16 +61,16 @@ class TestInvariantPairMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_candidate_semantics('pair_text', 'symmetric', forged)
 
-    def test_neutral_manifest_and_relation_preference_separation(self):
+    def test_equivalence_manifest_and_relation_preference_separation(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             rows = [('one', 'two'), ('a', 'b'), ('A', 'b')]
-            labels = ['no', 'yes', 'no']
+            labels = [0, 1, 0]
             train = root / 'train.zip'
             pair_package(train, rows, labels, 'symmetric', 'train')
             task = load_development_task(train)
             self.assertEqual(task.y_train.tolist(), labels)
-            self.assertNotIn('pair_label_one', task.spec['input_schema'])
+            self.assertEqual(task.spec['input_schema']['pair_label_one'], 'equivalent')
             spec = TaskSpec.from_task(task).record()
             with patch.dict('os.environ', {'SUPERAGENT_MINILM_WEIGHTS': ''}):
                 self.assertEqual(set(capabilities_for(spec, train_rows=3)), set(CHANNELS))

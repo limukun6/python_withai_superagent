@@ -1,5 +1,7 @@
 # A/B 共同接入约定 v1
 
+2026-11-21 A12–A16更新：正式local/raw-history/checked-history × ab-fixed/ab-v1六组已接，split-aware反馈与共享账本/3请求上限/失败链通过模拟HTTP验证；新增真实PNG照片开发路径与H1/H2登记。最新命令与交接以AB_RUN_MODES_20261121.md为准，实际证据与限制见batches/A12_A16_day_results.md。真实API未执行，H未评分，H1待B方法。
+
 2026-11-21 A-11 更新：同一正式入口增加ab-fixed本地对照（4探索＋primary前3各2复核＋refit），与ab-v1共用候选/探索函数/最终选型。三真实开发任务六路径对照完成，动态省6/33fits、最终预测一致，详见batches/A11_fixed_dynamic_results.md；不是Flash或未见任务结论。
 
 2026-11-21 A-09 更新：B a787a28 已接正式 `superagent run --scheduler ab-v1 --portfolio ab-v1 --fit-limit 11`。本地匿名路径/实际fit限额/新进程预测已验收，见 A_TO_B_BRIDGE_ACCEPTED_20261121.md。动态 Flash 回调与 AUC 分数证据仍待接，下文“尚未接入”描述的是早期交接状态。

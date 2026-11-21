@@ -67,6 +67,10 @@ def pair_package(path, pairs, labels, semantics, split):
                     target='label', splits={split: {'format': 'csv', 'path': 'pairs.csv'}})
     if semantics == 'preference':
         manifest['pair_label_one'] = 'left'
+    elif semantics == 'symmetric':
+        manifest['pair_label_one'] = 'equivalent'
+        if labels is not None and any(str(label) not in ('0', '1') for label in labels):
+            raise ValueError('Supply binary labels with 1 denoting equivalence')
     buf = io.StringIO(newline='')
     writer = csv.writer(buf, lineterminator='\n')
     writer.writerow(['left', 'right'] + (['label'] if labels is not None else []))
@@ -96,7 +100,7 @@ def pair_source(name, released):
         a, b = words[i % len(words)], words[(i + 3) % len(words)]
         same = i % 3 != 1
         pairs.append((f'card {i} {a} triangle', f'{a if same else b} on card {i} triangle'))
-        labels.append('same' if same else 'different')
+        labels.append(int(same))
     return pairs, np.asarray(labels), 'symmetric', dict(generator='anonymous color agreement', data_sha256=fixture.digest(pairs))
 
 

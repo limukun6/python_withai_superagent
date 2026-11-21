@@ -36,7 +36,7 @@ def load_rows(source):
     if len(frame) != 3668 or any(frame.null_count().row(0)) or frame['idx'].n_unique() != 3668:
         raise ValueError('Unexpected MRPC source rows')
     x = list(zip(frame['sentence1'].to_list(), frame['sentence2'].to_list(), strict=True))
-    y = np.asarray(frame['label'].to_list(), dtype=str)
+    y = np.asarray(frame['label'].to_list(), dtype=int)
     return x, y, frame['idx'].to_list()
 
 

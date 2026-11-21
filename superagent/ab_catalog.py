@@ -34,7 +34,10 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
             rule = candidate_swap_rule(candidate)
             preference = pair == 'preference' or (pair is None and schema.get('pair_label_one') in ('left','right'))
             if pair == 'symmetric':
-                if rule != 'preserves' or len(metric.labels) != 2 or schema.get('pair_label_one') is not None:
+                meaning = schema.get('pair_label_one')
+                if rule != 'preserves' or len(metric.labels) != 2 or meaning not in (None, 'equivalent'):
+                    continue
+                if meaning == 'equivalent' and set(metric.labels) != {0, 1}:
                     continue
             elif not preference or rule != 'flips' or set(metric.labels) != {0, 1}:
                 continue

@@ -52,6 +52,10 @@ def validate_options(args):
         raise ValueError('AB supports local, raw-history or checked-history planning')
     if args.planner=='local' and args.history_policy!='strict':
         raise ValueError('Historical usage policy applies only to explicit Flash research')
+    if getattr(args,'candidate_coverage','off') not in ('off','routes'):
+        raise ValueError('Unknown candidate coverage mode')
+    if args.planner=='local' and getattr(args,'candidate_coverage','off')!='off':
+        raise ValueError('Candidate coverage projection applies only to the explicit Flash menu')
     forbidden = ('policy','trials')
     if args.planner == 'local':
         forbidden += ('api_url','api_key_file','model','budget_ledger','task_budget_id','llm_budget_rmb')
@@ -221,6 +225,7 @@ def command(args):
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
+            candidate_coverage=getattr(args,'candidate_coverage','off'),
             decision_context_version='ab-history-v1' if history_mode else None,
             planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
             project_usage_before_run=ledger.project_summary() if history_mode else None,
@@ -247,6 +252,10 @@ def command(args):
                 picker.last_proposal = None
 
             def choose(ids):
+                if getattr(args,'candidate_coverage','off')=='routes':
+                    from .candidate_coverage import project_routes
+                    ids,coverage=project_routes(state,caps,ids)
+                    logger.event('candidate_coverage_projection',trial=number,**coverage)
                 try:
                     return picker.choose(state,caps,ids)
                 finally:
@@ -328,6 +337,7 @@ def command(args):
         unresolved_calls=unresolved, task_budget_after_run=account.snapshot() if account else None,
         partial_trial_models=[p.name for p in sorted(directory.glob('trial_*.joblib'))])
     outcome.update(history_policy=args.history_policy,
+        candidate_coverage=getattr(args,'candidate_coverage','off'),
         course_budget_compliance='unverified_history' if args.history_policy=='incremental-research' else
             'verified_local_ledger' if history_mode else 'no_new_llm_calls',
         valid_for_budgeted_final_report=False if args.history_policy=='incremental-research' else None,

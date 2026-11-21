@@ -2,18 +2,23 @@
 import argparse
 from collections import Counter
 import csv
+import hashlib
 import json
 from pathlib import Path
 import shutil
 
 from scripts.a_batch_common import save
 from scripts.run_a10_real_task_pilot import read
-from superagent.prediction_evidence import fingerprint
 from superagent.task_budget import TaskBudgetLedger
 
 
 ARMS = ('L0', 'L1', 'R0', 'E0', 'R1', 'E1')
 PAIRS = [('L1','L0'), ('E0','R0'), ('E1','R1'), ('R1','R0'), ('E1','E0'), ('E1','L1')]
+
+
+def fingerprint(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
+        separators=(',', ':'), allow_nan=False).encode('utf-8')).hexdigest()
 
 
 def records(path):
@@ -62,6 +67,8 @@ def run(args):
                 output_tokens=sum(row.get('output_tokens') or 0 for row in usage),
                 call_latencies_seconds=[row['latency_seconds'] for row in usage if 'latency_seconds' in row],
                 explored_candidates=[row['candidate'] for row in primary], candidate_count=len(manifest['capabilities']),
+                explored_routes=sorted({manifest['capabilities'][row['candidate']]['route'] for row in primary}),
+                available_routes=sorted({cap['route'] for cap in manifest['capabilities'].values()}),
                 untried_candidates=len(manifest['capabilities']) - len(primary),
                 source_unchanged=outcome['source_unchanged'], reload_identical=score['reload_identical'],
                 independent_winner_confirmation=outcome.get('confirmation', {}).get('independent_confirmation_observed'),
@@ -75,6 +82,7 @@ def run(args):
                 context = json.loads(request['messages'][1]['content'])
                 common = {key:value for key,value in context.items() if key not in ('checks','memory')}
                 summary.update(first_request_context_sha256=fingerprint(context),
+                    first_request_messages_sha256=fingerprint(request['messages']),
                     first_request_common_context_sha256=fingerprint(common),
                     first_request_checks_present='checks' in context, first_request_memory_present='memory' in context)
                 contexts[arm] = common
@@ -87,8 +95,8 @@ def run(args):
                 known_course_cost_delta_rmb=details[left]['known_course_cost_rmb'] - details[right]['known_course_cost_rmb'])
         tasks[taskname] = dict(arms=details, differences=differences,
             first_flash_common_context_identical=all(context == contexts['R0'] for context in contexts.values()),
-            raw_first_prompt_repeated=details['R0']['first_request_context_sha256'] == details['R1']['first_request_context_sha256'],
-            checked_first_prompt_repeated=details['E0']['first_request_context_sha256'] == details['E1']['first_request_context_sha256'])
+            raw_first_prompt_repeated=details['R0']['first_request_messages_sha256'] == details['R1']['first_request_messages_sha256'],
+            checked_first_prompt_repeated=details['E0']['first_request_messages_sha256'] == details['E1']['first_request_messages_sha256'])
         target = output / 'evaluation' / taskname
         target.mkdir(parents=True)
         shutil.copy2(args.matrix / 'evaluation' / taskname / 'source_access.json', target / 'source_access.json')

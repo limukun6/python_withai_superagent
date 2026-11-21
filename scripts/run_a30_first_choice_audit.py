@@ -1,5 +1,6 @@
 """Audit already frozen first Flash choices on two fresh train-only partitions; zero API."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -15,7 +16,7 @@ from superagent.ab_run import sources
 from superagent.benchmark import train_candidate
 from superagent.data import load_training_task
 from superagent.metrics import MetricSpec
-from superagent.prediction_evidence import fingerprint
+from superagent.prediction_evidence import fingerprint as vector_fingerprint
 from superagent.splits import grouped_partition, take, overlap_audit
 from superagent.task_semantics import declared_semantics
 
@@ -23,6 +24,11 @@ from superagent.task_semantics import declared_semantics
 ROOT = Path(__file__).resolve().parents[1]
 ARMS = ('R0', 'E0', 'R1', 'E1')
 SEEDS = (17171, 17181)
+
+
+def fingerprint(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
+        separators=(',', ':'), allow_nan=False).encode('utf-8')).hexdigest()
 
 
 def events(path):
@@ -69,7 +75,7 @@ def run(args):
                 if ('checks' in context) != arm.startswith('E') or ('memory' in context) != arm.startswith('E'):
                     raise ValueError('Feedback visibility differs from the recorded arm')
                 common[arm] = {key: value for key, value in context.items() if key not in ('checks', 'memory')}
-                full_context[arm] = fingerprint(context)
+                full_context[arm] = fingerprint(request['messages'])
                 name = proposal['candidate']
                 if name not in caps or proposal['params'] != caps[name]['params']:
                     raise ValueError('First choice differs from trusted registered configuration')
@@ -77,7 +83,7 @@ def run(args):
                 if actual['candidate'] != name or actual['params'] != caps[name]['params'] or actual['split_id'] != 'primary':
                     raise ValueError('Proposed first choice was not executed as recorded')
                 choices[arm] = dict(candidate=name, params=caps[name]['params'], actual_trial=actual['trial'],
-                    original_primary_score=actual['search_score'], request_context_sha256=full_context[arm],
+                    original_primary_score=actual['search_score'], request_messages_sha256=full_context[arm],
                     request_budget_id=request['budget_request_id'], role=request['role'])
                 if (taskname, name) not in unique:
                     unique.append((taskname, name))
@@ -108,7 +114,7 @@ def run(args):
                     pair_semantics=declared_semantics(task)), path)
                 payloads[(taskname, seed)] = path
                 save(folder / f'partition_{seed}.json', dict(seed=seed, train_indices=train.tolist(), search_indices=held.tolist(),
-                    row_ids_sha256=fingerprint(held.tolist()), payload_sha256=sha(path), split_resource=resource,
+                    row_ids_sha256=vector_fingerprint(held.tolist()), payload_sha256=sha(path), split_resource=resource,
                     overlap=overlap_audit(task, train, held)))
         if len(unique) > 8:
             raise ValueError('Too many unique first actions')

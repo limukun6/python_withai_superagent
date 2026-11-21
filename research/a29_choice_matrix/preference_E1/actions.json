@@ -1,0 +1,114 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.05",
+    "split_id": "primary",
+    "reason": "Trial 1 on the primary split shows word-only C=0.05 with a large train-search gap (0.816 vs 0.637), suggesting overfitting rather than underfitting. Testing word_char_C0.05 keeps strong regularization while adding subword information, which may improve preference discrimination before tuning C upward.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.1",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed PRIMARY result so far: word_char_C0.05 reached search accuracy 0.6618 versus 0.6371 for word_C0.05. The train-search gap remains large (0.8222 vs 0.6618), so the next primary test should stay on the word_char route and make the nearest regularization adjustment, C=0.1, to check whether slightly less regularization improves preference discrimination without abandoning the subword representation that helped in Trial 2.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 3 is the best completed PRIMARY result so far: word_char_C0.1 reached search accuracy 0.6721 versus 0.6618 for word_char_C0.05. The train-search gap remains large (0.8556 vs 0.6721), so the next primary test should stay on the word_char route and make the nearest regularization adjustment, C=0.3, to check whether slightly weaker regularization improves preference discrimination while retaining the subword representation that helped in Trials 2 and 3.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_char_C0.1",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.6721 and 0.6703; hard predictions differ on 83/1659 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_char_C0.3",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.6721 and 0.6703; hard predictions differ on 83/1659 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      3,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_char_C0.1",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.6721 and 0.6703; hard predictions differ on 83/1659 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0018). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_char_C0.3",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.6721 and 0.6703; hard predictions differ on 83/1659 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0018). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "char_C0.1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

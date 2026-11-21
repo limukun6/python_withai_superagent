@@ -1,6 +1,7 @@
 """Two-task, six-arm live development comparison; train-only inputs and delayed validation."""
 import argparse
 import csv
+from datetime import datetime, timezone
 import importlib.metadata
 import io
 import json
@@ -33,6 +34,24 @@ ARMS = {'L0': ('local', 'ab-fixed'), 'L1': ('local', 'ab-v1'),
         'R1': ('raw-history', 'ab-v1'), 'E1': ('checked-history', 'ab-v1')}
 ORDER = [(task, arm) for task, arms in [('coupon', ['L1','R0','E1','L0','E0','R1']),
           ('preference', ['E0','L0','R1','E1','R0','L1'])] for arm in arms]
+ROUTE_ORDER = [(task, arm) for task, arms in [
+    ('coupon',['L1','R0_off','R0_routes','E1_routes','L0','E1_off','E0_off','E0_routes','R1_routes','R1_off']),
+    ('preference',['E0_routes','E0_off','L0','R1_off','R1_routes','E1_off','E1_routes','R0_routes','R0_off','L1'])]
+    for arm in arms]
+
+
+class WindowLimitReached(RuntimeError):
+    pass
+
+
+def settings(arm):
+    base, _, coverage = arm.partition('_')
+    return (*ARMS[base], coverage or 'off')
+
+
+def plan_path(args):
+    name='A32_route_coverage_matrix_plan.md' if args.study=='route-coverage' else 'A29_limited_choice_matrix_plan.md'
+    return ROOT/'docs'/'batches'/name
 
 
 def physical(root):
@@ -46,7 +65,7 @@ def prepare(args):
     began = time.monotonic()
     frozen = sources()
     save(root / 'protocol.json', dict(batch='A29-prepare', source_files=frozen,
-        runner_sha256=sha(Path(__file__)), plan_sha256=sha(ROOT / 'docs/batches/A29_limited_choice_matrix_plan.md'),
+        runner_sha256=sha(Path(__file__)), plan_sha256=sha(plan_path(args)), study=args.study,
         original_readiness_sha256=sha(args.readiness / 'readiness.json'), real_api_requests=0, classifier_fits=0))
     entries = []
     originals = {e['task']: e for e in read(args.readiness / 'readiness.json')}
@@ -81,13 +100,13 @@ def prepare(args):
             task_spec=spec, capabilities=caps, rows=len(task.y_train), splits=allowed))
     save(root / 'readiness.json', entries)
     (root / 'environment.txt').write_text(subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True), encoding='utf-8')
-    save(root / 'completion.json', dict(status='prepared', tasks=2, arms=12, actual_classifier_fits=0,
+    save(root / 'completion.json', dict(status='prepared', tasks=2, arms=20 if args.study=='route-coverage' else 12, actual_classifier_fits=0,
         real_api_requests=0, source_unchanged=sources() == frozen, elapsed_seconds=time.monotonic() - began))
     print(json.dumps(dict(status='prepared', tasks=[dict(task=e['task'], candidates=len(e['capabilities'])) for e in entries])))
 
 
 def command(entry, arm, directory, args):
-    planner, scheduler = ARMS[arm]
+    planner, scheduler, coverage = settings(arm)
     result = [sys.executable, '-m', 'superagent', 'run', entry['training_archive'], '--run-dir', str(directory),
         '--planner', planner, '--scheduler', scheduler, '--portfolio', 'ab-v1', '--catalog-scope', 'full',
         '--fit-limit', '11', '--seed', '707', '--time-limit', '600', '--trial-timeout', '60']
@@ -95,6 +114,7 @@ def command(entry, arm, directory, args):
         result += ['--api-key-file', str(args.api_key_file), '--budget-ledger', str(args.ledger),
             '--task-budget-id', entry['task_budget_id'], '--llm-budget-rmb', '.30',
             '--history-policy', 'incremental-research']
+        result += ['--candidate-coverage',coverage]
     return result
 
 
@@ -111,7 +131,7 @@ def launch(cmd, log, env, timeout):
     return code, time.monotonic() - start
 
 
-def evaluation(entry, root):
+def evaluation(entry, root, frozen_model_count=12):
     folder = root / 'evaluation' / entry['task']
     folder.mkdir(parents=True)
     if sha(Path(entry['source_archive'])) != entry['source_archive_sha256']:
@@ -142,7 +162,7 @@ def evaluation(entry, root):
             archive.writestr('test.csv', buffer.getvalue())
     joblib.dump(dict(X=x, y=y, row_ids=list(range(len(y)))), folder / 'holdout.joblib')
     save(folder / 'source_access.json', dict(original_members_opened=opened, formal_test_opened=False,
-        scope='Original designated val opened only after all 12 models frozen; output test-named file holds val features'))
+        scope=f'Original designated val opened only after all {frozen_model_count} models frozen; output test-named file holds val features'))
     return folder
 
 
@@ -155,13 +175,19 @@ def execute(args):
     observer = ROOT / 'scripts' / 'a29_worker_observer' / 'sitecustomize.py'
     observer_hash = sha(observer)
     results = []
+    order=ROUTE_ORDER if args.study=='route-coverage' else ORDER
+    paid_count=sum(settings(arm)[0]!='local' for _,arm in order)
+    per_task_allowance=2.40 if args.study=='route-coverage' else 1.20
+    deadline=datetime.fromisoformat(args.window_deadline) if args.window_deadline else None
+    if deadline is not None and deadline.tzinfo is None:
+        raise ValueError('Window deadline must include a timezone')
     base_env = {**os.environ, 'PYTHONIOENCODING':'utf-8', 'OMP_NUM_THREADS':'2', 'OPENBLAS_NUM_THREADS':'2',
         'MKL_NUM_THREADS':'2', 'TOKENIZERS_PARALLELISM':'false', 'AB_A29_OBSERVE_FITS':'1',
         'AB_A29_FIT_LOG': str(root / 'physical_fits.jsonl'),
         'PYTHONPATH': os.pathsep.join([str(observer.parent), str(ROOT)])}
-    protocol = dict(batch='A29-six-arm-development', source_files=frozen, runner_sha256=runner_hash,
-        observer_sha256=observer_hash, plan_sha256=sha(ROOT / 'docs/batches/A29_limited_choice_matrix_plan.md'),
-        order=ORDER, maximum_classifier_fits=132, maximum_api_requests=24, per_paid_arm_allowance_rmb=.30,
+    protocol = dict(batch='A32-route-coverage' if args.study=='route-coverage' else 'A29-six-arm-development', source_files=frozen, runner_sha256=runner_hash,
+        observer_sha256=observer_hash, plan_sha256=sha(plan_path(args)), study=args.study, window_deadline=args.window_deadline,
+        order=order, maximum_classifier_fits=11*len(order), maximum_api_requests=3*paid_count, per_paid_arm_allowance_rmb=.30,
         history_policy='incremental-research', course_budget_compliance='unverified_history',
         valid_for_budgeted_final_report=False, automatic_retries=False, validate_only=args.validate_only)
     save(root / 'protocol.json', protocol)
@@ -174,13 +200,13 @@ def execute(args):
         for entry in entries.values():
             if sha(Path(entry['training_archive'])) != entry['training_archive_sha256']:
                 raise ValueError('Prepared train-only archive changed')
-        for taskname, arm in ORDER:
+        for taskname, arm in order:
             entry = entries[taskname]
             cmd = command(entry, arm, root / (taskname + '_' + arm), args)
-            if ARMS[arm][0] != 'local':
+            if settings(arm)[0] != 'local':
                 parsed = build_parser().parse_args(cmd[3:])
                 ledger, _, _ = preflight(parsed)
-                research_preflight(ledger, entry['task_budget_id'], 1.20)
+                research_preflight(ledger, entry['task_budget_id'], per_task_allowance)
             commands.append(dict(task=taskname, arm=arm, command=cmd))
         protocol.update(entries=list(entries.values()), commands=commands, project_usage_before=ledger.project_summary())
         save(root / 'protocol.json', protocol)
@@ -189,12 +215,14 @@ def execute(args):
             print(json.dumps(dict(status='validated_not_executed', arms=len(commands))))
             return
         for item in commands:
+            if deadline is not None and (deadline-datetime.now(timezone.utc)).total_seconds()<660:
+                raise WindowLimitReached('Less than 660 seconds remain; no new path or request started')
             taskname, arm, cmd = item['task'], item['arm'], item['command']
             if sources() != frozen or sha(Path(__file__)) != runner_hash or sha(observer) != observer_hash:
                 raise ValueError('Frozen production/runner/observer changed during matrix')
             directory = root / (taskname + '_' + arm)
             env = {**base_env, 'AB_A29_RUN_NAME':directory.name,
-                   'SUPERAGENT_OFFLINE':'1' if ARMS[arm][0] == 'local' else '0'}
+                   'SUPERAGENT_OFFLINE':'1' if settings(arm)[0] == 'local' else '0'}
             code, seconds = launch(cmd, root / (directory.name + '.log'), env, 660)
             value = read(directory / 'run_outcome.json')
             results.append(dict(task=taskname, arm=arm, outcome=value, process_seconds=seconds))
@@ -221,7 +249,7 @@ def execute(args):
             print(json.dumps(dict(task=taskname, arm=arm, status='model_frozen', fits=traced,
                 requests=value['new_api_requests'], seconds=seconds, selected=value['selected_candidate'])), flush=True)
         save(root / 'all_models_frozen.json', [dict(task=r['task'], arm=r['arm'], selection=r['selection']) for r in results])
-        held = {name: evaluation(entry, root) for name, entry in entries.items()}
+        held = {name: evaluation(entry, root, len(order)) for name, entry in entries.items()}
         for row in results:
             directory = root / (row['task'] + '_' + row['arm'])
             folder = held[row['task']]
@@ -240,7 +268,7 @@ def execute(args):
             row.update(evaluation=read(directory / 'verification.json'), export_seconds=export_seconds)
             save(root / 'results.json', results)
         fits = sum(row['outcome']['classifier_fit_accounting']['attempted_classifier_fits'] for row in results)
-        if fits != len(physical(root)) or fits > 132 or sources() != frozen:
+        if fits != len(physical(root)) or fits > 11*len(order) or sources() != frozen:
             raise ValueError('Final physical-fit accounting or frozen source differs')
         save(root / 'completion.json', dict(status='completed', paths_completed=len(results), actual_classifier_fits=fits,
             real_api_requests=sum(row['outcome']['new_api_requests'] for row in results),
@@ -249,7 +277,7 @@ def execute(args):
             elapsed_seconds=time.monotonic() - began, course_budget_compliance='unverified_history', valid_for_budgeted_final_report=False))
     except Exception as error:
         save(root / 'results.json', results)
-        save(root / 'completion.json', dict(status='stopped', error=str(error), automatic_retry=False,
+        save(root / 'completion.json', dict(status='window_limited' if isinstance(error,WindowLimitReached) else 'stopped', error=str(error), automatic_retry=False,
             completed_path_outcomes=len(results), observed_classifier_fit_entries=len(physical(root)),
             real_api_requests=sum(row['outcome']['new_api_requests'] for row in results),
             source_unchanged=sources() == frozen, elapsed_seconds=time.monotonic() - began))
@@ -265,6 +293,8 @@ if __name__ == '__main__':
     parser.add_argument('--ledger', type=Path)
     parser.add_argument('--api-key-file', type=Path)
     parser.add_argument('--validate-only', action='store_true')
+    parser.add_argument('--study',choices=['six-arm','route-coverage'],default='six-arm')
+    parser.add_argument('--window-deadline')
     args = parser.parse_args()
     if args.phase == 'prepare':
         if args.readiness is None: parser.error('prepare needs --readiness')

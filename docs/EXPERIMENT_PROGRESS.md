@@ -11,7 +11,15 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
-### A29运行中；A30同历史动作审计已预登记
+### 最新A29/A30已完成；新三小时窗口A31通过、A32准备就绪
+
+- A29两任务六组12路径全部完成，128实际fit/24成功请求/2459.935秒/¥.205921，132821输入18275输出；source不变、12模型新进程预测重载通过，H/test未开。各组结果见batches/A29_A30_results.md：Coupon L0/L1/R1/E1 .750246，R0/E0 .748276；偏好对L0/L1 .696809、R0/E0 .680851、R1 .701064、E1 .695745。单开发划分，无显著性或普遍迁移声明。
+- A30严格首次公共历史相同，raw与checked各自两次完整messages相同；偏好对checked首次候选却不同，不能把差异全归因于反馈。3唯一动作×2新划分=6fit/0API/34.140秒，16逻辑评价复用10；Coupon首选全部同，偏好对word_char C.05较word C.1新划分均值+1.7772个百分点，但完整E1最终低于R1，局部与端到端结论分开。初次分析hash用错工具已修，0fit/API、原错误保留。A窗口累计597fit。
+- 用户新授权继续3小时：北京时间11月21日23:24–22日02:24，计划batches/A31_A35_three_hour_window.md；本机runs/three_hour_20261121_2324/window.json记录起点ledger203/known5.3767495/11unknown/pending0。
+- A31新增默认off的Flash候选路线投影，min(4,注册路线数)，仅从原eligible里优先未见路线，不改B调度/anchor/confirm/stop、不重问。124回归通过，7监督fit/0API；旧固定Flash12提案有10个在原状态下会被新门槛排除，0fit/API回放不冒充新效果。新窗口当前7fit，A窗口604。
+- A32新源训练包/15与22候选/原实际划分重新冻结，20路径预检0fit/API通过；计划batches/A32_route_coverage_matrix_plan.md。两任务L0/L1共享本地+R0/E0/R1/E1各off/routes，最多220fit/48请求/¥4.80估计阈值，截止02:24前不足660秒不启动新路径。尚未运行；随后状态以a32_coverage_matrix checkpoint/completion为准。不能将A29旧源当新代码控制。路线门槛是否提升分数仍待真实开关对照。
+
+### A29/A30先前运行快照（现已完成，以上方为准）
 
 - 用户要求连续推进。计划batches/A29_limited_choice_matrix_plan.md、runner scripts/run_a29_choice_matrix.py、独立worker观察器已落盘。
 - a29_choice_prepared重新冻结coupon15/preference22候选、只含训练成员的包、实际707/808/909划分和当前生产源码。准备6.234秒；a29_choice_preflight验证12路径命令/同一累计账本通过，0fit/请求。

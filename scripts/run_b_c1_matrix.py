@@ -194,38 +194,49 @@ def run_matrix(args, protocol):
     rec.write(args.matrix/'all_models_frozen.json',frozen_models(args.matrix,protocol))
 
 
+def read_export(path, expected_rows):
+    with path.open(newline='',encoding='utf-8') as f:
+        rows = list(csv.DictReader(f))
+    manifest = rec.read(path.parent/'prediction_manifest.json')
+    if (manifest['test_labels_read'] is not False or manifest['prediction_count']!=expected_rows or
+            [row['row_id'] for row in rows]!=list(map(str,range(expected_rows)))):
+        raise ValueError('Exported row count, identities or label access differ')
+    return [row['prediction'] for row in rows]
+
+
+def grade_task(name, portable, task, original_packet, predictions):
+    reference = rec.read(REFERENCE/'results.json')['tasks'][name]
+    typed = load_development_task(portable/'optimizer/train.zip')
+    metric = MetricSpec.for_task(typed)
+    original,_ = load_original(name,original_packet,reference['source'])
+    identity = gzip.decompress((REFERENCE/name/'row_ids.json.gz').read_bytes())
+    if rec.sha(identity)!=reference['row_ids_sha256']:
+        raise ValueError('Source indices differ from registration')
+    truth = original.y_train[json.loads(identity)['outer']['held']]
+    query = load_prediction_features(portable/'delivery/features.zip',typed.kind,typed.spec)
+    if content_digest(query,truth)!=task['held_content']:
+        raise ValueError('Outer sources, labels or row order differ')
+    mapping = {str(label):label for label in metric.labels}
+    return {arm:metric.evaluate(truth,[mapping[p] for p in column]) for arm,column in predictions.items()}
+
+
 def score(args, protocol):
     models = frozen_models(args.matrix,protocol)
     if rec.read(args.matrix/'all_models_frozen.json')!=models:
         raise ValueError('Frozen model set changed')
     args.output.mkdir(parents=True,exist_ok=False)
-    exported = {}
+    exported, csv_hashes = {}, {}
     for name, task in protocol['tasks'].items():
+        exported[name],csv_hashes[name] = {},{}
         for arm in task['order']:
             target = args.output/name/arm/'rows.csv'
             subprocess.run([sys.executable,'-m','superagent','predict',str(args.portable/name/'delivery/features.zip'),
                     '--run-dir',str(location(args.matrix,name,arm)/'official'),'--output',str(target)],cwd=ROOT,check=True)
-            with target.open(newline='',encoding='utf-8') as f:
-                rows = list(csv.DictReader(f))
-            if [row['row_id'] for row in rows]!=list(map(str,range(task['held_rows']))):
-                raise ValueError('Exported row identities differ')
-            exported[name,arm] = [row['prediction'] for row in rows]
-    reference = rec.read(REFERENCE/'results.json')['tasks']
-    scores = {}
-    for name, task in protocol['tasks'].items():
-        typed = load_development_task(args.portable/name/'optimizer/train.zip')
-        metric = MetricSpec.for_task(typed)
-        original,_ = load_original(name,getattr(args,name),reference[name]['source'])
-        identity = gzip.decompress((REFERENCE/name/'row_ids.json.gz').read_bytes())
-        if rec.sha(identity)!=reference[name]['row_ids_sha256']:
-            raise ValueError('Source indices differ from registration')
-        truth = original.y_train[json.loads(identity)['outer']['held']]
-        query = load_prediction_features(args.portable/name/'delivery/features.zip',typed.kind,typed.spec)
-        if content_digest(query,truth)!=task['held_content']:
-            raise ValueError('Outer sources, labels or row order differ')
-        mapping = {str(label):label for label in metric.labels}
-        scores[name] = {a:metric.evaluate(truth,[mapping[p] for p in exported[name,a]]) for a in task['order']}
-    rec.write(args.output/'results.json',dict(protocol=rec.digest(protocol),models=models,scores=scores))
+            exported[name][arm] = read_export(target,task['held_rows'])
+            csv_hashes[name][arm] = ab_run.sha(target)
+    scores = {name:grade_task(name,args.portable/name,task,getattr(args,name),exported[name])
+              for name,task in protocol['tasks'].items()}
+    rec.write(args.output/'results.json',dict(protocol=rec.digest(protocol),models=models,prediction_sha256=csv_hashes,scores=scores))
     rec.write(args.output/'completion.json',dict(status='scored',paths=12,training_or_model_api_requests=0))
 
 

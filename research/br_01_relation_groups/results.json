@@ -1,0 +1,192 @@
+{
+  "rows": 4439,
+  "source_families": 788,
+  "outer": {
+    "train_rows": 3685,
+    "held_rows": 754,
+    "train_families": 631,
+    "held_families": 157,
+    "families_shared": 0,
+    "held_rows_in_training_families": 0,
+    "held_rows_sharing_a_visible_sentence": 0,
+    "repeated_ordered_pairs": 0
+  },
+  "inner": {
+    "primary": {
+      "native": {
+        "train_rows": 2948,
+        "held_rows": 737,
+        "train_families": 617,
+        "held_families": 379,
+        "families_shared": 365,
+        "held_rows_in_training_families": 718,
+        "held_rows_sharing_a_visible_sentence": 682,
+        "repeated_ordered_pairs": 0
+      },
+      "registered": {
+        "train_rows": 3186,
+        "held_rows": 499,
+        "train_families": 524,
+        "held_families": 107,
+        "families_shared": 0,
+        "held_rows_in_training_families": 0,
+        "held_rows_sharing_a_visible_sentence": 0,
+        "repeated_ordered_pairs": 0
+      }
+    },
+    "confirmation_1": {
+      "native": {
+        "train_rows": 2948,
+        "held_rows": 737,
+        "train_families": 610,
+        "held_families": 383,
+        "families_shared": 362,
+        "held_rows_in_training_families": 710,
+        "held_rows_sharing_a_visible_sentence": 677,
+        "repeated_ordered_pairs": 0
+      },
+      "registered": {
+        "train_rows": 3128,
+        "held_rows": 557,
+        "train_families": 518,
+        "held_families": 113,
+        "families_shared": 0,
+        "held_rows_in_training_families": 0,
+        "held_rows_sharing_a_visible_sentence": 0,
+        "repeated_ordered_pairs": 0
+      }
+    },
+    "confirmation_2": {
+      "native": {
+        "train_rows": 2948,
+        "held_rows": 737,
+        "train_families": 621,
+        "held_families": 389,
+        "families_shared": 379,
+        "held_rows_in_training_families": 726,
+        "held_rows_sharing_a_visible_sentence": 679,
+        "repeated_ordered_pairs": 0
+      },
+      "registered": {
+        "train_rows": 3119,
+        "held_rows": 566,
+        "train_families": 525,
+        "held_families": 106,
+        "families_shared": 0,
+        "held_rows_in_training_families": 0,
+        "held_rows_sharing_a_visible_sentence": 0,
+        "repeated_ordered_pairs": 0
+      }
+    }
+  },
+  "missing_original_caption_cells": 0,
+  "train_classes": {
+    "contradicts": 663,
+    "entails": 1060,
+    "neutral": 1962
+  },
+  "kind": "text_tabular",
+  "optimizer_columns": [
+    "left",
+    "right"
+  ],
+  "menu": {
+    "text_tabular_logistic_C0.1": {
+      "id": "text_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "route": "text_tabular_logistic",
+      "input_kind": "text_tabular",
+      "representation": "typed table and text features",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "text_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "text_tabular_logistic_C1.0": {
+      "id": "text_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "route": "text_tabular_logistic",
+      "input_kind": "text_tabular",
+      "representation": "typed table and text features",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "text_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "text_tabular_logistic_C10.0": {
+      "id": "text_tabular_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "route": "text_tabular_logistic",
+      "input_kind": "text_tabular",
+      "representation": "typed table and text features",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "text_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "text_tabular_extra_trees_leaf1": {
+      "id": "text_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "route": "text_tabular_extra_trees",
+      "input_kind": "text_tabular",
+      "representation": "typed table and text features",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "text_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "text_tabular_extra_trees_leaf3": {
+      "id": "text_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "route": "text_tabular_extra_trees",
+      "input_kind": "text_tabular",
+      "representation": "typed table and text features",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "text_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  },
+  "signed_split_sha256": "81716ddfc13343f1e11748f1c699afab6ab2b8adc6c25ef49f25b4ff55dd4423",
+  "train_sha256": "6223f21d5b7b598972e1f4d62f693b1412a7cc6e0a4780839789a1b46ac4c60d",
+  "features_sha256": "abf57226c1141893a88013ccd14b491dc3cb9bbc1c37246eac447ea6a1c54710",
+  "outer_source_ids_sha256": "605f2679a96471213bb7c4d4f03b7fffccae2ec703a87d44b4f36af1c69cd598",
+  "held_content_sha256": "bafd685b40c822ae89d3c0b0f801496195f05232cc00e4ef1f3acdb053faf55d"
+}

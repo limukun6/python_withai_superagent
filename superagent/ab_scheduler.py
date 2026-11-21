@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 from pathlib import Path
+from statistics import median
 
 from .ab_methods import ROUTES
 from .ab_comparison import MIN_GAIN, MIN_PAIRED_WINS, incumbent_review, macro_f1_pair_spread
@@ -268,6 +269,41 @@ def _fixed_confirm(front, attempted, records, splits, available, reserve, known_
     return _action('stop', 'Completed the registered fixed exploration and confirmation allocation.', refs)
 
 
+def _first_route_configuration(ordered, capabilities, tried_routes):
+    """Compare a single numeric parameter within the already chosen executable route."""
+    first = ordered[0]
+    first_id = first[0]['id']
+    if not capabilities:
+        return first
+    route = capabilities[first_id].get('route')
+    if not route or route in tried_routes:
+        return first
+    family = {name: cap for name,cap in capabilities.items() if cap.get('route') == route}
+    if len(family) < 3:
+        return first
+    declaration = {k:v for k,v in family[first_id].items() if k not in ('id','params')}
+    if any({k:v for k,v in cap.items() if k not in ('id','params')} != declaration for cap in family.values()):
+        return first
+    params = {name: cap.get('params') for name,cap in family.items()}
+    reference = params[first_id]
+    if not isinstance(reference,dict) or any(not isinstance(p,dict) or p.keys()!=reference.keys() for p in params.values()):
+        return first
+    varying = [k for k in reference if any(p[k] != reference[k] for p in params.values())]
+    if len(varying) != 1:
+        return first
+    values = {name:p[varying[0]] for name,p in params.items()}
+    if any(type(v) not in (int,float) or v <= 0 or (type(v) is float and not math.isfinite(v)) for v in values.values()):
+        return first
+    if len(set(values.values())) != len(values):
+        return first
+    logs = {name:math.log(value) for name,value in values.items()}
+    center = median(logs.values())
+    feasible = [item for item in ordered if item[0]['id'] in family]
+    distances = [abs(logs[item[0]['id']] - center) for item in feasible]
+    nearest = min(distances)
+    return next(item for item,difference in zip(feasible,distances) if math.isclose(difference,nearest,abs_tol=1e-12))
+
+
 def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive'):
     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
     if allocation not in ('adaptive', 'fixed'):
@@ -367,6 +403,10 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
             raise ValueError('Planner returned an ineligible candidate')
         entry,cost = next((e,c) for e,c in ordered if e['id'] == selected)
         why = 'Planner selected an eligible untried configuration within the shared allowance.'
+    elif on_explore is None and allocation == 'adaptive':
+        entry,cost = _first_route_configuration(ordered, capabilities, tried_routes)
+        if entry['id'] != ordered[0][0]['id']:
+            why = 'Explore the feasible setting nearest the log median on the first visit to this route.'
     action = _action('explore',why,[r['trial'] for r in front[:2]],entry['id'],PRIMARY,cost)
     return _explain_skips(action, skipped)
 

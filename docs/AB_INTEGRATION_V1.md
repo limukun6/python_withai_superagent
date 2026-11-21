@@ -1,5 +1,7 @@
 # A/B 共同接入约定 v1
 
+2026-11-21 A-11 更新：同一正式入口增加ab-fixed本地对照（4探索＋primary前3各2复核＋refit），与ab-v1共用候选/探索函数/最终选型。三真实开发任务六路径对照完成，动态省6/33fits、最终预测一致，详见batches/A11_fixed_dynamic_results.md；不是Flash或未见任务结论。
+
 2026-11-21 A-09 更新：B a787a28 已接正式 `superagent run --scheduler ab-v1 --portfolio ab-v1 --fit-limit 11`。本地匿名路径/实际fit限额/新进程预测已验收，见 A_TO_B_BRIDGE_ACCEPTED_20261121.md。动态 Flash 回调与 AUC 分数证据仍待接，下文“尚未接入”描述的是早期交接状态。
 
 2026-11-21增量：A已补目标来源/metric_spec身份与导出校验；提供scheduler_bridge的动作校验及注入式分发（尚未接正式CLI）。新交接见A_TO_B_NEXT_HANDOFF_20261121.md，实验结果见batches/A_window_20261121_results.md。接口字段继续沿用本文v1。

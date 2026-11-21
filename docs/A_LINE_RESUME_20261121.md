@@ -1,5 +1,7 @@
 # A 线接跑入口
 
+最新A-11：正式入口固定/动态三任务六路径对照完成；先读batches/A11_fixed_dynamic_results.md与EXPERIMENT_PROGRESS顶部。已见任务外层预测均相同，动态27vs固定33fits，定位省训练；不要重复该批追涨分。下一工作为动态Flash raw/checked回调/账本失败链，先落计划与runner、无真实请求验证。真实调用仍需核验11条历史未知账本。自然图像与合法对称文本/H资格尚未完成。
+
 最新更新 A-09：已接收 B a787a28 并完成正式本地动态 CLI 验收。先读 A_TO_B_BRIDGE_ACCEPTED_20261121.md 与 batches/A09_B_bridge_cli_results.md。下文等待 B 的事项已完成；下一步改为真实任务小试/环境对齐，再接动态 Flash 回调。旧 A2 状态与当前源码不再同源。最新实验进度以 EXPERIMENT_PROGRESS.md 顶部为准。
 
 先读EXPERIMENT_PROGRESS.md、batches/A_window_20261121_results.md、A_TO_B_NEXT_HANDOFF_20261121.md。代码在codex/expanded-feedback，首轮实现提交1d57fd4。主仓库main不是这轮实验源码，运行时工作目录必须是runs/integration。

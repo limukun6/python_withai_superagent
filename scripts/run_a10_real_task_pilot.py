@@ -47,7 +47,7 @@ def launch(command, log, timeout):
     return time.monotonic()-start
 
 
-def run(args):
+def run(args, comparison=False):
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     offline_fixture.offline(output)
@@ -77,24 +77,29 @@ def run(args):
                                 frozen_partitions={s:read(frozen_dir/(s+'_split.json')) for s in allowed}))
         dependencies = subprocess.check_output([sys.executable,'-m','pip','freeze'], text=True)
         (output/'environment.txt').write_text(dependencies, encoding='utf-8')
-        save(output/'protocol.json', dict(batch='A10', source_files=frozen, baseline='07884d0',
-            driver_sha256=sha(Path(__file__)), plan_sha256=sha(ROOT/'docs/batches/A10_real_task_pilot_plan.md'),
-            tasks=records, fit_limit_per_path=11, fit_limit_batch=33, api_limit=0,
+        schedule = [('bean','ab-fixed'),('bean','ab-v1'),('sms','ab-v1'),('sms','ab-fixed'),
+                    ('digits','ab-fixed'),('digits','ab-v1')] if comparison else [(n,'ab-v1') for n in NAMES]
+        save(output/'protocol.json', dict(batch='A11' if comparison else 'A10', source_files=frozen,
+            baseline='5ed06c6' if comparison else '07884d0', schedule=schedule,
+            driver_sha256=sha(Path(__file__)), plan_sha256=sha(ROOT/('docs/batches/A11_fixed_dynamic_plan.md' if comparison
+                else 'docs/batches/A10_real_task_pilot_plan.md')),
+            tasks=records, fit_limit_per_path=11, fit_limit_batch=66 if comparison else 33, api_limit=0,
             seed=707, trial_timeout=60, time_limit=300, validate_only=args.validate_only,
             environment_sha256=sha(output/'environment.txt'),
-            scope='Real development pilot; no paired efficacy comparison; all models frozen before scoring'))
+            scope='Paired fixed/dynamic development comparison' if comparison else 'Real development pilot; no paired efficacy comparison; all models frozen before scoring'))
         if args.validate_only:
             save(output/'completion.json',dict(status='validated', actual_classifier_fits=0, api_requests=0,
                 source_unchanged=sources()==frozen, elapsed_seconds=time.monotonic()-start))
             return
-        for entry in records:
-            name = entry['name']
-            source = args.prepared/name
+        for task_name, scheduler in schedule:
+            entry = next(r for r in records if r['name']==task_name)
+            name = task_name+'_'+scheduler if comparison else task_name
+            source = args.prepared/task_name
             directory = output/name
             if sources()!=frozen:
                 raise ValueError('Production source changed before launch')
             command = [sys.executable,'-m','superagent','run',str(source/'train.zip'),'--run-dir',str(directory),
-                '--scheduler','ab-v1','--portfolio','ab-v1','--fit-limit','11','--seed','707',
+                '--scheduler',scheduler,'--portfolio','ab-v1','--fit-limit','11','--seed','707',
                 '--trial-timeout','60','--time-limit','300']
             save(output/(name+'_command.json'), command)
             seconds = launch(command, output/(name+'_train.log'), 330)
@@ -108,19 +113,31 @@ def run(args):
                 actual = read(directory/(split+'_split.json'))
                 if actual!=expected:
                     raise ValueError('Registered split differs from frozen row IDs: '+name)
+            manifest=read(directory/'run_manifest.json')
+            if manifest['capabilities']!=entry['capabilities'] or manifest['source_files']!=frozen:
+                raise ValueError('Candidate capabilities or production source differ: '+name)
             selection = read(directory/'final_selection.json')
             if sha(directory/selection['model_file']) != selection['model_sha256']:
                 raise ValueError('Frozen model digest differs')
-            results.append(dict(name=name, train_process_seconds=seconds, outcome=outcome,
+            results.append(dict(name=name, task=task_name, scheduler=scheduler, train_process_seconds=seconds, outcome=outcome,
                                 selection=selection, actions=read(directory/'actions.json')))
             save(output/'checkpoint.json',results)
             print(json.dumps(dict(task=name,status='model_frozen',fits=counts['attempted_classifier_fits'],
                                   seconds=seconds,selected=outcome['selected_candidate'])), flush=True)
         save(output/'all_models_frozen.json', [dict(name=r['name'],selection=r['selection']) for r in results])
+        if comparison:
+            for task_name in NAMES:
+                pair=[r for r in results if r['task']==task_name]
+                candidates=[[a['candidate_id'] for a in r['actions'] if a['action']=='explore'] for r in pair]
+                length=min(map(len,candidates))
+                if candidates[0][:length]!=candidates[1][:length]:
+                    raise ValueError('Common exploration prefix differs: '+task_name)
+            save(output/'fairness.json',dict(same_source=True,same_candidates=True,same_actual_partitions=True,
+                same_budget_caps=True,same_exploration_prefix=True,all_models_frozen_before_scoring=True))
         for row in results:
             name = row['name']
             directory = output/name
-            source = args.prepared/name
+            source = args.prepared/row['task']
             relocated = directory/'relocated'
             relocated.mkdir()
             for fname in ('final_selection.json','task_spec.json',row['selection']['model_file']):

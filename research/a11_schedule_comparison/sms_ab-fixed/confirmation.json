@@ -1,0 +1,366 @@
+{
+  "primary_metric": "macro_f1",
+  "enabled": true,
+  "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+  "seeds": [
+    707,
+    808
+  ],
+  "shortlist": [
+    "single_word_char_C0.3",
+    "single_word_char_C3.0"
+  ],
+  "primary_candidate": "single_word_char_C0.3",
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "candidates": [
+    {
+      "candidate": "single_word_char_C0.3",
+      "primary_accuracy": 0.9440242057488654,
+      "measurements": [
+        {
+          "seed": 707,
+          "trial": 3,
+          "candidate": "single_word_char_C0.3",
+          "params": {
+            "representation": "word_char",
+            "C": 0.3
+          },
+          "split_id": "primary",
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "macro_f1",
+          "metric_spec": {
+            "name": "macro_f1",
+            "labels": [
+              "ham",
+              "spam"
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.7724399025851543,
+          "search_score": 0.8388495371133001,
+          "train_metrics": {
+            "accuracy": 0.9269216205982582,
+            "macro_f1": 0.7724399025851543,
+            "primary_metric": "macro_f1",
+            "score": 0.7724399025851543,
+            "rows": 2641
+          },
+          "search_metrics": {
+            "accuracy": 0.9440242057488654,
+            "macro_f1": 0.8388495371133001,
+            "primary_metric": "macro_f1",
+            "score": 0.8388495371133001,
+            "rows": 661
+          },
+          "score_gap": -0.06640963452814586,
+          "train_accuracy": 0.9269216205982582,
+          "search_accuracy": 0.9440242057488654,
+          "generalization_gap": -0.01710258515060714,
+          "class_recall": [
+            1.0,
+            0.5487804878048781
+          ],
+          "training_seconds": 0.5177727000009327,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "single_word_char_C0.3",
+            "params": {
+              "representation": "word_char",
+              "C": 0.3
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "single_word_char_C0.3",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 2.95719729999837
+        },
+        {
+          "seed": 808,
+          "trial": 6,
+          "candidate": "single_word_char_C0.3",
+          "params": {
+            "representation": "word_char",
+            "C": 0.3
+          },
+          "split_id": "confirmation_1",
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "macro_f1",
+          "metric_spec": {
+            "name": "macro_f1",
+            "labels": [
+              "ham",
+              "spam"
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.7708154406607406,
+          "search_score": 0.8277092731829574,
+          "train_metrics": {
+            "accuracy": 0.9265429761453995,
+            "macro_f1": 0.7708154406607406,
+            "primary_metric": "macro_f1",
+            "score": 0.7708154406607406,
+            "rows": 2641
+          },
+          "search_metrics": {
+            "accuracy": 0.9409984871406959,
+            "macro_f1": 0.8277092731829574,
+            "primary_metric": "macro_f1",
+            "score": 0.8277092731829574,
+            "rows": 661
+          },
+          "score_gap": -0.0568938325222168,
+          "train_accuracy": 0.9265429761453995,
+          "search_accuracy": 0.9409984871406959,
+          "generalization_gap": -0.014455510995296406,
+          "class_recall": [
+            1.0,
+            0.524390243902439
+          ],
+          "training_seconds": 0.5584467000007862,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "single_word_char_C0.3",
+            "params": {
+              "representation": "word_char",
+              "C": 0.3
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "single_word_char_C0.3",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 2.9889193999988493
+        }
+      ],
+      "complete": true,
+      "primary_score": 0.8388495371133001,
+      "mean_score": 0.8332794051481287,
+      "mean_accuracy": 0.9425113464447806,
+      "sample_sd": 0.007877356169353245
+    },
+    {
+      "candidate": "single_word_char_C3.0",
+      "primary_accuracy": 0.9848714069591528,
+      "measurements": [
+        {
+          "seed": 707,
+          "trial": 4,
+          "candidate": "single_word_char_C3.0",
+          "params": {
+            "representation": "word_char",
+            "C": 3.0
+          },
+          "split_id": "primary",
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "macro_f1",
+          "metric_spec": {
+            "name": "macro_f1",
+            "labels": [
+              "ham",
+              "spam"
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.9929825959877774,
+          "search_score": 0.9636605532831948,
+          "train_metrics": {
+            "accuracy": 0.9969708443771299,
+            "macro_f1": 0.9929825959877774,
+            "primary_metric": "macro_f1",
+            "score": 0.9929825959877774,
+            "rows": 2641
+          },
+          "search_metrics": {
+            "accuracy": 0.9848714069591528,
+            "macro_f1": 0.9636605532831948,
+            "primary_metric": "macro_f1",
+            "score": 0.9636605532831948,
+            "rows": 661
+          },
+          "score_gap": 0.029322042704582607,
+          "train_accuracy": 0.9969708443771299,
+          "search_accuracy": 0.9848714069591528,
+          "generalization_gap": 0.012099437417977144,
+          "class_recall": [
+            0.998272884283247,
+            0.8902439024390244
+          ],
+          "training_seconds": 0.5692448000008881,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "single_word_char_C3.0",
+            "params": {
+              "representation": "word_char",
+              "C": 3.0
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "single_word_char_C3.0",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 2.982950699999492
+        },
+        {
+          "seed": 808,
+          "trial": 5,
+          "candidate": "single_word_char_C3.0",
+          "params": {
+            "representation": "word_char",
+            "C": 3.0
+          },
+          "split_id": "confirmation_1",
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "macro_f1",
+          "metric_spec": {
+            "name": "macro_f1",
+            "labels": [
+              "ham",
+              "spam"
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.9947508248419881,
+          "search_score": 0.9553981106612686,
+          "train_metrics": {
+            "accuracy": 0.9977281332828474,
+            "macro_f1": 0.9947508248419881,
+            "primary_metric": "macro_f1",
+            "score": 0.9947508248419881,
+            "rows": 2641
+          },
+          "search_metrics": {
+            "accuracy": 0.9818456883509834,
+            "macro_f1": 0.9553981106612686,
+            "primary_metric": "macro_f1",
+            "score": 0.9553981106612686,
+            "rows": 661
+          },
+          "score_gap": 0.039352714180719506,
+          "train_accuracy": 0.9977281332828474,
+          "search_accuracy": 0.9818456883509834,
+          "generalization_gap": 0.01588244493186397,
+          "class_recall": [
+            1.0,
+            0.8536585365853658
+          ],
+          "training_seconds": 0.5591000999993412,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "single_word_char_C3.0",
+            "params": {
+              "representation": "word_char",
+              "C": 3.0
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "single_word_char_C3.0",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 3.0689983000011125
+        }
+      ],
+      "complete": true,
+      "primary_score": 0.9636605532831948,
+      "mean_score": 0.9595293319722317,
+      "mean_accuracy": 0.9833585476550681,
+      "sample_sd": 0.005842429207128783
+    }
+  ],
+  "valid_confirmation": true,
+  "selected_candidate": "single_word_char_C3.0",
+  "selection_score": 0.9595293319722317,
+  "changed": true,
+  "b_scheduler_review": {
+    "initial": "single_word_char_C0.3",
+    "incumbent": "single_word_char_C3.0",
+    "promotions": [
+      {
+        "previous": "single_word_char_C0.3",
+        "candidate": "single_word_char_C3.0",
+        "splits": [
+          "primary",
+          "confirmation_1"
+        ],
+        "gaps": [
+          0.12481101616989465,
+          0.12768883747831117
+        ],
+        "mean_gain": 0.1262499268241029,
+        "evidence_trials": [
+          3,
+          4,
+          6,
+          5
+        ]
+      }
+    ],
+    "basis": [
+      "primary",
+      "confirmation_1"
+    ],
+    "primary_metric": "macro_f1"
+  },
+  "independent_confirmation_observed": true
+}

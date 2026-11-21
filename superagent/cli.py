@@ -89,7 +89,7 @@ def _validate(args):
 
 
 def _run(args):
-    if args.scheduler == 'ab-v1':
+    if args.scheduler in ('ab-v1','ab-fixed'):
         from .ab_run import command
         return command(args)
     if args.fit_limit is not None or args.portfolio == 'ab-v1':
@@ -286,7 +286,7 @@ def build_parser():
     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
-    run.add_argument('--scheduler',choices=['fixed','ab-v1'],default='fixed')
+    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed'],default='fixed')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
     run.add_argument('--anchor',choices=['catalog','schema'],default='catalog')
     run.add_argument('--portfolio',choices=['original','expanded','research','nonlinear','adaptive','semantic','learned','challenger','ab-v1'],default='expanded')

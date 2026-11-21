@@ -50,6 +50,8 @@ def validate_options(args):
     limit = 11 if args.fit_limit is None else args.fit_limit
     if type(limit) is not int or not 2 <= limit <= 11:
         raise ValueError('AB fit-limit must be an integer in [2,11], including final refit')
+    if args.scheduler == 'ab-fixed' and limit != 11:
+        raise ValueError('AB fixed control requires fit-limit 11')
     if any(not math.isfinite(x) or x <= 0 for x in (args.time_limit, args.trial_timeout)):
         raise ValueError('Time limits must be positive and finite')
     return limit
@@ -172,13 +174,13 @@ def command(args):
     frozen = sources()
     history, evidence, actions = [], [], []
     executor = None
-    outcome = dict(run_dir=str(directory), scheduler='ab-v1', planner_mode='local',
+    outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode='local',
                    requested_planner_completed=False, model_available=False, new_api_requests=0,
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
         caps = capabilities_for(spec, train_rows=len(task.y_train))
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
-            scheduler='ab-v1', task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
+            scheduler=args.scheduler, task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
             llm_request_limit=0, time_limit_seconds=args.time_limit, trial_timeout_seconds=args.trial_timeout,
             python=platform.python_version(), dependencies={k:importlib.metadata.version(k)
@@ -198,7 +200,11 @@ def command(args):
                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
             number = len(history) + 1
             logger.write_json(f'state_{number}.json', state)
-            action = next_action(state, capabilities=caps, trusted_partitions=trusted)
+            if args.scheduler == 'ab-fixed':
+                from .ab_fixed_schedule import fixed_action
+                action = fixed_action(state, capabilities=caps, trusted_partitions=trusted)
+            else:
+                action = next_action(state, capabilities=caps, trusted_partitions=trusted)
             actions.append(action)
             logger.write_json('actions.json', actions)
 

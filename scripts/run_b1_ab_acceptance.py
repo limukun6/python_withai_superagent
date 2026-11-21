@@ -193,18 +193,20 @@ def finish(run,task,history,began,review):
                 full_refits=len(trace(run))-before,task_classifier_fits=len(trace(run)))
 
 
-def predict_twice(run,query):
+def predict_twice(run,query,*,output_dir=None,task_package=None):
     original = read(run/'final_selection.json')
-    relocated = run/'relocated'
+    workspace = run if output_dir is None else output_dir
+    query_package = run/'test.zip' if task_package is None else task_package
+    relocated = workspace/'relocated'
     relocated.mkdir()
     for fname in ('task_spec.json','final_selection.json',original['model_file']):
         shutil.copy2(run/fname,relocated/fname)
     model = joblib.load(run/original['model_file'])['model']
     expected = predict_with_model('numeric_tabular',model,query).astype(str).tolist()
     outputs = []
-    for source in (run,relocated):
-        dest = source/'predict'/'rows.csv'
-        subprocess.run([sys.executable,'-m','superagent','predict',str(run/'test.zip'),'--run-dir',str(source),
+    for source,export in ((run,workspace),(relocated,relocated)):
+        dest = export/'predict'/'rows.csv'
+        subprocess.run([sys.executable,'-m','superagent','predict',str(query_package),'--run-dir',str(source),
                         '--output',str(dest)],check=True,cwd=ROOT,capture_output=True,text=True,timeout=TRIAL_SECONDS)
         with dest.open(newline='') as file:
             rows = list(csv.DictReader(file))

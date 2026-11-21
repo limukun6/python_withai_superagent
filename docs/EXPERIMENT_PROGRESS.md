@@ -11,6 +11,16 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新A20–A25：五任务本地C1已跑，不再等待学校历史记录
+
+- 用户无法取得平台记录且明确“不用等，继续推进”。新增显式`--history-policy incremental-research`，保留历史unknown；默认strict仍拦截。新增unknown/pending立即停，结果标记课程总预算未核验/非预算合规正式报告。金额是估计预留与结算阈值，不是最终扣费硬上界；不承诺总费用已知。
+- A22先补旧偏好文本对CSV/列契约，87检查通过、0分类器fit；随后a22_c1_readiness冻结。A20五任务十路径完整CLI，先全冻结再评分，原正式test未打开；102 attempted=completed fits、478.379秒、API0，十个模型新进程预测与重载评分通过。
+- Coupon accuracy .750246、偏好对accuracy .696809、DryBean accuracy .913223、SMS macro-F1 .945980、照片accuracy .975；每对同方法同预测。固定55fit→动态47fit，少8（14.55%）；CLI合计226.830→197.312秒。只支持开发单划分节省训练，无精度或LLM收益，不是最终冻结六组C1。
+- A21本地审计未恢复11未知的任何receipt。A23导入170真实历史、known 5.1277825元、11unknown，排除模拟，完整费用仍null。真实小试确实启动：1基线fit后第一请求DNS NameResolutionError，无HTTP/流数据，失败即停、checked未跑、留出未评分；原子路径保留3.568秒记录。
+- A24只读网络诊断6.078秒，DNS失败、校园IP443超时，0聊天，不改网络。A25原请求ticket/run/hash证明未发出，追加审计而保留原unknown转移；当前171行、known仍5.1277825、原11unknown ID全保留、pending0、完整费用null。1真实连接attempt，0模型请求发出/响应；不自动重试。
+- 最终93项回归通过4.306秒，0监督fit/API；首轮91项测试异常类型预期错误已修，原失败保留。四轮整套检查另4预处理fit。本轮103监督fits，A窗口累计383；模拟HTTP25未增。
+- 结果batches/A20_A25_results.md；research/a20_local_c1与research/a21_a25_progress。续跑先读该结果与A_TO_B_A20_A25_UPDATE_20261121.md；学校网络可达后新目录按研究模式跑小试，不再等待平台账单。剩余真实Flash/A2、B合法对称方法/剩余Q、最终六组C1/H/Released仍待，H1/H2保持封存。下方早期“必须等11未知对账才允许所有真实研究”已由本次显式用户指令更新，不删历史记录。
+
 ### 最新A17–A19：照片Q对照完成，C1五任务准备齐
 
 - A17同版新增--catalog-scope baseline/full（full默认），A执行器投影B目录，B方法/调度不改。照片7vs8候选、相同实际划分/11fit上限，2路径全封存后评分；两组均78/80=97.5%，不同3行（各独有正确1），无分数收益。baseline像素logistic10fits/22.746秒，full梯度9fits/18.488秒；两模型搬迁预测各自一致，整批19fits/56.029秒/API0。

@@ -1,4 +1,4 @@
-"""Verified-history-only real Flash pilot. Default preflight, no requests or training."""
+"""Real Flash pilot with explicit historical-usage policy; default is preflight only."""
 import argparse
 import json
 from pathlib import Path
@@ -20,6 +20,7 @@ from superagent.metrics import MetricSpec
 def run(args):
     root=args.output.resolve();root.mkdir(parents=True,exist_ok=False);began=time.monotonic();frozen=sources()
     protocol=dict(batch='A16',source_files=frozen,runner_sha256=sha(Path(__file__)),
+        history_policy=args.history_policy,course_budget_compliance='unverified_history' if args.history_policy=='incremental-research' else 'requires_verified_history',
         execute_requested=args.execute,maximum_classifier_fits=22,maximum_real_requests=6,
         per_run_allowance_rmb=.30,task_budget_id=args.task_budget_id,automatic_retries=False)
     save(root/'protocol.json',protocol)
@@ -33,10 +34,15 @@ def run(args):
             cli=['run',str(folder/'train.zip'),'--scheduler','ab-v1','--portfolio','ab-v1','--planner',mode,
                 '--api-key-file',str(args.api_key_file),'--budget-ledger',str(args.ledger),
                 '--task-budget-id',args.task_budget_id,'--llm-budget-rmb','.30','--seed','707',
+                '--history-policy',args.history_policy,
                 '--run-dir',str(root/mode),'--fit-limit','11','--time-limit','600','--trial-timeout','60']
             parsed=build_parser().parse_args(cli)
             ledger,allowance,snapshot=preflight(parsed)
-            ledger.preflight(args.task_budget_id,.60)  # Both planned incremental allowances fit, not only the first.
+            if args.history_policy=='incremental-research':
+                from superagent.research_budget import research_preflight
+                research_preflight(ledger,args.task_budget_id,.60)
+            else:
+                ledger.preflight(args.task_budget_id,.60)
             commands.append([sys.executable,'-m','superagent',*cli])
         task=load_development_task(folder/'train.zip');metric=MetricSpec.for_task(task)
         partitions=root/'partitions';partitions.mkdir();_,allowed=freeze_partitions(task,partitions,707,metric)
@@ -73,12 +79,16 @@ def run(args):
                 '--holdout',str(folder/'holdout.joblib'),'--predictions',str(csv),
                 '--output',str(directory/'verification.json')],root/(mode+'_verify.log'),60)
         save(root/'completion.json',dict(status='completed',real_api_requests=sum(r['new_api_requests'] for r in results),
+            history_policy=args.history_policy,course_budget_compliance='unverified_history' if args.history_policy=='incremental-research' else 'verified_local_ledger',
+            project_usage_after_run=ledger.project_summary(),
             classifier_fits=sum(r['classifier_fit_accounting']['attempted_classifier_fits'] for r in results),
             source_unchanged=sources()==frozen,elapsed_seconds=time.monotonic()-began))
     except Exception as error:
+        observed=[read(p) for p in root.glob('*/run_outcome.json')]
         save(root/'completion.json',dict(status='stopped' if args.execute else 'blocked_by_accounting_or_input',
-            error=str(error),real_api_requests=None if args.execute else 0,
-            classifier_fits=None if args.execute else 0,automatic_retry=False))
+            error=str(error),real_api_requests=sum(r['new_api_requests'] for r in observed) if observed else None if args.execute else 0,
+            classifier_fits=sum(r['classifier_fit_accounting']['attempted_classifier_fits'] for r in observed) if observed else None if args.execute else 0,
+            automatic_retry=False,history_policy=args.history_policy))
         raise
 
 
@@ -86,4 +96,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepared',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--ledger',type=Path,required=True)
     p.add_argument('--api-key-file',type=Path,required=True);p.add_argument('--task-budget-id',default='sms_spam')
+    p.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict')
     p.add_argument('--execute',action='store_true');run(p.parse_args())

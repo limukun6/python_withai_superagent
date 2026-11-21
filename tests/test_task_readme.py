@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-from superagent.data import load_training_task,load_development_task
+from superagent.data import load_training_task,load_development_task,load_prediction_features
 from superagent.contracts import TaskSpec
 
 
@@ -76,6 +76,16 @@ class TaskReadmeTests(unittest.TestCase):
                 return original(archive,name,*args,**kwargs)
             with patch.object(zipfile.ZipFile,'read',new=guarded):load_training_task(path)
             self.assertEqual(set(opened),{'train.csv','README.md'})
+
+    def test_legacy_declaration_freezes_complete_label_free_prediction_format(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);task=load_training_task(self.package(root,PAIR+' Report test accuracy.'))
+            prediction=root/'features.zip'
+            with zipfile.ZipFile(prediction,'w') as archive:
+                archive.writestr('test.csv','headline_A,headline_B\nnew left,new right\n')
+            self.assertEqual(task.spec['input_format'],'csv')
+            values=load_prediction_features(prediction,'pair_text',task.spec)
+            self.assertEqual(values,[('new left','new right')])
 
 
 if __name__=='__main__':unittest.main()

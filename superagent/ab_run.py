@@ -50,6 +50,8 @@ def registered_capabilities(task_spec, train_rows, scope='full'):
 def validate_options(args):
     if args.planner not in ('local','raw-history','checked-history'):
         raise ValueError('AB supports local, raw-history or checked-history planning')
+    if args.planner=='local' and args.history_policy!='strict':
+        raise ValueError('Historical usage policy applies only to explicit Flash research')
     forbidden = ('policy','trials')
     if args.planner == 'local':
         forbidden += ('api_url','api_key_file','model','budget_ledger','task_budget_id','llm_budget_rmb')
@@ -196,7 +198,11 @@ def command(args):
         from .ab_flash import FlashPicker
         from .experiment_llm import ExperimentLLM
         from .task_budget import TaskBudgetAccount
-        account = TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
+        if args.history_policy=='incremental-research':
+            from .research_budget import IncrementalResearchAccount
+            account=IncrementalResearchAccount(ledger,args.task_budget_id,str(directory))
+        else:
+            account = TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
         client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
             allowed_served_models={args.model},account=account,streaming=True)
         client.set_deadline(began+args.time_limit)
@@ -214,8 +220,10 @@ def command(args):
             task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
+            history_policy=args.history_policy,
             decision_context_version='ab-history-v1' if history_mode else None,
             planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
+            project_usage_before_run=ledger.project_summary() if history_mode else None,
             incremental_run_allowance_rmb=allowance if history_mode else 0,
             time_limit_seconds=args.time_limit, trial_timeout_seconds=args.trial_timeout,
             python=platform.python_version(), dependencies={k:importlib.metadata.version(k)
@@ -319,6 +327,12 @@ def command(args):
         complete_course_cost_rmb=None if unresolved else client.spent if client else 0,
         unresolved_calls=unresolved, task_budget_after_run=account.snapshot() if account else None,
         partial_trial_models=[p.name for p in sorted(directory.glob('trial_*.joblib'))])
+    outcome.update(history_policy=args.history_policy,
+        course_budget_compliance='unverified_history' if args.history_policy=='incremental-research' else
+            'verified_local_ledger' if history_mode else 'no_new_llm_calls',
+        valid_for_budgeted_final_report=False if args.history_policy=='incremental-research' else None,
+        project_usage_after_run=ledger.project_summary() if history_mode else None)
+    outcome['complete_project_course_cost_rmb']=ledger.project_summary()['complete_course_cost_rmb'] if history_mode else None
     outcome['model_available'] = (directory / 'final_selection.json').exists()
     outcome['requested_planner_completed'] &= outcome['source_unchanged']
     outcome['status'] = 'completed' if outcome['requested_planner_completed'] else 'failed'

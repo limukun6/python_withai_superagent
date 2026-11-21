@@ -36,11 +36,13 @@ def sources():
 
 
 def validate_options(args):
-    if args.planner != 'local':
-        raise ValueError('AB-v1 CLI currently supports local planning only; Flash integration is pending')
-    if any(getattr(args, k) is not None for k in ('api_url', 'api_key_file', 'model', 'budget_ledger',
-            'task_budget_id', 'llm_budget_rmb', 'policy', 'trials')):
-        raise ValueError('AB-v1 uses fit-limit and its shared local scheduler, without API or fixed-trials options')
+    if args.planner not in ('local','raw-history','checked-history'):
+        raise ValueError('AB supports local, raw-history or checked-history planning')
+    forbidden = ('policy','trials')
+    if args.planner == 'local':
+        forbidden += ('api_url','api_key_file','model','budget_ledger','task_budget_id','llm_budget_rmb')
+    if any(getattr(args, k) is not None for k in forbidden):
+        raise ValueError('AB uses its shared scheduler and fit-limit; incompatible API/local/fixed-trials options')
     if (args.portfolio != 'ab-v1' or args.architecture != 'single' or args.anchor != 'catalog'
             or args.refinement != 'off' or args.allocation != 'off' or args.feature_cache != 'off'
             or args.time_policy != 'shared' or args.error_feedback):
@@ -159,6 +161,12 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
 
 def command(args):
     limit = validate_options(args)
+    client = account = picker = None
+    history_mode = args.planner in ('raw-history','checked-history')
+    accounting = None
+    if history_mode:
+        from .ab_flash import preflight
+        ledger, allowance, accounting = preflight(args)  # Before data, credentials, or a request.
     task_path = Path(args.task_package).expanduser().resolve()
     task = load_development_task(task_path)
     spec = TaskSpec.from_task(task).record()
@@ -172,9 +180,18 @@ def command(args):
     logger.initialize_usage_ledger()  # Per-run zero-call log, never a replacement for the project API ledger.
     began = time.monotonic()
     frozen = sources()
+    if history_mode:
+        from .ab_flash import FlashPicker
+        from .experiment_llm import ExperimentLLM
+        from .task_budget import TaskBudgetAccount
+        account = TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
+        client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
+            allowed_served_models={args.model},account=account,streaming=True)
+        client.set_deadline(began+args.time_limit)
+        picker = FlashPicker(client,logger,args.planner=='checked-history')
     history, evidence, actions = [], [], []
     executor = None
-    outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode='local',
+    outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
                    requested_planner_completed=False, model_available=False, new_api_requests=0,
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
@@ -182,7 +199,11 @@ def command(args):
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
-            llm_request_limit=0, time_limit_seconds=args.time_limit, trial_timeout_seconds=args.trial_timeout,
+            llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
+            decision_context_version='ab-history-v1' if history_mode else None,
+            planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
+            incremental_run_allowance_rmb=allowance if history_mode else 0,
+            time_limit_seconds=args.time_limit, trial_timeout_seconds=args.trial_timeout,
             python=platform.python_version(), dependencies={k:importlib.metadata.version(k)
             for k in ('numpy','scipy','scikit-learn','joblib')},
             provided_validation_role='score only after final model freeze'))
@@ -192,7 +213,7 @@ def command(args):
         executor = Executor(directory, caps, metric, began, args.time_limit, args.trial_timeout, limit, logger)
         budget = dict(fit_limit=limit, attempted_classifier_fits=0, completed_classifier_fits=0,
                       remaining_fit_allowance=limit, reserved_final_refit=1, unknown_failed_attempts=0,
-                      llm_request_limit=0, used_llm_requests=0, time_limit_seconds=args.time_limit)
+                      llm_request_limit=3 if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
         while True:
             budget['elapsed_seconds'] = time.monotonic() - began
             state = dict(ab_schema_version=1, task=spec, history=history,
@@ -200,11 +221,30 @@ def command(args):
                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
             number = len(history) + 1
             logger.write_json(f'state_{number}.json', state)
+            if picker:
+                picker.last_proposal = None
+
+            def choose(ids):
+                try:
+                    return picker.choose(state,caps,ids)
+                finally:
+                    budget['used_llm_requests'] = client.request_count
+
             if args.scheduler == 'ab-fixed':
                 from .ab_fixed_schedule import fixed_action
-                action = fixed_action(state, capabilities=caps, trusted_partitions=trusted)
+                action = fixed_action(state, capabilities=caps, trusted_partitions=trusted,
+                                      on_explore=choose if picker else None)
             else:
-                action = next_action(state, capabilities=caps, trusted_partitions=trusted)
+                action = next_action(state, capabilities=caps, trusted_partitions=trusted,
+                                     on_explore=choose if picker else None)
+            proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
+            if proposal is not None:
+                action['reason'] = proposal['reason']
+                action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'],*proposal['evidence_trials']]))
+            logger.event('planner_routing', trial=number, action=action['action'],
+                source='flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
+                    and action['action']=='explore' else 'shared_local_rule',
+                used_llm_requests=client.request_count if client else 0)
             actions.append(action)
             logger.write_json('actions.json', actions)
 
@@ -228,7 +268,16 @@ def command(args):
                 break
             name, split = action['candidate_id'], action['split_id']
             facts = observed['observation']
-            history.append(dict(trial=number, candidate=name, params=caps[name]['params'], split_id=split, **facts))
+            row = dict(trial=number, candidate=name, params=caps[name]['params'], split_id=split,
+                       proposal=proposal, **facts)
+            from .hypothesis_agent import check_expectation
+            from .estimator_facts import verify_configuration_claim
+            from .explanation_audit import audit_explanation
+            row['metric_identity'] = metric.check_identity(facts.get('metric_spec'))
+            row['configuration_fact_check'] = verify_configuration_claim(proposal,facts['estimator'])
+            row['hypothesis_check'] = check_expectation(proposal,row,history)
+            row['explanation_audit'] = audit_explanation(proposal,history,{'id':name,'params':caps[name]['params']}) if proposal else None
+            history.append(row)
             raw = joblib.load(directory / f'trial_{number}.joblib')['prediction_record']
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),
@@ -249,6 +298,13 @@ def command(args):
                    action_counts=dict(Counter(a['action'] for a in actions)),
                    classifier_fit_accounting=executor.accounting() if executor else dict(
                        attempted_classifier_fits=0, completed_classifier_fits=0, unknown_failed_attempts=0))
+    usage = [json.loads(line) for line in logger.usage_path.read_text(encoding='utf-8').splitlines()]
+    unresolved = sum(r.get('usage_known') is False for r in usage)
+    outcome.update(new_api_requests=client.request_count if client else 0,
+        known_course_cost_rmb=client.spent if client else 0,
+        complete_course_cost_rmb=None if unresolved else client.spent if client else 0,
+        unresolved_calls=unresolved, task_budget_after_run=account.snapshot() if account else None,
+        partial_trial_models=[p.name for p in sorted(directory.glob('trial_*.joblib'))])
     outcome['model_available'] = (directory / 'final_selection.json').exists()
     outcome['requested_planner_completed'] &= outcome['source_unchanged']
     outcome['status'] = 'completed' if outcome['requested_planner_completed'] else 'failed'

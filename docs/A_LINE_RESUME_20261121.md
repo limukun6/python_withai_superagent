@@ -1,5 +1,7 @@
 # A 线接跑入口
 
+最新A12–A16：先读AB_RUN_MODES_20261121.md、batches/A12_A16_day_results.md与EXPERIMENT_PROGRESS顶部。正式六组入口已接、4成功+3失败模拟HTTP验收通过；47fits/15模拟，真实照片9fits/78/80。H1/H2数据登记已完成但H未评分，H1待B合法对称方法。最终78项回归通过。真实11条未知仍未对账，禁止真实请求；A16默认只校验，账本核验后才--execute。不要按下文早期“待接调度/Flash”的状态重复开发。
+
 最新A-11：正式入口固定/动态三任务六路径对照完成；先读batches/A11_fixed_dynamic_results.md与EXPERIMENT_PROGRESS顶部。已见任务外层预测均相同，动态27vs固定33fits，定位省训练；不要重复该批追涨分。下一工作为动态Flash raw/checked回调/账本失败链，先落计划与runner、无真实请求验证。真实调用仍需核验11条历史未知账本。自然图像与合法对称文本/H资格尚未完成。
 
 最新更新 A-09：已接收 B a787a28 并完成正式本地动态 CLI 验收。先读 A_TO_B_BRIDGE_ACCEPTED_20261121.md 与 batches/A09_B_bridge_cli_results.md。下文等待 B 的事项已完成；下一步改为真实任务小试/环境对齐，再接动态 Flash 回调。旧 A2 状态与当前源码不再同源。最新实验进度以 EXPERIMENT_PROGRESS.md 顶部为准。

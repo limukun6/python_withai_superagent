@@ -5,7 +5,7 @@ from .ab_scheduler import next_action, selection_evidence, PRIMARY, CONFIRMATION
 from .metrics import score_of
 
 
-def fixed_action(state, *, capabilities, trusted_partitions):
+def fixed_action(state, *, capabilities, trusted_partitions, on_explore=None):
     budget = state['budget']
     if budget['fit_limit'] != 11 or budget['reserved_final_refit'] != 1:
         raise ValueError('AB fixed control requires total 11-fit budget and one reserved refit')
@@ -22,7 +22,7 @@ def fixed_action(state, *, capabilities, trusted_partitions):
         projected = deepcopy(state)
         projected['registered_confirmation_splits'] = []
         action = next_action(projected, capabilities=capabilities,
-                             trusted_partitions={PRIMARY: trusted_partitions[PRIMARY]})
+                             trusted_partitions={PRIMARY: trusted_partitions[PRIMARY]}, on_explore=on_explore)
         if action['action'] != 'explore':
             raise ValueError('Fixed primary allocation cannot be completed: '+action['reason'])
         action['reason'] = 'Fixed allocation primary stage. ' + action['reason']

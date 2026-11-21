@@ -1,0 +1,75 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word representation with C=0.3 and collapsed to majority-class behavior: macro_f1 0.4669 with class recalls [1.0, 0.0]. A controlled increase to C=3.0 within the same word representation tests whether stronger fitting can recover spam recall before moving to untried char or combined routes.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary result: word representation with C=3.0 reached macro_f1 0.9514 and spam recall 0.8415. The word-only route is exhausted, so the next informative test is the untried combined word+char representation at the same C=3.0, checking whether character-level cues improve over the best word-only model before trying char-only variants.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 3 is the best completed primary result: word+char representation with C=3.0 reached macro_f1 0.9637, but its train-search gap was 0.0293 and spam recall was 0.8902. The active word+char route has one remaining configuration, C=0.3, which changes only regularization strength within the same representation and is the most direct next test before moving to the untried char-only route.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C0.3",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      3,
+      6
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

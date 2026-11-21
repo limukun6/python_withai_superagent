@@ -1,0 +1,291 @@
+{
+  "paths": {
+    "a_native": {
+      "selected": "symmetric_word_char_C3.0",
+      "model_sha256": "1ee4c587f16ffbf0cb1752a102cde15494aad8972fe8c0489011378ffab5a974",
+      "fits": 9,
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_C0.3",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_char_C0.3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_char_C3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_C3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "symmetric_word_char_C3.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7262 and 0.7210; hard predictions differ on 59/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "symmetric_word_C3.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7262 and 0.7210; hard predictions differ on 59/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "symmetric_word_char_C3.0",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary accuracy 0.7262 and 0.7210; hard predictions differ on 59/577 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0084). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "symmetric_word_C3.0",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary accuracy 0.7262 and 0.7210; hard predictions differ on 59/577 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0084). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 4,
+        "stop": 1
+      },
+      "seconds": 20.55760966707021,
+      "csv_sha256": "56e0e912d8f32109812ee052667252cc9e77a12a5c6a6629ba0ddc9f9c5c099c",
+      "swap": {
+        "rows": 746,
+        "classes": [
+          0,
+          1
+        ],
+        "max_swap_probability_difference": 0.0
+      },
+      "rows": 746,
+      "correct": 558,
+      "scores": {
+        "accuracy": 0.7479892761394102,
+        "macro_f1": 0.6848076231571377,
+        "primary_metric": "accuracy",
+        "score": 0.7479892761394102,
+        "rows": 746
+      }
+    },
+    "ab_joint": {
+      "selected": "unordered_word_char",
+      "model_sha256": "4f81d034ae15a776a2a4baa4ec91bb5db0391cd812ee05b5f45606ff376cb43d",
+      "fits": 11,
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_C0.3",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "symmetric_word_char_C0.3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7123 and 0.7244; hard predictions differ on 55/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7123 and 0.7244; hard predictions differ on 55/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary accuracy 0.7123 and 0.7244; hard predictions differ on 55/577 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap +0.0017). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary accuracy 0.7123 and 0.7244; hard predictions differ on 55/577 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap +0.0017). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            4,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7244 and 0.7296; hard predictions differ on 27/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            4,
+            9,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Search is closed; preserve the recorded final refit allowance.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 5,
+        "confirm": 5,
+        "stop": 1
+      },
+      "seconds": 15.72979983408004,
+      "csv_sha256": "14d05c0fa8f08248762c3e13ed0bafc22eee764472c24ac1162538741119118b",
+      "swap": {
+        "rows": 746,
+        "classes": [
+          0,
+          1
+        ],
+        "max_swap_probability_difference": 0.0
+      },
+      "rows": 746,
+      "correct": 560,
+      "scores": {
+        "accuracy": 0.7506702412868632,
+        "macro_f1": 0.6693262411347518,
+        "primary_metric": "accuracy",
+        "score": 0.7506702412868632,
+        "rows": 746
+      }
+    }
+  },
+  "newly_correct": 37,
+  "newly_wrong": 35,
+  "delta_accuracy_pp": 0.2680965147452974
+}

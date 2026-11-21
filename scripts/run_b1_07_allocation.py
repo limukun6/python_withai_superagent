@@ -50,7 +50,7 @@ def verify_policy(path, arm, actions):
         raise ValueError('Full-resource fixed path did not match its registered four/three/two schedule')
 
 
-def run(root, released, weights, reference, prepare_only):
+def run(root, task_source, weights, reference, prepare_only, *, prepare_tasks=setup):
     root.mkdir(parents=True, exist_ok=False)
     fixture.offline(root)
     os.environ.update(SUPERAGENT_OFFLINE='1', OMP_NUM_THREADS='2', OPENBLAS_NUM_THREADS='2', MKL_NUM_THREADS='2',
@@ -61,7 +61,7 @@ def run(root, released, weights, reference, prepare_only):
         if verified_directory() is None:
             raise ValueError('Shared pinned encoder failed local verification')
         frozen = fixture.digest(sources())
-        entries = setup(root, released, frozen)
+        entries = prepare_tasks(root, task_source, frozen)
         if reference:
             checks = compare(reference, root)
             fixture.write(root / 'preflight.json', checks)
@@ -83,7 +83,15 @@ def run(root, released, weights, reference, prepare_only):
         fixture.write(root / 'all_models_frozen.json', {p['name']: p['model_sha256'] for p in paths})
         for p in paths:
             p['delivery'] = pilot.score_one(root / p['name'], entries[p['name']])
-        comparisons = {str(seed): paired_counts(root, seed, ARMS) for seed in (45102, 45103)}
+        scores = {p['name']: p['delivery'] for p in paths}
+        comparisons = {}
+        for seed in (45102, 45103):
+            fixed, adaptive = (scores[f'{seed}_{arm}'] for arm in ARMS)
+            if fixed['primary_metric'] != adaptive['primary_metric']:
+                raise ValueError('Two allocations were scored using different primary metrics')
+            comparisons[str(seed)] = dict(paired_counts(root, seed, ARMS),
+                primary_metric=fixed['primary_metric'], fixed_score=fixed['score'], adaptive_score=adaptive['score'],
+                primary_difference_percentage_points=100 * (adaptive['score'] - fixed['score']))
         holds = [set(json.loads(gzip.decompress((root / str(seed) / 'row_ids.json.gz').read_bytes()))['outer']['held'])
                  for seed in (45102, 45103)]
         if fixture.digest(sources()) != frozen:

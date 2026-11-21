@@ -4,7 +4,7 @@ from importlib.util import find_spec
 
 from .ab_methods import FIELDS, ROUTES, TEXT
 from .ab_symmetric import ENCODER
-from .ab_vision import NAME as VISION
+from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
@@ -28,7 +28,7 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
     menu = []
     for candidate in search_candidates(kind, 'ab-v1'):
         name, params = candidate.family, candidate.params
-        if name == VISION and (schema.get('image_preprocessing') or {}).get('mode') not in ('L', 'RGB'):
+        if name == VISION and not supports_decoder(schema):
             continue
         if kind == 'pair_text':
             rule = candidate_swap_rule(candidate)

@@ -17,7 +17,10 @@ class FrozenVisualMethodTests(unittest.TestCase):
                     metric=MetricSpec('accuracy',('a','b')).record(), input_schema=dict(modality='image'))
         with patch.object(ab_vision, 'weights_file', return_value=Path('registered')):
             self.assertNotIn(ab_vision.NAME, {r['id'] for r in common_catalog(spec, train_rows=50)})
-            spec['input_schema']['image_preprocessing'] = dict(mode='RGB')
+            for unsupported in ('RGB',dict(mode='RGB'),dict(width=0,height=32,mode='RGB',resize='stretch_bilinear')):
+                spec['input_schema']['image_preprocessing'] = unsupported
+                self.assertNotIn(ab_vision.NAME,{r['id'] for r in common_catalog(spec,train_rows=50)})
+            spec['input_schema']['image_preprocessing'] = dict(mode='RGB',width=64,height=64,resize='stretch_bilinear')
             item = next(r for r in common_catalog(spec, train_rows=50) if r['id']==ab_vision.NAME)
             self.assertEqual((item['estimator'],item['expected_classifier_fits'],item['resource']),
                              ('logistic',1,'local_frozen_encoder_cpu'))

@@ -19,6 +19,16 @@ WEIGHT_SHA256 = '047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1
 WEIGHT_ENV = 'SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS'
 
 
+def supports_decoder(schema):
+    from .image_files import image_contract
+
+    try:
+        image_contract(schema.get('image_preprocessing'))
+    except ValueError:
+        return False
+    return True
+
+
 @lru_cache(maxsize=8)
 def _weight_digest(path, identity):
     with path.open('rb') as stream:

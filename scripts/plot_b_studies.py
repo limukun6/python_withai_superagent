@@ -1,4 +1,4 @@
-"""Render the two B-line study figures from the audited, portable receipts."""
+"""Render B's study figures from the audited, portable receipts."""
 import argparse
 import json
 from pathlib import Path
@@ -88,6 +88,39 @@ def allocation(out):
     plt.close(fig)
 
 
+def visual_options(out):
+    fig, axes = plt.subplots(1, 2, figsize=(8.8,4.0), sharey=True)
+    fig.subplots_adjust(left=.085, right=.985, top=.79, bottom=.23, wspace=.21)
+    fig.suptitle('When did the agent keep the pretrained visual model?',x=.04,ha='left',
+                 fontsize=15,fontweight='bold',color=INK)
+    for ax,folder,title in zip(axes,('bv_01_photos','bv_03_grayscale'),('Flower photos','Handwritten digits'),strict=True):
+        result = read(ROOT/folder/'results.json')['paths']
+        ax.set_title(title,fontsize=12,color=INK)
+        ax.set_ylim(0,115)
+        ax.set_yticks([0,25,50,75,100],['0%','25%','50%','75%','100%'])
+        ax.spines[['top','left','right']].set_visible(False)
+        ax.spines['bottom'].set_color('#bfcccc')
+        ax.tick_params(length=0,pad=5,colors=INK)
+        ax.grid(axis='y',color='#e1e9e8')
+        ax.set_axisbelow(True)
+        for n,(arm,color) in enumerate(zip(('existing','vision'),(GRAY,BLUE),strict=True)):
+            data = result[arm]
+            receipt = data['delivery']
+            pct = 100*receipt['score']
+            ax.bar(n,pct,color=color,width=.58)
+            ax.text(n,pct+1.4,f"{pct:.1f}%",ha='center',va='bottom',color=INK,fontweight='bold',fontsize=10)
+            ax.text(n,pct/2,f"{receipt['correct']}/{receipt['rows']}",ha='center',va='center',color='white',fontsize=10)
+        names = {'image_rbf_svm_C1.0':'RBF SVM','image_extra_trees_leaf1':'Extra Trees',
+                 'image_mobilenet_v3_small_linear':'MobileNet + linear'}
+        winners = [names[result[arm]['selected']] for arm in ('existing','vision')]
+        ax.set_xticks([0,1],[f'Original options\nSelected {winners[0]}',f'MobileNet offered\nSelected {winners[1]}'],fontsize=8)
+    axes[0].set_ylabel('Held-out accuracy',color=INK)
+    fig.text(.04,.026,'Within each task, both arms used the same examples and an 11-fit cap. Each task has one development holdout.',
+             fontsize=8,color=GRAY)
+    fig.savefig(out/'optional_vision.png',dpi=190,facecolor='white')
+    plt.close(fig)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
@@ -95,3 +128,4 @@ if __name__ == '__main__':
     args.output.mkdir(parents=True, exist_ok=False)
     catalogue(args.output)
     allocation(args.output)
+    visual_options(args.output)

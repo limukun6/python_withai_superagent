@@ -1,0 +1,270 @@
+{
+  "headlines": {
+    "train_sha256": "2b350a85117c0753e9d3a8fcae86a805ac932ae08e2e885de916706c446ce402",
+    "inner_sha256": "625412851826d589966826714489c96eac08ff31509e97b5fd15a2009b2c445d",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "4983f09112af09de275cde63a049e5746a75551c123a517a61b398ebb2467e7d",
+        "label_sha256": "ee9b79afcd6caa25941bef5177bab4f46bb532ae3dd2b4b1c48e596b04f76185",
+        "evaluation_payload_sha256": "fbc443aca45e41e8969c65def199592fb48d54687a19a03355166e0bbff9037b"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "a57f869df5184f168a81b2311ef6df6f9d4ce0b1be7fbe1b7b842cc4b65e88ab",
+        "label_sha256": "ac271ce3e174cd92294194c18d9ecce2da8c969d9c97079ca9ec14a759884262",
+        "evaluation_payload_sha256": "5139d09accc6dacaccd8c2c5d6e620ca9ee769205f64cab6e48a2fad4e137a95"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "5a2ef9833503c6fb51370a4d670dc05362e5375d8c1b916b6afdaa7174435e11",
+        "label_sha256": "7c7fb476b6b3b9416aa0af71937f3715ea6c30dadb4cfdcd6d7962db364455f0",
+        "evaluation_payload_sha256": "b9abd0cbb0cd4c5899e28a5bcd5a93d63e94a3f8fafd557195d1da4992936b71"
+      }
+    },
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "pair_text",
+        "pair_semantics": "preference",
+        "pair_label_one": "left",
+        "columns": [
+          {
+            "name": "headline_A",
+            "type": "text"
+          },
+          {
+            "name": "headline_B",
+            "type": "text"
+          }
+        ],
+        "target": "label_pairwise"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "pair_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": "preference",
+            "source": "input_schema",
+            "status": "confirmed"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "base_ids": [
+      "word_C0.05",
+      "word_C0.1",
+      "word_C0.3",
+      "word_C0.7",
+      "word_C1.5",
+      "word_C3.0",
+      "word_C10.0",
+      "word_char_C0.05",
+      "word_char_C0.1",
+      "word_char_C0.3",
+      "word_char_C0.7",
+      "word_char_C1.5",
+      "word_char_C3.0",
+      "word_char_C10.0",
+      "char_C0.1",
+      "char_C0.3",
+      "char_C1.0",
+      "char_C3.0",
+      "word_char_stats_C0.1",
+      "word_char_stats_C0.3",
+      "word_char_stats_C1.0",
+      "word_char_stats_C3.0",
+      "minilm_text_with_lexical_features"
+    ],
+    "expanded_ids": [
+      "word_C0.05",
+      "word_C0.1",
+      "word_C0.3",
+      "word_C0.7",
+      "word_C1.5",
+      "word_C3.0",
+      "word_C10.0",
+      "word_char_C0.05",
+      "word_char_C0.1",
+      "word_char_C0.3",
+      "word_char_C0.7",
+      "word_char_C1.5",
+      "word_char_C3.0",
+      "word_char_C10.0",
+      "char_C0.1",
+      "char_C0.3",
+      "char_C1.0",
+      "char_C3.0",
+      "word_char_stats_C0.1",
+      "word_char_stats_C0.3",
+      "word_char_stats_C1.0",
+      "word_char_stats_C3.0",
+      "minilm_text_with_lexical_features",
+      "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+      "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+      "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+      "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+      "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+      "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+      "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+      "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9"
+    ],
+    "base_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+    "expanded_sha256": "152f9ca7cda509b576525d3bd25a61b2c95bd1e19353301c5c75279046919808"
+  },
+  "sms": {
+    "train_sha256": "73bdaa91d286e85e3c6eda9c7d23362b3f5320788f958778441009e957e9be94",
+    "inner_sha256": "cba4f38a0bc65b4a1df2fdf6f0c658ee4a78134915dc2a67fd0846121c7c5ce9",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "9ae0f1df07f790b48d5c3e4f737a7f413ca3e23a59a8ee499e517bc06295f41d",
+        "label_sha256": "2de0ea1799383444f58090e0b6e89412062fd2a2afcf79dfceed38c5d47b66d1",
+        "evaluation_payload_sha256": "cb15766a35f633d08fb38d2ecfb00a7f47f41301ebcf288d0036c439166880d3"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "de363a1a0de396efa9ddb00e8b8a8d86dd26580b88887f2f0f6124c037982fa4",
+        "label_sha256": "850eaf83bb4f6f92263f9900b745d46373773039f1d3c34fc4e6becf44883eaa",
+        "evaluation_payload_sha256": "b003f8b640580e403c62fce2a5823c86eb8020263ab51298066e297ade761026"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "7ad48d72325a5d00f42029e836e7c4451771272f69597177775c89dfaedb1237",
+        "label_sha256": "56dab94e6b28f68b99221f25a63125d7306faa5731db2326edef58013edf6d45",
+        "evaluation_payload_sha256": "11b03acc0f34c4f76697e2469bc5db66f483649a32d419b703db9caaeed07176"
+      }
+    },
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "message",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "ham",
+              "spam"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "base_ids": [
+      "single_word_C0.3",
+      "single_word_C3.0",
+      "single_char_C0.3",
+      "single_char_C3.0",
+      "single_word_char_C0.3",
+      "single_word_char_C3.0",
+      "minilm_text_with_lexical_features"
+    ],
+    "expanded_ids": [
+      "single_word_C0.3",
+      "single_word_C3.0",
+      "single_char_C0.3",
+      "single_char_C3.0",
+      "single_word_char_C0.3",
+      "single_word_char_C3.0",
+      "minilm_text_with_lexical_features",
+      "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+      "recipe_single_text_latent_word_logistic_5fd03d4294addcee",
+      "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+      "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+      "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+      "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9"
+    ],
+    "base_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+    "expanded_sha256": "22e66c6b70202f8427acd1e3e568d86f19258b5a87120c979fe52e03c23f3aad"
+  }
+}

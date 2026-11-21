@@ -35,7 +35,10 @@ def legacy_declarations(archive, kind, spec):
     # This grammar is tied to the already-recognized column contract, not a dataset identity.
     if kind=='pair_text' and pair_lines and not any(negation.search(s) or s.endswith('?') for s in pair_lines):
         if not re.search(r'\b(?:label_pairwise\s+is\s+0\s+if\s+A|1\s+if\s+B)\b',text,re.I):
-            result['input_schema']={'modality':'pair_text','pair_semantics':'preference','pair_label_one':'left'}
+            result['input_schema']={'modality':'pair_text','pair_semantics':'preference','pair_label_one':'left',
+                'columns':[{'name':name,'type':'text'} for name in ('headline_A','headline_B')],
+                'target':'label_pairwise'}
+            result['input_format']='csv'
             recognised['pair_semantics']=dict(value='preference',pair_label_one='left',excerpt=pair_lines[0][:500])
     result['task_description_source']=dict(member=names[0],sha256=hashlib.sha256(payload).hexdigest(),
         parser_version='legacy-explicit-declarations-v1',recognized=recognised,

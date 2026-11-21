@@ -1,0 +1,7 @@
+# A-25：仅本次DNS失败的未发送事实核对（2026-11-21）
+
+A23默认把网络错误记unknown，这是正确的保守初始状态。A24已证明DNS失败且已知IP当前不可达；本批再核对本次原始transport事件本身，不能仅依据当前连通性猜历史费用。
+
+仅当该ticket唯一请求、失败异常明确NameResolutionError/getaddrinfo、HTTP状态不存在、SSE数据事件0、无对应HTTP/response事件时，确认HTTP请求未发送；本次为no_dispatch attempt，不是模型处理请求。SQLite新增显式审阅transition，保留原unknown事件与原日志，记录原文件SHA、ticket、判断规则，终态not_dispatched/费用0、不编造provider token回执。actual_account_debit仍unknown。原11历史unknown完全不改。
+
+此脚本0fit/0请求、不重试A23、checked臂仍未执行。若条件不足必须拒绝核对，不用DNS缺失去解释ReadTimeout或SSL断流。课程累计费用仍未核验。完成后网络恢复才可另行预登记新批次，当前不循环请求。

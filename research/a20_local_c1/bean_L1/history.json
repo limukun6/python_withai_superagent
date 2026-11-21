@@ -1,0 +1,853 @@
+[
+  {
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9258036739380023,
+    "search_score": 0.9225028702640643,
+    "train_metrics": {
+      "accuracy": 0.9258036739380023,
+      "macro_f1": 0.9368044074788952,
+      "primary_metric": "accuracy",
+      "score": 0.9258036739380023,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9225028702640643,
+      "macro_f1": 0.9351429204175874,
+      "primary_metric": "accuracy",
+      "score": 0.9225028702640643,
+      "rows": 1742
+    },
+    "score_gap": 0.0033008036739380353,
+    "train_accuracy": 0.9258036739380023,
+    "search_accuracy": 0.9225028702640643,
+    "generalization_gap": 0.0033008036739380353,
+    "class_recall": [
+      0.8994082840236687,
+      1.0,
+      0.9471153846153846,
+      0.9096916299559471,
+      0.9554655870445344,
+      0.9382239382239382,
+      0.8846153846153846
+    ],
+    "training_seconds": 0.0975179000015487,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.998000100000354,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.9121699196326062,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9121699196326062,
+      "macro_f1": 0.9245127898679908,
+      "primary_metric": "accuracy",
+      "score": 0.9121699196326062,
+      "rows": 1742
+    },
+    "score_gap": 0.08783008036739381,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.9121699196326062,
+    "generalization_gap": 0.08783008036739381,
+    "class_recall": [
+      0.9053254437869822,
+      0.9850746268656716,
+      0.9182692307692307,
+      0.9052863436123348,
+      0.9311740890688259,
+      0.9382239382239382,
+      0.8727810650887574
+    ],
+    "training_seconds": 0.3879289000033168,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.2055229999969015,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 3,
+    "candidate": "numeric_tabular_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9276693455797933,
+    "search_score": 0.9230769230769231,
+    "train_metrics": {
+      "accuracy": 0.9276693455797933,
+      "macro_f1": 0.9386695588433491,
+      "primary_metric": "accuracy",
+      "score": 0.9276693455797933,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9230769230769231,
+      "macro_f1": 0.9353319967079633,
+      "primary_metric": "accuracy",
+      "score": 0.9230769230769231,
+      "rows": 1742
+    },
+    "score_gap": 0.004592422502870175,
+    "train_accuracy": 0.9276693455797933,
+    "search_accuracy": 0.9230769230769231,
+    "generalization_gap": 0.004592422502870175,
+    "class_recall": [
+      0.9112426035502958,
+      1.0,
+      0.9423076923076923,
+      0.9074889867841409,
+      0.9554655870445344,
+      0.9420849420849421,
+      0.8846153846153846
+    ],
+    "training_seconds": 0.11727450000034878,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7036294000063208,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 4,
+    "candidate": "numeric_tabular_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9265212399540758,
+    "search_score": 0.9276693455797933,
+    "train_metrics": {
+      "accuracy": 0.9265212399540758,
+      "macro_f1": 0.9387043189213005,
+      "primary_metric": "accuracy",
+      "score": 0.9265212399540758,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9276693455797933,
+      "macro_f1": 0.935008580193043,
+      "primary_metric": "accuracy",
+      "score": 0.9276693455797933,
+      "rows": 1742
+    },
+    "score_gap": -0.0011481056257175437,
+    "train_accuracy": 0.9265212399540758,
+    "search_accuracy": 0.9276693455797933,
+    "generalization_gap": -0.0011481056257175437,
+    "class_recall": [
+      0.8698224852071006,
+      1.0,
+      0.937799043062201,
+      0.9273127753303965,
+      0.9512195121951219,
+      0.9461538461538461,
+      0.9050445103857567
+    ],
+    "training_seconds": 0.121632900001714,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7438045000017155,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 5,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9250861079219288,
+    "search_score": 0.9270952927669346,
+    "train_metrics": {
+      "accuracy": 0.9250861079219288,
+      "macro_f1": 0.93731382256503,
+      "primary_metric": "accuracy",
+      "score": 0.9250861079219288,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9270952927669346,
+      "macro_f1": 0.9343452002333589,
+      "primary_metric": "accuracy",
+      "score": 0.9270952927669346,
+      "rows": 1742
+    },
+    "score_gap": -0.0020091848450057848,
+    "train_accuracy": 0.9250861079219288,
+    "search_accuracy": 0.9270952927669346,
+    "generalization_gap": -0.0020091848450057848,
+    "class_recall": [
+      0.8579881656804734,
+      1.0,
+      0.937799043062201,
+      0.9295154185022027,
+      0.9512195121951219,
+      0.9384615384615385,
+      0.9109792284866469
+    ],
+    "training_seconds": 0.10163740000280086,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7282924999963143,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "numeric_tabular_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9661308840413318,
+    "search_score": 0.9092996555683123,
+    "train_metrics": {
+      "accuracy": 0.9661308840413318,
+      "macro_f1": 0.9706894415018906,
+      "primary_metric": "accuracy",
+      "score": 0.9661308840413318,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9092996555683123,
+      "macro_f1": 0.9221388775253386,
+      "primary_metric": "accuracy",
+      "score": 0.9092996555683123,
+      "rows": 1742
+    },
+    "score_gap": 0.05683122847301958,
+    "train_accuracy": 0.9661308840413318,
+    "search_accuracy": 0.9092996555683123,
+    "generalization_gap": 0.05683122847301958,
+    "class_recall": [
+      0.893491124260355,
+      0.9850746268656716,
+      0.9182692307692307,
+      0.9030837004405287,
+      0.9352226720647774,
+      0.9305019305019305,
+      0.8698224852071006
+    ],
+    "training_seconds": 0.41177199999947334,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.2078037000028417,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "numeric_tabular_logistic_C10.0",
+    "params": {
+      "C": 10.0
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.927382319173364,
+    "search_score": 0.9207807118254879,
+    "train_metrics": {
+      "accuracy": 0.927382319173364,
+      "macro_f1": 0.9387333588467899,
+      "primary_metric": "accuracy",
+      "score": 0.927382319173364,
+      "rows": 6968
+    },
+    "search_metrics": {
+      "accuracy": 0.9207807118254879,
+      "macro_f1": 0.9339290643609591,
+      "primary_metric": "accuracy",
+      "score": 0.9207807118254879,
+      "rows": 1742
+    },
+    "score_gap": 0.006601607347876071,
+    "train_accuracy": 0.927382319173364,
+    "search_accuracy": 0.9207807118254879,
+    "generalization_gap": 0.006601607347876071,
+    "class_recall": [
+      0.9171597633136095,
+      1.0,
+      0.9375,
+      0.9030837004405287,
+      0.9473684210526315,
+      0.9420849420849421,
+      0.8846153846153846
+    ],
+    "training_seconds": 0.13835929999913787,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.216999999996915,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

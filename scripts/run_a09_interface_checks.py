@@ -15,6 +15,7 @@ def main():
     parser.add_argument('--include-schema', action='store_true')
     parser.add_argument('--include-catalog', action='store_true')
     parser.add_argument('--include-readme', action='store_true')
+    parser.add_argument('--include-incremental', action='store_true')
     args = parser.parse_args()
     suites = ['tests.test_ab_official_cli', 'tests.test_ab_bridge_adapter', 'tests.test_ab_scheduler',
               'tests.test_ab_comparison', 'tests.test_ab_confirmation_budget',
@@ -29,6 +30,8 @@ def main():
         suites.append('tests.test_catalog_scope')
     if args.include_readme:
         suites.append('tests.test_task_readme')
+    if args.include_incremental:
+        suites.extend(['tests.test_incremental_research_account','tests.test_no_dispatch_review'])
     journal = Journal(args.directory, Path(__file__).resolve().parents[1],
                       dict(batch='A09-interface-regression', suites=suites,
                            scope='Mocks or pre-fit refusals only; no real training or API'))

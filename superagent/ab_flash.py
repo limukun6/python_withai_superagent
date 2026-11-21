@@ -31,6 +31,9 @@ def preflight(args):
     project = ledger.project_summary()
     if origin == 'explicit_new_project' or not project['requests']:
         raise ValueError('AB Flash requires nonempty imported history, not an empty/new-project ledger')
+    if getattr(args,'history_policy','strict')=='incremental-research':
+        from .research_budget import research_preflight
+        return ledger,allowance,research_preflight(ledger,args.task_budget_id,allowance)
     if project['unresolved_requests'] or project['pending_requests']:
         raise ValueError('Existing project usage remains unresolved/pending; reconcile before any AB Flash call')
     state = ledger.preflight(args.task_budget_id, allowance)

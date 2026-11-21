@@ -2,7 +2,7 @@
 from copy import deepcopy
 from importlib.util import find_spec
 
-from .ab_methods import FIELDS, ROUTES, TEXT
+from .ab_methods import FIELDS, RELATION, ROUTES, TEXT
 from .ab_symmetric import ENCODER
 from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
@@ -30,6 +30,11 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
         name, params = candidate.family, candidate.params
         if name == VISION and not supports_decoder(schema):
             continue
+        if name == RELATION:
+            columns = schema.get('columns')
+            if (pair != 'relation' or schema.get('modality') != 'pair_text' or not isinstance(columns, list)
+                    or len(columns) != 2 or any(not isinstance(c,dict) or c.get('type') != 'text' for c in columns)):
+                continue
         if kind == 'pair_text':
             rule = candidate_swap_rule(candidate)
             preference = pair == 'preference' or (pair is None and schema.get('pair_label_one') in ('left','right'))

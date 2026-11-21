@@ -5,19 +5,21 @@ from importlib.util import find_spec
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
-from .ab_symmetric import CHANNELS, ENCODER, candidates as symmetric_candidates
+from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
 from . import ab_vision
 
 
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
+RELATION = 'ordered_text_pair_interactions'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
-          **{name: name for name in CHANNELS}, ENCODER: ENCODER, ab_vision.NAME:'frozen_image_features'}
+          RELATION:'ordered_text_interactions', **{name: name for name in CHANNELS}, ENCODER: ENCODER,
+          ab_vision.NAME:'frozen_image_features'}
 
 
 def _field_tree(rows, labels, query):
@@ -66,7 +68,24 @@ def _image(rows, labels, query):
     return model,model.predict(query)
 
 
+def _ordered_relation(rows, labels, query):
+    from .general_models import TextTablePreprocessor
+    from .schema import TextTableRows
+
+    if not isinstance(rows, TextTableRows) or rows.shape[1] != 2 or rows.text_columns != (0, 1):
+        raise ValueError('Ordered text interactions require two declared text columns')
+    features = FeatureUnion([('ordered', TextTablePreprocessor()),
+                             ('overlap', UnorderedPairFeatures(('word', 'char'), bins=32768))])
+    model = Pipeline([('features', features),
+                      ('classifier', LogisticRegression(C=1.0, max_iter=2000, random_state=42))])
+    model.fit(rows, labels)
+    return model, model.predict(query)
+
+
 def additions(kind):
+    if kind == 'text_tabular':
+        return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
+                          representation='ordered columns with word and character pair interactions'), _ordered_relation)]
     if kind=='categorical_tabular' and find_spec('catboost') is not None:
         return [Candidate(FIELDS,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
                           representation='training-selected categorical field interactions'),_field_tree)]

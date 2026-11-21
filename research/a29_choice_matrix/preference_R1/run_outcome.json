@@ -1,0 +1,776 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\a29_choice_matrix\\preference_R1",
+  "scheduler": "ab-v1",
+  "planner_mode": "raw-history",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 3,
+  "known_course_cost_rmb": 0.022446999999999998,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "word_char_C0.05",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707,
+      808
+    ],
+    "shortlist": [
+      "word_C0.7",
+      "word_char_C0.05"
+    ],
+    "primary_candidate": "word_C0.7",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "word_C0.7",
+        "primary_accuracy": 0.6588306208559374,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 4,
+            "candidate": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "split_id": "primary",
+            "proposal": {
+              "candidate": "word_C0.7",
+              "task_kind": "pair_text",
+              "configuration_claim": {
+                "classifier": "logistic"
+              },
+              "reason": "Trials 1-3 show search accuracy improving monotonically on the word route with swap augmentation: 0.6371 at C=0.05, 0.6462 at C=0.1, and 0.6570 at C=0.3. The next same-route candidate, word_C0.7, continues the regularization sweep and isolates a modest C increase before changing representation.",
+              "review": "The train-search gap also rises across trials 1-3, so overfitting is plausible but not established from three primary trials. Confirmation scores cannot measure a primary-trial change. The controller owns replication, stopping, and final selection.",
+              "hypothesis": "Increasing C from 0.3 to 0.7 may further improve the word-level logistic decision boundary on the primary split while swap augmentation preserves pairwise orientation.",
+              "evidence_trials": [
+                1,
+                2,
+                3
+              ],
+              "expected_change": {
+                "metric": "search_score",
+                "reference_trial": 3,
+                "direction": "increase",
+                "min_delta": 0.001
+              },
+              "slice_expectation": null
+            },
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.9382716049382716,
+            "search_score": 0.6588306208559374,
+            "train_metrics": {
+              "accuracy": 0.9382716049382716,
+              "macro_f1": 0.9382712467348513,
+              "primary_metric": "accuracy",
+              "score": 0.9382716049382716,
+              "rows": 6642
+            },
+            "search_metrics": {
+              "accuracy": 0.6588306208559374,
+              "macro_f1": 0.6588027278514681,
+              "primary_metric": "accuracy",
+              "score": 0.6588306208559374,
+              "rows": 1659
+            },
+            "score_gap": 0.2794409840823342,
+            "train_accuracy": 0.9382716049382716,
+            "search_accuracy": 0.6588306208559374,
+            "generalization_gap": 0.2794409840823342,
+            "class_recall": [
+              0.6715151515151515,
+              0.6462829736211031
+            ],
+            "training_seconds": 0.6137702999985777,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_C0.7",
+              "params": {
+                "C": 0.7,
+                "representation": "word",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_C0.7",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 2.0871532000019215,
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": "logistic",
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "confirmed",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "supported",
+              "metric": "search_score",
+              "reference_trial": 3,
+              "reference_value": 0.6570223025919228,
+              "observed_value": 0.6588306208559374,
+              "observed_delta": 0.001808318264014508,
+              "direction": "increase",
+              "required_delta": 0.001
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "improved",
+                "source": "executor",
+                "latest_trial": 3,
+                "best_prior_trial": 2,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.6570223025919228,
+                "best_prior_search_score": 0.646172393007836,
+                "latest_search_accuracy": 0.6570223025919228,
+                "best_prior_search_accuracy": 0.646172393007836,
+                "delta_vs_prior_best": 0.010849909584086825,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 3 internal accuracy score is 65.702230%; best earlier trial 2 is 64.617239%; difference +1.084991 percentage points (improved).",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 3,
+                "reference_candidate": "word_C0.3",
+                "reference_status": "completed",
+                "reference_rule": "structured_expectation_reference",
+                "selected_candidate": "word_C0.7",
+                "selected_status": null,
+                "reference_route": "word",
+                "selected_route": "word",
+                "same_declared_route": true,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.3,
+                    "after": 0.7,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": true,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": null
+                    }
+                  }
+                ],
+                "single_declared_parameter_change": true,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+              },
+              "direction_consistency": {
+                "scope": "same declared route, single changed C; narrow English phrases only",
+                "applicable": true,
+                "expected_regularization_direction": "weaker",
+                "mentions": [],
+                "warnings": [],
+                "freeform_semantics_verified": false
+              },
+              "selected_candidate": "word_C0.7",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Increasing C from 0.3 to 0.7 may further improve the word-level logistic decision boundary on the primary split while swap augmentation preserves pairwise orientation.",
+                "expected_change": {
+                  "metric": "search_score",
+                  "reference_trial": 3,
+                  "direction": "increase",
+                  "min_delta": 0.001
+                }
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Trials 1-3 show search accuracy improving monotonically on the word route with swap augmentation: 0.6371 at C=0.05, 0.6462 at C=0.1, and 0.6570 at C=0.3. The next same-route candidate, word_C0.7, continues the regularization sweep and isolates a modest C increase before changing representation.",
+                  "review": "The train-search gap also rises across trials 1-3, so overfitting is plausible but not established from three primary trials. Confirmation scores cannot measure a primary-trial change. The controller owns replication, stopping, and final selection.",
+                  "hypothesis": "Increasing C from 0.3 to 0.7 may further improve the word-level logistic decision boundary on the primary split while swap augmentation preserves pairwise orientation.",
+                  "assessment.interpretation": "",
+                  "assessment.uncertainty": ""
+                }
+              },
+              "prose_claims": {
+                "claims_checked": 3,
+                "confirmed": 2,
+                "contradicted": 0,
+                "unverifiable": 1,
+                "informational": 0,
+                "items": [
+                  {
+                    "field": "reason",
+                    "kind": "trial_reference",
+                    "span": "Trials 1",
+                    "claim": 1,
+                    "observed": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "review",
+                    "kind": "trial_reference",
+                    "span": "trials 1",
+                    "claim": 1,
+                    "observed": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "hypothesis",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "Increasing C from 0.3 to 0.7 may further improve the word-level logistic decision boundary on the primary split while swap augmentation preserves pairwise orientation.",
+                    "in_comparison": false,
+                    "observed": [
+                      "logistic"
+                    ],
+                    "status": "unverifiable"
+                  }
+                ],
+                "unique_contradictions": [],
+                "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 3 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            }
+          },
+          {
+            "seed": 808,
+            "trial": 6,
+            "candidate": "word_C0.7",
+            "params": {
+              "C": 0.7,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "split_id": "confirmation_1",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.9379518072289157,
+            "search_score": 0.6532209512341962,
+            "train_metrics": {
+              "accuracy": 0.9379518072289157,
+              "macro_f1": 0.9379507038701153,
+              "primary_metric": "accuracy",
+              "score": 0.9379518072289157,
+              "rows": 6640
+            },
+            "search_metrics": {
+              "accuracy": 0.6532209512341962,
+              "macro_f1": 0.65302966562704,
+              "primary_metric": "accuracy",
+              "score": 0.6532209512341962,
+              "rows": 1661
+            },
+            "score_gap": 0.2847308559947195,
+            "train_accuracy": 0.9379518072289157,
+            "search_accuracy": 0.6532209512341962,
+            "generalization_gap": 0.2847308559947195,
+            "class_recall": [
+              0.6331719128329297,
+              0.6730538922155689
+            ],
+            "training_seconds": 0.6242110999955912,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_C0.7",
+              "params": {
+                "C": 0.7,
+                "representation": "word",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_C0.7",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 2.0764100999949733,
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6588306208559374,
+        "mean_score": 0.6560257860450668,
+        "mean_accuracy": 0.6560257860450668,
+        "sample_sd": 0.003966635429749336
+      },
+      {
+        "candidate": "word_char_C0.05",
+        "primary_accuracy": 0.6618444846292948,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 7,
+            "candidate": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.822192110809997,
+            "search_score": 0.6618444846292948,
+            "train_metrics": {
+              "accuracy": 0.822192110809997,
+              "macro_f1": 0.8221853353693389,
+              "primary_metric": "accuracy",
+              "score": 0.822192110809997,
+              "rows": 6642
+            },
+            "search_metrics": {
+              "accuracy": 0.6618444846292948,
+              "macro_f1": 0.6618130285880397,
+              "primary_metric": "accuracy",
+              "score": 0.6618444846292948,
+              "rows": 1659
+            },
+            "score_gap": 0.1603476261807022,
+            "train_accuracy": 0.822192110809997,
+            "search_accuracy": 0.6618444846292948,
+            "generalization_gap": 0.1603476261807022,
+            "class_recall": [
+              0.6751515151515152,
+              0.6486810551558753
+            ],
+            "training_seconds": 3.006266600001254,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_char_C0.05",
+              "params": {
+                "C": 0.05,
+                "representation": "word_char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_char_C0.05",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 4.8912619999973685,
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          },
+          {
+            "seed": 808,
+            "trial": 8,
+            "candidate": "word_char_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "split_id": "confirmation_1",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.817921686746988,
+            "search_score": 0.6676700782661048,
+            "train_metrics": {
+              "accuracy": 0.817921686746988,
+              "macro_f1": 0.8179140505488701,
+              "primary_metric": "accuracy",
+              "score": 0.817921686746988,
+              "rows": 6640
+            },
+            "search_metrics": {
+              "accuracy": 0.6676700782661048,
+              "macro_f1": 0.667649719873334,
+              "primary_metric": "accuracy",
+              "score": 0.6676700782661048,
+              "rows": 1661
+            },
+            "score_gap": 0.15025160848088315,
+            "train_accuracy": 0.817921686746988,
+            "search_accuracy": 0.6676700782661048,
+            "generalization_gap": 0.15025160848088315,
+            "class_recall": [
+              0.6634382566585957,
+              0.6718562874251497
+            ],
+            "training_seconds": 2.9794144999978016,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_char_C0.05",
+              "params": {
+                "C": 0.05,
+                "representation": "word_char",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_char_C0.05",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 4.90883870000107,
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6618444846292948,
+        "mean_score": 0.6647572814476999,
+        "mean_accuracy": 0.6647572814476999,
+        "sample_sd": 0.004119316765025561
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "word_char_C0.05",
+    "selection_score": 0.6647572814476999,
+    "changed": true,
+    "b_scheduler_review": {
+      "initial": "word_C0.3",
+      "incumbent": "word_char_C0.05",
+      "promotions": [
+        {
+          "previous": "word_C0.3",
+          "candidate": "word_C0.7",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.001808318264014508,
+            0.011438892233594178
+          ],
+          "mean_gain": 0.006623605248804343,
+          "evidence_trials": [
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "previous": "word_C0.7",
+          "candidate": "word_char_C0.05",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.003013863773357439,
+            0.014449127031908593
+          ],
+          "mean_gain": 0.008731495402633016,
+          "evidence_trials": [
+            4,
+            7,
+            6,
+            8
+          ]
+        }
+      ],
+      "basis": [
+        "primary",
+        "confirmation_1"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": true
+  },
+  "validation_score": null,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": null,
+    "pre_refit_validation_score": null,
+    "single_model_validation_score": null,
+    "official_validation_accuracy": null,
+    "pre_refit_validation_accuracy": null,
+    "single_model_validation_accuracy": null,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 8301,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 2.4459070000011707,
+    "ensemble_failure": null,
+    "provided_validation_available": false
+  },
+  "elapsed_seconds": 100.51110490000428,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 6,
+    "confirm": 4,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 11,
+    "completed_classifier_fits": 11,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.022446999999999998,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "task2",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 2.475997,
+    "shared_known_cost_rmb": 0.002398,
+    "known_cost_counted_against_limit_rmb": 2.478395,
+    "unresolved_requests": 3,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "incremental-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "Known charges limited; imported historical unknown charges retain null cost and have no certified upper bound"
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_10.joblib",
+    "trial_2.joblib",
+    "trial_3.joblib",
+    "trial_4.joblib",
+    "trial_5.joblib",
+    "trial_6.joblib",
+    "trial_7.joblib",
+    "trial_8.joblib",
+    "trial_9.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 197,
+    "known_course_cost_rmb": 5.3255655,
+    "unresolved_requests": 11,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed"
+}

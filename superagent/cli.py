@@ -92,7 +92,7 @@ def _run(args):
     if args.scheduler in ('ab-v1','ab-fixed'):
         from .ab_run import command
         return command(args)
-    if args.fit_limit is not None or args.portfolio == 'ab-v1' or args.catalog_scope!='full' or args.history_policy!='strict':
+    if args.fit_limit is not None or args.portfolio == 'ab-v1' or args.catalog_scope!='full' or args.history_policy!='strict' or args.candidate_coverage!='off':
         raise ValueError('AB fit-limit/portfolio require --scheduler ab-v1')
     if args.trials is None:
         args.trials = 5
@@ -290,6 +290,7 @@ def build_parser():
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
+    run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
     run.add_argument('--anchor',choices=['catalog','schema'],default='catalog')
     run.add_argument('--portfolio',choices=['original','expanded','research','nonlinear','adaptive','semantic','learned','challenger','ab-v1'],default='expanded')
     run.add_argument('--time-limit',type=float,default=300.)

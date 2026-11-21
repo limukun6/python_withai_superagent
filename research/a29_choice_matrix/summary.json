@@ -1,0 +1,857 @@
+{
+  "completion": {
+    "status": "completed",
+    "paths_completed": 12,
+    "actual_classifier_fits": 128,
+    "real_api_requests": 24,
+    "known_new_course_cost_rmb": 0.205921,
+    "project_usage_after": {
+      "requests": 203,
+      "known_course_cost_rmb": 5.3767495,
+      "unresolved_requests": 11,
+      "pending_requests": 0,
+      "complete_course_cost_rmb": null,
+      "actual_account_debit_rmb": null
+    },
+    "source_unchanged": true,
+    "original_formal_test_opened": false,
+    "elapsed_seconds": 2459.935420599999,
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false
+  },
+  "tasks": {
+    "coupon": {
+      "arms": {
+        "L0": {
+          "score": 0.7502463054187192,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "supported_field_interactions",
+          "selected_first_observed_trial": 2,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 245.44503780000377,
+          "requests": 0,
+          "known_course_cost_rmb": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "call_latencies_seconds": [],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "supported_field_interactions",
+            "extra_trees_leaf1",
+            "catboost_depth4_reg3.0"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 11,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": false,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 10
+          },
+          "hypothesis_checks": {
+            "not_stated": 10
+          },
+          "scope": "Designated development val, not formal test"
+        },
+        "L1": {
+          "score": 0.7502463054187192,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "supported_field_interactions",
+          "selected_first_observed_trial": 2,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 8,
+            "confirm": 2,
+            "stop": 1
+          },
+          "path_seconds": 249.50935860000027,
+          "requests": 0,
+          "known_course_cost_rmb": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "call_latencies_seconds": [],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "supported_field_interactions",
+            "extra_trees_leaf1",
+            "catboost_depth4_reg3.0",
+            "catboost_depth4_reg10.0",
+            "extra_trees_leaf2",
+            "logistic_C0.25",
+            "catboost_depth6_reg3.0"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 7,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": false,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1"
+          ],
+          "configuration_checks": {
+            "not_declared": 10
+          },
+          "hypothesis_checks": {
+            "not_stated": 10
+          },
+          "scope": "Designated development val, not formal test"
+        },
+        "R0": {
+          "score": 0.7482758620689656,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "catboost_depth6_reg3.0",
+          "selected_first_observed_trial": 2,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 413.188650600001,
+          "requests": 3,
+          "known_course_cost_rmb": 0.019214,
+          "input_tokens": 10954,
+          "output_tokens": 2065,
+          "call_latencies_seconds": [
+            27.486,
+            24.416,
+            37.061
+          ],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "catboost_depth6_reg3.0",
+            "catboost_depth6_reg10.0",
+            "catboost_depth4_reg3.0"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 11,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": false,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 7,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 7,
+            "supported": 1,
+            "not_supported": 2
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_messages_sha256": "8a488a61921f3c3c8cc7fb54c7dad614c77d52889d0acb6e7688da90c5a77057",
+          "first_request_common_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_checks_present": false,
+          "first_request_memory_present": false
+        },
+        "E0": {
+          "score": 0.7482758620689656,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "catboost_depth6_reg3.0",
+          "selected_first_observed_trial": 2,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 397.84800190000533,
+          "requests": 3,
+          "known_course_cost_rmb": 0.031125,
+          "input_tokens": 19737,
+          "output_tokens": 2847,
+          "call_latencies_seconds": [
+            18.876,
+            19.051,
+            39.231
+          ],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "catboost_depth6_reg3.0",
+            "catboost_depth6_reg10.0",
+            "catboost_depth4_reg3.0"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 11,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": false,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 7,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 7,
+            "supported": 1,
+            "not_supported": 2
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "4ccf8f4f90d8b73c465da1442840e9a35adaba898cd2ac66af74ba11df74bc76",
+          "first_request_messages_sha256": "06e9455a82c3f34c61a54cf6276412f8333f40bb438a514031e7ea8cecbce980",
+          "first_request_common_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_checks_present": true,
+          "first_request_memory_present": true
+        },
+        "R1": {
+          "score": 0.7502463054187192,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "supported_field_interactions",
+          "selected_first_observed_trial": 4,
+          "actual_classifier_fits": 10,
+          "action_counts": {
+            "explore": 7,
+            "confirm": 2,
+            "stop": 1
+          },
+          "path_seconds": 293.34478800000215,
+          "requests": 3,
+          "known_course_cost_rmb": 0.019523,
+          "input_tokens": 11023,
+          "output_tokens": 2125,
+          "call_latencies_seconds": [
+            18.305,
+            16.281,
+            23.619
+          ],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "catboost_depth6_reg3.0",
+            "catboost_depth6_reg10.0",
+            "supported_field_interactions",
+            "extra_trees_leaf1",
+            "extra_trees_leaf2",
+            "logistic_C0.25"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 8,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1"
+          ],
+          "configuration_checks": {
+            "not_declared": 6,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 6,
+            "supported": 2,
+            "not_supported": 1
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_messages_sha256": "8a488a61921f3c3c8cc7fb54c7dad614c77d52889d0acb6e7688da90c5a77057",
+          "first_request_common_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_checks_present": false,
+          "first_request_memory_present": false
+        },
+        "E1": {
+          "score": 0.7502463054187192,
+          "primary_metric": "accuracy",
+          "rows": 2030,
+          "selected_candidate": "supported_field_interactions",
+          "selected_first_observed_trial": 4,
+          "actual_classifier_fits": 10,
+          "action_counts": {
+            "explore": 7,
+            "confirm": 2,
+            "stop": 1
+          },
+          "path_seconds": 327.2513420999967,
+          "requests": 3,
+          "known_course_cost_rmb": 0.031625,
+          "input_tokens": 20025,
+          "output_tokens": 2900,
+          "call_latencies_seconds": [
+            37.567,
+            25.084,
+            27.577
+          ],
+          "explored_candidates": [
+            "logistic_C0.05",
+            "catboost_depth6_reg3.0",
+            "catboost_depth6_reg10.0",
+            "supported_field_interactions",
+            "extra_trees_leaf1",
+            "extra_trees_leaf2",
+            "logistic_C0.25"
+          ],
+          "candidate_count": 15,
+          "explored_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "available_routes": [
+            "catboost",
+            "extra_trees",
+            "field_interactions",
+            "logistic"
+          ],
+          "untried_candidates": 8,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1"
+          ],
+          "configuration_checks": {
+            "not_declared": 6,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 6,
+            "supported": 2,
+            "not_supported": 1
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "4ccf8f4f90d8b73c465da1442840e9a35adaba898cd2ac66af74ba11df74bc76",
+          "first_request_messages_sha256": "06e9455a82c3f34c61a54cf6276412f8333f40bb438a514031e7ea8cecbce980",
+          "first_request_common_context_sha256": "0985279dcd503a2978db81c380594f0001ca6662540677e9e9222998d85c9e24",
+          "first_request_checks_present": true,
+          "first_request_memory_present": true
+        }
+      },
+      "differences": {
+        "L1-L0": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0
+        },
+        "E0-R0": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0.011911000000000001
+        },
+        "E1-R1": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0.012102000000000002
+        },
+        "R1-R0": {
+          "score_delta": 0.0019704433497536034,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 106,
+          "known_course_cost_delta_rmb": 0.00030900000000000025
+        },
+        "E1-E0": {
+          "score_delta": 0.0019704433497536034,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 106,
+          "known_course_cost_delta_rmb": 0.0005000000000000004
+        },
+        "E1-L1": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0.031625
+        }
+      },
+      "first_flash_common_context_identical": true,
+      "raw_first_prompt_repeated": true,
+      "checked_first_prompt_repeated": true
+    },
+    "preference": {
+      "arms": {
+        "L0": {
+          "score": 0.6968085106382979,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_char_stats_C0.1",
+          "selected_first_observed_trial": 4,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 56.64881190000597,
+          "requests": 0,
+          "known_course_cost_rmb": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "call_latencies_seconds": [],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_char_C0.05",
+            "char_C0.1",
+            "word_char_stats_C0.1"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 18,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 10
+          },
+          "hypothesis_checks": {
+            "not_stated": 10
+          },
+          "scope": "Designated development val, not formal test"
+        },
+        "L1": {
+          "score": 0.6968085106382979,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_char_stats_C0.1",
+          "selected_first_observed_trial": 8,
+          "actual_classifier_fits": 10,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 5,
+            "stop": 1
+          },
+          "path_seconds": 50.37700000000041,
+          "requests": 0,
+          "known_course_cost_rmb": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "call_latencies_seconds": [],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_char_C0.05",
+            "char_C0.1",
+            "word_char_stats_C0.1"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 18,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1"
+          ],
+          "configuration_checks": {
+            "not_declared": 9
+          },
+          "hypothesis_checks": {
+            "not_stated": 9
+          },
+          "scope": "Designated development val, not formal test"
+        },
+        "R0": {
+          "score": 0.6808510638297872,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_C0.7",
+          "selected_first_observed_trial": 4,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 69.7660221000042,
+          "requests": 3,
+          "known_course_cost_rmb": 0.020365,
+          "input_tokens": 14217,
+          "output_tokens": 1537,
+          "call_latencies_seconds": [
+            15.458,
+            16.028,
+            11.651
+          ],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_C0.1",
+            "word_C0.3",
+            "word_C0.7"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "word"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 18,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 7,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 7,
+            "supported": 3
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_messages_sha256": "d2d55eb06466b2612df40ef1df1a651813a7d713fb6421775bc5cd29eaf728e1",
+          "first_request_common_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_checks_present": false,
+          "first_request_memory_present": false
+        },
+        "E0": {
+          "score": 0.6808510638297872,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_C0.7",
+          "selected_first_observed_trial": 4,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 4,
+            "confirm": 6,
+            "stop": 1
+          },
+          "path_seconds": 95.41671040000074,
+          "requests": 3,
+          "known_course_cost_rmb": 0.030803000000000004,
+          "input_tokens": 21275,
+          "output_tokens": 2382,
+          "call_latencies_seconds": [
+            24.139,
+            23.669,
+            21.042
+          ],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_C0.1",
+            "word_C0.3",
+            "word_C0.7"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "word"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 18,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 7,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 7,
+            "supported": 3
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "ec311b52a554baf30c534baa069a89f0ff1824b8702fbe5432fa014a77b7f93f",
+          "first_request_messages_sha256": "1b50043a9da89ecc808f3e0aaa5dde7ead0479c74b91bb4750feb07429a2be85",
+          "first_request_common_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_checks_present": true,
+          "first_request_memory_present": true
+        },
+        "R1": {
+          "score": 0.701063829787234,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_char_C0.05",
+          "selected_first_observed_trial": 7,
+          "actual_classifier_fits": 11,
+          "action_counts": {
+            "explore": 6,
+            "confirm": 4,
+            "stop": 1
+          },
+          "path_seconds": 100.51110490000428,
+          "requests": 3,
+          "known_course_cost_rmb": 0.022446999999999998,
+          "input_tokens": 14119,
+          "output_tokens": 2082,
+          "call_latencies_seconds": [
+            30.334,
+            11.527,
+            19.769
+          ],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_C0.1",
+            "word_C0.3",
+            "word_C0.7",
+            "word_char_C0.05",
+            "char_C0.1"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "char",
+            "word",
+            "word_char"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 16,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": true,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1"
+          ],
+          "configuration_checks": {
+            "not_declared": 7,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 7,
+            "supported": 3
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_messages_sha256": "d2d55eb06466b2612df40ef1df1a651813a7d713fb6421775bc5cd29eaf728e1",
+          "first_request_common_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_checks_present": false,
+          "first_request_memory_present": false
+        },
+        "E1": {
+          "score": 0.6957446808510638,
+          "primary_metric": "accuracy",
+          "rows": 940,
+          "selected_candidate": "word_char_C0.1",
+          "selected_first_observed_trial": 3,
+          "actual_classifier_fits": 10,
+          "action_counts": {
+            "explore": 5,
+            "confirm": 4,
+            "stop": 1
+          },
+          "path_seconds": 112.61408740000479,
+          "requests": 3,
+          "known_course_cost_rmb": 0.030819000000000003,
+          "input_tokens": 21471,
+          "output_tokens": 2337,
+          "call_latencies_seconds": [
+            26.756,
+            19.877,
+            16.191
+          ],
+          "explored_candidates": [
+            "word_C0.05",
+            "word_char_C0.05",
+            "word_char_C0.1",
+            "word_char_C0.3",
+            "char_C0.1"
+          ],
+          "candidate_count": 22,
+          "explored_routes": [
+            "char",
+            "word",
+            "word_char"
+          ],
+          "available_routes": [
+            "char",
+            "word",
+            "word_char",
+            "word_char_stats"
+          ],
+          "untried_candidates": 17,
+          "source_unchanged": true,
+          "reload_identical": true,
+          "independent_winner_confirmation": false,
+          "selected_candidate_confirmation_splits": [
+            "confirmation_1",
+            "confirmation_2"
+          ],
+          "configuration_checks": {
+            "not_declared": 6,
+            "confirmed": 3
+          },
+          "hypothesis_checks": {
+            "not_stated": 6,
+            "supported": 2,
+            "not_supported": 1
+          },
+          "scope": "Designated development val, not formal test",
+          "first_request_context_sha256": "ec311b52a554baf30c534baa069a89f0ff1824b8702fbe5432fa014a77b7f93f",
+          "first_request_messages_sha256": "1b50043a9da89ecc808f3e0aaa5dde7ead0479c74b91bb4750feb07429a2be85",
+          "first_request_common_context_sha256": "7136872fe63490a74ea31a2a20c571a76610e9621e4c44f78f26cfe24ed2d119",
+          "first_request_checks_present": true,
+          "first_request_memory_present": true
+        }
+      },
+      "differences": {
+        "L1-L0": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0
+        },
+        "E0-R0": {
+          "score_delta": 0.0,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 0,
+          "known_course_cost_delta_rmb": 0.010438000000000003
+        },
+        "E1-R1": {
+          "score_delta": -0.005319148936170248,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 33,
+          "known_course_cost_delta_rmb": 0.008372000000000004
+        },
+        "R1-R0": {
+          "score_delta": 0.02021276595744681,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 167,
+          "known_course_cost_delta_rmb": 0.002081999999999997
+        },
+        "E1-E0": {
+          "score_delta": 0.014893617021276562,
+          "classifier_fit_delta": -1,
+          "prediction_disagreements": 150,
+          "known_course_cost_delta_rmb": 1.5999999999998654e-05
+        },
+        "E1-L1": {
+          "score_delta": -0.0010638297872340718,
+          "classifier_fit_delta": 0,
+          "prediction_disagreements": 135,
+          "known_course_cost_delta_rmb": 0.030819000000000003
+        }
+      },
+      "first_flash_common_context_identical": true,
+      "raw_first_prompt_repeated": true,
+      "checked_first_prompt_repeated": true
+    }
+  },
+  "input_tokens": 132821,
+  "output_tokens": 18275,
+  "known_new_course_cost_rmb": 0.205921,
+  "unknown_usage_calls": 0,
+  "duplicate_response_ids": 0,
+  "project_usage": {
+    "requests": 203,
+    "known_course_cost_rmb": 5.3767495,
+    "unresolved_requests": 11,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "analysis_new_classifier_fits": 0,
+  "analysis_new_api_requests": 0,
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "scope": "Two development tasks, one development split each, one run per arm; not final five-task C1 or H"
+}

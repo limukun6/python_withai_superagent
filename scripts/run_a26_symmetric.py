@@ -23,13 +23,15 @@ from scripts.run_a10_real_task_pilot import launch, read, sha
 from superagent.ab_run import sources
 
 
-def checks(root):
+def checks(root, include_coverage=False):
     suites = ['tests.test_ab_official_cli', 'tests.test_ab_bridge_adapter', 'tests.test_ab_scheduler',
         'tests.test_ab_comparison', 'tests.test_ab_confirmation_budget', 'tests.test_unified_cli.UnifiedCLITests',
         'tests.test_ab_fixed_schedule', 'tests.test_ab_flash', 'tests.test_symmetric_input',
         'tests.test_general_schema', 'tests.test_native_schema', 'tests.test_image_files',
         'tests.test_catalog_scope', 'tests.test_task_readme', 'tests.test_incremental_research_account',
         'tests.test_no_dispatch_review', 'tests.test_symmetric_text', 'tests.test_task_semantics']
+    if include_coverage:
+        suites.append('tests.test_candidate_coverage')
     from sklearn.linear_model import LogisticRegression
     from sklearn.dummy import DummyClassifier
     calls = []
@@ -121,6 +123,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('phase', choices=['checks', 'cli'])
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--include-coverage', action='store_true')
     args = parser.parse_args()
     root = args.output.resolve()
     root.mkdir(parents=True, exist_ok=False)
@@ -131,7 +134,7 @@ if __name__ == '__main__':
         plan_sha256=sha(fixture.ROOT / 'docs/batches/A26_symmetric_methods_plan.md'), runner_sha256=sha(Path(__file__)),
         classifier_fit_limit=7 if args.phase == 'checks' else 11, real_api_limit=0, H_data_access=False))
     try:
-        value = checks(root) if args.phase == 'checks' else cli(root)
+        value = checks(root, args.include_coverage) if args.phase == 'checks' else cli(root)
         save(root / 'results.json', value)
         save(root / 'completion.json', dict(status=value['status'], elapsed_seconds=time.monotonic() - start,
             actual_classifier_fits=value['actual_classifier_fits'], real_api_requests=0, source_unchanged=sources() == frozen,

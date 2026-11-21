@@ -1,0 +1,109 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "primary",
+    "reason": "The only completed primary trial is a strongly regularized logistic model with modest accuracy (0.6722) and a small train-search gap. A CatBoost model with native categorical handling and moderate depth is a stronger next probe for nonlinear effects and category interactions than another nearby logistic C value.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) but shows a moderate train-search gap of about 0.064. Keeping the same CatBoost depth and iteration/learning-rate settings while increasing l2_leaf_reg from 3.0 to 10.0 is a focused regularization probe likely to reduce overfitting without abandoning the best-performing family and depth.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "supported_field_interactions",
+    "split_id": "primary",
+    "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) with CatBoost depth 6 and l2_leaf_reg 3.0. Trial 3 shows that increasing L2 regularization to 10.0 reduced primary search accuracy. The next focused probe should preserve the best-performing CatBoost depth and regularization while testing training-selected categorical field interactions, which may capture pairwise structure not fully exploited by the native categorical handling.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7443 and 0.7455; hard predictions differ on 82/1623 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "supported_field_interactions",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7443 and 0.7455; hard predictions differ on 82/1623 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "extra_trees_leaf2",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.25",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

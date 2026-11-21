@@ -101,11 +101,14 @@ def pair_source(name, released):
 
 
 def prepare(root, name, released):
+    return prepare_pairs(root, name, *pair_source(name, released), outer_seed=OUTER_SEED)
+
+
+def prepare_pairs(root, name, x, y, semantics, source, *, outer_seed):
     path = root / name
     path.mkdir()
-    x, y, semantics, source = pair_source(name, released)
     original = TrainingTask('pair_text', x, y)
-    train, held, resource = grouped_partition(original, OUTER_SEED, 'shared_text')
+    train, held, resource = grouped_partition(original, outer_seed, 'shared_text')
     audit = overlap_audit(original, train, held)
     if audit['search_rows_sharing_text']:
         raise ValueError('A held-out text also occurs in training')

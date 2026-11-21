@@ -6,13 +6,14 @@ from scipy.sparse import hstack
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import FeatureUnion, Pipeline
 
 from .models import Candidate
 
 
 CHANNELS = {'unordered_word': ('word',), 'unordered_char': ('char',),
             'unordered_word_char': ('word', 'char')}
+ENCODER = 'unordered_minilm_lexical'
 
 
 class UnorderedPairFeatures(TransformerMixin, BaseEstimator):
@@ -40,14 +41,39 @@ class UnorderedPairFeatures(TransformerMixin, BaseEstimator):
         return features
 
 
-def fit_symmetric_pair(rows, labels, query, *, channels, bins, c):
-    model = Pipeline([('unordered_pair', UnorderedPairFeatures(channels, bins)),
+class UnorderedSentenceFeatures(TransformerMixin, BaseEstimator):
+    def fit(self, rows, y=None):
+        return self
+
+    def transform(self, rows):
+        from .ab_sentence import encode
+        # Identical batches, padding and reduction order for forward and reverse inputs.
+        vocabulary = sorted({text for pair in rows for text in pair})
+        vectors, _ = encode(vocabulary)
+        index = {text: i for i, text in enumerate(vocabulary)}
+        a = vectors[[index[left] for left, _ in rows]]
+        b = vectors[[index[right] for _, right in rows]]
+        product = a * b
+        return np.column_stack((np.abs(a - b), product, product.sum(axis=1)))
+
+
+def fit_symmetric_pair(rows, labels, query, *, channels, bins, c, encoder=False):
+    features = UnorderedPairFeatures(channels, bins)
+    if encoder:
+        features = FeatureUnion([('lexical', features), ('sentence', UnorderedSentenceFeatures())])
+    model = Pipeline([('unordered_pair', features),
                       ('classifier', LogisticRegression(C=c, solver='liblinear', max_iter=500, random_state=42))])
     model.fit(rows, labels)
     return model, model.predict(query)
 
 
-def candidates():
-    return [Candidate(name, dict(representation=name, hash_bins=32768, C=1.0),
-                      partial(fit_symmetric_pair, channels=channels, bins=32768, c=1.0))
-            for name, channels in CHANNELS.items()]
+def candidates(*, include_encoder=False):
+    entries = [Candidate(name, dict(representation=name, hash_bins=32768, C=1.0),
+                         partial(fit_symmetric_pair, channels=channels, bins=32768, c=1.0))
+               for name, channels in CHANNELS.items()]
+    if include_encoder:
+        from .ab_sentence import MODEL, REVISION
+        entries.append(Candidate(ENCODER, dict(representation=ENCODER, hash_bins=32768, C=1.0,
+                                 encoder=MODEL, revision=REVISION), partial(fit_symmetric_pair,
+                                 channels=('word', 'char'), bins=32768, c=1.0, encoder=True)))
+    return entries

@@ -1,12 +1,13 @@
 import tempfile
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
 from scripts.run_b1_05_pair_pilot import pair_package
 from superagent.ab_catalog import capabilities_for
-from superagent.ab_symmetric import CHANNELS, candidates
+from superagent.ab_symmetric import CHANNELS, ENCODER, UnorderedSentenceFeatures, candidates
 from superagent.contracts import TaskSpec
 from superagent.data import load_development_task, load_prediction_features
 from superagent.models import Candidate, predict_with_model, probability_with_model
@@ -14,6 +15,19 @@ from superagent.task_semantics import candidate_swap_rule, validate_candidate_se
 
 
 class TestInvariantPairMethods(unittest.TestCase):
+    def test_frozen_features_encode_the_same_unique_text_batch_in_either_order(self):
+        pairs = [('a', 'z'), ('x', 'a'), ('z', 'z')]
+        batches = []
+        def encode(texts):
+            batches.append(texts)
+            return np.asarray([[i, i + 0.5] for i in range(len(texts))]), len(texts)
+        with patch('superagent.ab_sentence.encode', side_effect=encode):
+            features = UnorderedSentenceFeatures().fit(pairs)
+            np.testing.assert_array_equal(features.transform(pairs), features.transform([(r, l) for l, r in pairs]))
+        self.assertEqual(batches, [['a', 'x', 'z'], ['a', 'x', 'z']])
+        method = next(c for c in candidates(include_encoder=True) if c.family == ENCODER)
+        self.assertEqual(candidate_swap_rule(method), 'preserves')
+
     def test_actual_representations_labels_and_probability_columns_survive_swap(self):
         train = [('red pear', 'pear red'), ('red pear', 'blue sky'), ('green leaf', 'green leaves'),
                  ('a frog', 'green leaf'), ('A', 'a'), ('', '!')]
@@ -58,7 +72,8 @@ class TestInvariantPairMethods(unittest.TestCase):
             self.assertEqual(task.y_train.tolist(), labels)
             self.assertNotIn('pair_label_one', task.spec['input_schema'])
             spec = TaskSpec.from_task(task).record()
-            self.assertEqual(set(capabilities_for(spec, train_rows=3)), set(CHANNELS))
+            with patch.dict('os.environ', {'SUPERAGENT_MINILM_WEIGHTS': ''}):
+                self.assertEqual(set(capabilities_for(spec, train_rows=3)), set(CHANNELS))
             spec['input_schema']['pair_label_one'] = 'left'
             self.assertFalse(capabilities_for(spec, train_rows=3))
             for meaning in ('relation', 'preference'):

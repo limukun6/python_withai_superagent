@@ -27,10 +27,15 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
     for candidate in search_candidates(kind, 'ab-v1'):
         name, params = candidate.family, candidate.params
         if kind == 'pair_text':
-            if pair == 'relation' or pair == 'symmetric' or set(metric.labels) != {0, 1}:
-                continue
-            if pair != 'preference' and not (pair is None and schema.get('pair_label_one') in ('left','right')):
-                continue
+            rule = candidate_swap_rule(candidate)
+            if pair == 'symmetric':
+                if rule != 'preserves':
+                    continue
+            else:
+                if pair == 'relation' or set(metric.labels) != {0, 1} or rule == 'preserves':
+                    continue
+                if pair != 'preference' and not (pair is None and schema.get('pair_label_one') in ('left','right')):
+                    continue
             validate_candidate_semantics(kind, pair, candidate)
         route = route_of(name)
         if name == FIELDS or 'catboost' in route:
@@ -57,7 +62,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
                          resource='local_frozen_encoder_cpu' if name == TEXT else 'cpu',
-                         origin='b_port' if name in (TEXT,FIELDS,IMAGE) else 'shared_baseline'))
+                         origin='b_port' if name in (TEXT,FIELDS,IMAGE) or
+                             (kind == 'pair_text' and rule == 'preserves') else 'shared_baseline'))
     return menu
 
 

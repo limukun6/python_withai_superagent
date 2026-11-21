@@ -1,5 +1,7 @@
 # 正式六组运行入口与接续（2026-11-21）
 
+A26–A27最新：A已按用户明确授权补齐4个交换不变词法双文本候选，H1从0到4，不再等B补同一基线；H仍未训练评分。正式匿名CLI5fit、24条搬迁/交换预测一致、概率交换差0。真实Flash另试1次仍DNS失败，已停止；ledger现在172行（170历史+2未发出尝试）、11历史未知。先按CAMPUS_FLASH_A27_FAILURE_AND_TEST_20261121.md做只读网络检查与单次连通，不重复失败批次。完整结果batches/A26_A27_results.md。
+
 A20–A25更新：五任务L0/L1十路径开发对照已完成（102fits/478.379秒），五对同预测、动态少8fit；并非最终冻结六组C1。结果batches/A20_A25_results.md。旧偏好CSV预测契约已补。用户明确不等待平台账单；新增显式研究策略见下文，原11历史未知保持。真实Flash尝试在首请求DNS解析失败，0模型服务请求发出；只读校园IP443也超时，没有重试。当前真正缺口是运行环境学校网络可达性。
 
 A17–A19更新：新增--catalog-scope baseline用于同版Q目录对照，六组C1始终使用full（默认）。照片Q两组均97.5%，不宣称分数提升。保守README声明读取已恢复课程Task1指标和Task2偏好语义；不改B算法。最新五任务30配置位于D:/codex/python_withai/runs/a18_c1_readiness_current，尚未执行C1。费用任务ID沿用task1/task2/dry_bean/sms_spam，照片olivetti_faces；A16默认sms_spam。实际历史11未知仍未对账。
@@ -40,7 +42,7 @@ Set-Location "D:\codex\python_withai\runs\integration"
 ## 本机已准备的数据
 
 - 照片开发：D:/codex/python_withai/runs/a13_data_registration_network/photo_dev/train.zip；真实照片开发路径D:/codex/python_withai/runs/a13_photo_pilot，9fits/78/80，已作为开发任务。
-- H1：D:/codex/python_withai/runs/a13_holdout_packages/H1_task.zip，2000行PAWS同义判定，equivalent标签；输入解析可用，B合法方法0，不能启动性能实验。
+- H1：D:/codex/python_withai/runs/a13_holdout_packages/H1_task.zip，2000行PAWS同义判定，equivalent标签；A26已有4合法对称词法候选，尚未训练/评分，仍需统一冻结后按H协议启动。
 - H2：D:/codex/python_withai/runs/a13_holdout_packages/H2_task.zip，120张Rice照片；8个初始合法候选；未训练/未评分，保持封存。
 - H两份实际61411/61421划分登记在a13_holdout_packages/registration.json及来源注册文件。部署策略冻结前不运行H成绩，不改名为开发后又当未见。
 
@@ -48,6 +50,6 @@ Set-Location "D:\codex\python_withai\runs\integration"
 
 ## 给B的最小接续
 
-取包含本文的最新codex/expanded-feedback提交。A维护ab_run.py/ab_flash.py/schema.py/cli.py，B继续ab_catalog/ab_methods/ab_scheduler。B需要给H1加入真正交换不变的表征/分类器，明确candidate_swap_rule=preserves、能力/参数/拟合数；同时通过ab_catalog当前对symmetric的过滤和worker语义检查。不能只加元数据flag或复用翻标签增强。H1任务包已可直接加载，A不用再重写数据格式。
+取包含本文的最新codex/expanded-feedback提交。A维护ab_run.py/ab_flash.py/schema.py/cli.py；用户授权A补方法后，symmetric_text.py和注册/语义守卫已更新，B接续前先读A_TO_B_A26_SYMMETRIC_20261121.md，避免覆盖或重复实现。B继续方法效果与调度实验；未来更强对称候选仍须真实交换不变、每次fit声明准确，通过worker守卫，不能仅加flag。H1数据格式无需重写。
 
 当前六组接入完成、模拟HTTP流程验证通过，五任务本地开发对照完成；完整六组真实Flash效果尚未完成。接续优先在可达学校网络执行新小试、接B对称方法与剩余Q，再按总计划冻结Q/C1矩阵。历史未知继续披露，不等待平台记录才做研究。真实H仍按D5冻结后的D6窗口评价。

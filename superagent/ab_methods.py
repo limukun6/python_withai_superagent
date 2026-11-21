@@ -15,6 +15,8 @@ FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms'}
+ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
+               for representation in ('word','word_char') for c in (.3,3.)})
 
 
 def _field_tree(rows, labels, query):
@@ -71,7 +73,10 @@ def additions(kind):
         return [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
     if kind in ('single_text','pair_text'):
         from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
+        from .symmetric_text import candidates
+        added = candidates() if kind == 'pair_text' else []
         if verified_directory() is not None:
-            return [Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
+            added += [Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                               swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind))]
+        return added
     return []

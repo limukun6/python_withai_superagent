@@ -21,7 +21,7 @@ PARAMETERS = {
     "min_samples_leaf": "Larger minimum leaf size constrains tree complexity more strongly.",
     "depth": "Larger tree depth permits more complexity; a measured gain is not guaranteed.",
     "l2_leaf_reg": "Larger values strengthen the leaf-weight L2 penalty.",
-    "representation": "word uses word TF-IDF; char uses character TF-IDF; word_char combines both; word_char_stats adds generic shape/count features. Pair-text routes use left-minus-right differences; single-text routes classify one document. Features are fitted only on the training partition.",
+    "representation": "word uses word TF-IDF; char uses character TF-IDF; word_char combines both; word_char_stats adds generic shape/count features. Preference routes use left-minus-right differences; symmetric_*_absdiff_product uses absolute differences and elementwise products, preserving pair order invariance; single-text routes classify one document. Features are fitted only on the training partition.",
     'supervised_feature_weighting':'nb_word fits smoothed preferred/nonpreferred word log-count ratios using training labels only; ratios are frozen for evaluation.',
     'classifier':'logistic optimizes log loss; linear_svm uses a squared hinge objective and has no probability output. Research candidates are unproven alternatives, not preferred solutions.',
     'style_weight':'Fixed probability weight on the statistic-tree component; the linear component gets 1-weight. More tree weight does not guarantee improvement.',

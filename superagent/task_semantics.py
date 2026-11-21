@@ -45,6 +45,9 @@ def candidate_swap_rule(candidate):
         return 'flips'
     if candidate.params.get('swap_augmentation'):
         return 'flips'
+    from .symmetric_text import fit_symmetric_pair
+    if function is fit_symmetric_pair:
+        return 'preserves'
     return 'unknown'
 
 
@@ -55,6 +58,8 @@ def validate_candidate_semantics(kind, declared, candidate):
     rule = candidate_swap_rule(candidate) if kind == 'pair_text' else 'unknown'
     if kind == 'pair_text' and declared == 'symmetric' and rule != 'preserves':
         raise ValueError(f'Candidate {candidate.family} cannot serve symmetric semantics: swap rule {rule}')
+    if kind == 'pair_text' and declared == 'preference' and rule == 'preserves':
+        raise ValueError(f'Candidate {candidate.family} preserves labels and cannot serve preference semantics')
     if kind == 'pair_text' and declared == 'relation':
         raise ValueError('Relation semantics requires the relation input adapter')
     return {'candidate': candidate.family, 'swap_label_rule': rule}

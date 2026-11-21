@@ -71,6 +71,20 @@ def freeze_inputs(portable):
                 local_request_cap=0,flash_request_cap=3)
 
 
+def verify_strict_history(manifest, outcome, planner):
+    required = 'no_new_llm_calls' if planner=='local' else 'verified_local_ledger'
+    if (manifest.get('history_policy')!='strict' or outcome.get('history_policy')!='strict'
+            or outcome.get('course_budget_compliance')!=required or outcome.get('valid_for_budgeted_final_report') is False):
+        raise ValueError('Run did not use the registered strict budget history policy')
+    if planner!='local':
+        after=outcome.get('project_usage_after_run') or {}
+        total=after.get('complete_course_cost_rmb')
+        if (after.get('unresolved_requests')!=0 or after.get('pending_requests')!=0 or
+                type(total) not in (int,float) or not math.isfinite(total) or total<0
+                or outcome.get('complete_project_course_cost_rmb')!=total):
+            raise ValueError('The strict project budget receipt is missing or inconsistent')
+
+
 def verify_run(run, source, task, arm, *, funding=None):
     manifest, result = rec.read(run/'run_manifest.json'), rec.read(run/'run_outcome.json')
     fits, chosen = rec.read(run/'classifier_fits.json'), rec.read(run/'final_selection.json')
@@ -85,17 +99,9 @@ def verify_run(run, source, task, arm, *, funding=None):
             manifest['scheduler']==result['scheduler']==scheduler and manifest['llm_request_limit']==cap):
         raise ValueError('Run identity, catalogue or budgets differ from the registered arm')
     if 'history_policy' in task:
-        required = 'no_new_llm_calls' if planner=='local' else 'verified_local_ledger'
-        if (manifest.get('history_policy')!=task['history_policy'] or result.get('history_policy')!=task['history_policy']
-                or result.get('course_budget_compliance')!=required or result.get('valid_for_budgeted_final_report') is False):
-            raise ValueError('Run did not use the registered strict budget history policy')
-        if planner!='local':
-            after=result.get('project_usage_after_run') or {}
-            total=after.get('complete_course_cost_rmb')
-            if (after.get('unresolved_requests')!=0 or after.get('pending_requests')!=0 or
-                    type(total) not in (int,float) or not math.isfinite(total) or total<0
-                    or result.get('complete_project_course_cost_rmb')!=total):
-                raise ValueError('The strict project budget receipt is missing or inconsistent')
+        if task['history_policy']!='strict':
+            raise ValueError('A formal C1 task requires the registered strict budget history policy')
+        verify_strict_history(manifest,result,planner)
     if not (result['status']=='completed' and result['requested_planner_completed'] and result['full_refit_completed'] and
             result['source_unchanged'] and not result['formal_test_accessed'] and result['validation_score'] is None and
             result['unresolved_calls']==0 and not result['automatic_retries']):

@@ -32,7 +32,7 @@ def ordered(task):
 
 def options(taskfile, arm, destination):
     planner, allocation = ARMS[arm]
-    return ['run',str(taskfile),'--planner',planner,'--scheduler','ab-fixed' if allocation=='fixed' else 'ab-v1',
+    return ['run',str(taskfile),'--planner',planner,'--history-policy','strict','--scheduler','ab-fixed' if allocation=='fixed' else 'ab-v1',
             '--portfolio','ab-v1','--catalog-scope','full','--fit-limit','11','--seed','707','--time-limit','1200','--trial-timeout','300',
             '--run-dir',str(destination)]
 
@@ -62,7 +62,7 @@ def freeze_inputs(portable):
             parsed = build_parser().parse_args(options(train,arm,Path('unstarted')))
             if ab_run.validate_options(parsed) != 11:
                 raise ValueError('Formal entry did not accept the registered cap')
-        tasks[name] = dict(order=arms,files=expected,catalog_scope='full',task_budget_id=TASK_BUDGET_IDS[name],
+        tasks[name] = dict(order=arms,files=expected,catalog_scope='full',history_policy='strict',task_budget_id=TASK_BUDGET_IDS[name],
                            catalog_sha256=rec.digest(catalog),anchor=next(iter(catalog)),
                            splits=splits,held_rows=packets[name]['held_rows'],held_content=packets[name]['held_content_sha256'])
     helpers = ('scripts/run_b_c1_matrix.py','tools/ab_registered_rows.py','tools/ab_registered_run.py')
@@ -84,6 +84,18 @@ def verify_run(run, source, task, arm, *, funding=None):
             manifest['seed']==707 and manifest['planner_mode']==result['planner_mode']==planner and
             manifest['scheduler']==result['scheduler']==scheduler and manifest['llm_request_limit']==cap):
         raise ValueError('Run identity, catalogue or budgets differ from the registered arm')
+    if 'history_policy' in task:
+        required = 'no_new_llm_calls' if planner=='local' else 'verified_local_ledger'
+        if (manifest.get('history_policy')!=task['history_policy'] or result.get('history_policy')!=task['history_policy']
+                or result.get('course_budget_compliance')!=required or result.get('valid_for_budgeted_final_report') is False):
+            raise ValueError('Run did not use the registered strict budget history policy')
+        if planner!='local':
+            after=result.get('project_usage_after_run') or {}
+            total=after.get('complete_course_cost_rmb')
+            if (after.get('unresolved_requests')!=0 or after.get('pending_requests')!=0 or
+                    type(total) not in (int,float) or not math.isfinite(total) or total<0
+                    or result.get('complete_project_course_cost_rmb')!=total):
+                raise ValueError('The strict project budget receipt is missing or inconsistent')
     if not (result['status']=='completed' and result['requested_planner_completed'] and result['full_refit_completed'] and
             result['source_unchanged'] and not result['formal_test_accessed'] and result['validation_score'] is None and
             result['unresolved_calls']==0 and not result['automatic_retries']):

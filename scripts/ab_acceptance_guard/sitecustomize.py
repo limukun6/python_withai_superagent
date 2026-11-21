@@ -18,11 +18,20 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
         from sklearn.linear_model import LogisticRegression
         from sklearn.svm import SVC
 
+        # The anonymous controller launches one worker per admitted action.
+        ceiling = os.environ.get('AB_B1_PER_WORKER_FIT_LIMIT')
+        component_limit = int(ceiling) if ceiling is not None else None
+        component_calls = 0
+
         def observe(cls):
             original = cls.fit
 
             @wraps(original)
             def fit(self, *args, **kwargs):
+                global component_calls
+                if component_limit is not None and component_calls >= component_limit:
+                    raise RuntimeError('Supervised fit exceeds this worker admission')
+                component_calls += 1
                 with Path(os.environ['AB_B1_FIT_LOG']).open('a',encoding='utf-8') as file:
                     file.write(json.dumps({'classifier':cls.__name__,'candidate':sys.argv[2]}) + chr(10))
                 return original(self,*args,**kwargs)

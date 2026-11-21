@@ -57,12 +57,15 @@ def _observations(history, evidence, metric, splits, trusted_partitions):
         if row.get('status') == 'completed':
             if row.get('primary_metric','accuracy') != metric.name or score_of(row) is None:
                 raise ValueError('Completed trial lacks a comparable primary metric')
+            metric.check_identity(row.get('metric_spec'))
             measured[name,split] = row
     signatures, records, partitions = {}, {}, {}
     for item in evidence:
         trial = item['trial']
         row = by_trial.get(trial)
-        name, split = item['candidate_id'], item['split_id']
+        name, split = item.get('candidate_id', item.get('candidate')), item['split_id']
+        if not isinstance(name, str) or item.get('candidate', name) != name:
+            raise ValueError('Missing or conflicting candidate identity in prediction evidence')
         if (type(trial) is not int or row is None or measured.get((name,split)) is not row
                 or trial in records or item.get('row_id_scope') != ROW_SCOPE):
             raise ValueError('Prediction evidence does not uniquely identify a completed trial')
@@ -97,6 +100,7 @@ def _observations(history, evidence, metric, splits, trusted_partitions):
 def _cost(record, known_single):
     params = record.get('params') or {}
     declared = [v for v in (record.get('expected_classifier_fits'),
+                record.get('classifier_fits') if 'id' in record else None,
                 params.get('maximum_classifier_fits_per_evaluation'),
                 params.get('classifier_fits_per_evaluation')) if v is not None]
     if not declared and record.get('id',record.get('candidate')) in known_single:
@@ -106,6 +110,28 @@ def _cost(record, known_single):
     observed = record.get('classifier_fits',0)
     ceiling = max(declared)
     return ceiling if type(observed) is int and 0 <= observed <= ceiling else None
+
+
+def _refit_cost(record, cost):
+    value = record.get('refit_classifier_fits', cost)
+    return value if type(value) is int and value > 0 else None
+
+
+def _with_capability(row, name, capabilities, kind):
+    """Use locally registered bounds and metadata; retain the worker's actual fit count."""
+    cap = capabilities[name]
+    if cap['kind'] != kind or row.get('params') != cap['params']:
+        raise ValueError('Recorded configuration differs from the trusted executable capability: ' + name)
+    fits, refit = cap['classifier_fits'], cap['refit_classifier_fits']
+    if any(type(n) is not int or n < 1 for n in (fits, refit)):
+        raise ValueError('Invalid trusted fit cost for ' + name)
+    bound = dict(row, expected_classifier_fits=fits, refit_classifier_fits=refit,
+                 supports_probabilities=cap['supports_probabilities'])
+    if 'id' in row:
+        bound['classifier_fits'] = fits
+    if 'route' in cap:
+        bound['route'] = cap['route']
+    return bound
 
 
 def _contenders(lead, front, records, metric, trusted):
@@ -218,7 +244,7 @@ def selection_evidence(state, *, trusted_partitions=None):
     return review
 
 
-def next_action(state, *, on_explore=None, trusted_partitions=None):
+def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None):
     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
     if state.get('ab_schema_version') != 1:
         raise ValueError('Expected ab_schema_version=1')
@@ -232,8 +258,12 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
     splits = tuple(state.get('registered_confirmation_splits',CONFIRMATIONS))
     if splits != CONFIRMATIONS[:len(splits)]:
         raise ValueError('Expected an ordered prefix of the v1 confirmation split IDs')
+    history, entries = state['history'], state['available_candidates']
     try:
-        attempted, measured, records = _observations(state['history'],state['prediction_evidence'],metric,splits,trusted_partitions)
+        if capabilities is not None:
+            history = [_with_capability(r, r['candidate'], capabilities, task['kind']) for r in history]
+            entries = [_with_capability(e, e['id'], capabilities, task['kind']) for e in entries]
+        attempted, measured, records = _observations(history,state['prediction_evidence'],metric,splits,trusted_partitions)
     except (KeyError,TypeError,ValueError) as error:
         return _action('stop','Execution evidence requires reconciliation: ' + str(error))
     # The published A fixture supplies just id/params. Only recognized single-fit methods
@@ -243,20 +273,25 @@ def next_action(state, *, on_explore=None, trusted_partitions=None):
     front = sorted((r for (name,split),r in measured.items() if split == PRIMARY),
                    key=lambda r:(-score_of(r),r['candidate']))
     costs = [_cost(r,known_single) for r in front]
-    if None in costs:
-        return _action('stop','A completed candidate has unknown full-refit cost.')
+    refits = [_refit_cost(row, cost) for row, cost in zip(front, costs, strict=True)]
+    reserved = budget['reserved_final_refit']
+    if None in costs or None in refits or any('refit_classifier_fits' in row and refit > reserved
+                                              for row, refit in zip(front, refits, strict=True)):
+        return _action('stop','A completed candidate has unknown cost or exceeds the registered refit reserve.')
     physical = sum(row.get('classifier_fits',0) for row in measured.values() if type(row.get('classifier_fits')) is int)
     if physical > budget['completed_classifier_fits']:
         return _action('stop','Recorded worker fits exceed the ledger count.')
-    reserve = max([budget['reserved_final_refit'],*costs])
-    entries = state['available_candidates']
+    reserve = max([reserved,*refits])
     if len({e['id'] for e in entries}) != len(entries):
         raise ValueError('Duplicate entries in shared catalogue')
     feasible = []
     for e in entries:
         name, cost = e['id'], _cost(e,known_single)
+        refit = _refit_cost(e,cost)
+        if refit is None or ('refit_classifier_fits' in e and refit > reserved):
+            continue
         minimum = 2*cost if cost and len(front)>=3 else cost
-        if (name,PRIMARY) not in attempted and cost and minimum + max(reserve,cost) <= available:
+        if (name,PRIMARY) not in attempted and cost and minimum + max(reserve,refit) <= available:
             if not metric.requires_scores or e.get('supports_probabilities', 'rbf_svm' not in name):
                 feasible.append((e,cost))
     skipped = []

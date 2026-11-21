@@ -1,4 +1,5 @@
 """B's shared, initially visible menu. Both planners receive the same returned records."""
+from copy import deepcopy
 from importlib.util import find_spec
 
 from .ab_methods import FIELDS, IMAGE, TEXT
@@ -6,6 +7,9 @@ from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+
+
+ADAPTER_VERSION = '1.1'
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
@@ -55,3 +59,19 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
                          resource='local_frozen_encoder_cpu' if name == TEXT else 'cpu',
                          origin='b_port' if name in (TEXT,FIELDS,IMAGE) else 'shared_baseline'))
     return menu
+
+
+def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+    """Build the executor's registry before exploration. Use only locally runnable methods."""
+    entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes)
+    return {
+        entry['id']: dict(entry, kind=task['kind'], classifier_fits=entry['expected_classifier_fits'],
+                          refit_classifier_fits=1)
+        for entry in entries
+    }
+
+
+def untried_candidates(capabilities, history):
+    """Detach the planners' common view from the trusted registry, including nested params."""
+    tried = {row['candidate'] for row in history}
+    return [deepcopy(entry) for name, entry in capabilities.items() if name not in tried]

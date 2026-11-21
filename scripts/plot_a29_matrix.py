@@ -44,6 +44,9 @@ if __name__ == '__main__':
     fig.tight_layout(rect=(0, .06, 1, .94))
     for ext in ('png', 'svg'):
         fig.savefig(args.output / ('accuracy_differences.' + ext), dpi=180)
+        if ext=='svg':
+            path=args.output/'accuracy_differences.svg'
+            path.write_text('\n'.join(line.rstrip() for line in path.read_text(encoding='utf-8').splitlines())+'\n',encoding='utf-8')
     plt.close(fig)
     fig, axes = plt.subplots(2, 2, figsize=(11, 7.2))
     for column, name in enumerate(tasks):
@@ -77,5 +80,8 @@ if __name__ == '__main__':
     fig.tight_layout(rect=(0, .05, 1, .95))
     for ext in ('png', 'svg'):
         fig.savefig(args.output / ('fits_and_runtime.' + ext), dpi=180)
+        if ext=='svg':
+            path=args.output/'fits_and_runtime.svg'
+            path.write_text('\n'.join(line.rstrip() for line in path.read_text(encoding='utf-8').splitlines())+'\n',encoding='utf-8')
     plt.close(fig)
     print(json.dumps(dict(status='plotted', classifier_fits=0, api_requests=0, figures=4)))

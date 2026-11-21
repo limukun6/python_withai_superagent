@@ -17,7 +17,8 @@
 - A30严格首次公共历史相同，raw与checked各自两次完整messages相同；偏好对checked首次候选却不同，不能把差异全归因于反馈。3唯一动作×2新划分=6fit/0API/34.140秒，16逻辑评价复用10；Coupon首选全部同，偏好对word_char C.05较word C.1新划分均值+1.7772个百分点，但完整E1最终低于R1，局部与端到端结论分开。初次分析hash用错工具已修，0fit/API、原错误保留。A窗口累计597fit。
 - 用户新授权继续3小时：北京时间11月21日23:24–22日02:24，计划batches/A31_A35_three_hour_window.md；本机runs/three_hour_20261121_2324/window.json记录起点ledger203/known5.3767495/11unknown/pending0。
 - A31新增默认off的Flash候选路线投影，min(4,注册路线数)，仅从原eligible里优先未见路线，不改B调度/anchor/confirm/stop、不重问。124回归通过，7监督fit/0API；旧固定Flash12提案有10个在原状态下会被新门槛排除，0fit/API回放不冒充新效果。新窗口当前7fit，A窗口604。
-- A32新源训练包/15与22候选/原实际划分重新冻结，20路径预检0fit/API通过；计划batches/A32_route_coverage_matrix_plan.md。两任务L0/L1共享本地+R0/E0/R1/E1各off/routes，最多220fit/48请求/¥4.80估计阈值，截止02:24前不足660秒不启动新路径。尚未运行；随后状态以a32_coverage_matrix checkpoint/completion为准。不能将A29旧源当新代码控制。路线门槛是否提升分数仍待真实开关对照。
+- A32新源训练包/15与22候选/原实际划分重新冻结，20路径预检0fit/API通过；已启动a32_coverage_matrix，coupon L1 11fit/0请求、R0_off 11fit/3请求已封存，正接首个routes组。计划batches/A32_route_coverage_matrix_plan.md；最多220fit/48请求，截止02:24前不足660秒不启动新路径。以checkpoint/completion实时状态为准，不能把中途快照当完成或A29旧源当新代码控制。
+- A31另将24个原始R/E请求在新代码off模式重建，内容逐项一致，0fit/API。A34四任务数据/划分prepare完成0fit/API；A34跨输入、A35复用R的固定状态、条件A36紧预算计划/代码与串行队列已保存，队列待A32完成再开新训练，见batches/A31_A35_three_hour_window.md。是否实际启动取决于余时/前批成功，不能将准备当已执行。
 
 ### A29/A30先前运行快照（现已完成，以上方为准）
 

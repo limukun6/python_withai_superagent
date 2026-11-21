@@ -29,7 +29,11 @@ def run(args):
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     completion = read(args.matrix / 'completion.json')
-    if completion['status'] != 'completed' or completion['paths_completed'] != 12:
+    coverage=args.study=='route-coverage'
+    arms=('L0','L1',*[base+'_'+mode for base in ('R0','E0','R1','E1') for mode in ('off','routes')]) if coverage else ARMS
+    pairs=([('L1','L0')]+[(base+'_routes',base+'_off') for base in ('R0','E0','R1','E1')]+
+        [(a+'_'+mode,b+'_'+mode) for mode in ('off','routes') for a,b in [('E0','R0'),('E1','R1'),('R1','R0'),('E1','E0')]]) if coverage else PAIRS
+    if completion['status'] != 'completed' or completion['paths_completed'] != 2*len(arms):
         raise ValueError('Only complete matrices can be scored/summarized as six-arm results')
     for name in ('protocol.json', 'completion.json', 'all_models_frozen.json', 'physical_fits.jsonl'):
         shutil.copy2(args.matrix / name, output / name)
@@ -40,7 +44,7 @@ def run(args):
         details = {}
         predictions = {}
         contexts = {}
-        for arm in ARMS:
+        for arm in arms:
             directory = args.matrix / (taskname + '_' + arm)
             target = output / directory.name
             target.mkdir()
@@ -66,6 +70,9 @@ def run(args):
                 input_tokens=sum(row.get('input_tokens') or 0 for row in usage),
                 output_tokens=sum(row.get('output_tokens') or 0 for row in usage),
                 call_latencies_seconds=[row['latency_seconds'] for row in usage if 'latency_seconds' in row],
+                coverage_projection_events=[{key:row.get(key) for key in ('trial','target_routes','observed_primary_routes',
+                    'projected_routes','reason','original_eligible_ids','projected_eligible_ids')}
+                    for row in events if row['kind']=='candidate_coverage_projection'],
                 explored_candidates=[row['candidate'] for row in primary], candidate_count=len(manifest['capabilities']),
                 explored_routes=sorted({manifest['capabilities'][row['candidate']]['route'] for row in primary}),
                 available_routes=sorted({cap['route'] for cap in manifest['capabilities'].values()}),
@@ -88,15 +95,21 @@ def run(args):
                 contexts[arm] = common
             details[arm] = summary
         differences = {}
-        for left, right in PAIRS:
+        for left, right in pairs:
             differences[left + '-' + right] = dict(score_delta=details[left]['score'] - details[right]['score'],
                 classifier_fit_delta=details[left]['actual_classifier_fits'] - details[right]['actual_classifier_fits'],
                 prediction_disagreements=sum(a != b for a,b in zip(predictions[left], predictions[right], strict=True)),
                 known_course_cost_delta_rmb=details[left]['known_course_cost_rmb'] - details[right]['known_course_cost_rmb'])
-        tasks[taskname] = dict(arms=details, differences=differences,
-            first_flash_common_context_identical=all(context == contexts['R0'] for context in contexts.values()),
-            raw_first_prompt_repeated=details['R0']['first_request_messages_sha256'] == details['R1']['first_request_messages_sha256'],
-            checked_first_prompt_repeated=details['E0']['first_request_messages_sha256'] == details['E1']['first_request_messages_sha256'])
+        if coverage:
+            prompt_checks={mode:dict(common_context_identical=all(contexts[base+'_'+mode]==contexts['R0_'+mode] for base in ('R0','E0','R1','E1')),
+                raw_messages_identical=details['R0_'+mode]['first_request_messages_sha256']==details['R1_'+mode]['first_request_messages_sha256'],
+                checked_messages_identical=details['E0_'+mode]['first_request_messages_sha256']==details['E1_'+mode]['first_request_messages_sha256'])
+                for mode in ('off','routes')}
+        else:
+            prompt_checks=dict(first_flash_common_context_identical=all(context == contexts['R0'] for context in contexts.values()),
+                raw_first_prompt_repeated=details['R0']['first_request_messages_sha256']==details['R1']['first_request_messages_sha256'],
+                checked_first_prompt_repeated=details['E0']['first_request_messages_sha256']==details['E1']['first_request_messages_sha256'])
+        tasks[taskname] = dict(arms=details,differences=differences,prompt_checks=prompt_checks)
         target = output / 'evaluation' / taskname
         target.mkdir(parents=True)
         shutil.copy2(args.matrix / 'evaluation' / taskname / 'source_access.json', target / 'source_access.json')
@@ -109,7 +122,7 @@ def run(args):
         project_usage=TaskBudgetLedger(args.ledger).project_summary(),
         analysis_new_classifier_fits=0, analysis_new_api_requests=0,
         course_budget_compliance='unverified_history', valid_for_budgeted_final_report=False,
-        scope='Two development tasks, one development split each, one run per arm; not final five-task C1 or H')
+        study=args.study,scope='Two development tasks, one development split each, one run per arm; not final five-task C1 or H')
     save(output / 'summary.json', summary)
     print(json.dumps(dict(completion=completion, scores={name:{arm:row['score'] for arm,row in value['arms'].items()}
         for name,value in tasks.items()}, input_tokens=summary['input_tokens'], output_tokens=summary['output_tokens'],
@@ -121,4 +134,5 @@ if __name__ == '__main__':
     parser.add_argument('--matrix', type=Path, required=True)
     parser.add_argument('--ledger', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--study',choices=['six-arm','route-coverage'],default='six-arm')
     run(parser.parse_args())

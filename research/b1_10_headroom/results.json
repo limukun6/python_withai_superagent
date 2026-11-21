@@ -1,0 +1,2567 @@
+{
+  "headlines": {
+    "seeds": {
+      "45102": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "f59fe8f157246858b3cfe3d38d11c7fb49fc00a996b3aa6d3b97e01c44326f0c",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "b90886556d33f49d19aa7bb0bcef6a1fedff1da075043d7fb7e255beafb5d9aa",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1344,
+            "groups": 990,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_C0.05",
+                "word_char_C0.05"
+              ],
+              "adaptive": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_C0.05",
+                "word_char_C0.05",
+                "word_char_C0.1",
+                "word_char_stats_C0.1",
+                "word_char_stats_C0.3"
+              ]
+            },
+            "observed": 7,
+            "unmeasured": [
+              "char_C0.3",
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.1",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_stats_C0.1",
+                  "word_char_C0.05",
+                  "word_char_C0.1",
+                  "char_C0.1",
+                  "word_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7001488095238095,
+                "worst_score": 0.6517857142857143,
+                "spread_points": 4.836309523809524
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_stats_C0.1",
+                  "word_char_C0.05",
+                  "word_char_C0.1",
+                  "char_C0.1",
+                  "word_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7001488095238095,
+                "worst_score": 0.6517857142857143,
+                "spread_points": 4.836309523809524
+              }
+            },
+            "scores": {
+              "word_C0.05": {
+                "search_score": 0.6517857142857143,
+                "search_accuracy": 0.6517857142857143,
+                "configuration_sha256": "e5c0bd7504e528551334752cb09f82db0d2dfd2e4297cb608693315a833e7487"
+              },
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7001488095238095,
+                "search_accuracy": 0.7001488095238095,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.6636904761904762,
+                "search_accuracy": 0.6636904761904762,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              },
+              "char_C0.1": {
+                "search_score": 0.6569940476190477,
+                "search_accuracy": 0.6569940476190477,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              },
+              "word_char_stats_C0.1": {
+                "search_score": 0.6837797619047619,
+                "search_accuracy": 0.6837797619047619,
+                "configuration_sha256": "7bea01114ce21448bc0580ec2edbf771ac30e20bda6021d768393d0dc0f31a31"
+              },
+              "word_char_stats_C0.3": {
+                "search_score": 0.6949404761904762,
+                "search_accuracy": 0.6949404761904762,
+                "configuration_sha256": "fb9c28a19d0cfddc1b5f86d215f02c0ce8c720d0e0afaf50b916a1db4b2f0786"
+              },
+              "word_char_C0.1": {
+                "search_score": 0.6629464285714286,
+                "search_accuracy": 0.6629464285714286,
+                "configuration_sha256": "3ec5053f2be0ff23e4fa3a46656865d33b6323461e2605a4e1add273658ba4db"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1344,
+              "groups": 990,
+              "both_correct": 941,
+              "both_wrong": 403,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1344,
+              "selected_wrong": 403,
+              "all_observed_wrong": 167,
+              "correctable_among_observed": 236,
+              "label_aware_oracle_primary": 0.8757440476190477
+            }
+          },
+          "confirmation_1": {
+            "rows": 1376,
+            "groups": 998,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_char_C0.05"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "word_char_stats_C0.3"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "char_C0.3",
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.05",
+              "word_C0.1",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.1",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C0.1",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_C0.05",
+                  "char_C0.1"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7034883720930233,
+                "worst_score": 0.6446220930232558,
+                "spread_points": 5.886627906976749
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_C0.05",
+                  "char_C0.1"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7034883720930233,
+                "worst_score": 0.6446220930232558,
+                "spread_points": 5.886627906976749
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7034883720930233,
+                "search_accuracy": 0.7034883720930233,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.6482558139534884,
+                "search_accuracy": 0.6482558139534884,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              },
+              "char_C0.1": {
+                "search_score": 0.6446220930232558,
+                "search_accuracy": 0.6446220930232558,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              },
+              "word_char_stats_C0.3": {
+                "search_score": 0.6540697674418605,
+                "search_accuracy": 0.6540697674418605,
+                "configuration_sha256": "fb9c28a19d0cfddc1b5f86d215f02c0ce8c720d0e0afaf50b916a1db4b2f0786"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1376,
+              "groups": 998,
+              "both_correct": 968,
+              "both_wrong": 408,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1365,
+            "groups": 1004,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_char_C0.05"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "char_C0.3",
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.05",
+              "word_C0.1",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.1",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C0.1",
+              "word_char_stats_C0.3",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "char_C0.1",
+                  "word_char_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7135531135531136,
+                "worst_score": 0.673992673992674,
+                "spread_points": 3.956043956043953
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "char_C0.1",
+                  "word_char_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7135531135531136,
+                "worst_score": 0.673992673992674,
+                "spread_points": 3.956043956043953
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7135531135531136,
+                "search_accuracy": 0.7135531135531136,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.673992673992674,
+                "search_accuracy": 0.673992673992674,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              },
+              "char_C0.1": {
+                "search_score": 0.6754578754578755,
+                "search_accuracy": 0.6754578754578755,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1365,
+              "groups": 1004,
+              "both_correct": 974,
+              "both_wrong": 391,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      },
+      "45103": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "8712ae6563e1d9ba0dae7350f8f2beef70a4f875ba1d49194b5513b0adb12cf0",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "1c17fb89947706d815573981895647dc4087df22cda8baeaa6ee825cd2944631",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1370,
+            "groups": 992,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_C0.05",
+                "word_char_C0.05"
+              ],
+              "adaptive": [
+                "char_C0.1",
+                "char_C0.3",
+                "minilm_text_with_lexical_features",
+                "word_C0.05",
+                "word_C0.1",
+                "word_char_C0.05",
+                "word_char_C0.1",
+                "word_char_stats_C0.1",
+                "word_char_stats_C0.3"
+              ]
+            },
+            "observed": 9,
+            "unmeasured": [
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_stats_C0.1",
+                  "char_C0.1",
+                  "char_C0.3",
+                  "word_char_C0.1",
+                  "word_char_C0.05",
+                  "word_C0.1",
+                  "word_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7138686131386861,
+                "worst_score": 0.6321167883211679,
+                "spread_points": 8.175182481751818
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_stats_C0.3",
+                  "word_char_stats_C0.1",
+                  "char_C0.1",
+                  "char_C0.3",
+                  "word_char_C0.1",
+                  "word_char_C0.05",
+                  "word_C0.1",
+                  "word_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7138686131386861,
+                "worst_score": 0.6321167883211679,
+                "spread_points": 8.175182481751818
+              }
+            },
+            "scores": {
+              "word_C0.05": {
+                "search_score": 0.6321167883211679,
+                "search_accuracy": 0.6321167883211679,
+                "configuration_sha256": "e5c0bd7504e528551334752cb09f82db0d2dfd2e4297cb608693315a833e7487"
+              },
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7138686131386861,
+                "search_accuracy": 0.7138686131386861,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.6715328467153284,
+                "search_accuracy": 0.6715328467153284,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              },
+              "char_C0.1": {
+                "search_score": 0.6773722627737226,
+                "search_accuracy": 0.6773722627737226,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              },
+              "word_char_stats_C0.1": {
+                "search_score": 0.6781021897810219,
+                "search_accuracy": 0.6781021897810219,
+                "configuration_sha256": "7bea01114ce21448bc0580ec2edbf771ac30e20bda6021d768393d0dc0f31a31"
+              },
+              "word_char_stats_C0.3": {
+                "search_score": 0.6802919708029197,
+                "search_accuracy": 0.6802919708029197,
+                "configuration_sha256": "fb9c28a19d0cfddc1b5f86d215f02c0ce8c720d0e0afaf50b916a1db4b2f0786"
+              },
+              "char_C0.3": {
+                "search_score": 0.6773722627737226,
+                "search_accuracy": 0.6773722627737226,
+                "configuration_sha256": "7639272ce78d71f15878107d0553bef83cc419182d4fa342145991ec6b39b2af"
+              },
+              "word_char_C0.1": {
+                "search_score": 0.6722627737226278,
+                "search_accuracy": 0.6722627737226278,
+                "configuration_sha256": "3ec5053f2be0ff23e4fa3a46656865d33b6323461e2605a4e1add273658ba4db"
+              },
+              "word_C0.1": {
+                "search_score": 0.6364963503649635,
+                "search_accuracy": 0.6364963503649635,
+                "configuration_sha256": "064b5d2959c1626129c3d9dcb693e2a7ad343bb0bfef559ddab101ba50dfe15a"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1370,
+              "groups": 992,
+              "both_correct": 978,
+              "both_wrong": 392,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1370,
+              "selected_wrong": 392,
+              "all_observed_wrong": 184,
+              "correctable_among_observed": 208,
+              "label_aware_oracle_primary": 0.8656934306569343
+            }
+          },
+          "confirmation_1": {
+            "rows": 1320,
+            "groups": 967,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_char_C0.05"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "char_C0.3",
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.05",
+              "word_C0.1",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.1",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C0.1",
+              "word_char_stats_C0.3",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_C0.05",
+                  "char_C0.1"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7068181818181818,
+                "worst_score": 0.668939393939394,
+                "spread_points": 3.7878787878787845
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "word_char_C0.05",
+                  "char_C0.1"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7068181818181818,
+                "worst_score": 0.668939393939394,
+                "spread_points": 3.7878787878787845
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7068181818181818,
+                "search_accuracy": 0.7068181818181818,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "char_C0.1": {
+                "search_score": 0.668939393939394,
+                "search_accuracy": 0.668939393939394,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.6734848484848485,
+                "search_accuracy": 0.6734848484848485,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1320,
+              "groups": 967,
+              "both_correct": 933,
+              "both_wrong": 387,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1334,
+            "groups": 994,
+            "catalogue_size": 23,
+            "tried": {
+              "fixed": [
+                "char_C0.1",
+                "minilm_text_with_lexical_features",
+                "word_char_C0.05"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "char_C0.3",
+              "char_C1.0",
+              "char_C3.0",
+              "word_C0.05",
+              "word_C0.1",
+              "word_C0.3",
+              "word_C0.7",
+              "word_C1.5",
+              "word_C10.0",
+              "word_C3.0",
+              "word_char_C0.1",
+              "word_char_C0.3",
+              "word_char_C0.7",
+              "word_char_C1.5",
+              "word_char_C10.0",
+              "word_char_C3.0",
+              "word_char_stats_C0.1",
+              "word_char_stats_C0.3",
+              "word_char_stats_C1.0",
+              "word_char_stats_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "char_C0.1",
+                  "word_char_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7061469265367316,
+                "worst_score": 0.6499250374812594,
+                "spread_points": 5.622188905547221
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "char_C0.1",
+                  "word_char_C0.05"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.7061469265367316,
+                "worst_score": 0.6499250374812594,
+                "spread_points": 5.622188905547221
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.7061469265367316,
+                "search_accuracy": 0.7061469265367316,
+                "configuration_sha256": "db6429b8c03dc5a68f1a7fb03cf232d7115d2033b34b12bf9d32e76440d9e356"
+              },
+              "char_C0.1": {
+                "search_score": 0.6544227886056971,
+                "search_accuracy": 0.6544227886056971,
+                "configuration_sha256": "845c2018abbecefd283caa1a21f8c340781af463b382008c027c2f7b7d3a4105"
+              },
+              "word_char_C0.05": {
+                "search_score": 0.6499250374812594,
+                "search_accuracy": 0.6499250374812594,
+                "configuration_sha256": "7d2aeab777c6743605c56222b20d81ba56f62fd5d9a92d22547ff104a0e37f08"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1334,
+              "groups": 994,
+              "both_correct": 942,
+              "both_wrong": 392,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      }
+    },
+    "repeated_supported_alternatives": []
+  },
+  "coupon": {
+    "seeds": {
+      "45102": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "supported_field_interactions",
+            "model_sha256": "79c6f81a7ae8bcf8d79babe9f10f4b9f4d31a4881d0494b3bb46e10bf990cf66",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "supported_field_interactions",
+            "model_sha256": "3874d649fd57584d77c515c8c6eda1992867e204ea4455af7f9cf49e4f85e2e2",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1305,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "logistic_C0.05",
+                "supported_field_interactions"
+              ],
+              "adaptive": [
+                "catboost_depth4_reg10.0",
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "extra_trees_leaf2",
+                "logistic_C0.05",
+                "supported_field_interactions"
+              ]
+            },
+            "observed": 6,
+            "unmeasured": [
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C0.25",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf2",
+                  "extra_trees_leaf1",
+                  "logistic_C0.05"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7448275862068966,
+                "worst_score": 0.6704980842911877,
+                "spread_points": 7.432950191570886
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf2",
+                  "extra_trees_leaf1",
+                  "logistic_C0.05"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7448275862068966,
+                "worst_score": 0.6704980842911877,
+                "spread_points": 7.432950191570886
+              }
+            },
+            "scores": {
+              "logistic_C0.05": {
+                "search_score": 0.6704980842911877,
+                "search_accuracy": 0.6704980842911877,
+                "configuration_sha256": "a84b252079f5f720da964f2b1973bcd6aa1f2484da31db0265667e6890b875d1"
+              },
+              "supported_field_interactions": {
+                "search_score": 0.7448275862068966,
+                "search_accuracy": 0.7448275862068966,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.7095785440613027,
+                "search_accuracy": 0.7095785440613027,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.7432950191570882,
+                "search_accuracy": 0.7432950191570882,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "catboost_depth4_reg10.0": {
+                "search_score": 0.7440613026819923,
+                "search_accuracy": 0.7440613026819923,
+                "configuration_sha256": "b1bf63dd25440f6d78a76bb75f808a2f25552c5f5a629cc252f28621cf5764f1"
+              },
+              "extra_trees_leaf2": {
+                "search_score": 0.7172413793103448,
+                "search_accuracy": 0.7172413793103448,
+                "configuration_sha256": "94a6fabb471e0a62ba073e00e8cb9f5e44534c13523e2bdb1e7a5327f818d47e"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1305,
+              "groups": 1274,
+              "both_correct": 972,
+              "both_wrong": 333,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1305,
+              "selected_wrong": 333,
+              "all_observed_wrong": 169,
+              "correctable_among_observed": 164,
+              "label_aware_oracle_primary": 0.8704980842911877
+            }
+          },
+          "confirmation_1": {
+            "rows": 1290,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "supported_field_interactions"
+              ],
+              "adaptive": [
+                "catboost_depth4_reg10.0",
+                "catboost_depth4_reg3.0",
+                "supported_field_interactions"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf2",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C0.05",
+              "logistic_C0.25",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7410852713178294,
+                "worst_score": 0.7077519379844961,
+                "spread_points": 3.3333333333333326
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7410852713178294,
+                "worst_score": 0.7077519379844961,
+                "spread_points": 3.3333333333333326
+              }
+            },
+            "scores": {
+              "supported_field_interactions": {
+                "search_score": 0.7410852713178294,
+                "search_accuracy": 0.7410852713178294,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.7209302325581395,
+                "search_accuracy": 0.7209302325581395,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.7077519379844961,
+                "search_accuracy": 0.7077519379844961,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              },
+              "catboost_depth4_reg10.0": {
+                "search_score": 0.7248062015503876,
+                "search_accuracy": 0.7248062015503876,
+                "configuration_sha256": "b1bf63dd25440f6d78a76bb75f808a2f25552c5f5a629cc252f28621cf5764f1"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1290,
+              "groups": 1274,
+              "both_correct": 956,
+              "both_wrong": 334,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1297,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "supported_field_interactions"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "catboost_depth4_reg10.0",
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf2",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C0.05",
+              "logistic_C0.25",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7478797224363917,
+                "worst_score": 0.7085582112567463,
+                "spread_points": 3.932151117964533
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7478797224363917,
+                "worst_score": 0.7085582112567463,
+                "spread_points": 3.932151117964533
+              }
+            },
+            "scores": {
+              "supported_field_interactions": {
+                "search_score": 0.7478797224363917,
+                "search_accuracy": 0.7478797224363917,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.7401696222050886,
+                "search_accuracy": 0.7401696222050886,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.7085582112567463,
+                "search_accuracy": 0.7085582112567463,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1297,
+              "groups": 1274,
+              "both_correct": 970,
+              "both_wrong": 327,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      },
+      "45103": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "supported_field_interactions",
+            "model_sha256": "4e5544ef9b22a5994a98822607b06b10e0d05de5afc3592cce2f1ab13cc15dda",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "supported_field_interactions",
+            "model_sha256": "2e985d9f1e5196ab16c4f60f3c1847ff2f6c0bb46059cebab558f85fdccba545",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1295,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "logistic_C0.05",
+                "supported_field_interactions"
+              ],
+              "adaptive": [
+                "catboost_depth4_reg10.0",
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "extra_trees_leaf2",
+                "logistic_C0.05",
+                "logistic_C0.25",
+                "supported_field_interactions"
+              ]
+            },
+            "observed": 7,
+            "unmeasured": [
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf2",
+                  "extra_trees_leaf1",
+                  "logistic_C0.05",
+                  "logistic_C0.25"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7583011583011583,
+                "worst_score": 0.6733590733590734,
+                "spread_points": 8.494208494208488
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg10.0",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf2",
+                  "extra_trees_leaf1",
+                  "logistic_C0.05",
+                  "logistic_C0.25"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7583011583011583,
+                "worst_score": 0.6733590733590734,
+                "spread_points": 8.494208494208488
+              }
+            },
+            "scores": {
+              "logistic_C0.05": {
+                "search_score": 0.6733590733590734,
+                "search_accuracy": 0.6733590733590734,
+                "configuration_sha256": "a84b252079f5f720da964f2b1973bcd6aa1f2484da31db0265667e6890b875d1"
+              },
+              "supported_field_interactions": {
+                "search_score": 0.7583011583011583,
+                "search_accuracy": 0.7583011583011583,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.7034749034749035,
+                "search_accuracy": 0.7034749034749035,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.745945945945946,
+                "search_accuracy": 0.745945945945946,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "catboost_depth4_reg10.0": {
+                "search_score": 0.7521235521235521,
+                "search_accuracy": 0.7521235521235521,
+                "configuration_sha256": "b1bf63dd25440f6d78a76bb75f808a2f25552c5f5a629cc252f28621cf5764f1"
+              },
+              "extra_trees_leaf2": {
+                "search_score": 0.715057915057915,
+                "search_accuracy": 0.715057915057915,
+                "configuration_sha256": "94a6fabb471e0a62ba073e00e8cb9f5e44534c13523e2bdb1e7a5327f818d47e"
+              },
+              "logistic_C0.25": {
+                "search_score": 0.6733590733590734,
+                "search_accuracy": 0.6733590733590734,
+                "configuration_sha256": "b14b7787cf275e49532ec2a252842c03ec3d682b0417a1e96035cc9c6e4c8922"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1295,
+              "groups": 1274,
+              "both_correct": 982,
+              "both_wrong": 313,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1295,
+              "selected_wrong": 313,
+              "all_observed_wrong": 153,
+              "correctable_among_observed": 160,
+              "label_aware_oracle_primary": 0.8818532818532818
+            }
+          },
+          "confirmation_1": {
+            "rows": 1303,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "supported_field_interactions"
+              ],
+              "adaptive": [
+                "catboost_depth4_reg10.0",
+                "supported_field_interactions"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf2",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C0.05",
+              "logistic_C0.25",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "extra_trees_leaf1",
+                  "catboost_depth4_reg3.0",
+                  "catboost_depth4_reg10.0"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7375287797390637,
+                "worst_score": 0.7198772064466615,
+                "spread_points": 1.765157329240219
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "extra_trees_leaf1",
+                  "catboost_depth4_reg3.0",
+                  "catboost_depth4_reg10.0"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7375287797390637,
+                "worst_score": 0.7198772064466615,
+                "spread_points": 1.765157329240219
+              }
+            },
+            "scores": {
+              "supported_field_interactions": {
+                "search_score": 0.7375287797390637,
+                "search_accuracy": 0.7375287797390637,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.7214121258633922,
+                "search_accuracy": 0.7214121258633922,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.7267843438219493,
+                "search_accuracy": 0.7267843438219493,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              },
+              "catboost_depth4_reg10.0": {
+                "search_score": 0.7198772064466615,
+                "search_accuracy": 0.7198772064466615,
+                "configuration_sha256": "b1bf63dd25440f6d78a76bb75f808a2f25552c5f5a629cc252f28621cf5764f1"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1303,
+              "groups": 1274,
+              "both_correct": 961,
+              "both_wrong": 342,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1296,
+            "groups": 1274,
+            "catalogue_size": 15,
+            "tried": {
+              "fixed": [
+                "catboost_depth4_reg3.0",
+                "extra_trees_leaf1",
+                "supported_field_interactions"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "catboost_depth4_reg10.0",
+              "catboost_depth6_reg10.0",
+              "catboost_depth6_reg3.0",
+              "catboost_depth8_reg10.0",
+              "catboost_depth8_reg3.0",
+              "extra_trees_leaf2",
+              "extra_trees_leaf4",
+              "extra_trees_leaf8",
+              "logistic_C0.05",
+              "logistic_C0.25",
+              "logistic_C1.0",
+              "logistic_C4.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7407407407407407,
+                "worst_score": 0.6952160493827161,
+                "spread_points": 4.552469135802461
+              },
+              "search_accuracy": {
+                "order": [
+                  "supported_field_interactions",
+                  "catboost_depth4_reg3.0",
+                  "extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "supported_field_interactions"
+                ],
+                "best_score": 0.7407407407407407,
+                "worst_score": 0.6952160493827161,
+                "spread_points": 4.552469135802461
+              }
+            },
+            "scores": {
+              "supported_field_interactions": {
+                "search_score": 0.7407407407407407,
+                "search_accuracy": 0.7407407407407407,
+                "configuration_sha256": "ea08306c907a96a1307e6f3858d9924e9cc3cdc8867e6cd40516d203c01986cd"
+              },
+              "catboost_depth4_reg3.0": {
+                "search_score": 0.7345679012345679,
+                "search_accuracy": 0.7345679012345679,
+                "configuration_sha256": "042d8a6e0ae0228c35a747acb5190030468367df732da7587e5f42eeb840d1f5"
+              },
+              "extra_trees_leaf1": {
+                "search_score": 0.6952160493827161,
+                "search_accuracy": 0.6952160493827161,
+                "configuration_sha256": "8b9523cb6f06a8d62d07e1951da01fb5fce4297ebe284a459992ee6d83816d42"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1296,
+              "groups": 1274,
+              "both_correct": 960,
+              "both_wrong": 336,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      }
+    },
+    "repeated_supported_alternatives": []
+  },
+  "bean": {
+    "seeds": {
+      "45102": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            "BARBUNYA",
+            "BOMBAY",
+            "CALI",
+            "DERMASON",
+            "HOROZ",
+            "SEKER",
+            "SIRA"
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "numeric_tabular_logistic_C0.1",
+            "model_sha256": "bc41cb760709c64e2d834f116c83a023fadf6920bfe1156e2de2b801ae96c09f",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "numeric_tabular_logistic_C0.1",
+            "model_sha256": "bc41cb760709c64e2d834f116c83a023fadf6920bfe1156e2de2b801ae96c09f",
+            "trials": 10
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1742,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0",
+                "numeric_tabular_logistic_C10.0"
+              ]
+            },
+            "observed": 5,
+            "unmeasured": [],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_extra_trees_leaf3",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9242250287026407,
+                "worst_score": 0.9196326061997704,
+                "spread_points": 0.4592422502870286
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_extra_trees_leaf3",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9242250287026407,
+                "worst_score": 0.9196326061997704,
+                "spread_points": 0.4592422502870286
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.9242250287026407,
+                "search_accuracy": 0.9242250287026407,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_extra_trees_leaf1": {
+                "search_score": 0.9196326061997704,
+                "search_accuracy": 0.9196326061997704,
+                "configuration_sha256": "ff3dcce8aa18663dc6f5fe14eed2058f3a19fe52e0503949208c86de01f14abe"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.9230769230769231,
+                "search_accuracy": 0.9230769230769231,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              },
+              "numeric_tabular_extra_trees_leaf3": {
+                "search_score": 0.9230769230769231,
+                "search_accuracy": 0.9230769230769231,
+                "configuration_sha256": "ae78bb9c5229a2647db25354772f33047b211c5629b27ed4378e6dca89ab6050"
+              },
+              "numeric_tabular_logistic_C10.0": {
+                "search_score": 0.9230769230769231,
+                "search_accuracy": 0.9230769230769231,
+                "configuration_sha256": "2dccd4d8e9a5c4a4d5f45a50afffb7583772d5347f69ff26aba8cf439a142e4f"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1742,
+              "groups": 1734,
+              "both_correct": 1610,
+              "both_wrong": 132,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1742,
+              "selected_wrong": 132,
+              "all_observed_wrong": 99,
+              "correctable_among_observed": 33
+            }
+          },
+          "confirmation_1": {
+            "rows": 1743,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0",
+                "numeric_tabular_logistic_C10.0"
+              ]
+            },
+            "observed": 5,
+            "unmeasured": [],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0"
+                ],
+                "best_score": 0.912794033275961,
+                "worst_score": 0.9053356282271945,
+                "spread_points": 0.7458405048766492
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0"
+                ],
+                "best_score": 0.912794033275961,
+                "worst_score": 0.9053356282271945,
+                "spread_points": 0.7458405048766492
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.912794033275961,
+                "search_accuracy": 0.912794033275961,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_extra_trees_leaf3": {
+                "search_score": 0.9053356282271945,
+                "search_accuracy": 0.9053356282271945,
+                "configuration_sha256": "ae78bb9c5229a2647db25354772f33047b211c5629b27ed4378e6dca89ab6050"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.912794033275961,
+                "search_accuracy": 0.912794033275961,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              },
+              "numeric_tabular_extra_trees_leaf1": {
+                "search_score": 0.9070567986230637,
+                "search_accuracy": 0.9070567986230637,
+                "configuration_sha256": "ff3dcce8aa18663dc6f5fe14eed2058f3a19fe52e0503949208c86de01f14abe"
+              },
+              "numeric_tabular_logistic_C10.0": {
+                "search_score": 0.9122203098106713,
+                "search_accuracy": 0.9122203098106713,
+                "configuration_sha256": "2dccd4d8e9a5c4a4d5f45a50afffb7583772d5347f69ff26aba8cf439a142e4f"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1743,
+              "groups": 1734,
+              "both_correct": 1591,
+              "both_wrong": 152,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1739,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "numeric_tabular_extra_trees_leaf1",
+              "numeric_tabular_logistic_C10.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C1.0"
+                ],
+                "best_score": 0.909718228867165,
+                "worst_score": 0.8993674525589419,
+                "spread_points": 1.035077630822312
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C1.0"
+                ],
+                "best_score": 0.909718228867165,
+                "worst_score": 0.8993674525589419,
+                "spread_points": 1.035077630822312
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.9045428407130535,
+                "search_accuracy": 0.9045428407130535,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_extra_trees_leaf3": {
+                "search_score": 0.8993674525589419,
+                "search_accuracy": 0.8993674525589419,
+                "configuration_sha256": "ae78bb9c5229a2647db25354772f33047b211c5629b27ed4378e6dca89ab6050"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.909718228867165,
+                "search_accuracy": 0.909718228867165,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1739,
+              "groups": 1734,
+              "both_correct": 1573,
+              "both_wrong": 166,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      },
+      "45103": {
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            "BARBUNYA",
+            "BOMBAY",
+            "CALI",
+            "DERMASON",
+            "HOROZ",
+            "SEKER",
+            "SIRA"
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "numeric_tabular_logistic_C0.1",
+            "model_sha256": "cabf8aeb32e7b892e662ddffc5ceccc2cd695f2fe5fa069f8f29e2a9511b4246",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "numeric_tabular_logistic_C0.1",
+            "model_sha256": "cabf8aeb32e7b892e662ddffc5ceccc2cd695f2fe5fa069f8f29e2a9511b4246",
+            "trials": 10
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 1748,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_extra_trees_leaf3",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0",
+                "numeric_tabular_logistic_C10.0"
+              ]
+            },
+            "observed": 5,
+            "unmeasured": [],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9233409610983981,
+                "worst_score": 0.9153318077803204,
+                "spread_points": 0.8009153318077722
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_extra_trees_leaf1",
+                  "numeric_tabular_extra_trees_leaf3"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9233409610983981,
+                "worst_score": 0.9153318077803204,
+                "spread_points": 0.8009153318077722
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.9233409610983981,
+                "search_accuracy": 0.9233409610983981,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_extra_trees_leaf1": {
+                "search_score": 0.9164759725400458,
+                "search_accuracy": 0.9164759725400458,
+                "configuration_sha256": "ff3dcce8aa18663dc6f5fe14eed2058f3a19fe52e0503949208c86de01f14abe"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.9227688787185355,
+                "search_accuracy": 0.9227688787185355,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              },
+              "numeric_tabular_extra_trees_leaf3": {
+                "search_score": 0.9153318077803204,
+                "search_accuracy": 0.9153318077803204,
+                "configuration_sha256": "ae78bb9c5229a2647db25354772f33047b211c5629b27ed4378e6dca89ab6050"
+              },
+              "numeric_tabular_logistic_C10.0": {
+                "search_score": 0.9227688787185355,
+                "search_accuracy": 0.9227688787185355,
+                "configuration_sha256": "2dccd4d8e9a5c4a4d5f45a50afffb7583772d5347f69ff26aba8cf439a142e4f"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1748,
+              "groups": 1734,
+              "both_correct": 1614,
+              "both_wrong": 134,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            },
+            "label_aware_coverage": {
+              "rows": 1748,
+              "selected_wrong": 134,
+              "all_observed_wrong": 104,
+              "correctable_among_observed": 30
+            }
+          },
+          "confirmation_1": {
+            "rows": 1739,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": [
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0",
+                "numeric_tabular_logistic_C10.0"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "numeric_tabular_extra_trees_leaf3"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C10.0"
+                ],
+                "best_score": 0.9350201265094882,
+                "worst_score": 0.9275445658424382,
+                "spread_points": 0.7475560667050019
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C10.0"
+                ],
+                "best_score": 0.9350201265094882,
+                "worst_score": 0.9275445658424382,
+                "spread_points": 0.7475560667050019
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.9332949971247844,
+                "search_accuracy": 0.9332949971247844,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.9327199539965497,
+                "search_accuracy": 0.9327199539965497,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              },
+              "numeric_tabular_extra_trees_leaf1": {
+                "search_score": 0.9275445658424382,
+                "search_accuracy": 0.9275445658424382,
+                "configuration_sha256": "ff3dcce8aa18663dc6f5fe14eed2058f3a19fe52e0503949208c86de01f14abe"
+              },
+              "numeric_tabular_logistic_C10.0": {
+                "search_score": 0.9350201265094882,
+                "search_accuracy": 0.9350201265094882,
+                "configuration_sha256": "2dccd4d8e9a5c4a4d5f45a50afffb7583772d5347f69ff26aba8cf439a142e4f"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1739,
+              "groups": 1734,
+              "both_correct": 1623,
+              "both_wrong": 116,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          },
+          "confirmation_2": {
+            "rows": 1741,
+            "groups": 1734,
+            "catalogue_size": 5,
+            "tried": {
+              "fixed": [
+                "numeric_tabular_extra_trees_leaf1",
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C1.0"
+              ],
+              "adaptive": [
+                "numeric_tabular_logistic_C0.1",
+                "numeric_tabular_logistic_C10.0"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "numeric_tabular_extra_trees_leaf3"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9184376794945434,
+                "worst_score": 0.9103963239517519,
+                "spread_points": 0.8041355542791506
+              },
+              "search_accuracy": {
+                "order": [
+                  "numeric_tabular_logistic_C0.1",
+                  "numeric_tabular_logistic_C10.0",
+                  "numeric_tabular_logistic_C1.0",
+                  "numeric_tabular_extra_trees_leaf1"
+                ],
+                "tied_best": [
+                  "numeric_tabular_logistic_C0.1"
+                ],
+                "best_score": 0.9184376794945434,
+                "worst_score": 0.9103963239517519,
+                "spread_points": 0.8041355542791506
+              }
+            },
+            "scores": {
+              "numeric_tabular_logistic_C0.1": {
+                "search_score": 0.9184376794945434,
+                "search_accuracy": 0.9184376794945434,
+                "configuration_sha256": "fd3a9b0ad3a6a24c623f91cf3c9b781ac831a3750c29012a72d0c1f6ffb0e71d"
+              },
+              "numeric_tabular_logistic_C1.0": {
+                "search_score": 0.9172889144170018,
+                "search_accuracy": 0.9172889144170018,
+                "configuration_sha256": "ffdbad7a57980299eb79d1a652f76792b7a1211f60c3ea57666fa5971f5b924e"
+              },
+              "numeric_tabular_extra_trees_leaf1": {
+                "search_score": 0.9103963239517519,
+                "search_accuracy": 0.9103963239517519,
+                "configuration_sha256": "ff3dcce8aa18663dc6f5fe14eed2058f3a19fe52e0503949208c86de01f14abe"
+              },
+              "numeric_tabular_logistic_C10.0": {
+                "search_score": 0.9178632969557725,
+                "search_accuracy": 0.9178632969557725,
+                "configuration_sha256": "2dccd4d8e9a5c4a4d5f45a50afffb7583772d5347f69ff26aba8cf439a142e4f"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 1741,
+              "groups": 1734,
+              "both_correct": 1599,
+              "both_wrong": 142,
+              "newly_correct": 0,
+              "newly_wrong": 0,
+              "disagree": 0,
+              "right_minus_left_points": 0.0
+            }
+          }
+        },
+        "supported_alternatives": {}
+      }
+    },
+    "repeated_supported_alternatives": []
+  },
+  "sms": {
+    "seeds": {
+      "45102": {
+        "metric": {
+          "name": "macro_f1",
+          "labels": [
+            "ham",
+            "spam"
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "f4c5dfbcec7c0b4584803a8005221b30f594fdb391e289fa84ab1827bcf8430f",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "single_word_char_C3.0",
+            "model_sha256": "cd1c75dfba64e6e44a778436f6270d079d6a8e17982b07716c16b28fbbfc17c1",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 662,
+            "groups": 661,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_char_C3.0",
+                "single_word_C0.3",
+                "single_word_char_C0.3",
+                "single_word_char_C3.0"
+              ]
+            },
+            "observed": 6,
+            "unmeasured": [
+              "single_word_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "single_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3",
+                  "single_word_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9559107559107559,
+                "worst_score": 0.46353322528363045,
+                "spread_points": 49.23775306271255
+              },
+              "search_accuracy": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "single_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3",
+                  "single_word_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9803625377643505,
+                "worst_score": 0.8640483383685801,
+                "spread_points": 11.631419939577036
+              }
+            },
+            "scores": {
+              "single_word_C0.3": {
+                "search_score": 0.46353322528363045,
+                "search_accuracy": 0.8640483383685801,
+                "configuration_sha256": "f4578983f05c106cbb1f5a25a26e4d307dbc0b924ea326bda422fe702e5ce82a"
+              },
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9249493886144627,
+                "search_accuracy": 0.9682779456193353,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.6120942224305637,
+                "search_accuracy": 0.8867069486404834,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.7809866692614575,
+                "search_accuracy": 0.9229607250755287,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_word_char_C3.0": {
+                "search_score": 0.9559107559107559,
+                "search_accuracy": 0.9803625377643505,
+                "configuration_sha256": "70ce09602e1007ab2060b67d3e64581ef36b47908eefcc9ee5d5b89736cf6579"
+              },
+              "single_char_C3.0": {
+                "search_score": 0.9517864202925692,
+                "search_accuracy": 0.9788519637462235,
+                "configuration_sha256": "ed7eba0f4535af5a148c6c9075850465ba3ab3128bc443b50fa2ffef829b5b46"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 662,
+              "groups": 661,
+              "both_correct": 638,
+              "both_wrong": 10,
+              "newly_correct": 11,
+              "newly_wrong": 3,
+              "disagree": 14,
+              "right_minus_left_points": 3.0961367296293174,
+              "paired_bootstrap_sd_points": 1.3737233475753485,
+              "group_bootstrap_draws": 128
+            },
+            "label_aware_coverage": {
+              "rows": 662,
+              "selected_wrong": 13,
+              "all_observed_wrong": 10,
+              "correctable_among_observed": 3,
+              "label_aware_oracle_primary": 0.9662554796615352
+            }
+          },
+          "confirmation_1": {
+            "rows": 661,
+            "groups": 661,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "single_char_C3.0",
+                "single_word_char_C3.0"
+              ]
+            },
+            "observed": 5,
+            "unmeasured": [
+              "single_word_C0.3",
+              "single_word_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "single_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9579041829497756,
+                "worst_score": 0.6472260864239656,
+                "spread_points": 31.067809652581
+              },
+              "search_accuracy": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "single_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.983358547655068,
+                "worst_score": 0.9077155824508321,
+                "spread_points": 7.564296520423596
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9483968988896295,
+                "search_accuracy": 0.9803328290468987,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.8204523360210443,
+                "search_accuracy": 0.9425113464447806,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.6472260864239656,
+                "search_accuracy": 0.9077155824508321,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              },
+              "single_word_char_C3.0": {
+                "search_score": 0.9579041829497756,
+                "search_accuracy": 0.983358547655068,
+                "configuration_sha256": "70ce09602e1007ab2060b67d3e64581ef36b47908eefcc9ee5d5b89736cf6579"
+              },
+              "single_char_C3.0": {
+                "search_score": 0.9532399547255235,
+                "search_accuracy": 0.9818456883509834,
+                "configuration_sha256": "ed7eba0f4535af5a148c6c9075850465ba3ab3128bc443b50fa2ffef829b5b46"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 661,
+              "groups": 661,
+              "both_correct": 643,
+              "both_wrong": 6,
+              "newly_correct": 7,
+              "newly_wrong": 5,
+              "disagree": 12,
+              "right_minus_left_points": 0.9507284060146115,
+              "paired_bootstrap_sd_points": 1.5124447383716952,
+              "group_bootstrap_draws": 128
+            }
+          },
+          "confirmation_2": {
+            "rows": 661,
+            "groups": 661,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": []
+            },
+            "observed": 3,
+            "unmeasured": [
+              "single_char_C3.0",
+              "single_word_C0.3",
+              "single_word_C3.0",
+              "single_word_char_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.9265032912293186,
+                "worst_score": 0.599721767594108,
+                "spread_points": 32.678152363521065
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.9697428139183056,
+                "worst_score": 0.8880484114977307,
+                "spread_points": 8.16944024205749
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9265032912293186,
+                "search_accuracy": 0.9697428139183056,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.7714152037266828,
+                "search_accuracy": 0.9228441754916793,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.599721767594108,
+                "search_accuracy": 0.8880484114977307,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              }
+            },
+            "selected_pair": {
+              "status": "missing_candidate",
+              "missing": [
+                "single_word_char_C3.0"
+              ]
+            }
+          }
+        },
+        "supported_alternatives": {}
+      },
+      "45103": {
+        "metric": {
+          "name": "macro_f1",
+          "labels": [
+            "ham",
+            "spam"
+          ],
+          "direction": "maximize"
+        },
+        "paths": {
+          "fixed": {
+            "selected": "minilm_text_with_lexical_features",
+            "model_sha256": "7bef468630c73af21c90979fff6fa31810eb443d2167c60332dd86a7e2c3ea36",
+            "trials": 10
+          },
+          "adaptive": {
+            "selected": "single_word_char_C3.0",
+            "model_sha256": "d57326b2824ff808efd68b1eed235224ab654e3293f486dbb5ef7abc9d47be6b",
+            "trials": 9
+          }
+        },
+        "splits": {
+          "primary": {
+            "rows": 661,
+            "groups": 660,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_C0.3",
+                "single_word_char_C0.3",
+                "single_word_char_C3.0"
+              ]
+            },
+            "observed": 5,
+            "unmeasured": [
+              "single_char_C3.0",
+              "single_word_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3",
+                  "single_word_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9711254641330462,
+                "worst_score": 0.5264688585939589,
+                "spread_points": 44.465660553908734
+              },
+              "search_accuracy": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3",
+                  "single_word_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.989409984871407,
+                "worst_score": 0.8986384266263238,
+                "spread_points": 9.07715582450832
+              }
+            },
+            "scores": {
+              "single_word_C0.3": {
+                "search_score": 0.5264688585939589,
+                "search_accuracy": 0.8986384266263238,
+                "configuration_sha256": "f4578983f05c106cbb1f5a25a26e4d307dbc0b924ea326bda422fe702e5ce82a"
+              },
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9579195314489433,
+                "search_accuracy": 0.9848714069591528,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.6616408394992788,
+                "search_accuracy": 0.9167927382753404,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.8153860476663357,
+                "search_accuracy": 0.9455370650529501,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_word_char_C3.0": {
+                "search_score": 0.9711254641330462,
+                "search_accuracy": 0.989409984871407,
+                "configuration_sha256": "70ce09602e1007ab2060b67d3e64581ef36b47908eefcc9ee5d5b89736cf6579"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 661,
+              "groups": 660,
+              "both_correct": 648,
+              "both_wrong": 4,
+              "newly_correct": 6,
+              "newly_wrong": 3,
+              "disagree": 9,
+              "right_minus_left_points": 1.3205932684102972,
+              "paired_bootstrap_sd_points": 1.2793136854110378,
+              "group_bootstrap_draws": 128
+            },
+            "label_aware_coverage": {
+              "rows": 661,
+              "selected_wrong": 7,
+              "all_observed_wrong": 4,
+              "correctable_among_observed": 3,
+              "label_aware_oracle_primary": 0.9838180571876224
+            }
+          },
+          "confirmation_1": {
+            "rows": 660,
+            "groups": 660,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "single_word_char_C3.0"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "single_char_C3.0",
+              "single_word_C0.3",
+              "single_word_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C3.0",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.9378651529835249,
+                "worst_score": 0.6193926201479869,
+                "spread_points": 31.8472532835538
+              },
+              "search_accuracy": {
+                "order": [
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C3.0",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "best_score": 0.9742424242424242,
+                "worst_score": 0.8924242424242425,
+                "spread_points": 8.18181818181818
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9378651529835249,
+                "search_accuracy": 0.9742424242424242,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.7679884752445219,
+                "search_accuracy": 0.9227272727272727,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.6193926201479869,
+                "search_accuracy": 0.8924242424242425,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              },
+              "single_word_char_C3.0": {
+                "search_score": 0.9345757335448057,
+                "search_accuracy": 0.9727272727272728,
+                "configuration_sha256": "70ce09602e1007ab2060b67d3e64581ef36b47908eefcc9ee5d5b89736cf6579"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 660,
+              "groups": 660,
+              "both_correct": 635,
+              "both_wrong": 10,
+              "newly_correct": 7,
+              "newly_wrong": 8,
+              "disagree": 15,
+              "right_minus_left_points": -0.3289419438719188,
+              "paired_bootstrap_sd_points": 1.5420956821353498,
+              "group_bootstrap_draws": 128
+            }
+          },
+          "confirmation_2": {
+            "rows": 660,
+            "groups": 660,
+            "catalogue_size": 7,
+            "tried": {
+              "fixed": [
+                "minilm_text_with_lexical_features",
+                "single_char_C0.3",
+                "single_word_char_C0.3"
+              ],
+              "adaptive": [
+                "minilm_text_with_lexical_features",
+                "single_word_char_C3.0"
+              ]
+            },
+            "observed": 4,
+            "unmeasured": [
+              "single_char_C3.0",
+              "single_word_C0.3",
+              "single_word_C3.0"
+            ],
+            "ranks": {
+              "search_score": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9634129747872056,
+                "worst_score": 0.5550646122856748,
+                "spread_points": 40.834836250153074
+              },
+              "search_accuracy": {
+                "order": [
+                  "single_word_char_C3.0",
+                  "minilm_text_with_lexical_features",
+                  "single_word_char_C0.3",
+                  "single_char_C0.3"
+                ],
+                "tied_best": [
+                  "single_word_char_C3.0"
+                ],
+                "best_score": 0.9833333333333333,
+                "worst_score": 0.8742424242424243,
+                "spread_points": 10.909090909090901
+              }
+            },
+            "scores": {
+              "minilm_text_with_lexical_features": {
+                "search_score": 0.9491052287951305,
+                "search_accuracy": 0.9772727272727273,
+                "configuration_sha256": "eb22ce36b0762a8928ed79041ed5bc1a6a080902344827d274e4369f63913554"
+              },
+              "single_word_char_C0.3": {
+                "search_score": 0.7637318649561635,
+                "search_accuracy": 0.9166666666666666,
+                "configuration_sha256": "a1f8ab68d29b066e785ef3b0a64fc161b63eea3ffb57e6fecbf6cac55566c151"
+              },
+              "single_char_C0.3": {
+                "search_score": 0.5550646122856748,
+                "search_accuracy": 0.8742424242424243,
+                "configuration_sha256": "256e96d2bf4f58330d90dabfa3a7eb82091292c24237e77811f7083a711b7d3a"
+              },
+              "single_word_char_C3.0": {
+                "search_score": 0.9634129747872056,
+                "search_accuracy": 0.9833333333333333,
+                "configuration_sha256": "70ce09602e1007ab2060b67d3e64581ef36b47908eefcc9ee5d5b89736cf6579"
+              }
+            },
+            "selected_pair": {
+              "status": "observed",
+              "rows": 660,
+              "groups": 660,
+              "both_correct": 643,
+              "both_wrong": 9,
+              "newly_correct": 6,
+              "newly_wrong": 2,
+              "disagree": 8,
+              "right_minus_left_points": 1.4307745992075072,
+              "paired_bootstrap_sd_points": 1.079913000691721,
+              "group_bootstrap_draws": 128
+            }
+          }
+        },
+        "supported_alternatives": {}
+      }
+    },
+    "repeated_supported_alternatives": []
+  }
+}

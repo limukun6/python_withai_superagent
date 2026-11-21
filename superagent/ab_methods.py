@@ -9,12 +9,14 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
+from .ab_symmetric import CHANNELS, ENCODER, candidates as symmetric_candidates
 
 
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
-ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms'}
+ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
+          **{name: name for name in CHANNELS}, ENCODER: ENCODER}
 
 
 def _field_tree(rows, labels, query):
@@ -71,7 +73,10 @@ def additions(kind):
         return [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
     if kind in ('single_text','pair_text'):
         from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
-        if verified_directory() is not None:
-            return [Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
-                              swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind))]
+        encoder_ready = verified_directory() is not None
+        extra = symmetric_candidates(include_encoder=encoder_ready) if kind == 'pair_text' else []
+        if encoder_ready:
+            extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
+                                   swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+        return extra
     return []

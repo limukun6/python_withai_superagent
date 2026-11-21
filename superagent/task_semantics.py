@@ -38,9 +38,12 @@ def swap_augmented(candidates):
 def candidate_swap_rule(candidate):
     """Resolve known execution rules; absence of a flag is not evidence of safety."""
     from .recipe_models import fit_recipe
+    from .ab_symmetric import fit_symmetric_pair
     function = candidate.fit_predict
     while isinstance(function, partial):
         function = function.func
+    if function is fit_symmetric_pair:
+        return 'preserves'
     if function is fit_recipe and candidate.params.get('kind') == 'pair_text':
         return 'flips'
     if candidate.params.get('swap_augmentation'):
@@ -55,6 +58,8 @@ def validate_candidate_semantics(kind, declared, candidate):
     rule = candidate_swap_rule(candidate) if kind == 'pair_text' else 'unknown'
     if kind == 'pair_text' and declared == 'symmetric' and rule != 'preserves':
         raise ValueError(f'Candidate {candidate.family} cannot serve symmetric semantics: swap rule {rule}')
+    if kind == 'pair_text' and rule == 'preserves' and declared != 'symmetric':
+        raise ValueError('An unordered pair candidate requires declared symmetric semantics')
     if kind == 'pair_text' and declared == 'relation':
         raise ValueError('Relation semantics requires the relation input adapter')
     return {'candidate': candidate.family, 'swap_label_rule': rule}
@@ -101,9 +106,11 @@ def validate_task_semantics(task, portfolio='expanded'):
             checks.append({'check': 'swap_augmentation', 'status': 'ok',
                            'detail': 'no candidate assumes flipped labels'})
     elif policy == 'flips':
+        excluded = [c['id'] for c in candidates if c['swap_label_rule'] == 'preserves']
         checks.append({'check': 'swap_augmentation', 'status': 'ok',
                        'detail': 'label-flipping augmentation matches the declared semantics'})
     else:
+        excluded = [c['id'] for c in candidates if c['swap_label_rule'] == 'preserves']
         checks.append({'check': 'swap_augmentation', 'status': 'unverified',
                        'detail': 'semantics does not imply a swap policy'})
 

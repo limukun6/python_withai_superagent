@@ -153,10 +153,14 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
                 kind='text_tabular';x=TextTableRows(np.asarray(feature_rows,dtype=object),(),tuple(names),tuple(range(len(names))))
                 spec['feature_shape']=[len(names)]
         y=np.asarray(labels) if include_labels else None
-        if kind=='pair_text' and include_labels:
-            if not set(labels)<={'0','1'}:raise ValueError('Pair targets must be 0/1 with declared left/right meaning')
-            if manifest.get('pair_label_one')!='left':raise ValueError('Declare pair_label_one=left explicitly')
-            y=np.asarray(labels,dtype=int)
+        if kind=='pair_text':
+            if manifest.get('pair_semantics')=='symmetric':
+                if manifest.get('pair_label_one') is not None:
+                    raise ValueError('A symmetric pair target cannot declare a preferred side')
+            elif include_labels:
+                if not set(labels)<={'0','1'}:raise ValueError('Pair targets must be 0/1 with declared left/right meaning')
+                if manifest.get('pair_label_one')!='left':raise ValueError('Declare pair_label_one=left explicitly')
+                y=np.asarray(labels,dtype=int)
         spec['input_columns']=[{'name':name,'type':t} for name,t in zip(names,types)]
     else:raise ValueError('Supported split formats are csv, npz and numeric npy pairs')
     if include_labels:

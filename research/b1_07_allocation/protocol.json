@@ -1,0 +1,401 @@
+{
+  "batch": "B1-07",
+  "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "driver_sha256": "9e7dea8d334bb94a43bc1277745ff77ea641362ee2143b3510e85ad912ca4623",
+  "entry_sha256": "f4a56a6664c78d2c3ae7c5373bbd16bf6dee81c22aba1b79a6728ccbe9de52f4",
+  "helper_sha256": "3a42e111bab124622095a84d646ecc85d15f349da15648107e2e88e6525c9b86",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "execution_order": [
+    [
+      45102,
+      "fixed"
+    ],
+    [
+      45102,
+      "adaptive"
+    ],
+    [
+      45103,
+      "adaptive"
+    ],
+    [
+      45103,
+      "fixed"
+    ]
+  ],
+  "plan_sha256": "9f3f1adfa96d5ed945c67f76c1fd956b66e74fecb5c582298120e1a9ffe04303",
+  "tasks": {
+    "45102_fixed": {
+      "name": "45102_fixed",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6615,
+      "outer_rows": 1686,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4876,
+        "heldout_groups": 1243,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6615,
+        "search_rows": 1686,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "4983f09112af09de275cde63a049e5746a75551c123a517a61b398ebb2467e7d",
+          "label_sha256": "ee9b79afcd6caa25941bef5177bab4f46bb532ae3dd2b4b1c48e596b04f76185",
+          "evaluation_payload_sha256": "fbc443aca45e41e8969c65def199592fb48d54687a19a03355166e0bbff9037b"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "a57f869df5184f168a81b2311ef6df6f9d4ce0b1be7fbe1b7b842cc4b65e88ab",
+          "label_sha256": "ac271ce3e174cd92294194c18d9ecce2da8c969d9c97079ca9ec14a759884262",
+          "evaluation_payload_sha256": "5139d09accc6dacaccd8c2c5d6e620ca9ee769205f64cab6e48a2fad4e137a95"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "5a2ef9833503c6fb51370a4d670dc05362e5375d8c1b916b6afdaa7174435e11",
+          "label_sha256": "7c7fb476b6b3b9416aa0af71937f3715ea6c30dadb4cfdcd6d7962db364455f0",
+          "evaluation_payload_sha256": "b9abd0cbb0cd4c5899e28a5bcd5a93d63e94a3f8fafd557195d1da4992936b71"
+        }
+      },
+      "row_ids_sha256": "806574736fff39da9f4fbf986c49c76604996e71ca0448986f7ab990a24392c3",
+      "files": {
+        "features.zip": "3552538353d8632a53cc4c4f9ff2c0b95e9be4d74cf81012f446e9f38fd8f63e",
+        "train.zip": "ecce7d36f29dc92ce1d6b7083fc014e42ad24976e741eae02cd85abd700bd806"
+      },
+      "holdout_sha256": "f9a2ffab56889abc313c6e9b745b6f313e3301c6e1f216072bfaab8678721dd8",
+      "catalog_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45102,
+      "allocation": "fixed"
+    },
+    "45102_adaptive": {
+      "name": "45102_adaptive",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6615,
+      "outer_rows": 1686,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4876,
+        "heldout_groups": 1243,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6615,
+        "search_rows": 1686,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "4983f09112af09de275cde63a049e5746a75551c123a517a61b398ebb2467e7d",
+          "label_sha256": "ee9b79afcd6caa25941bef5177bab4f46bb532ae3dd2b4b1c48e596b04f76185",
+          "evaluation_payload_sha256": "fbc443aca45e41e8969c65def199592fb48d54687a19a03355166e0bbff9037b"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "a57f869df5184f168a81b2311ef6df6f9d4ce0b1be7fbe1b7b842cc4b65e88ab",
+          "label_sha256": "ac271ce3e174cd92294194c18d9ecce2da8c969d9c97079ca9ec14a759884262",
+          "evaluation_payload_sha256": "5139d09accc6dacaccd8c2c5d6e620ca9ee769205f64cab6e48a2fad4e137a95"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "5a2ef9833503c6fb51370a4d670dc05362e5375d8c1b916b6afdaa7174435e11",
+          "label_sha256": "7c7fb476b6b3b9416aa0af71937f3715ea6c30dadb4cfdcd6d7962db364455f0",
+          "evaluation_payload_sha256": "b9abd0cbb0cd4c5899e28a5bcd5a93d63e94a3f8fafd557195d1da4992936b71"
+        }
+      },
+      "row_ids_sha256": "806574736fff39da9f4fbf986c49c76604996e71ca0448986f7ab990a24392c3",
+      "files": {
+        "features.zip": "3552538353d8632a53cc4c4f9ff2c0b95e9be4d74cf81012f446e9f38fd8f63e",
+        "train.zip": "ecce7d36f29dc92ce1d6b7083fc014e42ad24976e741eae02cd85abd700bd806"
+      },
+      "holdout_sha256": "f9a2ffab56889abc313c6e9b745b6f313e3301c6e1f216072bfaab8678721dd8",
+      "catalog_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45102,
+      "allocation": "adaptive"
+    },
+    "45103_fixed": {
+      "name": "45103_fixed",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6625,
+      "outer_rows": 1676,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4882,
+        "heldout_groups": 1237,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6625,
+        "search_rows": 1676,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "5594bc1db76809eb7f0eed969d63a47f003c321bb3b7c2a469f60c1c22b380d4",
+          "label_sha256": "8c70f803e552db50a85042e48e65b355a87b3761ebe571bb4d397658a0c39937",
+          "evaluation_payload_sha256": "c6314ae018d55d2ada909e7a8c0ec9bfb4734c30fead81839e989f05fb03ad30"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "e0fbadb818c8f1d9d75e99d7574cff47e52edcad8c8f7396973f90e52c6eb900",
+          "label_sha256": "ff97505e58a29c52fd246bcfc93f80a2a614f4fc5c4d21f3318dd74533d56c64",
+          "evaluation_payload_sha256": "b32a091f3bd8bf71a633da5e6d944e4a1494382d0067a714866948482ee570ce"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "6871c06ae794f90bcbfc67f03ab1e02b955f30064b5c5fd7e66976226977d958",
+          "label_sha256": "03937f577b1751503d95820790d91f6b80351575a1b456de918f56779ea6c0ef",
+          "evaluation_payload_sha256": "9661d0b4cb53f833ea63476926ff213ead2126d5ce3a32e2309aac074d7086e4"
+        }
+      },
+      "row_ids_sha256": "386b5bdbae3d92a1bb19f926690d2f41913c639853146fe22049236021f734d7",
+      "files": {
+        "features.zip": "35c7f23448c9517d2d30c1d3273d272036441b01983acd9a55e3c51f63eb8582",
+        "train.zip": "33ff875549dbfb389cd332b6ac5c4a76be870073a0cb22b21885353c2cec1027"
+      },
+      "holdout_sha256": "3d8c144b3c7ef6ff3b6d62449f1cf4ab817c0e8f7ca65f1182c1321f740ce185",
+      "catalog_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45103,
+      "allocation": "fixed"
+    },
+    "45103_adaptive": {
+      "name": "45103_adaptive",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6625,
+      "outer_rows": 1676,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4882,
+        "heldout_groups": 1237,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6625,
+        "search_rows": 1676,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "5594bc1db76809eb7f0eed969d63a47f003c321bb3b7c2a469f60c1c22b380d4",
+          "label_sha256": "8c70f803e552db50a85042e48e65b355a87b3761ebe571bb4d397658a0c39937",
+          "evaluation_payload_sha256": "c6314ae018d55d2ada909e7a8c0ec9bfb4734c30fead81839e989f05fb03ad30"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "e0fbadb818c8f1d9d75e99d7574cff47e52edcad8c8f7396973f90e52c6eb900",
+          "label_sha256": "ff97505e58a29c52fd246bcfc93f80a2a614f4fc5c4d21f3318dd74533d56c64",
+          "evaluation_payload_sha256": "b32a091f3bd8bf71a633da5e6d944e4a1494382d0067a714866948482ee570ce"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "6871c06ae794f90bcbfc67f03ab1e02b955f30064b5c5fd7e66976226977d958",
+          "label_sha256": "03937f577b1751503d95820790d91f6b80351575a1b456de918f56779ea6c0ef",
+          "evaluation_payload_sha256": "9661d0b4cb53f833ea63476926ff213ead2126d5ce3a32e2309aac074d7086e4"
+        }
+      },
+      "row_ids_sha256": "386b5bdbae3d92a1bb19f926690d2f41913c639853146fe22049236021f734d7",
+      "files": {
+        "features.zip": "35c7f23448c9517d2d30c1d3273d272036441b01983acd9a55e3c51f63eb8582",
+        "train.zip": "33ff875549dbfb389cd332b6ac5c4a76be870073a0cb22b21885353c2cec1027"
+      },
+      "holdout_sha256": "3d8c144b3c7ef6ff3b6d62449f1cf4ab817c0e8f7ca65f1182c1321f740ce185",
+      "catalog_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "outer_seed": 45103,
+      "allocation": "adaptive"
+    }
+  },
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 44,
+  "inner_seed": 707,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "api_requests_allowed": 0,
+  "selected_dataset_members": [
+    "train.csv"
+  ]
+}

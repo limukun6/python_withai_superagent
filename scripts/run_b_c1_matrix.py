@@ -86,6 +86,9 @@ def verify_run(run, source, task, arm, *, funding=None):
             result['source_unchanged'] and not result['formal_test_accessed'] and result['validation_score'] is None and
             result['unresolved_calls']==0 and not result['automatic_retries']):
         raise ValueError('Incomplete or unaccounted official arm')
+    elapsed = result['elapsed_seconds']
+    if type(elapsed) not in (int,float) or not math.isfinite(elapsed) or elapsed<=0:
+        raise ValueError('Actual training and selection time is missing or invalid')
     tally = result['classifier_fit_accounting']
     if (any(tally[k]!=fits[k] for k in ('attempted_classifier_fits','completed_classifier_fits','unknown_failed_attempts')) or
             fits['unknown_failed_attempts'] or not 1 < fits['attempted_classifier_fits']==fits['completed_classifier_fits']<=11 or
@@ -115,7 +118,7 @@ def verify_run(run, source, task, arm, *, funding=None):
             ab_run.sha(run/chosen['model_file'])==chosen['model_sha256'] and ab_run.sha(run/'task_spec.json')==chosen['task_spec_sha256']):
         raise ValueError('Delivered model or its schema differs from the frozen selection')
     return dict(model_sha256=chosen['model_sha256'],candidate=chosen['family'],fits=fits['completed_classifier_fits'],
-                requests=len(calls),course_rmb=result['complete_course_cost_rmb'])
+                requests=len(calls),course_rmb=result['complete_course_cost_rmb'],elapsed_seconds=elapsed)
 
 
 def claim_or_resume(folder, intent):

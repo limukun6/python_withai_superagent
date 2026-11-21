@@ -22,6 +22,17 @@ class RegisteredRowTests(unittest.TestCase):
         return dict(train_indices=fit,search_indices=held,row_ids_sha256=fingerprint(held),
                     label_sha256=fingerprint(self.task.y_train[held]))
 
+    def test_missing_categorical_features_keep_known_fingerprints_and_remain_distinct(self):
+        finite = content_digest([['雪', 2]], [1])
+        self.assertEqual(finite, hashlib.sha256('[["雪",2],1]\n'.encode()).hexdigest())
+        actual = content_digest(np.array([['a', np.nan]], dtype=object), np.array([1]))
+        self.assertEqual(actual, content_digest([['a', float('nan')]], [1]))
+        self.assertEqual(len({actual, content_digest([['a', None]], [1]),
+                              content_digest([['a','NaN']], [1]), content_digest([['a','nan']], [1])}), 4)
+        for rows,labels in [([[float('inf')]], [1]), ([[float('-inf')]], [1]), ([[float('nan')]], [float('nan')])]:
+            with self.subTest(rows=rows, labels=labels), self.assertRaises(ValueError):
+                content_digest(rows, labels)
+
     def test_rejects_shared_text_even_with_matching_row_and_label_hashes(self):
         row = self.record([0,3,4,5],[1,2])
         with self.assertRaisesRegex(ValueError,'group crosses'):

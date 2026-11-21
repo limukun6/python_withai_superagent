@@ -9,12 +9,26 @@ from superagent.prediction_evidence import fingerprint
 from superagent.splits import effective_grouping, sample_groups
 
 
+def _missing_feature(token):
+    if token != 'NaN':
+        raise ValueError('Infinite feature values cannot be registered')
+
+
 def content_digest(rows, labels):
     digest = hashlib.sha256()
+    compact = dict(separators=(',', ':'), ensure_ascii=False)
     for row, label in zip(rows, labels, strict=True):
         value = row.tolist() if isinstance(row, np.ndarray) else row
         scalar = label.item() if isinstance(label, np.generic) else label
-        digest.update(json.dumps([value, scalar], separators=(',', ':'), ensure_ascii=False, allow_nan=False).encode() + b'\n')
+        try:
+            encoded = json.dumps([value, scalar], allow_nan=False, **compact)
+        except ValueError:
+            label_text = json.dumps(scalar, allow_nan=False, **compact)
+            features = json.dumps(value, allow_nan=True, **compact)
+            json.loads(features, parse_constant=_missing_feature)
+            # This internal hash token distinguishes numeric NaN from null and quoted text.
+            encoded = '[' + features + ',' + label_text + ']'
+        digest.update(encoded.encode() + b'\n')
     return digest.hexdigest()
 
 

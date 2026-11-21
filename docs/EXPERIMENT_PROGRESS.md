@@ -11,6 +11,12 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### A29准备就绪：两任务六组，尚未执行训练/请求
+
+- 用户要求连续推进。计划batches/A29_limited_choice_matrix_plan.md、runner scripts/run_a29_choice_matrix.py、独立worker观察器已落盘。
+- a29_choice_prepared重新冻结coupon15/preference22候选、只含训练成员的包、实际707/808/909划分和当前生产源码。准备6.234秒；a29_choice_preflight验证12路径命令/同一累计账本通过，0fit/请求。
+- 接下来运行a29_choice_matrix：两任务各L0/L1/R0/E0/R1/E1，最多132fit/24请求，任务规范scope task1/task2，保持历史未知。预登记顺序和全12模型先封存后评分；预计20–45分钟，不是已完成结果。运行状态以该目录checkpoint/completion为准，勿重复收费请求或覆盖目录。
+
 ### 最新A28：Flash网络恢复，真实SMS raw/checked两臂完成
 
 - 用户网络调整后新授权；连通1请求返回ok:true/有效usage，7.597秒、¥.000136。随后按预登记正式CLI执行两臂，无改生产代码/网络、无重试。实际源码同202a250且两臂source_unchanged，H/test未开。

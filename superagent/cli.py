@@ -32,6 +32,8 @@ def _sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _validate(args):
+    if args.trials is None:
+        args.trials = 5
     calls_per_decision(args.architecture)
     if args.planner in HISTORY_PLANNERS:
         if (args.architecture!='single' or args.refinement!='off' or args.allocation!='off'
@@ -87,6 +89,13 @@ def _validate(args):
 
 
 def _run(args):
+    if args.scheduler == 'ab-v1':
+        from .ab_run import command
+        return command(args)
+    if args.fit_limit is not None or args.portfolio == 'ab-v1':
+        raise ValueError('AB fit-limit/portfolio require --scheduler ab-v1')
+    if args.trials is None:
+        args.trials = 5
     pricing=_validate(args)
     if args.allocation != "off" and (args.planner != "local" or args.refinement != "off"):
         raise ValueError("Resource allocation requires local mode and refinement off")
@@ -276,9 +285,11 @@ def build_parser():
         help='LLM mode: single proposal, same-planner self-review, or Planner plus Reviewer; shares the run allowance')
     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')
     run.add_argument('--seed',type=int,default=707)
-    run.add_argument('--trials',type=int,default=5)
+    run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
+    run.add_argument('--scheduler',choices=['fixed','ab-v1'],default='fixed')
+    run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
     run.add_argument('--anchor',choices=['catalog','schema'],default='catalog')
-    run.add_argument('--portfolio',choices=['original','expanded','research','nonlinear','adaptive','semantic','learned','challenger'],default='expanded')
+    run.add_argument('--portfolio',choices=['original','expanded','research','nonlinear','adaptive','semantic','learned','challenger','ab-v1'],default='expanded')
     run.add_argument('--time-limit',type=float,default=300.)
     run.add_argument('--trial-timeout',type=float,default=60.)
     run.add_argument('--time-policy',choices=['shared','reserve'],default='shared',help='Optional train-history-based time reservation for confirmation and full refit')

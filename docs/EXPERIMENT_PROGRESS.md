@@ -11,6 +11,15 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新 A-09：B bundle 已合入，正式本地动态入口验收通过
+
+- B a787a28 快进接收；新增正式 `superagent run --scheduler ab-v1 --portfolio ab-v1 --fit-limit 11`，接 A 状态/执行/交付与 B 目录/调度，不修改 B 选型规则。worker 正式加入 fit 前限额与持久计数。
+- 匿名路径 5 explore＋4 confirm＋1 refit＝10真实fits，18.791秒；两个新进程含模型目录搬迁，31行预测一致。初次外层验收误要求B的恰好11次而失败，失败保留；改为按原约定“最多11”复验既有模型，新增0fit/3.754秒。生产源码未变。
+- 两机依赖与实际划分指纹不同；只有生成配置/种子相同，不能称同划分公平对照或性能复现。详细说明 `batches/A09_B_bridge_cli_results.md`。
+- 38项接口回归通过（3.519秒，0fit）；旧CLI五项通过（29.628秒，17fits/5模拟HTTP）；本批合计27fits/0真实API。本A窗口累计116fits、10模拟HTTP；历史与队友用量另计。
+- 协议/runner/紧凑证据齐备：A09_B_bridge_cli_plan.md、scripts/run_a09_bridge_cli.py、research/a09_bridge_cli；给队友 `A_TO_B_BRIDGE_ACCEPTED_20261121.md`。
+- 动态CLI尚未接Flash raw/checked；AUC分数证据、对称/关系文本候选仍缺。下一批做真实任务完整小试与环境/划分对齐。11条未知API仍未对账。B合并改变源码，A2旧冻结状态仅作历史，不再声称与新版同源。
+
 - 用户明确此前做 B、现在切换 A；历史文件编号保留，我们当前只主改 A 的任务/证据/入口/交付，队友主改 B 方法与调度。
 - 已发布共同基线 `0b112d823a1991686281fdc88602e758e29a4202`，远端分支 `codex/expanded-feedback`。
 - 计划：`batches/A_next_3h_20261121_plan.md`；结果：`batches/A_window_20261121_results.md`。这是计划内批次实际成果，不宣称已经持续运行满三小时。

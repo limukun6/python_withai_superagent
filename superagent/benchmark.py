@@ -101,11 +101,13 @@ class Policy:
         return answer["candidate"], answer["reason"]
 
 
-def train_candidate(payload_path, candidate, destination, timeout):
+def train_candidate(payload_path, candidate, destination, timeout, *, fit_admission_path=None):
     started = time.monotonic()
     command = [sys.executable, "-m", "superagent.experiment_worker", str(payload_path), candidate, str(destination)]
     registry=Path(destination).parent/'candidate_registry.json'
     if registry.is_file():command.append(str(registry))
+    if fit_admission_path is not None:
+        command.extend(['--fit-admission', str(fit_admission_path)])
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=timeout,
                                 cwd=Path(__file__).resolve().parents[1])

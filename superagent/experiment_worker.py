@@ -17,16 +17,21 @@ from .error_slices import ErrorSlices
 
 
 def main() -> None:
-    if len(sys.argv) not in (4,5):raise ValueError('Expected payload, candidate, output, and optional owned registry')
-    payload_path, candidate_id, output_path = sys.argv[1:4]
+    arguments = sys.argv[1:]
+    fit_admission = None
+    if len(arguments) >= 2 and arguments[-2] == '--fit-admission':
+        fit_admission = json.loads(Path(arguments[-1]).read_text(encoding='utf-8'))
+        arguments = arguments[:-2]
+    if len(arguments) not in (3,4):raise ValueError('Expected payload, candidate, output, and optional owned registry')
+    payload_path, candidate_id, output_path = arguments[:3]
     payload_bytes=Path(payload_path).read_bytes()
     payload = joblib.load(io.BytesIO(payload_bytes))
     payload_sha256=hashlib.sha256(payload_bytes).hexdigest()
     metric=MetricSpec.from_payload(payload)
     registry_sha256=None;origin='static'
-    if len(sys.argv)==5:
+    if len(arguments)==4:
         from .candidate_refinement import resolve_registered
-        registry_bytes=Path(sys.argv[4]).read_bytes();document=json.loads(registry_bytes)
+        registry_bytes=Path(arguments[3]).read_bytes();document=json.loads(registry_bytes)
         candidate=resolve_registered(payload['kind'],candidate_id,document)
         registry_sha256=hashlib.sha256(registry_bytes).hexdigest()
         if candidate_id in document['entries']:origin='registry'
@@ -36,11 +41,15 @@ def main() -> None:
     configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256,
                    'semantic_check':semantic_check}
     start = time.perf_counter()
-    with using_feature_cache(payload.get('feature_cache_dir')) as cache:
+    from .fit_guard import admitted_fits
+    with admitted_fits(fit_admission, candidate_id) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
         if payload.get("mode") != "refit":
             training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
         cache_report=cache.report() if cache else {'enabled':False}
+    classifier_fits = fit_counts['completed_classifier_fits'] if fit_counts is not None else int(getattr(model,'classifier_fits',1))
+    if fit_counts is not None and int(getattr(model,'classifier_fits',classifier_fits)) != classifier_fits:
+        raise ValueError('Model fit declaration differs from actual supervised calls')
     training_metadata=getattr(model,'training_metadata',None)
     selected_iterations=training_metadata.get('selected_iterations') if training_metadata else None
     from .estimator_facts import observed_classifier
@@ -48,7 +57,7 @@ def main() -> None:
     if payload.get("mode") == "refit":
         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
-                     'classifier_fits':int(getattr(model,'classifier_fits',1)),
+                     'classifier_fits':classifier_fits,
                      'training_metadata':training_metadata,'selected_iterations':selected_iterations,
                      'estimator':observed,'resolved_configuration':configuration,'metric_spec':metric.record()}}, output_path)
         return
@@ -72,7 +81,7 @@ def main() -> None:
         "class_recall": recall_score(payload["y_search"], predictions, average=None, zero_division=0).tolist(),
         "training_seconds": time.perf_counter() - start,
         'feature_cache':cache_report,
-        'classifier_fits':int(getattr(model,'classifier_fits',1)),
+        'classifier_fits':classifier_fits,
         'training_metadata':training_metadata,'selected_iterations':selected_iterations,
         'estimator':observed,'resolved_configuration':configuration,
     }}, output_path)

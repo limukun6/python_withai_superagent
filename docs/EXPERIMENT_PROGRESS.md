@@ -11,6 +11,14 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 最新 A-10：真实三任务动态入口小试通过
+
+- 生产基线07884d0，未修改生产代码。复用已冻结A07数据包；预先登记三任务实际行ID、目录与依赖，运行后逐项一致，三模型封存后统一外层评分。
+- DryBean accuracy 0.913223（2178行），8fits/17.710秒CLI；SMS macro_f1 0.945980（826行），9fits/27.035秒；digits accuracy 0.986111（360行），10fits/19.266秒。各模型搬迁后新进程预测CSV一致，交付验证共16.536秒。
+- 全批90.096秒、27attempted=completed fits，独立观察器同为27，0真实API、0未知训练失败。当前A窗口累计143fits；模拟HTTP仍为10。历史/队友用量另计。
+- SMS在两共同划分后将word_char C0.3换为C3.0；digits允许primary稍差但两次复核更好的树替换logistic。梯度图像方法第2步实际训练但未胜出。不是固定/动态调度或LLM的因果收益证据。
+- 协议A10_real_task_pilot_plan.md；runner scripts/run_a10_real_task_pilot.py；结果A10_real_task_pilot_results.md；紧凑证据research/a10_real_task_pilot。下一项优先同版本/同候选/同预算固定与动态对照。Flash接入、自然图像和对称文本H支持仍待；11条未知API仍未对账。
+
 ### 最新 A-09：B bundle 已合入，正式本地动态入口验收通过
 
 - B a787a28 快进接收；新增正式 `superagent run --scheduler ab-v1 --portfolio ab-v1 --fit-limit 11`，接 A 状态/执行/交付与 B 目录/调度，不修改 B 选型规则。worker 正式加入 fit 前限额与持久计数。

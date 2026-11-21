@@ -1,0 +1,80 @@
+{
+  "batch": "B-TEXT-KERNEL-05",
+  "source_url": "https://archive.ics.uci.edu/dataset/331/sentiment%2Blabelled%2Bsentences",
+  "source_sha256": "afc26626d710899948693e1a61405dce197f57ffa719fa1130d346b4cc095343",
+  "members": {
+    "amazon": [
+      "amazon_cells_labelled.txt",
+      "47003fc0a0d4840b00e96e715b6189bad09e7443a3da41c4cbe12ffc79f86ae3"
+    ],
+    "imdb": [
+      "imdb_labelled.txt",
+      "aef2e49e3da25714d61175e3a6e68eeef74a20a2f914318dc3be9947ea86512d"
+    ],
+    "yelp": [
+      "yelp_labelled.txt",
+      "c76468b7b5c6e56a0804d728345c5f84aa2142ddb214420f61cc9cfd4c00d2ea"
+    ]
+  },
+  "driver_sha256": "6766fc158a65b833d7783b007532ee44fd2833bab9a113fac14464cf99a47263",
+  "plan_sha256": "ec207ba77f7846533c6c9bbe09c3e54b9e43bb29fca3a68435675766b4fe2aaf",
+  "ordered_runs": [
+    [
+      "amazon",
+      "original"
+    ],
+    [
+      "amazon",
+      "extended"
+    ],
+    [
+      "imdb",
+      "extended"
+    ],
+    [
+      "imdb",
+      "original"
+    ],
+    [
+      "yelp",
+      "original"
+    ],
+    [
+      "yelp",
+      "extended"
+    ]
+  ],
+  "sources": {
+    "original": "4d29aeb360e0a15f20011d4b98703bbcc4ebe332e11e7a40716b2d8919651ce3",
+    "extended": "4aacb36d219d501715e139cab44aad376457cfd2670956c1d96bb7b6346c9832"
+  },
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "fit_limit": 11,
+  "max_total_fits": 66,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "model_api_limit": 0
+}

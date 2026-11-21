@@ -10,7 +10,6 @@ import zipfile
 
 import joblib
 import numpy as np
-from PIL import Image
 from sklearn.datasets import load_digits
 
 from scripts import run_b1_ab_acceptance as rec, run_b1_05_pair_pilot as pilot
@@ -56,6 +55,8 @@ def record_rows(out):
 
 
 def packet(path, split, images, labels=None):
+    from PIL import Image
+
     manifest = dict(schema_version=1,objective='classification',modality='image',metric='accuracy',target='label',
                     columns=[{'name':'image','type':'image_path'}],
                     image_preprocessing=dict(width=8,height=8,mode='L',resize='stretch_bilinear'),

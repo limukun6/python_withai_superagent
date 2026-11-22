@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A64/A65补D3审计完成，0fit/0API，累计仍999，无运行任务。D3尚未全部验收：先读docs/D3_ACCEPTANCE_CHECKLIST_20261122_zh.md与docs/batches/A64_A65_results_zh.md。远端fetch无队友新提交（d750c7b/main a38e1b8），本机bundle a787a28已接。用户已授权继续补D3；1000fit为旧计划建议非权限硬限制，后续先登记有限补充预算并保留正式实验资源。
+
 - 最新A60–A63已完成：26+3=29新增实际fit、0API，A累计999，当前无训练/API任务运行。统一finalists与AUC正式入口/概率证据/partial交付已接，详细见docs/batches/A60_A63_results_zh.md、A_TO_B_AUC_FINALISTS_20261122.md。先按D4_freeze_and_formal_budget_20261122_zh.md整合最终目录与预算，不重复开发轮训练、不将下方970/运行中旧快照当现状。H/test仍封存。
 
 - 最新收尾：A50/A51/A55/A58真实队列及A59只读分析全部完成，没有训练/API任务在运行。优先读docs/batches/A37_A59_round_results_zh.md与docs/NEXT_RESEARCH_AFTER_A58_zh.md。下面“队列当前运行”是历史快照，已失效。A累计970次实际fit；共享真账本275行、已知估计¥5.9765785、历史未知11、pending0。H1/H2与正式test仍封存；不要重复启动已完成批次。

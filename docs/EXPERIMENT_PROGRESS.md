@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 最新：A64/A65 D3验收补充已完成
+
+用户授权继续未完成D3。清单docs/D3_ACCEPTANCE_CHECKLIST_20261122_zh.md（本目录下同名文件）、结果batches/A64_A65_results_zh.md。当前源76已知回归全通过/7.464秒，新增fit/API均0，累计仍999。旧预留案例已看过，不冒充新封存48例。
+
+Git fetch成功，origin队友d750c7b/main a38e1b8未更新，a787a28本机交接包已接；不代表队友本机无新工作。D3原A1 96例/独立封存与8格探针、A2四任务统一矩阵/语义纠错、B1四任务两划分仍需补齐或明确范围修订。
+
+A65六状态12回答机械约束全部有效，数值预期全null；结构记录中的失败/配置矛盾/不支持假设机会均0，纠错率不可测。文本三状态局部E−R均值+2.40899pp，Coupon0，为已有A55测量再分析，不新增独立证据。生产代码未改、H/test未开、无训练/API运行。1000fit旧建议不能当学校硬限制；下批先登记有限预算再推进，优先完整验收和正式证据链。
+
 ## 最新：A60–A63完成，进入D4整合准备
 
 - 先读[batches/A60_A63_results_zh.md](batches/A60_A63_results_zh.md)，下一步[D4_freeze_and_formal_budget_20261122_zh.md](D4_freeze_and_formal_budget_20261122_zh.md)，队友交接[A_TO_B_AUC_FINALISTS_20261122.md](A_TO_B_AUC_FINALISTS_20261122.md)。没有训练/API任务在运行；下方A37–A59为历史。

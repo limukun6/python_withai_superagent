@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 最新A88完成，A89继续Coupon六组完整对照
+
+A88四模型全部冻结再统一评分，43fit/363.890秒/API0，A累计1290。Coupon74.8276→75.0246%（净+4/2030，106预测不同）；photo95→97.5%（净+2/80，5预测不同），梯度方法胜出、冻结视觉实际试过未胜出。仅两已见开发划分，详见batches/A88_A_track_catalogue_Q_results_zh.md，不把A47旧source分数拼作新对照。
+
+接着按CURRENT_C1_A89.md与batches/A89_coupon_six_arm_C1_plan.md推进六组。L1预登记复用A88同源同预算11fit，其余5路径上限55新fit/12Flash/四组估计阈值合计¥1.20。统一全15菜单/实际split/300/1200，calibrated-v2，原真实ledger/incremental-research，历史11未知不清。先看actual completion/checkpoint，不把预算上限当实耗；任何请求或训练失败停，无重试。一个任务C1不代表跨任务矩阵完成，H/test封存。
+
 ## 当前A88已启动：A线两任务同源Q
 
 代码/方案/脚本先提交aa47bb9并推送，再启动四条真实路径。先读CURRENT_Q_A88.md、batches/A88_A_track_catalogue_Q_plan.md。Coupon与photo各baseline/full，同一正式入口/指标/实际划分，最多44fit，trial300/path1200，0API；全部四模型冻结后统一开发留出评分。上批累计1247，本批按实际physical日志叠加，不把上限当实耗；H/test封存，不改活动源码或重复运行。下方A87“无活动任务”只对应上一阶段。

@@ -30,7 +30,15 @@ class NonlinearTextTests(unittest.TestCase):
         base=search_candidates('pair_text','expanded');research=search_candidates('pair_text','research')
         nonlinear=search_candidates('pair_text','nonlinear');all_candidates=search_candidates('pair_text','all')
         from superagent.ab_methods import TEXT
-        self.assertEqual([len(base),len(research),len(nonlinear),sum(c.family != TEXT for c in all_candidates)],[22,28,29,43])
+        from superagent.ab_sentence import verified_directory
+        from superagent.ab_symmetric import CHANNELS, ENCODER
+        from superagent.symmetric_text import candidates as tfidf_candidates
+        additions = [c.family for c in tfidf_candidates()] + list(CHANNELS)
+        if verified_directory() is not None:
+            additions.extend([ENCODER, TEXT])
+        self.assertEqual([len(base), len(research), len(nonlinear)], [22, 28, 29])
+        self.assertEqual([c.family for c in all_candidates[43:]], additions)
+        self.assertEqual(len({c.family for c in all_candidates[:43]} - set(additions)), 43)
         self.assertEqual([(c.family,c.params) for c in base],[(c.family,c.params) for c in nonlinear[:22]])
         self.assertEqual({route_of(c.family) for c in nonlinear[22:]},{'style_tree','style_blend','symmetric_stats'})
         self.assertEqual(sum(c.params['classifier_fits_per_evaluation'] for c in nonlinear[22:]),11)

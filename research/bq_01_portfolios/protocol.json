@@ -1,0 +1,709 @@
+{
+  "batch": "BQ-01",
+  "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "driver_sha256": "117683959b4224614fee4b854ed2f9d7d11978f762cfb1c8844d8e7cd200afe2",
+  "entry_sha256": "ecd4c6ca69600a55211005530f3eccab613b16e25185d6fe853ee7478a9a5680",
+  "helper_sha256": "e25b3b83c0a5df048be9b635d914c7a9830fbbf76a629465a33dfaf5857fe77e",
+  "source_builder_sha256": "74634ee1dd7763613be691092918695364d68f341e1ae2d38e528ee81261994a",
+  "plan_sha256": "6e977b820471c13050bce5a7bc8589809332a46862ff63e0f224ff1931f286fb",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "tasks": {
+    "coupon_original": {
+      "name": "coupon_original",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6490,
+      "outer_rows": 1627,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6490,
+        "search_rows": 1627,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "8a5f069830639cbd33882fb9281fb8b835e6b83a74d93a2b960eddbda10c2571",
+          "label_sha256": "fdb64f93b540f62a8f1f8c8ab3352c0696a40ad416decc58bfa4f9557547158a",
+          "evaluation_payload_sha256": "0cef17219a35316da55ee8ef03e7f45b28bf74897bd7772919d00be0c644df40"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "71188f52747c944cdd94163a75a0ea0fb6164d3aab5493ee4bcaf744ed8fdbf3",
+          "label_sha256": "31f98ad2859cea0d68694ec4d6bbe4c9901b66391b0453d46d257adccd431b99",
+          "evaluation_payload_sha256": "d357912075274272d40b945fced6cf28cda09818709b44d45da645943078ae2f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "16966f3b4019bfbdcec8dce23295712d9667c2427e0c1c3ae8ae732d0f5c7add",
+          "label_sha256": "efefbe274ed80ff88abeee973e55f7870953e870e18e470ce49179142c315997",
+          "evaluation_payload_sha256": "ea0d51baeeeb99acf1eb266fb3f57c48e27d1ff9ebfe7ea80cbbd92606280f1b"
+        }
+      },
+      "row_ids_sha256": "608b30011391c7976b97dc51c00a6a6450a5323187aaa599713e636b30539ccd",
+      "files": {
+        "features.zip": "76e6b204fa11e76d6e2f60c84c6715a815091ec0437d77ddc57aff3daf80c82f",
+        "train.zip": "6df5e3755422d9c06e686a5cb7ed6ea3e935080c5ba367ff1405345663af5b9c"
+      },
+      "holdout_sha256": "d06c8cb2b52834dab0aba9ae665cfe7a5ea9243d450a535b3e91047ae014be82",
+      "catalog_sha256": "00cb79766e5a4c8ebd01a08066f0250d9de440d44bc2e370aa247b8d5cdfd0fc",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0"
+      ],
+      "task_group": "coupon",
+      "portfolio": "original",
+      "metric": "accuracy"
+    },
+    "coupon_expanded": {
+      "name": "coupon_expanded",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6490,
+      "outer_rows": 1627,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6490,
+        "search_rows": 1627,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "8a5f069830639cbd33882fb9281fb8b835e6b83a74d93a2b960eddbda10c2571",
+          "label_sha256": "fdb64f93b540f62a8f1f8c8ab3352c0696a40ad416decc58bfa4f9557547158a",
+          "evaluation_payload_sha256": "0cef17219a35316da55ee8ef03e7f45b28bf74897bd7772919d00be0c644df40"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "71188f52747c944cdd94163a75a0ea0fb6164d3aab5493ee4bcaf744ed8fdbf3",
+          "label_sha256": "31f98ad2859cea0d68694ec4d6bbe4c9901b66391b0453d46d257adccd431b99",
+          "evaluation_payload_sha256": "d357912075274272d40b945fced6cf28cda09818709b44d45da645943078ae2f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "16966f3b4019bfbdcec8dce23295712d9667c2427e0c1c3ae8ae732d0f5c7add",
+          "label_sha256": "efefbe274ed80ff88abeee973e55f7870953e870e18e470ce49179142c315997",
+          "evaluation_payload_sha256": "ea0d51baeeeb99acf1eb266fb3f57c48e27d1ff9ebfe7ea80cbbd92606280f1b"
+        }
+      },
+      "row_ids_sha256": "608b30011391c7976b97dc51c00a6a6450a5323187aaa599713e636b30539ccd",
+      "files": {
+        "features.zip": "76e6b204fa11e76d6e2f60c84c6715a815091ec0437d77ddc57aff3daf80c82f",
+        "train.zip": "6df5e3755422d9c06e686a5cb7ed6ea3e935080c5ba367ff1405345663af5b9c"
+      },
+      "holdout_sha256": "d06c8cb2b52834dab0aba9ae665cfe7a5ea9243d450a535b3e91047ae014be82",
+      "catalog_sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0",
+        "supported_field_interactions"
+      ],
+      "task_group": "coupon",
+      "portfolio": "expanded",
+      "metric": "accuracy"
+    },
+    "headlines_original": {
+      "name": "headlines_original",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6629,
+      "outer_rows": 1672,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4877,
+        "heldout_groups": 1242,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6629,
+        "search_rows": 1672,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "3c428c9a9f77dc771f1acc5b40aecccc88fd0c075492831afde974f0d0d4a753",
+          "label_sha256": "65f41ae91dabb43c41d0276763c2574d1e848ff67ad9ca7278fa1b73af10ffbf",
+          "evaluation_payload_sha256": "cb9e1796609dab2241895827e97391a9da3079bd38df2bd97fe4afc548aed13c"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "37a1fd6b60a524822930cf5165ddff5b979a1a7007b1de8f6092e7063d31a6b9",
+          "label_sha256": "67d7e0011010d89684f356ef47f29d1b7de5b36804153346590386f9ab599759",
+          "evaluation_payload_sha256": "e44cb7ce198ea09ccadc9d73025ad67f6a5d28bd10f67d9b82802de75675f5e0"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "29a3ef505665e15fcd8799b32e28395cc9063f2b13fe440c4b14b62ea475240e",
+          "label_sha256": "4f99c96ae72fdbc2083d3f7131fa0e2d99a9a10e2aeabf2556dec2023ec12b8d",
+          "evaluation_payload_sha256": "17f8d9b790077c3ecbb563113be682ba86241aa7d37b5ed7bcbde86e500345a5"
+        }
+      },
+      "row_ids_sha256": "1c33a82d371528a61a1e9bd0c8336c5bdbe6376a75ca16c6c22c1aaeedd83991",
+      "files": {
+        "features.zip": "4dea617e19638469adb1af233af5a7eafe580bf64b81dc834022cb24e86d96b4",
+        "train.zip": "0b08c2d9abed349ddd6027f13708346f024c758584eeb0f705c0f1b0d10cd0df"
+      },
+      "holdout_sha256": "b871e891fe7b3ed3b4e424457ea91b92b0e1fe68e64e5cbeb5950eb1f62aa6b2",
+      "catalog_sha256": "8d43b11ef70ce343e7313bce12b9701388ed796d2005bfb9c81463aaa90429fb",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0"
+      ],
+      "task_group": "headlines",
+      "portfolio": "original",
+      "metric": "accuracy"
+    },
+    "headlines_expanded": {
+      "name": "headlines_expanded",
+      "semantics": "preference",
+      "source": {
+        "training_member_sha256": "cf728ca87cc5f187cae90b86a38406ba2ef981601cc662a6815b429bee748d0c",
+        "opened": [
+          "train.csv"
+        ]
+      },
+      "source_rows": 8301,
+      "inner_input_rows": 6629,
+      "outer_rows": 1672,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 6119,
+        "train_groups": 4877,
+        "heldout_groups": 1242,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6629,
+        "search_rows": 1672,
+        "search_rows_sharing_text": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "3c428c9a9f77dc771f1acc5b40aecccc88fd0c075492831afde974f0d0d4a753",
+          "label_sha256": "65f41ae91dabb43c41d0276763c2574d1e848ff67ad9ca7278fa1b73af10ffbf",
+          "evaluation_payload_sha256": "cb9e1796609dab2241895827e97391a9da3079bd38df2bd97fe4afc548aed13c"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "37a1fd6b60a524822930cf5165ddff5b979a1a7007b1de8f6092e7063d31a6b9",
+          "label_sha256": "67d7e0011010d89684f356ef47f29d1b7de5b36804153346590386f9ab599759",
+          "evaluation_payload_sha256": "e44cb7ce198ea09ccadc9d73025ad67f6a5d28bd10f67d9b82802de75675f5e0"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "29a3ef505665e15fcd8799b32e28395cc9063f2b13fe440c4b14b62ea475240e",
+          "label_sha256": "4f99c96ae72fdbc2083d3f7131fa0e2d99a9a10e2aeabf2556dec2023ec12b8d",
+          "evaluation_payload_sha256": "17f8d9b790077c3ecbb563113be682ba86241aa7d37b5ed7bcbde86e500345a5"
+        }
+      },
+      "row_ids_sha256": "1c33a82d371528a61a1e9bd0c8336c5bdbe6376a75ca16c6c22c1aaeedd83991",
+      "files": {
+        "features.zip": "4dea617e19638469adb1af233af5a7eafe580bf64b81dc834022cb24e86d96b4",
+        "train.zip": "0b08c2d9abed349ddd6027f13708346f024c758584eeb0f705c0f1b0d10cd0df"
+      },
+      "holdout_sha256": "b871e891fe7b3ed3b4e424457ea91b92b0e1fe68e64e5cbeb5950eb1f62aa6b2",
+      "catalog_sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0",
+      "candidate_ids": [
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C3.0",
+        "word_C10.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C3.0",
+        "word_char_C10.0",
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "task_group": "headlines",
+      "portfolio": "expanded",
+      "metric": "accuracy"
+    },
+    "bean_original": {
+      "name": "bean_original",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8714,
+      "outer_rows": 2174,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8714,
+        "search_rows": 2174,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "7734588443c28748132ff193377cdc47187303179532b0fd4b41bd95ba4585e2",
+          "label_sha256": "30b791a54cab4751c3a7c05453d9710e26e93e9853f0f3077a8f07fdfa8d7beb",
+          "evaluation_payload_sha256": "bb7d06454004c36c13679ec0b471f6eced52f266dc864371614d313da2041547"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "306a4ecb9c4cf8a9a808e1a11b6ba1074df387695b8a7f5585a42c9845e67c16",
+          "label_sha256": "d505878cd81fba561be7160683c6cd924a192b86e0021375dd4cd2627cfb2889",
+          "evaluation_payload_sha256": "b8e6a25e33647694cc4d6e310acbad08c08d0a846c77b9d572188bd78cb47bb6"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "c23c0563e0d903cc15fafcf3b69901b6406addd9ef67e6125534a75abf916822",
+          "label_sha256": "d36a9d130eb3ead2e9566028078199a3c12fbc27b878e7aaa73f3c86903d9653",
+          "evaluation_payload_sha256": "3291e3dec6fe7df348d6f2aa500f04c6216c2781620f196a636f6e1390296f2f"
+        }
+      },
+      "row_ids_sha256": "c594dbc3c4d7f74b3a9beebcb3d3e6cce06700984dca5dc29ca82e33bd2e13b2",
+      "files": {
+        "features.zip": "6c8b2325edb717b67f44ab6ca10976c7a051eac6d4c2454fdd163ede0a87954b",
+        "train.zip": "28c9a7e80994ff0cf90b7c32d73b5f6c01b994db7b0a167fe0bad7cff628f078"
+      },
+      "holdout_sha256": "8cca975e2abd4a3d2d5de80b277751b0e1d6355740274720193757b1c9fca102",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "task_group": "bean",
+      "portfolio": "original",
+      "metric": "accuracy"
+    },
+    "bean_expanded": {
+      "name": "bean_expanded",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8714,
+      "outer_rows": 2174,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8714,
+        "search_rows": 2174,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "7734588443c28748132ff193377cdc47187303179532b0fd4b41bd95ba4585e2",
+          "label_sha256": "30b791a54cab4751c3a7c05453d9710e26e93e9853f0f3077a8f07fdfa8d7beb",
+          "evaluation_payload_sha256": "bb7d06454004c36c13679ec0b471f6eced52f266dc864371614d313da2041547"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "306a4ecb9c4cf8a9a808e1a11b6ba1074df387695b8a7f5585a42c9845e67c16",
+          "label_sha256": "d505878cd81fba561be7160683c6cd924a192b86e0021375dd4cd2627cfb2889",
+          "evaluation_payload_sha256": "b8e6a25e33647694cc4d6e310acbad08c08d0a846c77b9d572188bd78cb47bb6"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "c23c0563e0d903cc15fafcf3b69901b6406addd9ef67e6125534a75abf916822",
+          "label_sha256": "d36a9d130eb3ead2e9566028078199a3c12fbc27b878e7aaa73f3c86903d9653",
+          "evaluation_payload_sha256": "3291e3dec6fe7df348d6f2aa500f04c6216c2781620f196a636f6e1390296f2f"
+        }
+      },
+      "row_ids_sha256": "c594dbc3c4d7f74b3a9beebcb3d3e6cce06700984dca5dc29ca82e33bd2e13b2",
+      "files": {
+        "features.zip": "6c8b2325edb717b67f44ab6ca10976c7a051eac6d4c2454fdd163ede0a87954b",
+        "train.zip": "28c9a7e80994ff0cf90b7c32d73b5f6c01b994db7b0a167fe0bad7cff628f078"
+      },
+      "holdout_sha256": "8cca975e2abd4a3d2d5de80b277751b0e1d6355740274720193757b1c9fca102",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "task_group": "bean",
+      "portfolio": "expanded",
+      "metric": "accuracy"
+    },
+    "sms_original": {
+      "name": "sms_original",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "9ae0f1df07f790b48d5c3e4f737a7f413ca3e23a59a8ee499e517bc06295f41d",
+          "label_sha256": "2de0ea1799383444f58090e0b6e89412062fd2a2afcf79dfceed38c5d47b66d1",
+          "evaluation_payload_sha256": "cb15766a35f633d08fb38d2ecfb00a7f47f41301ebcf288d0036c439166880d3"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "de363a1a0de396efa9ddb00e8b8a8d86dd26580b88887f2f0f6124c037982fa4",
+          "label_sha256": "850eaf83bb4f6f92263f9900b745d46373773039f1d3c34fc4e6becf44883eaa",
+          "evaluation_payload_sha256": "b003f8b640580e403c62fce2a5823c86eb8020263ab51298066e297ade761026"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "7ad48d72325a5d00f42029e836e7c4451771272f69597177775c89dfaedb1237",
+          "label_sha256": "56dab94e6b28f68b99221f25a63125d7306faa5731db2326edef58013edf6d45",
+          "evaluation_payload_sha256": "11b03acc0f34c4f76697e2469bc5db66f483649a32d419b703db9caaeed07176"
+        }
+      },
+      "row_ids_sha256": "c63a599bac943ff85eec68239bf8427bd755d646ba325671d0990a25018d7e13",
+      "files": {
+        "features.zip": "e261b8db39d5a65a8cdeb9546f72f12c31ca25adb727fa821775aa4127ba2ce0",
+        "train.zip": "73bdaa91d286e85e3c6eda9c7d23362b3f5320788f958778441009e957e9be94"
+      },
+      "holdout_sha256": "c560a2cebf60607f39f108a69536580347f227f49343a58e54ba06b16b1ad230",
+      "catalog_sha256": "ab131bc2b4cb6c31ff65d099b22f10205683c8564f76e83229d5831c35ae7de8",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0"
+      ],
+      "task_group": "sms",
+      "portfolio": "original",
+      "metric": "macro_f1"
+    },
+    "sms_expanded": {
+      "name": "sms_expanded",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "9d8f81a75bbaa11a622c9bb3e67b52b6bf5edb9b29dc7552f5091ce6f3bb656e",
+        "training_member_sha256": "91552306098f2123c4b962fef576a2d7b031d79b0ed336c48eb13c1f50873f22",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+      },
+      "source_rows": 4128,
+      "inner_input_rows": 3303,
+      "outer_rows": 825,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 4127,
+        "train_groups": 3302,
+        "heldout_groups": 825,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 3303,
+        "search_rows": 825,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "9ae0f1df07f790b48d5c3e4f737a7f413ca3e23a59a8ee499e517bc06295f41d",
+          "label_sha256": "2de0ea1799383444f58090e0b6e89412062fd2a2afcf79dfceed38c5d47b66d1",
+          "evaluation_payload_sha256": "cb15766a35f633d08fb38d2ecfb00a7f47f41301ebcf288d0036c439166880d3"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "de363a1a0de396efa9ddb00e8b8a8d86dd26580b88887f2f0f6124c037982fa4",
+          "label_sha256": "850eaf83bb4f6f92263f9900b745d46373773039f1d3c34fc4e6becf44883eaa",
+          "evaluation_payload_sha256": "b003f8b640580e403c62fce2a5823c86eb8020263ab51298066e297ade761026"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "7ad48d72325a5d00f42029e836e7c4451771272f69597177775c89dfaedb1237",
+          "label_sha256": "56dab94e6b28f68b99221f25a63125d7306faa5731db2326edef58013edf6d45",
+          "evaluation_payload_sha256": "11b03acc0f34c4f76697e2469bc5db66f483649a32d419b703db9caaeed07176"
+        }
+      },
+      "row_ids_sha256": "c63a599bac943ff85eec68239bf8427bd755d646ba325671d0990a25018d7e13",
+      "files": {
+        "features.zip": "e261b8db39d5a65a8cdeb9546f72f12c31ca25adb727fa821775aa4127ba2ce0",
+        "train.zip": "73bdaa91d286e85e3c6eda9c7d23362b3f5320788f958778441009e957e9be94"
+      },
+      "holdout_sha256": "c560a2cebf60607f39f108a69536580347f227f49343a58e54ba06b16b1ad230",
+      "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+      "candidate_ids": [
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0",
+        "minilm_text_with_lexical_features"
+      ],
+      "task_group": "sms",
+      "portfolio": "expanded",
+      "metric": "macro_f1"
+    }
+  },
+  "execution_order": [
+    [
+      "coupon",
+      "original"
+    ],
+    [
+      "coupon",
+      "expanded"
+    ],
+    [
+      "headlines",
+      "expanded"
+    ],
+    [
+      "headlines",
+      "original"
+    ],
+    [
+      "bean",
+      "original"
+    ],
+    [
+      "bean",
+      "expanded"
+    ],
+    [
+      "sms",
+      "expanded"
+    ],
+    [
+      "sms",
+      "original"
+    ]
+  ],
+  "outer_seed": 45101,
+  "inner_seed": 707,
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 88,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "api_requests_allowed": 0,
+  "a10_cross_machine": {
+    "bean": {
+      "source_package_matches": false,
+      "primary_row_ids_match": false,
+      "primary_payload_matches": false
+    },
+    "sms": {
+      "source_package_matches": false,
+      "primary_row_ids_match": false,
+      "primary_payload_matches": false
+    }
+  }
+}

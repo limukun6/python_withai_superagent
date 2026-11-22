@@ -1,0 +1,278 @@
+{
+  "coupon": {
+    "name": "coupon",
+    "training_rows": 6490,
+    "held_rows": 1627,
+    "outer_ids_sha256": "608b30011391c7976b97dc51c00a6a6450a5323187aaa599713e636b30539ccd",
+    "raw_training_content": "41e0419ff92f66ea2b76a80fd9381b85c358dff5050170dfb8f384004d3ec5f4",
+    "held_content": "300e096631e410e0163c5f2e2be959ef220b1d3809f929160ee39cdcdb18c5f4",
+    "train_sha256": "101a2c6d59d5a109a667804f642c933cf39932f2a7e1bd9987ff319d1339633b",
+    "features_sha256": "9bf326a98a50c845ff05d05fd350cd77244bbf495e69d9e0afad5ba298dae46a",
+    "inner_sha256": "574354d3a90fbaa38d4ae8d5fd904ae199b701edf64a8f010e40a693b1339095",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "8a5f069830639cbd33882fb9281fb8b835e6b83a74d93a2b960eddbda10c2571",
+        "label_sha256": "fdb64f93b540f62a8f1f8c8ab3352c0696a40ad416decc58bfa4f9557547158a",
+        "evaluation_payload_sha256": "2af27e72896e4abf078ae82fe84dc8e31aa3593669c406cf782008ee98e87d47"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "71188f52747c944cdd94163a75a0ea0fb6164d3aab5493ee4bcaf744ed8fdbf3",
+        "label_sha256": "31f98ad2859cea0d68694ec4d6bbe4c9901b66391b0453d46d257adccd431b99",
+        "evaluation_payload_sha256": "ded902105c45644cf78209b4537da95f6ecfca028e421524fe4308205cc1a5f6"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "16966f3b4019bfbdcec8dce23295712d9667c2427e0c1c3ae8ae732d0f5c7add",
+        "label_sha256": "efefbe274ed80ff88abeee973e55f7870953e870e18e470ce49179142c315997",
+        "evaluation_payload_sha256": "27d5d66c5782707c98381c7d7a70837a62690edc080b006d1659c89448bb5f10"
+      }
+    },
+    "catalogs": {
+      "baseline": {
+        "ids": [
+          "logistic_C0.05",
+          "logistic_C0.25",
+          "logistic_C1.0",
+          "logistic_C4.0",
+          "extra_trees_leaf1",
+          "extra_trees_leaf2",
+          "extra_trees_leaf4",
+          "extra_trees_leaf8",
+          "catboost_depth4_reg3.0",
+          "catboost_depth4_reg10.0",
+          "catboost_depth6_reg3.0",
+          "catboost_depth6_reg10.0",
+          "catboost_depth8_reg3.0",
+          "catboost_depth8_reg10.0"
+        ],
+        "sha256": "00cb79766e5a4c8ebd01a08066f0250d9de440d44bc2e370aa247b8d5cdfd0fc"
+      },
+      "full": {
+        "ids": [
+          "logistic_C0.05",
+          "logistic_C0.25",
+          "logistic_C1.0",
+          "logistic_C4.0",
+          "extra_trees_leaf1",
+          "extra_trees_leaf2",
+          "extra_trees_leaf4",
+          "extra_trees_leaf8",
+          "catboost_depth4_reg3.0",
+          "catboost_depth4_reg10.0",
+          "catboost_depth6_reg3.0",
+          "catboost_depth6_reg10.0",
+          "catboost_depth8_reg3.0",
+          "catboost_depth8_reg10.0",
+          "supported_field_interactions"
+        ],
+        "sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29"
+      }
+    },
+    "task_contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "categorical_tabular",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "readme_sha256": "289f7684d1d8170dccbb7e64e6b196c6881b1c6b982a939c1e0475f8486c6493",
+    "source_staged_sha256": "8552c53c23c4d0f2101ed4121b73046830a9b760d5cddf5980b1d1d68127d281"
+  },
+  "headlines": {
+    "name": "headlines",
+    "training_rows": 6629,
+    "held_rows": 1672,
+    "outer_ids_sha256": "1c33a82d371528a61a1e9bd0c8336c5bdbe6376a75ca16c6c22c1aaeedd83991",
+    "raw_training_content": "1854d98ade1f82cd2517860d26ae191218370608825cab3c7a04ae40e2eca051",
+    "held_content": "f532395064e3be408d39a6722742c6a0dcae648eb147e65ce40292a11d87f2e0",
+    "train_sha256": "ce6bf469f3662055a80d35b198b644812f4a5353b73313fcc010246cfcc80fda",
+    "features_sha256": "0419952fafabe3e66b46a781561367e1b2551fc68ff0c73b917b6a10d4f4b5d9",
+    "inner_sha256": "ce2469140082275af908e9241717890d2cdd5d4a72fbcf71b4132d497f561468",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "3c428c9a9f77dc771f1acc5b40aecccc88fd0c075492831afde974f0d0d4a753",
+        "label_sha256": "65f41ae91dabb43c41d0276763c2574d1e848ff67ad9ca7278fa1b73af10ffbf",
+        "evaluation_payload_sha256": "cb9e1796609dab2241895827e97391a9da3079bd38df2bd97fe4afc548aed13c"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "37a1fd6b60a524822930cf5165ddff5b979a1a7007b1de8f6092e7063d31a6b9",
+        "label_sha256": "67d7e0011010d89684f356ef47f29d1b7de5b36804153346590386f9ab599759",
+        "evaluation_payload_sha256": "e44cb7ce198ea09ccadc9d73025ad67f6a5d28bd10f67d9b82802de75675f5e0"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "29a3ef505665e15fcd8799b32e28395cc9063f2b13fe440c4b14b62ea475240e",
+        "label_sha256": "4f99c96ae72fdbc2083d3f7131fa0e2d99a9a10e2aeabf2556dec2023ec12b8d",
+        "evaluation_payload_sha256": "17f8d9b790077c3ecbb563113be682ba86241aa7d37b5ed7bcbde86e500345a5"
+      }
+    },
+    "catalogs": {
+      "baseline": {
+        "ids": [
+          "word_C0.05",
+          "word_C0.1",
+          "word_C0.3",
+          "word_C0.7",
+          "word_C1.5",
+          "word_C3.0",
+          "word_C10.0",
+          "word_char_C0.05",
+          "word_char_C0.1",
+          "word_char_C0.3",
+          "word_char_C0.7",
+          "word_char_C1.5",
+          "word_char_C3.0",
+          "word_char_C10.0",
+          "char_C0.1",
+          "char_C0.3",
+          "char_C1.0",
+          "char_C3.0",
+          "word_char_stats_C0.1",
+          "word_char_stats_C0.3",
+          "word_char_stats_C1.0",
+          "word_char_stats_C3.0"
+        ],
+        "sha256": "8d43b11ef70ce343e7313bce12b9701388ed796d2005bfb9c81463aaa90429fb"
+      },
+      "full": {
+        "ids": [
+          "word_C0.05",
+          "word_C0.1",
+          "word_C0.3",
+          "word_C0.7",
+          "word_C1.5",
+          "word_C3.0",
+          "word_C10.0",
+          "word_char_C0.05",
+          "word_char_C0.1",
+          "word_char_C0.3",
+          "word_char_C0.7",
+          "word_char_C1.5",
+          "word_char_C3.0",
+          "word_char_C10.0",
+          "char_C0.1",
+          "char_C0.3",
+          "char_C1.0",
+          "char_C3.0",
+          "word_char_stats_C0.1",
+          "word_char_stats_C0.3",
+          "word_char_stats_C1.0",
+          "word_char_stats_C3.0",
+          "minilm_text_with_lexical_features"
+        ],
+        "sha256": "087eef0ca332a9127b4bd0e0f1ab237a5bec9dae7fb49dcbab531347d11620d0"
+      }
+    },
+    "task_contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "pair_text",
+        "pair_semantics": "preference",
+        "pair_label_one": "left"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "pair_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": "preference",
+            "source": "input_schema",
+            "status": "confirmed"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "readme_sha256": "020196bc21301804050b7542fa0a6371510ae87a10d16b30d71fbc2eef183c82",
+    "source_staged_sha256": "582a2ff7f63f3f71c28189acfc870f94b974b974e5843b1c92feaa2d8f341012"
+  }
+}

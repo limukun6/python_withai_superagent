@@ -5,16 +5,21 @@ from importlib.util import find_spec
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
+from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
+from . import ab_vision, symmetric_text
 
 
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
-ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms'}
+RELATION = 'ordered_text_pair_interactions'
+ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
+          RELATION:'ordered_text_interactions', **{name: name for name in CHANNELS}, ENCODER: ENCODER,
+          ab_vision.NAME:'frozen_image_features'}
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 
@@ -65,18 +70,42 @@ def _image(rows, labels, query):
     return model,model.predict(query)
 
 
+def _ordered_relation(rows, labels, query):
+    from .general_models import TextTablePreprocessor
+    from .schema import TextTableRows
+
+    if not isinstance(rows, TextTableRows) or rows.shape[1] != 2 or rows.text_columns != (0, 1):
+        raise ValueError('Ordered text interactions require two declared text columns')
+    features = FeatureUnion([('ordered', TextTablePreprocessor()),
+                             ('overlap', UnorderedPairFeatures(('word', 'char'), bins=32768))])
+    model = Pipeline([('features', features),
+                      ('classifier', LogisticRegression(C=1.0, max_iter=2000, random_state=42))])
+    model.fit(rows, labels)
+    return model, model.predict(query)
+
+
 def additions(kind):
+    if kind == 'text_tabular':
+        return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
+                          representation='ordered columns with word and character pair interactions'), _ordered_relation)]
     if kind=='categorical_tabular' and find_spec('catboost') is not None:
         return [Candidate(FIELDS,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
                           representation='training-selected categorical field interactions'),_field_tree)]
     if kind=='image':
-        return [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
+        methods = [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
+        if ab_vision.weights_file() is not None:
+            methods.append(Candidate(ab_vision.NAME,dict(encoder=ab_vision.WEIGHT_ID, weight_sha256=ab_vision.WEIGHT_SHA256,
+                C=10., representation='L2-normalized frozen 576-dimensional image features'),ab_vision.fit_vision))
+        return methods
     if kind in ('single_text','pair_text'):
         from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
-        from .symmetric_text import candidates
-        added = candidates() if kind == 'pair_text' else []
-        if verified_directory() is not None:
-            added += [Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
-                              swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind))]
-        return added
+        encoder_ready = verified_directory() is not None
+        extra = []
+        if kind == 'pair_text':
+            extra.extend(symmetric_text.candidates())
+            extra.extend(symmetric_candidates(include_encoder=encoder_ready))
+        if encoder_ready:
+            extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
+                                   swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+        return extra
     return []

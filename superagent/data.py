@@ -187,8 +187,12 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
         manifest=read_manifest(archive)
         if frozen_spec and frozen_spec.get('input_schema'):
             if manifest is None:
-                from .native_schema import prediction_manifest
-                manifest=prediction_manifest(archive,frozen_spec)
+                # A legacy two-column CSV records its fields and README semantics without input_format.
+                legacy_csv = (kind == 'pair_text' and frozen_spec.get('task_kind') == 'pair_text_binary'
+                              and frozen_spec.get('input_fields') == ['headline_A', 'headline_B'])
+                if 'input_format' in frozen_spec or not legacy_csv:
+                    from .native_schema import prediction_manifest
+                    manifest=prediction_manifest(archive,frozen_spec)
             else:
                 expected=frozen_spec['input_schema']
                 for key in ('modality','columns','pair_label_one','pair_semantics','image_preprocessing'):

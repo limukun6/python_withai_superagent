@@ -51,7 +51,8 @@ class SymmetricInputTests(unittest.TestCase):
             root=Path(tmp);path=self.package(root)
             args=build_parser().parse_args(['run',str(path),'--scheduler','ab-v1','--portfolio','ab-v1',
                 '--run-dir',str(root/'run')])
-            with patch('superagent.ab_run.train_candidate') as worker,patch('superagent.ab_run.registered_capabilities',return_value={}),contextlib.redirect_stdout(io.StringIO()):
+            with patch('superagent.ab_run.capabilities_for', return_value={}), \
+                    patch('superagent.ab_run.train_candidate') as worker,contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(_run(args),2)
                 worker.assert_not_called()
             outcome=json.loads((root/'run/run_outcome.json').read_text(encoding='utf-8'))

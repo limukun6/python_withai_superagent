@@ -1,0 +1,480 @@
+{
+  "headlines": {
+    "reproduced_actions": {
+      "45102_fixed": 11,
+      "45102_adaptive": 10,
+      "45103_fixed": 11,
+      "45103_adaptive": 10
+    },
+    "policy_first_difference": {
+      "45102": {
+        "step": 5,
+        "left": [
+          "confirm",
+          "minilm_text_with_lexical_features",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "word_char_stats_C0.1",
+          "primary"
+        ]
+      },
+      "45103": {
+        "step": 5,
+        "left": [
+          "confirm",
+          "minilm_text_with_lexical_features",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "word_char_stats_C0.1",
+          "primary"
+        ]
+      }
+    },
+    "adaptive_first_cross_split_difference": {
+      "step": 7,
+      "left": [
+        "confirm",
+        "minilm_text_with_lexical_features",
+        "confirmation_1"
+      ],
+      "right": [
+        "explore",
+        "char_C0.3",
+        "primary"
+      ],
+      "status": "bidirectional_change",
+      "controls": {
+        "task": true,
+        "available_candidates": true,
+        "registered_confirmation_splits": true,
+        "ab_schema_version": true,
+        "capabilities": true,
+        "budget_except_elapsed": true
+      },
+      "comparisons": [
+        {
+          "state_sha256": "cf8c80d7e661da793c77b64e369f07aff8ac5a4f49dae3b0ed5966cb034aa01b",
+          "donor_evidence_sha256": "c4eb6a06b11b07ab8e591aff6fa8f6f46f4a8c15920830a1c06e578c5c813d53",
+          "retained_elapsed_seconds": 37.88127012504265,
+          "remaining_fits": 5,
+          "original": {
+            "action": "confirm",
+            "candidate_id": "minilm_text_with_lexical_features",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.7001 and 0.6949; hard predictions differ on 241/1344 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+            "evidence_trials": [
+              2,
+              6
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "explore",
+            "candidate_id": "char_C0.3",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              2,
+              6
+            ],
+            "estimated_classifier_fits": 1
+          }
+        },
+        {
+          "state_sha256": "78c9bd2acb6c552202e9339496c041fc4768743e0c54e9a1f44f28292be0d544",
+          "donor_evidence_sha256": "697df60d40cfe3004c76ca13f7dcd9f10be4c823a9c8ab7c17a397914eb2b54a",
+          "retained_elapsed_seconds": 37.63521991693415,
+          "remaining_fits": 5,
+          "original": {
+            "action": "explore",
+            "candidate_id": "char_C0.3",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              2,
+              6
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "confirm",
+            "candidate_id": "minilm_text_with_lexical_features",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.7001 and 0.6949; hard predictions differ on 241/1344 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+            "evidence_trials": [
+              2,
+              6
+            ],
+            "estimated_classifier_fits": 1
+          }
+        }
+      ]
+    }
+  },
+  "coupon": {
+    "reproduced_actions": {
+      "45102_fixed": 11,
+      "45102_adaptive": 10,
+      "45103_fixed": 11,
+      "45103_adaptive": 10
+    },
+    "policy_first_difference": {
+      "45102": {
+        "step": 7,
+        "left": [
+          "confirm",
+          "extra_trees_leaf1",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "catboost_depth4_reg10.0",
+          "primary"
+        ]
+      },
+      "45103": {
+        "step": 5,
+        "left": [
+          "confirm",
+          "supported_field_interactions",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "catboost_depth4_reg10.0",
+          "primary"
+        ]
+      }
+    },
+    "adaptive_first_cross_split_difference": {
+      "step": 5,
+      "left": [
+        "confirm",
+        "supported_field_interactions",
+        "confirmation_1"
+      ],
+      "right": [
+        "explore",
+        "catboost_depth4_reg10.0",
+        "primary"
+      ],
+      "status": "bidirectional_change",
+      "controls": {
+        "task": true,
+        "available_candidates": true,
+        "registered_confirmation_splits": true,
+        "ab_schema_version": true,
+        "capabilities": true,
+        "budget_except_elapsed": true
+      },
+      "comparisons": [
+        {
+          "state_sha256": "4e68f3190e0890198dc26e598ec7e15c614b9db15c2a8d43ccb56f66fbbc1aaa",
+          "donor_evidence_sha256": "7b8b7df59da0f7ba78dd34abde4a94818e6756e32005307adb9daabce150160a",
+          "retained_elapsed_seconds": 13.915252750040963,
+          "remaining_fits": 7,
+          "original": {
+            "action": "confirm",
+            "candidate_id": "supported_field_interactions",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.7448 and 0.7433; hard predictions differ on 90/1305 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+            "evidence_trials": [
+              2,
+              4
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "explore",
+            "candidate_id": "catboost_depth4_reg10.0",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              2,
+              4
+            ],
+            "estimated_classifier_fits": 1
+          }
+        },
+        {
+          "state_sha256": "28ebd51f36a0b9ba03be26e23920012cbcc5ad9d3fc44d4cd78f35d39b4784f3",
+          "donor_evidence_sha256": "1a228e043815bd506b9604dba72a6cb249c8518de8a70a82063249001e966a49",
+          "retained_elapsed_seconds": 13.844658500049263,
+          "remaining_fits": 7,
+          "original": {
+            "action": "explore",
+            "candidate_id": "catboost_depth4_reg10.0",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              2,
+              4
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "confirm",
+            "candidate_id": "supported_field_interactions",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.7448 and 0.7433; hard predictions differ on 90/1305 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+            "evidence_trials": [
+              2,
+              4
+            ],
+            "estimated_classifier_fits": 1
+          }
+        }
+      ]
+    }
+  },
+  "bean": {
+    "reproduced_actions": {
+      "45102_fixed": 11,
+      "45102_adaptive": 11,
+      "45103_fixed": 11,
+      "45103_adaptive": 11
+    },
+    "policy_first_difference": {
+      "45102": {
+        "step": 4,
+        "left": [
+          "explore",
+          "numeric_tabular_extra_trees_leaf3",
+          "primary"
+        ],
+        "right": [
+          "confirm",
+          "numeric_tabular_logistic_C0.1",
+          "confirmation_1"
+        ]
+      },
+      "45103": {
+        "step": 4,
+        "left": [
+          "explore",
+          "numeric_tabular_extra_trees_leaf3",
+          "primary"
+        ],
+        "right": [
+          "confirm",
+          "numeric_tabular_logistic_C0.1",
+          "confirmation_1"
+        ]
+      }
+    },
+    "adaptive_first_cross_split_difference": {
+      "step": 6,
+      "left": [
+        "confirm",
+        "numeric_tabular_extra_trees_leaf1",
+        "confirmation_1"
+      ],
+      "right": [
+        "explore",
+        "numeric_tabular_extra_trees_leaf3",
+        "primary"
+      ],
+      "status": "bidirectional_change",
+      "controls": {
+        "task": true,
+        "available_candidates": true,
+        "registered_confirmation_splits": true,
+        "ab_schema_version": true,
+        "capabilities": true,
+        "budget_except_elapsed": true
+      },
+      "comparisons": [
+        {
+          "state_sha256": "b581a6b057f2b656e0ceadd9022f7f2b3f8e97317b74a83f2a62ccbae5798cae",
+          "donor_evidence_sha256": "c81654927a67b89174bf95c66d53bf06100186289d693cebee8a11f31e9a5d99",
+          "retained_elapsed_seconds": 6.955629542004317,
+          "remaining_fits": 6,
+          "original": {
+            "action": "confirm",
+            "candidate_id": "numeric_tabular_extra_trees_leaf1",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.9242 and 0.9196; hard predictions differ on 66/1742 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1. Skipped replication of numeric_tabular_logistic_C1.0 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+            "evidence_trials": [
+              1,
+              2,
+              4,
+              3,
+              5
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "explore",
+            "candidate_id": "numeric_tabular_extra_trees_leaf3",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_logistic_C1.0 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+            "evidence_trials": [
+              1,
+              3,
+              4,
+              5
+            ],
+            "estimated_classifier_fits": 1
+          }
+        },
+        {
+          "state_sha256": "899f9ba93ad862cdcab6fe3eda611ffa1b472676e3253c45eb7b046d210e0735",
+          "donor_evidence_sha256": "d8c97a8844e9b60c0b15ee4809e04a7d289a708ad821744ffd3a1f21ae0f0349",
+          "retained_elapsed_seconds": 6.953481291886419,
+          "remaining_fits": 6,
+          "original": {
+            "action": "explore",
+            "candidate_id": "numeric_tabular_extra_trees_leaf3",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_logistic_C1.0 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+            "evidence_trials": [
+              1,
+              3,
+              4,
+              5
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "confirm",
+            "candidate_id": "numeric_tabular_extra_trees_leaf1",
+            "split_id": "confirmation_1",
+            "reason": "Comparable primary accuracy 0.9242 and 0.9196; hard predictions differ on 66/1742 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1. Skipped replication of numeric_tabular_logistic_C1.0 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+            "evidence_trials": [
+              1,
+              2,
+              4,
+              3,
+              5
+            ],
+            "estimated_classifier_fits": 1
+          }
+        }
+      ]
+    }
+  },
+  "sms": {
+    "reproduced_actions": {
+      "45102_fixed": 11,
+      "45102_adaptive": 10,
+      "45103_fixed": 11,
+      "45103_adaptive": 10
+    },
+    "policy_first_difference": {
+      "45102": {
+        "step": 5,
+        "left": [
+          "confirm",
+          "minilm_text_with_lexical_features",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "single_word_char_C3.0",
+          "primary"
+        ]
+      },
+      "45103": {
+        "step": 5,
+        "left": [
+          "confirm",
+          "minilm_text_with_lexical_features",
+          "confirmation_1"
+        ],
+        "right": [
+          "explore",
+          "single_word_char_C3.0",
+          "primary"
+        ]
+      }
+    },
+    "adaptive_first_cross_split_difference": {
+      "step": 8,
+      "left": [
+        "explore",
+        "single_char_C3.0",
+        "primary"
+      ],
+      "right": [
+        "confirm",
+        "minilm_text_with_lexical_features",
+        "confirmation_2"
+      ],
+      "status": "bidirectional_change",
+      "controls": {
+        "task": true,
+        "available_candidates": true,
+        "registered_confirmation_splits": true,
+        "ab_schema_version": true,
+        "capabilities": true,
+        "budget_except_elapsed": true
+      },
+      "comparisons": [
+        {
+          "state_sha256": "8c949ffc338e1236f96caa07b2a15ba3937dad39b5cbaac5ac1c6cf30186a8e3",
+          "donor_evidence_sha256": "dc52e459fcbb9c5461ddca457079a0839b827540536f3d1e5efc2d37bdbabadb",
+          "retained_elapsed_seconds": 29.824613667093217,
+          "remaining_fits": 4,
+          "original": {
+            "action": "explore",
+            "candidate_id": "single_char_C3.0",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              5,
+              2
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "confirm",
+            "candidate_id": "minilm_text_with_lexical_features",
+            "split_id": "confirmation_2",
+            "reason": "Comparable primary macro_f1 0.9579 and 0.9711; hard predictions differ on 9/661 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap +0.0033). Complete a matched pair on confirmation_2.",
+            "evidence_trials": [
+              2,
+              5,
+              6,
+              7
+            ],
+            "estimated_classifier_fits": 1
+          }
+        },
+        {
+          "state_sha256": "87588428f508bbcb96af27dddfaef0022b8db38a21efa8f894386ffb79c2d059",
+          "donor_evidence_sha256": "d9b4ff472c35310ebd4cb3ef5ac057ff43d4e6a0fa50e90b6459180649172f13",
+          "retained_elapsed_seconds": 30.114020166918635,
+          "remaining_fits": 4,
+          "original": {
+            "action": "confirm",
+            "candidate_id": "minilm_text_with_lexical_features",
+            "split_id": "confirmation_2",
+            "reason": "Comparable primary macro_f1 0.9579 and 0.9711; hard predictions differ on 9/661 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap +0.0033). Complete a matched pair on confirmation_2.",
+            "evidence_trials": [
+              2,
+              5,
+              6,
+              7
+            ],
+            "estimated_classifier_fits": 1
+          },
+          "replayed_with_other_observations": {
+            "action": "explore",
+            "candidate_id": "single_char_C3.0",
+            "split_id": "primary",
+            "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+            "evidence_trials": [
+              5,
+              2
+            ],
+            "estimated_classifier_fits": 1
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "course_inputs": {
+    "coupon": {
+      "raw_sha256": "b64ab2938b3a96afb997b2e0ca4b0711df767f5e5c873453951e1c0e9bdfd6e5",
+      "staged_sha256": "8552c53c23c4d0f2101ed4121b73046830a9b760d5cddf5980b1d1d68127d281",
+      "opened_members": [
+        "in_vehicle_coupon_recommendation/C_train.npy",
+        "in_vehicle_coupon_recommendation/Readme.md",
+        "in_vehicle_coupon_recommendation/y_train.npy"
+      ],
+      "original_cli": {
+        "stage": "blocked_before_member_open",
+        "denied_member": "in_vehicle_coupon_recommendation/C_val.npy",
+        "opened_training": [
+          "in_vehicle_coupon_recommendation/y_train.npy"
+        ]
+      },
+      "staged_cli": {
+        "stage": "reached_partitions",
+        "opened_training": [
+          "in_vehicle_coupon_recommendation/y_train.npy",
+          "in_vehicle_coupon_recommendation/C_train.npy",
+          "in_vehicle_coupon_recommendation/Readme.md"
+        ]
+      },
+      "same_task_contract_and_declared_readme": true,
+      "n_train": 8117,
+      "training_content_sha256": "d7aa5d77bc1b9badb187db851cc1a1bd11c3b2473f845c32f97036965dfd1f7c",
+      "metric": "accuracy",
+      "budget_id": "task1",
+      "counts": {
+        "A": 15,
+        "here_without_encoder": 15,
+        "here_with_encoder": 15
+      },
+      "added_by_local_weights": [],
+      "same_local_row_ids_as_A": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      },
+      "same_local_labels_as_A": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      }
+    },
+    "preference": {
+      "raw_sha256": "56b5439ea3f77c7b933d9c0bc49705f3759b3a1d302da49adee80031904834e4",
+      "staged_sha256": "582a2ff7f63f3f71c28189acfc870f94b974b974e5843b1c92feaa2d8f341012",
+      "opened_members": [
+        "Released_Task2-Headlines_CTR/README.md",
+        "Released_Task2-Headlines_CTR/train.csv"
+      ],
+      "original_cli": {
+        "stage": "blocked_before_member_open",
+        "denied_member": "Released_Task2-Headlines_CTR/val.csv",
+        "opened_training": [
+          "Released_Task2-Headlines_CTR/train.csv",
+          "Released_Task2-Headlines_CTR/train.csv"
+        ]
+      },
+      "staged_cli": {
+        "stage": "reached_partitions",
+        "opened_training": [
+          "Released_Task2-Headlines_CTR/train.csv",
+          "Released_Task2-Headlines_CTR/train.csv",
+          "Released_Task2-Headlines_CTR/README.md"
+        ]
+      },
+      "same_task_contract_and_declared_readme": true,
+      "n_train": 8301,
+      "training_content_sha256": "3b8cbb311dfec5f23b8960f4ed425466cde6e1611bf96a17dbc3c33f7b5bfc74",
+      "metric": "accuracy",
+      "budget_id": "task2",
+      "counts": {
+        "A": 22,
+        "here_without_encoder": 22,
+        "here_with_encoder": 23
+      },
+      "added_by_local_weights": [
+        "minilm_text_with_lexical_features"
+      ],
+      "same_local_row_ids_as_A": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      },
+      "same_local_labels_as_A": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      }
+    }
+  },
+  "C1_freeze_differences": {
+    "headlines": {
+      "raw_A_rows": 8301,
+      "registered_B_rows": 6629,
+      "B_held_rows": 1672,
+      "A_full_count": 22,
+      "B_full_count": 23,
+      "A_time_cap": 300,
+      "B_time_cap": 1200,
+      "A_worker_cap": 60,
+      "B_worker_cap": 300,
+      "same_task_budget_id": "task2",
+      "same_actual_inner_row_ids": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      }
+    },
+    "bean": {
+      "raw_A_rows": 8710,
+      "registered_B_rows": 8714,
+      "B_held_rows": 2174,
+      "A_full_count": 5,
+      "B_full_count": 5,
+      "A_time_cap": 300,
+      "B_time_cap": 1200,
+      "A_worker_cap": 60,
+      "B_worker_cap": 300,
+      "same_task_budget_id": "dry_bean",
+      "same_actual_inner_row_ids": {
+        "primary": false,
+        "confirmation_1": false,
+        "confirmation_2": false
+      }
+    }
+  },
+  "wrong_scope_pairs_blocked_before_ledger": [
+    [
+      "task2-dev",
+      "dry_bean"
+    ],
+    [
+      "dry_bean",
+      "task2"
+    ],
+    [
+      "task2",
+      "task2"
+    ]
+  ]
+}

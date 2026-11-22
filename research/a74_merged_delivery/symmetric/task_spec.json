@@ -1,0 +1,52 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "pair_text",
+  "metric": "accuracy",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "pair_text",
+    "columns": [
+      {
+        "name": "first",
+        "type": "text"
+      },
+      {
+        "name": "second",
+        "type": "text"
+      }
+    ],
+    "target": "label",
+    "pair_label_one": "equivalent",
+    "pair_semantics": "symmetric"
+  },
+  "input_columns": [
+    {
+      "name": "first",
+      "type": "text"
+    },
+    {
+      "name": "second",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "pair_text",
+  "train_rows": 180,
+  "validation_rows": 0,
+  "provided_validation_available": false,
+  "class_count": 2,
+  "task_kind": "pair_text_binary",
+  "model_kind": "pair_text",
+  "metric_spec": {
+    "name": "accuracy",
+    "labels": [
+      0,
+      1
+    ],
+    "direction": "maximize"
+  }
+}

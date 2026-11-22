@@ -160,8 +160,9 @@ class TestCommonMenu(unittest.TestCase):
             task['input_schema'] = {'pair_semantics':pair}
             self.assertEqual(common_catalog(task,train_rows=50),[])
         task['input_schema'] = {'pair_semantics':'symmetric'}
-        symmetric = common_catalog(task,train_rows=50)
-        self.assertEqual(len(symmetric),4)
+        with patch.dict('os.environ',{'SUPERAGENT_MINILM_WEIGHTS':''}):
+            symmetric = common_catalog(task,train_rows=50)
+        self.assertEqual(len(symmetric),7)
         self.assertTrue(all(r['swap_label_rule']=='preserves' for r in symmetric))
         task['input_schema']['pair_semantics'] = 'preference'
         with patch.dict('os.environ',{'SUPERAGENT_MINILM_WEIGHTS':''}):

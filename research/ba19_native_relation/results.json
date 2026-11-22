@@ -1,0 +1,371 @@
+{
+  "baseline": {
+    "name": "baseline",
+    "fits": 6,
+    "workers": [
+      {
+        "candidate": "text_tabular_logistic_C0.1",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_1.joblib"
+      },
+      {
+        "candidate": "text_tabular_extra_trees_leaf1",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "ExtraTreesClassifier",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_2.joblib"
+      },
+      {
+        "candidate": "text_tabular_extra_trees_leaf3",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "ExtraTreesClassifier",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_3.joblib"
+      },
+      {
+        "candidate": "text_tabular_logistic_C1.0",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_4.joblib"
+      },
+      {
+        "candidate": "text_tabular_logistic_C10.0",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_5.joblib"
+      },
+      {
+        "candidate": "text_tabular_extra_trees_leaf1",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "ExtraTreesClassifier",
+            "status": "completed"
+          }
+        ],
+        "artifact": "refit_component_0.joblib"
+      }
+    ],
+    "actions": [
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C0.1",
+        "split_id": "primary",
+        "reason": "Shared first eligible candidate.",
+        "evidence_trials": [],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_extra_trees_leaf1",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_extra_trees_leaf3",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C1.0",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C10.0",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "stop",
+        "candidate_id": null,
+        "split_id": null,
+        "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 0
+      }
+    ],
+    "action_counts": {
+      "explore": 5,
+      "stop": 1
+    },
+    "model_sha256": "e12d5f81ae04d1e2b5a4776365641af493a5666784c6ee0bf785a39efe241f30",
+    "selected": "text_tabular_extra_trees_leaf1",
+    "seconds": 13.700245124986395,
+    "promotions": [],
+    "delivery": {
+      "csv_sha256": [
+        "f55ff683f5c02f06bcd54709c7dca6b8b34b524ee0275b946733af729f44feac",
+        "f55ff683f5c02f06bcd54709c7dca6b8b34b524ee0275b946733af729f44feac"
+      ],
+      "reference_csv_sha256": "f55ff683f5c02f06bcd54709c7dca6b8b34b524ee0275b946733af729f44feac",
+      "rows": 754,
+      "relocated_identical": true,
+      "reproduced_reference": true
+    }
+  },
+  "full": {
+    "name": "full",
+    "fits": 7,
+    "workers": [
+      {
+        "candidate": "text_tabular_logistic_C0.1",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_1.joblib"
+      },
+      {
+        "candidate": "ordered_text_pair_interactions",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_2.joblib"
+      },
+      {
+        "candidate": "text_tabular_extra_trees_leaf1",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "ExtraTreesClassifier",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_3.joblib"
+      },
+      {
+        "candidate": "text_tabular_extra_trees_leaf3",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "ExtraTreesClassifier",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_4.joblib"
+      },
+      {
+        "candidate": "text_tabular_logistic_C1.0",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_5.joblib"
+      },
+      {
+        "candidate": "text_tabular_logistic_C10.0",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "trial_6.joblib"
+      },
+      {
+        "candidate": "ordered_text_pair_interactions",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ],
+        "artifact": "refit_component_0.joblib"
+      }
+    ],
+    "actions": [
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C0.1",
+        "split_id": "primary",
+        "reason": "Shared first eligible candidate.",
+        "evidence_trials": [],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "ordered_text_pair_interactions",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_extra_trees_leaf1",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_extra_trees_leaf3",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C1.0",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "text_tabular_logistic_C10.0",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "stop",
+        "candidate_id": null,
+        "split_id": null,
+        "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "estimated_classifier_fits": 0
+      }
+    ],
+    "action_counts": {
+      "explore": 6,
+      "stop": 1
+    },
+    "model_sha256": "bbc24c8770499cb72608a47b475136ac12666511c857074d038607c94d047345",
+    "selected": "ordered_text_pair_interactions",
+    "seconds": 17.1611437080428,
+    "promotions": [],
+    "delivery": {
+      "csv_sha256": [
+        "15d3754e3308d6205ee80b7986ffdde2d1fe25d5b3e44f3345c34a33d1719449",
+        "15d3754e3308d6205ee80b7986ffdde2d1fe25d5b3e44f3345c34a33d1719449"
+      ],
+      "reference_csv_sha256": "15d3754e3308d6205ee80b7986ffdde2d1fe25d5b3e44f3345c34a33d1719449",
+      "rows": 754,
+      "relocated_identical": true,
+      "reproduced_reference": true
+    }
+  }
+}

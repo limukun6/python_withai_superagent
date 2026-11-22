@@ -87,5 +87,24 @@ class TaskReadmeTests(unittest.TestCase):
             values=load_prediction_features(prediction,'pair_text',task.spec)
             self.assertEqual(values,[('new left','new right')])
 
+    def test_frozen_a19_preference_csv_exports_with_its_original_minimal_schema(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            frozen={'task_kind':'pair_text_binary','input_fields':['headline_A','headline_B'],
+                    'input_schema':{'modality':'pair_text','pair_semantics':'preference','pair_label_one':'left'}}
+            query=root/'unlabelled.zip'
+            with zipfile.ZipFile(query,'w') as archive:
+                archive.writestr('nested/test.csv','headline_B,ignored,headline_A\nright,unused,left\n')
+            self.assertEqual(load_prediction_features(query,'pair_text',frozen),[('left','right')])
+            declared=root/'declared.zip'
+            with zipfile.ZipFile(declared,'w') as archive:
+                archive.writestr('manifest.json',json.dumps(dict(schema_version=1,objective='classification',
+                    modality='pair_text',pair_semantics='symmetric',pair_label_one='equivalent',
+                    columns=[dict(name=n,type='text') for n in ('headline_A','headline_B')],
+                    splits={'test':dict(path='rows.csv',format='csv')})))
+                archive.writestr('rows.csv','headline_A,headline_B\nleft,right\n')
+            with self.assertRaisesRegex(ValueError,'Prediction schema differs'):
+                load_prediction_features(declared,'pair_text',frozen)
+
 
 if __name__=='__main__':unittest.main()

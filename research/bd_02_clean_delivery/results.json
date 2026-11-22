@@ -1,0 +1,201 @@
+{
+  "candidate_commit": "23e7986af720e33eacc4fb5b39231d58347bd5ae",
+  "production_sha256": "d421bd99d9e13933cf3b9592639ab4f6d30b5fb96b8a5e1da3280f1a9b8df61d",
+  "selected": "numeric_tabular_rbf_svm_C10.0",
+  "counts": {
+    "attempted_classifier_fits": 11,
+    "completed_classifier_fits": 11,
+    "unknown_failed_attempts": 0
+  },
+  "physical_fit_calls": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "numeric_tabular_logistic_C0.1"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "numeric_tabular_logistic_C0.1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C10.0"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C10.0"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C10.0"
+    }
+  ],
+  "action_counts": {
+    "explore": 4,
+    "confirm": 6,
+    "stop": 1
+  },
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_logistic_C0.1",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0196). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        3,
+        2,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.6275 and 0.5882; hard predictions differ on 8/51 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0196). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        3,
+        2,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_logistic_C0.1",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.5882 and 0.5882; hard predictions differ on 18/51 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        2,
+        1,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_rbf_svm_C10.0",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_logistic_C0.1 against numeric_tabular_extra_trees_leaf1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+      "evidence_trials": [
+        3,
+        2,
+        1,
+        5,
+        8,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "numeric_tabular_rbf_svm_C10.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.5882 and 0.6863; hard predictions differ on 11/51 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        2,
+        9,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "prediction": {
+    "fresh_interpreters": 2,
+    "rows_per_prediction": 31,
+    "matching_row_ids_and_labels": true,
+    "prediction_csv_sha256": "1bf8954752c5714a855b256af448214004d70d1d0fc677aa0fe731da2a2c9be8",
+    "model_sha256": "175c24b33dc49b861ab16728fddd4a1812c3b787a98da1206085fb88b58852d2",
+    "task_spec_sha256": "af1772ff0fd21a3069b3fa77317a7ab5ac4b9eee57b61d76cc471d55ebcfb483",
+    "prediction_fixture_contains_labels": false
+  },
+  "training_and_selection_seconds": 10.206252458970994,
+  "source_unchanged": true,
+  "model_api_requests": 0
+}

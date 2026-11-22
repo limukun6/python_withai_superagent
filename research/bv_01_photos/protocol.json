@@ -1,0 +1,185 @@
+{
+  "batch": "BV-01",
+  "source_sha256": "124e4666a3af565bffb56f9b5cfe13f5b8b36c5cd555fef9bb23e7517761b6e7",
+  "driver_sha256": "1e009fbaf16c94c29b9aa1f8eb47dc702fdd6587d87cd4da069987e96c980299",
+  "plan_sha256": "aefe55afa10039e7ee106b3b12af962c129410446859e371abd8072c7aeac8cb",
+  "tasks": {
+    "existing": {
+      "name": "existing",
+      "semantics": "not_applicable",
+      "source": {
+        "source_sha256": "4c54ace7911aaffe13a365c34f650e71dd5bf1be0a58b464e5a7183e3e595d9c",
+        "license_sha256": "701e91b9e9f46d1f9623fc793a00fd444fe2821f66b01f3a0ff4a73d82f49507",
+        "source_photographs": 3670,
+        "unique_flickr_accounts": 1000,
+        "unique_photo_ids": 1000,
+        "unique_decoded_images": 1000,
+        "source_id_order_sha256": "4145558ec5cc2b71689763235cb26debc56a262247c207b324fbf555e4dd9115",
+        "classes": [
+          "daisy",
+          "dandelion",
+          "roses",
+          "sunflowers",
+          "tulips"
+        ]
+      },
+      "source_rows": 1000,
+      "inner_input_rows": 800,
+      "outer_rows": 200,
+      "grouping": {
+        "grouping": "one published Flickr account per photo"
+      },
+      "overlap": {
+        "shared_accounts": 0,
+        "shared_decoded_images": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+          "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+          "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "79e387a364f84ec5f205518abbf45b4437682be281075357f0f6233699826606",
+          "label_sha256": "f7ce88a21a36c9c8afdaf9aa338abcd79f4926f3eb490f92de55faa4acc85398",
+          "evaluation_payload_sha256": "cd009a5cd866edafa2ad655e8c85de38599a1d4e0a22f0dc82bc0f4140fc169f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "0ff82515aec847324041f06fc7f9af51e041c21fcf17ccd7d552ec30ca7631d5",
+          "label_sha256": "01df3eeb2dd4f85f4df7e03b17b0035b3c5978bdbbf524882bafeac7814633ec",
+          "evaluation_payload_sha256": "be850e72a8824130efe77a63f8f3f69f84c347564100853f80e2e04db9072434"
+        }
+      },
+      "row_ids_sha256": "f5edd32ff65883f7ae9e3a2c5e4b459712eafeb7b31a295b59cee7c79dd62544",
+      "files": {
+        "features.zip": "d706efc0cbafb4a84d162df977ec181bc2f470a6a3e6afb47b39f218ed1f2406",
+        "train.zip": "7891447eab9f1937e77e898c2db3ca8a3108c4145368a107919c574d75c67ccf"
+      },
+      "holdout_sha256": "cc7999c86aded19d9a511fc919e272c7552d215d8a5a66969f29d15e00d633ba",
+      "catalog_sha256": "1ee05970be12b74f9f999aa27c8fedfcb249a41694ab39eb6d4c94da6a943041",
+      "candidate_ids": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic"
+      ]
+    },
+    "vision": {
+      "name": "vision",
+      "semantics": "not_applicable",
+      "source": {
+        "source_sha256": "4c54ace7911aaffe13a365c34f650e71dd5bf1be0a58b464e5a7183e3e595d9c",
+        "license_sha256": "701e91b9e9f46d1f9623fc793a00fd444fe2821f66b01f3a0ff4a73d82f49507",
+        "source_photographs": 3670,
+        "unique_flickr_accounts": 1000,
+        "unique_photo_ids": 1000,
+        "unique_decoded_images": 1000,
+        "source_id_order_sha256": "4145558ec5cc2b71689763235cb26debc56a262247c207b324fbf555e4dd9115",
+        "classes": [
+          "daisy",
+          "dandelion",
+          "roses",
+          "sunflowers",
+          "tulips"
+        ]
+      },
+      "source_rows": 1000,
+      "inner_input_rows": 800,
+      "outer_rows": 200,
+      "grouping": {
+        "grouping": "one published Flickr account per photo"
+      },
+      "overlap": {
+        "shared_accounts": 0,
+        "shared_decoded_images": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+          "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+          "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "79e387a364f84ec5f205518abbf45b4437682be281075357f0f6233699826606",
+          "label_sha256": "f7ce88a21a36c9c8afdaf9aa338abcd79f4926f3eb490f92de55faa4acc85398",
+          "evaluation_payload_sha256": "cd009a5cd866edafa2ad655e8c85de38599a1d4e0a22f0dc82bc0f4140fc169f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "0ff82515aec847324041f06fc7f9af51e041c21fcf17ccd7d552ec30ca7631d5",
+          "label_sha256": "01df3eeb2dd4f85f4df7e03b17b0035b3c5978bdbbf524882bafeac7814633ec",
+          "evaluation_payload_sha256": "be850e72a8824130efe77a63f8f3f69f84c347564100853f80e2e04db9072434"
+        }
+      },
+      "row_ids_sha256": "f5edd32ff65883f7ae9e3a2c5e4b459712eafeb7b31a295b59cee7c79dd62544",
+      "files": {
+        "features.zip": "d706efc0cbafb4a84d162df977ec181bc2f470a6a3e6afb47b39f218ed1f2406",
+        "train.zip": "7891447eab9f1937e77e898c2db3ca8a3108c4145368a107919c574d75c67ccf"
+      },
+      "holdout_sha256": "cc7999c86aded19d9a511fc919e272c7552d215d8a5a66969f29d15e00d633ba",
+      "catalog_sha256": "f2aa4387fda7f4f3c4c79de163ea1d3cd62af30eef1b3c69b388d79ab33a42b7",
+      "candidate_ids": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic",
+        "image_mobilenet_v3_small_linear"
+      ]
+    }
+  },
+  "runtime": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": null,
+    "minilm_files": {}
+  },
+  "vision_runtime": {
+    "torch": "2.13.0",
+    "torchvision": "0.28.0",
+    "Pillow": "12.3.0"
+  },
+  "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 22,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "inner_seed": 707,
+  "model_api_limit": 0,
+  "order": [
+    "existing",
+    "vision"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "text",
+  "metric": "roc_auc",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "text",
+    "columns": [
+      {
+        "name": "text",
+        "type": "text"
+      }
+    ],
+    "target": "label"
+  },
+  "positive_label": "spam",
+  "input_columns": [
+    {
+      "name": "text",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "single_text",
+  "train_rows": 3302,
+  "validation_rows": 0,
+  "provided_validation_available": false,
+  "class_count": 2,
+  "task_kind": "single_text_classification",
+  "model_kind": "single_text",
+  "metric_spec": {
+    "name": "roc_auc",
+    "labels": [
+      "ham",
+      "spam"
+    ],
+    "direction": "maximize"
+  }
+}

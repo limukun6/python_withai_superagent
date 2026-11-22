@@ -2,14 +2,16 @@
 from copy import deepcopy
 from importlib.util import find_spec
 
-from .ab_methods import FIELDS, IMAGE, TEXT
+from .ab_methods import FIELDS, RELATION, ROUTES, TEXT
+from .ab_symmetric import ENCODER
+from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
-ADAPTER_VERSION = '1.1'
+ADAPTER_VERSION = '1.5'
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
@@ -26,16 +28,24 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
     menu = []
     for candidate in search_candidates(kind, 'ab-v1'):
         name, params = candidate.family, candidate.params
+        if name == VISION and not supports_decoder(schema):
+            continue
+        if name == RELATION:
+            columns = schema.get('columns')
+            if (pair != 'relation' or schema.get('modality') != 'pair_text' or not isinstance(columns, list)
+                    or len(columns) != 2 or any(not isinstance(c,dict) or c.get('type') != 'text' for c in columns)):
+                continue
         if kind == 'pair_text':
             rule = candidate_swap_rule(candidate)
+            preference = pair == 'preference' or (pair is None and schema.get('pair_label_one') in ('left','right'))
             if pair == 'symmetric':
-                if rule != 'preserves':
+                meaning = schema.get('pair_label_one')
+                if rule != 'preserves' or len(metric.labels) != 2 or meaning not in (None, 'equivalent'):
                     continue
-            else:
-                if pair == 'relation' or set(metric.labels) != {0, 1} or rule == 'preserves':
+                if meaning == 'equivalent' and set(metric.labels) != {0, 1}:
                     continue
-                if pair != 'preference' and not (pair is None and schema.get('pair_label_one') in ('left','right')):
-                    continue
+            elif not preference or rule != 'flips' or set(metric.labels) != {0, 1}:
+                continue
             validate_candidate_semantics(kind, pair, candidate)
         route = route_of(name)
         if name == FIELDS or 'catboost' in route:
@@ -61,9 +71,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
-                         resource='local_frozen_encoder_cpu' if name == TEXT else 'cpu',
-                         origin='b_port' if name in (TEXT,FIELDS,IMAGE) or
-                             (kind == 'pair_text' and rule == 'preserves') else 'shared_baseline'))
+                         resource='local_frozen_encoder_cpu' if name in (TEXT, ENCODER, VISION) else 'cpu',
+                         origin='b_port' if name in ROUTES else 'shared_baseline'))
     return menu
 
 

@@ -39,12 +39,12 @@ def run(directory, existing=None):
             _, query = fixture.packages(directory)
             output = directory / 'official_run'
             origin = directory
-        command = [sys.executable, '-m', 'superagent', 'run', str(directory / 'train.zip'),
-            '--run-dir', str(output), '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
-            '--fit-limit', '11', '--seed', '41', '--time-limit', '240', '--trial-timeout', '65']
-        fixture.write(directory / 'command.json', command)
         completed = None
         if existing is None:
+            command = [sys.executable, '-m', 'superagent', 'run', str(directory / 'train.zip'),
+                '--run-dir', str(output), '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
+                '--fit-limit', '11', '--seed', '41', '--time-limit', '240', '--trial-timeout', '65']
+            fixture.write(directory / 'command.json', command)
             completed = subprocess.run(command, cwd=fixture.ROOT, capture_output=True, text=True,
                                        encoding='utf-8', errors='replace', timeout=300)
             (directory / 'cli_stdout.log').write_text(completed.stdout, encoding='utf-8')
@@ -64,9 +64,15 @@ def run(directory, existing=None):
                 and outcome['full_refit_completed'] and len(trace) == counts['explore'] + counts['confirm'] + 1):
             raise ValueError('Anonymous path failed three-action coverage or final refit accounting')
         # The production predictor receives an unlabeled query package in two new processes.
-        import shutil
-        shutil.copy2(origin / 'test.zip', output / 'test.zip')
-        prediction = fixture.predict_twice(output, query)
+        if existing is None:
+            import shutil
+            shutil.copy2(origin / 'test.zip', output / 'test.zip')
+            prediction = fixture.predict_twice(output, query)
+        else:
+            prediction = fixture.predict_twice(output, query, output_dir=directory, task_package=origin / 'test.zip')
+        new_fits = len(fixture.trace(directory))
+        if new_fits != (len(trace) if existing is None else 0):
+            raise ValueError('Frozen prediction triggered additional classifier fitting')
         results.update(physical_fit_calls=trace, prediction=prediction,
                        actions=json.loads((output / 'actions.json').read_text(encoding='utf-8')),
                        source_unchanged=sources()==frozen,
@@ -74,8 +80,9 @@ def run(directory, existing=None):
         if not results['source_unchanged']:
             raise ValueError('Production source changed during acceptance')
         fixture.write(directory / 'results.json', results)
-        fixture.write(directory / 'completion.json', dict(status='passed', official_run_cli_exercised=True,
-            actual_classifier_fits=0 if existing else len(trace), reused_path_classifier_fits=len(trace) if existing else 0,
+        fixture.write(directory / 'completion.json', dict(status='passed', official_run_cli_exercised=existing is None,
+            previous_official_run_verified=existing is not None, actual_classifier_fits=new_fits,
+            reused_path_classifier_fits=len(trace) if existing is not None else 0,
             action_counts=outcome['action_counts'], api_requests=0,
             fresh_prediction_processes=2, matching_rows=31, elapsed_seconds=results['elapsed_seconds'],
             scope='synthetic workflow acceptance; no real-task efficacy claim'))

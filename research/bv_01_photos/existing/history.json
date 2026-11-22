@@ -1,0 +1,790 @@
+[
+  {
+    "trial": 1,
+    "candidate": "image_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.40625,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.40625,
+      "macro_f1": 0.40158715094286074,
+      "primary_metric": "accuracy",
+      "score": 0.40625,
+      "rows": 160
+    },
+    "score_gap": 0.59375,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.40625,
+    "generalization_gap": 0.59375,
+    "class_recall": [
+      0.2571428571428571,
+      0.5517241379310345,
+      0.391304347826087,
+      0.5128205128205128,
+      0.3235294117647059
+    ],
+    "training_seconds": 2.3209767921362072,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 3.1614691668655723
+  },
+  {
+    "trial": 2,
+    "candidate": "image_gradient_histograms_logistic",
+    "params": {
+      "grid": 4,
+      "orientation_bins": 8,
+      "C": 1.0,
+      "representation": "gradient histograms and cell means"
+    },
+    "split_id": "primary",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7515625,
+    "search_score": 0.36875,
+    "train_metrics": {
+      "accuracy": 0.7515625,
+      "macro_f1": 0.7517465588288088,
+      "primary_metric": "accuracy",
+      "score": 0.7515625,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.36875,
+      "macro_f1": 0.36319120157666135,
+      "primary_metric": "accuracy",
+      "score": 0.36875,
+      "rows": 160
+    },
+    "score_gap": 0.3828125,
+    "train_accuracy": 0.7515625,
+    "search_accuracy": 0.36875,
+    "generalization_gap": 0.3828125,
+    "class_recall": [
+      0.37142857142857144,
+      0.3103448275862069,
+      0.30434782608695654,
+      0.41025641025641024,
+      0.4117647058823529
+    ],
+    "training_seconds": 0.2602604168932885,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_gradient_histograms_logistic",
+      "params": {
+        "grid": 4,
+        "orientation_bins": 8,
+        "C": 1.0,
+        "representation": "gradient histograms and cell means"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_gradient_histograms_logistic",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.0693849169183522
+  },
+  {
+    "trial": 3,
+    "candidate": "image_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.525,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.525,
+      "macro_f1": 0.5127970069146539,
+      "primary_metric": "accuracy",
+      "score": 0.525,
+      "rows": 160
+    },
+    "score_gap": 0.475,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.525,
+    "generalization_gap": 0.475,
+    "class_recall": [
+      0.5428571428571428,
+      0.6206896551724138,
+      0.5217391304347826,
+      0.6410256410256411,
+      0.29411764705882354
+    ],
+    "training_seconds": 0.656205833889544,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.5613434170372784
+  },
+  {
+    "trial": 4,
+    "candidate": "image_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "primary",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8984375,
+    "search_score": 0.4875,
+    "train_metrics": {
+      "accuracy": 0.8984375,
+      "macro_f1": 0.8987368018071982,
+      "primary_metric": "accuracy",
+      "score": 0.8984375,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.4875,
+      "macro_f1": 0.47998271158414807,
+      "primary_metric": "accuracy",
+      "score": 0.4875,
+      "rows": 160
+    },
+    "score_gap": 0.4109375,
+    "train_accuracy": 0.8984375,
+    "search_accuracy": 0.4875,
+    "generalization_gap": 0.4109375,
+    "class_recall": [
+      0.4857142857142857,
+      0.41379310344827586,
+      0.5217391304347826,
+      0.6153846153846154,
+      0.38235294117647056
+    ],
+    "training_seconds": 2.861055792076513,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 3.734521833015606
+  },
+  {
+    "trial": 5,
+    "candidate": "image_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_1",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.48125,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.48125,
+      "macro_f1": 0.478507764602268,
+      "primary_metric": "accuracy",
+      "score": 0.48125,
+      "rows": 160
+    },
+    "score_gap": 0.51875,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.48125,
+    "generalization_gap": 0.51875,
+    "class_recall": [
+      0.5625,
+      0.5,
+      0.37142857142857144,
+      0.6666666666666666,
+      0.3225806451612903
+    ],
+    "training_seconds": 0.6430443748831749,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.553537542000413
+  },
+  {
+    "trial": 6,
+    "candidate": "image_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "confirmation_1",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9078125,
+    "search_score": 0.525,
+    "train_metrics": {
+      "accuracy": 0.9078125,
+      "macro_f1": 0.9075952743810175,
+      "primary_metric": "accuracy",
+      "score": 0.9078125,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.525,
+      "macro_f1": 0.5263095238095238,
+      "primary_metric": "accuracy",
+      "score": 0.525,
+      "rows": 160
+    },
+    "score_gap": 0.3828125,
+    "train_accuracy": 0.9078125,
+    "search_accuracy": 0.525,
+    "generalization_gap": 0.3828125,
+    "class_recall": [
+      0.5625,
+      0.5,
+      0.5142857142857142,
+      0.6333333333333333,
+      0.41935483870967744
+    ],
+    "training_seconds": 2.886860291007906,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 3.755737208062783
+  },
+  {
+    "trial": 7,
+    "candidate": "image_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_2",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.45,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.45,
+      "macro_f1": 0.44001022117921423,
+      "primary_metric": "accuracy",
+      "score": 0.45,
+      "rows": 160
+    },
+    "score_gap": 0.55,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.45,
+    "generalization_gap": 0.55,
+    "class_recall": [
+      0.5625,
+      0.37037037037037035,
+      0.3333333333333333,
+      0.5897435897435898,
+      0.3448275862068966
+    ],
+    "training_seconds": 0.657218957785517,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.5604617500212044
+  },
+  {
+    "trial": 8,
+    "candidate": "image_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "confirmation_2",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.909375,
+    "search_score": 0.4875,
+    "train_metrics": {
+      "accuracy": 0.909375,
+      "macro_f1": 0.9099213209128776,
+      "primary_metric": "accuracy",
+      "score": 0.909375,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.4875,
+      "macro_f1": 0.4765324890698025,
+      "primary_metric": "accuracy",
+      "score": 0.4875,
+      "rows": 160
+    },
+    "score_gap": 0.42187500000000006,
+    "train_accuracy": 0.909375,
+    "search_accuracy": 0.4875,
+    "generalization_gap": 0.42187500000000006,
+    "class_recall": [
+      0.5,
+      0.3333333333333333,
+      0.42424242424242425,
+      0.6410256410256411,
+      0.4827586206896552
+    ],
+    "training_seconds": 2.9108894588425756,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 3.7753670420497656
+  },
+  {
+    "trial": 9,
+    "candidate": "image_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.525,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.525,
+      "macro_f1": 0.5131629072681705,
+      "primary_metric": "accuracy",
+      "score": 0.525,
+      "rows": 160
+    },
+    "score_gap": 0.475,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.525,
+    "generalization_gap": 0.475,
+    "class_recall": [
+      0.5714285714285714,
+      0.5517241379310345,
+      0.4782608695652174,
+      0.6410256410256411,
+      0.35294117647058826
+    ],
+    "training_seconds": 0.6030756251420826,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.500209250021726
+  },
+  {
+    "trial": 10,
+    "candidate": "image_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_1",
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.46875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.46875,
+      "macro_f1": 0.46571173362156976,
+      "primary_metric": "accuracy",
+      "score": 0.46875,
+      "rows": 160
+    },
+    "score_gap": 0.53125,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.46875,
+    "generalization_gap": 0.53125,
+    "class_recall": [
+      0.5,
+      0.4375,
+      0.4,
+      0.6666666666666666,
+      0.3548387096774194
+    ],
+    "training_seconds": 0.5782994588371366,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4719181670807302
+  }
+]

@@ -1,0 +1,340 @@
+{
+  "batch": "B1-08-bean",
+  "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "tasks": {
+    "45102_fixed": {
+      "name": "45102_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8710,
+      "outer_rows": 2178,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8710,
+        "search_rows": 2178,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "f19a6be6cf18a5bf283cb51e37b32b3dfb73952ce12b32c41ac3a2402064e278",
+          "label_sha256": "24975c5700fac4872949e14bd297e011cdba76c0b939f91d1dad5ef7994ffc95",
+          "evaluation_payload_sha256": "9e9e158b98b93aa747ded5034401e46a86d16c57e40c1289171d4dd8c961d57a"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "56f0884b2deb3a9d87a3de3b1a6964bebc1514ef9a172e9363d5b5544a0a9c4d",
+          "label_sha256": "ac458eea5247678f2c961e27fed3598cb3b07f9e881d2ea448353456e9d5cb06",
+          "evaluation_payload_sha256": "ed3bdc78f7e4ff0414c2eacfdada7839b8239a22db32da4d60231162c100a252"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "d34ee779e5c80c6a8f8a9b3c5df4714e81ee2875d3eabed759d09852bcd49743",
+          "label_sha256": "7f1721c31852d7aa9b75265fd2821419a2745c8fe3e349c7398bb738e1aff492",
+          "evaluation_payload_sha256": "6650ef1b91feeed1bed71c76aab1c28eaafeb1c56fed5ba0f0ea64eff18c3cc5"
+        }
+      },
+      "row_ids_sha256": "8d94e504de6d8c45b184b853381c77697e1c7f5402bfb1110fd0d1d5e98ab78d",
+      "files": {
+        "features.zip": "7816c3e0fbdac3c88714543bea537fef3659a3ea09ef87a2e1772aee3c576700",
+        "train.zip": "c5371111d405af705654dbf2aa6d0a631cad59f4c52b939aeb7daa92264e093b"
+      },
+      "holdout_sha256": "95db7e83315d0cee877904596d9d600ee62971b5d5f2607b743f95f6750ef6f7",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "outer_seed": 45102,
+      "allocation": "fixed"
+    },
+    "45102_adaptive": {
+      "name": "45102_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8710,
+      "outer_rows": 2178,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8710,
+        "search_rows": 2178,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "f19a6be6cf18a5bf283cb51e37b32b3dfb73952ce12b32c41ac3a2402064e278",
+          "label_sha256": "24975c5700fac4872949e14bd297e011cdba76c0b939f91d1dad5ef7994ffc95",
+          "evaluation_payload_sha256": "9e9e158b98b93aa747ded5034401e46a86d16c57e40c1289171d4dd8c961d57a"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "56f0884b2deb3a9d87a3de3b1a6964bebc1514ef9a172e9363d5b5544a0a9c4d",
+          "label_sha256": "ac458eea5247678f2c961e27fed3598cb3b07f9e881d2ea448353456e9d5cb06",
+          "evaluation_payload_sha256": "ed3bdc78f7e4ff0414c2eacfdada7839b8239a22db32da4d60231162c100a252"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "d34ee779e5c80c6a8f8a9b3c5df4714e81ee2875d3eabed759d09852bcd49743",
+          "label_sha256": "7f1721c31852d7aa9b75265fd2821419a2745c8fe3e349c7398bb738e1aff492",
+          "evaluation_payload_sha256": "6650ef1b91feeed1bed71c76aab1c28eaafeb1c56fed5ba0f0ea64eff18c3cc5"
+        }
+      },
+      "row_ids_sha256": "8d94e504de6d8c45b184b853381c77697e1c7f5402bfb1110fd0d1d5e98ab78d",
+      "files": {
+        "features.zip": "7816c3e0fbdac3c88714543bea537fef3659a3ea09ef87a2e1772aee3c576700",
+        "train.zip": "c5371111d405af705654dbf2aa6d0a631cad59f4c52b939aeb7daa92264e093b"
+      },
+      "holdout_sha256": "95db7e83315d0cee877904596d9d600ee62971b5d5f2607b743f95f6750ef6f7",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "outer_seed": 45102,
+      "allocation": "adaptive"
+    },
+    "45103_fixed": {
+      "name": "45103_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8710,
+      "outer_rows": 2178,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8710,
+        "search_rows": 2178,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "90cb0885dc3e99b94a15d270021c5f28a0c7c6dfa70c12c1d24d847978a3adb6",
+          "label_sha256": "df68c1ef207e9d50b5b4f37a7633b63afa648f38a31e7c60a1d155192fea34e9",
+          "evaluation_payload_sha256": "909a342b233aa0be28ce8fb8a336ede68074eb13527afc700f6d9618f87d6bd5"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "6c1c8d7155666d9115bb96705045a01286d413b702d3b5f99f96a3732c25c0f7",
+          "label_sha256": "1904489d7c10d07a516a4c149310e30547ecc990b39398c12329532cf2cfede1",
+          "evaluation_payload_sha256": "561e4eb335df18c263f7fad171ca1c6c29783208f98048bbf164bbc41b81b898"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "612ef8cb691b9bc8e1f920577eb52ce9e0ef10d83e2444467d81acc891e4fd69",
+          "label_sha256": "c05c26c0b49314a0af772095884606c424078c872a8fc1a4899dbdfed29729a4",
+          "evaluation_payload_sha256": "29be5bb0ab2d67aa37454df3d48d9fbdfb71ac92e35c82a96c37db168b925842"
+        }
+      },
+      "row_ids_sha256": "22657fca2be0400a917305dcc84fb9b9cff64be12093bf1d27b0c6bde5b9c2ac",
+      "files": {
+        "features.zip": "9575f606d842d2566abec89f1f2d277f06c3bd97d4d234a4f604ee529725e797",
+        "train.zip": "813b268fd49c911a87a61c466f8da888b082c672fc6c8fc5bb023ba7cb994515"
+      },
+      "holdout_sha256": "d353781e5ad21e24cb512b5c2f9499a7316b33a4e69f3e7ef755ffeb2c6448a8",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "outer_seed": 45103,
+      "allocation": "fixed"
+    },
+    "45103_adaptive": {
+      "name": "45103_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "package_sha256": "c290b2e43756bdcab095e7f82c0131977afa7b18ed08b679a71bc84edf7d0638",
+        "training_member_sha256": "2196dfd89a48da8432beefc3b1787014c3ebd323a51e1fd24b638ba26c6a2432",
+        "opened": [
+          "manifest.json",
+          "train.csv"
+        ],
+        "published_source": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset"
+      },
+      "source_rows": 10888,
+      "inner_input_rows": 8710,
+      "outer_rows": 2178,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 10841,
+        "train_groups": 8673,
+        "heldout_groups": 2168,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 8710,
+        "search_rows": 2178,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "90cb0885dc3e99b94a15d270021c5f28a0c7c6dfa70c12c1d24d847978a3adb6",
+          "label_sha256": "df68c1ef207e9d50b5b4f37a7633b63afa648f38a31e7c60a1d155192fea34e9",
+          "evaluation_payload_sha256": "909a342b233aa0be28ce8fb8a336ede68074eb13527afc700f6d9618f87d6bd5"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "6c1c8d7155666d9115bb96705045a01286d413b702d3b5f99f96a3732c25c0f7",
+          "label_sha256": "1904489d7c10d07a516a4c149310e30547ecc990b39398c12329532cf2cfede1",
+          "evaluation_payload_sha256": "561e4eb335df18c263f7fad171ca1c6c29783208f98048bbf164bbc41b81b898"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "612ef8cb691b9bc8e1f920577eb52ce9e0ef10d83e2444467d81acc891e4fd69",
+          "label_sha256": "c05c26c0b49314a0af772095884606c424078c872a8fc1a4899dbdfed29729a4",
+          "evaluation_payload_sha256": "29be5bb0ab2d67aa37454df3d48d9fbdfb71ac92e35c82a96c37db168b925842"
+        }
+      },
+      "row_ids_sha256": "22657fca2be0400a917305dcc84fb9b9cff64be12093bf1d27b0c6bde5b9c2ac",
+      "files": {
+        "features.zip": "9575f606d842d2566abec89f1f2d277f06c3bd97d4d234a4f604ee529725e797",
+        "train.zip": "813b268fd49c911a87a61c466f8da888b082c672fc6c8fc5bb023ba7cb994515"
+      },
+      "holdout_sha256": "d353781e5ad21e24cb512b5c2f9499a7316b33a4e69f3e7ef755ffeb2c6448a8",
+      "catalog_sha256": "add833e505bf07de3adbc3153c6c2c43df2437fb7d35a60b0e8458b30477bdbb",
+      "candidate_ids": [
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0",
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3"
+      ],
+      "outer_seed": 45103,
+      "allocation": "adaptive"
+    }
+  },
+  "execution_order": [
+    [
+      45102,
+      "fixed"
+    ],
+    [
+      45102,
+      "adaptive"
+    ],
+    [
+      45103,
+      "adaptive"
+    ],
+    [
+      45103,
+      "fixed"
+    ]
+  ],
+  "driver_sha256": "9b3350fba52e915640165990434e28cbf469bf8c7ddc2cc2e0b5824586f78709",
+  "runner_sha256": "2d48a566bd2bebffc26c765ec1300fc83b3dfb08232578aac6b75f5dc99cb3f0",
+  "helper_sha256": "e25b3b83c0a5df048be9b635d914c7a9830fbbf76a629465a33dfaf5857fe77e",
+  "entry_sha256": "f4a56a6664c78d2c3ae7c5373bbd16bf6dee81c22aba1b79a6728ccbe9de52f4",
+  "source_builder_sha256": "05ec570ae37c1430dd18f92954ac3a7267f80cd3b543e3605fc7566e6846350a",
+  "plan_sha256": "42cb67d37eac4a94ebd481b2e696b30687e6b8294af2a6a76f2f3e444f9f861a",
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 44,
+  "inner_seed": 707,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "api_requests_allowed": 0
+}

@@ -64,7 +64,9 @@ class SymmetricTextTests(unittest.TestCase):
         task = recorded()['task']
         task.update(kind='pair_text', input_schema=dict(pair_semantics='symmetric', pair_label_one='equivalent'))
         caps = capabilities_for(task, train_rows=200)
-        self.assertEqual(len(caps), 4)
+        native = [candidate.family for candidate in candidates()]
+        self.assertEqual(len(native), 4)
+        self.assertEqual(list(caps)[:4], native)
         self.assertEqual(len(registered_capabilities(task, 200, 'baseline')), 0)
         worker = {c.family: c for c in search_candidates('pair_text', 'all')}
         for name, entry in caps.items():

@@ -1,0 +1,945 @@
+{
+  "paths": [
+    {
+      "name": "45101_lexical",
+      "fits": 6,
+      "workers": [
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7296 and 0.7244; hard predictions differ on 27/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7296 and 0.7244; hard predictions differ on 27/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 3,
+        "confirm": 2,
+        "stop": 1
+      },
+      "model_sha256": "6b82885923443bee9eedb9aaafa4db593979acb36e97a9ae729e1d36d479fec1",
+      "selected": "unordered_word_char",
+      "seconds": 8.56490945792757,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 746,
+        "primary_metric": "accuracy",
+        "score": 0.7506702412868632,
+        "accuracy": 0.7506702412868632,
+        "heldout_scored": true,
+        "model_sha256": "6b82885923443bee9eedb9aaafa4db593979acb36e97a9ae729e1d36d479fec1",
+        "original_row_ids_sha256": "490e23494da9b4a446a59082dc546f035f7f898b7ede1d61c0defba0d92aecd3",
+        "selected_candidate": "unordered_word_char",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 560,
+        "csv_sha256": "14d05c0fa8f08248762c3e13ed0bafc22eee764472c24ac1162538741119118b",
+        "swap_label_mismatches": 0,
+        "swap_max_probability_difference": 0.0,
+        "swap_rows": 746
+      }
+    },
+    {
+      "name": "45101_extended",
+      "fits": 8,
+      "workers": [
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7296 and 0.7244; hard predictions differ on 27/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7296 and 0.7244; hard predictions differ on 27/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_minilm_lexical",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_minilm_lexical",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7296 and 0.7608; hard predictions differ on 68/577 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            3,
+            6,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            6,
+            3
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 3,
+        "stop": 1
+      },
+      "model_sha256": "1d11bf9412dbb8f3910ef9de126c21185f9c9a090d66cbb7c2cc7a02760d2ec3",
+      "selected": "unordered_minilm_lexical",
+      "seconds": 47.229311832925305,
+      "promotions": [
+        {
+          "previous": "unordered_word_char",
+          "candidate": "unordered_minilm_lexical",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.03119584055459279,
+            0.03015075376884424
+          ],
+          "mean_gain": 0.030673297161718516,
+          "evidence_trials": [
+            3,
+            6,
+            4,
+            7
+          ]
+        }
+      ],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 746,
+        "primary_metric": "accuracy",
+        "score": 0.7627345844504021,
+        "accuracy": 0.7627345844504021,
+        "heldout_scored": true,
+        "model_sha256": "1d11bf9412dbb8f3910ef9de126c21185f9c9a090d66cbb7c2cc7a02760d2ec3",
+        "original_row_ids_sha256": "490e23494da9b4a446a59082dc546f035f7f898b7ede1d61c0defba0d92aecd3",
+        "selected_candidate": "unordered_minilm_lexical",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 569,
+        "csv_sha256": "2d827883d47a4c45724c0cada58afc2df5125b7c7457e07b71d8292498a5f6a8",
+        "swap_label_mismatches": 0,
+        "swap_max_probability_difference": 0.0,
+        "swap_rows": 746
+      }
+    },
+    {
+      "name": "45102_extended",
+      "fits": 9,
+      "workers": [
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "unordered_minilm_lexical",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7036; hard predictions differ on 25/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7036; hard predictions differ on 25/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7002; hard predictions differ on 51/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            1,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_minilm_lexical",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_minilm_lexical",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7257; hard predictions differ on 68/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            7,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            7,
+            2
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 4,
+        "stop": 1
+      },
+      "model_sha256": "736891c5672914ec8c25cd0d455cfc38faee907dbe2a048deabc706a7111406d",
+      "selected": "unordered_minilm_lexical",
+      "seconds": 47.24346395814791,
+      "promotions": [
+        {
+          "previous": "unordered_char",
+          "candidate": "unordered_minilm_lexical",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.017035775127768327,
+            0.02595155709342567
+          ],
+          "mean_gain": 0.021493666110597,
+          "evidence_trials": [
+            2,
+            7,
+            4,
+            8
+          ]
+        }
+      ],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 729,
+        "primary_metric": "accuracy",
+        "score": 0.7626886145404664,
+        "accuracy": 0.7626886145404664,
+        "heldout_scored": true,
+        "model_sha256": "736891c5672914ec8c25cd0d455cfc38faee907dbe2a048deabc706a7111406d",
+        "original_row_ids_sha256": "da0a50b22655003587ba248a0515ce2621695fd9c9972523f09fb736dcff6732",
+        "selected_candidate": "unordered_minilm_lexical",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 556,
+        "csv_sha256": "76f55ac951401b60d35dc40b23093460daad686c7b841cc97d4cd2fa2ea49cda",
+        "swap_label_mismatches": 0,
+        "swap_max_probability_difference": 0.0,
+        "swap_rows": 729
+      }
+    },
+    {
+      "name": "45102_lexical",
+      "fits": 7,
+      "workers": [
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "unordered_word_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "unordered_word",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "unordered_char",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "unordered_word_char",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7036; hard predictions differ on 25/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word_char",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7036; hard predictions differ on 25/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "unordered_word",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7087 and 0.7002; hard predictions differ on 51/587 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            1,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 3,
+        "confirm": 3,
+        "stop": 1
+      },
+      "model_sha256": "ccfea95caede6b38453b00aae96e95293de1983716c304166357c7d7e261770c",
+      "selected": "unordered_char",
+      "seconds": 8.966886208858341,
+      "promotions": [],
+      "delivery": {
+        "reload_identical": true,
+        "rows": 729,
+        "primary_metric": "accuracy",
+        "score": 0.7311385459533608,
+        "accuracy": 0.7311385459533608,
+        "heldout_scored": true,
+        "model_sha256": "ccfea95caede6b38453b00aae96e95293de1983716c304166357c7d7e261770c",
+        "original_row_ids_sha256": "da0a50b22655003587ba248a0515ce2621695fd9c9972523f09fb736dcff6732",
+        "selected_candidate": "unordered_char",
+        "scope": "Outer development holdout after model freeze; not official test",
+        "correct": 533,
+        "csv_sha256": "713be52beeff77868c7d60235e237ed8316828bc5299d0255b3041637bcd2765",
+        "swap_label_mismatches": 0,
+        "swap_max_probability_difference": 0.0,
+        "swap_rows": 729
+      }
+    }
+  ],
+  "paired_counts": {
+    "45101": {
+      "rows": 746,
+      "lexical_correct": 560,
+      "extended_correct": 569,
+      "newly_correct": 50,
+      "newly_wrong": 41,
+      "both_correct": 519,
+      "both_wrong": 136,
+      "difference_percentage_points": 1.2064343163538882
+    },
+    "45102": {
+      "rows": 729,
+      "lexical_correct": 533,
+      "extended_correct": 556,
+      "newly_correct": 56,
+      "newly_wrong": 33,
+      "both_correct": 500,
+      "both_wrong": 140,
+      "difference_percentage_points": 3.155006858710563
+    }
+  },
+  "outer_holdout_shared_rows": 178
+}

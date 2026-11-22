@@ -250,8 +250,34 @@ def selection_evidence(state, *, trusted_partitions=None):
     return review
 
 
-def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None):
+def _fixed_confirm(front, attempted, records, splits, available, reserve, known_single):
+    finalists = front[:3]
+    refs = [row['trial'] for row in finalists]
+    if len(finalists) < 2 or any(trial not in records for trial in refs):
+        return _action('stop', 'Insufficient verified primary contenders for fixed confirmation.', refs)
+    for split in splits:
+        missing = []
+        for row in finalists:
+            prior = attempted.get((row['candidate'], split))
+            if prior is None:
+                missing.append(row)
+            elif prior['trial'] in records:
+                refs.append(prior['trial'])
+            else:
+                return _action('stop', 'Fixed confirmation has an unverified attempt.', refs)
+        if missing:
+            costs = [_cost(row, known_single) for row in missing]
+            if None in costs or sum(costs) + reserve > available:
+                return _action('stop', 'Remaining budget cannot complete this fixed confirmation round.', refs)
+            return _action('confirm', 'Fixed allocation replicates the best primary configurations on both registered splits.',
+                           refs, missing[0]['candidate'], split, costs[0])
+    return _action('stop', 'Completed the registered fixed exploration and confirmation allocation.', refs)
+
+
+def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive'):
     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
+    if allocation not in ('adaptive', 'fixed'):
+        raise ValueError('Unknown AB budget allocation')
     if state.get('ab_schema_version') != 1:
         raise ValueError('Expected ab_schema_version=1')
     task, budget = state['task'], state['budget']
@@ -301,7 +327,10 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
             if not metric.requires_scores or e.get('supports_probabilities', 'rbf_svm' not in name):
                 feasible.append((e,cost))
     skipped = []
-    if any(r['trial'] in records for r in front) and (len(front) >= 3 or not feasible):
+    if allocation == 'fixed':
+        if len(front) >= 4 or not feasible:
+            return _fixed_confirm(front, attempted, records, splits, available, reserve, known_single)
+    elif any(r['trial'] in records for r in front) and (len(front) >= 3 or not feasible):
         lead_id = incumbent_review(measured,records,splits)['incumbent']
         lead = next(r for r in front if r['candidate']==lead_id)
         local_primary = trusted_partitions.get(PRIMARY) if trusted_partitions is not None else None

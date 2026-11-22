@@ -1,0 +1,125 @@
+{
+  "batch": "BV-03",
+  "source": "d421bd99d9e13933cf3b9592639ab4f6d30b5fb96b8a5e1da3280f1a9b8df61d",
+  "dataset_sha256": "faf2d98f61250c1cdc0b114323133d3c58da04f5c5d28bb78e4bde3c936a75b1",
+  "outer_row_sha256": "14b97cec31a8ab82dfd3f3fba0df6f5f889be610eef0f3cc3c497460e36c1d3d",
+  "training_rows": 1437,
+  "held_rows": 360,
+  "inner_manifest": "ba98a05ff6d1647ca7d5d3d15ea120ead9e6e91b91a56bb6f330b8cfa3f1223d",
+  "driver": "075dd4091af60f9a71e15cbffcfd353e3be0a34976f76d499d4b4853f5ed2a23",
+  "plan": "0e66f49a79bd98860ac72fa2f4d1623c5662fa93e251d2471140b647ccaed2b5",
+  "runtime": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": null,
+    "minilm_files": {}
+  },
+  "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+  "tasks": {
+    "existing": {
+      "name": "existing",
+      "semantics": "not_applicable",
+      "files": {
+        "train.zip": "60d26dca76b27c02db46f516fc6a875f16c55d98273fd24a4ae90a77d7e8559f",
+        "features.zip": "d4c866ed4bf3d38e4de741ac183102e1e32f29f8d6a7260e03e2f32c31d3e1f9"
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "b94a133c76ca414969e33f6f9a2fa25fedc20b381536b7e8e2b42c270b18417c",
+          "label_sha256": "3561a682efc56b0af5d6e4452f0cd942055f0a4a9b83753ad49b38ced0c1e4d9",
+          "evaluation_payload_sha256": "c11f704ed32d844e16a410ac3ebe41c1e727580f3a83ac262976702709afb885"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "a3e8340db4f91e1568b6c3e0e9c1f9eb3a7788ba3ba68c506a3cd07ac3dd30f6",
+          "label_sha256": "86ea1b485250effd1bf60a88c0e34629a8250a13c5d0715de7dd680f431ec652",
+          "evaluation_payload_sha256": "3cd5c5fd39b6069ba170526911b115f01f77e553988df6d0478f1d0064dadd2f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "8d5cafbe874648ff6d47c809286b7af74566e25c6c864d1e7476030214f04251",
+          "label_sha256": "d26162ba78a9af0c4efbaab19da8e7e768960b7387ac4b3ed55402d094e5f6cc",
+          "evaluation_payload_sha256": "b53d69d0371693a716628c934607264c8aa33c4ead5d9c016387cd689ad784cf"
+        }
+      },
+      "holdout_sha256": "75add6462a1aa93a31a04c20e3f99466854a8c623ae53f9bde72f62c81fa8199",
+      "outer_rows": 360,
+      "candidate_ids": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic"
+      ],
+      "catalog_sha256": "1ee05970be12b74f9f999aa27c8fedfcb249a41694ab39eb6d4c94da6a943041"
+    },
+    "vision": {
+      "name": "vision",
+      "semantics": "not_applicable",
+      "files": {
+        "train.zip": "60d26dca76b27c02db46f516fc6a875f16c55d98273fd24a4ae90a77d7e8559f",
+        "features.zip": "d4c866ed4bf3d38e4de741ac183102e1e32f29f8d6a7260e03e2f32c31d3e1f9"
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "b94a133c76ca414969e33f6f9a2fa25fedc20b381536b7e8e2b42c270b18417c",
+          "label_sha256": "3561a682efc56b0af5d6e4452f0cd942055f0a4a9b83753ad49b38ced0c1e4d9",
+          "evaluation_payload_sha256": "c11f704ed32d844e16a410ac3ebe41c1e727580f3a83ac262976702709afb885"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "a3e8340db4f91e1568b6c3e0e9c1f9eb3a7788ba3ba68c506a3cd07ac3dd30f6",
+          "label_sha256": "86ea1b485250effd1bf60a88c0e34629a8250a13c5d0715de7dd680f431ec652",
+          "evaluation_payload_sha256": "3cd5c5fd39b6069ba170526911b115f01f77e553988df6d0478f1d0064dadd2f"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "8d5cafbe874648ff6d47c809286b7af74566e25c6c864d1e7476030214f04251",
+          "label_sha256": "d26162ba78a9af0c4efbaab19da8e7e768960b7387ac4b3ed55402d094e5f6cc",
+          "evaluation_payload_sha256": "b53d69d0371693a716628c934607264c8aa33c4ead5d9c016387cd689ad784cf"
+        }
+      },
+      "holdout_sha256": "75add6462a1aa93a31a04c20e3f99466854a8c623ae53f9bde72f62c81fa8199",
+      "outer_rows": 360,
+      "candidate_ids": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic",
+        "image_mobilenet_v3_small_linear"
+      ],
+      "catalog_sha256": "f2aa4387fda7f4f3c4c79de163ea1d3cd62af30eef1b3c69b388d79ab33a42b7"
+    }
+  },
+  "fit_limit": 22,
+  "model_api_limit": 0
+}

@@ -38,7 +38,8 @@ def validate_slice_expectation(expectation, history):
         raise ValueError('Slice expectation needs slice_id, reference_trial and min_delta')
     if type(expectation['reference_trial']) is not int:
         raise ValueError('Slice reference must be a prior integer trial')
-    reference = next((r for r in history if r['trial'] == expectation['reference_trial']), None)
+    references=[r for r in history if r['trial']==expectation['reference_trial']]
+    reference=references[0] if len(references)==1 else None
     slices = (reference.get('error_slices') or {}).get('slices', []) if reference else []
     if expectation['slice_id'] not in {s['slice_id'] for s in slices}:
         raise ValueError('Slice expectation must cite an observed prior slice')
@@ -48,21 +49,30 @@ def validate_slice_expectation(expectation, history):
 
 
 def check_slice_expectation(expectation, result, history):
-    reference = next((r for r in history if r['trial'] == expectation['reference_trial']), None)
+    references=[r for r in history if r['trial']==expectation['reference_trial']]
+    reference=references[0] if len(references)==1 else None
+    from .comparison_scope import comparison_scope
+    scope=comparison_scope(reference or {},result)
+    if not scope['comparable']:
+        return dict(status='not_evaluable',slice_id=expectation['slice_id'],reason='incomparable_measurement_scope',comparison_scope=scope)
     rows = []
     for trial in (reference, result):
         slices = (trial.get('error_slices') or {}).get('slices', []) if trial else []
-        rows.append(next((s for s in slices if s['slice_id'] == expectation['slice_id']), None))
+        matches=[s for s in slices if s['slice_id']==expectation['slice_id']]
+        rows.append(matches[0] if len(matches)==1 else None)
     before, after = rows
     identity = ('feature', 'threshold_from_training', 'relation', 'rows')
     if (not before or not after or reference.get('status') != 'completed'
             or result.get('status') != 'completed'
             or any(before[k] != after[k] for k in identity)):
         return {'status': 'not_evaluable', 'slice_id': expectation['slice_id']}
+    extra=('row_ids_sha256','label_sha256','evaluation_payload_sha256')
+    if any((k in before or k in after) and before.get(k)!=after.get(k) for k in extra):
+        return dict(status='not_evaluable',slice_id=expectation['slice_id'],reason='incomparable_slice_rows')
     delta = after['accuracy'] - before['accuracy']
     return {'status': 'supported' if delta + 1e-12 >= expectation['min_delta'] else 'not_supported',
             'slice_id': expectation['slice_id'], 'reference_trial': reference['trial'],
             'rows': before['rows'], 'reference_accuracy': before['accuracy'],
             'observed_accuracy': after['accuracy'], 'observed_delta': delta,
             'required_delta': expectation['min_delta'],
-            'scope': 'same internal search partition and train-fitted slice definition'}
+            'scope': 'same internal search partition and train-fitted slice definition','comparison_scope':scope}

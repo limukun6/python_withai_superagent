@@ -130,11 +130,17 @@ def _check_overall_expectation(proposal, result, history):
     expectation = (proposal or {}).get("expected_change")
     if expectation is None:
         return {"status": "not_stated"}
-    reference = next((row for row in history if row["trial"] == expectation["reference_trial"]), None)
+    matches = [row for row in history if row['trial'] == expectation['reference_trial']]
+    reference = matches[0] if len(matches)==1 else None
     metric = expectation["metric"]
     if (reference is None or reference.get("status") != "completed" or result.get("status") != "completed"
         or not _number(reference.get(metric)) or not _number(result.get(metric))):
         return {"status": "not_evaluable", "metric": metric, "reference_trial": expectation["reference_trial"]}
+    from .comparison_scope import comparison_scope
+    scope=comparison_scope(reference,result,primary_metric=metric in ('search_score','train_score','score_gap'))
+    if not scope['comparable']:
+        return dict(status='not_evaluable',metric=metric,reference_trial=expectation['reference_trial'],
+                    reason='incomparable_measurement_scope',comparison_scope=scope)
     delta = float(result[metric]) - float(reference[metric])
     directional_delta = delta if expectation["direction"] == "increase" else -delta
     return {
@@ -142,7 +148,7 @@ def _check_overall_expectation(proposal, result, history):
         "metric": metric, "reference_trial": reference["trial"],
         "reference_value": float(reference[metric]), "observed_value": float(result[metric]),
         "observed_delta": delta, "direction": expectation["direction"],
-        "required_delta": expectation["min_delta"],
+        "required_delta": expectation["min_delta"], 'comparison_scope':scope,
     }
 
 

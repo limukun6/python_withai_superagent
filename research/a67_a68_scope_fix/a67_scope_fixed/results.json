@@ -1,0 +1,581 @@
+[
+  {
+    "id": "task_semantics_1",
+    "category": "task_semantics",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "candidate": "word_C0.05",
+      "swap_label_rule": "flips"
+    }
+  },
+  {
+    "id": "task_semantics_2",
+    "category": "task_semantics",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "candidate": "symmetric_word_C0.3",
+      "swap_label_rule": "preserves"
+    }
+  },
+  {
+    "id": "task_semantics_3",
+    "category": "task_semantics",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "error": "Candidate word_C0.05 cannot serve symmetric semantics: swap rule flips"
+    }
+  },
+  {
+    "id": "task_semantics_4",
+    "category": "task_semantics",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "error": "Candidate symmetric_word_C0.3 preserves labels and cannot serve preference semantics"
+    }
+  },
+  {
+    "id": "task_semantics_5",
+    "category": "task_semantics",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "candidate": "word_C0.05",
+      "swap_label_rule": "flips"
+    }
+  },
+  {
+    "id": "task_semantics_6",
+    "category": "task_semantics",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "candidate": "symmetric_word_C0.3",
+      "swap_label_rule": "preserves"
+    }
+  },
+  {
+    "id": "configuration_1",
+    "category": "configuration",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "declared": "ridge",
+      "observed": "ridge",
+      "observed_class": null,
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "configuration_2",
+    "category": "configuration",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "declared": "poly_svm",
+      "observed": "poly_svm",
+      "observed_class": null,
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "configuration_3",
+    "category": "configuration",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "declared": "linear_svm",
+      "observed": "logistic",
+      "observed_class": null,
+      "status": "contradicted",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "configuration_4",
+    "category": "configuration",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "declared": "catboost",
+      "observed": "extra_trees",
+      "observed_class": null,
+      "status": "contradicted",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "configuration_5",
+    "category": "configuration",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "declared": "ridge",
+      "observed": null,
+      "observed_class": null,
+      "status": "unverified",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "configuration_6",
+    "category": "configuration",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": null,
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "trial_identity_1",
+    "category": "trial_identity",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      },
+      "observed": 0.81,
+      "evidence_id": "trial:7/search/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "trial_identity_2",
+    "category": "trial_identity",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.73
+      },
+      "observed": 0.73,
+      "evidence_id": "trial:7/search/macro_f1",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "trial_identity_3",
+    "category": "trial_identity",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 3,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "contradicted",
+      "reason": "trial_not_recorded"
+    }
+  },
+  {
+    "id": "trial_identity_4",
+    "category": "trial_identity",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 17,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.94
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "contradicted",
+      "reason": "trial_not_recorded"
+    }
+  },
+  {
+    "id": "trial_identity_5",
+    "category": "trial_identity",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 11,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.99
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "trial_not_completed"
+    }
+  },
+  {
+    "id": "trial_identity_6",
+    "category": "trial_identity",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "ambiguous_trial_identity"
+    }
+  },
+  {
+    "id": "metric_partition_1",
+    "category": "metric_partition",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.94
+      },
+      "observed": 0.94,
+      "evidence_id": "trial:7/train/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "metric_partition_2",
+    "category": "metric_partition",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.73
+      },
+      "observed": 0.73,
+      "evidence_id": "trial:7/search/macro_f1",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "metric_partition_3",
+    "category": "metric_partition",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.94
+      },
+      "observed": 0.81,
+      "evidence_id": "trial:7/search/accuracy",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "metric_partition_4",
+    "category": "metric_partition",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.81
+      },
+      "observed": 0.73,
+      "evidence_id": "trial:7/search/macro_f1",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "metric_partition_5",
+    "category": "metric_partition",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "roc_auc",
+        "value": 0.73
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "named_measurement_unavailable"
+    }
+  },
+  {
+    "id": "metric_partition_6",
+    "category": "metric_partition",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "train",
+        "metric": "macro_f1",
+        "value": 0.94
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "named_measurement_unavailable"
+    }
+  },
+  {
+    "id": "negation_future_1",
+    "category": "negation_future",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 1,
+      "contradicted": 0,
+      "unverifiable": 0,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "This is logistic regression.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "negation_future_2",
+    "category": "negation_future",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 1,
+      "contradicted": 0,
+      "unverifiable": 0,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "linear SVM",
+          "claim": "linear_svm",
+          "compatible_with": [
+            "linear_svm"
+          ],
+          "sentence": "The classifier is a linear SVM.",
+          "in_comparison": false,
+          "observed": [
+            "linear_svm"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "negation_future_3",
+    "category": "negation_future",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 1,
+      "unverifiable": 0,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "SVM",
+          "claim": "svm",
+          "compatible_with": [
+            "linear_svm",
+            "rbf_svm"
+          ],
+          "sentence": "This is an SVM.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "contradicted"
+        }
+      ],
+      "unique_contradictions": [
+        "SVM"
+      ],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "negation_future_4",
+    "category": "negation_future",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 1,
+      "unverifiable": 0,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "CatBoost",
+          "claim": "catboost",
+          "compatible_with": [
+            "catboost"
+          ],
+          "sentence": "The classifier is CatBoost.",
+          "in_comparison": false,
+          "observed": [
+            "ridge"
+          ],
+          "status": "contradicted"
+        }
+      ],
+      "unique_contradictions": [
+        "CatBoost"
+      ],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "negation_future_5",
+    "category": "negation_future",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "This is not logistic regression.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "unverifiable"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "negation_future_6",
+    "category": "negation_future",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "We might use logistic regression.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "unverifiable"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  }
+]

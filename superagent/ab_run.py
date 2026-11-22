@@ -318,8 +318,11 @@ def command(args):
                 break
             name, split = action['candidate_id'], action['split_id']
             facts = observed['observation']
+            raw = joblib.load(directory / f'trial_{number}.joblib')['prediction_record']
             row = dict(trial=number, candidate=name, params=caps[name]['params'], split_id=split,
-                       proposal=proposal, **facts)
+                       proposal=proposal, **facts,
+                       evaluation_payload_sha256=raw['evaluation_payload_sha256'],label_sha256=raw['label_sha256'],
+                       row_ids_sha256=fingerprint(trusted[split]['row_ids']))
             from .hypothesis_agent import check_expectation
             from .estimator_facts import verify_configuration_claim
             from .explanation_audit import audit_explanation
@@ -328,7 +331,6 @@ def command(args):
             row['hypothesis_check'] = check_expectation(proposal,row,history)
             row['explanation_audit'] = audit_explanation(proposal,history,{'id':name,'params':caps[name]['params']}) if proposal else None
             history.append(row)
-            raw = joblib.load(directory / f'trial_{number}.joblib')['prediction_record']
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),
                 **{k:raw[k] for k in ('prediction_sha256','label_sha256','evaluation_payload_sha256')},

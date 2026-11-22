@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## A67/A68完成，A69→A70已启动（以completion核对实时状态）
+
+先读CURRENT_D3_A67_A70.md。A侧统一48开发例，旧源44/48，有4例跨split/payload/primary metric错误确认；已加comparison_scope和正式AB观测身份，修复集48/48。旧缺provenance入口不称完整核验；独立B48尚缺。A68正式匿名两观测+refit共3fit/9.624秒通过，5受控scope冲突全拒绝，新进程predict通过。最终52无训练检查通过。
+
+资源修正：阶段55项回归包含HypothesisAgent.IntegrationTests真实Dummy.fit共15次，依据未改测试源码/通过日志回溯补记（非原物理观察），不能记0。A66后1007+15+3=1025，API0。research/a67_cases/regression_fit_correction.json保存依据。
+
+A69预登记四任务两训练内seed固定/动态16路径、最多176fit/API0，已实跑；source/目录/实际split全批冻结，16模型全封存再评分。A70已启动等待A69成功，再复用本地前三步prepare12状态、最多24Flash/48去重fit，唯一真账本/incremental-research，11历史unknown保留。独立输出、不自动重试；代码与计划均已保存。当前不把计划上限当完成量，H/test未开，不修改活动源码或重复启动。
+
 ## 最新A66：A1八格真实训练输入探针已补齐
 
 起点c1514db，执行前计划batches/A66_semantic_training_matrix_plan.md、runner与观察器已保存。preference/symmetric × primary/full-refit × seed19411/19421八格全部实际训练通过；捕获分类器真实特征/y，preference正确翻倍+翻转，symmetric不复制不翻转；训练内词表/查询隔离与交换概率验收通过。另8次相反语义候选在fit前拒绝，未多训练。

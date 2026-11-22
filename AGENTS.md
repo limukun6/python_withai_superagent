@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新接手读docs/CURRENT_D3_A67_A70.md：A67/A68比较scope修复及开发48例完成，A69四任务B1与A70四任务A2队列已启动，先查actual completion，禁止改生产/活动runner，不能重复计费。A69前累计1025（含回溯15 Dummy fit+A68实测3），不再用下方1007当现值。A67独立B侧48仍缺，H/test仍封存。
+
 - 最新A66已补A1八格实际训练输入探针：8合法fit/8非法fit前拒绝，26.478秒、0API，A累计1007；无运行任务。docs/batches/A66_semantic_training_matrix_results_zh.md及D3验收清单已更新。本项只证明合成worker语义性质，不是完整自主搜索/迁移；剩余96案例/独立封存、A2语义标注与范围、B1矩阵仍待补或明确修订。
 
 - 最新A64/A65补D3审计完成，0fit/0API，累计仍999，无运行任务。D3尚未全部验收：先读docs/D3_ACCEPTANCE_CHECKLIST_20261122_zh.md与docs/batches/A64_A65_results_zh.md。远端fetch无队友新提交（d750c7b/main a38e1b8），本机bundle a787a28已接。用户已授权继续补D3；1000fit为旧计划建议非权限硬限制，后续先登记有限补充预算并保留正式实验资源。

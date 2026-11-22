@@ -1,0 +1,57 @@
+[
+  {
+    "probe": "nonlinear",
+    "worker_model_sha256": "9962ca6c401b432b1822e82e5b6fd30d54ddd317237463e8f116f16365b1d751",
+    "prediction_rows": 8,
+    "actual_encoder_model": true,
+    "CSV_byte_identical": true,
+    "missing_asset_rejected": true,
+    "equal_size_corruption_rejected": true,
+    "delivery_scope": "frozen_worker_probe_not_autonomous",
+    "external_resources": [
+      {
+        "name": "minilm",
+        "environment_variable": "SUPERAGENT_MINILM_WEIGHTS",
+        "path_kind": "directory",
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "files": {
+          "config.json": {
+            "bytes": 612,
+            "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41"
+          },
+          "tokenizer.json": {
+            "bytes": 466247,
+            "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+          },
+          "model.safetensors": {
+            "bytes": 90868376,
+            "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "probe": "vision",
+    "worker_model_sha256": "a28bc10c92fbdd3dfaa1d4b33d77b23c8dc3c2180c5f231f7eb42dbff6d83f18",
+    "prediction_rows": 8,
+    "actual_encoder_model": true,
+    "CSV_byte_identical": true,
+    "missing_asset_rejected": true,
+    "equal_size_corruption_rejected": true,
+    "delivery_scope": "frozen_worker_probe_not_autonomous",
+    "external_resources": [
+      {
+        "name": "vision",
+        "environment_variable": "SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS",
+        "path_kind": "file",
+        "model": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+        "file": {
+          "bytes": 10306551,
+          "sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f"
+        }
+      }
+    ]
+  }
+]

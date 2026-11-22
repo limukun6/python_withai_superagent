@@ -1,0 +1,51 @@
+"""Describe external frozen encoders from actual pipeline objects, and verify their files."""
+import hashlib
+import os
+from pathlib import Path
+
+
+def model_resources(model):
+    from .ab_sentence import FILES, MODEL, REVISION, SentenceFeatures
+    from .ab_symmetric import UnorderedSentenceFeatures
+    from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
+
+    found=set();visited=set()
+    def walk(value):
+        if id(value) in visited:return
+        visited.add(id(value))
+        if isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
+        if isinstance(value,FrozenVisionFeatures):found.add('vision')
+        if isinstance(value,dict):
+            for child in value.values():walk(child)
+        elif isinstance(value,(list,tuple)):
+            for child in value:walk(child)
+        elif callable(getattr(value,'get_params',None)):
+            for child in value.get_params(deep=False).values():walk(child)
+        # Local vote wrappers store fitted pipelines rather than sklearn parameters.
+        for name in ('models','components'):
+            children=getattr(value,name,None)
+            if isinstance(children,(list,tuple,dict)):walk(children)
+    walk(model);resources=[];packages=set()
+    if 'minilm' in found:
+        resources.append(dict(name='minilm',environment_variable='SUPERAGENT_MINILM_WEIGHTS',path_kind='directory',
+            model=MODEL,revision=REVISION,files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in FILES.items()}))
+        packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
+    if 'vision' in found:
+        resources.append(dict(name='vision',environment_variable=WEIGHT_ENV,path_kind='file',model=WEIGHT_ID,
+                              file=dict(bytes=WEIGHT_BYTES,sha256=WEIGHT_SHA256)))
+        packages.update(('torch','torchvision'))
+    return resources,sorted(packages)
+
+
+def verify_resources(resources, environment=None):
+    environment=os.environ if environment is None else environment
+    for resource in resources:
+        env=resource['environment_variable'];provided=environment.get(env)
+        if not provided:raise ValueError('Missing frozen encoder resource: set '+env)
+        root=Path(provided).expanduser().resolve()
+        entries=[(root/name,record) for name,record in resource['files'].items()] if resource['path_kind']=='directory' else [(root,resource['file'])]
+        for path,record in entries:
+            if not path.is_file() or path.stat().st_size!=record['bytes']:
+                raise ValueError('Frozen encoder asset size/missing file: '+resource['name'])
+            with path.open('rb') as stream:digest=hashlib.file_digest(stream,'sha256').hexdigest()
+            if digest!=record['sha256']:raise ValueError('Frozen encoder asset checksum mismatch: '+resource['name'])

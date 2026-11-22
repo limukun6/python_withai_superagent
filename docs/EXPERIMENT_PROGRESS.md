@@ -1,5 +1,23 @@
 # 实验持续工作记录
 
+## 最新A74–A87已全部结束：强方法真实接入与交付完成，进入共同冻结
+
+本对话33实际fit，A累计1247，新增学校API/费用0，无活动队列。读[batches/A75_A87_encoder_integration_results_zh.md](batches/A75_A87_encoder_integration_results_zh.md)及[A_TO_B_SHARED_RUNTIME_20261122_zh.md](A_TO_B_SHARED_RUNTIME_20261122_zh.md)。A74 14fit交付；A76 76项禁fit检查；A77 11fit正式本地证据提议/模型交付（A78只读纠正日志漏计5提议）。核心/非线性/组合已实合并，不再是review候选。
+
+A75慢下载取消819.662秒；A79环境装好、旧revision404停295.071秒；A82新固定revision下四文件与原SHA全同/98.647秒；A81四真实编码器动作4fit通过，但fixture公开modality写错令CLI fit前停92.969秒；A84仅修fixture独立恢复4fit/102.922秒，自主试两编码器、选plain MiniLM、31行源码包CSV一致、缺权重拒绝。原失败不覆盖、不重复四worker。
+
+A80导出v2外部权重/版本/预测前校验，3检查及旧包兼容通过。A85损坏副本硬链接权限失败保留；A86普通复制0fit/60.969秒，真实nonlinear/vision各8行跨进程一致，缺权重/同大小损坏拒绝。A83已记录实际菜单：Coupon15、偏好32、SMS16、照片9、Bean5；baseline分别14/22/6/7/5。强运行入口已准备，资产与venv不进Git。
+
+A87 0fit/34.562秒：偏好全量单次编码粗估69–86秒，SMS22–32秒；现有worker有3次transform，不能拿小试秒数推全量。正式建议共同trial300/path1200秒，C1中心约2–4小时/名义路径上界10小时，均为预测。下一步冻结实际输入行号/source/菜单/环境/开关/预算后做Q/C1；不是正式矩阵已跑。H/test未开，独立48例/24语义标注仍缺，真ledger299/known¥6.1417335/11unknown/pending0未动。下方“准备中/未启动”等为历史快照。
+
+## 最新A74–A82：核心与文本增量已实合并，编码器资产准备中
+
+A74核心真实14fit/60.365秒、4路径正式新进程/源码包CSV一致；A76非线性/有界组合/canonical模块增量在独立checkout合并，76项禁fit兼容检查通过。A77新增正式开关--local-text-proposals evidence（默认off，local/ab-v1/full），实际10fit自主SMS路径+1pair探针=11fit/41.146秒；5次证据提议均实际完成，新进程CSV一致。统计脚本误读event/kind导致旧completion漏计，A78只读审计纠正，原产物/原runner保留。读batches/A74_merged_delivery_results_zh.md及batches/A76_A78_text_integration_results_zh.md。核心/文本已进入当前A，非仅review候选。
+
+本对话新增25实际fit，A累计1239，学校API/新增费用0，旧ledger299/known¥6.1417335/unknown11/pending0保留。A75全环境公开依赖下载无代理过慢，核对自有pip后取消并保留失败；A79显式进程公共代理已成功安装锁定依赖，固定MiniLM旧revision返回404而停止（295.071秒）。A82按官方现有固定revision下载，仍要求B原全部SHA/字节一致，当前须查actual completion，不能视为ready或重复请求。学校API路由未改。
+
+A80修导出包的外部权重与运行依赖声明/预测前校验，3项无fit检查与旧词法包兼容通过（10.837秒），不是实际编码器模型交付。A81真实编码器9fit上限计划与runner已保存，**尚未启动**；仅A82ready后用A79独立Python执行。H/test仍封存，D3独立48/24标注仍缺。下方A73“未合并”及更旧运行快照均已过时。
+
 ## 最新A73：B新交付已审阅，核心独立整合候选完成
 
 已fetch并核对B五个开发分支及hjl交接入口，精确refs与无训练证据归档research/a73_b_upload_review，详情[B_UPLOAD_REVIEW_20261122_zh.md](B_UPLOAD_REVIEW_20261122_zh.md)。核心fa58e85与A67ba67f在独立checkout合并为9c7ceaf（codex/b-integration-review-20261122），当前A工作分支没有替换生产模块。64项禁网/禁fit兼容检查通过，保留首轮训练型测试被拦截的失败记录。A开发48例初验47/48，修研究适配器区分语义未知与执行拒绝后48/48；案例期望与生产守卫未放松。

@@ -19,7 +19,8 @@ from .models import style_differences
 
 
 MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
-REVISION = '524b52f1d626e9a5a16462e141fc9dffc25d5aeb'
+# A82 verified all three existing byte hashes at this publicly resolvable revision.
+REVISION = '1110a243fdf4706b3f48f1d95db1a4f5529b4d41'
 KERNEL_DIMENSIONS = 512
 KERNEL_SEED = 12271
 KERNEL_SAMPLE_LIMIT = 128

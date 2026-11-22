@@ -1,0 +1,69 @@
+{
+  "official_classifier_fits": 4,
+  "process_seconds": 68.28200000000652,
+  "selected_candidate": "minilm_text_with_lexical_features",
+  "executed_candidates": [
+    "single_word_C0.3",
+    "minilm_text_with_lexical_features",
+    "minilm_text_with_nonlinear_lexical_features"
+  ],
+  "catalogue": [
+    "single_word_C0.3",
+    "single_word_C3.0",
+    "single_char_C0.3",
+    "single_char_C3.0",
+    "single_word_char_C0.3",
+    "single_word_char_C3.0",
+    "minilm_text_with_lexical_features",
+    "minilm_text_with_nonlinear_lexical_features",
+    "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+    "recipe_single_text_latent_word_logistic_5fd03d4294addcee",
+    "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+    "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+    "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+    "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+    "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+    "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9"
+  ],
+  "CSV_byte_identical": true,
+  "external_resources": [
+    {
+      "name": "minilm",
+      "environment_variable": "SUPERAGENT_MINILM_WEIGHTS",
+      "path_kind": "directory",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "files": {
+        "config.json": {
+          "bytes": 612,
+          "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41"
+        },
+        "tokenizer.json": {
+          "bytes": 466247,
+          "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+        },
+        "model.safetensors": {
+          "bytes": 90868376,
+          "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+        }
+      }
+    }
+  ],
+  "dependencies": {
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "scikit-learn": "1.7.2",
+    "joblib": "1.5.2",
+    "Pillow": "12.3.0",
+    "requests": "2.34.2",
+    "catboost": "1.2.10",
+    "huggingface-hub": "0.34.4",
+    "safetensors": "0.6.2",
+    "tokenizers": "0.21.4",
+    "torch": "2.13.0+cu126",
+    "transformers": "4.53.3"
+  },
+  "missing_weights_refused": true,
+  "original_four_worker_probes_not_repeated": true,
+  "not_performance_superiority_test": true
+}

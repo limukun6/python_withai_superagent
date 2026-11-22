@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 当前A88已启动：A线两任务同源Q
+
+代码/方案/脚本先提交aa47bb9并推送，再启动四条真实路径。先读CURRENT_Q_A88.md、batches/A88_A_track_catalogue_Q_plan.md。Coupon与photo各baseline/full，同一正式入口/指标/实际划分，最多44fit，trial300/path1200，0API；全部四模型冻结后统一开发留出评分。上批累计1247，本批按实际physical日志叠加，不把上限当实耗；H/test封存，不改活动源码或重复运行。下方A87“无活动任务”只对应上一阶段。
+
 ## 最新A74–A87已全部结束：强方法真实接入与交付完成，进入共同冻结
 
 本对话33实际fit，A累计1247，新增学校API/费用0，无活动队列。读[batches/A75_A87_encoder_integration_results_zh.md](batches/A75_A87_encoder_integration_results_zh.md)及[A_TO_B_SHARED_RUNTIME_20261122_zh.md](A_TO_B_SHARED_RUNTIME_20261122_zh.md)。A74 14fit交付；A76 76项禁fit检查；A77 11fit正式本地证据提议/模型交付（A78只读纠正日志漏计5提议）。核心/非线性/组合已实合并，不再是review候选。

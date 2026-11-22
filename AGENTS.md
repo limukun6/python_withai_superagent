@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 当前A88已实际启动，优先读docs/CURRENT_Q_A88.md；冻结源码aa47bb9，四路径Q最多44fit/API0，上批累计1247+本批physical日志实耗。先查runs/a88_A_track_catalogue_Q/completion.json及checkpoint，禁止重复启动/修改superagent或活动脚本。下方“无活动任务”是A87结束快照，不能当当前状态。H/test封存。
+
 - 最新A74–A87均结束，无活动训练/API。A累计1247，本对话33fit/0学校API；核心、非线性、有界组合均已进入A。A82四权重与B原完整SHA相同，公开revision改1110a243fdf4706b3f48f1d95db1a4f5529b4d41；A79独立环境已就绪。A81四真编码器worker过，但fixture modality错令CLI fit前停；A84独立恢复4fit，自主选MiniLM、源码包CSV一致/缺权重拒绝。A85硬链接权限停；A86普通复制0fit，真实nonlinear/vision交付及缺失/同大小损坏拒绝过。A87校准偏好全量单次encode69–86秒，正式建议共同trial300/path1200。读docs/batches/A75_A87_encoder_integration_results_zh.md及A_TO_B_SHARED_RUNTIME_20261122_zh.md。强环境入口scripts.run_with_encoder_assets --assets D:/codex/python_withai/runs/a82_encoder_assets，解释器在A79/venv，别用缺强资产的主环境开正式矩阵。下方准备中/未启动为旧快照；下一步共同冻结Q/C1，H/test与独立48/24标签边界不变。
 
 - 最新A74–A82覆盖下方旧状态：核心与文本增量已进A，A74新增14fit/60.365秒，A77新增11fit/41.146秒，A累计1239、0新学校API。A76 76项禁fit检查通过，正式--local-text-proposals evidence默认off；A78只读纠正A77日志字段漏计5提议，原结果保留。A80导出显式外部权重/依赖/预测前校验，3测试+旧包兼容通过。A75公开下载慢取消；A79独立环境装好但旧MiniLM revision404；A82正在固定现有revision下载且不放松原SHA，先查runs/a82_encoder_assets/completion.json，不重复下载/训练。A81实际编码器计划/runner已写、未启动，待资产ready后用runs/a79_encoder_assets/venv/Scripts/python.exe执行。读EXPERIMENT_PROGRESS顶部；H/test封存，独立48/24标签仍缺。

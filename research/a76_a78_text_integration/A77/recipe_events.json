@@ -1,0 +1,310 @@
+[
+  {
+    "time_utc": "2026-11-22T12:07:45.853570+00:00",
+    "kind": "planner_routing",
+    "trial": 1,
+    "action": "explore",
+    "source": "shared_local_rule",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:07:48.423457+00:00",
+    "kind": "planner_routing",
+    "trial": 2,
+    "action": "explore",
+    "source": "shared_local_rule",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:07:51.116902+00:00",
+    "kind": "local_text_recipe_proposal",
+    "trial": 3,
+    "proposal": {
+      "reference_trial": 2,
+      "reference_score": 0.9281427190076497,
+      "train_minus_search": -0.03317624542293485,
+      "analyzer_basis": "try the complementary analyzer",
+      "analyzer_reference_trials": {
+        "word": 2
+      },
+      "target_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "target_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "target_eligible": true,
+      "chosen_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "chosen_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "default_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "evidence_trials": [
+        2
+      ],
+      "feasible_recipe_ids": [
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+        "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee"
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-22T12:07:51.117591+00:00",
+    "kind": "planner_routing",
+    "trial": 3,
+    "action": "explore",
+    "source": "local_text_evidence",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:07:54.277784+00:00",
+    "kind": "local_text_recipe_proposal",
+    "trial": 4,
+    "proposal": {
+      "reference_trial": 3,
+      "reference_score": 0.9636605532831948,
+      "train_minus_search": -0.028342452666586748,
+      "analyzer_basis": "highest observed primary score across both analyzers",
+      "analyzer_reference_trials": {
+        "char_wb": 3,
+        "word": 2
+      },
+      "target_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "target_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "target_eligible": false,
+      "chosen_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "chosen_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+      "default_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "evidence_trials": [
+        3,
+        2
+      ],
+      "feasible_recipe_ids": [
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+        "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee"
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-22T12:07:54.278719+00:00",
+    "kind": "planner_routing",
+    "trial": 4,
+    "action": "explore",
+    "source": "local_text_evidence",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:07:57.569600+00:00",
+    "kind": "planner_routing",
+    "trial": 5,
+    "action": "confirm",
+    "source": "shared_local_rule",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:08:00.687755+00:00",
+    "kind": "planner_routing",
+    "trial": 6,
+    "action": "confirm",
+    "source": "shared_local_rule",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:08:03.913772+00:00",
+    "kind": "local_text_recipe_proposal",
+    "trial": 7,
+    "proposal": {
+      "reference_trial": 4,
+      "reference_score": 0.9757628139650611,
+      "train_minus_search": 0.0009988285650655016,
+      "analyzer_basis": "highest observed primary score across both analyzers",
+      "analyzer_reference_trials": {
+        "char_wb": 4,
+        "word": 2
+      },
+      "target_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "target_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+      "target_eligible": false,
+      "chosen_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "latent",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "chosen_id": "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+      "default_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "evidence_trials": [
+        4,
+        2
+      ],
+      "feasible_recipe_ids": [
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee"
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-22T12:08:03.915735+00:00",
+    "kind": "planner_routing",
+    "trial": 7,
+    "action": "explore",
+    "source": "local_text_evidence",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:08:07.088286+00:00",
+    "kind": "local_text_recipe_proposal",
+    "trial": 8,
+    "proposal": {
+      "reference_trial": 4,
+      "reference_score": 0.9757628139650611,
+      "train_minus_search": 0.0009988285650655016,
+      "analyzer_basis": "highest observed primary score across both analyzers",
+      "analyzer_reference_trials": {
+        "char_wb": 4,
+        "word": 2
+      },
+      "target_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "target_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+      "target_eligible": false,
+      "chosen_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "latent",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "chosen_id": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+      "default_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "evidence_trials": [
+        4,
+        2
+      ],
+      "feasible_recipe_ids": [
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee"
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-22T12:08:07.089305+00:00",
+    "kind": "planner_routing",
+    "trial": 8,
+    "action": "explore",
+    "source": "local_text_evidence",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:08:10.237611+00:00",
+    "kind": "local_text_recipe_proposal",
+    "trial": 9,
+    "proposal": {
+      "reference_trial": 4,
+      "reference_score": 0.9757628139650611,
+      "train_minus_search": 0.0009988285650655016,
+      "analyzer_basis": "highest observed primary score across both analyzers",
+      "analyzer_reference_trials": {
+        "char_wb": 4,
+        "word": 2
+      },
+      "target_spec": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "target_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+      "target_eligible": false,
+      "chosen_spec": {
+        "kind": "single_text",
+        "analyzer": "word",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 1.0,
+        "dimensions": 64
+      },
+      "chosen_id": "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+      "default_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "evidence_trials": [
+        4,
+        2
+      ],
+      "feasible_recipe_ids": [
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee"
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-22T12:08:10.238681+00:00",
+    "kind": "planner_routing",
+    "trial": 9,
+    "action": "explore",
+    "source": "local_text_evidence",
+    "used_llm_requests": 0
+  },
+  {
+    "time_utc": "2026-11-22T12:08:12.973133+00:00",
+    "kind": "planner_routing",
+    "trial": 10,
+    "action": "stop",
+    "source": "shared_local_rule",
+    "used_llm_requests": 0
+  }
+]

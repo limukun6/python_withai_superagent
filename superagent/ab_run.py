@@ -52,6 +52,11 @@ def validate_options(args):
         raise ValueError('AB supports local, raw-history or checked-history planning')
     if args.planner=='local' and args.history_policy!='strict':
         raise ValueError('Historical usage policy applies only to explicit Flash research')
+    local_text_mode=getattr(args,'local_text_proposals','off')
+    if local_text_mode not in ('off','evidence'):
+        raise ValueError('Unknown local text proposal mode')
+    if local_text_mode!='off' and (args.planner!='local' or args.scheduler!='ab-v1' or args.catalog_scope!='full'):
+        raise ValueError('Evidence text proposals require local ab-v1 and the full shared catalogue')
     if getattr(args,'candidate_coverage','off') not in ('off','routes'):
         raise ValueError('Unknown candidate coverage mode')
     if args.planner=='local' and getattr(args,'candidate_coverage','off')!='off':
@@ -226,6 +231,7 @@ def command(args):
     history, evidence, actions = [], [], []
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
+                   local_text_proposals=getattr(args,'local_text_proposals','off'),
                    requested_planner_completed=False, model_available=False, new_api_requests=0,
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
@@ -240,6 +246,7 @@ def command(args):
             candidate_coverage=getattr(args,'candidate_coverage','off'),
             task_profile=getattr(args,'task_profile','off'),proposal_contract=getattr(args,'proposal_contract','strict-v1'),
             partial_delivery=getattr(args,'partial_delivery','off'),
+            local_text_proposals=getattr(args,'local_text_proposals','off'),
             decision_context_version='ab-history-v1' if history_mode else None,
             planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
             project_usage_before_run=ledger.project_summary() if history_mode else None,
@@ -276,6 +283,15 @@ def command(args):
                 finally:
                     budget['used_llm_requests'] = client.request_count
 
+            local_recipe_proposals=[]
+            def compose(eligible, verified, capabilities):
+                from .ab_text_recipes import propose
+                proof=propose(eligible,verified,capabilities)
+                if proof is not None:
+                    local_recipe_proposals.append(proof)
+                    logger.event('local_text_recipe_proposal',trial=number,proposal=proof)
+                return proof
+
             if args.scheduler == 'ab-finalists':
                 from .ab_finalists import finalist_action
                 action = finalist_action(state, capabilities=caps, trusted_partitions=trusted,
@@ -285,14 +301,15 @@ def command(args):
                 action = fixed_action(state, capabilities=caps, trusted_partitions=trusted,
                                       on_explore=choose if picker else None)
             else:
+                optional_local=({'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
                 action = next_action(state, capabilities=caps, trusted_partitions=trusted,
-                                     on_explore=choose if picker else None)
+                                     on_explore=choose if picker else None,**optional_local)
             proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
             if proposal is not None:
                 action['reason'] = proposal['reason']
                 action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'],*proposal['evidence_trials']]))
             logger.event('planner_routing', trial=number, action=action['action'],
-                source='flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
+                source='local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
                     and action['action']=='explore' else 'shared_local_rule',
                 used_llm_requests=client.request_count if client else 0)
             actions.append(action)

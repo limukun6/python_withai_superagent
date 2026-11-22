@@ -1,0 +1,5 @@
+# A78：只读纠正A77日志统计，不重训
+
+A77已完成11fit/41.146秒（自主路径10+pair探针1），模型交付和交换概率通过。统计器误读日志字段event，而RunLogger实际字段kind，导致原completion写为completed_without_proposal_trigger。真实events已存在local_text_recipe_proposal。保留原completion/results与原runner，另目录只读核对kind、动作、历史、候选参数、引用先于当前试验及状态摘要；不修改训练结果，不重跑fit或API。
+
+本批0fit/0API，原A累计1239不变。修可复跑runner字段只影响后续新运行，不使旧source/runner身份悄悄变更。最终结论分别引用原资源、原交付证据与新审计，不用新completion覆盖旧记录。

@@ -93,7 +93,8 @@ def _run(args):
         from .ab_run import command
         return command(args)
     if (args.fit_limit is not None or args.portfolio == 'ab-v1' or args.catalog_scope!='full' or args.history_policy!='strict'
-            or args.candidate_coverage!='off' or args.task_profile!='off' or args.proposal_contract!='strict-v1' or args.partial_delivery!='off'):
+            or args.candidate_coverage!='off' or args.task_profile!='off' or args.proposal_contract!='strict-v1' or args.partial_delivery!='off'
+            or args.local_text_proposals!='off'):
         raise ValueError('AB fit-limit/portfolio require --scheduler ab-v1')
     if args.trials is None:
         args.trials = 5
@@ -292,6 +293,7 @@ def build_parser():
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
+    run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2'],default='strict-v1',help='AB Flash: allow explicit diagnostic intent and uncertain score expectations')
     run.add_argument('--partial-delivery',choices=['off','checkpoint'],default='off',help='AB: on failure freeze an already fitted checkpoint; the requested run remains failed')

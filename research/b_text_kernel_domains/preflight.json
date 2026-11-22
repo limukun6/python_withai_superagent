@@ -1,0 +1,374 @@
+{
+  "amazon": {
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "negative",
+          "positive"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "message",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "negative",
+              "positive"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 1000,
+    "training_rows": 1999,
+    "removed_training_rows": 1,
+    "held_groups": 987,
+    "overlapping_groups_after_filter": 0,
+    "held_content_sha256": "dbf9a8170059d6f7b9f0bacc79b3788e3674dff9601add7e4cd57dbf3c3b3c9d",
+    "training_content_sha256": "7b30307b510a4d21497685ed0a5bf0a96977d0db30857f8d505794328b16152b",
+    "files": {
+      "train.zip": "af0a8ff60c918575b1ce3505a5af944d3c7d0efa080415e9904e8d5d39acf96f"
+    },
+    "features_sha256": "9c18135256025f8390a7d7acc5df50c91fa7822e2676f0108eaa2fa549e0773b",
+    "inner_sha256": "dd351aa0d188c76af448d1c5ffa333242e29aa4ea9854c1300b0db2e4377b9fc",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "f700c496e5070d5c1eb615df19585b6389a53d020f60287baf48a0710df68fc0",
+        "label_sha256": "2905eab2ce684de73fd57e5463c0daf5dda0ea787e41503b39af35f3d8ef18c5",
+        "evaluation_payload_sha256": "c0504ebb9c7dd2382c93e79a1030fe68a535ae61d18e8ef01a1ea4db87b7fd10"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "590179028023234b387455a8e94fdb20de8ca359b5e8b47f6868b3a4ffa0a2e1",
+        "label_sha256": "55106651b178dbe7eb39ada9dbfe7939f4cac3560a9c62c31a56f154d8c15271",
+        "evaluation_payload_sha256": "1171168dbeed9098ac0b64b0f1c244e09b2d335d18c669d95b2fa4af4bcc91a6"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "1b2d226df103f792762c9eee178935d9d90396e91e5f937af773172b375ef4c5",
+        "label_sha256": "45860692da46e21eb94083f802d928ca7b1d224dcdda2f1ab489f68532ec2c3a",
+        "evaluation_payload_sha256": "5a3416b159612ad050863cd2ec745372ca2694adcbe5a57a411131260c764f51"
+      }
+    },
+    "catalogs": {
+      "original": {
+        "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features"
+        ]
+      },
+      "extended": {
+        "catalog_sha256": "d57a27bf7e234c70784720eb5699f9a242e0738a1fa0ae73df68ec814cafa62b",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features",
+          "minilm_text_with_nonlinear_lexical_features"
+        ]
+      }
+    }
+  },
+  "imdb": {
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "negative",
+          "positive"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "message",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "negative",
+              "positive"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 1000,
+    "training_rows": 1999,
+    "removed_training_rows": 1,
+    "held_groups": 997,
+    "overlapping_groups_after_filter": 0,
+    "held_content_sha256": "a4b39eae9dfa213860ab2aa19ddd539703eb42abaae653976818e6d7277e741c",
+    "training_content_sha256": "0e99882801ea88241d2e79a593da1879cf27d932e4834143a895d1457702e500",
+    "files": {
+      "train.zip": "8ef1da589e54e41a84fda4203956ab9548ba451817724a5fb5cf35ef406caa28"
+    },
+    "features_sha256": "cd078a30f3ca0f2b536cc9c17405861314ea3510f72c2c2c426b61be45045dd6",
+    "inner_sha256": "291036ac87cd669466d413721615376dd72302b35186fe7fb30260ebf514dbfd",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "6458b22f3088550d65c340d7d08e93a57fd01908affabc7b72a2f4149fb13d11",
+        "label_sha256": "f25450d5774c23468dd926b272d171cdd6af5a071fd3643b4f35ee7c54bfb879",
+        "evaluation_payload_sha256": "1fd911cf2f210aeb4d6c944c3b289258bcbda338ee32e83d1cbf9cf75fc1eae6"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "cd435736229fdd5e4071c0608c69aefba0b72b05688c5b274dc45bc45077aedd",
+        "label_sha256": "d59ebf7780aa45c12428adcc0ca298196a6ebafa4f6a68bb3c2f90cdb7e61bbd",
+        "evaluation_payload_sha256": "25c6357976d10880926ea9302558118bca2582ecdd30ea77919331c274db0cd7"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "18bc63e07a568208ea2a6ba0c3b29b35789e8c3646744706e53d40b3d2a1a3b4",
+        "label_sha256": "63429b29fc4e5f341f76ee4364bdb312adcb48e621a426ca14b90b4fc89a4cbe",
+        "evaluation_payload_sha256": "2c61af0d81236e06758b3ce8c51c6069e19b9ee331e50f45cec6c23072dda406"
+      }
+    },
+    "catalogs": {
+      "original": {
+        "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features"
+        ]
+      },
+      "extended": {
+        "catalog_sha256": "d57a27bf7e234c70784720eb5699f9a242e0738a1fa0ae73df68ec814cafa62b",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features",
+          "minilm_text_with_nonlinear_lexical_features"
+        ]
+      }
+    }
+  },
+  "yelp": {
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "negative",
+          "positive"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "message",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "negative",
+              "positive"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 1000,
+    "training_rows": 2000,
+    "removed_training_rows": 0,
+    "held_groups": 996,
+    "overlapping_groups_after_filter": 0,
+    "held_content_sha256": "f2eda171c80b1b79f6df5211447600c0c4b3da2d63d662fa6df8d3b5f72f9fab",
+    "training_content_sha256": "d1fc0c888435596e58fccfc1903cfc319c9033042494f90b939848ee86a73d3c",
+    "files": {
+      "train.zip": "e9fad78d26814ce2139ce0bc8ae28e6fc6783294a17699085d1b6c161309ab80"
+    },
+    "features_sha256": "f8e929728348e5e8c44fd5cd4a784f307bc772478e4561d12fbc41ac01edfed6",
+    "inner_sha256": "dc7941f69105519df1874d0ae02c819a428c3186cfb1e7bcd8f8690c3d475005",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "63e120ab2226f49fbadcf7104b018e953f5ece5a9c2968f4ccdd9c3d6c38726c",
+        "label_sha256": "adaf8fc879542e20db62e4e06f3d4e81bc6816ea32ebc9eec6a8e50055426381",
+        "evaluation_payload_sha256": "67e4aab99d1eb2a3497a5ed6cee4417a6b30a0d7eea8f00066a6442277bacf33"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "0b9994f9b39c5b7bd26f710798fc2c3906416c706a0a50e817c8c79960bbf9a2",
+        "label_sha256": "d46f55cc3cf309cb395ba1503b55a1232c2cad49bc71a17fe8f62d8c0cc6949d",
+        "evaluation_payload_sha256": "143d230a53eb62a6086be66e9e4afa610ed29f1827633b639a82cd23d4a2099b"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "1f2e4c8bc9ad6b5fb73ae7b57885d090df393ead3d1eca9a4d6753a449d89969",
+        "label_sha256": "c3c8f86bf26cb1ac321f34e6c01d9a98ac82f42b64b1ad39207a916353f2a2c8",
+        "evaluation_payload_sha256": "1919a92aa50d7e595b677c3c9625fe3d7c3b688681ff5c14272db73a7f40bf6d"
+      }
+    },
+    "catalogs": {
+      "original": {
+        "catalog_sha256": "059b79cd4eb64ea648efedc92c3aaff95af582d7b5d482914ed213f89b2cec69",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features"
+        ]
+      },
+      "extended": {
+        "catalog_sha256": "d57a27bf7e234c70784720eb5699f9a242e0738a1fa0ae73df68ec814cafa62b",
+        "candidate_ids": [
+          "single_word_C0.3",
+          "single_word_C3.0",
+          "single_char_C0.3",
+          "single_char_C3.0",
+          "single_word_char_C0.3",
+          "single_word_char_C3.0",
+          "minilm_text_with_lexical_features",
+          "minilm_text_with_nonlinear_lexical_features"
+        ]
+      }
+    }
+  }
+}

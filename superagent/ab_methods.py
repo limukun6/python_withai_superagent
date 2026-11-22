@@ -15,9 +15,10 @@ from . import ab_vision, symmetric_text
 
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
+TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
 IMAGE = 'image_gradient_histograms_logistic'
 RELATION = 'ordered_text_pair_interactions'
-ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', IMAGE:'gradient_histograms',
+ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minilm_nonlinear_lexical', IMAGE:'gradient_histograms',
           RELATION:'ordered_text_interactions', **{name: name for name in CHANNELS}, ENCODER: ENCODER,
           ab_vision.NAME:'frozen_image_features'}
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
@@ -98,7 +99,7 @@ def additions(kind):
                 C=10., representation='L2-normalized frozen 576-dimensional image features'),ab_vision.fit_vision))
         return methods
     if kind in ('single_text','pair_text'):
-        from .ab_sentence import MODEL, REVISION, fit_sentence, verified_directory
+        from .ab_sentence import KERNEL_DIMENSIONS, KERNEL_SAMPLE_LIMIT, KERNEL_SEED, MODEL, REVISION, fit_sentence, verified_directory
         encoder_ready = verified_directory() is not None
         extra = []
         if kind == 'pair_text':
@@ -107,5 +108,9 @@ def additions(kind):
         if encoder_ready:
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+            extra.append(Candidate(TEXT_KERNEL,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm_rbf',
+                                   kernel_components=KERNEL_DIMENSIONS,bandwidth_sample_limit=KERNEL_SAMPLE_LIMIT,
+                                   kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),
+                                   partial(fit_sentence,kind=kind,nonlinear=True)))
         return extra
     return []

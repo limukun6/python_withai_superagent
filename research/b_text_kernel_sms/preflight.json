@@ -1,0 +1,111 @@
+{
+  "sms": {
+    "source": {
+      "source": "UCI SMS Spam Collection published training-internal development cohort",
+      "outer_rows_sha256": "c63a599bac943ff85eec68239bf8427bd755d646ba325671d0990a25018d7e13"
+    },
+    "inner_sha256": "cba4f38a0bc65b4a1df2fdf6f0c658ee4a78134915dc2a67fd0846121c7c5ce9",
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "message",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "ham",
+              "spam"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "training_rows": 3303,
+    "rows": 825,
+    "files": {
+      "train.zip": "73bdaa91d286e85e3c6eda9c7d23362b3f5320788f958778441009e957e9be94",
+      "features.zip": "e261b8db39d5a65a8cdeb9546f72f12c31ca25adb727fa821775aa4127ba2ce0",
+      "holdout.joblib": "c560a2cebf60607f39f108a69536580347f227f49343a58e54ba06b16b1ad230"
+    },
+    "catalog_sha256": "d57a27bf7e234c70784720eb5699f9a242e0738a1fa0ae73df68ec814cafa62b",
+    "candidate_ids": [
+      "single_word_C0.3",
+      "single_word_C3.0",
+      "single_char_C0.3",
+      "single_char_C3.0",
+      "single_word_char_C0.3",
+      "single_word_char_C3.0",
+      "minilm_text_with_lexical_features",
+      "minilm_text_with_nonlinear_lexical_features"
+    ],
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "9ae0f1df07f790b48d5c3e4f737a7f413ca3e23a59a8ee499e517bc06295f41d",
+        "label_sha256": "2de0ea1799383444f58090e0b6e89412062fd2a2afcf79dfceed38c5d47b66d1",
+        "evaluation_payload_sha256": "cb15766a35f633d08fb38d2ecfb00a7f47f41301ebcf288d0036c439166880d3"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "de363a1a0de396efa9ddb00e8b8a8d86dd26580b88887f2f0f6124c037982fa4",
+        "label_sha256": "850eaf83bb4f6f92263f9900b745d46373773039f1d3c34fc4e6becf44883eaa",
+        "evaluation_payload_sha256": "b003f8b640580e403c62fce2a5823c86eb8020263ab51298066e297ade761026"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "7ad48d72325a5d00f42029e836e7c4451771272f69597177775c89dfaedb1237",
+        "label_sha256": "56dab94e6b28f68b99221f25a63125d7306faa5731db2326edef58013edf6d45",
+        "evaluation_payload_sha256": "11b03acc0f34c4f76697e2469bc5db66f483649a32d419b703db9caaeed07176"
+      }
+    },
+    "name": "sms"
+  }
+}

@@ -1,5 +1,14 @@
 # 实验持续工作记录
 
+## 最新：A60–A63完成，进入D4整合准备
+
+- 先读[batches/A60_A63_results_zh.md](batches/A60_A63_results_zh.md)，下一步[D4_freeze_and_formal_budget_20261122_zh.md](D4_freeze_and_formal_budget_20261122_zh.md)，队友交接[A_TO_B_AUC_FINALISTS_20261122.md](A_TO_B_AUC_FINALISTS_20261122.md)。没有训练/API任务在运行；下方A37–A59为历史。
+- A60原动态/统一finalists两任务4完整路径，26fit/187.641秒/0API。Coupon均75.0246%；偏好69.5745%→69.6809%（+0.1064pp、多对1条）。统一组两候选都有同一confirmation证据，但探索分配也变，不能单独归因或宣称稳定涨分。7fit小试，未替换默认S。
+- A61五类真实旧模型概率与类列序诊断、人工硬标签同/AUC异反例通过，0fit/API。A62正式AB AUC在已见SMS显式换目标跑通3fit/15.525秒，开发AUC .991983/accuracy .881356，新进程概率核验/B导出通过；不是对原macro-F1的效果提升证明，多分类/Flash-AUC待测。
+- A63合法AUC partial通过、六损坏反例拒绝（含硬标签相同而概率变），完整/partial两源码包独立进程及已有独立venv概率CSV一致，0fit/API。52个不同无训练契约/回归检查通过。
+- 本轮新增29实际fit/API0/费用0，A累计999；原真账本275行、known¥5.9765785/11历史unknown/pending0的历史状态未清空。本轮禁网，本机账本未被替换；课程总预算仍未核验。原1000为建议线，先停止开发轮训练；正式阶段另按两人产物核算预留，不能把已花研发冒充正式Q/C1/H。
+- A60与A62有各自冻结source，后者含AUC与防御性证据缺失检查；正式冻结版仍待两线合并。H1/H2与课程test未打开。脱敏统计归档research/a60_a63_finalists_auc。
+
 ## 最新完成状态：A37–A59本轮收尾
 
 所有训练/API队列已完成。结果总表见[batches/A37_A59_round_results_zh.md](batches/A37_A59_round_results_zh.md)，后续计划见[NEXT_RESEARCH_AFTER_A58_zh.md](NEXT_RESEARCH_AFTER_A58_zh.md)。下方“运行中”均为历史快照，不可据此重跑。

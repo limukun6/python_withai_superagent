@@ -1,5 +1,7 @@
 # 当前状态：本轮队列已完成
 
+最新已推进至A60–A63，累计999fit，当前无训练/API任务。参见batches/A60_A63_results_zh.md与D4_freeze_and_formal_budget_20261122_zh.md。AUC正式CLI与概率交付已通过一条真实SMS路径；统一finalists完成两任务小试，尚未升默认。下方A50收尾计数970为旧快照。
+
 A50/A51/A55/A58与所有收尾检查已完成，无训练/API队列运行。下文是历史运行记录。最新结果见`batches/A37_A59_round_results_zh.md`，后续计划见`NEXT_RESEARCH_AFTER_A58_zh.md`。A累计970fit，真实ledger275行/已知估计¥5.9765785/旧11 unknown/pending0。不要重复启动；H/test仍封存。
 
 # 当前正在执行A50/A51：接手先看实际状态

@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A60–A63已完成：26+3=29新增实际fit、0API，A累计999，当前无训练/API任务运行。统一finalists与AUC正式入口/概率证据/partial交付已接，详细见docs/batches/A60_A63_results_zh.md、A_TO_B_AUC_FINALISTS_20261122.md。先按D4_freeze_and_formal_budget_20261122_zh.md整合最终目录与预算，不重复开发轮训练、不将下方970/运行中旧快照当现状。H/test仍封存。
+
 - 最新收尾：A50/A51/A55/A58真实队列及A59只读分析全部完成，没有训练/API任务在运行。优先读docs/batches/A37_A59_round_results_zh.md与docs/NEXT_RESEARCH_AFTER_A58_zh.md。下面“队列当前运行”是历史快照，已失效。A累计970次实际fit；共享真账本275行、已知估计¥5.9765785、历史未知11、pending0。H1/H2与正式test仍封存；不要重复启动已完成批次。
 
 - 最新接手先读docs/CURRENT_RUN_20261122_A50.md及EXPERIMENT_PROGRESS顶部。原三小时窗口因00:21待机而中断，A32为8完整/1部分/11未启动，不是完整矩阵；旧completion不改。恢复窗口另记08:42–10:42，A50/A51真实Flash队列当前运行，禁止改superagent、campus_direct.py、run_a50_facts_calibration.py、run_a29_choice_matrix.py、run_a34_transfer_coverage.py及worker观察器，先查实际completion，别重复启动/计费。

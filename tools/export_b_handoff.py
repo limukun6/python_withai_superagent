@@ -16,7 +16,6 @@ def export_ab(run):
     from superagent.metrics import MetricSpec
     from superagent.ab_scheduler import CONFIRMATIONS
     metric=MetricSpec.from_payload({'metric_spec':manifest['task_contract']['metric']})
-    if metric.requires_scores:raise ValueError('AB score-vector export is not enabled for AUC')
     predictions=read('prediction_evidence.json');bytrial={r['trial']:r for r in history};splits={};provenance={}
     if len(bytrial)!=len(history):raise ValueError('Duplicated history trial identity')
     if len({p['trial'] for p in predictions})!=len(predictions):raise ValueError('Duplicated trial prediction evidence')
@@ -35,7 +34,11 @@ def export_ab(run):
                 or item['evaluation_payload_sha256']!=digest or item['label_sha256']!=fingerprint(payload['y_search'])
                 or item['prediction_sha256']!=fingerprint(item['predictions'])):
             raise ValueError('Invalid split-aware prediction identity')
-        measured=metric.evaluate(payload['y_search'],item['predictions'])['score']
+        scores=classes=None
+        if metric.requires_scores:
+            from superagent.score_evidence import checked_score_record
+            scores,classes=checked_score_record(item.get('score_record'),item,metric,item['candidate_id'],payload['y_search'])
+        measured=metric.evaluate(payload['y_search'],item['predictions'],scores,classes)['score']
         if not math.isclose(measured,row['search_score'],abs_tol=1e-10):raise ValueError('Stored score differs from local training labels')
     if {r['trial'] for r in history if r['status']=='completed'}!={p['trial'] for p in predictions}:
         raise ValueError('Every completed observation needs one bound prediction record')

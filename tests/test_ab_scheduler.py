@@ -119,7 +119,8 @@ class TestActionAdapter(unittest.TestCase):
         state['task']['metric']['name'] = 'roc_auc'
         for r in state['history']:
             r.update(primary_metric='roc_auc',search_score=.91)
-        self.assertEqual(next_action(state)['action'],'confirm')
+        # Scalar AUC plus hard labels cannot certify a score-based comparison.
+        self.assertEqual(next_action(state)['action'],'stop')
 
     def test_new_confirmation_cannot_reuse_primary_rows(self):
         state = competing()

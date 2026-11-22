@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "distinct_check_count": 52,
+  "actual_classifier_fits": 0,
+  "real_api_requests": 0,
+  "observations": [
+    {
+      "checks": 51,
+      "elapsed_seconds": 2.069,
+      "result": "OK",
+      "modules": [
+        "tests.test_score_evidence",
+        "tests.test_ab_finalists",
+        "tests.test_ab_scheduler",
+        "tests.test_ab_fixed_schedule",
+        "tests.test_ab_confirmation_budget",
+        "tests.test_ab_flash",
+        "tests.test_ab_bridge_adapter"
+      ],
+      "individual_metric_checks": [
+        "tests.test_general_extensions.GeneralExtensionTests.test_auc_uses_scores_and_honors_class_order",
+        "tests.test_general_extensions.GeneralExtensionTests.test_auc_refuses_missing_invalid_and_unrepresentative_scores",
+        "tests.test_general_extensions.GeneralExtensionTests.test_multiclass_auc_is_macro_ovr_with_aligned_columns",
+        "tests.test_general_extensions.GeneralExtensionTests.test_additional_metrics_and_explicit_positive_label"
+      ]
+    },
+    {
+      "checks": 1,
+      "elapsed_seconds": 0.030,
+      "result": "OK",
+      "test": "tests.test_ab_finalists.MatchedFinalistTests.test_missing_prediction_record_cannot_enter_shortlist"
+    }
+  ],
+  "note": "Earlier 29/35-check runs overlap this set and are not independent extra cases. No broad training regression was repeated."
+}

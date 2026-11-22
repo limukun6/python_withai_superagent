@@ -46,6 +46,13 @@ def freeze_checkpoint(task,state,trusted,caps,directory,logger,reason):
     evidence=next(r for r in state['prediction_evidence'] if r['trial']==chosen['trial'])
     if fingerprint(predicted.tolist())!=evidence['prediction_sha256']:
         raise ValueError('Checkpoint no longer reproduces its verified primary predictions')
+    if metric.requires_scores:
+        from .models import probability_with_model
+        from .score_evidence import checked_score_record,matrix_sha256
+        _,classes=checked_score_record(evidence.get('score_record'),evidence,metric,chosen['candidate'],payload['y_search'])
+        actual_classes,scores=probability_with_model(task.kind,bundle['model'],payload['X_search'])
+        if actual_classes.tolist()!=classes or matrix_sha256(scores)!=evidence['score_record']['scores_sha256']:
+            raise ValueError('Checkpoint no longer reproduces its bound primary probabilities')
     clean=DevelopmentTask(task.kind,'partial checkpoint',task.X_train,task.y_train,None,None,task.spec)
     def no_training(*a,**kw):raise RuntimeError('Partial recovery cannot train a model')
     result=finalize(clean,rows,bundle['model'],chosen['candidate'],chosen['search_score'],payload,

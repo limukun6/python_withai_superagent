@@ -74,6 +74,8 @@ def validate_options(args):
         raise ValueError('AB fit-limit must be an integer in [2,11], including final refit')
     if args.scheduler == 'ab-fixed' and limit != 11:
         raise ValueError('AB fixed control requires fit-limit 11')
+    if args.scheduler == 'ab-finalists' and limit < 5:
+        raise ValueError('AB matched finalists require at least 5 fits including refit')
     if any(not math.isfinite(x) or x <= 0 for x in (args.time_limit, args.trial_timeout)):
         raise ValueError('Time limits must be positive and finite')
     return limit
@@ -152,15 +154,19 @@ class Executor:
         return model, facts
 
 
-def finish(task, history, state, trusted, allowed, caps, directory, executor, logger):
-    review = selection_evidence(state, trusted_partitions=trusted)
+def finish(task, history, state, trusted, allowed, caps, directory, executor, logger, *, matched_finalists=False):
+    if matched_finalists:
+        from .ab_finalists import finalist_review
+        review = finalist_review(state, capabilities=caps, trusted_partitions=trusted)
+    else:
+        review = selection_evidence(state, trusted_partitions=trusted)
     chosen = review['incumbent']
     if chosen is None:
         raise ValueError('No verified completed candidate to freeze')
     primary = [r for r in history if r['split_id'] == PRIMARY]
     lookup = {(r['candidate'], r['split_id']): r for r in history}
     last = review['promotions'][-1] if review['promotions'] else None
-    names = [last['previous'], chosen] if last else [chosen]
+    names = review['finalists'] if matched_finalists else [last['previous'], chosen] if last else [chosen]
     basis = review['basis']
     measurements = {name: [dict(seed=allowed[s]['seed'], **lookup[name, s]) for s in basis] for name in names}
     decision = decide([lookup[n, PRIMARY] for n in names], measurements,
@@ -168,7 +174,8 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
     if not decision['valid_confirmation'] or decision['selected_candidate'] != chosen:
         raise ValueError('A final selection disagrees with B matched evidence')
     decision.update(b_scheduler_review=review,
-        selection_rule='Best of initial three; replace on two paired wins and mean gain >= 0.002',
+        selection_rule=review['selection_rule'] if matched_finalists else
+            'Best of initial three; replace on two paired wins and mean gain >= 0.002',
         independent_confirmation_observed=any(s != PRIMARY for s in basis))
     logger.write_json('confirmation.json', decision)
     row = lookup[chosen, PRIMARY]
@@ -191,8 +198,6 @@ def command(args):
     task = load_development_task(task_path)
     spec = TaskSpec.from_task(task).record()
     metric = MetricSpec.for_task(task)
-    if metric.requires_scores:
-        raise ValueError('AB CLI currently requires accuracy or macro_f1; score-level AUC evidence is pending')
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S_%fZ')
     directory = Path(args.run_dir or Path(args.output_dir or 'runs') / ('ab_' + stamp)).expanduser().resolve()
     directory.mkdir(parents=True, exist_ok=False)
@@ -271,7 +276,11 @@ def command(args):
                 finally:
                     budget['used_llm_requests'] = client.request_count
 
-            if args.scheduler == 'ab-fixed':
+            if args.scheduler == 'ab-finalists':
+                from .ab_finalists import finalist_action
+                action = finalist_action(state, capabilities=caps, trusted_partitions=trusted,
+                                         on_explore=choose if picker else None)
+            elif args.scheduler == 'ab-fixed':
                 from .ab_fixed_schedule import fixed_action
                 action = fixed_action(state, capabilities=caps, trusted_partitions=trusted,
                                       on_explore=choose if picker else None)
@@ -322,11 +331,13 @@ def command(args):
             raw = joblib.load(directory / f'trial_{number}.joblib')['prediction_record']
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),
-                **{k:raw[k] for k in ('prediction_sha256','label_sha256','evaluation_payload_sha256')}))
+                **{k:raw[k] for k in ('prediction_sha256','label_sha256','evaluation_payload_sha256')},
+                **({'score_record':raw['score_record']} if metric.requires_scores else {})))
             logger.write_json('history.json', history)
             logger.write_json('prediction_evidence.json', evidence)
         # Recheck every completed observation against locally held labels before selection.
-        chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger)
+        chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
+                                          matched_finalists=args.scheduler == 'ab-finalists')
         outcome.update(selected_candidate=chosen, primary_metric=metric.name, model_available=True,
             full_refit_completed=result['refit_succeeded'], confirmation=decision,
             validation_score=result.get('official_validation_score'),

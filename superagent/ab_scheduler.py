@@ -77,15 +77,21 @@ def _observations(history, evidence, metric, splits, trusted_partitions):
         payload, labels = item['evaluation_payload_sha256'], item['label_sha256']
         if not _digest(payload) or not _digest(labels) or item['prediction_sha256'] != fingerprint(predictions):
             raise ValueError('Prediction or payload fingerprint is invalid')
+        score_values=score_classes=None
+        if metric.requires_scores:
+            if trusted_partitions is None:
+                raise ValueError('AUC comparisons require trusted local labels, not scalar scores alone')
+            from .score_evidence import checked_score_record
+            score_values,score_classes=checked_score_record(item.get('score_record'),item,metric,name,
+                                                           trusted_partitions[split]['labels'])
         if trusted_partitions is not None:
             trusted = trusted_partitions[split]
             if (list(trusted['row_ids']) != ids or trusted['evaluation_payload_sha256'] != payload
                     or fingerprint(trusted['labels']) != labels):
                 raise ValueError('Evidence differs from the trusted local training partition')
-            if not metric.requires_scores:
-                actual = metric.evaluate(trusted['labels'],predictions)['score']
-                if not math.isclose(actual,score_of(row),abs_tol=1.e-10):
-                    raise ValueError('Stored score differs from the declared metric on the local rows')
+            actual = metric.evaluate(trusted['labels'],predictions,score_values,score_classes)['score']
+            if not math.isclose(actual,score_of(row),abs_tol=1.e-10):
+                raise ValueError('Stored score differs from the declared metric on the local rows')
         signature = (tuple(ids), payload, labels)
         if split in signatures and signatures[split] != signature:
             raise ValueError('Ordered rows, payload or labels differ inside one partition')

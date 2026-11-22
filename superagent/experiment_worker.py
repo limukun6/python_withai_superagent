@@ -67,12 +67,16 @@ def main() -> None:
     if metric.requires_scores:
         classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
         score_evidence={'search_scores':scores,'score_classes':classes}
+    prediction_record=make_prediction_record(predictions,payload['y_search'],payload_sha256)
+    if metric.requires_scores:
+        from .score_evidence import make_score_record
+        prediction_record['score_record']=make_score_record(prediction_record,scores,classes,metric,candidate_id)
     train_accuracy=train_metrics["accuracy"];search_accuracy=search_metrics["accuracy"]
     slices = ErrorSlices(payload["kind"], payload["X_train"]).describe(payload["X_search"], payload["y_search"], predictions) if payload.get("error_feedback") else None
     joblib.dump({"model": model if payload.get("retain_model", True) else None,
                 **score_evidence,
                 "search_predictions": predictions,
-                'prediction_record':make_prediction_record(predictions,payload['y_search'],payload_sha256), "metrics": {
+                'prediction_record':prediction_record, "metrics": {
         "error_slices":slices, "primary_metric":metric.name,'metric_spec':metric.record(),"train_score":train_metrics["score"],"search_score":search_metrics["score"],
         "train_metrics":train_metrics,"search_metrics":search_metrics,"score_gap":train_metrics["score"]-search_metrics["score"],
         "train_accuracy": train_accuracy,

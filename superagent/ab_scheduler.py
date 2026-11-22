@@ -274,7 +274,7 @@ def _fixed_confirm(front, attempted, records, splits, available, reserve, known_
     return _action('stop', 'Completed the registered fixed exploration and confirmation allocation.', refs)
 
 
-def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive'):
+def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None):
     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
     if allocation not in ('adaptive', 'fixed'):
         raise ValueError('Unknown AB budget allocation')
@@ -367,13 +367,29 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
                      0 if ec[0]['id'] in ROUTES else 1, -scores.get(route(ec[0]),0)))
     entry, cost = ordered[0]
     why = 'Explore a feasible route using prior route coverage and observed primary scores.'
+    references = [r['trial'] for r in front[:2]]
     if on_explore is not None and budget['used_llm_requests'] < budget['llm_request_limit']:
         selected = on_explore(tuple(e['id'] for e,c in ordered))
         if selected not in {e['id'] for e,c in ordered}:
             raise ValueError('Planner returned an ineligible candidate')
         entry,cost = next((e,c) for e,c in ordered if e['id'] == selected)
         why = 'Planner selected an eligible untried configuration within the shared allowance.'
-    action = _action('explore',why,[r['trial'] for r in front[:2]],entry['id'],PRIMARY,cost)
+    elif on_explore is None and on_local_recipe is not None and allocation=='adaptive' and trusted_partitions is not None:
+        eligible = tuple(e['id'] for e,c in ordered)
+        verified = [r for r in front if r['trial'] in records]
+        proposal = on_local_recipe(eligible,verified,capabilities)
+        if proposal is not None:
+            from .ab_text_recipes import ROUTES as recipe_routes
+            picked = proposal['chosen_id']
+            if (entry['id'] not in recipe_routes or picked not in eligible or picked not in recipe_routes
+                    or any(ref not in {r['trial'] for r in verified} for ref in proposal['evidence_trials'])):
+                raise ValueError('The local composition is outside the eligible menu or unverified history')
+            entry,cost = next((e,c) for e,c in ordered if e['id']==picked)
+            spec = proposal['chosen_spec']
+            why = (f"Use trial {proposal['reference_trial']} and the observed analyzer results to try "
+                   f"{spec['analyzer']} {spec['representation']} logistic features with C={spec['C']}.")
+            references.extend(proposal['evidence_trials'])
+    action = _action('explore',why,references,entry['id'],PRIMARY,cost)
     return _explain_skips(action, skipped)
 
 

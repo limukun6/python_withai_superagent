@@ -36,6 +36,13 @@ class NonlinearTextTests(unittest.TestCase):
         additions = [c.family for c in tfidf_candidates()] + list(CHANNELS)
         if verified_directory() is not None:
             additions.extend([ENCODER, TEXT])
+        from superagent.recipe_models import materialize_recipe
+        for analyzer in ('word', 'char_wb'):
+            for representation in ('latent', 'hybrid'):
+                for strength in (.3, 1.):
+                    params = dict(kind='pair_text', analyzer=analyzer, representation=representation,
+                                  classifier='logistic', C=strength, dimensions=64)
+                    additions.append(materialize_recipe(params).family)
         self.assertEqual([len(base), len(research), len(nonlinear)], [22, 28, 29])
         self.assertEqual([c.family for c in all_candidates[43:]], additions)
         self.assertEqual(len({c.family for c in all_candidates[:43]} - set(additions)), 43)

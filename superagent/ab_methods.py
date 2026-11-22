@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
-from . import ab_vision, symmetric_text
+from . import ab_text_recipes, ab_vision, symmetric_text
 
 
 FIELDS = 'supported_field_interactions'
@@ -23,6 +23,7 @@ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minil
           ab_vision.NAME:'frozen_image_features'}
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
+ROUTES.update(ab_text_recipes.ROUTES)
 
 
 def _field_tree(rows, labels, query):
@@ -112,5 +113,6 @@ def additions(kind):
                                    kernel_components=KERNEL_DIMENSIONS,bandwidth_sample_limit=KERNEL_SAMPLE_LIMIT,
                                    kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),
                                    partial(fit_sentence,kind=kind,nonlinear=True)))
+        extra.extend(ab_text_recipes.candidates(kind))
         return extra
     return []

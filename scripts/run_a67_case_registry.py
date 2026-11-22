@@ -86,7 +86,10 @@ def evaluate(case):
         from superagent.task_semantics import validate_candidate_semantics
         c=next(c for c in search_candidates('pair_text','all') if c.family==p['candidate'])
         try:r=validate_candidate_semantics('pair_text',p['meaning'],c)
-        except ValueError as e:return 'contradicted',dict(error=str(e))
+        except ValueError as e:
+            # This case asks whether task intent is known, independently of execution admission.
+            return ('unknown' if p['meaning'] is None else 'contradicted'),dict(error=str(e),execution_status='rejected',
+                task_intent_status='unknown' if p['meaning'] is None else 'contradicted')
         return ('unknown' if p['meaning'] is None else 'confirmed'),r
     if op=='configuration':
         from superagent.estimator_facts import verify_configuration_claim

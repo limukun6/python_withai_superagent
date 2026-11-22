@@ -1,0 +1,33 @@
+.............................................................E...
+======================================================================
+ERROR: test_swapping_preserves_overlap_and_changes_the_ordered_feature_block (tests.test_ab_ordered_relation.OrderedRelationTests.test_swapping_preserves_overlap_and_changes_the_ordered_feature_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\codex\python_withai\runs\b_review_20261122\tests\test_ab_ordered_relation.py", line 32, in test_swapping_preserves_overlap_and_changes_the_ordered_feature_block
+    model,predicted = candidate.fit_predict(rows(texts),np.array(['a','b','c','a','b','c']),rows(texts))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\codex\python_withai\runs\b_review_20261122\superagent\ab_methods.py", line 83, in _ordered_relation
+    model.fit(rows, labels)
+    ~~~~~~~~~^^^^^^^^^^^^^^
+  File "D:\codex\python_withai\.venv\Lib\site-packages\sklearn\base.py", line 1403, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "D:\codex\python_withai\.venv\Lib\site-packages\sklearn\pipeline.py", line 645, in fit
+    self._final_estimator.fit(Xt, y, **last_step_params["fit"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\codex\python_withai\runs\b_review_20261122\scripts\a38_predict_guard.py", line 10, in no_fit
+    def no_fit(*args,**kwargs):raise RuntimeError('Classifier fitting forbidden in portable prediction validation')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Classifier fitting forbidden in portable prediction validation
+
+----------------------------------------------------------------------
+Ran 65 tests in 0.351s
+
+FAILED (errors=1)
+  manifest.json: 324 bytes sha256=31236a8e990d7526
+  pairs.csv: 39 bytes sha256=1762b31670c96c2d
+  manifest.json: 291 bytes sha256=eccf1172662c8b2c
+  pairs.csv: 39 bytes sha256=1762b31670c96c2d
+  manifest.json: 319 bytes sha256=2c5415a7dd302d6a
+  pairs.csv: 39 bytes sha256=1762b31670c96c2d
+  manifest.json: 318 bytes sha256=b4ab620552d7117a
+  pairs.csv: 27 bytes sha256=6e9faac111e1a6a8

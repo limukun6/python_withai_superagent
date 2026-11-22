@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A73已审阅B的5个新Git分支：核心fa58e85在独立worktree runs/b_review_20261122合并A67ba67f，候选提交9c7ceaf、分支codex/b-integration-review-20261122；当前A工作分支未合并核心生产改动。64项禁fit/禁网兼容检查通过，A开发48例47→48（修研究适配器区分意图unknown和执行rejected，未放松生产守卫）。新增fit/API均0，累计仍1214。读docs/B_UPLOAD_REVIEW_20261122_zh.md和research/a73_b_upload_review；B非线性/组合/偏好输出为独立增量尚未实合并。torch/torchvision与验证权重未配置，不将强方法当成本机已启用；A1独立48和24独立语义标注仍缺，H/test封存。
+
 - 最新A67–A72本轮完成，无训练/API进程。A累计1214拟合尝试（含A67回溯15和A70超时1）；A69 B1四任务两内部seed16路径168fit/879.761秒，0涨7平1负；A70真实24回答成功451.177秒/¥.165155，原60秒评价停，A71复用冻结回答统一180秒下20fit/101.039秒完成12状态动作比较，0涨10平2负。原A70失败保留，不能重复ask。A72修review引用范围，旧结果保留原source；当前40相关检查及48开发例通过。先读docs/batches/A70_A72_feedback_and_review_results_zh.md、D3_ACCEPTANCE_CHECKLIST_20261122_zh.md。剩独立48例和24语义标注见D3_REMAINING_INDEPENDENT_REVIEW_TO_B_zh.md。真ledger299/known6.1417335/旧11unknown/pending0；H/test未开。
 
 - 最新接手读docs/CURRENT_D3_A67_A70.md：A67/A68比较scope修复及开发48例完成，A69四任务B1与A70四任务A2队列已启动，先查actual completion，禁止改生产/活动runner，不能重复计费。A69前累计1025（含回溯15 Dummy fit+A68实测3），不再用下方1007当现值。A67独立B侧48仍缺，H/test仍封存。

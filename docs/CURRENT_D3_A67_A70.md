@@ -1,5 +1,9 @@
 # 当前D3补齐：A67/A68完成，A69→A70串行运行
 
+## A73最新：已收到B新交付，优先接强方法而非重跑旧开发矩阵
+
+读B_UPLOAD_REVIEW_20261122_zh.md。B核心fa58e85已与A67ba67f在独立候选9c7ceaf整合，A工作分支生产未替换；64禁fit兼容检查和48个A开发例通过。其余四个实验分支尚未增量整合；torch/torchvision和校验权重未配置。无训练/API运行，新fit/API均0，A累计1214。先做核心匿名交付验收、配置合法运行资产，再冻结正式目录。独立48例和24语义标注未齐，H/test封存。下面全是历史启动/结束快照，不据此重复运行。
+
 ## 最新：本轮已结束，覆盖下方所有运行快照
 
 A69完成16路径168fit/879.761秒/API0。A70 ask24/24成功，evaluation首fit超时，旧queue保持stopped；A71独立新目录复用冻结回答完成20fit/101.039秒，不重问。A72已修回顾对象引用范围，所有实验进程结束。A累计1214，ledger299/known6.1417335/旧11unknown/pending0。结果batches/A70_A72_feedback_and_review_results_zh.md；剩独立案例/语义标注见D3_REMAINING_INDEPENDENT_REVIEW_TO_B_zh.md。不要按下方历史命令重复启动。

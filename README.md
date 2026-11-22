@@ -1,5 +1,9 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 11 月 22 日 A/B 整合
+
+最新 B 线代码供队友从 `codex/b-a31-joint` 整合，当前交接提交为 `fa58e85`。候选目录、调度、验收记录及各实验分支入口见交接说明。下文记录 v0.42 路线在课程指定验证集上的历史成绩。[最新版 B 线交接](https://github.com/limukun6/python_withai_superagent/blob/codex/b-a31-joint/docs/B_HANDOFF_20261122.md)
+
 ## 11 月 20 日课程指定验证集
 
 本次直接加载上一轮冻结的三个模型，先保存全部预测，再核对课程验证标签。

@@ -1,3 +1,7 @@
+# 最新收尾覆盖旧快照
+
+A50/A51/A55/A58队列已全部完成，没有训练/API任务运行。先读`batches/A37_A59_round_results_zh.md`与`NEXT_RESEARCH_AFTER_A58_zh.md`，勿重复执行下方历史启动命令。累计970fit；真账本275行、已知估计¥5.9765785、历史未知11、pending0。H/test仍封存。
+
 # A 线接跑入口
 
 最新优先：docs/CURRENT_RUN_20261122_A50.md与EXPERIMENT_PROGRESS顶部。A44数据事实/校准提案/partial交付已接正式开关，五真实任务25fit十路径验收通过；失败验收8fit另计。A47同源五任务Q七路径67fit完成，A48模拟v2链9fit/5mock/0真实API通过。当前A50/A51真实Flash队列运行，工具session36542不是PID；恢复窗口截止2026-11-22 10:42:29+08。原A32待机中断8完整/1部分/11未启动，没有外层评分，不是完成。

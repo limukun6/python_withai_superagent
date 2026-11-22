@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新收尾：A50/A51/A55/A58真实队列及A59只读分析全部完成，没有训练/API任务在运行。优先读docs/batches/A37_A59_round_results_zh.md与docs/NEXT_RESEARCH_AFTER_A58_zh.md。下面“队列当前运行”是历史快照，已失效。A累计970次实际fit；共享真账本275行、已知估计¥5.9765785、历史未知11、pending0。H1/H2与正式test仍封存；不要重复启动已完成批次。
+
 - 最新接手先读docs/CURRENT_RUN_20261122_A50.md及EXPERIMENT_PROGRESS顶部。原三小时窗口因00:21待机而中断，A32为8完整/1部分/11未启动，不是完整矩阵；旧completion不改。恢复窗口另记08:42–10:42，A50/A51真实Flash队列当前运行，禁止改superagent、campus_direct.py、run_a50_facts_calibration.py、run_a29_choice_matrix.py、run_a34_transfer_coverage.py及worker观察器，先查实际completion，别重复启动/计费。
 - 执行沙箱会拒绝校园网络（DNS/10013），实际Python解析还可能得到198.18.*代理虚拟IP。已核验的显式进程包装器scripts.campus_direct仅把官方域名解析到AGENTS既有10.121.10.250，HTTPS Host/SNI/证书不变，不改系统DNS/代理，不自动失败切换。真实任务必须用获准访问网络的执行权限，并按批协议显式启用，不能在沙箱中误报校园网断了。模型列表探测a50_models_direct已HTTP200/19模型；原失败请求不能自动重试。
 

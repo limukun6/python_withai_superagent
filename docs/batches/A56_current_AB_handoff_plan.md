@@ -1,0 +1,9 @@
+# A56：让给B的导出器跟上正式入口
+
+代码检查发现tools/export_b_handoff.py仍只读早期trials.json/task_contract.json/split.json格式，不能直接导出现在的AB history/多个split与新training_profile。这是实际交接缺口，不是新算法性能试验。
+
+在修改前登记：保留legacy导出路径，新增正式AB终态支持；run_outcome不存在则拒绝，避免把正在执行的预算当成可继续状态。按classifier_fits实际账本（含refit）与new_api_requests导出，terminal状态reserved_final_refit=0，provenance明确executable_for_continuation=false，B不得从终态重启付费搜索。history/prediction evidence按各primary/confirmation split校验行ID、payload/label/prediction指纹及主指标，不能错误拼成同一划分。
+
+有训练摘要时导出同一training_profile并校验与初始状态一致，source/目标/指标/配置事实/预算字段不丢。不要加载模型或外部标签，不读密钥或真实ledger，0fit/API。
+
+验收五任务已完成AB run、一个失败partial和A48匿名模拟run，均能给B的next_action返回stop。人工篡改预测指纹必须拒绝。以匿名模拟run生成一个标fixture_only的JSON接口例子，不上传真实任务逐行向量。实际示例/交接文档标注这是终态调试快照，不可直接拿它继续实验；内部运行入口仍给B完整实时state，不受此终态导出限制。

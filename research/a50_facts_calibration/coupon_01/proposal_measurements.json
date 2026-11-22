@@ -1,0 +1,32 @@
+[
+  {
+    "trial": 2,
+    "candidate": "catboost_depth6_reg3.0",
+    "purpose": "improve",
+    "uncertainty": "Only one primary trial exists, so model-family and hyperparameter effects are unmeasured. Categorical cardinality, class balance, split variance, and possible overfitting of depth-6 CatBoost are unknown; this run is exploratory and does not establish causal improvement.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "catboost_depth6_reg10.0",
+    "purpose": "improve",
+    "uncertainty": "The effect of stronger L2 regularization at fixed depth is unmeasured. Categorical cardinality, class balance, split variance, and whether the current gap reflects harmful overfitting are unknown. This is an exploratory primary-split comparison and may reduce accuracy if the previous regularization level was already appropriate.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "catboost_depth8_reg3.0",
+    "purpose": "improve",
+    "uncertainty": "The effect of increasing depth at fixed L2 regularization is unmeasured. Categorical cardinality, class balance, split variance, and whether the depth-6 model is already capacity-limited or overfitting are unknown. This is an exploratory primary-split comparison and may reduce accuracy if added depth mainly increases variance.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  }
+]

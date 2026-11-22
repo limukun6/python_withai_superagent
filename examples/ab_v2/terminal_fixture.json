@@ -1,0 +1,1086 @@
+{
+  "ab_schema_version": 1,
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "numeric_tabular",
+    "metric": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "tabular"
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "numeric_tabular",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "accuracy",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            0,
+            1
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [
+    {
+      "trial": 1,
+      "candidate": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "split_id": "primary",
+      "proposal": null,
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "accuracy",
+      "metric_spec": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.6048780487804878,
+      "search_score": 0.6470588235294118,
+      "train_metrics": {
+        "accuracy": 0.6048780487804878,
+        "macro_f1": 0.6047275583803471,
+        "primary_metric": "accuracy",
+        "score": 0.6048780487804878,
+        "rows": 205
+      },
+      "search_metrics": {
+        "accuracy": 0.6470588235294118,
+        "macro_f1": 0.6436335403726708,
+        "primary_metric": "accuracy",
+        "score": 0.6470588235294118,
+        "rows": 51
+      },
+      "score_gap": -0.04218077474892401,
+      "train_accuracy": 0.6048780487804878,
+      "search_accuracy": 0.6470588235294118,
+      "generalization_gap": -0.04218077474892401,
+      "class_recall": [
+        0.56,
+        0.7307692307692307
+      ],
+      "training_seconds": 0.052677700005006045,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "numeric_tabular_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "numeric_tabular_logistic_C0.1",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 2.096053999994183,
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": null
+    },
+    {
+      "trial": 2,
+      "candidate": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "split_id": "primary",
+      "proposal": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "task_kind": "numeric_tabular",
+        "configuration_claim": {
+          "classifier": "logistic"
+        },
+        "reason": "Test a registered alternative.",
+        "review": "Read the primary observations.",
+        "hypothesis": "The effect is uncertain.",
+        "purpose": "diagnose",
+        "uncertainty": "A single search split does not establish which representation is better.",
+        "evidence_trials": [
+          1
+        ],
+        "slice_expectation": null,
+        "expected_change": null
+      },
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "accuracy",
+      "metric_spec": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.5902439024390244,
+      "search_score": 0.6274509803921569,
+      "train_metrics": {
+        "accuracy": 0.5902439024390244,
+        "macro_f1": 0.5901561309977151,
+        "primary_metric": "accuracy",
+        "score": 0.5902439024390244,
+        "rows": 205
+      },
+      "search_metrics": {
+        "accuracy": 0.6274509803921569,
+        "macro_f1": 0.6251450676982592,
+        "primary_metric": "accuracy",
+        "score": 0.6274509803921569,
+        "rows": 51
+      },
+      "score_gap": -0.037207077953132495,
+      "train_accuracy": 0.5902439024390244,
+      "search_accuracy": 0.6274509803921569,
+      "generalization_gap": -0.037207077953132495,
+      "class_recall": [
+        0.56,
+        0.6923076923076923
+      ],
+      "training_seconds": 0.048634999999194406,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "numeric_tabular_logistic_C1.0",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 1.83885790000204,
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": "logistic",
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "confirmed",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": {
+        "executor_comparison": {
+          "reading": "no_comparison",
+          "source": "executor",
+          "latest_trial": 1,
+          "best_prior_trial": null,
+          "primary_metric": "accuracy",
+          "latest_search_score": 0.6470588235294118,
+          "best_prior_search_score": null,
+          "latest_search_accuracy": 0.6470588235294118,
+          "best_prior_search_accuracy": null,
+          "delta_vs_prior_best": null,
+          "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+          "text": "Trial 1 internal accuracy score is 64.705882%; no earlier completed score is available.",
+          "statistical_test_performed": false,
+          "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+        },
+        "cited_measured_facts": [],
+        "configuration_change": {
+          "available": true,
+          "source": "executor",
+          "reference_trial": 1,
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_status": "completed",
+          "reference_rule": "best_completed_in_selected_route",
+          "selected_candidate": "numeric_tabular_logistic_C1.0",
+          "selected_status": null,
+          "reference_route": "numeric_tabular_logistic",
+          "selected_route": "numeric_tabular_logistic",
+          "same_declared_route": true,
+          "changed_parameters": [
+            {
+              "parameter": "C",
+              "before_present": true,
+              "after_present": true,
+              "before": 0.1,
+              "after": 1.0,
+              "parameter_effect": {
+                "numeric_direction": "increased",
+                "declared_effect": "weaker_regularization",
+                "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                "effect_scope": "definition within a fixed parameterization",
+                "same_declared_route": true,
+                "accuracy_effect_verified": false,
+                "cross_route_note": null
+              }
+            }
+          ],
+          "single_declared_parameter_change": true,
+          "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+          "single_factor_attribution_supported": false,
+          "statistical_test_performed": false,
+          "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+        },
+        "direction_consistency": {
+          "scope": "same declared route, single changed C; narrow English phrases only",
+          "applicable": true,
+          "expected_regularization_direction": "weaker",
+          "mentions": [],
+          "warnings": [],
+          "freeform_semantics_verified": false
+        },
+        "selected_candidate": "numeric_tabular_logistic_C1.0",
+        "future_hypothesis": {
+          "source": "LLM, unverified future hypothesis",
+          "text": "The effect is uncertain.",
+          "expected_change": null
+        },
+        "original_prose": {
+          "source": "LLM, not certified as measured evidence",
+          "fields": {
+            "reason": "Test a registered alternative.",
+            "review": "Read the primary observations.",
+            "hypothesis": "The effect is uncertain.",
+            "assessment.interpretation": "",
+            "assessment.uncertainty": ""
+          }
+        },
+        "prose_claims": {
+          "claims_checked": 0,
+          "confirmed": 0,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "warnings": [],
+        "freeform_prose_fully_verified": false,
+        "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 0 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+        "changes_candidate": false,
+        "triggers_api_retry": false
+      }
+    },
+    {
+      "trial": 3,
+      "candidate": "numeric_tabular_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "split_id": "primary",
+      "proposal": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "task_kind": "numeric_tabular",
+        "configuration_claim": {
+          "classifier": "logistic"
+        },
+        "reason": "Test a registered alternative.",
+        "review": "Read the primary observations.",
+        "hypothesis": "The effect is uncertain.",
+        "purpose": "diagnose",
+        "uncertainty": "A single search split does not establish which representation is better.",
+        "evidence_trials": [
+          1
+        ],
+        "slice_expectation": null,
+        "expected_change": {
+          "metric": "score_gap",
+          "reference_trial": 1,
+          "direction": "decrease",
+          "min_delta": 0
+        }
+      },
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "accuracy",
+      "metric_spec": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.5902439024390244,
+      "search_score": 0.6274509803921569,
+      "train_metrics": {
+        "accuracy": 0.5902439024390244,
+        "macro_f1": 0.5901561309977151,
+        "primary_metric": "accuracy",
+        "score": 0.5902439024390244,
+        "rows": 205
+      },
+      "search_metrics": {
+        "accuracy": 0.6274509803921569,
+        "macro_f1": 0.6251450676982592,
+        "primary_metric": "accuracy",
+        "score": 0.6274509803921569,
+        "rows": 51
+      },
+      "score_gap": -0.037207077953132495,
+      "train_accuracy": 0.5902439024390244,
+      "search_accuracy": 0.6274509803921569,
+      "generalization_gap": -0.037207077953132495,
+      "class_recall": [
+        0.56,
+        0.6923076923076923
+      ],
+      "training_seconds": 0.05126890000246931,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "numeric_tabular_logistic_C10.0",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 1.6803884000109974,
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": "logistic",
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "confirmed",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_supported",
+        "metric": "score_gap",
+        "reference_trial": 1,
+        "reference_value": -0.04218077474892401,
+        "observed_value": -0.037207077953132495,
+        "observed_delta": 0.004973696795791516,
+        "direction": "decrease",
+        "required_delta": 0
+      },
+      "explanation_audit": {
+        "executor_comparison": {
+          "reading": "lower",
+          "source": "executor",
+          "latest_trial": 2,
+          "best_prior_trial": 1,
+          "primary_metric": "accuracy",
+          "latest_search_score": 0.6274509803921569,
+          "best_prior_search_score": 0.6470588235294118,
+          "latest_search_accuracy": 0.6274509803921569,
+          "best_prior_search_accuracy": 0.6470588235294118,
+          "delta_vs_prior_best": -0.019607843137254943,
+          "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+          "text": "Trial 2 internal accuracy score is 62.745098%; best earlier trial 1 is 64.705882%; difference -1.960784 percentage points (lower).",
+          "statistical_test_performed": false,
+          "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+        },
+        "cited_measured_facts": [],
+        "configuration_change": {
+          "available": true,
+          "source": "executor",
+          "reference_trial": 1,
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_status": "completed",
+          "reference_rule": "structured_expectation_reference",
+          "selected_candidate": "numeric_tabular_logistic_C10.0",
+          "selected_status": null,
+          "reference_route": "numeric_tabular_logistic",
+          "selected_route": "numeric_tabular_logistic",
+          "same_declared_route": true,
+          "changed_parameters": [
+            {
+              "parameter": "C",
+              "before_present": true,
+              "after_present": true,
+              "before": 0.1,
+              "after": 10.0,
+              "parameter_effect": {
+                "numeric_direction": "increased",
+                "declared_effect": "weaker_regularization",
+                "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                "effect_scope": "definition within a fixed parameterization",
+                "same_declared_route": true,
+                "accuracy_effect_verified": false,
+                "cross_route_note": null
+              }
+            }
+          ],
+          "single_declared_parameter_change": true,
+          "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+          "single_factor_attribution_supported": false,
+          "statistical_test_performed": false,
+          "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+        },
+        "direction_consistency": {
+          "scope": "same declared route, single changed C; narrow English phrases only",
+          "applicable": true,
+          "expected_regularization_direction": "weaker",
+          "mentions": [],
+          "warnings": [],
+          "freeform_semantics_verified": false
+        },
+        "selected_candidate": "numeric_tabular_logistic_C10.0",
+        "future_hypothesis": {
+          "source": "LLM, unverified future hypothesis",
+          "text": "The effect is uncertain.",
+          "expected_change": {
+            "metric": "score_gap",
+            "reference_trial": 1,
+            "direction": "decrease",
+            "min_delta": 0
+          }
+        },
+        "original_prose": {
+          "source": "LLM, not certified as measured evidence",
+          "fields": {
+            "reason": "Test a registered alternative.",
+            "review": "Read the primary observations.",
+            "hypothesis": "The effect is uncertain.",
+            "assessment.interpretation": "",
+            "assessment.uncertainty": ""
+          }
+        },
+        "prose_claims": {
+          "claims_checked": 0,
+          "confirmed": 0,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "warnings": [],
+        "freeform_prose_fully_verified": false,
+        "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 0 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+        "changes_candidate": false,
+        "triggers_api_retry": false
+      }
+    }
+  ],
+  "available_candidates": [
+    {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "route": "numeric_tabular_rbf_svm",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_rbf_svm_C10.0",
+      "params": {
+        "C": 10.0,
+        "kernel": "rbf"
+      },
+      "route": "numeric_tabular_rbf_svm",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "prediction_evidence": [
+    {
+      "trial": 1,
+      "candidate_id": "numeric_tabular_logistic_C0.1",
+      "split_id": "primary",
+      "row_id_scope": "positions within this run training input",
+      "row_ids": [
+        14,
+        15,
+        20,
+        23,
+        28,
+        30,
+        34,
+        45,
+        50,
+        52,
+        62,
+        66,
+        81,
+        87,
+        88,
+        92,
+        95,
+        99,
+        111,
+        112,
+        114,
+        117,
+        123,
+        128,
+        130,
+        135,
+        142,
+        144,
+        146,
+        152,
+        155,
+        159,
+        161,
+        170,
+        173,
+        175,
+        178,
+        182,
+        188,
+        192,
+        202,
+        203,
+        205,
+        213,
+        227,
+        234,
+        235,
+        238,
+        242,
+        247,
+        248
+      ],
+      "predictions": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "prediction_sha256": "5a82541f592a922f31e1ed980cdee77fbeab7658813fa76fb6b41e310f9e6207",
+      "label_sha256": "7621f29b2af2d2456668a0c14dc443a90bd340905651c3dd7c12a7689cf4bb3a",
+      "evaluation_payload_sha256": "3149556100f8d928877b42d75a5519f0066b64a077f8dc7e363aee197c46245a"
+    },
+    {
+      "trial": 2,
+      "candidate_id": "numeric_tabular_logistic_C1.0",
+      "split_id": "primary",
+      "row_id_scope": "positions within this run training input",
+      "row_ids": [
+        14,
+        15,
+        20,
+        23,
+        28,
+        30,
+        34,
+        45,
+        50,
+        52,
+        62,
+        66,
+        81,
+        87,
+        88,
+        92,
+        95,
+        99,
+        111,
+        112,
+        114,
+        117,
+        123,
+        128,
+        130,
+        135,
+        142,
+        144,
+        146,
+        152,
+        155,
+        159,
+        161,
+        170,
+        173,
+        175,
+        178,
+        182,
+        188,
+        192,
+        202,
+        203,
+        205,
+        213,
+        227,
+        234,
+        235,
+        238,
+        242,
+        247,
+        248
+      ],
+      "predictions": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "prediction_sha256": "db985365320c92efe83da0888d1416aefe9828e4e0431bb986ca3bfdc2c5f31a",
+      "label_sha256": "7621f29b2af2d2456668a0c14dc443a90bd340905651c3dd7c12a7689cf4bb3a",
+      "evaluation_payload_sha256": "3149556100f8d928877b42d75a5519f0066b64a077f8dc7e363aee197c46245a"
+    },
+    {
+      "trial": 3,
+      "candidate_id": "numeric_tabular_logistic_C10.0",
+      "split_id": "primary",
+      "row_id_scope": "positions within this run training input",
+      "row_ids": [
+        14,
+        15,
+        20,
+        23,
+        28,
+        30,
+        34,
+        45,
+        50,
+        52,
+        62,
+        66,
+        81,
+        87,
+        88,
+        92,
+        95,
+        99,
+        111,
+        112,
+        114,
+        117,
+        123,
+        128,
+        130,
+        135,
+        142,
+        144,
+        146,
+        152,
+        155,
+        159,
+        161,
+        170,
+        173,
+        175,
+        178,
+        182,
+        188,
+        192,
+        202,
+        203,
+        205,
+        213,
+        227,
+        234,
+        235,
+        238,
+        242,
+        247,
+        248
+      ],
+      "predictions": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "prediction_sha256": "db985365320c92efe83da0888d1416aefe9828e4e0431bb986ca3bfdc2c5f31a",
+      "label_sha256": "7621f29b2af2d2456668a0c14dc443a90bd340905651c3dd7c12a7689cf4bb3a",
+      "evaluation_payload_sha256": "3149556100f8d928877b42d75a5519f0066b64a077f8dc7e363aee197c46245a"
+    }
+  ],
+  "registered_confirmation_splits": [
+    "confirmation_1",
+    "confirmation_2"
+  ],
+  "budget": {
+    "fit_limit": 5,
+    "attempted_classifier_fits": 4,
+    "completed_classifier_fits": 4,
+    "unknown_failed_attempts": 0,
+    "remaining_fit_allowance": 1,
+    "reserved_final_refit": 0,
+    "llm_request_limit": 3,
+    "used_llm_requests": 2,
+    "elapsed_seconds": 7.439078600000357,
+    "time_limit_seconds": 240.0
+  },
+  "provenance": {
+    "source": "terminal AB artifacts; training-only evidence, no model loading",
+    "executable_for_continuation": false,
+    "terminal_delivery_status": "complete",
+    "requested_planner_completed": true,
+    "manifest_sha256": "9ccc282b3a3b5a2f574bada0d81430c31e55e4673d109e2b017401cd6c4c4d73",
+    "outcome_sha256": "ebb0e2c8bf3122b8145e71df0ad6cc8fff36c2aca969d0a58fc4962e022d1a1c",
+    "splits": {
+      "primary": {
+        "payload_sha256": "3149556100f8d928877b42d75a5519f0066b64a077f8dc7e363aee197c46245a",
+        "split_sha256": "b6be0e4cf182b415a3624d26b0090755966941206fc03745094e3bfe6fa4feff"
+      }
+    },
+    "source_fixture_only": true,
+    "paid_ledger_eligible": false
+  },
+  "training_profile": {
+    "profile_version": "training-facts-v1",
+    "computed_from": "all supplied training rows; no external validation or test",
+    "validation_accessed": false,
+    "formal_test_accessed": false,
+    "statistics": {
+      "task_kind": "numeric_tabular",
+      "primary_metric": "accuracy",
+      "train_label_counts": {
+        "1": 130,
+        "0": 126
+      },
+      "class_count": 2,
+      "train_rows": 256,
+      "feature_shape": [
+        8
+      ],
+      "feature_count": 8,
+      "missing_values_per_column": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "truncated_fields": {},
+    "majority_class_fraction": 0.5078125,
+    "minority_class_fraction": 0.4921875
+  }
+}

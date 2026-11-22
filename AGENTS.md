@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A67–A72本轮完成，无训练/API进程。A累计1214拟合尝试（含A67回溯15和A70超时1）；A69 B1四任务两内部seed16路径168fit/879.761秒，0涨7平1负；A70真实24回答成功451.177秒/¥.165155，原60秒评价停，A71复用冻结回答统一180秒下20fit/101.039秒完成12状态动作比较，0涨10平2负。原A70失败保留，不能重复ask。A72修review引用范围，旧结果保留原source；当前40相关检查及48开发例通过。先读docs/batches/A70_A72_feedback_and_review_results_zh.md、D3_ACCEPTANCE_CHECKLIST_20261122_zh.md。剩独立48例和24语义标注见D3_REMAINING_INDEPENDENT_REVIEW_TO_B_zh.md。真ledger299/known6.1417335/旧11unknown/pending0；H/test未开。
+
 - 最新接手读docs/CURRENT_D3_A67_A70.md：A67/A68比较scope修复及开发48例完成，A69四任务B1与A70四任务A2队列已启动，先查actual completion，禁止改生产/活动runner，不能重复计费。A69前累计1025（含回溯15 Dummy fit+A68实测3），不再用下方1007当现值。A67独立B侧48仍缺，H/test仍封存。
 
 - 最新A66已补A1八格实际训练输入探针：8合法fit/8非法fit前拒绝，26.478秒、0API，A累计1007；无运行任务。docs/batches/A66_semantic_training_matrix_results_zh.md及D3验收清单已更新。本项只证明合成worker语义性质，不是完整自主搜索/迁移；剩余96案例/独立封存、A2语义标注与范围、B1矩阵仍待补或明确修订。

@@ -1,5 +1,7 @@
 # 最新收尾覆盖旧快照
 
+最新已至A72，本轮所有队列结束，A累计1214；先读EXPERIMENT_PROGRESS.md顶部、batches/A70_A72_feedback_and_review_results_zh.md与D3剩余独立交接说明。A70 ask已24成功，不可重问；旧evaluate超时记录保留，A71已复用回答完成评价。下方999/970为历史快照。
+
 最新A60–A63完成：A累计999fit，0新增API；当前无训练任务。接手读batches/A60_A63_results_zh.md、A_TO_B_AUC_FINALISTS_20261122.md与D4_freeze_and_formal_budget_20261122_zh.md。勿重复A60/A62；先整合B方法与最终版预算。下方970与队列描述为历史快照。
 
 A50/A51/A55/A58队列已全部完成，没有训练/API任务运行。先读`batches/A37_A59_round_results_zh.md`与`NEXT_RESEARCH_AFTER_A58_zh.md`，勿重复执行下方历史启动命令。累计970fit；真账本275行、已知估计¥5.9765785、历史未知11、pending0。H/test仍封存。

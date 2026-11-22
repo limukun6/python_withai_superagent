@@ -1,0 +1,1050 @@
+[
+  {
+    "state_id": "coupon_1",
+    "task": "coupon",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\coupon\\state_1.json",
+    "state_sha256": "d3c10cdc9f347a7a24eab51653769786e4f1f0eaf7aecf126421b96c71ad60e4",
+    "original_candidate": "supported_field_interactions",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "The only completed primary trial is a heavily regularized one-hot logistic model with modest accuracy and a small train-search gap. A native-category CatBoost candidate is a reasonable next primary-split experiment to test whether nonlinear categorical interactions improve accuracy over the linear baseline.",
+        "hypothesis": "CatBoost with depth 6, native categorical handling, and moderate L2 regularization may capture categorical interactions that the one-hot logistic baseline cannot, potentially improving primary-split accuracy.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "The only completed primary trial is a heavily regularized one-hot logistic model with modest accuracy and a small train-search gap. A native-category CatBoost candidate is a reasonable next primary-split experiment to test whether nonlinear categorical interactions improve accuracy over the linear baseline.",
+          "review": "Trial 1 completed on the primary split with search accuracy 0.6722, train accuracy 0.6852, gap 0.0130, and class recalls [0.5443, 0.7692]. This suggests the baseline is not strongly overfitting, but it may be limited by linear one-hot representation and strong regularization. No formal test is available.",
+          "hypothesis": "CatBoost with depth 6, native categorical handling, and moderate L2 regularization may capture categorical interactions that the one-hot logistic baseline cannot, potentially improving primary-split accuracy.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Only one completed primary trial is available, and no confirmation split or formal test is accessible. The CatBoost candidate may overfit, may not outperform the regularized logistic baseline, and any primary-split accuracy difference may be noisy."
+        }
+      }
+    },
+    "E": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 1 established a one-hot logistic baseline on the primary split at accuracy 0.6722 with a small train-search gap. The task is categorical tabular, and CatBoost with native categorical handling is a registered candidate that can model nonlinearities and category interactions not captured by the linear baseline.",
+        "hypothesis": "A depth-6 CatBoost model with native categorical representation and moderate L2 regularization may capture categorical interactions and nonlinear effects that the one-hot logistic baseline misses, potentially improving primary-split accuracy.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 1 established a one-hot logistic baseline on the primary split at accuracy 0.6722 with a small train-search gap. The task is categorical tabular, and CatBoost with native categorical handling is a registered candidate that can model nonlinearities and category interactions not captured by the linear baseline.",
+          "review": "Only one completed primary trial is available, so there is no matched evidence for any nonlinear route yet. The logistic baseline has moderate class recall imbalance, and its low regularization setting may be underfitting. This choice tests a different estimator family rather than another nearby logistic regularization value.",
+          "hypothesis": "A depth-6 CatBoost model with native categorical representation and moderate L2 regularization may capture categorical interactions and nonlinear effects that the one-hot logistic baseline misses, potentially improving primary-split accuracy.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The direction and magnitude of change are unknown because no CatBoost or tree-based candidate has been evaluated on the primary split. CatBoost may overfit or may not outperform the logistic baseline; this trial is exploratory evidence for the controller, not a predicted improvement."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "coupon_2",
+    "task": "coupon",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\coupon\\state_2.json",
+    "state_sha256": "edb9765b873b8e4de7f787b41c3cd202422fc28da91c2d4bc6ec4487a7caf6c2",
+    "original_candidate": "extra_trees_leaf1",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected categorical field interactions. The native-category CatBoost route is untried, so matching the best trial's core depth/regularization is a controlled next probe before varying capacity or regularization.",
+        "hypothesis": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 will be competitive with trial 2 and will help determine whether the interaction representation contributed materially to the observed PRIMARY accuracy. No directional accuracy improvement is asserted.",
+        "evidence_trials": [
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected categorical field interactions. The native-category CatBoost route is untried, so matching the best trial's core depth/regularization is a controlled next probe before varying capacity or regularization.",
+          "review": "Trial 1 logistic C0.05 scored 0.6722; trial 2 CatBoost interactions scored 0.7455 with a 0.0749 train-search gap. The field_interactions route is exhausted, while native-category CatBoost remains available. This candidate isolates the representation change from the best trial's depth and regularization rather than changing multiple factors at once.",
+          "hypothesis": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 will be competitive with trial 2 and will help determine whether the interaction representation contributed materially to the observed PRIMARY accuracy. No directional accuracy improvement is asserted.",
+          "evidence_trials": [
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "The representation change may reduce accuracy relative to trial 2, and the existing train-search gap indicates overfit risk. Results are from a single PRIMARY split with no formal test available, so this probe is diagnostic rather than proof of a better final configuration."
+        }
+      }
+    },
+    "R": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the strongest completed PRIMARY result (search_accuracy 0.7455) using CatBoost depth 6, l2_leaf_reg 3.0, and training-selected categorical field interactions. The closest available candidate is catboost_depth6_reg3.0 with native categories, which isolates whether the explicit interaction representation is necessary at the same core depth/regularization setting.",
+        "hypothesis": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 may retain much of Trial 2's gain; comparing it to Trial 2 will help diagnose whether the training-selected interaction representation is contributing materially or whether native categorical handling is sufficient.",
+        "evidence_trials": [
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the strongest completed PRIMARY result (search_accuracy 0.7455) using CatBoost depth 6, l2_leaf_reg 3.0, and training-selected categorical field interactions. The closest available candidate is catboost_depth6_reg3.0 with native categories, which isolates whether the explicit interaction representation is necessary at the same core depth/regularization setting.",
+          "review": "Trial 1 logistic C0.05 underperformed at 0.6722. Trial 2 improved to 0.7455 but had a 0.0749 train-search gap, so overfitting and representation effects are plausible. This candidate is a controlled diagnostic comparison against Trial 2 rather than a claim of guaranteed improvement.",
+          "hypothesis": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 may retain much of Trial 2's gain; comparing it to Trial 2 will help diagnose whether the training-selected interaction representation is contributing materially or whether native categorical handling is sufficient.",
+          "evidence_trials": [
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only one PRIMARY split is available per trial, and Trial 2's train-search gap indicates possible overfitting. The native-category candidate may behave differently from the interaction representation, and no formal test is available, so direction and magnitude of change are unknown."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "coupon_3",
+    "task": "coupon",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\coupon\\state_3.json",
+    "state_sha256": "62d2c841042ca6e1a15dbb95662449041f2c542109ac122694881d1a818e89b8",
+    "original_candidate": "catboost_depth4_reg3.0",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "The strongest completed PRIMARY trial was the CatBoost interaction model (trial 2, search_accuracy 0.7455), while logistic regression underfit and ExtraTrees leaf1 showed severe overfitting. Among available candidates, catboost_depth6_reg3.0 is the closest regularized native-category CatBoost configuration to that leading family and is preferable to more overfit tree or weaker linear options.",
+        "hypothesis": "A native-category CatBoost with depth 6 and l2_leaf_reg 3.0 may retain the nonlinear categorical signal that helped trial 2 while reducing representation-specific overfitting.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "The strongest completed PRIMARY trial was the CatBoost interaction model (trial 2, search_accuracy 0.7455), while logistic regression underfit and ExtraTrees leaf1 showed severe overfitting. Among available candidates, catboost_depth6_reg3.0 is the closest regularized native-category CatBoost configuration to that leading family and is preferable to more overfit tree or weaker linear options.",
+          "review": "Trial 2 is the best observed PRIMARY result but has a nontrivial train-search gap (0.0749), so regularization and representation differences matter. Trial 3 overfit heavily (gap 0.2811), and trial 1 underperformed. This candidate tests whether native categorical CatBoost at depth 6 with l2_leaf_reg 3.0 can preserve useful nonlinear structure without relying on the prior interaction representation.",
+          "hypothesis": "A native-category CatBoost with depth 6 and l2_leaf_reg 3.0 may retain the nonlinear categorical signal that helped trial 2 while reducing representation-specific overfitting.",
+          "evidence_trials": [
+            1,
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The prior best CatBoost used a training-selected interaction representation, so this native-category candidate is not a matched comparison. It may not exceed trial 2, and the observed gap suggests overfitting risk remains. The PRIMARY split result will be evidence only for this configuration, not proof of causal improvement."
+        }
+      }
+    },
+    "E": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected field interactions. The available catboost_depth6_reg3.0 candidate tests the same core CatBoost configuration with native categorical handling, making it the most relevant next PRIMARY comparison. Trial 3 shows severe overfitting (train 0.9946 vs search 0.7135), and trial 1 underfits relative to CatBoost.",
+        "hypothesis": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 using native categorical handling may preserve the useful signal seen in trial 2 while changing the representation and potentially reducing interaction-driven overfitting. This is a controlled representation comparison, not a guaranteed improvement.",
+        "evidence_trials": [
+          2,
+          3,
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected field interactions. The available catboost_depth6_reg3.0 candidate tests the same core CatBoost configuration with native categorical handling, making it the most relevant next PRIMARY comparison. Trial 3 shows severe overfitting (train 0.9946 vs search 0.7135), and trial 1 underfits relative to CatBoost.",
+          "review": "Evidence is limited to three completed PRIMARY trials. Trial 2 leads on search accuracy but has a 0.0749 train-search gap. Trial 3 has a much larger 0.2811 gap, so extra-trees leaf1 is not a good immediate follow-up. Logistic C=0.05 is materially weaker. The next test should stay in the stronger CatBoost family and compare native categorical representation against the interaction-based trial 2.",
+          "hypothesis": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 using native categorical handling may preserve the useful signal seen in trial 2 while changing the representation and potentially reducing interaction-driven overfitting. This is a controlled representation comparison, not a guaranteed improvement.",
+          "evidence_trials": [
+            2,
+            3,
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The native-category representation may underperform the interaction representation from trial 2. PRIMARY split variance and the true overfitting tradeoff are unknown, so no directional improvement is predicted."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_1",
+    "task": "preference",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\preference\\state_1.json",
+    "state_sha256": "fba04e7cbaf7bf1c407b02db2279151ab38db5ab356e09015a62de1e7faf5943",
+    "original_candidate": "word_char_C0.05",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "word_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "reason": "Continue the active word route with the adjacent regularization strength to isolate the effect of C before changing representation. Only one primary trial exists, so a direct within-route comparison is the most informative next step.",
+        "hypothesis": "Increasing C from 0.05 to 0.1 may alter the bias-variance tradeoff within the word representation, but the direction of search-score change is not established by the single completed trial.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Continue the active word route with the adjacent regularization strength to isolate the effect of C before changing representation. Only one primary trial exists, so a direct within-route comparison is the most informative next step.",
+          "review": "Trial 1 (word_C0.05) completed on the primary split with search accuracy 0.6371, train accuracy 0.8162, gap 0.1790, and balanced class recalls. No failures are recorded. The word route is active; word_char, char, and word_char_stats routes are untried.",
+          "hypothesis": "Increasing C from 0.05 to 0.1 may alter the bias-variance tradeoff within the word representation, but the direction of search-score change is not established by the single completed trial.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only one primary trial is available, with a large train-search gap. It is unclear whether that gap reflects overfitting, distribution shift, or representation limits, so no directional improvement is predicted."
+        }
+      }
+    },
+    "R": {
+      "candidate": "word_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "reason": "Use the adjacent regularization step from the completed word-feature trial to isolate the effect of C before changing representation.",
+        "hypothesis": "Slightly weaker regularization may alter the bias-variance tradeoff for word features, but the direction of the effect is not assumed.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Use the adjacent regularization step from the completed word-feature trial to isolate the effect of C before changing representation.",
+          "review": "Trial 1 completed on the primary split with word_C0.05: search accuracy 0.637, train accuracy 0.816, gap 0.179. No other primary evidence is available.",
+          "hypothesis": "Slightly weaker regularization may alter the bias-variance tradeoff for word features, but the direction of the effect is not assumed.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Only one primary trial is available; no confirmation-split evidence exists, and the expected direction or magnitude of change from C=0.05 to C=0.1 is unknown."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_2",
+    "task": "preference",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\preference\\state_2.json",
+    "state_sha256": "a7ad8e169ea00e9ce58d35679db32c71e5dce27ae14925b67ab8eedf3842cd55",
+    "original_candidate": "char_C0.1",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "word_char_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "Trial 2 (word_char_C0.05) is the best completed PRIMARY result at 0.6618 accuracy, outperforming word_C0.05 at 0.6371. The next step should probe the same stronger representation with slightly weaker regularization before changing representation family or making a larger C jump.",
+        "hypothesis": "A small increase from C=0.05 to C=0.1 within the word_char representation may reduce underfitting while retaining the representation advantage, but the direction and size of the effect are not established.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 2 (word_char_C0.05) is the best completed PRIMARY result at 0.6618 accuracy, outperforming word_C0.05 at 0.6371. The next step should probe the same stronger representation with slightly weaker regularization before changing representation family or making a larger C jump.",
+          "review": "Completed evidence is limited to two low-C logistic trials. word_char_C0.05 has higher search accuracy but also a sizable train-search gap (0.1603), so the main uncertainty is whether a modest C increase helps or overfits. No confirmation split or formal test is available.",
+          "hypothesis": "A small increase from C=0.05 to C=0.1 within the word_char representation may reduce underfitting while retaining the representation advantage, but the direction and size of the effect are not established.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Only one PRIMARY split and two completed fits are available. The C sensitivity of word_char is unobserved, and the observed train-search gap means a higher C could either improve or worsen search accuracy. This is an exploratory improvement attempt, not a predicted gain."
+        }
+      }
+    },
+    "E": {
+      "candidate": "word_char_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "The word_char route has the best completed PRIMARY search accuracy so far (trial 2: 0.6618 vs trial 1: 0.6371). Testing the adjacent higher regularization strength C=0.1 on the same route is a focused next step to assess sensitivity around the current best C=0.05 before branching to untried representations.",
+        "hypothesis": "If the word_char representation at C=0.05 is slightly underfitting, a modest increase to C=0.1 may allow better feature weighting and improve PRIMARY accuracy; alternatively, it may increase overfitting and reduce accuracy.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "The word_char route has the best completed PRIMARY search accuracy so far (trial 2: 0.6618 vs trial 1: 0.6371). Testing the adjacent higher regularization strength C=0.1 on the same route is a focused next step to assess sensitivity around the current best C=0.05 before branching to untried representations.",
+          "review": "Trial 2 improved PRIMARY accuracy over trial 1, but both show substantial train-search gaps (about 0.16-0.18), so overfitting risk remains. This is a search-split comparison only; no confirmation split is available and no causal claim is made.",
+          "hypothesis": "If the word_char representation at C=0.05 is slightly underfitting, a modest increase to C=0.1 may allow better feature weighting and improve PRIMARY accuracy; alternatively, it may increase overfitting and reduce accuracy.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Only two PRIMARY trials are available, both on low-C settings. The direction of the C change is not established, and the observed score gaps indicate possible overfitting. No confirmation-split evidence is available."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_3",
+    "task": "preference",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\preference\\state_3.json",
+    "state_sha256": "3c1cfbf9cdc34a275b29f38654b889bd8d69ea3c26daf8400e8a436a6aaee60b",
+    "original_candidate": "word_char_stats_C0.1",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "word_char_stats_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        },
+        "reason": "Trials 1-3 are completed on the primary split. The best primary search scores are tied at 0.661844 for word_char_C0.05 and char_C0.1, while word_C0.05 is lower at 0.637131. The word_char_stats route is untried and C=0.1 matches the low-regularization region that has performed best so far, so it is a reasonable coverage experiment without claiming a predicted gain.",
+        "hypothesis": "A combined word, character, and statistics representation at C=0.1 may capture complementary lexical and structural cues beyond char-only or word_char features; whether it improves primary accuracy is unknown.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_stats_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trials 1-3 are completed on the primary split. The best primary search scores are tied at 0.661844 for word_char_C0.05 and char_C0.1, while word_C0.05 is lower at 0.637131. The word_char_stats route is untried and C=0.1 matches the low-regularization region that has performed best so far, so it is a reasonable coverage experiment without claiming a predicted gain.",
+          "review": "All three completed trials used logistic regression with swap augmentation and reported confirmed accuracy on the primary split. No failures are recorded. Trial 2 and trial 3 tie for best search score; trial 1 is lower. The word_char_stats route has four remaining configurations and no primary measurements yet.",
+          "hypothesis": "A combined word, character, and statistics representation at C=0.1 may capture complementary lexical and structural cues beyond char-only or word_char features; whether it improves primary accuracy is unknown.",
+          "evidence_trials": [
+            1,
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "coverage",
+          "uncertainty": "Primary-split variance and feature interactions are unknown, and no formal test or confirmation split is available to the agent. This is exploratory coverage, not evidence of causal improvement."
+        }
+      }
+    },
+    "R": {
+      "candidate": "word_char_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "word_char at C=0.05 was the best completed primary trial (0.6618), tied with char at C=0.1 and above word at C=0.05. Testing word_char at the adjacent C=0.1 value is a focused next step to see whether the stronger representation retains its advantage with slightly less regularization.",
+        "hypothesis": "A word+char representation with C=0.1 may preserve or improve the primary search accuracy relative to word_char_C0.05, but the observed tie and small trial count mean any gain is uncertain.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "word_char at C=0.05 was the best completed primary trial (0.6618), tied with char at C=0.1 and above word at C=0.05. Testing word_char at the adjacent C=0.1 value is a focused next step to see whether the stronger representation retains its advantage with slightly less regularization.",
+          "review": "Completed primary evidence is limited to three trials. word_char_C0.05 and char_C0.1 both scored 0.6618, while word_C0.05 scored 0.6371. The untested word_char_C0.1 candidate combines the best-performing representation family with a regularization value already observed to be competitive in the char route.",
+          "hypothesis": "A word+char representation with C=0.1 may preserve or improve the primary search accuracy relative to word_char_C0.05, but the observed tie and small trial count mean any gain is uncertain.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Only three primary trials are available, and the top two scores are tied at 0.6618. word_char_C0.1 has not been evaluated, so direction and magnitude of change are unknown; differences may be within split noise."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "sms_1",
+    "task": "sms",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\sms\\state_1.json",
+    "state_sha256": "70d0a7b7b66cf41ce69b191c9a9628ea3b82f3845867c2c9d0bb83777c5cc0bc",
+    "original_candidate": "single_char_C0.3",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "single_word_char_C3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "single_word_char_C3.0",
+        "params": {
+          "representation": "word_char",
+          "C": 3.0
+        },
+        "reason": "Trial 1 used word features with C=0.3 and collapsed to majority-class behavior: macro_f1 0.4669 with class recalls [1.0, 0.0]. The next primary search step should test a different representation and regularization setting rather than only increasing C on the same word representation. single_word_char_C3.0 combines word and character features and uses C=3.0, giving a broader feature view and less regularization, which is a reasonable primary-split candidate to probe whether spam signal can be recovered.",
+        "hypothesis": "Character n-grams may capture spam-indicative patterns that word-only features missed, and C=3.0 may reduce underfitting relative to C=0.3. The combined word_char representation could improve minority-class recall and therefore macro_f1 on the primary search split.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_word_char_C3.0",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 1 used word features with C=0.3 and collapsed to majority-class behavior: macro_f1 0.4669 with class recalls [1.0, 0.0]. The next primary search step should test a different representation and regularization setting rather than only increasing C on the same word representation. single_word_char_C3.0 combines word and character features and uses C=3.0, giving a broader feature view and less regularization, which is a reasonable primary-split candidate to probe whether spam signal can be recovered.",
+          "review": "Only one completed primary trial is available. It shows near-zero spam recall and macro_f1 close to the majority-class baseline, so the current word/C=0.3 configuration is inadequate as evidence of useful spam classification. No candidate has primary-split evidence yet; this choice is exploratory and not a confirmed improvement.",
+          "hypothesis": "Character n-grams may capture spam-indicative patterns that word-only features missed, and C=3.0 may reduce underfitting relative to C=0.3. The combined word_char representation could improve minority-class recall and therefore macro_f1 on the primary search split.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The candidate has no primary-split measurements. The observed failure may be due to representation, regularization, label imbalance, or other causes. Improvement in macro_f1 is not guaranteed, and spam recall may remain low if the combined features do not separate the classes."
+        }
+      }
+    },
+    "E": {
+      "candidate": "single_char_C3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "single_char_C3.0",
+        "params": {
+          "representation": "char",
+          "C": 3.0
+        },
+        "reason": "Trial 1 on the word route collapsed to majority-class prediction with class_recall [1.0, 0.0], so macro_f1 is low despite high accuracy. A char n-gram route is untried and may capture spam-specific character patterns that word tokens missed.",
+        "hypothesis": "Character n-gram features with C=3.0 may reduce majority-class collapse by representing spam-like character patterns and punctuation cues not captured by word tokens.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_char_C3.0",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 1 on the word route collapsed to majority-class prediction with class_recall [1.0, 0.0], so macro_f1 is low despite high accuracy. A char n-gram route is untried and may capture spam-specific character patterns that word tokens missed.",
+          "review": "The only completed primary trial is single_word_C0.3 with macro_f1 0.4669 and zero spam recall. This indicates a representation or class-balance issue, not evidence that the word route is exhausted.",
+          "hypothesis": "Character n-gram features with C=3.0 may reduce majority-class collapse by representing spam-like character patterns and punctuation cues not captured by word tokens.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Unknown whether char n-grams will improve macro_f1 or spam recall; the direction and magnitude are not established from the single completed trial."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "sms_2",
+    "task": "sms",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\sms\\state_2.json",
+    "state_sha256": "3dd67db3309055ee0780011f704d40468b1f31153b6680132fdecd74c97cc1bc",
+    "original_candidate": "single_word_char_C0.3",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "single_word_char_C0.3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "single_word_char_C0.3",
+        "params": {
+          "representation": "word_char",
+          "C": 0.3
+        },
+        "reason": "Trial 2 (char C=0.3) substantially outperformed Trial 1 (word C=0.3) on PRIMARY macro_f1, but spam recall remained low. The untried word_char route at the better-observed regularization strength is the most informative next candidate because it combines word and character signals while staying within the registered logistic baseline.",
+        "hypothesis": "Combining word and character n-gram features at C=0.3 may retain the char route's better macro_f1 while adding word-level signal that improves spam recall, but the direction and magnitude are not established.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_word_char_C0.3",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 2 (char C=0.3) substantially outperformed Trial 1 (word C=0.3) on PRIMARY macro_f1, but spam recall remained low. The untried word_char route at the better-observed regularization strength is the most informative next candidate because it combines word and character signals while staying within the registered logistic baseline.",
+          "review": "PRIMARY evidence only: word C=0.3 scored 0.4669 macro_f1 with spam recall 0.0; char C=0.3 scored 0.6451 with spam recall 0.2073. No confirmation-split comparison is made. The word_char candidate has no direct trial evidence, so this is a coverage/improvement probe rather than a guaranteed gain.",
+          "hypothesis": "Combining word and character n-gram features at C=0.3 may retain the char route's better macro_f1 while adding word-level signal that improves spam recall, but the direction and magnitude are not established.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "No direct evidence exists for word_char C=0.3. The choice is based on char C=0.3 outperforming word C=0.3 and on the untried combined representation; improvement is plausible but not predicted. Macro_f1 is sensitive to the low spam recall observed in both completed trials."
+        }
+      }
+    },
+    "R": {
+      "candidate": "single_word_char_C0.3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "single_word_char_C0.3",
+        "params": {
+          "representation": "word_char",
+          "C": 0.3
+        },
+        "reason": "Trial 2 shows char representation at C=0.3 substantially outperforms word-only on macro_f1, but spam recall remains low. The combined word_char representation at the same regularization is the most direct next test of whether word-level spam cues can complement the stronger char features without changing the estimator family.",
+        "hypothesis": "Combining word and char features at C=0.3 may retain the char representation's robustness while adding word-level signals that improve spam recall and macro_f1 relative to char-only C=0.3.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_word_char_C0.3",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 2 shows char representation at C=0.3 substantially outperforms word-only on macro_f1, but spam recall remains low. The combined word_char representation at the same regularization is the most direct next test of whether word-level spam cues can complement the stronger char features without changing the estimator family.",
+          "review": "Prior evidence is limited to two completed primary trials. Word-only C=0.3 collapsed to ham-only recall, while char-only C=0.3 improved macro_f1 and recovered some spam recall. This candidate is a representation-combination test, not a confirmed improvement.",
+          "hypothesis": "Combining word and char features at C=0.3 may retain the char representation's robustness while adding word-level signals that improve spam recall and macro_f1 relative to char-only C=0.3.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The direction and magnitude are unknown. Word features previously produced ham-only behavior, so the combined representation could inherit that bias or fail to improve spam recall. This is a single primary-split experiment and does not establish confirmation-split performance."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "sms_3",
+    "task": "sms",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\sms\\state_3.json",
+    "state_sha256": "2ccbc062345fe672c0d47776f161f05d6242ea4ebea2ce42338befeb48bc3dad",
+    "original_candidate": "single_word_char_C3.0",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "single_word_char_C3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "single_word_char_C3.0",
+        "params": {
+          "representation": "word_char",
+          "C": 3.0
+        },
+        "reason": "Trial 3 with word_char representation at C=0.3 achieved the best PRIMARY macro_f1 (0.8388) among completed trials, substantially above char (0.6451) and word (0.4669). The available C=3.0 word_char candidate preserves the strongest observed representation while testing a different regularization strength.",
+        "hypothesis": "The word_char representation captures complementary token and character signals that improve spam recall relative to word-only or char-only features; changing C from 0.3 to 3.0 may alter the regularization tradeoff, but the direction of macro_f1 change is not known.",
+        "evidence_trials": [
+          3,
+          2,
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_word_char_C3.0",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 3 with word_char representation at C=0.3 achieved the best PRIMARY macro_f1 (0.8388) among completed trials, substantially above char (0.6451) and word (0.4669). The available C=3.0 word_char candidate preserves the strongest observed representation while testing a different regularization strength.",
+          "review": "Selection is based only on training-derived PRIMARY split evidence; no formal test is available. Trial 3 also showed a negative score_gap, so overfitting risk should be monitored, but it remains the strongest completed candidate family.",
+          "hypothesis": "The word_char representation captures complementary token and character signals that improve spam recall relative to word-only or char-only features; changing C from 0.3 to 3.0 may alter the regularization tradeoff, but the direction of macro_f1 change is not known.",
+          "evidence_trials": [
+            3,
+            2,
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The effect of increasing C from 0.3 to 3.0 is unknown and could increase overfitting. Prior evidence is from a single PRIMARY split and does not establish confirmation-split performance."
+        }
+      }
+    },
+    "E": {
+      "candidate": "single_word_char_C3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "single_word_char_C3.0",
+        "params": {
+          "representation": "word_char",
+          "C": 3.0
+        },
+        "reason": "Trial 3 shows the word_char representation is the strongest PRIMARY result so far (macro_f1 0.8388), while word-only and char-only lag. The available C3.0 variant is the natural next configuration on the active word_char route, testing whether less regularization improves the current best representation without changing estimator family.",
+        "hypothesis": "Increasing C from 0.3 to 3.0 for the word_char logistic model may allow the combined word and character features to fit spam-indicative patterns more strongly, potentially improving macro_f1 relative to trial 3.",
+        "evidence_trials": [
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "single_word_char_C3.0",
+          "task_kind": "single_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 3 shows the word_char representation is the strongest PRIMARY result so far (macro_f1 0.8388), while word-only and char-only lag. The available C3.0 variant is the natural next configuration on the active word_char route, testing whether less regularization improves the current best representation without changing estimator family.",
+          "review": "Evidence is limited to three completed PRIMARY trials at C=0.3. Trial 3 has the best macro_f1 and best spam recall among trials, but spam recall remains 0.5488, so the class imbalance issue is not resolved. No confirmation split is available, and no causal claim is made.",
+          "hypothesis": "Increasing C from 0.3 to 3.0 for the word_char logistic model may allow the combined word and character features to fit spam-indicative patterns more strongly, potentially improving macro_f1 relative to trial 3.",
+          "evidence_trials": [
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The direction and magnitude of the effect of changing C from 0.3 to 3.0 are unknown. The current best trial may reflect representation effects rather than regularization level, and the observed score gap suggests possible overfitting or split variance. This is a PRIMARY search proposal only, not proof of improvement."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "bean_1",
+    "task": "bean",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\bean\\state_1.json",
+    "state_sha256": "79d5ac18454b354e9bfde5bc9840676f4ebca0393210f9ddd00e84573ddca212",
+    "original_candidate": "numeric_tabular_extra_trees_leaf1",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "numeric_tabular_extra_trees_leaf3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        },
+        "reason": "Trial 1 shows a strong logistic baseline on the PRIMARY split, but the extra-trees route is untried. Selecting a regularized tree ensemble provides route coverage and tests whether nonlinear feature interactions add useful signal beyond the linear model.",
+        "hypothesis": "A regularized extra-trees ensemble may capture nonlinear or interaction effects in the numeric tabular features that the linear logistic model does not represent, potentially complementing the strong baseline.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_extra_trees_leaf3",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "extra_trees"
+          },
+          "reason": "Trial 1 shows a strong logistic baseline on the PRIMARY split, but the extra-trees route is untried. Selecting a regularized tree ensemble provides route coverage and tests whether nonlinear feature interactions add useful signal beyond the linear model.",
+          "review": "The completed PRIMARY trial is logistic C=0.1 with accuracy 0.9225 and small train-search gap. No extra-trees configuration has been evaluated yet, so this choice is exploratory rather than a claimed improvement.",
+          "hypothesis": "A regularized extra-trees ensemble may capture nonlinear or interaction effects in the numeric tabular features that the linear logistic model does not represent, potentially complementing the strong baseline.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "coverage",
+          "uncertainty": "It is unknown whether extra trees will improve PRIMARY accuracy over the logistic baseline; leaf3 is chosen as a moderately regularized first probe, but performance may be lower or higher and class-specific effects are not yet known."
+        }
+      }
+    },
+    "R": {
+      "candidate": "numeric_tabular_extra_trees_leaf3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        },
+        "reason": "Trial 1 shows a strong linear baseline (search accuracy 0.9225) with small train-search gap. The next useful primary-split experiment is a different model family to test whether nonlinear tree ensembles can capture structure not represented by logistic regression, while using leaf size 3 to reduce overfitting relative to leaf 1.",
+        "hypothesis": "A moderately regularized Extra Trees ensemble may capture nonlinear feature interactions and improve primary-split accuracy over the logistic C0.1 baseline, but the direction and magnitude are not established by existing evidence.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_extra_trees_leaf3",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "extra_trees"
+          },
+          "reason": "Trial 1 shows a strong linear baseline (search accuracy 0.9225) with small train-search gap. The next useful primary-split experiment is a different model family to test whether nonlinear tree ensembles can capture structure not represented by logistic regression, while using leaf size 3 to reduce overfitting relative to leaf 1.",
+          "review": "Only one completed primary trial is available, so there is no matched evidence comparing logistic regularization strengths or tree ensembles on this split. The logistic C0.1 result is strong but does not establish that nonlinear models are unnecessary. Extra Trees with min_samples_leaf=3 is a reasonable coverage/improvement probe within budget.",
+          "hypothesis": "A moderately regularized Extra Trees ensemble may capture nonlinear feature interactions and improve primary-split accuracy over the logistic C0.1 baseline, but the direction and magnitude are not established by existing evidence.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The prior trial only supports a strong logistic baseline; it provides no direct evidence about Extra Trees performance on this dataset or split. The expected effect is unknown, and any observed change must be evaluated on the primary search split without assuming causal learning."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "bean_2",
+    "task": "bean",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\bean\\state_2.json",
+    "state_sha256": "9d04c704b4d034aac217bce82422ba7f6c7582e840e50f02b4e7cf5c201076e3",
+    "original_candidate": "numeric_tabular_logistic_C1.0",
+    "original_candidate_is_local_not_R": true,
+    "R": {
+      "candidate": "numeric_tabular_logistic_C1.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        },
+        "reason": "Trial 1 logistic C0.1 is the strongest completed PRIMARY result (search_accuracy 0.9225) with a small train-search gap. Trial 2 extra trees leaf1 overfits (train_accuracy 1.0, score_gap 0.0878) and scores lower. The adjacent logistic C1.0 candidate stays on the better-performing linear route and tests whether slightly weaker regularization improves the primary split without the tree overfit risk.",
+        "hypothesis": "A less strongly regularized logistic model may capture additional numeric-tabular structure relative to C0.1 while retaining the stable linear behavior seen in trial 1; the direction of the accuracy change is not assumed.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_logistic_C1.0",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 1 logistic C0.1 is the strongest completed PRIMARY result (search_accuracy 0.9225) with a small train-search gap. Trial 2 extra trees leaf1 overfits (train_accuracy 1.0, score_gap 0.0878) and scores lower. The adjacent logistic C1.0 candidate stays on the better-performing linear route and tests whether slightly weaker regularization improves the primary split without the tree overfit risk.",
+          "review": "Evidence favors the regularized logistic family over the high-variance extra-trees configuration. C1.0 is a controlled regularization step from the leading C0.1 trial; extra_trees_leaf3 is available but would require reversing the observed overfitting pattern. No formal test is available, so this is a PRIMARY search decision only.",
+          "hypothesis": "A less strongly regularized logistic model may capture additional numeric-tabular structure relative to C0.1 while retaining the stable linear behavior seen in trial 1; the direction of the accuracy change is not assumed.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The C0.1 logistic result is already strong, so C1.0 may be similar or slightly worse. The primary split measurement is the only comparable evidence; no confirmation-split comparison is implied. Extra-trees leaf3 might reduce overfitting but is less supported by the current best score."
+        }
+      }
+    },
+    "E": {
+      "candidate": "numeric_tabular_logistic_C1.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        },
+        "reason": "Trial 1 logistic C=0.1 achieved the best PRIMARY accuracy (0.9225) with a small train-search gap (0.0033), while trial 2 extra trees overfit more (gap 0.0878) and scored lower. Testing logistic C=1.0 is the most direct next step within the stronger route.",
+        "hypothesis": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_logistic_C1.0",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 1 logistic C=0.1 achieved the best PRIMARY accuracy (0.9225) with a small train-search gap (0.0033), while trial 2 extra trees overfit more (gap 0.0878) and scored lower. Testing logistic C=1.0 is the most direct next step within the stronger route.",
+          "review": "Evidence is limited to two completed PRIMARY trials. Logistic is currently best and stable; extra trees leaf1 showed high train accuracy but lower search accuracy. The available extra_trees leaf3 may reduce overfitting, but the logistic route has stronger observed PRIMARY performance.",
+          "hypothesis": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The direction and magnitude of change from C=0.1 to C=1.0 are unknown; the PRIMARY split is reused, and no formal test is available. This is a search-split comparison only, not proof of generalization."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "bean_3",
+    "task": "bean",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a70_four_task_feedback\\prepared\\bean\\state_3.json",
+    "state_sha256": "a7078d7ca00da74637d5e8f19ad14e78c1225c331a1b5ccd7f314189cafbad36",
+    "original_candidate": "numeric_tabular_extra_trees_leaf3",
+    "original_candidate_is_local_not_R": true,
+    "E": {
+      "candidate": "numeric_tabular_logistic_C10.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        },
+        "reason": "The active logistic route has the best PRIMARY search accuracy so far: trial 3 (C=1.0) scored 0.9230769230769231 with a small train-search gap of 0.004592422502870175. Trial 1 (C=0.1) was slightly lower at 0.9225028702640643. The available C=10.0 candidate continues this active route and tests a less-regularized logistic setting on the same PRIMARY split.",
+        "hypothesis": "Increasing logistic regularization strength from C=1.0 to C=10.0 may allow a sharper decision boundary and could change PRIMARY accuracy, but the direction and magnitude are not established from the completed trials.",
+        "evidence_trials": [
+          3,
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_logistic_C10.0",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "The active logistic route has the best PRIMARY search accuracy so far: trial 3 (C=1.0) scored 0.9230769230769231 with a small train-search gap of 0.004592422502870175. Trial 1 (C=0.1) was slightly lower at 0.9225028702640643. The available C=10.0 candidate continues this active route and tests a less-regularized logistic setting on the same PRIMARY split.",
+          "review": "Trials 1 and 3 show logistic regression performing strongly and consistently on PRIMARY accuracy with low train-search gaps. Trial 2, Extra Trees with min_samples_leaf=1, had a much larger gap (0.08783008036739381) and lower PRIMARY accuracy (0.9121699196326062), so the paused Extra Trees route is less attractive at this point. The available Extra Trees leaf=3 candidate could reduce overfitting, but it is not yet supported by a better PRIMARY result.",
+          "hypothesis": "Increasing logistic regularization strength from C=1.0 to C=10.0 may allow a sharper decision boundary and could change PRIMARY accuracy, but the direction and magnitude are not established from the completed trials.",
+          "evidence_trials": [
+            3,
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The effect of moving from C=1.0 to C=10.0 is unknown. The completed logistic trials are close in PRIMARY accuracy, so any change may be small or could reflect overfitting rather than a genuine improvement. This is a PRIMARY search-split choice only, not a confirmation-split result."
+        }
+      }
+    },
+    "R": {
+      "candidate": "numeric_tabular_logistic_C10.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        },
+        "reason": "Logistic regression is the strongest completed family on the primary split, with C1.0 at 0.92308 accuracy and a small train-search gap. C10.0 is the natural next regularization point within the same route and representation.",
+        "hypothesis": "Reducing regularization from C1.0 to C10.0 may allow a slightly sharper linear boundary, but it may also increase variance; the direction of accuracy change is not established.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "numeric_tabular_logistic_C10.0",
+          "task_kind": "numeric_tabular",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Logistic regression is the strongest completed family on the primary split, with C1.0 at 0.92308 accuracy and a small train-search gap. C10.0 is the natural next regularization point within the same route and representation.",
+          "review": "Trials 1 and 3 show stable logistic performance; trial 2 shows Extra Trees overfitting with train 1.0 and lower search accuracy. The available Extra Trees leaf3 candidate may reduce overfitting but has no primary evidence yet.",
+          "hypothesis": "Reducing regularization from C1.0 to C10.0 may allow a slightly sharper linear boundary, but it may also increase variance; the direction of accuracy change is not established.",
+          "evidence_trials": [
+            1,
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "C10.0 may not exceed C1.0 and could overfit more. This is a controlled extension of the best completed logistic route, not a guaranteed improvement."
+        }
+      }
+    }
+  }
+]

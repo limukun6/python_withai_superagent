@@ -41,6 +41,8 @@ COMPARISON = re.compile(
 SENTENCE_SPLIT = re.compile(r'(?<=[.!?;])\s+|\n+')
 # Candidate identifiers look like char_C1.0 or word_char_stats_C0.3.
 ID_LIKE = re.compile(r'\b[a-z][a-z_]*(?:_[A-Za-z0-9.]+)+\b', re.I)
+CURRENT_SUBJECT = re.compile(r'\b(?:(?:current|selected|proposed|next)\s+(?:model|classifier|candidate|configuration)|'
+                            r'this\s+(?:model|classifier|candidate)|(?:this|it)\s+is|the\s+classifier\s+is)\b', re.I)
 
 
 def _family_of(kind, identifier, params=None):
@@ -167,7 +169,11 @@ def check_prose(fields, facts, history, kind=None, tolerance=0.01):
                 items.append({'field': field, **claim, 'observed': None, 'status': 'informational'})
                 continue
             scope = scope_families(claim['sentence'], facts, history, kind)
-            if NEGATION.search(claim['sentence']) or UNCERTAIN.search(claim['sentence']) or len(scope)>1:
+            historical_review = field in ('review','assessment.interpretation')
+            bound_reference = bool(TRIAL.search(claim['sentence']) or any(
+                row.get('candidate') and row['candidate'] in claim['sentence'] for row in history))
+            unbound_review = historical_review and not CURRENT_SUBJECT.search(claim['sentence']) and not bound_reference
+            if unbound_review or NEGATION.search(claim['sentence']) or UNCERTAIN.search(claim['sentence']) or len(scope)>1:
                 status, observed = 'unverifiable', sorted(scope) if scope else None
             elif not scope:
                 status, observed = 'unverifiable', None
@@ -175,7 +181,8 @@ def check_prose(fields, facts, history, kind=None, tolerance=0.01):
                 status, observed = 'confirmed', sorted(scope)
             else:
                 status, observed = 'contradicted', sorted(scope)
-            items.append({'field': field, **claim, 'observed': observed, 'status': status})
+            items.append({'field': field, **claim, 'observed': observed, 'status': status,
+                          'reference_resolution':'unbound_review_subject' if unbound_review else 'current_or_locally_scoped'})
         for match in TRIAL.finditer(text):
             claim={'kind':'trial_reference','span':match.group(),'claim':int(match.group(1))}
             sentence,_=sentence_around(text,match.start())

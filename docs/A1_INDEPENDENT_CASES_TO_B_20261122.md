@@ -14,3 +14,5 @@ python -m scripts.run_a67_case_registry run --cases B_CASES.json --output NEW_OU
 ```
 
 本次不要求B操作者把真实标签、数据集或密钥写入案例。A67是受控结构测试，不测自然错误率；A2自然反馈/错误恢复和B1完整运行分别报告。
+
+执行前先验证48例/八类各六、三种判定都有、ID与输入不重复、作者/子集和预期依据完整：`python -m tools.validate_a1_case_pack --cases B_CASES.json --role B --output NEW_VALIDATION.json`。B例ID用B_前缀，避免合并后与A重复。格式检查不验证真实作者身份或盲测过程，需另外附来源记录；检查器不会自动生成expected。

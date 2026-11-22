@@ -2,6 +2,8 @@
 
 这是实现与实测索引，不是未来愿望清单。默认本地策略；Flash为显式运行方式，optional结构不等于默认生效。
 
+A93老师说明已澄清：通用预训练下游特征允许，由Agent自主选用；限制针对规划语言模型。环境入口默认auto，有固定资产时纳入共同菜单，restricted仍可做消融。具体原文见TEACHER_ENCODER_CLARIFICATION_20261122_zh.md，不将资源存在或任务名称直接当选模理由。
+
 ```mermaid
 flowchart TD
     A[任务包与声明指标] --> B[数据与目标契约 / 语义守卫]

@@ -3,3 +3,5 @@
 此前Windows待机确实中断过实验。当前C1需持续运行约30–60分钟或更久，用户明确无人值守继续。本项复用现有scripts/hold_work_session_awake.py与tools/unattended_runtime.py，仅创建线程级ES_SYSTEM_REQUIRED请求，已有运行完成/失败completion文件出现即自动释放，另设当前UTC起最多2小时截止。不是新性能实验，0fit/0API，不改持久电源策略，不修改活动C1源码/调度。
 
 配置和协议仅写runs/a89_sleep_guard*，done-file使用实际runs/a89_coupon_C1/completion.json。进程若退出系统会释放其线程请求；仍监控helper完成记录。不用自动化定时任务或服务，不用于启动新实验。
+
+A91已预登记为同队列结束后的单条本地照片路径，因此另复用同一已登记截止时间，为runs/a91_restricted_photo_Q/completion.json申请一个重叠临时请求，输出runs/a91_sleep_guard。它只覆盖已排队的这条任务，避免C1释放与照片启动之间的待机空档，两个请求各自按done文件或相同截止释放；仍不改持久设置或启动额外模型请求。

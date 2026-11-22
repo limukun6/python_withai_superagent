@@ -1,5 +1,7 @@
 # A90：冻结编码器可运行，不等于课程例外已确认
 
+**A93已解决本页当时的不确定性**：用户转来老师明确答复，限制针对SuperAgent语言模型，允许通用下游预训练特征、由Agent自主选用。原文见TEACHER_ENCODER_CLARIFICATION_20261122_zh.md。默认现为auto，本页restricted/待答复叙述保留为历史，不作当前阻断条件。
+
 原始要求来自用户提供的AIAA3102 Final Project Full Assignment Requirements第4节：指定日期前Qwen/DeepSeek模型、官方标准token计价与本地部署同样计费。该段未明确说明冻结MiniLM/ImageNet特征是否豁免；目前未找到老师明确例外答复。已向用户问原文，未把未回复或预选项当同意。此前把技术可执行性直接写成正式运行建议，缺少资格边界，现修正。
 
 课程默认环境入口`run_with_encoder_assets`现在默认`--encoder-policy restricted`，清空两类权重变量，沿用同一个superagent CLI/方法注册/调度；无需先下载编码器。可借已有Python3.12环境，但不会启用预训练特征。`--encoder-policy research --assets ...`才显式启用原研究路线，不由此认证课程许可。核心superagent未改，正在跑的Coupon C1不使用这些编码器，源码/目录/预算不变。

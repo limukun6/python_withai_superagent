@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## A93老师说明已到，恢复通用下游特征资格；C1继续
+
+用户已转来老师原文：限制针对SuperAgent语言模型，下游可用通用预训练特征，例如MiniLM，须自主选用、不得任务身份路由。TEACHER_ENCODER_CLARIFICATION_20261122_zh.md保留原文；A90未明确状态为历史，不再等待同一确认。wrapper默认auto，有校验资产时提供两编码器，真实full菜单15/32/16/9/5；无资产保留普通方法，restricted仍供消融。A93六入口检查/实际菜单快照0fit/API通过，核心及A89 immutable未改。
+
+A89仍按既有Coupon六组队列继续，L1显式复用；A91排队full8不改其程序/seed/预算，研究角色转为禁用预训练视觉的消融，与A88 baseline7/full9比较。当前实际执行优先CURRENT_AGENT_STATE.md和completion/真ledger，AGENTS已清理为稳定约定，旧原文归档A92，不据旧阶段快照重复启动。
+
 ## A90资格边界更新；A89队列继续
 
 课程“仅Qwen/DeepSeek”条款未明确冻结MiniLM/ImageNet例外，已问用户老师说明，尚未回复。默认环境入口改restricted，research需显式选；未改核心或活动A89。默认full菜单Coupon15/偏好30/SMS14/photo8/Bean5；A83旧研究full保留。编码器技术执行不认证课程资格/计价，A88 photo full尝试过视觉，暂作开发研究，不能因赢家梯度而省略该事实。A90 0fit/API的5入口检查及restricted菜单快照通过，详见A90_ENCODER_QUALIFICATION_BOUNDARY_zh.md。

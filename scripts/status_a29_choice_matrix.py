@@ -4,6 +4,19 @@ import json
 from pathlib import Path
 
 
+def completion_failure(outcome):
+    if outcome.get('requested_planner_completed'):
+        return None
+    if outcome.get('error'):
+        return dict(stage='run', error_type=outcome.get('error_type'), error=outcome['error'])
+    final = outcome.get('finalization') or {}
+    if final.get('refit_failure'):
+        return dict(stage='final_refit', **final['refit_failure'])
+    if final.get('validation_failure'):
+        return dict(stage='validation', detail=final['validation_failure'])
+    return dict(stage='completion', error='Requested planner did not complete; inspect preserved outcome')
+
+
 def safe_read(path, default=None):
     try:
         return json.loads(path.read_text(encoding='utf-8'))
@@ -32,6 +45,10 @@ if __name__ == '__main__':
             requests=sum(row.get('kind') == 'llm_request' for row in events),
             responses=sum(row.get('kind') == 'llm_response' for row in events),
             last_event=events[-1]['kind'] if events else None))
-    print(json.dumps(dict(frozen_paths=len(completed), frozen=[row['task']+'_'+row['arm'] for row in completed],
-        completed_fit_counts=[row['outcome']['classifier_fit_accounting']['completed_classifier_fits'] for row in completed],
+    frozen = [row for row in completed if row['outcome'].get('requested_planner_completed')]
+    partial = [dict(path=row['task']+'_'+row['arm'], model_available=row['outcome'].get('model_available'),
+                    failure=completion_failure(row['outcome'])) for row in completed if not row['outcome'].get('requested_planner_completed')]
+    print(json.dumps(dict(frozen_paths=len(frozen), frozen=[row['task']+'_'+row['arm'] for row in frozen],
+        partial_paths=partial, observed_path_outcomes=len(completed),
+        completed_fit_counts=[row['outcome']['classifier_fit_accounting']['completed_classifier_fits'] for row in frozen],
         active=current, batch_completion=safe_read(args.matrix / 'completion.json'))))

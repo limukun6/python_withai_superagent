@@ -230,7 +230,8 @@ def execute(args):
             counts = value['classifier_fit_accounting']
             traced = sum(row['run_name'] == directory.name for row in physical(root))
             if code or not value['requested_planner_completed']:
-                raise RuntimeError('A29 path stopped without retry: ' + directory.name + ': ' + str(value.get('error')))
+                from scripts.status_a29_choice_matrix import completion_failure
+                raise RuntimeError('A29 path stopped without retry: ' + directory.name + ': ' + str(completion_failure(value)))
             if not (2 <= traced == counts['attempted_classifier_fits'] == counts['completed_classifier_fits'] <= 11
                     and counts['unknown_failed_attempts'] == 0 and value['new_api_requests'] <= 3):
                 raise ValueError('Actual fit/request count differs or exceeded budget')

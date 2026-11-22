@@ -56,6 +56,8 @@ def validate_options(args):
         raise ValueError('Unknown candidate coverage mode')
     if args.planner=='local' and getattr(args,'candidate_coverage','off')!='off':
         raise ValueError('Candidate coverage projection applies only to the explicit Flash menu')
+    if args.planner=='local' and getattr(args,'proposal_contract','strict-v1')!='strict-v1':
+        raise ValueError('Proposal contract applies only to an explicit Flash planner')
     forbidden = ('policy','trials')
     if args.planner == 'local':
         forbidden += ('api_url','api_key_file','model','budget_ledger','task_budget_id','llm_budget_rmb')
@@ -198,6 +200,11 @@ def command(args):
     logger.initialize_usage_ledger()  # Per-run zero-call log, never a replacement for the project API ledger.
     began = time.monotonic()
     frozen = sources()
+    training_profile_value=None
+    if getattr(args,'task_profile','off')=='train':
+        from .task_profile import training_facts
+        training_profile_value=training_facts(task)
+        logger.write_json('training_profile.json',training_profile_value)
     if history_mode:
         from .ab_flash import FlashPicker
         from .experiment_llm import ExperimentLLM
@@ -210,7 +217,7 @@ def command(args):
         client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
             allowed_served_models={args.model},account=account,streaming=True)
         client.set_deadline(began+args.time_limit)
-        picker = FlashPicker(client,logger,args.planner=='checked-history')
+        picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'))
     history, evidence, actions = [], [], []
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
@@ -226,6 +233,8 @@ def command(args):
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
             candidate_coverage=getattr(args,'candidate_coverage','off'),
+            task_profile=getattr(args,'task_profile','off'),proposal_contract=getattr(args,'proposal_contract','strict-v1'),
+            partial_delivery=getattr(args,'partial_delivery','off'),
             decision_context_version='ab-history-v1' if history_mode else None,
             planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
             project_usage_before_run=ledger.project_summary() if history_mode else None,
@@ -246,6 +255,7 @@ def command(args):
             state = dict(ab_schema_version=1, task=spec, history=history,
                          available_candidates=untried_candidates(caps, history), prediction_evidence=evidence,
                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
+            if training_profile_value is not None:state['training_profile']=training_profile_value
             number = len(history) + 1
             logger.write_json(f'state_{number}.json', state)
             if picker:
@@ -325,6 +335,16 @@ def command(args):
     except Exception as error:
         outcome.update(error_type=type(error).__name__, error=str(error), status='failed')
         logger.event('run_stopped', error_type=type(error).__name__, message=str(error), automatic_retry=False)
+        if getattr(args,'partial_delivery','off')=='checkpoint' and history and not (directory/'final_selection.json').exists():
+            try:
+                from .partial_delivery import freeze_checkpoint
+                recovery_state=dict(state,history=history,prediction_evidence=evidence)
+                recovered=freeze_checkpoint(task,recovery_state,trusted,caps,directory,logger,str(error))
+                outcome.update(selected_candidate=recovered['candidate'],primary_metric=metric.name,full_refit_completed=False,
+                    partial_recovery=recovered)
+            except Exception as recovery_error:
+                outcome['partial_recovery_failure']=dict(error_type=type(recovery_error).__name__,error=str(recovery_error))
+                logger.event('partial_delivery_failed',**outcome['partial_recovery_failure'])
     outcome.update(elapsed_seconds=time.monotonic()-began, source_unchanged=sources()==frozen,
                    action_counts=dict(Counter(a['action'] for a in actions)),
                    classifier_fit_accounting=executor.accounting() if executor else dict(
@@ -346,6 +366,11 @@ def command(args):
     outcome['model_available'] = (directory / 'final_selection.json').exists()
     outcome['requested_planner_completed'] &= outcome['source_unchanged']
     outcome['status'] = 'completed' if outcome['requested_planner_completed'] else 'failed'
+    outcome['delivery_status']='complete' if outcome['requested_planner_completed'] else 'partial' if outcome['model_available'] else 'unavailable'
+    if getattr(args,'partial_delivery','off')=='checkpoint' and outcome['model_available'] and not outcome['requested_planner_completed']:
+        selection=json.loads((directory/'final_selection.json').read_text(encoding='utf-8'))
+        selection.update(delivery_status='partial',requested_planner_completed=False,full_training_rows=len(task.y_train))
+        logger.write_json('final_selection.json',selection)
     logger.write_json('run_outcome.json', outcome)
     logger.write_json('summary.json', outcome)
     print(json.dumps(outcome, ensure_ascii=False))

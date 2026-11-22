@@ -1,5 +1,8 @@
 # A/B 共同开发约定
 
+- 最新接手先读docs/CURRENT_RUN_20261122_A50.md及EXPERIMENT_PROGRESS顶部。原三小时窗口因00:21待机而中断，A32为8完整/1部分/11未启动，不是完整矩阵；旧completion不改。恢复窗口另记08:42–10:42，A50/A51真实Flash队列当前运行，禁止改superagent、campus_direct.py、run_a50_facts_calibration.py、run_a29_choice_matrix.py、run_a34_transfer_coverage.py及worker观察器，先查实际completion，别重复启动/计费。
+- 执行沙箱会拒绝校园网络（DNS/10013），实际Python解析还可能得到198.18.*代理虚拟IP。已核验的显式进程包装器scripts.campus_direct仅把官方域名解析到AGENTS既有10.121.10.250，HTTPS Host/SNI/证书不变，不改系统DNS/代理，不自动失败切换。真实任务必须用获准访问网络的执行权限，并按批协议显式启用，不能在沙箱中误报校园网断了。模型列表探测a50_models_direct已HTTP200/19模型；原失败请求不能自动重试。
+
 - 开始前读 docs/AB_INTEGRATION_V1.md、docs/EXPERIMENT_PROGRESS.md 和 docs/nine_day_two_track_plan_20261120_zh.md。
 - A负责统一入口、任务/证据契约和模型导出；B负责方法目录与Scheduler。修改共用控制循环前明确文件归属，用独立checkout与Git提交交接。
 - 用户2026-11-21明确授权A补对称文本方法；A26已在symmetric_text及方法注册/语义守卫完成，不再等B重复该基线。H1已有4合法候选，但H原包/模型/成绩仍封存；交换性质与合成验收不代表真实迁移效果。B继续方法效果与调度，不覆盖新模块。

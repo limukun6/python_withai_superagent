@@ -11,6 +11,18 @@
 
 ## 当前进度：A 线三小时计划内批次已推进（2026-11-21）
 
+### 2026-11-22最新：A44–A49已完成；A50/A51真实队列运行中
+
+- 接手优先docs/CURRENT_RUN_20261122_A50.md。A32被Windows00:21待机/08:32唤醒中断，8完整/1部分/11未启动，91fit/20成功聊天/¥.163567；未开外层val，旧completion保留stopped。三小时原窗口没有完整执行，不把待机九小时算训练。
+- A42补充批首条1fit后沙箱DNS失败、未重试，原ticket审计not_dispatched保留unknown转移；原11历史unknown仍在。进一步对照发现两层：沙箱拒绝校园网；授权环境Python拿到198.18.*虚拟IP。显式进程解析官方域名到既有10.121.10.250后，带认证models200/19模型，Host/SNI/证书不变，系统代理/DNS未改。普通GET超时与成功TCP探测不能混称API已可用；a50_models_direct才是JSON模型核验。
+- 新正式开关：task-profile train给raw/E同一训练统计；proposal-contract calibrated-v2允许purpose/uncertainty及null或下降预期；partial-delivery checkpoint异常后只包装已成功模型，仍failed/exit2。默认off/strict-v1保留旧行为，未改B方法/调度。
+- A44–A46五真实开发任务十路径通过：5完整3fit、5人工故障2fit，共25fit/142.736秒/0API，10模型新进程搬迁预测一致，外层标签未开。两次失败验收3+5fit另保留，修摘要变量覆盖和checkpoint.kind误判；1合法+6损坏证据恢复探针0fit通过。另124回归7fit已计，最终版本回归待训练队列结束串行做。
+- A47五任务同源Q全部完成，7物理路径/67fit/328.799秒/0API。Coupon目录14→15，accuracy .738916→.750246（+1.133pp、10→11fits）；照片7→8，.975→.975（10→9fits、3行预测不同）；偏好22/22、SMS6/6、Bean5/5目录相同，各一shared路径，不是独立重复实验/0收益证明。七模型重载通过，H/test封存。research/a47_catalog_Q。
+- A48真实CLI与模拟SSE的v2/profile闭环3用例，9fit/5模拟HTTP/26.946秒、0真API，实际共享账本SHA不变；raw/E全部共同payload相同，null检查not_stated，模拟timeout后partial且不重试。模拟ledger/usage不导入真账本。A49参数观察独立原型五模型、五错误参数声明被识别/0自然冲突/0fit/API，尚未接生产。
+- A50/A51计划batches/A50_A51_live_facts_calibration_plan.md与runner/queue已保存并实际启动。A50两真实任务2×2 off/train×strict/calibrated，8路径；首coupon_00已完整11fit/3真实响应/499.411秒、refit成功，尚未开本批val。后续A51仅在A50成功且余≥50分钟才启动SMS/照片联合对照，不把计划当已完成。截止恢复窗口10:42:29。不能修改冻结生产/执行器脚本或并发训练。
+- A50前被跟踪A窗口812fit（含失败/回归/原历史40更正），ledger224行/known5.5403165/原11unknown/pending0。A50开始后必须看真ledger与completion，不能继续用此快照发请求。课程总预算仍未核验、实际平台扣费null；新API确已返回有效Flash响应与usage，当前不再以学校网络不可用为结论。
+- A52四模型搬迁与A53首动作两新训练内划分计划/代码已保存，尚未执行；H1/H2仍未开。原A34/A35/A36/A38不能由新编号顶替成已完成。
+
 ### 最新A29/A30已完成；新三小时窗口A31通过、A32准备就绪
 
 - A29两任务六组12路径全部完成，128实际fit/24成功请求/2459.935秒/¥.205921，132821输入18275输出；source不变、12模型新进程预测重载通过，H/test未开。各组结果见batches/A29_A30_results.md：Coupon L0/L1/R1/E1 .750246，R0/E0 .748276；偏好对L0/L1 .696809、R0/E0 .680851、R1 .701064、E1 .695745。单开发划分，无显著性或普遍迁移声明。

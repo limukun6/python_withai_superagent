@@ -10,6 +10,7 @@ import time
 from scripts.a_batch_common import save
 from scripts.run_a10_real_task_pilot import read, sha
 from superagent.ab_run import sources
+from scripts.status_a29_choice_matrix import safe_read, completion_failure
 
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -54,6 +55,10 @@ def run(args):
     try:
         print(json.dumps(dict(status='waiting_for_main_matrix',seconds_left=round(left()))),flush=True)
         while not (args.after_matrix/'completion.json').exists():
+            for outcome_path in args.after_matrix.glob('*/run_outcome.json'):
+                outcome = safe_read(outcome_path)
+                if outcome is not None and not outcome.get('requested_planner_completed'):
+                    raise RuntimeError('Main path failed; no further stages started: '+outcome_path.parent.name+': '+str(completion_failure(outcome)))
             if left()<=0:raise RuntimeError('Window ended while waiting for the main matrix')
             time.sleep(3)
         completed=read(args.after_matrix/'completion.json')

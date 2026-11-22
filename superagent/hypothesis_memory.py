@@ -22,6 +22,8 @@ def build_memory(history,available,primary_metric=None):
             'slice_expectation':deepcopy(proposal.get('slice_expectation')),
             'measurement_check':check,'causal_explanation_verified':False,
             'pending_check':deepcopy(proposal.get('route_plan',{}).get('next_check'))})
+        if 'purpose' in proposal:
+            hypotheses[-1].update(purpose=proposal['purpose'],uncertainty=proposal['uncertainty'])
     routes=route_board(history,available,name)
     revisit={}
     for index,row in enumerate(history):

@@ -1,0 +1,266 @@
+[
+  {
+    "task": "coupon",
+    "model_sha256": "b1f03941368dee6c71c68fe1061f5b27c82c8331aa3bf7126dac51cdb881203d",
+    "observed": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator",
+      "configured_parameters": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss"
+      },
+      "unavailable_fields": {},
+      "learned_tree_count": 600,
+      "observation_source": "known unwrapped fitted object get_params(deep=False)",
+      "scope": "Constructor parameter facts; not a causal explanation or feature-engineering audit",
+      "deployed_in_agent": false
+    },
+    "actual_declared_parameter_checks": [
+      {
+        "parameter": "pair_limit",
+        "declared": 3,
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      },
+      {
+        "parameter": "depth",
+        "declared": 6,
+        "observed": 6,
+        "status": "confirmed"
+      },
+      {
+        "parameter": "l2_leaf_reg",
+        "declared": 3.0,
+        "observed": 3.0,
+        "status": "confirmed"
+      },
+      {
+        "parameter": "iterations",
+        "declared": 600,
+        "observed": 600,
+        "status": "confirmed"
+      },
+      {
+        "parameter": "representation",
+        "declared": "training-selected categorical field interactions",
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      }
+    ],
+    "wrong_declaration_probe": {
+      "parameter": "depth",
+      "old_family_only_check": "confirmed",
+      "prototype_check": "contradicted",
+      "fault_injected": true,
+      "actual_model_modified": false
+    },
+    "probe_status": "passed",
+    "deployed_in_agent": false
+  },
+  {
+    "task": "preference",
+    "model_sha256": "1009fce468c09abe5d6e22495559241dc8c68d3651a89db9762f9b3407805bee",
+    "observed": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator",
+      "configured_parameters": {
+        "C": 0.05,
+        "penalty": "deprecated",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "class_weight": null,
+        "fit_intercept": true
+      },
+      "unavailable_fields": {},
+      "learned_tree_count": null,
+      "observation_source": "known unwrapped fitted object get_params(deep=False)",
+      "scope": "Constructor parameter facts; not a causal explanation or feature-engineering audit",
+      "deployed_in_agent": false
+    },
+    "actual_declared_parameter_checks": [
+      {
+        "parameter": "C",
+        "declared": 0.05,
+        "observed": 0.05,
+        "status": "confirmed"
+      },
+      {
+        "parameter": "representation",
+        "declared": "word_char",
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      },
+      {
+        "parameter": "swap_augmentation",
+        "declared": true,
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      }
+    ],
+    "wrong_declaration_probe": {
+      "parameter": "C",
+      "old_family_only_check": "confirmed",
+      "prototype_check": "contradicted",
+      "fault_injected": true,
+      "actual_model_modified": false
+    },
+    "probe_status": "passed",
+    "deployed_in_agent": false
+  },
+  {
+    "task": "sms",
+    "model_sha256": "ff0ba39d5223054ea1a40ac13dbd290193bbfbeffb47414b878c766e742fac41",
+    "observed": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator",
+      "configured_parameters": {
+        "C": 0.3,
+        "penalty": "deprecated",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "class_weight": null,
+        "fit_intercept": true
+      },
+      "unavailable_fields": {},
+      "learned_tree_count": null,
+      "observation_source": "known unwrapped fitted object get_params(deep=False)",
+      "scope": "Constructor parameter facts; not a causal explanation or feature-engineering audit",
+      "deployed_in_agent": false
+    },
+    "actual_declared_parameter_checks": [
+      {
+        "parameter": "representation",
+        "declared": "char",
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      },
+      {
+        "parameter": "C",
+        "declared": 0.3,
+        "observed": 0.3,
+        "status": "confirmed"
+      }
+    ],
+    "wrong_declaration_probe": {
+      "parameter": "C",
+      "old_family_only_check": "confirmed",
+      "prototype_check": "contradicted",
+      "fault_injected": true,
+      "actual_model_modified": false
+    },
+    "probe_status": "passed",
+    "deployed_in_agent": false
+  },
+  {
+    "task": "photo",
+    "model_sha256": "c8c21e4ba6e6de54830972ff2d6693d02dda821b920edc8d305777ec3ff2d05c",
+    "observed": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator",
+      "configured_parameters": {
+        "C": 1.0,
+        "penalty": "deprecated",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "class_weight": null,
+        "fit_intercept": true
+      },
+      "unavailable_fields": {},
+      "learned_tree_count": null,
+      "observation_source": "known unwrapped fitted object get_params(deep=False)",
+      "scope": "Constructor parameter facts; not a causal explanation or feature-engineering audit",
+      "deployed_in_agent": false
+    },
+    "actual_declared_parameter_checks": [
+      {
+        "parameter": "grid",
+        "declared": 4,
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      },
+      {
+        "parameter": "orientation_bins",
+        "declared": 8,
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      },
+      {
+        "parameter": "C",
+        "declared": 1.0,
+        "observed": 1.0,
+        "status": "confirmed"
+      },
+      {
+        "parameter": "representation",
+        "declared": "gradient histograms and cell means",
+        "status": "unverified",
+        "reason": "No bounded fitted-parameter observation"
+      }
+    ],
+    "wrong_declaration_probe": {
+      "parameter": "C",
+      "old_family_only_check": "confirmed",
+      "prototype_check": "contradicted",
+      "fault_injected": true,
+      "actual_model_modified": false
+    },
+    "probe_status": "passed",
+    "deployed_in_agent": false
+  },
+  {
+    "task": "bean",
+    "model_sha256": "fbda76ad0c646dd76f3e10fdac752e72d77167a5c2927402dfcb0f74b05337de",
+    "observed": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator",
+      "configured_parameters": {
+        "C": 0.1,
+        "penalty": "deprecated",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "class_weight": null,
+        "fit_intercept": true
+      },
+      "unavailable_fields": {},
+      "learned_tree_count": null,
+      "observation_source": "known unwrapped fitted object get_params(deep=False)",
+      "scope": "Constructor parameter facts; not a causal explanation or feature-engineering audit",
+      "deployed_in_agent": false
+    },
+    "actual_declared_parameter_checks": [
+      {
+        "parameter": "C",
+        "declared": 0.1,
+        "observed": 0.1,
+        "status": "confirmed"
+      }
+    ],
+    "wrong_declaration_probe": {
+      "parameter": "C",
+      "old_family_only_check": "confirmed",
+      "prototype_check": "contradicted",
+      "fault_injected": true,
+      "actual_model_modified": false
+    },
+    "probe_status": "passed",
+    "deployed_in_agent": false
+  }
+]

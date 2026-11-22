@@ -1,5 +1,11 @@
 # A 线接跑入口
 
+最新优先：docs/CURRENT_RUN_20261122_A50.md与EXPERIMENT_PROGRESS顶部。A44数据事实/校准提案/partial交付已接正式开关，五真实任务25fit十路径验收通过；失败验收8fit另计。A47同源五任务Q七路径67fit完成，A48模拟v2链9fit/5mock/0真实API通过。当前A50/A51真实Flash队列运行，工具session36542不是PID；恢复窗口截止2026-11-22 10:42:29+08。原A32待机中断8完整/1部分/11未启动，没有外层评分，不是完成。
+
+真实学校API可以工作：沙箱网络拒绝和Python198.18.*虚拟DNS是两个执行层问题；显式scripts.campus_direct仅对官方域名使用既有校园IP10.121.10.250，保留HTTPS Host/SNI/证书，不改系统/代理。真实运行要获准访问校园网的执行权限。a50_models_direct实测200/19模型，A50首路径3真实响应且完整重训。不要按下方旧状态反复请求诊断或清空账本。
+
+A50前A窗口812fit、真实ledger224/known5.5403165/历史11unknown/pending0是起点快照，不是当前值。实际ledger主仓库runs/a23_real_local_history/ledger.sqlite，新增unknown/pending停止，不重试，不将模拟ledger导入。H继续封存；队列中不能改superagent或被hash冻结的执行脚本。完整后再跑只读summarize_a50_factors、A52/A53和最终串行回归，更新资源后提交推送。
+
 最新A28优先：网络已实际恢复，Flash连通1请求成功，正式SMS raw/checked两臂也完成（各3请求7fit，826行macro-F1均.9459801186、预测相同）。总14fit/7请求/¥.043046/两臂278.569秒；首请求公共上下文一致，checked含checks/memory。每臂6探索+1refit，无confirm，两个模型新进程重载通过；只是单开发任务真实闭环，不是反馈精度收益或H迁移。详细batches/A28_flash_network_resume_results.md。
 
 当前累计A窗口463fit，ledger179行/known5.1708285元/原11unknown/pending0，课程总预算仍未核验。后续不要按下面旧“DNS阻塞”状态重复诊断或重复SMS追分；优先在候选多于预算的15/22候选开发任务做同版local/raw/checked，先保存计划/runner。H1已有4方法但仍封存。同步给队友最新累计账本，不能使用旧版172行快照继续真实调用。

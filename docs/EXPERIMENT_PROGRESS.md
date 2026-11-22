@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 最新A66：A1八格真实训练输入探针已补齐
+
+起点c1514db，执行前计划batches/A66_semantic_training_matrix_plan.md、runner与观察器已保存。preference/symmetric × primary/full-refit × seed19411/19421八格全部实际训练通过；捕获分类器真实特征/y，preference正确翻倍+翻转，symmetric不复制不翻转；训练内词表/查询隔离与交换概率验收通过。另8次相反语义候选在fit前拒绝，未多训练。
+
+26.478秒，新增8实际fit/API0/费用0，A累计999→1007，无运行任务；原1000为建议线，8次按本批有限验收预算单独登记。生产源码未改，H/test未打开；合成worker性质探针不代表8条完整自主Agent或真实迁移。结果batches/A66_semantic_training_matrix_results_zh.md，脱敏research/a66_semantic_matrix。D3清单训练探针项可勾完成，96案例/独立封存、A2语义与范围、B1矩阵仍未完成。
+
 ## 最新：A64/A65 D3验收补充已完成
 
 用户授权继续未完成D3。清单docs/D3_ACCEPTANCE_CHECKLIST_20261122_zh.md（本目录下同名文件）、结果batches/A64_A65_results_zh.md。当前源76已知回归全通过/7.464秒，新增fit/API均0，累计仍999。旧预留案例已看过，不冒充新封存48例。

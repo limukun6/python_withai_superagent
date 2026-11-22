@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A66已补A1八格实际训练输入探针：8合法fit/8非法fit前拒绝，26.478秒、0API，A累计1007；无运行任务。docs/batches/A66_semantic_training_matrix_results_zh.md及D3验收清单已更新。本项只证明合成worker语义性质，不是完整自主搜索/迁移；剩余96案例/独立封存、A2语义标注与范围、B1矩阵仍待补或明确修订。
+
 - 最新A64/A65补D3审计完成，0fit/0API，累计仍999，无运行任务。D3尚未全部验收：先读docs/D3_ACCEPTANCE_CHECKLIST_20261122_zh.md与docs/batches/A64_A65_results_zh.md。远端fetch无队友新提交（d750c7b/main a38e1b8），本机bundle a787a28已接。用户已授权继续补D3；1000fit为旧计划建议非权限硬限制，后续先登记有限补充预算并保留正式实验资源。
 
 - 最新A60–A63已完成：26+3=29新增实际fit、0API，A累计999，当前无训练/API任务运行。统一finalists与AUC正式入口/概率证据/partial交付已接，详细见docs/batches/A60_A63_results_zh.md、A_TO_B_AUC_FINALISTS_20261122.md。先按D4_freeze_and_formal_budget_20261122_zh.md整合最终目录与预算，不重复开发轮训练、不将下方970/运行中旧快照当现状。H/test仍封存。

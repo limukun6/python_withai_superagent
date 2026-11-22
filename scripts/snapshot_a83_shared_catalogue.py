@@ -9,10 +9,11 @@ from scripts.run_a10_real_task_pilot import read,sha
 ROOT=Path(__file__).resolve().parents[1]
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--reference',type=Path,required=True)
-    p.add_argument('--assets',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--assets',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--encoder-policy',choices=['restricted','research'],default='restricted');a=p.parse_args()
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
-    os.environ.update(SUPERAGENT_MINILM_WEIGHTS=str(a.assets/'minilm'),
-        SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS=str(a.assets/'mobilenet_v3_small-047dcff4.pth'))
+    os.environ.update(SUPERAGENT_MINILM_WEIGHTS=str(a.assets/'minilm') if a.encoder_policy=='research' else '',
+        SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS=str(a.assets/'mobilenet_v3_small-047dcff4.pth') if a.encoder_policy=='research' else '')
     from scripts import a38_predict_guard
     from superagent.ab_run import sources,registered_capabilities
     from superagent.scheduler_bridge import fingerprint
@@ -20,7 +21,8 @@ if __name__=='__main__':
     entries=read(a.reference/'protocol.json')['entries'];results={}
     save(out/'protocol.json',dict(batch='A83_catalogue',runner_sha256=sha(Path(__file__)),
         plan_sha256=sha(ROOT/'docs/batches/A83_shared_runtime_handoff_plan.md'),source_files=sources(),
-        metadata_only=True,training_rows_source='A73 measured A47 training registration',real_api_requests=0,actual_classifier_fits=0))
+        metadata_only=True,encoder_policy=a.encoder_policy,encoder_course_exception_verified=False,
+        training_rows_source='A73 measured A47 training registration',real_api_requests=0,actual_classifier_fits=0))
     for name,entry in entries.items():
         spec=entry['task_spec_current'];rows=baseline[name]['full_training_rows']
         full=registered_capabilities(spec,rows,'full');old=registered_capabilities(spec,rows,'baseline')

@@ -1,5 +1,7 @@
 # 给B：核心与文本增量已整合，下一步共同冻结
 
+**A90课程资格修正，优先于下文强环境建议**：尚无MiniLM/ImageNet冻结特征豁免的课程明确答复；技术验收不能自行认证资格。wrapper默认restricted，不启用两编码器；research须显式--encoder-policy research。默认full菜单15/30/14/8/5，原研究full15/32/16/9/5保留。A88照片full试过视觉，暂只作开发研究；A89 Coupon六组不使用这些编码器，继续同源15候选。详见A90_ENCODER_QUALIFICATION_BOUNDARY_zh.md，老师有明确说明再登记适用范围，不回填原合规。
+
 **当前验收完成**：A81四真实编码器worker4fit通过，正式入口因研究清单modality误写在fit前停，A84独立恢复4fit，自主试两MiniLM并选plain版，31行新进程/源码包CSV一致且缺权重拒绝。A86复用nonlinear/vision真实worker模型，8行交付一致/缺失及同大小损坏拒绝，0fit；硬链接失败旧A85保留。A87校准偏好全量单次encode69–86秒，建议双方统一trial300/path1200秒。A累计1247，本对话33fit/API0；详细batches/A75_A87_encoder_integration_results_zh.md。下方“A81结果待定”段是准备时快照，以本段与最终completion为准。
 
 本机A已接fa58e85核心、07a3706非线性、1453394组合、d0b9fb3可选偏好输出，保持当前AUC/partial/finalists/scope/路线覆盖。代表参数分支未升默认。原B2依靠monkeypatch的本地证据提议已接正式CLI：`--local-text-proposals evidence`，默认off，仅local/ab-v1/full，不能将它混进Flash或固定组。两类planner使用相同完整菜单。

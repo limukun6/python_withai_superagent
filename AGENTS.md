@@ -1,5 +1,7 @@
 # A/B 共同开发约定
 
+- 最新A90资格边界覆盖下方强环境默认建议：课程原文未明确豁免MiniLM/ImageNet，已异步问老师说明、当前未回复。run_with_encoder_assets默认encoder-policy restricted（不需权重），research须显式选；核心superagent未改，在跑A89 Coupon不调用待核实编码器、目录仍15。默认full五任务15/30/14/8/5，旧研究full15/32/16/9/5保留。编码器技术验收不是课程资格/预算认证，A88 photo full曾实际试视觉，资格前只作开发；详见docs/A90_ENCODER_QUALIFICATION_BOUNDARY_zh.md。A89继续，先查actual completion，H/test封存。
+
 - 最新A88已结束43fit/363.890秒/API0，A累计1290；Coupon+0.1970pp净+4/2030、photo+2.5pp净+2/80，单开发划分。A89接着跑Coupon六组C1，优先docs/CURRENT_C1_A89.md：L1引用A88同源11fit，另5路径最多55新fit/12Flash，真实ledger/incremental-research，不重复计复用；API失败或新unknown/pending停整批。先查runs/a89_coupon_C1/completion/checkpoint；禁止改superagent、runner及immutable helper。下方A88“当前运行”已过时，H/test封存。
 
 - 当前A88已实际启动，优先读docs/CURRENT_Q_A88.md；冻结源码aa47bb9，四路径Q最多44fit/API0，上批累计1247+本批physical日志实耗。先查runs/a88_A_track_catalogue_Q/completion.json及checkpoint，禁止重复启动/修改superagent或活动脚本。下方“无活动任务”是A87结束快照，不能当当前状态。H/test封存。

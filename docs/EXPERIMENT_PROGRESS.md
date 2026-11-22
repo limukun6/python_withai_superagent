@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## A90资格边界更新；A89队列继续
+
+课程“仅Qwen/DeepSeek”条款未明确冻结MiniLM/ImageNet例外，已问用户老师说明，尚未回复。默认环境入口改restricted，research需显式选；未改核心或活动A89。默认full菜单Coupon15/偏好30/SMS14/photo8/Bean5；A83旧研究full保留。编码器技术执行不认证课程资格/计价，A88 photo full尝试过视觉，暂作开发研究，不能因赢家梯度而省略该事实。A90 0fit/API的5入口检查及restricted菜单快照通过，详见A90_ENCODER_QUALIFICATION_BOUNDARY_zh.md。
+
+A89仍在跑，L0已11fit/535.687秒，E0已11fit/3成功调用/857.406秒，原始动态后续进行；同Fields参数/硬预测相同而时耗5.12倍，根因未定位，复用L1旧秒数不作新效率因果证据。研究期间只写工具/文档，活动source未改。先读CURRENT_C1_A89.md与真实completion/ledger，不重复运行或把预算上限当实耗。
+
 ## 最新A88完成，A89继续Coupon六组完整对照
 
 A88四模型全部冻结再统一评分，43fit/363.890秒/API0，A累计1290。Coupon74.8276→75.0246%（净+4/2030，106预测不同）；photo95→97.5%（净+2/80，5预测不同），梯度方法胜出、冻结视觉实际试过未胜出。仅两已见开发划分，详见batches/A88_A_track_catalogue_Q_results_zh.md，不把A47旧source分数拼作新对照。

@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-24：A137可选数值核正式接入与匿名自主交付
+
+计划/runner先行、隔离适配B5bd6b14旧补丁，数值核默认off、只按数值schema及资源资格进入共同full，原守卫保留、弱标签不接。七类默认菜单完全一致，46无fit/无网络检查通过；匿名240×3/40查询由正式local ab-v1/full/707/fit3自主试线性和核、选择核并refit，实际3fit/CLI7.437秒，native/搬迁/93源隔离包预测逐字节一致，不评分、不读课程/H。新增3fit/0API，A1602，账本363未改。它验证工程闭环，不把合成当真实泛化；真实核效果仍B Bean+16、Wisconsin未提分。Task1候选保持6b6ace8的92源不重标/不重跑；最终项目/test尚未冻结，H2/Released2仍B。报告batches/A137_numeric_adapter_results_20261124_zh.md，证据research/a137_numeric_acceptance，无活动队列。
+
 ## 2026-11-24：A136 B最新七项研究复算通过
 
 B固定5bd6b14，SHA全清单、源码包/runner、七研究回执、实际fit、配对组区间及导出SHA全部通过；本批0fit/API，A仍1599，ledger363字节未改。Bean新数值核1989→2005/2178、+16/+0.735pp；动态7/固定11fit同预测。第二真实二分类任务核候选被试后拒绝，仍111/114/AUC.987553、多1fit，支持可用/可拒绝而非迁移提分。两Bean池重叠402组不算两任务；Task2传递弱标签+3未达+8门槛，不接。B恢复后39fit及更早4fit只引用历史，不加入A。旧c8补丁四文件上下文不匹配，只check未apply，生产92源不变。报告batches/A136_numeric_and_weak_label_review_results_20261124_zh.md、证据research/a136_numeric_review。下一批可单独适配默认关闭的数值核，零重复Bean矩阵；H2/Released2仍B。

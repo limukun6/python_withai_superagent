@@ -35,11 +35,11 @@ def sources():
     return {p.relative_to(root).as_posix(): sha(p) for p in sorted(root.rglob('*.py'))}
 
 
-def registered_capabilities(task_spec, train_rows, scope='full'):
+def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kernel_width=None):
     """A-owned study projection of B's registry; never constructs new methods."""
     if scope not in ('baseline','full'):
         raise ValueError('Unknown candidate catalogue scope')
-    caps=capabilities_for(task_spec,train_rows=train_rows)
+    caps=capabilities_for(task_spec,train_rows=train_rows,numeric_kernel_width=numeric_kernel_width)
     if scope=='baseline':
         if any(c.get('origin') not in ('shared_baseline','b_port') for c in caps.values()):
             raise ValueError('Cannot define baseline from unknown candidate origins')
@@ -276,7 +276,9 @@ def command(args):
                    requested_planner_completed=False, model_available=False, new_api_requests=0,
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
-        caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
+        numeric_width = (task.X_train.shape[1] if getattr(args,'numeric_kernel',False)
+                         and task.kind == 'numeric_tabular' else None)
+        caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope,numeric_kernel_width=numeric_width)
         complement=False
         adaptive=False
         if args.scheduler in ('ab-complement','ab-adaptive-complement'):
@@ -290,6 +292,7 @@ def command(args):
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
+            **({'numeric_kernel_width':numeric_width} if numeric_width is not None else {}),
             parameter_semantics=getattr(args,'parameter_semantics','off'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             task_description_source=task.spec.get('task_description_source'),

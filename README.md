@@ -1,5 +1,9 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 队友整合用的六组对照与独立标注
+
+Task2 和 Dry Bean 共 12 份预测、八类 48 个检查案例，以及 24 份带逐条依据的遮蔽标注已归档。交接页列出两组提前结束的原因和完整组的成绩，并附标准库复核命令。[B 线补交与数据入口](docs/batches/B_C1_D3_handoff_20261123_zh.md)
+
 ## 11 月 23 日已验证的 Task2 方法
 
 标准 Agent 在有十二层 MiniLM 可选时，自主选择了十二层 MiniLM 加词法与风格特征。它在训练集内按共享标题分组预留的 1,693 对上答对 **1,224 对（72.30%）**。另一组多提供了能学习标题改写片段的候选，Agent 实际训练并复核了它，最后也保留普通十二层。两组各拟合 10 次，模型 API 请求 0 次。四份独立进程导出逐行一致。[本分支可运行源码包](releases/verified-preference-2026-11-23/) · [实验成绩与复现命令](releases/verified-preference-2026-11-23/docs/batches/B_verified_preference_1123_zh.md) · [供队友整合的固定源码提交](https://github.com/limukun6/python_withai_superagent/tree/c6584776be99a1eaee59b881047566219651edbd)

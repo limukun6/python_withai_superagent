@@ -1,0 +1,1143 @@
+[
+  {
+    "id": "B_order_char",
+    "category": "task_semantics",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "candidate": "char_C3.0",
+      "swap_label_rule": "flips"
+    }
+  },
+  {
+    "id": "B_unordered_hybrid",
+    "category": "task_semantics",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "candidate": "symmetric_word_char_C3.0",
+      "swap_label_rule": "preserves"
+    }
+  },
+  {
+    "id": "B_pref_symmetric",
+    "category": "task_semantics",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "error": "An unordered pair candidate requires declared symmetric semantics",
+      "execution_status": "rejected",
+      "task_intent_status": "contradicted"
+    }
+  },
+  {
+    "id": "B_equiv_direction",
+    "category": "task_semantics",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "error": "Candidate word_char_stats_C1.0 cannot serve symmetric semantics: swap rule flips",
+      "execution_status": "rejected",
+      "task_intent_status": "contradicted"
+    }
+  },
+  {
+    "id": "B_missing_order",
+    "category": "task_semantics",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "candidate": "word_C10.0",
+      "swap_label_rule": "flips"
+    }
+  },
+  {
+    "id": "B_missing_equiv",
+    "category": "task_semantics",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "error": "An unordered pair candidate requires declared symmetric semantics",
+      "execution_status": "rejected",
+      "task_intent_status": "unknown"
+    }
+  },
+  {
+    "id": "B_rbf_family",
+    "category": "configuration",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "declared": "rbf_svm",
+      "observed": "rbf_svm",
+      "observed_class": null,
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_histogram_tree",
+    "category": "configuration",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "declared": "extra_trees",
+      "observed": "gradient_boosting",
+      "observed_class": null,
+      "status": "contradicted",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_two_forests",
+    "category": "configuration",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "declared": "random_forest",
+      "observed": "extra_trees",
+      "observed_class": null,
+      "status": "contradicted",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_observed_only",
+    "category": "configuration",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "declared": null,
+      "observed": "ridge",
+      "observed_class": null,
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_declared_only",
+    "category": "configuration",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "declared": "nearest_neighbours",
+      "observed": null,
+      "observed_class": null,
+      "status": "unverified",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_dummy_was_fitted",
+    "category": "configuration",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "declared": "dummy",
+      "observed": "dummy",
+      "observed_class": null,
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    }
+  },
+  {
+    "id": "B_id_reordered",
+    "category": "trial_identity",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 32,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.734
+      },
+      "observed": 0.734,
+      "evidence_id": "trial:32/search/macro_f1",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_neighbor_identity",
+    "category": "trial_identity",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 18,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.88
+      },
+      "observed": 0.79,
+      "evidence_id": "trial:18/search/accuracy",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_duplicate_agree",
+    "category": "trial_identity",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 14,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.91
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "ambiguous_trial_identity"
+    }
+  },
+  {
+    "id": "B_running_with_cache",
+    "category": "trial_identity",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.77
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "trial_not_completed"
+    }
+  },
+  {
+    "id": "B_prior_failure_not_target",
+    "category": "trial_identity",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 20,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.62
+      },
+      "observed": 0.62,
+      "evidence_id": "trial:20/search/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_same_candidate_two_ids",
+    "category": "trial_identity",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 42,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.81
+      },
+      "observed": 0.84,
+      "evidence_id": "trial:42/train/accuracy",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_accuracy_beside_f1",
+    "category": "metric_partition",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 22,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.932
+      },
+      "observed": 0.932,
+      "evidence_id": "trial:22/search/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_train_as_search",
+    "category": "metric_partition",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 5,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.924
+      },
+      "observed": 0.721,
+      "evidence_id": "trial:5/search/macro_f1",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_absent_class_score",
+    "category": "metric_partition",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 13,
+        "split": "search",
+        "metric": "recall_minority",
+        "value": 0.42
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "named_measurement_unavailable"
+    }
+  },
+  {
+    "id": "B_accuracy_fallback",
+    "category": "metric_partition",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 58,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.765
+      },
+      "observed": 0.765,
+      "evidence_id": "trial:58/train/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_opposite_partition_only",
+    "category": "metric_partition",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 8,
+        "split": "search",
+        "metric": "log_loss",
+        "value": 0.203
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "named_measurement_unavailable"
+    }
+  },
+  {
+    "id": "B_two_metrics_one_value",
+    "category": "metric_partition",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "claim": {
+        "trial": 6,
+        "split": "search",
+        "metric": "balanced_accuracy",
+        "value": 0.91
+      },
+      "observed": 0.67,
+      "evidence_id": "trial:6/search/balanced_accuracy",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "B_current_linear",
+    "category": "negation_future",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 1,
+      "contradicted": 0,
+      "unverifiable": 0,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "We used logistic regression for the current trial.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "confirmed",
+          "reference_resolution": "current_or_locally_scoped"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_current_kernel",
+    "category": "negation_future",
+    "expected": "contradicted",
+    "observed": "unknown",
+    "passed": false,
+    "detail": {
+      "claims_checked": 0,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 0,
+      "informational": 1,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "The classifier fitted for this trial was logistic regression.",
+          "in_comparison": true,
+          "observed": null,
+          "status": "informational"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_future_choice",
+    "category": "negation_future",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "random forest",
+          "claim": "random_forest",
+          "compatible_with": [
+            "random_forest"
+          ],
+          "sentence": "Next time I would try random forest if the gap persists.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "unverifiable",
+          "reference_resolution": "current_or_locally_scoped"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_denial_matches",
+    "category": "negation_future",
+    "expected": "confirmed",
+    "observed": "unknown",
+    "passed": false,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "The model fitted here was not logistic regression.",
+          "in_comparison": false,
+          "observed": [
+            "extra_trees"
+          ],
+          "status": "unverifiable",
+          "reference_resolution": "current_or_locally_scoped"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_denial_conflicts",
+    "category": "negation_future",
+    "expected": "contradicted",
+    "observed": "unknown",
+    "passed": false,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "For the present run we did not use logistic regression.",
+          "in_comparison": false,
+          "observed": [
+            "logistic"
+          ],
+          "status": "unverifiable",
+          "reference_resolution": "current_or_locally_scoped"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_question_only",
+    "category": "negation_future",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "claims_checked": 1,
+      "confirmed": 0,
+      "contradicted": 0,
+      "unverifiable": 1,
+      "informational": 0,
+      "items": [
+        {
+          "field": "reason",
+          "kind": "classifier",
+          "span": "logistic regression",
+          "claim": "logistic",
+          "compatible_with": [
+            "logistic"
+          ],
+          "sentence": "Could a logistic regression be competitive on a new split?",
+          "in_comparison": false,
+          "observed": [
+            "extra_trees"
+          ],
+          "status": "unverifiable",
+          "reference_resolution": "current_or_locally_scoped"
+        }
+      ],
+      "unique_contradictions": [],
+      "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+    }
+  },
+  {
+    "id": "B_gain_in_same_slice",
+    "category": "slice_scope",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "status": "supported",
+      "slice_id": "long",
+      "reference_trial": 1,
+      "rows": 20,
+      "reference_accuracy": 0.6,
+      "observed_accuracy": 0.72,
+      "observed_delta": 0.12,
+      "required_delta": 0.05,
+      "scope": "same internal search partition and train-fitted slice definition",
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_tie_same_slice",
+    "category": "slice_scope",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "status": "not_supported",
+      "slice_id": "long",
+      "reference_trial": 1,
+      "rows": 20,
+      "reference_accuracy": 0.6,
+      "observed_accuracy": 0.6,
+      "observed_delta": 0.0,
+      "required_delta": 0.05,
+      "scope": "same internal search partition and train-fitted slice definition",
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_small_gain_same_slice",
+    "category": "slice_scope",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "status": "not_supported",
+      "slice_id": "long",
+      "reference_trial": 1,
+      "rows": 20,
+      "reference_accuracy": 0.6,
+      "observed_accuracy": 0.625,
+      "observed_delta": 0.025000000000000022,
+      "required_delta": 0.05,
+      "scope": "same internal search partition and train-fitted slice definition",
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_no_slice_with_better_total",
+    "category": "slice_scope",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "slice_id": "long"
+    }
+  },
+  {
+    "id": "B_moved_boundary_and_payload",
+    "category": "slice_scope",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "slice_id": "long",
+      "reason": "incomparable_measurement_scope",
+      "comparison_scope": {
+        "comparable": false,
+        "conflicts": [
+          "evaluation_payload_sha256"
+        ],
+        "matched_fields": [
+          "split_id"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_fall_on_different_split",
+    "category": "slice_scope",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "slice_id": "long",
+      "reason": "incomparable_measurement_scope",
+      "comparison_scope": {
+        "comparable": false,
+        "conflicts": [
+          "split_id"
+        ],
+        "matched_fields": [
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_positive_measurement",
+    "category": "memory_state",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "measurement_supported",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "supported"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_negative_measurement",
+    "category": "memory_state",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "measurement_not_supported",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "not_supported"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_misquoted_negative",
+    "category": "memory_state",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "measurement_not_supported",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "not_supported"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_positive_not_causation",
+    "category": "memory_state",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "measurement_supported",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "supported"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_unscored_expectation",
+    "category": "memory_state",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "not_evaluable",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "not_evaluable"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [
+        "h1"
+      ],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_no_numerical_target",
+    "category": "memory_state",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "schema_version": 1,
+      "primary_metric": "accuracy",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "proposed_before_trial": 1,
+          "tested_by_trial": 1,
+          "candidate": "word_C0.05",
+          "route": "word",
+          "text": "Controlled hypothesis",
+          "evidence_trials": [],
+          "expected_change": null,
+          "status": "no_numerical_expectation",
+          "slice_expectation": null,
+          "measurement_check": {
+            "status": "not_stated"
+          },
+          "causal_explanation_verified": false,
+          "pending_check": null
+        }
+      ],
+      "configuration_checks": [],
+      "explanation_checks": [],
+      "routes": [
+        {
+          "route": "word",
+          "status": "exhausted",
+          "attempted_trials": [
+            1
+          ],
+          "best_trial": 1,
+          "best_search_accuracy": 0.6,
+          "primary_metric": "accuracy",
+          "best_search_score": 0.6,
+          "remaining_configurations": 0
+        }
+      ],
+      "failures": [],
+      "open_hypotheses": [
+        "h1"
+      ],
+      "interpretation": "Checks describe predeclared numerical expectations on reused internal rows. No causal claim, automatic route deletion, or significance claim."
+    }
+  },
+  {
+    "id": "B_paired_gain",
+    "category": "failure_comparison",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "status": "supported",
+      "metric": "search_score",
+      "reference_trial": 1,
+      "reference_value": 0.6,
+      "observed_value": 0.805,
+      "observed_delta": 0.20500000000000007,
+      "direction": "increase",
+      "required_delta": 0.1,
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256",
+          "primary_metric"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_margin_shortfall",
+    "category": "failure_comparison",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "status": "not_supported",
+      "metric": "search_score",
+      "reference_trial": 1,
+      "reference_value": 0.6,
+      "observed_value": 0.683,
+      "observed_delta": 0.08300000000000007,
+      "direction": "increase",
+      "required_delta": 0.1,
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256",
+          "primary_metric"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_failed_ref_with_score",
+    "category": "failure_comparison",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "metric": "search_score",
+      "reference_trial": 1
+    }
+  },
+  {
+    "id": "B_two_failures",
+    "category": "failure_comparison",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "metric": "search_score",
+      "reference_trial": 1
+    }
+  },
+  {
+    "id": "B_decrease_success",
+    "category": "failure_comparison",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "status": "not_supported",
+      "metric": "search_score",
+      "reference_trial": 1,
+      "reference_value": 0.6,
+      "observed_value": 0.432,
+      "observed_delta": -0.16799999999999998,
+      "direction": "increase",
+      "required_delta": 0.1,
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256",
+          "primary_metric"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_cross_metric_failed",
+    "category": "failure_comparison",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "metric": "search_score",
+      "reference_trial": 1
+    }
+  }
+]

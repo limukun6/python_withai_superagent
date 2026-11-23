@@ -64,11 +64,15 @@ def main() -> None:
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
     score_evidence={}
-    if metric.requires_scores:
+    if payload.get('preference_vote_probabilities'):
+        from .ab_complement import canonical_probabilities
+        classes,scores=canonical_probabilities(model,payload['X_search'])
+        score_evidence={'search_scores':scores,'score_classes':classes}
+    elif metric.requires_scores:
         classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
         score_evidence={'search_scores':scores,'score_classes':classes}
     prediction_record=make_prediction_record(predictions,payload['y_search'],payload_sha256)
-    if metric.requires_scores:
+    if score_evidence:
         from .score_evidence import make_score_record
         prediction_record['score_record']=make_score_record(prediction_record,scores,classes,metric,candidate_id)
     train_accuracy=train_metrics["accuracy"];search_accuracy=search_metrics["accuracy"]

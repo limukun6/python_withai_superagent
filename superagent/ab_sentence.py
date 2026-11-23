@@ -1,4 +1,4 @@
-"""Pinned local MiniLM features for one supervised lexical classifier. No generation or network access."""
+"""Pinned local sentence encoders for supervised lexical classifiers."""
 from functools import lru_cache
 import hashlib
 from importlib.util import find_spec
@@ -38,6 +38,19 @@ DEEP_FILES = {
     'tokenizer.json':FILES['tokenizer.json'],
     'model.safetensors':(133466304,'d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542'),
 }
+_ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
+ALTERNATIVES={
+    'e5':dict(model='intfloat/e5-small-v2',revision='ffb93f3bd4047442299a41ebb6fa998a38507c52',
+        env='SUPERAGENT_E5_SMALL_WEIGHTS',prefix='query: ',pool='mean',
+        files={'config.json':(615,'5dfb0363cd0243be179c03bcaafd1542d0fbb95e8cbcf575fff3e229342adc2f'),
+               'tokenizer.json':_ALT_TOKENIZER,
+               'model.safetensors':(133466304,'45bfa60070649aae2244fbc9d508537779b93b6f353c17b0f95ceccb1c5116c1')}),
+    'bge':dict(model='BAAI/bge-small-en-v1.5',revision='5c38ec7c405ec4b44b94cc5a9bb96e735b38267a',
+        env='SUPERAGENT_BGE_SMALL_WEIGHTS',prefix='',pool='cls',
+        files={'config.json':(743,'094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750'),
+               'tokenizer.json':_ALT_TOKENIZER,
+               'model.safetensors':(133466304,'3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad')}),
+}
 
 
 @lru_cache(maxsize=16)
@@ -47,11 +60,15 @@ def _checksum(path, identity):
 
 
 def verified_directory(*, deep=False):
-    folder = os.environ.get(DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS')
+    return verified_files(DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS',DEEP_FILES if deep else FILES)
+
+
+def verified_files(env,files):
+    folder = os.environ.get(env)
     if not folder or any(find_spec(p) is None for p in ('torch','transformers','tokenizers','safetensors')):
         return None
     root = Path(folder).resolve()
-    for name,(size,sha) in (DEEP_FILES if deep else FILES).items():
+    for name,(size,sha) in files.items():
         path = root/name
         if not path.is_file():
             return None
@@ -78,17 +95,32 @@ def _encoder(root,max_length=256):
 
 
 def encode(texts, *, deep=False):
-    import torch
     root=verified_directory(deep=True) if deep else verified_directory()
     if root is None:
         key = DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS'
         raise ValueError(f'Set {key} to the directory of the pinned local files')
     tokenizer,model=_encoder(root,128) if deep else _encoder(root)
+    return encode_frozen(texts,tokenizer,model)
+
+
+def encode_alternative(texts,variant):
+    spec=ALTERNATIVES[variant]
+    root=verified_files(spec['env'],spec['files'])
+    if root is None:
+        raise ValueError('Missing verified local weights: '+spec['env'])
+    tokenizer,model=_encoder(root,512)
+    return encode_frozen(texts,tokenizer,model,prefix=spec['prefix'],pool=spec['pool'])
+
+
+def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):
+    import torch
     unique=list(dict.fromkeys(texts))
-    encoded=tokenizer.encode_batch(unique)
+    if not unique:
+        return np.empty((0,model.config.hidden_size),dtype=np.float32),0
+    encoded=tokenizer.encode_batch([prefix+s for s in unique] if prefix else unique)
     lengths=np.array([len(x.ids) for x in encoded])
     order=np.argsort(lengths,kind='stable')
-    vectors=np.empty((len(unique),384),dtype=np.float32)
+    vectors=np.empty((len(unique),model.config.hidden_size),dtype=np.float32)
     with torch.inference_mode():
         for offset in range(0,len(order),48):
             idx=order[offset:offset+48]
@@ -98,7 +130,7 @@ def encode(texts, *, deep=False):
                 tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)
                 mask[row,:lengths[j]]=1
             hidden=model(input_ids=tokens,attention_mask=mask).last_hidden_state
-            pooled=(hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
+            pooled=hidden[:,0] if pool=='cls' else (hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
             vectors[idx]=torch.nn.functional.normalize(pooled,dim=1).numpy()
     if not np.isfinite(vectors).all():
         raise ValueError('Nonfinite frozen features')
@@ -177,6 +209,43 @@ class DeepPreferenceFeatures(SentenceFeatures):
         return blocks,tokens
 
 
+class FamiliarityPreferenceFeatures(DeepPreferenceFeatures):
+    def __init__(self, kind):
+        super().__init__(kind)
+
+    def fit(self, rows, y=None):
+        from .word_familiarity import WordFamiliarity
+
+        super().fit(rows, y)
+        self.corpus_ = WordFamiliarity().fit(text for pair in rows for text in pair)
+        differences = self.corpus_.differences(rows)
+        self.familiarity_scale_ = float(np.sqrt(np.mean(differences ** 2))) or 1.0
+        return self
+
+    def semantic_blocks(self, rows, texts):
+        blocks, tokens = super().semantic_blocks(rows, texts)
+        delta = self.corpus_.differences(rows) / self.familiarity_scale_
+        return [*blocks, csr_matrix(delta[:, None])], tokens
+
+
+class AlternativeSentenceFeatures(SentenceFeatures):
+    def __init__(self,kind,variant):
+        super().__init__(kind)
+        self.variant=variant
+
+    @property
+    def encoder_model(self):
+        return ALTERNATIVES[self.variant]['model']
+
+    @property
+    def encoder_revision(self):
+        return ALTERNATIVES[self.variant]['revision']
+
+    def semantic_blocks(self,rows,texts):
+        values,tokens=encode_alternative(texts,self.variant)
+        return self.embedding_features(values),tokens
+
+
 class KernelSentenceFeatures(SentenceFeatures):
     """Add a fixed-size nonlinear utility for each individual sentence."""
     def fit(self,rows,y=None):
@@ -202,8 +271,12 @@ class KernelSentenceFeatures(SentenceFeatures):
         return [*original,csr_matrix(extra)]
 
 
-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False):
-    if deep:
+def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
+    if familiarity:
+        features=FamiliarityPreferenceFeatures(kind)
+    elif alternative:
+        features=AlternativeSentenceFeatures(kind,alternative)
+    elif deep:
         features=DeepPreferenceFeatures(kind,edit_context)
     else:
         features=KernelSentenceFeatures(kind) if nonlinear else SentenceFeatures(kind)

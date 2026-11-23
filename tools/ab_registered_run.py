@@ -11,14 +11,14 @@ from tools.ab_registered_rows import registered_partitioner
 
 def run(manifest, sha, command):
     args = build_parser().parse_args(command)
-    if not command or command[0] != 'run' or args.scheduler not in ('ab-v1','ab-fixed'):
+    if not command or command[0] != 'run' or args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
         raise ValueError('An official AB scheduling run is required')
     freeze = ab_run.freeze_partitions
 
-    def from_rows(task, directory, seed, metric):
+    def from_rows(task, directory, seed, metric, **options):
         selector = registered_partitioner(task, manifest, sha)
         with patch.object(ab_run,'grouped_partition',selector):
-            return freeze(task,directory,seed,metric)
+            return freeze(task,directory,seed,metric,**options)
 
     with patch.object(ab_run,'freeze_partitions',from_rows):
         return args.handler(args)

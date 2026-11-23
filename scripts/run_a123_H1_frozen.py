@@ -1,4 +1,4 @@
-"""Prepare/seal H1 execution without opening outer labels; require an explicit common freeze receipt."""
+"""Prepare/seal H1 using a source-bound registered snapshot; no extra teammate consent form."""
 import argparse
 import csv
 import json
@@ -27,8 +27,10 @@ def check_freeze(receipt,digest,registration):
     if not receipt or not digest:return 'Common freeze receipt has not been supplied'
     if sha(receipt)!=digest:raise ValueError('Freeze receipt bytes changed')
     record=read(receipt)
-    if (record.get('status')!='jointly_frozen' or not record.get('A_confirmation') or not record.get('B_confirmation') or
-        record.get('policy')!=POLICY or record.get('source_files')!=registration['source_files'] or
+    status=record.get('status')
+    confirmation=(status=='registered_experiment_snapshot' or
+                  status=='jointly_frozen' and record.get('A_confirmation') and record.get('B_confirmation'))
+    if (not confirmation or record.get('policy')!=POLICY or record.get('source_files')!=registration['source_files'] or
         record.get('input_registration_sha256')!=registration['input_registration_sha256']):
         raise ValueError('Shared confirmations/source/policy/input scope do not match')
     return None
@@ -46,17 +48,27 @@ def prepare(output):
             capabilities=row['capabilities'],registered_splits=row['registered_splits'],rows=row['train_rows'])
     registration=dict(source_files=source,input_registration_sha256=sha(original),entries=entries,policy=POLICY,
                       outer_labels_opened=False,performance_seen=False)
+    snapshot=output/'experiment_snapshot.json'
+    save(snapshot,dict(status='registered_experiment_snapshot',
+        authority='User chose latest B delivery and authorized A integration; this is a run snapshot, not final submission freeze',
+        policy=POLICY,source_files=source,input_registration_sha256=sha(original)))
+    registration['snapshot_sha256']=sha(snapshot)
     save(output/'registration.json',registration)
     save(output/'freeze_receipt_TEMPLATE.json',dict(status='proposal_only_not_frozen',A_confirmation=None,B_confirmation=None,
         policy=POLICY,source_files=source,input_registration_sha256=sha(original)))
-    return dict(status='prepared_pending_joint_freeze',actual_classifier_fits=0,real_API_requests=0,
+    return dict(status='prepared_registered_snapshot',actual_classifier_fits=0,real_API_requests=0,
                 outer_scores_computed=0,inputs_previously_validated=True)
+
+
+def receipt_for(a,registration):
+    if a.freeze_receipt:return a.freeze_receipt,a.freeze_sha256
+    return a.prepared/'experiment_snapshot.json',registration.get('snapshot_sha256')
 
 
 def train(a):
     registration=read(a.prepared/'registration.json')
     if hashes(ROOT)!=registration['source_files']:raise ValueError('Source changed since registration')
-    reason=check_freeze(a.freeze_receipt,a.freeze_sha256,registration)
+    reason=check_freeze(*receipt_for(a,registration),registration)
     if reason:return dict(status='blocked_before_training',reason=reason,actual_classifier_fits=0,real_API_requests=0)
     entry=registration['entries'][a.outer]
     if sha(Path(entry['training']))!=entry['training_sha256'] or sha(Path(entry['manifest']))!=entry['manifest_sha256']:
@@ -115,7 +127,7 @@ def train(a):
 
 def score(a):
     registration=read(a.prepared/'registration.json')
-    reason=check_freeze(a.freeze_receipt,a.freeze_sha256,registration)
+    reason=check_freeze(*receipt_for(a,registration),registration)
     if reason:return dict(status='blocked_before_evaluation',reason=reason,actual_classifier_fits=0,real_API_requests=0,outer_labels_accessed=False)
     if hashes(ROOT)!=registration['source_files']:raise ValueError('Scoring source differs from frozen models')
     if not a.matrix or not a.matrix_sha256 or sha(a.matrix)!=a.matrix_sha256:

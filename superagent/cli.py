@@ -90,9 +90,13 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
-    if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
+    if getattr(args, 'resolve_single_conflict', False) and args.scheduler != 'ab-adaptive-complement':
+        raise ValueError('Single-model conflict resolution requires the adaptive complement scheduler')
+    if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
         raise ValueError('Parameter semantics diagnostics require the shared A/B executor')
-    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
+    if getattr(args, 'cover_untried_encoder', False) and args.scheduler != 'ab-adaptive-complement':
+        raise ValueError('Encoder coverage applies to the adaptive complement scheduler')
+    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
         from .ab_methods import PREFERENCE_CATALOG_ENV
         from .ab_run import command
         previous = os.environ.get(PREFERENCE_CATALOG_ENV)
@@ -302,10 +306,14 @@ def build_parser():
     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
-    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
+    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'],default='fixed')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit'], default='standard',
+    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
+    run.add_argument('--cover-untried-encoder', action='store_true',
+                     help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+    run.add_argument('--resolve-single-conflict', action='store_true',
+        help='Compare disagreeing single-model leaders on a third split when the remaining budget permits')
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')

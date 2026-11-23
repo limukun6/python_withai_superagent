@@ -83,12 +83,14 @@ def validate_options(args):
         raise ValueError('AB fixed control requires fit-limit 11')
     if args.scheduler == 'ab-finalists' and limit < 5:
         raise ValueError('AB matched finalists require at least 5 fits including refit')
+    if args.scheduler in ('ab-complement','ab-adaptive-complement') and args.planner!='local':
+        raise ValueError('The complement scheduler uses the registered local planner')
     if any(not math.isfinite(x) or x <= 0 for x in (args.time_limit, args.trial_timeout)):
         raise ValueError('Time limits must be positive and finite')
     return limit
 
 
-def freeze_partitions(task, directory, seed, metric):
+def freeze_partitions(task, directory, seed, metric, *, preference_vote=False):
     trusted, allowed = {}, {}
     groups = sample_groups(task, 'shared_text')
     seen = set()
@@ -100,11 +102,17 @@ def freeze_partitions(task, directory, seed, metric):
             raise ValueError('Registered confirmation repeats the same rows; no independent partition available')
         seen.add(identity)
         payload = directory / (split + '.joblib')
-        joblib.dump(dict(kind=task.kind, X_train=take(task.X_train, train), y_train=task.y_train[train],
-                        X_search=take(task.X_train, held), y_search=task.y_train[held],
-                        metric_spec=metric.record(), pair_semantics=declared_semantics(task)), payload)
+        evaluation=take(task.X_train, held)
+        contents=dict(kind=task.kind, X_train=take(task.X_train, train), y_train=task.y_train[train],
+                      X_search=evaluation, y_search=task.y_train[held],
+                      metric_spec=metric.record(), pair_semantics=declared_semantics(task))
+        if preference_vote:
+            contents['preference_vote_probabilities']=True
+        joblib.dump(contents,payload)
         trusted[split] = dict(row_ids=held.tolist(), labels=task.y_train[held].tolist(),
                              groups=groups[held].tolist(), evaluation_payload_sha256=sha(payload))
+        if preference_vote:
+            trusted[split]['tie_label_one']=[left<right for left,right in evaluation]
         allowed[split] = dict(id=split, seed=split_seed, row_ids_sha256=fingerprint(held.tolist()),
                              label_sha256=fingerprint(trusted[split]['labels']),
                              evaluation_payload_sha256=sha(payload))
@@ -193,6 +201,29 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
     return chosen, decision, result
 
 
+def finish_complement(task, history, state, trusted, directory, executor, logger, review=None, *, adaptive=False):
+    if review is None:
+        from .ab_complement import review
+    evidence=review(state,trusted)
+    if evidence.get('pending'):
+        raise ValueError('Cannot finalize an incomplete matched confirmation')
+    primary=[row for row in history if row['split_id']==PRIMARY]
+    anchor=evidence['members'][0]
+    row=next(r for r in primary if r['candidate']==anchor)
+    model=joblib.load(directory/f"trial_{row['trial']}.joblib")['model']
+    decision=dict(enabled=True,valid_confirmation=bool(evidence['confirmation_rows']),
+        independent_confirmation_observed=bool(evidence['confirmation_rows']),primary_metric='accuracy',
+        selected_candidate='equal_soft_vote' if evidence['promoted'] else anchor,
+        selection_score=evidence['portfolio_score'],selection_rule=(
+            'Uncertainty-based opening with matched pair and single controls' if adaptive else 'Matched two-split complement screening'),
+        b_scheduler_review=evidence)
+    logger.write_json('confirmation.json',decision)
+    result=finalize(task,primary,model,anchor,row['search_score'],joblib.load(directory/'primary.joblib'),
+        directory,logger,executor.worker,executor.start,executor.wall,executor.timeout,True,False,
+        confirmation=decision,matched_vote=evidence if evidence['promoted'] else None)
+    return ('equal_soft_vote' if result['ensemble_selected'] else anchor),decision,result
+
+
 def command(args):
     limit = validate_options(args)
     client = account = picker = None
@@ -238,6 +269,16 @@ def command(args):
                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
     try:
         caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
+        complement=False
+        adaptive=False
+        if args.scheduler in ('ab-complement','ab-adaptive-complement'):
+            from . import ab_complement as complement_policy
+            complement=complement_policy.eligible(spec,caps,metric,limit)
+            adaptive=complement and args.scheduler=='ab-adaptive-complement' and limit>=10
+            if adaptive:
+                from . import ab_adaptive_opening as complement_policy
+                if getattr(args,'resolve_single_conflict',False):
+                    from . import ab_single_conflict as complement_policy
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
@@ -245,6 +286,10 @@ def command(args):
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
+            **({'complement_active':complement} if args.scheduler in ('ab-complement','ab-adaptive-complement') else {}),
+            **({'adaptive_opening_active':adaptive} if args.scheduler=='ab-adaptive-complement' else {}),
+            **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
+            **({'resolve_single_conflict':bool(adaptive)} if getattr(args,'resolve_single_conflict',False) else {}),
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
             candidate_coverage=getattr(args,'candidate_coverage','off'),
@@ -261,10 +306,10 @@ def command(args):
             provided_validation_role='score only after final model freeze'))
         if not caps:
             raise ValueError('No registered executable method supports this task/semantics/dependencies')
-        trusted, allowed = freeze_partitions(task, directory, args.seed, metric)
+        trusted, allowed = freeze_partitions(task, directory, args.seed, metric, preference_vote=complement)
         executor = Executor(directory, caps, metric, began, args.time_limit, args.trial_timeout, limit, logger)
         budget = dict(fit_limit=limit, attempted_classifier_fits=0, completed_classifier_fits=0,
-                      remaining_fit_allowance=limit, reserved_final_refit=1, unknown_failed_attempts=0,
+                      remaining_fit_allowance=limit, reserved_final_refit=2 if complement else 1, unknown_failed_attempts=0,
                       llm_request_limit=3 if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
         while True:
             budget['elapsed_seconds'] = time.monotonic() - began
@@ -296,7 +341,10 @@ def command(args):
                     logger.event('local_text_recipe_proposal',trial=number,proposal=proof)
                 return proof
 
-            if args.scheduler == 'ab-finalists':
+            if complement:
+                options={'cover_untried_encoder':True} if adaptive and getattr(args,'cover_untried_encoder',False) else {}
+                action=complement_policy.action(state,caps,trusted,**options)
+            elif args.scheduler == 'ab-finalists':
                 from .ab_finalists import finalist_action
                 action = finalist_action(state, capabilities=caps, trusted_partitions=trusted,
                                          on_explore=choose if picker else None)
@@ -357,12 +405,16 @@ def command(args):
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),
                 **{k:raw[k] for k in ('prediction_sha256','label_sha256','evaluation_payload_sha256')},
-                **({'score_record':raw['score_record']} if metric.requires_scores else {})))
+                **({'score_record':raw['score_record']} if 'score_record' in raw else {})))
             logger.write_json('history.json', history)
             logger.write_json('prediction_evidence.json', evidence)
         # Recheck every completed observation against locally held labels before selection.
-        chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
-                                          matched_finalists=args.scheduler == 'ab-finalists')
+        if complement:
+            chosen,decision,result=finish_complement(task,history,state,trusted,directory,executor,logger,
+                                                     complement_policy.review,adaptive=adaptive)
+        else:
+            chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
+                                              matched_finalists=args.scheduler == 'ab-finalists')
         outcome.update(selected_candidate=chosen, primary_metric=metric.name, model_available=True,
             full_refit_completed=result['refit_succeeded'], confirmation=decision,
             validation_score=result.get('official_validation_score'),

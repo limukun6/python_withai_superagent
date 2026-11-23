@@ -53,7 +53,7 @@ def propose_vote(kind, history, load_model, x_search, y_search, enabled,metric=N
 
 def finalize(task, history, best_model, best_id, best_score, payload, directory,
              logger, train_candidate, start, time_limit, trial_timeout,
-             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None):
+             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None,*,matched_vote=None):
     confirmation = confirmation or {"enabled": False}
     metric=MetricSpec.for_task(task)
     if confirmation.get("enabled") and ensemble_selection:
@@ -79,8 +79,20 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
     selection_score = confirmation["selection_score"] if confirmed else best_score
     def load_model(row):
         return best_model if row["candidate"] == best_id else joblib.load(directory / f"trial_{row['trial']}.joblib")["model"]
-    vote, decision = propose_vote(task.kind, history, load_model, payload["X_search"],
-                                  payload["y_search"], ensemble_selection,metric)
+    if matched_vote is None:
+        vote, decision = propose_vote(task.kind, history, load_model, payload["X_search"],
+                                      payload["y_search"], ensemble_selection,metric)
+    else:
+        from .ab_complement import PreferenceProbabilityVote
+        ids=matched_vote['members']
+        if (not confirmed or ensemble_selection or not matched_vote['promoted'] or task.kind!='pair_text'
+                or len(ids)!=2 or ids[0]!=best_id or len(set(ids))!=2):
+            raise ValueError('Invalid matched preference vote')
+        rows={r['candidate']:r for r in history}
+        vote=PreferenceProbabilityVote(task.kind,[load_model(rows[n]) for n in ids],np.array([0,1]))
+        decision=dict(enabled=True,evaluations=len(matched_vote['opening_combinations'])+1,components=ids,
+                      adopted_on_inner=True,rule=selection_rule,search_score=matched_vote['portfolio_score'],
+                      primary_metric=metric.name,pooled_gain=matched_vote['pooled_gain'])
     if "predictions" in decision:
         logger.write_json("ensemble_search_predictions.json", decision.pop("predictions"))
     result["ensemble_evaluations"] = decision["evaluations"]
@@ -128,7 +140,7 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
             result["final_training_rows"] = len(task.y_train)
         if vote is not None:
             if all(refit_success.values()):
-                vote = SoftVoteModel(task.kind, [singles[c] for c in chosen_ids], vote.classes_)
+                vote = type(vote)(task.kind, [singles[c] for c in chosen_ids], vote.classes_)
             else:
                 vote = None
                 result["ensemble_failure"] = "At least one full-train component refit failed; retain single model"

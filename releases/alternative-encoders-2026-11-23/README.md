@@ -1,5 +1,9 @@
 # Task2 的替代编码器与按反馈选组合
 
+## 从零启动的组合调度
+
+`--scheduler ab-complement` 在匿名偏好任务上可以自行决定保留单模型或组成两模型组合。种子 18643 下，它实际选择六层 MiniLM 加词模型，在训练内保留区答对 **1,208/1,693（71.35%）**。这比原十二层模型少 16 对。附匿名候选复现、逐行反馈干预、独立进程加载和并列搭档的补测。[新种子的真实运行和局限](docs/batches/B_native_complement_results_1123_zh.md) · [上一版编码器研究的固定快照](https://github.com/limukun6/python_withai_superagent/tree/06a61897688565cc3d6949ecd34f3822e6a29213/releases/alternative-encoders-2026-11-23)
+
 进入本目录即可使用同一套 SuperAgent 模块。原十二层、E5 菜单、BGE 菜单三条标准路径在训练内保留区均为 **1,224/1,693**。后续等权组合在相同训练量下分别为 **MiniLM + E5 1,234/1,693（72.89%）**、**MiniLM + BGE 1,232/1,693（72.77%）**。组合由独立的后续研发路径和历史调度回放验证。23 次新增本地拟合，模型 API 0 次。 [完整结果、决策来源与配对不确定性](docs/batches/B_alternative_encoders_results_1123_zh.md)
 
 快速核对已发布回执可运行 `python3 scripts/verify_b_encoder_study.py`。检查全包源文件与证据的哈希可运行 `python3 -c "import json,hashlib,pathlib; m=json.load(open('SOURCE.json'))['sha256']; assert all(hashlib.sha256(pathlib.Path(k).read_bytes()).hexdigest()==v for k,v in m.items()); print(len(m))"`。[文件清单](SOURCE.json)

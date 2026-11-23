@@ -91,7 +91,7 @@ def _validate(args):
 def _run(args):
     catalog=getattr(args,'preference_catalog','standard')
     if catalog!='standard':
-        if args.scheduler not in ('ab-v1','ab-fixed','ab-finalists') or getattr(args,'preference_components',False):
+        if args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement') or getattr(args,'preference_components',False):
             raise ValueError('The expanded preference catalog requires the standard A/B executor')
         from .ab_methods import PREFERENCE_CATALOG_ENV
         from .ab_run import command
@@ -107,7 +107,7 @@ def _run(args):
     if getattr(args,'preference_components',False):
         from .component_preferences import run
         return run(args)
-    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
+    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists','ab-complement'):
         from .ab_run import command
         return command(args)
     if (args.fit_limit is not None or args.portfolio == 'ab-v1' or args.catalog_scope!='full' or args.history_policy!='strict'
@@ -306,7 +306,7 @@ def build_parser():
     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
-    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
+    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement'],default='fixed')
     run.add_argument('--preference-catalog',choices=['standard','deep','deep-edit','deep-e5','deep-bge'],default='standard',
         help='Expose verified local twelve-layer preference heads to the shared A/B scheduler')
     run.add_argument('--preference-components',action='store_true',

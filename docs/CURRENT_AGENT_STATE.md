@@ -2,6 +2,8 @@
 
 ## 最新：已接5329503、收回实际账本；28新fit，累计1566
 
+接入和证据已通过50f77ed快进合回共享codex/expanded-feedback；合并后82定向检查再次通过，91个生产文件与隔离验收及三个新模型训练源逐字节一致，H快照Git原字节SHA也匹配。合并复核research/a126_merged_checks（0fit/API）；后续直接从共享分支继续，无需再次手工套B补丁。
+
 隔离codex/a125-joint-latest生产提交87634a5接B联合编码器/词频L12/E5、预算内组合和额外编码器探索、可选单冲突。保留A120诊断off、A98/A99文字修复及L12公开revision。用户转B确认local/ab-adaptive-complement/deep-e5-familiarity/cover-untried-encoder、seed18643、fit10、单冲突off；924e88a下一轮，不接本轮。两补丁CLI冲突已合；登记划分包装器增加新scheduler及freeze options透传，首H1入口0fit失败保留，82无fit测试/7默认菜单/5真实训练前边界通过。
 
 E5三文件固定SHA匹配，runs/a126_e5_assets/e5-small-v2，34公共请求624.516秒、0学校API。H1两原A13分区61411/61421，standard8/L0各11fit，总22fit60.265秒，已封存但R0未跑/outer未开。H快照改A自动登记，不等B额外同意回执。随后匿名联合full35自主尝试5方法含E5，最后词法单模型6fit、51.453秒，12行原生/搬迁/隔离包一致；合成工程，不是新Task2/H性能，未真实触发ensemble。三个模型源与当前生产一致。本轮28fit/0API，A累计1566，无活动队列。

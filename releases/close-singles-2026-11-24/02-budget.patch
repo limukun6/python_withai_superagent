@@ -1,0 +1,26 @@
+diff --git a/superagent/ab_close_singles.py b/superagent/ab_close_singles.py
+index 4461d80de94ddf57ae4a16c6db5bccc84c91a1d4..9860e2eface266f06de06dd1f769e41d7078e084 100644
+--- a/superagent/ab_close_singles.py
++++ b/superagent/ab_close_singles.py
+@@ -3,7 +3,7 @@ import numpy as np
+ 
+ from .ab_adaptive_opening import opening_uncertainty
+ from .ab_complement import MIN_GAIN, split_columns
+-from .ab_scheduler import CONFIRMATIONS, PRIMARY, _action
++from .ab_scheduler import CONFIRMATIONS, PRIMARY, _action, _allowance
+ from .metrics import MetricSpec
+ 
+ 
+@@ -54,8 +54,11 @@ class SingleConfirmationPolicy:
+         evidence['evidence_trials'].extend(records[name][2] for name in (anchor,candidate) if name in records)
+         if missing:
+             budget = state['budget']
+-            if len(missing) + budget['reserved_final_refit'] > budget['remaining_fit_allowance']:
++            remaining, closed_reason = _allowance(budget)
++            if closed_reason or len(missing) + budget['reserved_final_refit'] > remaining:
+                 check['status'] = 'retain_budget'
++                if closed_reason:
++                    check['budget_reason'] = closed_reason
+             else:
+                 check['status'] = 'collect'
+                 evidence['pending'] = missing

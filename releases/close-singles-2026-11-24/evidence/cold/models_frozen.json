@@ -1,0 +1,634 @@
+{
+  "protocol": "af8b8db8521619fa49750aa3f2b8508ef12fb7a43e9b23d6c0afa376e73a6a31",
+  "arms": {
+    "control": {
+      "model": "4e8274cd0bc8c34438b8fa8eb2907e6f70279a45d31ccbede683d57c92db4e1e",
+      "selected": "equal_soft_vote",
+      "components": [
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features"
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "word_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_l12_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_l12_with_corpus_familiarity",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "e5_small_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "e5_small_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Finish the paired comparison and deliver the selected model or pair.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "physical": [
+        "word_C0.05",
+        "minilm_text_with_lexical_features",
+        "minilm_l12_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "e5_small_text_with_lexical_features",
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features",
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features"
+      ],
+      "actual_fits": 9,
+      "review": {
+        "anchor": "e5_small_text_with_lexical_features",
+        "members": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "partner": "minilm_text_with_lexical_features",
+        "primary_rows": 1451,
+        "opening_correct": {
+          "word_C0.05": 889,
+          "minilm_text_with_lexical_features": 1013,
+          "minilm_l12_text_with_lexical_features": 1013,
+          "minilm_l12_with_corpus_familiarity": 1010,
+          "e5_small_text_with_lexical_features": 1020
+        },
+        "opening_combinations": [
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_text_with_lexical_features"
+            ],
+            "correct": 1014
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_l12_text_with_lexical_features"
+            ],
+            "correct": 1010
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1006
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1003
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "minilm_l12_text_with_lexical_features"
+            ],
+            "correct": 1017
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1010
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1025
+          },
+          {
+            "members": [
+              "minilm_l12_text_with_lexical_features",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1008
+          },
+          {
+            "members": [
+              "minilm_l12_text_with_lexical_features",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1013
+          },
+          {
+            "members": [
+              "minilm_l12_with_corpus_familiarity",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1017
+          }
+        ],
+        "primary_single_accuracy": 0.7029634734665747,
+        "portfolio_score": 0.7082056520258767,
+        "proposed_pair": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "comparison_members": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "evidence_trials": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "opening_uncertainty": {
+          "leader": "minilm_text_with_lexical_features",
+          "runner_up": "minilm_l12_text_with_lexical_features",
+          "gap": 0.0,
+          "cluster_standard_error": 0.00844455202591895,
+          "groups": 1095,
+          "disagreements": 150,
+          "ambiguous": true
+        },
+        "confirmation_rows": 1486,
+        "promoted": true,
+        "pending": [],
+        "confirmation_correct": {
+          "e5_small_text_with_lexical_features": 1047,
+          "minilm_text_with_lexical_features": 1046
+        },
+        "confirmation_combination": 1055,
+        "pooled_gain": 13
+      },
+      "observations": [
+        {
+          "c": "word_C0.05",
+          "split": "primary",
+          "score": 0.6126809097174363,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.6981392143349414,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_l12_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.6981392143349414,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_l12_with_corpus_familiarity",
+          "split": "primary",
+          "score": 0.6960716747070985,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "e5_small_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.7029634734665747,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "e5_small_text_with_lexical_features",
+          "split": "confirmation_1",
+          "score": 0.7045760430686406,
+          "row_ids": "e2440695ad9a59cc6b42286403ce6550b588727c26385e19be071d7c5b446463",
+          "payload": "57fea7029d8153eb23d08481372196bbd7c9f11a3c86fda6d6b0e3c5c61416b5"
+        },
+        {
+          "c": "minilm_text_with_lexical_features",
+          "split": "confirmation_1",
+          "score": 0.7039030955585465,
+          "row_ids": "e2440695ad9a59cc6b42286403ce6550b588727c26385e19be071d7c5b446463",
+          "payload": "57fea7029d8153eb23d08481372196bbd7c9f11a3c86fda6d6b0e3c5c61416b5"
+        }
+      ]
+    },
+    "proposal": {
+      "model": "a0f691b20a4d7996e48fdd04eaa22aa53b306f4784c76ece37768c4236face6c",
+      "selected": "equal_soft_vote",
+      "components": [
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features"
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "word_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_l12_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_l12_with_corpus_familiarity",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            3,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "e5_small_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "e5_small_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Finish the paired comparison and deliver the selected model or pair.",
+          "evidence_trials": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "physical": [
+        "word_C0.05",
+        "minilm_text_with_lexical_features",
+        "minilm_l12_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "e5_small_text_with_lexical_features",
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features",
+        "e5_small_text_with_lexical_features",
+        "minilm_text_with_lexical_features"
+      ],
+      "actual_fits": 9,
+      "review": {
+        "anchor": "e5_small_text_with_lexical_features",
+        "members": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "partner": "minilm_text_with_lexical_features",
+        "primary_rows": 1451,
+        "opening_correct": {
+          "word_C0.05": 889,
+          "minilm_text_with_lexical_features": 1013,
+          "minilm_l12_text_with_lexical_features": 1013,
+          "minilm_l12_with_corpus_familiarity": 1010,
+          "e5_small_text_with_lexical_features": 1020
+        },
+        "opening_combinations": [
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_text_with_lexical_features"
+            ],
+            "correct": 1014
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_l12_text_with_lexical_features"
+            ],
+            "correct": 1010
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1006
+          },
+          {
+            "members": [
+              "word_C0.05",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1003
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "minilm_l12_text_with_lexical_features"
+            ],
+            "correct": 1017
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1010
+          },
+          {
+            "members": [
+              "minilm_text_with_lexical_features",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1025
+          },
+          {
+            "members": [
+              "minilm_l12_text_with_lexical_features",
+              "minilm_l12_with_corpus_familiarity"
+            ],
+            "correct": 1008
+          },
+          {
+            "members": [
+              "minilm_l12_text_with_lexical_features",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1013
+          },
+          {
+            "members": [
+              "minilm_l12_with_corpus_familiarity",
+              "e5_small_text_with_lexical_features"
+            ],
+            "correct": 1017
+          }
+        ],
+        "primary_single_accuracy": 0.7029634734665747,
+        "portfolio_score": 0.7082056520258767,
+        "proposed_pair": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "comparison_members": [
+          "e5_small_text_with_lexical_features",
+          "minilm_text_with_lexical_features"
+        ],
+        "evidence_trials": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "opening_uncertainty": {
+          "leader": "minilm_text_with_lexical_features",
+          "runner_up": "minilm_l12_text_with_lexical_features",
+          "gap": 0.0,
+          "cluster_standard_error": 0.00844455202591895,
+          "groups": 1095,
+          "disagreements": 150,
+          "ambiguous": true
+        },
+        "confirmation_rows": 1486,
+        "promoted": true,
+        "pending": [],
+        "confirmation_correct": {
+          "e5_small_text_with_lexical_features": 1047,
+          "minilm_text_with_lexical_features": 1046
+        },
+        "confirmation_combination": 1055,
+        "pooled_gain": 13
+      },
+      "observations": [
+        {
+          "c": "word_C0.05",
+          "split": "primary",
+          "score": 0.6126809097174363,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.6981392143349414,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_l12_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.6981392143349414,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "minilm_l12_with_corpus_familiarity",
+          "split": "primary",
+          "score": 0.6960716747070985,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "e5_small_text_with_lexical_features",
+          "split": "primary",
+          "score": 0.7029634734665747,
+          "row_ids": "58113d7c16c73774ff279bc5dd59dfb36210a6d70de30b98a9f9a3439b36a7d0",
+          "payload": "6abd7a02ff4608d849da3b1bfe4c4445687823462c1c4f5a4b790d629a666bcb"
+        },
+        {
+          "c": "e5_small_text_with_lexical_features",
+          "split": "confirmation_1",
+          "score": 0.7045760430686406,
+          "row_ids": "e2440695ad9a59cc6b42286403ce6550b588727c26385e19be071d7c5b446463",
+          "payload": "57fea7029d8153eb23d08481372196bbd7c9f11a3c86fda6d6b0e3c5c61416b5"
+        },
+        {
+          "c": "minilm_text_with_lexical_features",
+          "split": "confirmation_1",
+          "score": 0.7039030955585465,
+          "row_ids": "e2440695ad9a59cc6b42286403ce6550b588727c26385e19be071d7c5b446463",
+          "payload": "57fea7029d8153eb23d08481372196bbd7c9f11a3c86fda6d6b0e3c5c61416b5"
+        }
+      ]
+    }
+  },
+  "catalog": [
+    "word_C0.05",
+    "word_C0.1",
+    "word_C0.3",
+    "word_C0.7",
+    "word_C1.5",
+    "word_C3.0",
+    "word_C10.0",
+    "word_char_C0.05",
+    "word_char_C0.1",
+    "word_char_C0.3",
+    "word_char_C0.7",
+    "word_char_C1.5",
+    "word_char_C3.0",
+    "word_char_C10.0",
+    "char_C0.1",
+    "char_C0.3",
+    "char_C1.0",
+    "char_C3.0",
+    "word_char_stats_C0.1",
+    "word_char_stats_C0.3",
+    "word_char_stats_C1.0",
+    "word_char_stats_C3.0",
+    "minilm_text_with_lexical_features",
+    "minilm_l12_text_with_lexical_features",
+    "minilm_l12_with_corpus_familiarity",
+    "e5_small_text_with_lexical_features",
+    "minilm_text_with_nonlinear_lexical_features",
+    "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+    "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+    "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+    "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+    "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+    "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+    "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+    "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9"
+  ]
+}

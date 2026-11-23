@@ -1,0 +1,141 @@
+diff --git a/superagent/ab_close_singles.py b/superagent/ab_close_singles.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..4461d80de94ddf57ae4a16c6db5bccc84c91a1d4
+--- /dev/null
++++ b/superagent/ab_close_singles.py
+@@ -0,0 +1,91 @@
++"""Use spare budget to check a statistically close single when no pair warranted confirmation."""
++import numpy as np
++
++from .ab_adaptive_opening import opening_uncertainty
++from .ab_complement import MIN_GAIN, split_columns
++from .ab_scheduler import CONFIRMATIONS, PRIMARY, _action
++from .metrics import MetricSpec
++
++
++def close_challenger(opening, anchor, labels, groups):
++    anchor_hits = opening[anchor][0] == labels
++    eligible = []
++    for name, record in opening.items():
++        gains = int(np.sum((record[0] == labels) & ~anchor_hits))
++        if not gains:
++            continue
++        pair = {anchor: opening[anchor], name: record}
++        uncertainty = opening_uncertainty(pair, labels, groups)
++        if uncertainty['ambiguous']:
++            correct = int(np.sum(record[0] == labels))
++            eligible.append((-gains, -correct, name, uncertainty))
++    if eligible:
++        negative_gains, _, candidate, uncertainty = min(eligible, key=lambda row: row[:3])
++        return dict(challenger=candidate, corrections=-negative_gains, gap=uncertainty['gap'],
++                    cluster_standard_error=uncertainty['cluster_standard_error'])
++
++
++class SingleConfirmationPolicy:
++    def __init__(self, base):
++        self.base = base
++
++    def review(self, state, trusted):
++        evidence = self.base.review(state, trusted)
++        split = CONFIRMATIONS[0]
++        if evidence.get('comparison_members') or split not in state['registered_confirmation_splits']:
++            return evidence
++        anchor = evidence['anchor']
++        metric = MetricSpec.from_payload({'metric_spec':state['task']['metric']})
++        y, _, opening = split_columns(state, trusted, PRIMARY, metric)
++        check = close_challenger(opening, anchor, y, trusted[PRIMARY]['groups'])
++        if check is None:
++            return evidence
++        first_groups = set(trusted[PRIMARY]['groups'])
++        fresh = np.array([g not in first_groups for g in trusted[split]['groups']], dtype=bool)
++        fresh_rows = int(fresh.sum())
++        check.update(anchor=anchor, fresh_rows=fresh_rows)
++        evidence['close_singles'] = check
++        if not fresh_rows:
++            check['status'] = 'no_fresh_groups'
++            return evidence
++        candidate = check['challenger']
++        confirmed_y, _, records = split_columns(state, trusted, split, metric)
++        missing = [name for name in (anchor, candidate) if name not in records]
++        evidence['evidence_trials'].extend(records[name][2] for name in (anchor,candidate) if name in records)
++        if missing:
++            budget = state['budget']
++            if len(missing) + budget['reserved_final_refit'] > budget['remaining_fit_allowance']:
++                check['status'] = 'retain_budget'
++            else:
++                check['status'] = 'collect'
++                evidence['pending'] = missing
++            return evidence
++        first_correct = evidence['opening_correct']
++        fresh_correct = {name:int(np.sum(records[name][0][fresh] == confirmed_y[fresh])) for name in (anchor,candidate)}
++        fresh_net = fresh_correct[candidate]-fresh_correct[anchor]
++        total = len(y) + fresh_rows
++        pooled_gain = (first_correct[candidate]-first_correct[anchor]+fresh_net)/total
++        switch = fresh_net > 0 and pooled_gain >= MIN_GAIN
++        winner = candidate if switch else anchor
++        check.update(status='switch' if switch else 'retain', fresh_correct=fresh_correct,
++                     fresh_net=fresh_net, distinct_rows=total, pooled_gain=pooled_gain)
++        evidence.update(members=[winner], confirmation_rows=fresh_rows,
++                        portfolio_score=(first_correct[winner]+fresh_correct[winner])/total)
++        return evidence
++
++    def action(self, state, capabilities, trusted, **options):
++        original = self.base.action(state, capabilities, trusted, **options)
++        if original['action'] != 'stop' or sum(r['split_id']==PRIMARY for r in state['history']) < 4:
++            return original
++        evidence = self.review(state, trusted)
++        check = evidence.get('close_singles')
++        if not check:
++            return original
++        if check['status'] == 'collect':
++            return _action('confirm','Check both close singles on the same registered confirmation split.',
++                           evidence['evidence_trials'],evidence['pending'][0],CONFIRMATIONS[0],1)
++        reasons = dict(switch='The challenger gained on fresh groups and across the combined distinct rows.',
++                       retain='The fresh comparison did not warrant replacing the opening leader.',
++                       retain_budget='Retain the leader and reserve enough fits for final training.',
++                       no_fresh_groups='The registered confirmation offers no new groups.')
++        return _action('stop',reasons[check['status']],evidence['evidence_trials'])
+diff --git a/superagent/ab_run.py b/superagent/ab_run.py
+index 49d829b5c49265d1d774c16529a2e8bcc8a1c62d..949284e80d6abaa28abc6263d3f5093df58e9bec 100644
+--- a/superagent/ab_run.py
++++ b/superagent/ab_run.py
+@@ -289,6 +289,9 @@ def command(args):
+                 from . import ab_adaptive_opening as complement_policy
+                 if getattr(args,'resolve_single_conflict',False):
+                     from . import ab_single_conflict as complement_policy
++                if getattr(args,'confirm_close_singles',False):
++                    from .ab_close_singles import SingleConfirmationPolicy
++                    complement_policy = SingleConfirmationPolicy(complement_policy)
+         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+             preference_catalog=getattr(args,'preference_catalog','standard'),
+@@ -301,6 +304,7 @@ def command(args):
+             **({'adaptive_opening_active':adaptive} if args.scheduler=='ab-adaptive-complement' else {}),
+             **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
+             **({'resolve_single_conflict':bool(adaptive)} if getattr(args,'resolve_single_conflict',False) else {}),
++            **({'confirm_close_singles':bool(adaptive)} if getattr(args,'confirm_close_singles',False) else {}),
+             **({'confidence_cascade':True} if getattr(args,'confidence_cascade',False) else {}),
+             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
+             history_policy=args.history_policy,
+diff --git a/superagent/cli.py b/superagent/cli.py
+index 776d7121f1b29905dee2c2f9c1892f14e44683fa..339ef131eca89ccc1932fe366aaef0d9fc441ffc 100644
+--- a/superagent/cli.py
++++ b/superagent/cli.py
+@@ -96,6 +96,8 @@ def _run(args):
+         raise ValueError('Confidence routing requires the matched preference scheduler')
+     if getattr(args, 'resolve_single_conflict', False) and args.scheduler != 'ab-adaptive-complement':
+         raise ValueError('Single-model conflict resolution requires the adaptive complement scheduler')
++    if getattr(args, 'confirm_close_singles', False) and args.scheduler != 'ab-adaptive-complement':
++        raise ValueError('Close single-model confirmation requires the adaptive complement scheduler')
+     if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
+         raise ValueError('Parameter semantics diagnostics require the shared A/B executor')
+     if getattr(args, 'cover_untried_encoder', False) and args.scheduler != 'ab-adaptive-complement':
+@@ -322,6 +324,8 @@ def build_parser():
+                      help='Use confirmed training feedback to skip a second encoder for confident preference pairs')
+     run.add_argument('--resolve-single-conflict', action='store_true',
+         help='Compare disagreeing single-model leaders on a third split when the remaining budget permits')
++    run.add_argument('--confirm-close-singles', action='store_true',
++        help='Check a close single-model challenger on fresh groups when no pair qualifies for confirmation')
+     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
+     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
+     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')

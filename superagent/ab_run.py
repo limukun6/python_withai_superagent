@@ -238,6 +238,7 @@ def command(args):
         caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+            preference_catalog=getattr(args,'preference_catalog','standard'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,

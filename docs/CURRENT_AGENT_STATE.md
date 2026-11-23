@@ -1,5 +1,11 @@
 # 当前接续状态：2026-11-23，A97–A99已完成
 
+## A102当前活动状态（覆盖下面无活动旧快照）
+
+用户授权收到B回复前继续A线，SMS六组已实际启动。独立worktree D:/codex/python_withai/runs/a102_sms_c1_checkout，分支codex/sms-c1-20261123、计划/runner提交b420177，生产文件与c64bee4及A89相同。输出runs/a102_sms_C1；先查completion/checkpoint/physical_fits，不重复启动，活动session60804仅本会话有效。最多66新fit/12Flash，起点A1438、账本323/known¥6.3627855/历史unknown11/pending0；A重新持有唯一账本写入权，收到B付费交接请求先协调串行，不并发。
+
+首次预检因旧A47内部划分身份不同停在0fit/API，script/plan/protocol/completion已保留research/a102_sms_preflight_failed。新协议明确使用c64强环境重新登记的同707/808/909实际索引，第二预检a102_sms_preflight_v2通过0fit/API；新六组都须严格共用它，不冒称旧A47同划分。3302训练/826已见开发留出、macro-F1、16候选、11fit含refit、3调用、300/1200秒、其它研究开关off，四付费路径估计阈值合计¥1.20。所有模型冻结再评分，源/活动runner及script_hashes helpers禁止修改，第一失败停不重试。controller临时防待机退出释放。H/test封存，B建议任务未被接管。
+
 用户要求给队友写对齐说明，入口AB_ALIGNMENT_REQUEST_20261123_zh.md。它承认B已有成果，区分c64bee4同轮C1、新HEAD开发和未来H/Released冻结，给出建议完整实验分工与先回复现状的模板；尚不代表队友已确认承接，也未通过工具发消息。A侧独立工作不等该回复。此次文档交付新增fit/API0。
 
 原九天计划位置见NINE_DAY_MILESTONE_STATUS_20261123_zh.md：D4整合与冻结准备，D5两任务六组部分提前完成，D3独立验收尾项未齐；D6 H、D7最终Released未完成。用户最新剩余6天＝4天研发＋2天演讲。上一轮四天建议不替代原计划功能截止约束，不按已有模型导出认定研发结束。

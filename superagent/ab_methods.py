@@ -1,6 +1,7 @@
 """Executable early methods for the shared A/B menu. Constructor calls do not train models."""
 from functools import partial
 from importlib.util import find_spec
+import os
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -16,6 +17,9 @@ from . import ab_text_recipes, ab_vision, symmetric_text
 FIELDS = 'supported_field_interactions'
 TEXT = 'minilm_text_with_lexical_features'
 TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
+TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
+TEXT_EDIT = 'minilm_l12_with_edit_context'
+PREFERENCE_CATALOG_ENV = 'SUPERAGENT_AB_PREFERENCE_CATALOG'
 IMAGE = 'image_gradient_histograms_logistic'
 RELATION = 'ordered_text_pair_interactions'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minilm_nonlinear_lexical', IMAGE:'gradient_histograms',
@@ -24,6 +28,7 @@ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minil
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 ROUTES.update(ab_text_recipes.ROUTES)
+ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 
 
 def _field_tree(rows, labels, query):
@@ -109,6 +114,16 @@ def additions(kind):
         if encoder_ready:
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+        catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
+        if kind=='pair_text' and catalog in ('deep','deep-edit') and verified_directory(deep=True) is not None:
+            from .ab_sentence import DEEP_MODEL, DEEP_REVISION
+            params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
+                        representation='word_char_minilm_l12',swap_augmentation=True)
+            extra.append(Candidate(TEXT_DEEP,params,partial(fit_sentence,kind=kind,deep=True)))
+            if catalog=='deep-edit':
+                extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
+                                       partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
+        if encoder_ready:
             extra.append(Candidate(TEXT_KERNEL,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm_rbf',
                                    kernel_components=KERNEL_DIMENSIONS,bandwidth_sample_limit=KERNEL_SAMPLE_LIMIT,
                                    kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),

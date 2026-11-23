@@ -89,9 +89,21 @@ def _validate(args):
 
 
 def _run(args):
+    catalog = getattr(args, 'preference_catalog', 'standard')
     if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
+        from .ab_methods import PREFERENCE_CATALOG_ENV
         from .ab_run import command
-        return command(args)
+        previous = os.environ.get(PREFERENCE_CATALOG_ENV)
+        os.environ[PREFERENCE_CATALOG_ENV] = catalog
+        try:
+            return command(args)
+        finally:
+            if previous is None:
+                os.environ.pop(PREFERENCE_CATALOG_ENV, None)
+            else:
+                os.environ[PREFERENCE_CATALOG_ENV] = previous
+    if catalog != 'standard':
+        raise ValueError('Expanded preference catalog requires the shared A/B executor')
     if (args.fit_limit is not None or args.portfolio == 'ab-v1' or args.catalog_scope!='full' or args.history_policy!='strict'
             or args.candidate_coverage!='off' or args.task_profile!='off' or args.proposal_contract!='strict-v1' or args.partial_delivery!='off'
             or args.local_text_proposals!='off'):
@@ -290,6 +302,8 @@ def build_parser():
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit'], default='standard',
+                     help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')

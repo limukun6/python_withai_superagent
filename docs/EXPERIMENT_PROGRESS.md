@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-23：A107–A109解决A本机H2原包与训练输入准备
+
+用户要求A自行解决。A107续传长流247.781秒IncompleteRead停止，保留48,234,496字节；A108按4MiB分段12次/324秒完成94,658,721字节原包，SHA/作者MD5通过，随后因Windows CRLF导致inner manifest原始SHA不同停止。两训练ZIP、六worker字段已一致；诊断LF后SHA精确等于B登记值。A109先落盘计划/脚本，固定LF离线重建，83.344秒prepared，原包只打开登记5000训练图，两ZIP/两manifest/六worker全部原始指纹与B一致，full9图像目录可用。0新增fit/API/预测/留出图片访问，A累计1501不变。所有失败保留，不改原B脚本或生产控制器。输入runs/a109_H2_canonical/training，原包runs/a108_H2_segmented/EuroSAT_RGB.zip；归档research/a109_H2_canonical_inputs，报告batches/A107_A109_H2_local_results_20261123_zh.md。无活动队列，H2性能仍待共同冻结后执行。
+
 ## 2026-11-23：A106接收B离线成果摘要，准备账本快照
 
 B现已报告本地完成48案例和24标注，并表达Task2/Bean、H2、最终Task2承接意向；9ed50e6原提交和新bundle尚未收到。用户实际附件/同目录bundle仍为旧11月21日a787，fetch未找到新提交。结果状态更新为“摘要已收，原件待审”，不按未上传推断未做。A106 v2准备真实335条/known¥6.4920535/历史unknown11/pending0的一致性SQLite快照，私人文件忽略、源/副本全请求摘要相同，未交付/转移写入权。首次跨工作树ignore查询保守拒绝，原失败保留，修正在目标所属仓库验证后成功。0新增fit/API，A累计1501。回复与复核要求见B_REPLY_ACK_AND_NEXT_20261123_zh.md；无需重问24回答，H2优先B已有资产，adapter仅开发候选。

@@ -1,8 +1,10 @@
 # 当前接续状态：2026-11-23，A102–A105已结束
 
-## A108：用户要求A自行完成H2输入准备（分段下载运行中）
+## A109：A本机H2训练输入准备完成，无活动队列
 
-A107已在247.781秒因长连接IncompleteRead停止，保留48234496字节，无图片打开；原失败metadata归档research/a107_H2_download_stopped，旧A105/A107不变。A108计划batches/A108_H2_segmented_download_plan.md、脚本scripts/prepare_a108_H2_segmented.py先落盘，输出runs/a108_H2_segmented。按4MiB分段请求余下12段，每段严格校验Range，失败不重试，累计1800秒窗口。首段37.453秒成功。整包校验后仅允许打开原登记训练成员并复用B构造器，要求两包/六分区一致；0fit/API，不解封H性能。此节覆盖下文“无下载队列/A无需重复下载”的旧快照；恢复会话先查此目录completion，不重复启动。
+A107长流247.781秒因IncompleteRead停止；A108分段12次/324秒完成原包，SHA/作者MD5通过。A108构造两ZIP及六worker与B完全相同，但manifest因Windows CRLF与B LF原字节SHA不同，严格停止；失败证据保留。A109计划/代码先落盘，固定LF离线重新构造，83.344秒prepared：5000训练图片、两ZIP/两manifest/六worker所有登记字段完全一致，正式full9图像候选可用，0fit/API/预测/留出图片访问。只打开训练名单成员，原包字节哈希不等于解码留出图片。
+
+可用本机原包runs/a108_H2_segmented/EuroSAT_RGB.zip；验收后的训练输入runs/a109_H2_canonical/training/{45101,45102}/train.zip、inner_splits.json、worker_inputs。脱敏证据research/a109_H2_canonical_inputs；报告batches/A107_A109_H2_local_results_20261123_zh.md。A累计1501不变，未写API账本；全部控制器已退出。此节覆盖下文A本机未ready/无需再获取原包的历史状态。H2尚无性能成绩、最终策略未冻结，B负责H2的既有分工不变。
 
 ## A106收到B新摘要，原件尚缺
 

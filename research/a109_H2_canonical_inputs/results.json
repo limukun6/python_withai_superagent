@@ -1,0 +1,598 @@
+{
+  "registered_inputs": {
+    "45101": {
+      "train_rows": 2500,
+      "train_archive_sha256": "850cb18b028aa99b39daf77508240724944079bd67f7c7dc89d0cb78f1394bcc",
+      "inner_manifest_sha256": "5975d23a8ea516daa5f08b2d82989db32b372736796e51a3a5ddbf137953a916",
+      "splits": {
+        "primary": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "a6b0be6dd7ba2fc061d91a9e486cdc1a04786628ac35afc0c70789cb8fe7d3b5",
+          "label_sha256": "bb590e0531e8ad9cf47e092159611509d8cf2fcc324b2cca2cf8e8a3e971de48",
+          "evaluation_payload_sha256": "7b987bd5c47c41e972072689efc83668b73e51ecb5f6c212e22d8d62285f9536"
+        },
+        "confirmation_1": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "39eb89bdb40ff149fa03ace4acd5e53aa5ceeee1e1d8d11443cf5b08b09b45fa",
+          "label_sha256": "16513e4f49a3ae981a12d588b54115739b052b78a9daf8207231aba80fa9ad47",
+          "evaluation_payload_sha256": "70f0a76c7af979f39382246b5dba1a72b08abff67e2069fde08efcdf47025dcf"
+        },
+        "confirmation_2": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "c59de4291415b36b83d7a300d038cd8edb82102bdebb08745f2dcae19f4cf939",
+          "label_sha256": "e7eeafc8866550aa143dde7dcdcb069e0724410b24e0f7c577c772092b97c580",
+          "evaluation_payload_sha256": "ce045e43a51a9777fb28b4164e58c6ca512395413d27e57f10f98752afdf5417"
+        }
+      }
+    },
+    "45102": {
+      "train_rows": 2500,
+      "train_archive_sha256": "3367460cb10fbd74e5d5c1f13dd07926ff7af5cc8b22eb4e262d8ba8902aa070",
+      "inner_manifest_sha256": "d38f9256a32f1aeca78aa37379afbcd40b03f938eb93ad7639c2b1cecd8a822c",
+      "splits": {
+        "primary": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "e19693f88c1056386844fbfb0f1a4714ba0f0dd3d57f220681535820d9d09d4b",
+          "label_sha256": "cd4059aa809fb5fab54819b16ff23816775299d91b32b472892d39a72a3bfcec",
+          "evaluation_payload_sha256": "f169dc9da5a20685d3e5a623b5dfdcaeecf1d4046c019c2a9afb852c4749c6a4"
+        },
+        "confirmation_1": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "0b6bd617d75f40ccbd293f4169dd2f4a628a3816bf1f4d439530c3d4a8966972",
+          "label_sha256": "0da1cb2c76092b61459cd2b74ab353aeed41922429ad33ef6ee2cfc1eb2933be",
+          "evaluation_payload_sha256": "64cc618315ff8b23925e83af2a668a42de76f7e6761630c3479d8f97b88c96c8"
+        },
+        "confirmation_2": {
+          "train_rows": 2000,
+          "internal_eval_rows": 500,
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "e743203c06c234945a14cf8bf9f8a59c9d5d170226a349cca4f1ec0d4651f899",
+          "label_sha256": "ae7489a0f37ee8b156d20642050c5ecfc096e46b0f410febacf2a51861e8dde9",
+          "evaluation_payload_sha256": "45616a6c10e91103a01edad823ff85ef0d0eca4c502a3b97d467ffa1b0c350ed"
+        }
+      }
+    }
+  },
+  "menus": {
+    "45101": {
+      "rows": 2500,
+      "task_spec": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "image",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            "AnnualCrop",
+            "Forest",
+            "HerbaceousVegetation",
+            "Highway",
+            "Industrial",
+            "Pasture",
+            "PermanentCrop",
+            "Residential",
+            "River",
+            "SeaLake"
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "image",
+          "columns": [
+            {
+              "name": "image",
+              "type": "image_path"
+            }
+          ],
+          "target": "label",
+          "image_preprocessing": {
+            "height": 64,
+            "mode": "RGB",
+            "resize": "stretch_bilinear",
+            "width": 64
+          }
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "image",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                "AnnualCrop",
+                "Forest",
+                "HerbaceousVegetation",
+                "Highway",
+                "Industrial",
+                "Pasture",
+                "PermanentCrop",
+                "Residential",
+                "River",
+                "SeaLake"
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "capabilities": {
+        "image_logistic_C0.1": {
+          "id": "image_logistic_C0.1",
+          "params": {
+            "C": 0.1
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_logistic_C1.0": {
+          "id": "image_logistic_C1.0",
+          "params": {
+            "C": 1.0
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_logistic_C10.0": {
+          "id": "image_logistic_C10.0",
+          "params": {
+            "C": 10.0
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_extra_trees_leaf1": {
+          "id": "image_extra_trees_leaf1",
+          "params": {
+            "min_samples_leaf": 1,
+            "n_estimators": 300
+          },
+          "route": "image_extra_trees",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "extra_trees",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_extra_trees_leaf3": {
+          "id": "image_extra_trees_leaf3",
+          "params": {
+            "min_samples_leaf": 3,
+            "n_estimators": 300
+          },
+          "route": "image_extra_trees",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "extra_trees",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_rbf_svm_C1.0": {
+          "id": "image_rbf_svm_C1.0",
+          "params": {
+            "C": 1.0,
+            "kernel": "rbf"
+          },
+          "route": "image_rbf_svm",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "rbf_svm",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": false,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_rbf_svm_C10.0": {
+          "id": "image_rbf_svm_C10.0",
+          "params": {
+            "C": 10.0,
+            "kernel": "rbf"
+          },
+          "route": "image_rbf_svm",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "rbf_svm",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": false,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_gradient_histograms_logistic": {
+          "id": "image_gradient_histograms_logistic",
+          "params": {
+            "grid": 4,
+            "orientation_bins": 8,
+            "C": 1.0,
+            "representation": "gradient histograms and cell means"
+          },
+          "route": "gradient_histograms",
+          "input_kind": "image",
+          "representation": "gradient histograms and cell means",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_mobilenet_v3_small_linear": {
+          "id": "image_mobilenet_v3_small_linear",
+          "params": {
+            "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+            "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+            "C": 10.0,
+            "representation": "L2-normalized frozen 576-dimensional image features"
+          },
+          "route": "frozen_image_features",
+          "input_kind": "image",
+          "representation": "L2-normalized frozen 576-dimensional image features",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "local_frozen_encoder_cpu",
+          "origin": "b_port",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        }
+      }
+    },
+    "45102": {
+      "rows": 2500,
+      "task_spec": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "image",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            "AnnualCrop",
+            "Forest",
+            "HerbaceousVegetation",
+            "Highway",
+            "Industrial",
+            "Pasture",
+            "PermanentCrop",
+            "Residential",
+            "River",
+            "SeaLake"
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "image",
+          "columns": [
+            {
+              "name": "image",
+              "type": "image_path"
+            }
+          ],
+          "target": "label",
+          "image_preprocessing": {
+            "height": 64,
+            "mode": "RGB",
+            "resize": "stretch_bilinear",
+            "width": 64
+          }
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "image",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                "AnnualCrop",
+                "Forest",
+                "HerbaceousVegetation",
+                "Highway",
+                "Industrial",
+                "Pasture",
+                "PermanentCrop",
+                "Residential",
+                "River",
+                "SeaLake"
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "capabilities": {
+        "image_logistic_C0.1": {
+          "id": "image_logistic_C0.1",
+          "params": {
+            "C": 0.1
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_logistic_C1.0": {
+          "id": "image_logistic_C1.0",
+          "params": {
+            "C": 1.0
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_logistic_C10.0": {
+          "id": "image_logistic_C10.0",
+          "params": {
+            "C": 10.0
+          },
+          "route": "image_logistic",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_extra_trees_leaf1": {
+          "id": "image_extra_trees_leaf1",
+          "params": {
+            "min_samples_leaf": 1,
+            "n_estimators": 300
+          },
+          "route": "image_extra_trees",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "extra_trees",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_extra_trees_leaf3": {
+          "id": "image_extra_trees_leaf3",
+          "params": {
+            "min_samples_leaf": 3,
+            "n_estimators": 300
+          },
+          "route": "image_extra_trees",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "extra_trees",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_rbf_svm_C1.0": {
+          "id": "image_rbf_svm_C1.0",
+          "params": {
+            "C": 1.0,
+            "kernel": "rbf"
+          },
+          "route": "image_rbf_svm",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "rbf_svm",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": false,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_rbf_svm_C10.0": {
+          "id": "image_rbf_svm_C10.0",
+          "params": {
+            "C": 10.0,
+            "kernel": "rbf"
+          },
+          "route": "image_rbf_svm",
+          "input_kind": "image",
+          "representation": "flattened standardized pixels",
+          "estimator": "rbf_svm",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": false,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "shared_baseline",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_gradient_histograms_logistic": {
+          "id": "image_gradient_histograms_logistic",
+          "params": {
+            "grid": 4,
+            "orientation_bins": 8,
+            "C": 1.0,
+            "representation": "gradient histograms and cell means"
+          },
+          "route": "gradient_histograms",
+          "input_kind": "image",
+          "representation": "gradient histograms and cell means",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "image_mobilenet_v3_small_linear": {
+          "id": "image_mobilenet_v3_small_linear",
+          "params": {
+            "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+            "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+            "C": 10.0,
+            "representation": "L2-normalized frozen 576-dimensional image features"
+          },
+          "route": "frozen_image_features",
+          "input_kind": "image",
+          "representation": "L2-normalized frozen 576-dimensional image features",
+          "estimator": "logistic",
+          "swap_label_rule": "not_applicable",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "local_frozen_encoder_cpu",
+          "origin": "b_port",
+          "kind": "image",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        }
+      }
+    }
+  },
+  "source_unchanged": true,
+  "original_member_reads": 5000,
+  "unique_training_members": 5000,
+  "original_source_sha256": "b4f5b234ecb7d7ff9c6cddb046543b4717c53fd6e9815be6c0e80cc614f51b90",
+  "registration_exact_match": true,
+  "outer_holdout_image_members_opened": 0
+}

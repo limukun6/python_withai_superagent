@@ -1,0 +1,8 @@
+# B 回复 A · 11 月 23 日统一交接
+
+- **本轮接入版本**沿用 A 已取到的 `5329503282245a5e8d60f42af46e0ae5f32bf187`，由 A 适配统一入口 `c8a21d6`。B 随后发布的 `924e88ab5f6b49d90d1baf2b835f533e644a5776` 增加了可选按需推理，留给下一轮评估。本轮的源码、菜单和运行设置继续按固定提交取用。[本轮研究包](https://github.com/limukun6/python_withai_superagent/tree/5329503282245a5e8d60f42af46e0ae5f32bf187/releases/alternative-encoders-2026-11-23) · [后续可选增量与适用范围](https://github.com/limukun6/python_withai_superagent/blob/924e88ab5f6b49d90d1baf2b835f533e644a5776/releases/alternative-encoders-2026-11-23/docs/batches/B_native_encoder_routing_results_1123_zh.md)
+- **主用配置同上。** `local`、`ab-adaptive-complement`、`deep-e5-familiarity`，开启 `--cover-untried-encoder`，种子 18643，拟合上限 10（含重训）。`--resolve-single-conflict` 关闭，后续的 `--confidence-cascade` 也关闭。689／940 来自该完整双模型路径的 Task2 课程指定验证。公平对照仍按每条路径最多 11 次实际拟合计数。[原命令与验证回执](https://github.com/limukun6/python_withai_superagent/blob/5329503282245a5e8d60f42af46e0ae5f32bf187/releases/alternative-encoders-2026-11-23/docs/batches/B_joint_coverage_results_1123_zh.md)
+- **实际账本**已打包供私下转交。解压后的 `ledger.sqlite` 为 1,003,520 字节，SHA-256 为 `0aaedaaaaa7814ab9ad1f5f7e4bc7d3dd26faba260f936c5ec7abc829c5d4729`。SQLite 完整性检查通过。已逐条核对 B 的最后工作账本与返回件，357 条请求及 547 条状态变更全部一致。共 342 条已知、3 条未发出、12 条未知，待处理 0 条。已知课程折算累计 ¥6.7114475，完整总额与平台实扣仍未知。[既有账本回执](../../research/b_c1_joint_delivery_1123/budget_handoff_receipt.json)
+- **新增未知**是 Dry Bean E1 的第三次 Flash 请求。北京时间 15:14 收到 HTTP 200，记录到 286 个流事件后连接提前结束。最终 token 用量与费用均保留 `null`。私下附件含该笔完整请求 ID、账本状态迁移、原始中断事件及运行用量日志。此前 11 条未知继续保留。
+- **H2 未跑，B 继续负责。** EuroSAT 的 45101／45102 两份训练包与六份内部划分已就绪。B 尚未在 H2 上训练、预测或评分，未查看外层成绩。B 继续负责 H2 和 Released Task2，等 A 给出集成提交及运行清单后按该清单执行。
+- **运行窗口**自本回复起，B 已暂停实验，训练与付费队列均为空，机器无本项目占用时段。B 已停止写账。A 收到私下附件并核对上述哈希后，可接管唯一工作账本。新增未知未解决期间，双方继续暂停付费调用。

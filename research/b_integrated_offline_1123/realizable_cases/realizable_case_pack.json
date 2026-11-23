@@ -1,0 +1,817 @@
+[
+  {
+    "id": "B_order_char",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "A left-versus-right preference reverses under exchange, as does the character-difference candidate.",
+    "payload": {
+      "candidate": "char_C3.0",
+      "meaning": "preference"
+    }
+  },
+  {
+    "id": "B_unordered_hybrid",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The equivalence label and the absolute-difference/product representation both preserve a pair under exchange.",
+    "payload": {
+      "candidate": "symmetric_word_char_C3.0",
+      "meaning": "symmetric"
+    }
+  },
+  {
+    "id": "B_pref_symmetric",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "A pair of distinct headlines may switch winners when exchanged. An invariant representation cannot represent that requirement.",
+    "payload": {
+      "candidate": "symmetric_word_C3.0",
+      "meaning": "preference"
+    }
+  },
+  {
+    "id": "B_equiv_direction",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The registered word/character/statistics preference candidate flips the training label when the unordered equivalence task requires the same label.",
+    "payload": {
+      "candidate": "word_char_stats_C1.0",
+      "meaning": "symmetric"
+    }
+  },
+  {
+    "id": "B_missing_order",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Two text columns and an ordered candidate give no independent declaration of what their label means.",
+    "payload": {
+      "candidate": "word_C10.0",
+      "meaning": null
+    }
+  },
+  {
+    "id": "B_missing_equiv",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Even an invariant candidate cannot establish whether the unknown target means equivalence or preference.",
+    "payload": {
+      "candidate": "symmetric_word_char_C0.3",
+      "meaning": null
+    }
+  },
+  {
+    "id": "B_rbf_family",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The fitted kernel family is explicitly RBF SVM, matching the declared classifier.",
+    "payload": {
+      "claim": "rbf_svm",
+      "observed": "rbf_svm"
+    }
+  },
+  {
+    "id": "B_histogram_tree",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "A fitted boosting estimator is a different family from extremely randomized trees.",
+    "payload": {
+      "claim": "extra_trees",
+      "observed": "gradient_boosting"
+    }
+  },
+  {
+    "id": "B_two_forests",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "Both estimators are tree ensembles, but the observed ExtraTrees family contradicts the RandomForest claim.",
+    "payload": {
+      "claim": "random_forest",
+      "observed": "extra_trees"
+    }
+  },
+  {
+    "id": "B_observed_only",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "The fitted ridge family is present but there is no classifier declaration to check against it.",
+    "payload": {
+      "claim": null,
+      "observed": "ridge"
+    }
+  },
+  {
+    "id": "B_declared_only",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "The proposed nearest-neighbours name does not identify what was actually fitted.",
+    "payload": {
+      "claim": "nearest_neighbours",
+      "observed": null
+    }
+  },
+  {
+    "id": "B_dummy_was_fitted",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "A fitted dummy classifier is a real family and agrees with the declared baseline.",
+    "payload": {
+      "claim": "dummy",
+      "observed": "dummy"
+    }
+  },
+  {
+    "id": "B_id_reordered",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "Trial 32 is first in the unsorted history and its named macro F1 is .734.",
+    "payload": {
+      "claim": {
+        "trial": 32,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.734
+      },
+      "history": [
+        {
+          "trial": 32,
+          "status": "completed",
+          "search_metrics": {
+            "macro_f1": 0.734
+          }
+        },
+        {
+          "trial": 21,
+          "status": "completed",
+          "search_metrics": {
+            "macro_f1": 0.824
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_neighbor_identity",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The claimed .88 belongs to trial 17. The uniquely identified trial 18 recorded .79.",
+    "payload": {
+      "claim": {
+        "trial": 18,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.88
+      },
+      "history": [
+        {
+          "trial": 17,
+          "status": "completed",
+          "search_accuracy": 0.88
+        },
+        {
+          "trial": 18,
+          "status": "completed",
+          "search_accuracy": 0.79
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_duplicate_agree",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Two candidates share the same trial identity. Agreement of the numbers cannot disambiguate the cited experiment.",
+    "payload": {
+      "claim": {
+        "trial": 14,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.91
+      },
+      "history": [
+        {
+          "trial": 14,
+          "status": "completed",
+          "candidate": "one",
+          "train_accuracy": 0.91
+        },
+        {
+          "trial": 14,
+          "status": "completed",
+          "candidate": "another",
+          "train_accuracy": 0.91
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_running_with_cache",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A partial cached score on an unfinished trial cannot attest to a completed measurement.",
+    "payload": {
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.77
+      },
+      "history": [
+        {
+          "trial": 7,
+          "status": "running",
+          "search_accuracy": 0.77
+        },
+        {
+          "trial": 8,
+          "status": "completed",
+          "search_accuracy": 0.77
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_prior_failure_not_target",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "Only trial 20 was cited and completed; its search accuracy is .62 regardless of the stale value on trial 19.",
+    "payload": {
+      "claim": {
+        "trial": 20,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.62
+      },
+      "history": [
+        {
+          "trial": 19,
+          "status": "failed",
+          "search_accuracy": 0.99
+        },
+        {
+          "trial": 20,
+          "status": "completed",
+          "search_accuracy": 0.62
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_same_candidate_two_ids",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "A candidate name shared across two trials does not move the train accuracy from 41 to 42.",
+    "payload": {
+      "claim": {
+        "trial": 42,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.81
+      },
+      "history": [
+        {
+          "trial": 41,
+          "status": "completed",
+          "candidate": "repeat",
+          "train_accuracy": 0.81
+        },
+        {
+          "trial": 42,
+          "status": "completed",
+          "candidate": "repeat",
+          "train_accuracy": 0.84
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_accuracy_beside_f1",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The named search accuracy .932 is available even though macro F1 is the optimization metric.",
+    "payload": {
+      "claim": {
+        "trial": 22,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.932
+      },
+      "history": [
+        {
+          "trial": 22,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.75,
+          "search_metrics": {
+            "accuracy": 0.932,
+            "macro_f1": 0.75
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_train_as_search",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The recorded search F1 is .721. The larger number belongs to the training partition.",
+    "payload": {
+      "claim": {
+        "trial": 5,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.924
+      },
+      "history": [
+        {
+          "trial": 5,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "train_score": 0.924,
+          "search_score": 0.721
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_absent_class_score",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Neither accuracy nor macro F1 determines minority-class recall; no recall was measured.",
+    "payload": {
+      "claim": {
+        "trial": 13,
+        "split": "search",
+        "metric": "recall_minority",
+        "value": 0.42
+      },
+      "history": [
+        {
+          "trial": 13,
+          "status": "completed",
+          "search_metrics": {
+            "accuracy": 0.84,
+            "macro_f1": 0.53
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_accuracy_fallback",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The explicit train accuracy field is .765, under a separate primary metric.",
+    "payload": {
+      "claim": {
+        "trial": 58,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.765
+      },
+      "history": [
+        {
+          "trial": 58,
+          "status": "completed",
+          "primary_metric": "balanced_accuracy",
+          "train_score": 0.602,
+          "train_accuracy": 0.765
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_opposite_partition_only",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Log loss is available for the training rows only. Search accuracy cannot recover it.",
+    "payload": {
+      "claim": {
+        "trial": 8,
+        "split": "search",
+        "metric": "log_loss",
+        "value": 0.203
+      },
+      "history": [
+        {
+          "trial": 8,
+          "status": "completed",
+          "train_metrics": {
+            "log_loss": 0.203
+          },
+          "search_metrics": {
+            "accuracy": 0.902
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_two_metrics_one_value",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The stated metric is balanced accuracy with an explicit .67. The reported .91 is ordinary accuracy.",
+    "payload": {
+      "claim": {
+        "trial": 6,
+        "split": "search",
+        "metric": "balanced_accuracy",
+        "value": 0.91
+      },
+      "history": [
+        {
+          "trial": 6,
+          "status": "completed",
+          "search_metrics": {
+            "accuracy": 0.91,
+            "balanced_accuracy": 0.67
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "B_current_linear",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "An affirmative, past-tense statement about this trial agrees with the recorded logistic estimator.",
+    "payload": {
+      "fact": "logistic",
+      "text": "We used logistic regression for the current trial."
+    }
+  },
+  {
+    "id": "B_current_kernel",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The prose asserts a fitted logistic regression but this trial actually used an RBF SVM.",
+    "payload": {
+      "fact": "rbf_svm",
+      "text": "The classifier fitted for this trial was logistic regression."
+    }
+  },
+  {
+    "id": "B_future_choice",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A conditional proposal for a future fit makes no assertion about the classifier used in this trial.",
+    "payload": {
+      "fact": "logistic",
+      "text": "Next time I would try random forest if the gap persists."
+    }
+  },
+  {
+    "id": "B_denial_matches",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The negative statement is true for the known ExtraTrees family, even without a positive family identification in the sentence.",
+    "payload": {
+      "fact": "extra_trees",
+      "text": "The model fitted here was not logistic regression."
+    }
+  },
+  {
+    "id": "B_denial_conflicts",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The denial concerns the present fit, whose known estimator is logistic regression.",
+    "payload": {
+      "fact": "logistic",
+      "text": "For the present run we did not use logistic regression."
+    }
+  },
+  {
+    "id": "B_question_only",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A question about a hypothetical future comparison has no observed present-fit proposition to settle.",
+    "payload": {
+      "fact": "extra_trees",
+      "text": "Could a logistic regression be competitive on a new split?"
+    }
+  },
+  {
+    "id": "B_followup_one_more_correct",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "Exactly 13 of the same 20 rows are correct after 12 of 20 in the reference. This meets the inclusive five-point threshold.",
+    "payload": {
+      "after": 0.65
+    },
+    "original_case": "B_gain_in_same_slice"
+  },
+  {
+    "id": "B_tie_same_slice",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The same 20 rows at the same boundary remain at .60. A zero increase misses the slice target.",
+    "payload": {
+      "after": 0.6
+    }
+  },
+  {
+    "id": "B_followup_one_fewer_correct",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "On the same 20 rows, 11 correct after 12 is a decline, so the promised increase failed. A positive rise below .05 is impossible with 20 equally weighted rows.",
+    "payload": {
+      "after": 0.55
+    },
+    "original_case": "B_small_gain_same_slice"
+  },
+  {
+    "id": "B_no_slice_with_better_total",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A better global value cannot provide the missing measurement for the specifically registered long subset.",
+    "payload": {
+      "after": 0.91,
+      "missing_slice": true
+    }
+  },
+  {
+    "id": "B_followup_boundary_plus_new_rows",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Seventeen correct out of 20 in the new population is observable, but both the payload and the training-derived boundary differ from the reference slice.",
+    "payload": {
+      "after": 0.85,
+      "changed_threshold": true,
+      "changed_payload": true
+    },
+    "original_case": "B_moved_boundary_and_payload"
+  },
+  {
+    "id": "B_followup_other_split_decline",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Nine correct out of a different split of 20 does not determine the result on the original registered slice.",
+    "payload": {
+      "after": 0.45,
+      "changed_split": true
+    },
+    "original_case": "B_fall_on_different_split"
+  },
+  {
+    "id": "B_positive_measurement",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "A supported numerical prediction can be recorded as a supported measurement.",
+    "payload": {
+      "check": "supported",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "B_negative_measurement",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "The record may state that the realized value missed the criterion when the numerical check failed.",
+    "payload": {
+      "check": "not_supported",
+      "claim": "measurement_not_supported"
+    }
+  },
+  {
+    "id": "B_misquoted_negative",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "A failed numerical prediction cannot be recorded as meeting its criterion.",
+    "payload": {
+      "check": "not_supported",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "B_positive_not_causation",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "A matching numerical outcome does not by itself validate the suggested causal explanation.",
+    "payload": {
+      "check": "supported",
+      "claim": "causally_verified"
+    }
+  },
+  {
+    "id": "B_unscored_expectation",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "An unevaluable measurement gives no evidence that its numerical prediction missed.",
+    "payload": {
+      "check": "not_evaluable",
+      "claim": "measurement_not_supported"
+    }
+  },
+  {
+    "id": "B_no_numerical_target",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "With no numerical target there is no threshold against which a measurement can be called a match.",
+    "payload": {
+      "check": "not_stated",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "B_paired_gain",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "Both completed runs share the primary rows and accuracy. The .205 gain clears .10.",
+    "payload": {
+      "after": 0.805
+    }
+  },
+  {
+    "id": "B_margin_shortfall",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "The comparison is eligible but a gain of .083 is smaller than the promised .10.",
+    "payload": {
+      "after": 0.683
+    }
+  },
+  {
+    "id": "B_failed_ref_with_score",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A failed reference has no eligible baseline even if a stale numeric field remains on the row.",
+    "payload": {
+      "after": 0.975,
+      "failed_reference": true
+    }
+  },
+  {
+    "id": "B_two_failures",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Neither record is a completed trial; comparing the leftover numbers cannot judge the prediction.",
+    "payload": {
+      "after": 0.628,
+      "failed_result": true,
+      "failed_reference": true
+    }
+  },
+  {
+    "id": "B_decrease_success",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "Two completed comparable runs show a decline from .60, contrary to the specified minimum increase.",
+    "payload": {
+      "after": 0.432
+    }
+  },
+  {
+    "id": "B_cross_metric_failed",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "B_independent_reserved",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "A failed result on a different primary metric supplies no comparable endpoint for the promised improvement.",
+    "payload": {
+      "after": 0.827,
+      "changed_metric": true,
+      "failed_result": true
+    }
+  }
+]

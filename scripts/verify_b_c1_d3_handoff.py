@@ -1,6 +1,7 @@
 """Check the published frozen receipts and recompute the independent-review summary using stdlib."""
 
 from collections import Counter
+from decimal import Decimal
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -88,5 +89,46 @@ def check_d3():
             "blind_reviews": len(reviews), "factual_error_yes": ratings["factual_error"]["yes"]}
 
 
+def check_case_construction():
+    pack = D3 / "realizable_cases"
+    plan = read(pack / "protocol.json")
+    for name, digest in plan["input_sha256"].items():
+        check(sha256((D3/name).read_bytes()).hexdigest() == digest, name)
+    n = plan["fixed_slice_count"]
+    original = read(D3 / "a1_cases.json")
+    additions = read(D3 / "a1_slice_supplement.json")
+    first = read(D3 / "a1_check/results.json")
+    second = read(D3 / "a1_slice_sensitivity/results.json")
+
+    def possible(case):
+        payload = case["payload"]
+        if case["operation"] != "slice" or payload.get("missing_slice"):
+            return True
+        hits = n * Decimal(str(payload["after"]))
+        return hits == hits.to_integral_value()
+
+    invalid = {c["id"] for c in original if not possible(c)}
+    replacements = {c["original_case"]: c for c in additions}
+    check(n == 20 and len(invalid) == 4 and invalid == set(replacements), "invalid original slices")
+    check(len(additions) == 4 and all(possible(c) for c in additions), "replacement slices")
+    merged = [replacements.get(c["id"], c) for c in original]
+    check(merged == read(pack/"realizable_case_pack.json") and len({c["id"] for c in merged}) == 48,
+          "post-review case order or provenance")
+    check({c["id"]: c["expected"] for c in additions} == {r["id"]: r["expected"] for r in second},
+          "post-review expected labels")
+    initial = [r for r in first if r["id"] not in invalid]
+    agrees = sum(r["expected"] == r["observed"] for r in initial)
+    followup = sum(r["expected"] == r["observed"] for r in second)
+    expected = dict(unrealizable_originals=sorted(invalid), original_feasible=len(initial),
+                    correct_original_feasible=agrees, followup_cases=len(second), correct_followup=followup,
+                    realizable_combined_count=len(merged), combined_correct=agrees+followup,
+                    not_a_new_blind_evaluation=True)
+    check(read(pack/"results.json") == expected, "construction results")
+    check(sha256((pack/"realizable_case_pack.json").read_bytes()).hexdigest()
+          == read(pack/"completion.json")["realizable_pack_sha256"], "case pack identity")
+    return {"original_feasible": len(initial), "original_feasible_agreements": agrees, "post_review_agreements": followup}
+
+
 if __name__ == "__main__":
-    print(json.dumps({"c1": check_c1(), "independent": check_d3()}, indent=2))
+    print(json.dumps({"c1": check_c1(), "independent": check_d3(),
+                      "case_construction": check_case_construction()}, indent=2))

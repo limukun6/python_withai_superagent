@@ -1,0 +1,104 @@
+[
+  {
+    "id": "B_followup_one_more_correct",
+    "category": "slice_scope",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "detail": {
+      "status": "supported",
+      "slice_id": "long",
+      "reference_trial": 1,
+      "rows": 20,
+      "reference_accuracy": 0.6,
+      "observed_accuracy": 0.65,
+      "observed_delta": 0.050000000000000044,
+      "required_delta": 0.05,
+      "scope": "same internal search partition and train-fitted slice definition",
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_followup_one_fewer_correct",
+    "category": "slice_scope",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "detail": {
+      "status": "not_supported",
+      "slice_id": "long",
+      "reference_trial": 1,
+      "rows": 20,
+      "reference_accuracy": 0.6,
+      "observed_accuracy": 0.55,
+      "observed_delta": -0.04999999999999993,
+      "required_delta": 0.05,
+      "scope": "same internal search partition and train-fitted slice definition",
+      "comparison_scope": {
+        "comparable": true,
+        "conflicts": [],
+        "matched_fields": [
+          "split_id",
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_followup_boundary_plus_new_rows",
+    "category": "slice_scope",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "slice_id": "long",
+      "reason": "incomparable_measurement_scope",
+      "comparison_scope": {
+        "comparable": false,
+        "conflicts": [
+          "evaluation_payload_sha256"
+        ],
+        "matched_fields": [
+          "split_id"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  },
+  {
+    "id": "B_followup_other_split_decline",
+    "category": "slice_scope",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "detail": {
+      "status": "not_evaluable",
+      "slice_id": "long",
+      "reason": "incomparable_measurement_scope",
+      "comparison_scope": {
+        "comparable": false,
+        "conflicts": [
+          "split_id"
+        ],
+        "matched_fields": [
+          "evaluation_payload_sha256"
+        ],
+        "provenance_complete": false,
+        "interpretation": "Explicit conflicts or one-sided identities prevent comparison; absent legacy provenance is not independently verified."
+      }
+    }
+  }
+]

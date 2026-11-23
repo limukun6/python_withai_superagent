@@ -1,0 +1,57 @@
+[
+  {
+    "id": "B_followup_one_more_correct",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "confirmed",
+    "expectation_basis": "Exactly 13 of the same 20 rows are correct after 12 of 20 in the reference. This meets the inclusive five-point threshold.",
+    "payload": {
+      "after": 0.65
+    },
+    "original_case": "B_gain_in_same_slice"
+  },
+  {
+    "id": "B_followup_one_fewer_correct",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "contradicted",
+    "expectation_basis": "On the same 20 rows, 11 correct after 12 is a decline, so the promised increase failed. A positive rise below .05 is impossible with 20 equally weighted rows.",
+    "payload": {
+      "after": 0.55
+    },
+    "original_case": "B_small_gain_same_slice"
+  },
+  {
+    "id": "B_followup_boundary_plus_new_rows",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Seventeen correct out of 20 in the new population is observable, but both the payload and the training-derived boundary differ from the reference slice.",
+    "payload": {
+      "after": 0.85,
+      "changed_threshold": true,
+      "changed_payload": true
+    },
+    "original_case": "B_moved_boundary_and_payload"
+  },
+  {
+    "id": "B_followup_other_split_decline",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "B_post_review_sensitivity",
+    "author": "B",
+    "expected": "unknown",
+    "expectation_basis": "Nine correct out of a different split of 20 does not determine the result on the original registered slice.",
+    "payload": {
+      "after": 0.45,
+      "changed_split": true
+    },
+    "original_case": "B_fall_on_different_split"
+  }
+]

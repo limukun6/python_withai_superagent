@@ -23,3 +23,9 @@ Task2 的五个 668 分组逐行相同，E0 相对 L0 多答对 72 对、多答�
 48 例的预期先在 `6f29f84` 冻结，24 份标注在 `020ba75` 冻结。B 侧一位 Codex 标注者依据任务契约和当时历史独立给出判断，记录显示标注时未查看检查器输出、实验条件键或后续动作结果。人工双标与独立盲法审计尚无记录。A67 通用脚本在其回执中写入固定的 A 侧夹具说明；该次实际输入可用 48 个 B 侧 ID 和冻结哈希核对。[冻结方案](B_integrated_offline_1123_plan.md) · [独立汇总及输入指纹](../../research/b_integrated_offline_1123/independent_summary/)
 
 在仓库根目录运行 `python3 scripts/verify_b_c1_d3_handoff.py`，可核对 12 组模型和预测回执、48 个冻结预期与完整混淆矩阵，以及 24 份标注对原文的保留情况。发布前另逐组读取本机冻结预测，按对应留出标签重新计分。Git 交付包含汇总、指纹及去标识盲标材料，原始数据、模型权重和 SQLite 通过原有渠道保管。
+
+## 四个案例的构造与三处判断分歧
+
+原夹具的切片固定为 20 行。四个原例给出的准确率 72%、62.5%、84%、48% 分别对应 14.4、12.5、16.8、9.6 行答对，均无法在 20 行等权样本中观测。原 48 例的冻结记录仍为 45/48。只看可实现的 44 个原例，检查器与预期一致 41 次。事后构造的 4 个补例都改用了整数行数，逐例均与预期一致。两次观测的来源与原始 ID 均可复核。[四个补例与原例映射](../../research/b_integrated_offline_1123/a1_slice_supplement.json) · [四个逐例输出](../../research/b_integrated_offline_1123/a1_slice_sensitivity/results.json) · [构造核验](../../research/b_integrated_offline_1123/realizable_cases/results.json)
+
+三处分歧均在 44 个可实现的原例中。`B_current_kernel` 的事实是 RBF SVM，解释却声称本轮用了逻辑回归。检查器把该陈述当作比较背景。`B_denial_matches` 与 `B_denial_conflicts` 都是“本轮没用逻辑回归”，前者实际使用 Extra Trees，后者实际使用逻辑回归。检查器对两句否定陈述均返回“未知”。这是 B 对现有原件的复核，A 或另一位审阅者可用原始事实做独立裁决。24 份解释的空白盲标表已附在同一分支，供独立复标时直接使用。[三处分歧及检查器判据](../../research/b_integrated_offline_1123/a1_check/results.json) · [24 份空白盲标表](../../research/a70_independent_review/blinded_reviews.json)

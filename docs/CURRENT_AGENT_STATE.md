@@ -1,8 +1,8 @@
 # 当前接续状态：2026-11-23，A102–A105已结束
 
-## A112–A116队列已完成：原生整合待合并、真实交付通过、H准备齐备
+## A112–A116队列已完成：原生已合入、真实交付通过、H准备齐备
 
-原生提交16dc903在隔离A分支codex/a112-native-preference，worktree runs/a112_native_checkout：只接B原生standard/deep/deep-edit候选与导出，未接组件控制器，保留A审查修复；CLI每次明确设/恢复目录避免ambient环境污染。15无fit测试及7默认任务菜单通过（原检查和公开revision修正后检查各一次）。原B L12 revision52f9...官方404，A113原失败保留；作者metadata后另立A113R，用a50ef00143b4d5391434df20ae11632588ac25be获取三文件，大小/SHA全等于B原值，97.266秒ready，0fit/API。L12本机路径runs/a113R_deep_assets/minilm_l12，隔离ab_sentence声明已更新实际可用revision。
+原生提交16dc903已通过deae3bb合入当前A主线codex/expanded-feedback（隔离worktree runs/a112_native_checkout仍保留）。只接B原生standard/deep/deep-edit候选与导出，未接组件控制器，保留A审查修复；CLI每次明确设/恢复目录避免ambient环境污染。15无fit测试及7默认任务菜单通过（原检查和公开revision修正后检查各一次）。原B L12 revision52f9...官方404，A113原失败保留；作者metadata后另立A113R，用a50ef00143b4d5391434df20ae11632588ac25be获取三文件，大小/SHA全等于B原值，97.266秒ready，0fit/API。L12本机路径runs/a113R_deep_assets/minilm_l12，ab_sentence声明已更新实际可用revision。合并后source逐文件等于真实交付/H入口测试源，旧C1隔离checkout仍等于原c64源；回执research/a112_native_merge_verification。
 
 A114已prepared：A13原2000行PAWS池两训练包1599/1600行、六个新明确登记内部分区、8安全对称方法；B另有49401行全量封存，范围不能混同。A113实际交付工程探针75.766秒完成4fit/0API（两个native各primary+refit），各12行原生/独立源码包输出一致，缺资产前置拒绝；合成单候选投影不算自主效果/真实性能。A115新native源61.703秒通过H1/H2共8本地正式入口截停及16 Flash参数检查，无性能/付费handler。A116已落盘C1资源表：核对费用+50.36%，请求/fit未减；A71去重28/48只算避免重训需求，不冒充实测省时间。
 

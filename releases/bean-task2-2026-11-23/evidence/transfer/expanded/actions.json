@@ -1,0 +1,92 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_fourier_logistic",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "numeric_tabular_logistic_C0.1",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary roc_auc 0.9990 and 0.9975; hard predictions differ on 1/91 aligned rows (practical primary-metric threshold). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      1,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_logistic_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_extra_trees_leaf1 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      1,
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_extra_trees_leaf3",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_extra_trees_leaf1 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      1,
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_logistic_C10.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of numeric_tabular_extra_trees_leaf1 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2. Skipped replication of numeric_tabular_extra_trees_leaf3 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      1,
+      3,
+      4,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No remaining eligible search or replication can advance selection. Skipped replication of numeric_tabular_extra_trees_leaf1 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2. Skipped replication of numeric_tabular_extra_trees_leaf3 against numeric_tabular_logistic_C0.1. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      1,
+      3,
+      4,
+      6
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

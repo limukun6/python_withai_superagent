@@ -1,0 +1,202 @@
+diff --git a/superagent/ab_catalog.py b/superagent/ab_catalog.py
+index 0ee1ea2..185254d 100644
+--- a/superagent/ab_catalog.py
++++ b/superagent/ab_catalog.py
+@@ -8,13 +8,14 @@ from .ab_vision import NAME as VISION, supports_decoder
+ from .evidence_agent import route_of
+ from .metrics import MetricSpec
+ from .models import search_candidates
++from . import numeric_kernel
+ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+ 
+ 
+ ADAPTER_VERSION = '1.5'
+ 
+ 
+-def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
++def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
+     if task.get('contract_version') != 1 or task.get('objective') != 'classification':
+         raise ValueError('Expected an A/B v1 classification task')
+     metric = MetricSpec.from_payload({'metric_spec': task['metric']})
+@@ -25,9 +26,14 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+         raise ValueError('Full refit row count must be positive')
+     if type(kernel_memory_bytes) is not int or kernel_memory_bytes < 0:
+         raise ValueError('Invalid kernel memory allowance')
++    if numeric_kernel_width is not None and (type(numeric_kernel_width) is not int or numeric_kernel_width < 1):
++        raise ValueError('Numeric kernel requires a positive feature count')
+     menu = []
+     for candidate in search_candidates(kind, 'ab-v1'):
+         name, params = candidate.family, candidate.params
++        if name == numeric_kernel.NAME and (numeric_kernel_width is None or train_rows is None
++                or numeric_kernel.estimated_workspace(train_rows, numeric_kernel_width) > kernel_memory_bytes):
++            continue
+         if name == VISION and not supports_decoder(schema):
+             continue
+         if name == RELATION:
+@@ -76,9 +82,10 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+     return menu
+ 
+ 
+-def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
++def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
+     """Build the executor's registry before exploration. Use only locally runnable methods."""
+-    entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes)
++    entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes,
++                             numeric_kernel_width=numeric_kernel_width)
+     return {
+         entry['id']: dict(entry, kind=task['kind'], classifier_fits=entry['expected_classifier_fits'],
+                           refit_classifier_fits=1)
+diff --git a/superagent/ab_methods.py b/superagent/ab_methods.py
+index 13a72db..151c4a1 100644
+--- a/superagent/ab_methods.py
++++ b/superagent/ab_methods.py
+@@ -10,6 +10,7 @@ from sklearn.pipeline import FeatureUnion, Pipeline
+ from sklearn.preprocessing import StandardScaler
+ 
+ from .models import Candidate
++from . import numeric_kernel
+ from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
+ from . import ab_text_recipes, ab_vision, symmetric_text
+ 
+@@ -28,6 +29,7 @@ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minil
+ ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
+                for representation in ('word','word_char') for c in (.3,3.)})
+ ROUTES.update(ab_text_recipes.ROUTES)
++ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
+ ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
+ 
+ 
+@@ -92,6 +94,12 @@ def _ordered_relation(rows, labels, query):
+ 
+ 
+ def additions(kind):
++    if kind == 'numeric_tabular':
++        from .general_models import _fit
++        params = dict(C=1.0, kernel_components=numeric_kernel.COMPONENTS,
++                      bandwidth_sample_limit=numeric_kernel.SAMPLE_LIMIT, kernel_seed=numeric_kernel.SEED,
++                      representation='scaled numeric columns with random Fourier features')
++        return [Candidate(numeric_kernel.NAME, params, partial(_fit, kind, 'fourier_logistic'))]
+     if kind == 'text_tabular':
+         return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
+                           representation='ordered columns with word and character pair interactions'), _ordered_relation)]
+diff --git a/superagent/ab_run.py b/superagent/ab_run.py
+index 92c359e..9f8b08a 100644
+--- a/superagent/ab_run.py
++++ b/superagent/ab_run.py
+@@ -35,11 +35,11 @@ def sources():
+     return {p.relative_to(root).as_posix(): sha(p) for p in sorted(root.rglob('*.py'))}
+ 
+ 
+-def registered_capabilities(task_spec, train_rows, scope='full'):
++def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kernel_width=None):
+     """A-owned study projection of B's registry; never constructs new methods."""
+     if scope not in ('baseline','full'):
+         raise ValueError('Unknown candidate catalogue scope')
+-    caps=capabilities_for(task_spec,train_rows=train_rows)
++    caps=capabilities_for(task_spec,train_rows=train_rows,numeric_kernel_width=numeric_kernel_width)
+     if scope=='baseline':
+         if any(c.get('origin') not in ('shared_baseline','b_port') for c in caps.values()):
+             raise ValueError('Cannot define baseline from unknown candidate origins')
+@@ -237,10 +237,13 @@ def command(args):
+                    requested_planner_completed=False, model_available=False, new_api_requests=0,
+                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
+     try:
+-        caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
++        numeric_width = (task.X_train.shape[1] if getattr(args,'numeric_kernel',False)
++                         and task.kind == 'numeric_tabular' else None)
++        caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope,numeric_kernel_width=numeric_width)
+         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+             preference_catalog=getattr(args,'preference_catalog','standard'),
++            **({'numeric_kernel_width':numeric_width} if numeric_width is not None else {}),
+             parameter_semantics=getattr(args,'parameter_semantics','off'),
+             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
+             task_description_source=task.spec.get('task_description_source'),
+diff --git a/superagent/cli.py b/superagent/cli.py
+index c9fddd9..ef8f70b 100644
+--- a/superagent/cli.py
++++ b/superagent/cli.py
+@@ -90,6 +90,8 @@ def _validate(args):
+ 
+ def _run(args):
+     catalog = getattr(args, 'preference_catalog', 'standard')
++    if getattr(args,'numeric_kernel',False) and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
++        raise ValueError('The numeric kernel candidate requires the shared A/B executor')
+     if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
+         raise ValueError('Parameter semantics diagnostics require the shared A/B executor')
+     if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
+@@ -303,6 +305,8 @@ def build_parser():
+     run.add_argument('--seed',type=int,default=707)
+     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
+     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
++    run.add_argument('--numeric-kernel',action='store_true',
++                     help='Offer a bounded random Fourier classifier for numeric tables')
+     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+     run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit'], default='standard',
+                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
+diff --git a/superagent/general_models.py b/superagent/general_models.py
+index e81ff0d..ffdd73a 100644
+--- a/superagent/general_models.py
++++ b/superagent/general_models.py
+@@ -95,7 +95,10 @@ def _fit(kind,algorithm,x_train,y_train,x_search,c=1.,leaf=1):
+     elif kind=='mixed_tabular':steps=[('features',MixedPreprocessor())]
+     elif kind=='image':steps=[('flatten',ImageFlattener()),('scale',StandardScaler())]
+     else:steps=[('imputer',SimpleImputer(strategy='median',add_indicator=True,keep_empty_features=True)),('scale',StandardScaler())]
+-    if algorithm=='logistic':classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
++    if algorithm=='fourier_logistic':
++        from .numeric_kernel import NumericKernelFeatures
++        steps.append(('kernel', NumericKernelFeatures()))
++    if algorithm in ('logistic','fourier_logistic'):classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
+     elif algorithm=='extra_trees':classifier=ExtraTreesClassifier(n_estimators=300,min_samples_leaf=leaf,n_jobs=-1,random_state=42)
+     elif algorithm=='rbf_svm':classifier=SVC(C=c,kernel='rbf',gamma='scale')
+     else:raise ValueError('Unknown generic algorithm')
+diff --git a/superagent/numeric_kernel.py b/superagent/numeric_kernel.py
+new file mode 100644
+index 0000000..e84b99a
+--- /dev/null
++++ b/superagent/numeric_kernel.py
+@@ -0,0 +1,44 @@
++"""Training-only random Fourier features for a scaled numeric table."""
++import hashlib
++
++import numpy as np
++from scipy.spatial.distance import pdist
++from sklearn.base import BaseEstimator, TransformerMixin
++from sklearn.kernel_approximation import RBFSampler
++from sklearn.utils.validation import check_array, check_is_fitted
++
++COMPONENTS = 512
++SAMPLE_LIMIT = 384
++SEED = 20261123
++NAME = 'numeric_tabular_fourier_logistic'
++
++
++def estimated_workspace(rows, columns):
++    # Include missingness indicators, dense feature copies and classifier input.
++    width = 2 * columns
++    sample = min(rows, SAMPLE_LIMIT)
++    return 8 * (3 * rows * (width + COMPONENTS) + (width + 1) * COMPONENTS + sample ** 2)
++
++
++class NumericKernelFeatures(TransformerMixin, BaseEstimator):
++    def fit(self, x, y=None):
++        x = check_array(x, dtype=np.float64)
++        self.n_features_in_ = x.shape[1]
++
++        def rank(index):
++            vector = np.ascontiguousarray(x[index], dtype='<f8')
++            return hashlib.sha256(vector.tobytes()).digest()
++
++        sample = sorted(range(len(x)), key=rank)[:SAMPLE_LIMIT]
++        distances = pdist(x[sample], metric='sqeuclidean')
++        positive = distances[distances > 0]
++        self.median_squared_distance_ = float(np.median(positive)) if positive.size else 0.0
++        gamma = np.log(2.0) / self.median_squared_distance_ if positive.size else 1.0
++        self.scale_ = float(np.sqrt(np.einsum('ij,ij->', x, x) / len(x)))
++        self.map_ = RBFSampler(gamma=gamma, n_components=COMPONENTS, random_state=SEED).fit(x)
++        return self
++
++    def transform(self, x):
++        check_is_fitted(self, 'map_')
++        x = check_array(x, dtype=np.float64)
++        return np.column_stack((x, self.scale_ * self.map_.transform(x)))

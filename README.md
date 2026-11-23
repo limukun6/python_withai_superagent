@@ -6,6 +6,8 @@
 
 Task2 和 Dry Bean 共 12 份预测、八类 48 个检查案例，以及 24 份带逐条依据的遮蔽标注已归档。交接页列出两组提前结束的原因和完整组的成绩，并附标准库复核命令。[B 线补交与数据入口](docs/batches/B_C1_D3_handoff_20261123_zh.md)
 
+后续研发中，Agent 在 Dry Bean 的同一份开发留出上从 1,989 提高到 **2,005/2,178（92.06%）**。已补同一组行上的两代核方法比较、另一份数值任务的自主选型，以及 Task2 间接胜负标签实验。该包可独立运行，附 A 当前基线的可选补丁。[结果、代码和复算命令](releases/bean-task2-2026-11-23/README.md)
+
 ## 11 月 23 日已验证的 Task2 方法
 
 队友可接入按需运行第二个编码器的可选模式。正式 Agent 在 1,693 对开发标题中有 882 对只需第一个编码器，两次导出均与完整模型逐行一致。另三组实测呈现了节省计算与准确率的取舍。[四组对照](releases/alternative-encoders-2026-11-23/docs/batches/B_encoder_cascade_results_1123_zh.md) · [A117 接入及正式验收](releases/alternative-encoders-2026-11-23/docs/batches/B_native_encoder_routing_results_1123_zh.md)

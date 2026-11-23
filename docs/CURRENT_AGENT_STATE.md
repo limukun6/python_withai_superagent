@@ -1,5 +1,13 @@
 # 当前接续状态：2026-11-23，A102–A105已结束
 
+## A117：B已补交C1/D3，旧“尚缺”状态已过时
+
+fetch到HJL最新7f6458d，关键交付db589a3：Task2六组全完整、Bean六终局四完整两检查点；独立48案例与24已填写标注均已收到。A117纯stdlib回执核对通过，C1源码指纹等于A原c64，24原回答与A逐条一致。发布48例45/48、三差异均unknown；24标注错6/未发现8/证据不足10，单B Codex未人工复核。不是独立语义裁决完成，不再继续催原件或说B没上传。
+
+Bean R0因Flash改任务类型在1fit后停；E1第三请求中断留5fit检查点，不自动重跑抹失败。B历史112fit/22调用、21有计量、估计已知¥.219394；A117新增fit/API0，A累计1505。报告batches/A117_B_C1_D3_received_20261123_zh.md，原件已由Git字节提取到runs/a117_B_C1_D3_receipts/published，验证research/a117_B_C1_D3_receipts。
+
+关键预算变化：B返回摘要报告团队357请求/known¥6.7114475/unknown12/pending0（比A旧335多22及1新增未知）。返回SQLite实际未收到，A335旧副本不代表团队完整历史；付费继续暂停，不覆盖/重置新增unknown。接回原账本并核验之后再谈后续付费。可先继续五任务证据汇总与F*审查、48/24裁决，不重新训练已完成组；H仍待共同冻结，当前无A活动队列。HJL的其它新编码器/调度release未因此自动合并。
+
 ## A112–A116队列已完成：原生已合入、真实交付通过、H准备齐备
 
 原生提交16dc903已通过deae3bb合入当前A主线codex/expanded-feedback（隔离worktree runs/a112_native_checkout仍保留）。只接B原生standard/deep/deep-edit候选与导出，未接组件控制器，保留A审查修复；CLI每次明确设/恢复目录避免ambient环境污染。15无fit测试及7默认任务菜单通过（原检查和公开revision修正后检查各一次）。原B L12 revision52f9...官方404，A113原失败保留；作者metadata后另立A113R，用a50ef00143b4d5391434df20ae11632588ac25be获取三文件，大小/SHA全等于B原值，97.266秒ready，0fit/API。L12本机路径runs/a113R_deep_assets/minilm_l12，ab_sentence声明已更新实际可用revision。合并后source逐文件等于真实交付/H入口测试源，旧C1隔离checkout仍等于原c64源；回执research/a112_native_merge_verification。

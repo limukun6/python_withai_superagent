@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-23：A117收到并核对B补交C1/D3
+
+HJL最新7f6458d，关键db589a3已含Task2/Bean六组、48原例、24标注。A按Git原始字节核对，12模型终局回执一致、10完整/2检查点，source匹配A原c64，24原回答逐条相同；45/48预期一致与标注6/8/10汇总可复算，但单Codex不算人工金标准、案例构造争议/语义尚待裁决。Task2五组668/940，E0为655；Bean完整四组1989/2178，R0/E1部分交付1986/1988。历史B112fit/22API、21有usage、已知¥.219394，新unknown1。交接摘要团队357/known6.7114475/unknown12/pending0，SQLite原件未回，A335副本过时，付费继续暂停。A本次0fit/API、累计1505；报告batches/A117_B_C1_D3_received_20261123_zh.md，验证research/a117_B_C1_D3_receipts。
+
 ## 2026-11-23：A112–A116原生L12整合与实际交付、H1准备完成
 
 原生提交16dc903已通过deae3bb合入A主线，仅接standard/deep/deep-edit与资产/导出，保留A审查修复；每运行设/恢复目录防环境泄漏，组件控制器不接。15定向无fit检查、7默认任务目录通过。B声明L12原revision官方404原批保留；A113R用作者a50ef00143b4d5391434df20ae11632588ac25be取得三文件，大小/SHA全等于B原值，97.266秒ready。真实合成工程探针75.766秒，2native各primary+refit共4fit/0API，各12行原生/源码包一致，缺资产拒绝；A累计1505。不是自主性能证明。合并后source与探针/H入口逐文件相同，原c64隔离源码未改，回执research/a112_native_merge_verification。

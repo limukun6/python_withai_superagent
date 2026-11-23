@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-23，A125–A129接入与账本接收完成
+# 当前接续状态：2026-11-23，A130–A132付费恢复，H1完整对照完成
+
+## 最新用户授权及H1结果：不等官网账单，1588fit，363请求
+
+用户明确“付费不要暂停，我们没法调到官网账单，不管他了”，覆盖原357账本当前12条unknown（含Bean native未知）；不再以其未对账阻止付费。A130按具体ID/原行SHA及原ledger路径登记显式清单，unknown仍null、默认strict不改，清单外新增unknown/pending仍止当前付费批次、失败不自动重试。用外部工具scoped wrapper，不改91个规划/训练/选型源，可复用a128本地模型。19项无网络/无fit检查通过；首次大写H1预算ID0fit/0请求失败保留，已修h1_transfer。准入工具提交19ced53，AGENTS已记用户新授权。
+
+A131两个R0真实路径各11fit/3成功Flash，总22新fit/6请求，15890输入6481输出token，已知增量¥.041814，352.719秒队列。原12unknown未变、无新增unknown/pending。A132四模型全封存后首次统一打开H1外层：61411 L0 222/401(55.36%)→R0 234/401(58.35%)，+12/+2.99pp；61421 221/400(55.25%)→240/400(60.00%)，+19/+4.75pp。四模型原生/搬迁/隔离源码包预测逐字节一致。L0只探索词法4方法，R0在同8候选、同预算内试到并选择unordered_minilm_lexical；不是checked-feedback、偏好E5/组合的效果。只有1个新任务/2分区，不能外推普遍增益、按H提分改规则或反向晋级F*。
+
+累计A1588fit。当前真实ledger仍D:/codex/python_withai/runs/a129_B_ledger_return/private/ledger.sqlite，363请求/known6.7532615/unknown12/pending0，历史完整费用null。原357请求及其转移逐条未改，原0aaed...为收到时SHA，现文件合法追加6known而变化；不是新建账本。授权research/a130_accepted_history_v2/accepted_history.json，当前owner A/exclusive_idle，无活动训练/预测/API队列；旧335或B旧357副本不用来新调用。不要再次要求用户调官网账单或重复确认本轮已允许的12条未知。
+
+报告batches/A130_A132_H1_paid_results_20261123_zh.md，主证据research/a130_a132_H1_summary、a131_H1_paid、a132_H1_evaluation。H1完整完成，H2仍B负责，Released同版结果/最终报告与提交包尚待。新研究方向可以提出，但若用已看H1结果改规则，就把H1明确作为开发依据，不能重新包装成未见测试。
 
 ## 最新：已接5329503、收回实际账本；28新fit，累计1566
 

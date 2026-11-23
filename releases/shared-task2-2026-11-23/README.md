@@ -27,6 +27,8 @@
 
 在同一版生产源码上，B 已经分别用正式读取器载入 EuroSAT 45101、45102 的训练包。每包 2,500 张、10 类、9 个候选，每包三个 2,000/500 内部划分，行序、标签及组边界都与 A 的登记一致。本机用登记的 MobileNetV3-Small 权重对一张训练图像完成离线前向，得到 576 维。H2 正式训练和外层评分尚待共同运行清单；这一步共 0 次拟合、0 次模型 API。[H2 训练验收记录](evidence/h2_training_readiness.json)
 
+**队友的 A135 版本也已验收。** 共享提交 `6b6ace8` 有 92 个生产文件，新增可选的按需推理，默认关闭。按该版本的真实调度器逐个重放旧版的六个历史状态，35 个候选、三个训练内划分、六个动作和最后选中的单模型均一致。A135 代码在新进程中加载原模型，对无标签的 940 行生成完全相同的文件。两份 H2 训练包在 A135 上也通过同一套读取和划分检查。该验收 0 次拟合、0 次模型 API，原模型训练来源仍是 `a36296f`；本次没有重复读取课程验证标签。[A135 接收方回执](a135-replay/results.json) · [队友的 A135 更新](https://github.com/limukun6/python_withai_superagent/blob/6b6ace830ad9eefe92cf6236cb88c7ff706a116b/docs/batches/A133_A135_routing_and_task1_results_20261123_zh.md)
+
 A 在 `3eebf55` 已发布 H1 完整结果，该提交和本轮的 91 个生产源码文件相同。H1 的正式运行表指定的是 61411 和 61421。H2 如需 Flash，按 A 最新交接由 A 在现行累计账本执行，或先把最新原账本和独占写入窗口交到 B。其最新回执为 363 条请求、12 条历史未知、0 条待处理。这里的两项 Task2 实验和 H2 训练验收都是本机离线计算。[A 的当前交接记录](https://github.com/limukun6/python_withai_superagent/blob/3eebf5519509bd407c7d5dcddf9526c14e0f47a3/docs/batches/A130_A132_H1_paid_results_20261123_zh.md)
 
 ## 如何复算
@@ -48,3 +50,5 @@ python -m scripts.study_b_grouped_blend --parent runs/shared_full_task2_replay -
 python -m scripts.study_b_matched_e5 --parent runs/shared_full_task2_replay --shadow runs/borderline_stop_replay --weights /path/to/pretrained_weights --out runs/matched_e5_replay
 python -m scripts.study_b_fresh_single_encoders --parent runs/shared_full_task2_replay --shadow runs/borderline_stop_replay --matched runs/matched_e5_replay --weights /path/to/pretrained_weights --out runs/fresh_singles_replay
 ```
+
+A135 接收方检查在另一份 `6b6ace830ad9eefe92cf6236cb88c7ff706a116b` 工作树中执行。将 `a135-replay/overlay/` 中的文件放入该树，同样保留目录结构。传入上面生成的正式运行目录、940 行无标签特征包、已有的两份 H2 训练包目录和固定权重即可运行 `python -m scripts.check_b_a135_receiver --help` 所列的检查。[接收方脚本](a135-replay/overlay/scripts/check_b_a135_receiver.py)

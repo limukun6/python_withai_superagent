@@ -6,6 +6,8 @@
 
 11 月 24 日在训练集内部比较了两种编码器。E5 在两块开发区合计领先 18 题，换到另两块没有共同标题的区域后，MiniLM-L12 领先 11 题。这些结果支持保留两个候选，给 Agent 留出复核选择的余地。[冻结后复核的结果](releases/shared-task2-2026-11-23/fresh-singles/results.json)
 
+队友最新的 A135 共享代码 `6b6ace8` 已复现 B 的 6 个历史调度动作与 940 行冻结模型预测，两个 EuroSAT 训练包和全部 6 个内部分区也通过接收端检查。[A135 兼容性回执](releases/shared-task2-2026-11-23/a135-replay/results.json)
+
 ## 队友整合用的六组对照与独立标注
 
 本轮接入固定在 `5329503`。主用配置、账本私下交接、H2 状态及当前运行窗口见 [B 给 A 的统一回复](docs/batches/B_TO_A_LATEST_INTEGRATION_REPLY_20261123_zh.md)。

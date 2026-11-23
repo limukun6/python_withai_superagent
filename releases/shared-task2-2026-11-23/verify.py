@@ -238,10 +238,25 @@ def main(args):
     calibrated = check_calibration()
     matched_e5 = check_e5()
     fresh = check_fresh(args.interval)
+    receiver = ROOT/'a135-replay'
+    completed(receiver)
+    rr, rp = read(receiver/'results.json'), read(receiver/'protocol.json')
+    require(rp['original_protocol'] == sha(EVIDENCE/'protocol.json') and
+            rp['runner'] == sha(receiver/'overlay/scripts/check_b_a135_receiver.py') and
+            rp['plan'] == sha(receiver/'overlay/docs/batches/B_a135_receiver_plan_20261124_zh.md') and
+            rp['shared_source'] == rr['current_source'] and rr['source_files'] == len(rp['source_files']) == 92 and
+            rr['old_source'] == q['shared_commit'] and rr['historical_model'] == frozen['model'] and
+            rr['matching_actions'] == len(frozen['actions']) and rr['action_types'] == [x['action'] for x in frozen['actions']]
+            and rr['matching_task2_menu'] == len(frozen['candidates']) and rr['matching_partitions'] == 3 and
+            rr['matching_predictions'] == 940 and rr['prediction_sha256'] == ex['new'][0] and
+            rr['source_model'] == r['selected'] and not rr['current_training_performed'] and
+            not rr['course_validation_labels_read'] and rr['classifier_fits'] == rr['model_api_calls'] == 0 and
+            set(rr['h2_train']) == set(h['inputs']) and not rr['h2_outer_access'], 'A135 receiver record differs')
     print(f"Task2 {r['correct']}/{r['rows']}, previous {r['previous']}, +{r['gained']}/-{r['lost']}; "
           f"two training panels net {net:+d}/{count}; calibration net {calibrated:+d} versus stronger control per panel; "
           f"matched E5 vote net {matched_e5:+d}; fresh E5 minus L12 {fresh:+d}; "
-          "H2 train-only 2 x 3 splits; 11 base fits, 2 supervised calibration fits, 0 model API.")
+          "H2 train-only 2 x 3 splits; A135 6 decisions and 940 predictions matched; "
+          "11 base fits, 2 supervised calibration fits, 0 model API.")
 
 
 if __name__ == '__main__':

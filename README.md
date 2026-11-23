@@ -6,6 +6,8 @@ Task2 和 Dry Bean 共 12 份预测、八类 48 个检查案例，以及 24 份�
 
 ## 11 月 23 日已验证的 Task2 方法
 
+在同一批 1,591 对训练内标题上，E5＋词频 MiniLM-L12 从一半训练样本增至全部，两种抽样分别多答对 19 对和 31 对。双标题联合编码和训练子集投票均完成确认。队友可以从匿名组记录重算各阶段成绩。[训练规模和两种挑战方法](releases/alternative-encoders-2026-11-23/docs/batches/B_grouped_titles_results_1123_zh.md)
+
 新增一个可选实验开关：内部两次测量支持不同单模型时，Agent 可在剩余额度内验证第三份证据。两批电影台词中分别观察到改选和保留，A117 本地接入副本重现了全部 450 行诊断预测。[独立接入补丁与两次实测](releases/alternative-encoders-2026-11-23/docs/batches/B_single_conflict_results_1123_zh.md)
 
 固定与动态调度的同预算对照已完成。训练内留出结果为标题 1,208 对 1,237（共 1,693 对），电影台词 344 对 335（共 450 对）；动态调度分别实际使用 10 和 8 次训练，固定调度各用 11 次。[两项同预算比较](releases/alternative-encoders-2026-11-23/docs/batches/B_preference_policy_results_1123_zh.md)

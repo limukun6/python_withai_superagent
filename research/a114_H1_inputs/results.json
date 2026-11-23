@@ -1,0 +1,541 @@
+{
+  "training_inputs": {
+    "61411": {
+      "train_rows": 1599,
+      "outer_holdout_rows": 401,
+      "train_source_ids_sha256": "67ace3cf44ade91a82dd65fcc20fd2f825c4522b2fe2e1bfbdfd6079a6b869a5",
+      "train_archive_sha256": "2ffc7749c86c48c5bd6496991346464f3bc00c3c0d010fa6233671559e5f2267",
+      "inner_manifest_sha256": "6821d25feddfb708b75c96cfd2c6f7df604ba02209ab0f7237194949306b0c3a",
+      "registered_splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "56528032fdef3b8b8645e22412f86f8352ca66a282f389d12169b65798a7fdaf",
+          "label_sha256": "7c3d6f4e46d4dcfc1c6f5804f4f10f526a99c6e0c823577525db003849aec65f",
+          "evaluation_payload_sha256": "4554ce9e5eba3764014f66b1fe2ae968b0277e4526c962882994c0c2626e6eb2"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "90b148d19799d83bd7f859ae36f538577c623b1b128f861d47689575827c91cf",
+          "label_sha256": "c122d30ed82f534280a81c39fd83caa326d4ba193b3dcd78b4a199c46c6ace61",
+          "evaluation_payload_sha256": "374e379e342678e18d4a1724b6c5a42986fde15e1b9dfe86370e6c424e29eb19"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "a3f413a3ed244387e5d979fd365d427f0f97d46c75e87a562930e030d5c090a4",
+          "label_sha256": "82abcd4d21135dbc3d71f99242001f2f286b98fed1b1cb8ff0b7c42b889e70c2",
+          "evaluation_payload_sha256": "0df4469b3fc5601d3e8408e191111dd68fa65d5593c0c657d5ca01e7fab159d9"
+        }
+      },
+      "task_spec": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "left",
+              "type": "text"
+            },
+            {
+              "name": "right",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "equivalent",
+          "pair_semantics": "symmetric"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": "symmetric",
+              "source": "input_schema",
+              "status": "confirmed"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "capabilities": {
+        "symmetric_word_C0.3": {
+          "id": "symmetric_word_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "symmetric_word_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_C3.0": {
+          "id": "symmetric_word_C3.0",
+          "params": {
+            "C": 3.0,
+            "representation": "symmetric_word_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_char_C0.3": {
+          "id": "symmetric_word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "symmetric_word_char_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word_char",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_char_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_char_C3.0": {
+          "id": "symmetric_word_char_C3.0",
+          "params": {
+            "C": 3.0,
+            "representation": "symmetric_word_char_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word_char",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_char_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_word": {
+          "id": "unordered_word",
+          "params": {
+            "representation": "unordered_word",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_word",
+          "input_kind": "pair_text",
+          "representation": "unordered_word",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_char": {
+          "id": "unordered_char",
+          "params": {
+            "representation": "unordered_char",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_char",
+          "input_kind": "pair_text",
+          "representation": "unordered_char",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_word_char": {
+          "id": "unordered_word_char",
+          "params": {
+            "representation": "unordered_word_char",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_word_char",
+          "input_kind": "pair_text",
+          "representation": "unordered_word_char",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_minilm_lexical": {
+          "id": "unordered_minilm_lexical",
+          "params": {
+            "representation": "unordered_minilm_lexical",
+            "hash_bins": 32768,
+            "C": 1.0,
+            "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+            "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+          },
+          "route": "unordered_minilm_lexical",
+          "input_kind": "pair_text",
+          "representation": "unordered_minilm_lexical",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "local_frozen_encoder_cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        }
+      }
+    },
+    "61421": {
+      "train_rows": 1600,
+      "outer_holdout_rows": 400,
+      "train_source_ids_sha256": "ea7a4b3d08ea7cebd4922b723a292df69f98ae220da775c3c5ea31bb85dc5690",
+      "train_archive_sha256": "fad507300970c021115390aa522c1a2125c693bbb63368c2f606200e084cea14",
+      "inner_manifest_sha256": "e22400d7efaaed83896fbb0f66b0a16967b688fa6372b5804bfbf5716670f11e",
+      "registered_splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "dae8be28883e5b575594327d1709dbd2b31c1f648726501161b776402ac78894",
+          "label_sha256": "0fa973e6964a62ee106ab3b032c88212a91e9ef5d38b579deeb3a8327c55b07c",
+          "evaluation_payload_sha256": "6900628b37d9666276b98797e8db7dc40341ad8a811b80b1576658c7caa46b2f"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "cb96de4fc0d44707af66f652f699b093b172518e6db98b43a86a6cedeca355f5",
+          "label_sha256": "43d4d5fe9575ab5b5c6805ec3301395ec6b711c78694379c9feab911a0a49e2a",
+          "evaluation_payload_sha256": "edbb93dd203e50beeba2d15ca6e693603fc7be96c35d4829dd329a325b573688"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "e21bd65dd880bd4bef36cd6b8944356555b19885d70e0808c08966d6e03dcb44",
+          "label_sha256": "8eaf411548aafd9d04f9c5c0ba5dd4c4cc8fe922adee3a60f88fe3dbb88e5e20",
+          "evaluation_payload_sha256": "a0f9b1b4fc7a25b52d695def58ff497d4d8922e26d01057633ac45d7c5674711"
+        }
+      },
+      "task_spec": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "left",
+              "type": "text"
+            },
+            {
+              "name": "right",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "equivalent",
+          "pair_semantics": "symmetric"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": "symmetric",
+              "source": "input_schema",
+              "status": "confirmed"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "capabilities": {
+        "symmetric_word_C0.3": {
+          "id": "symmetric_word_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "symmetric_word_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_C3.0": {
+          "id": "symmetric_word_C3.0",
+          "params": {
+            "C": 3.0,
+            "representation": "symmetric_word_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_char_C0.3": {
+          "id": "symmetric_word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "symmetric_word_char_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word_char",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_char_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "symmetric_word_char_C3.0": {
+          "id": "symmetric_word_char_C3.0",
+          "params": {
+            "C": 3.0,
+            "representation": "symmetric_word_char_absdiff_product",
+            "swap_augmentation": false,
+            "max_features_per_vectorizer": 20000
+          },
+          "route": "symmetric_word_char",
+          "input_kind": "pair_text",
+          "representation": "symmetric_word_char_absdiff_product",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_word": {
+          "id": "unordered_word",
+          "params": {
+            "representation": "unordered_word",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_word",
+          "input_kind": "pair_text",
+          "representation": "unordered_word",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_char": {
+          "id": "unordered_char",
+          "params": {
+            "representation": "unordered_char",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_char",
+          "input_kind": "pair_text",
+          "representation": "unordered_char",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_word_char": {
+          "id": "unordered_word_char",
+          "params": {
+            "representation": "unordered_word_char",
+            "hash_bins": 32768,
+            "C": 1.0
+          },
+          "route": "unordered_word_char",
+          "input_kind": "pair_text",
+          "representation": "unordered_word_char",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        },
+        "unordered_minilm_lexical": {
+          "id": "unordered_minilm_lexical",
+          "params": {
+            "representation": "unordered_minilm_lexical",
+            "hash_bins": 32768,
+            "C": 1.0,
+            "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+            "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+          },
+          "route": "unordered_minilm_lexical",
+          "input_kind": "pair_text",
+          "representation": "unordered_minilm_lexical",
+          "estimator": "logistic",
+          "swap_label_rule": "preserves",
+          "supports_probabilities": true,
+          "expected_classifier_fits": 1,
+          "resource": "local_frozen_encoder_cpu",
+          "origin": "b_port",
+          "kind": "pair_text",
+          "classifier_fits": 1,
+          "refit_classifier_fits": 1
+        }
+      }
+    }
+  },
+  "B_full_registration_metadata_checked": true,
+  "B_full_rows": 49401,
+  "B_full_outer_rows": {
+    "45101": 39502,
+    "45102": 39176
+  },
+  "H1_final_scope_frozen": false,
+  "outer_rows_exported": 0,
+  "outer_scores_computed": 0
+}

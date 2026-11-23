@@ -1,0 +1,9 @@
+# A113工程交付探针：最多4次真实fit
+
+A113R已ready，三个文件完全等于B原资产SHA，公开可用revisiona50ef00143b4d5391434df20ae11632588ac25be。native整合分支已显式更新下载/模型元数据revision；不改权重。定向测试须在新源再次执行。
+
+以40组匿名合成偏好对、12组无标签查询做工程探针。各走deep/deep-edit一次，正式CLI/shared executor、fit-limit2、seed707、每worker180秒/路径600秒。本探针显式将控制器目录投影为正在验收的一个native候选，以保证覆盖其编码/训练/重训/导出；不将该人工覆盖探针当自主方法发现或真实任务提分证据。worker仍由原执行器调用并计数，不绕过实际fit账本。
+
+每模式预期1次primary+1次最终refit，共最多4fit。使用原a29物理监督fit观察器核对attempted/completed，任何失败停止本批、不重跑。全程离线，无学校API/共享账本写入。两个pipeline均通过原生predict、独立portable源码包predict逐行对比；缺失L12资产时必须在产生预测输出前拒绝。所有分类器拟合进入A累计，工程样本的分数不用于研究结论。
+
+0LLM，最多15分钟；每模式最多2fit。原始数据/worker/model/bundle在忽略目录，Git只归档协议、fit计数、导出资源描述/结果和代码。若任一路失败保留partial并记录已发生成本，不启动下一模式。

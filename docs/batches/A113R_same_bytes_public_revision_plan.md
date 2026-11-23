@@ -1,0 +1,5 @@
+# A113R：保留全部资产SHA，用作者已核验版本取得相同字节
+
+原A113的404与脚本快照保存在research/a113_original_revision_stopped。单独元数据请求已成功，作者当前revision为a50ef00143b4d5391434df20ae11632588ac25be。本批使用该固定revision，不重发原失败URL。prepare_a113_deep_assets新增--revision-metadata参数，要求元数据id正确及40位SHA；协议同时记原声明版本与本批下载版本。
+
+B的三文件大小和SHA完全保留，任一不符停止，不换成相近模型/不同权重。timeout60、总1800秒、4MiB分段/失败不重试、过程代理设置不改系统配置。预计2–20分钟，0fit/0模型API。只有全部字节验证成功后才考虑更新native生产资产revision并重新跑受影响工程检查。若失败继续H1离线准备，失败原件保留。

@@ -79,32 +79,59 @@ def prepare(inputs,out,env):
          training_rows=prior['rows'],reserve_rows=prior['holdout'],official_test=False))
 
 
-def execute(inputs,out,env):
+def check_interfaces(protocol,inputs,out):
+    original=protocol['interfaces']
+    current=interfaces(inputs)
+    if current==original:
+        return
+    amendment=read(out/'runner_amendment.json')
+    check(original['runner']==amendment['previous_runner'] and current['runner']==amendment['amended_runner']
+          and original|{'runner':current['runner']}==current,'An input other than the receipt controller changed')
+
+
+def execute(inputs,out,env,*,resume=False):
     protocol=read(out/'protocol.json')
-    check(protocol['interfaces']==interfaces(inputs),'Protocol inputs or implementation changed')
-    save(out/'training_started.json',dict(process=os.getpid(),seed=SEED))
+    check_interfaces(protocol,inputs,out)
+    if resume:
+        amendment=read(out/'runner_amendment.json')
+        check((out/'training_started.json').is_file() and not (out/'models_frozen.json').exists(),
+              'Resume requires a started pair with no final score')
+        save(out/'resume_started.json',dict(process=os.getpid(),amendment=ab_run.sha(out/'runner_amendment.json')))
+    else:
+        save(out/'training_started.json',dict(process=os.getpid(),seed=SEED))
     receipts={}
     for arm in ARMS:
         physical=out/(arm+'.physical.jsonl')
-        arm_env=dict(env,AB_B1_FIT_LOG=str(physical),AB_B1_PER_WORKER_FIT_LIMIT='1')
-        rc,seconds=command(argv(inputs,out,arm),out/(arm+'.log'),arm_env,1260)
-        counts=[json.loads(line) for line in physical.read_text().splitlines()] if physical.exists() else []
         run=out/arm
+        if run.exists():
+            check(resume and arm in amendment['completed'] and
+                  ab_run.sha(run/'selected_model.joblib')==amendment['completed'][arm]['model'] and
+                  ab_run.sha(physical)==amendment['completed'][arm]['fit_log'],'Unexpected existing arm')
+            rc=0
+        else:
+            arm_env=dict(env,AB_B1_FIT_LOG=str(physical),AB_B1_PER_WORKER_FIT_LIMIT='1')
+            rc,_=command(argv(inputs,out,arm),out/(arm+'.log'),arm_env,1260)
+        counts=[json.loads(line) for line in physical.read_text().splitlines()] if physical.exists() else []
         if rc:
-            save(out/(arm+'_failure.json'),dict(exit=rc,observed_fits=len(counts),seconds=seconds))
+            save(out/(arm+'_failure.json'),dict(exit=rc,observed_fits=len(counts)))
             raise RuntimeError(f'{arm} failed after {len(counts)} observed fits. See {arm}.log')
         outcome,account,manifest=[read(run/f) for f in ('run_outcome.json','classifier_fits.json','run_manifest.json')]
         n=len(counts)
         check(n==account['attempted_classifier_fits']==account['completed_classifier_fits']<=11,'Fit ledger mismatch')
-        check(outcome['requested_planner_completed'] and outcome['full_refit_completed'] and outcome['new_api_requests']==0 and
-              not (run/'llm_usage.jsonl').read_text().strip() and manifest['preference_catalog']==arm,'Run or usage mismatch')
+        usage=[json.loads(line) for line in (run/'llm_usage.jsonl').read_text().splitlines()]
+        check(len(usage)==1 and usage[0]['event']=='ledger_initialized' and
+              usage[0]['provider'] is None and usage[0]['model'] is None and
+              all(usage[0][key]==0 for key in ('input_tokens','output_tokens','cost_rmb','course_cost_rmb','actual_cost_rmb')),
+              'Unexpected entry in the local model API ledger')
+        check(outcome['requested_planner_completed'] and outcome['full_refit_completed'] and outcome['new_api_requests']==0
+              and manifest['preference_catalog']==arm,'Run or usage mismatch')
         check(len(manifest['capabilities'])==protocol['sizes'][arm],'Run catalog mismatch')
         for key,value in protocol['splits'].items():
             actual=read(run/(key+'_split.json'))
             check(actual['row_ids_sha256']==value['row_ids_sha256'] and
                   ab_run.sha(run/(key+'.joblib'))==value['evaluation_payload_sha256'],'Split drift')
         history=read(run/'history.json')
-        result=dict(actual_fits=n,seconds=seconds,candidate=outcome['selected_candidate'],model=ab_run.sha(run/'selected_model.joblib'),
+        result=dict(actual_fits=n,seconds=outcome['elapsed_seconds'],candidate=outcome['selected_candidate'],model=ab_run.sha(run/'selected_model.joblib'),
             selection=ab_run.sha(run/'final_selection.json'),actions=ab_run.sha(run/'actions.json'),
             observed=[dict(candidate=r['candidate'],partition=r['split_id'],score=r['search_score']) for r in history],
             physical_worker_log=ab_run.sha(physical),model_api=0)
@@ -127,7 +154,7 @@ def execute(inputs,out,env):
         check(files[0]==files[1],'Independent exports differ')
         exports[arm]=files[0]
     save(out/'exports_frozen.json',dict(models=ab_run.sha(out/'models_frozen.json'),predictions=exports))
-    check(protocol['interfaces']==interfaces(inputs),'Experiment inputs changed before scoring')
+    check_interfaces(protocol,inputs,out)
     y=np.array(read(inputs/'scoring_only.json')['labels'])
     groups=np.array(read(inputs/'groups_only.json'))
     hits={}
@@ -148,9 +175,13 @@ def execute(inputs,out,env):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('stage',choices=['prepare','execute'])
+    p.add_argument('stage',choices=['prepare','execute','resume'])
     p.add_argument('--workspace',type=Path,required=True)
     p.add_argument('--inputs',type=Path,default=REPO/'runs/local_components_02')
     p.add_argument('--output',type=Path,required=True)
     a=p.parse_args()
-    (prepare if a.stage=='prepare' else execute)(a.inputs.resolve(),a.output.resolve(),environment(a.workspace.resolve()))
+    paths=(a.inputs.resolve(),a.output.resolve(),environment(a.workspace.resolve()))
+    if a.stage=='prepare':
+        prepare(*paths)
+    else:
+        execute(*paths,resume=a.stage=='resume')

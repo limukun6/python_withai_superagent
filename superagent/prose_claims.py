@@ -43,6 +43,12 @@ SENTENCE_SPLIT = re.compile(r'(?<=[.!?;])\s+|\n+')
 ID_LIKE = re.compile(r'\b[a-z][a-z_]*(?:_[A-Za-z0-9.]+)+\b', re.I)
 CURRENT_SUBJECT = re.compile(r'\b(?:(?:current|selected|proposed|next)\s+(?:model|classifier|candidate|configuration)|'
                             r'this\s+(?:model|classifier|candidate)|(?:this|it)\s+is|the\s+classifier\s+is)\b', re.I)
+TEMPORAL_REFERENCE = re.compile(r'\b(?:after|following)\b', re.I)
+# Only a nearby noun phrase is handled; "after observing scores, SVM is better
+# than baseline" must not make the current SVM mention historical.
+HISTORICAL_BASELINE_TAIL = re.compile(
+    r'^\s+(?:(?:regression|model|classifier|C\d+(?:\.\d+)?)\s+){0,2}'
+    r'(?:baseline|incumbent)\b', re.I)
 
 
 def _family_of(kind, identifier, params=None):
@@ -108,9 +114,15 @@ def classifier_claims(text):
     claims = []
     for start, end, span, family, compatible in kept:
         sentence, before = sentence_around(text, start)
+        # An explicit current subject starts a new reference scope. Earlier
+        # "baseline" or "trial" words must not exempt a later current claim.
+        subjects = list(CURRENT_SUBJECT.finditer(before))
+        reference_prefix = before[subjects[-1].end():] if subjects else before
+        after = sentence[len(before) + end - start:]
         # "than the logistic baseline" and "trial 1 logistic C0.05" both name a
-        # different experiment, so the word is recorded but not scored.
-        elsewhere = bool(COMPARISON.search(before) or TRIAL_WORD.search(before))
+        # different experiment. A temporal baseline noun phrase does too.
+        elsewhere = bool(COMPARISON.search(reference_prefix) or TRIAL_WORD.search(reference_prefix)
+            or (TEMPORAL_REFERENCE.search(reference_prefix) and HISTORICAL_BASELINE_TAIL.match(after)))
         claims.append({'kind': 'classifier', 'span': span, 'claim': family,
                        'compatible_with': compatible, 'sentence': sentence,
                        'in_comparison': elsewhere})

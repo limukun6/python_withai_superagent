@@ -48,6 +48,8 @@ def registered_capabilities(task_spec, train_rows, scope='full'):
 
 
 def validate_options(args):
+    if getattr(args,'parameter_semantics','off')!='off' and args.planner!='checked-history':
+        raise ValueError('Parameter semantics diagnostics require checked-history planning')
     if args.planner not in ('local','raw-history','checked-history'):
         raise ValueError('AB supports local, raw-history or checked-history planning')
     if args.planner=='local' and args.history_policy!='strict':
@@ -239,6 +241,7 @@ def command(args):
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
+            parameter_semantics=getattr(args,'parameter_semantics','off'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
@@ -347,7 +350,9 @@ def command(args):
             row['metric_identity'] = metric.check_identity(facts.get('metric_spec'))
             row['configuration_fact_check'] = verify_configuration_claim(proposal,facts['estimator'])
             row['hypothesis_check'] = check_expectation(proposal,row,history)
-            row['explanation_audit'] = audit_explanation(proposal,history,{'id':name,'params':caps[name]['params']}) if proposal else None
+            row['explanation_audit'] = audit_explanation(proposal,history,{'id':name,'params':caps[name]['params']},
+                parameter_semantics=getattr(args,'parameter_semantics','off')=='diagnostic',
+                selected_facts={'classifier':caps[name]['estimator'],'source':'shared_ab_catalogue'}) if proposal else None
             history.append(row)
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),

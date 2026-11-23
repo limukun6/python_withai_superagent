@@ -90,6 +90,8 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
+        raise ValueError('Parameter semantics diagnostics require the shared A/B executor')
     if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
         from .ab_methods import PREFERENCE_CATALOG_ENV
         from .ab_run import command
@@ -310,6 +312,7 @@ def build_parser():
     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2'],default='strict-v1',help='AB Flash: allow explicit diagnostic intent and uncertain score expectations')
+    run.add_argument('--parameter-semantics',choices=['off','diagnostic'],default='off',help='AB checked-history only: optional source-backed C semantics warnings, without action veto')
     run.add_argument('--partial-delivery',choices=['off','checkpoint'],default='off',help='AB: on failure freeze an already fitted checkpoint; the requested run remains failed')
     run.add_argument('--anchor',choices=['catalog','schema'],default='catalog')
     run.add_argument('--portfolio',choices=['original','expanded','research','nonlinear','adaptive','semantic','learned','challenger','ab-v1'],default='expanded')

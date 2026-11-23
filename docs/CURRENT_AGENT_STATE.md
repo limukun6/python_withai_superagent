@@ -1,4 +1,12 @@
-# 当前接续状态：2026-11-23，A118/A119已完成
+# 当前接续状态：2026-11-23，A120–A124本地队列已完成
+
+## A120–A124：33新fit，三个当前源完整自主交付；语义未晋级，H未开
+
+计划batches/A120_A124_next_5h_plan_20261123_zh.md已执行本地可做部分，未声称跑满5小时。C语义模块/正式CLI显式开关已实现，默认off，仅checked可启用；文档绑定/同路trial/声明与实际身份分开。40开发例36符合/矛盾误报0，4失败为夹具未注册线性SVM路线；旧4明确C错误仅检出1，另3未知。受控checked上下文+7226 UTF8字节，非token/费用。74定向no-fit回归通过，1需Dummy.fit的测试排除。诊断未晋级，不宣称Flash纠错或提分，当前部署保持off，不追旧例满分。
+
+当前源Coupon/SMS/Flowers统一local+ab-fixed/full/standard/语义off，3条各11fit（4探索6复核1refit），自主选字段交互树、MiniLM非线性文本、MobileNet。2030/826/200行原生/搬迁/隔离源码包预测逐字节一致；未重新评分outer/test，工程自主交付证据。纯CLI325.344秒。prepare一次0fit对象属性失败，Coupon11fit后包装器一次误读可选资源文件；旧失败保留，核对完整模型后复用Coupon、SMS/花卉新增22，总33不重复训练。15交付故障通过20.562秒，0额外fit/API；脚本缺文件错误匹配首失败保留。原confirmation字段false实际指晋级basis，历史实际三分区4/3/3测量均有，未改B逻辑。A124首次归档比较哈希key前缀失败保留，v2规范key后逐文件核对生产与三个模型源相同。
+
+A累计1538，新API0、新API费0，历史完整费用仍未知。证据research/a120_cases、a121_evaluation、a121_transport_regression、a122_prepared_v2、a122_acceptance、a122_acceptance_continued、a123_delivery_faults_v2、a124_window_v2。报告batches/A120_A124_results_20261123_zh.md；交接A_TO_B_A124_HANDOFF_20261123_zh.md。H1 runner已提供prepare/train封存/score，未共同冻结回执训练/评分门均0fit/API前停，无H成绩/留出标签访问。新版H候选source由a124_window_v2/protocol.json固定；原a115 source不是当前完整源码，新诊断默认off。B更新3347564仅已看交付目录/摘要，未合新编码器/调度；未发现真实账本交回/H共同冻结。仍待B actual357 SQLite和新增unknown处理及共同版本/策略/范围/窗口。没有活动训练/预测/API队列；下一步H与Released，不重复C1或本轮完整工程验收。
 
 ## A118/A119：五任务与独立材料已审查，保守推荐L0，H尚未共同冻结
 

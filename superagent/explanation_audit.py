@@ -24,7 +24,7 @@ def comparison_report(history):
             'uncertainty':'These exact score comparisons do not establish statistical significance or a causal explanation.'}
 
 
-def audit_explanation(proposal,history,candidate=None):
+def audit_explanation(proposal,history,candidate=None,*,parameter_semantics=False,selected_facts=None):
     from .configuration_facts import proposal_change
     from .proposal_consistency import direction_diagnostics
     comparison=comparison_report(history)
@@ -63,7 +63,12 @@ def audit_explanation(proposal,history,candidate=None):
             'claim_kind':item['kind'],'matched_text':item['span'],'declared':item.get('claim'),
             'observed':item.get('observed'),
             'review_note':'The quoted claim does not match the recorded facts for this proposal.'})
-    return {'executor_comparison':comparison,'cited_measured_facts':[deepcopy(facts[fid]) for fid in cited],
+    semantic_report=None
+    if parameter_semantics:
+        from .parameter_semantics import check_parameter_semantics
+        semantic_report=check_parameter_semantics(fields,candidate,history,selected_facts or facts_for_candidate,kind)
+        warnings.extend(semantic_report['warnings'])
+    report={'executor_comparison':comparison,'cited_measured_facts':[deepcopy(facts[fid]) for fid in cited],
         'configuration_change':change,'direction_consistency':consistency,
         'selected_candidate':proposal['candidate'],'future_hypothesis':{'source':'LLM, unverified future hypothesis','text':proposal.get('hypothesis'),
             'expected_change':deepcopy(proposal.get('expected_change'))},
@@ -74,6 +79,8 @@ def audit_explanation(proposal,history,candidate=None):
                       f"{prose['claims_checked']} machine-checkable claims inspected, {prose['contradicted']} contradicted, "
                       f"{prose['unverifiable']} undecidable.",
         'changes_candidate':False,'triggers_api_retry':False}
+    if semantic_report is not None:report['parameter_semantics']=semantic_report
+    return report
 
 
 def proposed_review_context(proposal,history,candidate):

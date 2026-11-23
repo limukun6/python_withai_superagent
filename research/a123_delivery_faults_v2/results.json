@@ -1,0 +1,92 @@
+[
+  {
+    "task": "coupon",
+    "fault": "missing_model",
+    "rejected_before_output": true,
+    "expected_error": "No such file or directory"
+  },
+  {
+    "task": "coupon",
+    "fault": "schema_changed",
+    "rejected_before_output": true,
+    "expected_error": "Task schema no longer matches"
+  },
+  {
+    "task": "coupon",
+    "fault": "model_corrupt",
+    "rejected_before_output": true,
+    "expected_error": "Model file no longer matches"
+  },
+  {
+    "task": "sms",
+    "fault": "missing_model",
+    "rejected_before_output": true,
+    "expected_error": "No such file or directory"
+  },
+  {
+    "task": "sms",
+    "fault": "schema_changed",
+    "rejected_before_output": true,
+    "expected_error": "Task schema no longer matches"
+  },
+  {
+    "task": "sms",
+    "fault": "model_corrupt",
+    "rejected_before_output": true,
+    "expected_error": "Model file no longer matches"
+  },
+  {
+    "task": "sms",
+    "fault": "missing_weights",
+    "rejected_before_output": true,
+    "error_tail": "ValueError: Missing frozen encoder resource: set SUPERAGENT_MINILM_WEIGHTS"
+  },
+  {
+    "task": "flowers",
+    "fault": "missing_model",
+    "rejected_before_output": true,
+    "expected_error": "No such file or directory"
+  },
+  {
+    "task": "flowers",
+    "fault": "schema_changed",
+    "rejected_before_output": true,
+    "expected_error": "Task schema no longer matches"
+  },
+  {
+    "task": "flowers",
+    "fault": "model_corrupt",
+    "rejected_before_output": true,
+    "expected_error": "Model file no longer matches"
+  },
+  {
+    "task": "flowers",
+    "fault": "missing_weights",
+    "rejected_before_output": true,
+    "error_tail": "ValueError: Missing frozen encoder resource: set SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS"
+  },
+  {
+    "task": "controlled_output_contract",
+    "fault": "row_count",
+    "error": "Prediction output must contain one scalar per input row",
+    "rejected": true
+  },
+  {
+    "task": "controlled_output_contract",
+    "fault": "unknown_label",
+    "error": "Malformed metric specification",
+    "rejected": true
+  },
+  {
+    "task": "controlled_output_contract",
+    "fault": "probability_shape",
+    "error": "Malformed metric specification",
+    "rejected": true
+  },
+  {
+    "task": "controlled_output_contract",
+    "fault": "probability_normalization",
+    "error": "Malformed metric specification",
+    "rejected": true
+  }
+]

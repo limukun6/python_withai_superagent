@@ -60,6 +60,39 @@ class ProseClaimTests(unittest.TestCase):
                              HISTORY)
         self.assertEqual(report['contradicted'], 1)
 
+    def test_temporal_baseline_from_natural_proposal_is_not_current_classifier(self):
+        text = 'It is a reasonable next primary-split probe after a strongly regularized one-hot logistic baseline.'
+        report = check_prose({'reason':text}, {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['contradicted'], 0)
+        self.assertEqual(report['informational'], 1)
+
+    def test_following_baseline_preserves_distinct_current_claim(self):
+        text = 'Try CatBoost following a logistic regression baseline.'
+        report = check_prose({'reason':text}, {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['confirmed'], 1)
+        self.assertEqual(report['informational'], 1)
+
+    def test_current_wrong_classifier_after_baseline_is_still_rejected(self):
+        text = 'After the logistic baseline, the selected model is an SVM.'
+        report = check_prose({'reason':text}, {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['contradicted'], 1)
+        self.assertIn('SVM', report['unique_contradictions'])
+
+    def test_current_classifier_after_trial_is_checked(self):
+        text = 'Trial 1 logistic baseline, current classifier is CatBoost.'
+        report = check_prose({'reason':text}, {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['confirmed'], 2)  # current classifier and existing trial ID
+        self.assertEqual(report['informational'], 1)
+
+    def test_baseline_word_alone_does_not_exempt_false_current_claim(self):
+        report = check_prose({'reason':'the logistic regression baseline'}, {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['contradicted'], 1)
+
+    def test_temporal_marker_without_baseline_noun_phrase_does_not_hide_current_claim(self):
+        report = check_prose({'reason':'After observing scores, SVM is better than baseline.'},
+                             {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['contradicted'], 1)
+
     def test_a_future_trial_reference_is_contradicted(self):
         report = check_prose({'reason': 'trial 7 showed this'}, FACTS, HISTORY)
         self.assertEqual(report['contradicted'], 1)

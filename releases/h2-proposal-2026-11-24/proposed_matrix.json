@@ -1,0 +1,172 @@
+{
+  "status": "B_proposal_for_A_registration",
+  "source": "449b766eb4a29af2f4020092ab6b3eab425d25be",
+  "source_files": 93,
+  "Fstar_proposed": "L0",
+  "arms": [
+    "L0",
+    "R0"
+  ],
+  "seeds": [
+    "45101",
+    "45102"
+  ],
+  "entries": {
+    "45101": {
+      "training_sha256": "850cb18b028aa99b39daf77508240724944079bd67f7c7dc89d0cb78f1394bcc",
+      "registered_splits_sha256": "5975d23a8ea516daa5f08b2d82989db32b372736796e51a3a5ddbf137953a916",
+      "menu": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic",
+        "image_mobilenet_v3_small_linear"
+      ],
+      "worker_sha256": {
+        "primary": "7b987bd5c47c41e972072689efc83668b73e51ecb5f6c212e22d8d62285f9536",
+        "confirmation_1": "70f0a76c7af979f39382246b5dba1a72b08abff67e2069fde08efcdf47025dcf",
+        "confirmation_2": "ce045e43a51a9777fb28b4164e58c6ca512395413d27e57f10f98752afdf5417"
+      },
+      "flags": {
+        "L0": [
+          "--planner",
+          "local",
+          "--scheduler",
+          "ab-fixed",
+          "--portfolio",
+          "ab-v1",
+          "--catalog-scope",
+          "full",
+          "--fit-limit",
+          "11",
+          "--seed",
+          "707",
+          "--time-limit",
+          "1200",
+          "--trial-timeout",
+          "300"
+        ],
+        "R0": [
+          "--planner",
+          "raw-history",
+          "--scheduler",
+          "ab-fixed",
+          "--portfolio",
+          "ab-v1",
+          "--catalog-scope",
+          "full",
+          "--fit-limit",
+          "11",
+          "--seed",
+          "707",
+          "--time-limit",
+          "1200",
+          "--trial-timeout",
+          "300",
+          "--model",
+          "DeepSeek-V4.1-Flash",
+          "--api-key-file",
+          "LOCAL_KEY_PATH",
+          "--budget-ledger",
+          "EXISTING_SHARED_LEDGER_PATH",
+          "--task-budget-id",
+          "h2_transfer",
+          "--llm-budget-rmb",
+          ".30",
+          "--history-policy",
+          "incremental-research",
+          "--proposal-contract",
+          "calibrated-v2"
+        ]
+      }
+    },
+    "45102": {
+      "training_sha256": "3367460cb10fbd74e5d5c1f13dd07926ff7af5cc8b22eb4e262d8ba8902aa070",
+      "registered_splits_sha256": "d38f9256a32f1aeca78aa37379afbcd40b03f938eb93ad7639c2b1cecd8a822c",
+      "menu": [
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0",
+        "image_gradient_histograms_logistic",
+        "image_mobilenet_v3_small_linear"
+      ],
+      "worker_sha256": {
+        "primary": "f169dc9da5a20685d3e5a623b5dfdcaeecf1d4046c019c2a9afb852c4749c6a4",
+        "confirmation_1": "64cc618315ff8b23925e83af2a668a42de76f7e6761630c3479d8f97b88c96c8",
+        "confirmation_2": "45616a6c10e91103a01edad823ff85ef0d0eca4c502a3b97d467ffa1b0c350ed"
+      },
+      "flags": {
+        "L0": [
+          "--planner",
+          "local",
+          "--scheduler",
+          "ab-fixed",
+          "--portfolio",
+          "ab-v1",
+          "--catalog-scope",
+          "full",
+          "--fit-limit",
+          "11",
+          "--seed",
+          "707",
+          "--time-limit",
+          "1200",
+          "--trial-timeout",
+          "300"
+        ],
+        "R0": [
+          "--planner",
+          "raw-history",
+          "--scheduler",
+          "ab-fixed",
+          "--portfolio",
+          "ab-v1",
+          "--catalog-scope",
+          "full",
+          "--fit-limit",
+          "11",
+          "--seed",
+          "707",
+          "--time-limit",
+          "1200",
+          "--trial-timeout",
+          "300",
+          "--model",
+          "DeepSeek-V4.1-Flash",
+          "--api-key-file",
+          "LOCAL_KEY_PATH",
+          "--budget-ledger",
+          "EXISTING_SHARED_LEDGER_PATH",
+          "--task-budget-id",
+          "h2_transfer",
+          "--llm-budget-rmb",
+          ".30",
+          "--history-policy",
+          "incremental-research",
+          "--proposal-contract",
+          "calibrated-v2"
+        ]
+      }
+    }
+  },
+  "maximum_fits_per_path": 11,
+  "maximum_flash_per_paid_path": 3,
+  "maximum_fits_if_adopted": 44,
+  "maximum_flash_if_adopted": 6,
+  "paid_threshold_rmb_per_path": 0.3,
+  "task_scope": "h2_transfer",
+  "pool_all_models_before_outer": true,
+  "historical_ledger_owner": "A",
+  "historical_requests": 363,
+  "historical_unknown": 12,
+  "formal_matrix_adopted": false,
+  "h2_performance_observed": false
+}

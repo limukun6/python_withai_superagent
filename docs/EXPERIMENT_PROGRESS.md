@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-23：A110正式H2入口验收完成，尚未开性能
+
+计划和代码先落盘，41.594秒完成4次本地CLI在分区完成/Executor前截停（两外层各L0/L1），真实worker/行号/标签指纹与B登记一致，full9。8份Flash参数只解析校验，未执行handler/资金预检；12份注册分区启动模板备好，正式H2仍L0/R0/F*去重。0fit/API/预测/留出图片访问，A累计1501。fetch后仍缺B新9ed提交/当前Task2-Bean结果，原五任务选F*和共同冻结尚未完成，故不提前用H跑性能。报告batches/A110_H2_entry_results_20261123_zh.md，脱敏证据research/a110_H2_official_entry；无活动队列。
+
 ## 2026-11-23：A107–A109解决A本机H2原包与训练输入准备
 
 用户要求A自行解决。A107续传长流247.781秒IncompleteRead停止，保留48,234,496字节；A108按4MiB分段12次/324秒完成94,658,721字节原包，SHA/作者MD5通过，随后因Windows CRLF导致inner manifest原始SHA不同停止。两训练ZIP、六worker字段已一致；诊断LF后SHA精确等于B登记值。A109先落盘计划/脚本，固定LF离线重建，83.344秒prepared，原包只打开登记5000训练图，两ZIP/两manifest/六worker全部原始指纹与B一致，full9图像目录可用。0新增fit/API/预测/留出图片访问，A累计1501不变。所有失败保留，不改原B脚本或生产控制器。输入runs/a109_H2_canonical/training，原包runs/a108_H2_segmented/EuroSAT_RGB.zip；归档research/a109_H2_canonical_inputs，报告batches/A107_A109_H2_local_results_20261123_zh.md。无活动队列，H2性能仍待共同冻结后执行。

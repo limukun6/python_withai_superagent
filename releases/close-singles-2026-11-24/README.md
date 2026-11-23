@@ -20,6 +20,18 @@
 
 电影台词历史上，原调度已经复核一个组合，新增选项保留全部八个动作。两项历史重放均使用当时可见的候选和观测，电影任务保留历史目录里的两项 MiniLM-L12 版本信息。完整标题旧路径共六个动作，在第六步第一次分歧。阈值、时间或历史用量不满足追加条件时，接入版保留原路线。[历史重放](evidence/replay/after_guard.json) · [三条真实路径共 24 个动作的兼容验收](evidence/replay/observed_paths.json)
 
+## 两个模型意见不同时，按题挑选能否再提高成绩
+
+在双方预测冲突时，比较“这个模型对这道题的信心，在它自己的历史预测中排第几”。同意时沿用共同答案，百分位平手时沿用原交付策略。两个模型仍由当时的 Agent 选出。三个面板的预测先一起封存，再按事前规则检查；新增拟合和 API 均为零。[事前规则](overlay/docs/batches/B_disagreement_ranks_plan_20261124_zh.md)
+
+| 已有开发面板 | 原交付正确 | 等权投票正确 | 按置信百分位正确 | 相对原交付的改对／改错 |
+|---|---:|---:|---:|---:|
+| 标题，937 对 | 676 | 676 | 680 | 6／2 |
+| 全部标题训练包的确认区，1,358 对 | 962 | 968 | 968 | 58／52 |
+| 电影台词确认区，223 对 | 166 | 166 | 166 | 3／3 |
+
+937 对上达到 **72.57%**，比原交付增加 0.43 个百分点，标题组配对区间为 −0.11 至 +1.04 个百分点。两份标题面板共享 133 个标题组，各自计分。1,358 对上的等权投票也达到同样正确数，电影台词净变化为零。本次属于已见开发数据上的事后比较，未达到启动新自主对照的门槛。供队友作为后续研究选项，默认策略沿用原版。[三项结果与区间](evidence/rank-routing/results.json) · [冻结预测摘要](evidence/rank-routing/predictions_frozen.json)
+
 ## 下载后复核或接入
 
 只核对数字及文件摘要可在本目录运行 `python verify.py`。安装 NumPy 后可重新计算置信区间。以下命令还会把两份补丁依次应用到临时副本，验证对照和两个实验版本的全部生产源码摘要。传入的本地 Git 仓库需含共同提交 `449b766`。
@@ -50,3 +62,5 @@ python -m scripts.audit_b_close_singles_refits --run runs/close_singles --weight
 python -m scripts.run_b_close_singles_continuation --original "$ORIGINAL_RUN" --replay "$RELEASE/evidence/replay/before_guard.json" --weights "$FROZEN_WEIGHTS" --output runs/full_continuation
 python -m scripts.check_b_minilm_refit_repeatability --run "$MEASURED_COLD_RUN" --weights "$FROZEN_WEIGHTS" --output runs/refit_repeatability
 ```
+
+持有前述三项本地完整历史时，可运行 `python -m scripts.check_b_disagreement_ranks --cold "$MEASURED_COLD_RUN" --full runs/full_continuation --original "$ORIGINAL_RUN" --movie "$MOVIE_RUN" --weights "$FROZEN_WEIGHTS" --output runs/disagreement_ranks` 复算逐题规则，其中 `MOVIE_RUN` 是原电影台词 `quote_adaptation_01` 目录。

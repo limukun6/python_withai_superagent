@@ -2,6 +2,8 @@
 
 ## A102当前活动状态（覆盖下面无活动旧快照）
 
+A104轻量H2登记核对已通过：原压缩名单解压SHA一致，2外层/6内部/6000独立文件身份与训练留出边界吻合，0图片打开/fit/API。research/a104_H2_registration_audit保留结果，尚未下载/重建A侧RGB输入，不在A102计时期间做重负载准备。A103结果分析脚本已保存scripts/summarize_a102_sms_C1.py，A102 completed后按macro-F1核对，不误用准确率；独立复核是否实际发生另列。
+
 用户授权收到B回复前继续A线，SMS六组已实际启动。独立worktree D:/codex/python_withai/runs/a102_sms_c1_checkout，分支codex/sms-c1-20261123、计划/runner提交b420177，生产文件与c64bee4及A89相同。输出runs/a102_sms_C1；先查completion/checkpoint/physical_fits，不重复启动，活动session60804仅本会话有效。最多66新fit/12Flash，起点A1438、账本323/known¥6.3627855/历史unknown11/pending0；A重新持有唯一账本写入权，收到B付费交接请求先协调串行，不并发。
 
 首次预检因旧A47内部划分身份不同停在0fit/API，script/plan/protocol/completion已保留research/a102_sms_preflight_failed。新协议明确使用c64强环境重新登记的同707/808/909实际索引，第二预检a102_sms_preflight_v2通过0fit/API；新六组都须严格共用它，不冒称旧A47同划分。3302训练/826已见开发留出、macro-F1、16候选、11fit含refit、3调用、300/1200秒、其它研究开关off，四付费路径估计阈值合计¥1.20。所有模型冻结再评分，源/活动runner及script_hashes helpers禁止修改，第一失败停不重试。controller临时防待机退出释放。H/test封存，B建议任务未被接管。

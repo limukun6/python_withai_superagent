@@ -78,7 +78,9 @@ if __name__ == '__main__':
             process_seconds=row['process_seconds'], reference_process_seconds=row.get('reference_process_seconds'),
             new_API_requests=len(usage), input_tokens=inp, output_tokens=out, known_estimated_rmb=cost,
             prediction_sha256=sha(a.run / 'predictions' / arm / 'rows.csv'), reload_identical=True,
-            executed_candidates=[r['candidate'] for r in history], evidence=evidence)
+            executed_candidates=[r['candidate'] for r in history], evidence=evidence,
+            action_counts=outcome.get('action_counts'),
+            independent_confirmation_observed=(outcome.get('confirmation') or {}).get('independent_confirmation_observed'))
         save(dest / 'measured_usage_summary.json', dict(requests=len(usage), input_tokens=inp,
             output_tokens=out, known_estimated_rmb=cost))
     contrasts = []

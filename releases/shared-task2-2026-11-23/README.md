@@ -15,6 +15,12 @@
 
 随后单独验证了把临界组合再给一次机会的价值。从训练池排除首轮评估出现过的所有标题组，另外 4,971 对用于拟合，新留的两组也互不共享标题。采用同一对冻结模型，在 791 题上单模型与组合分别答对 567、564，在 846 题上分别答对 603、604。组合合计 **1,168/1,637，单模型 1,170/1,637**。两个复核区共享一对训练模型，均属开发证据。按预先写下的条件，本次保留原门槛。追加拟合 2 次、API 0 次，本项只使用课程训练包。第一次工作进程缺少共同目录配置，在拟合前退出。修复后逐项核对两个候选的实际参数才启动。[复核计划](overlay/docs/batches/B_near_threshold_plan_20261123_zh.md) · [复核结果](borderline/results.json) · [首次启动回执](borderline/preflight_stopped.json)
 
+11 月 24 日又检验了让数据决定该给词袋模型多少权重。只在一组学权重，换到另一组计分，再互换。两次分别给 MiniLM-L12 分配了 95.7% 和 97.6% 的权重。学习权重的组合和单模型同为 **1,170/1,637**。第一组的预测完全相同，第二组改对一题又改错一题。相对固定的一半权重多答对两题，仍未达到原定的晋级条件。复用原有两个模型，新做两次单参数监督拟合，API 0 次。最初的交换校验混入了批大小不同造成的浮点差异，在首次权重拟合前已纠正。[交叉复核的方案](overlay/docs/batches/B_grouped_blend_plan_20261124_zh.md) · [权重、准确率及对数损失](calibration/results.json) · [首次校验记录](calibration/initial_check.json)
+
+也按原配置单独复核了历史双编码器组合。在相同的 4,971 行上只新拟合一次 E5 分类头，直接复用原 MiniLM-L12。两组分别为 MiniLM-L12 **567、603**，E5 **580、608**，等权组合 **571、613**。组合比 MiniLM-L12 合计多答对 14 题，比 E5 少答对 4 题。搭档本身在这两组较强，强制投票未达到晋级条件。该结果与共同入口首轮内部评估的两种单模型排序相反，值得在其他标题组上检验单模型选择。[匹配训练行的计划](overlay/docs/batches/B_matched_e5_plan_20261124_zh.md) · [两区完整结果](matched-e5/results.json)
+
+另开两组，排除前三块评估区的全部 3,330 行及其标题组。两个单模型各在同样的 7,078 对上重新拟合。新评估的 631 题中 MiniLM-L12 答对 452，E5 答对 449；其余 592 题分别答对 441、433。合计 **MiniLM-L12 893/1,223，E5 882/1,223**。换成 E5 改对 80 题、改错 91 题。按 907 个标题组重抽样，E5 相对单模型的差值为 −0.90 个百分点，95% 区间 −3.03 至 +1.26。上一批 E5 领先的排序没有重复。不据此更换共同入口的默认方法，保留两个合法候选供 Agent 根据新任务证据选。此项新增 2 次分类器拟合，API 0 次。[事先登记的确认条件](overlay/docs/batches/B_fresh_single_encoders_plan_20261124_zh.md) · [新标题组的结果](fresh-singles/results.json)
+
 ## 交付与 H2
 
 正式 Task2 运行使用 91 个逐文件校验通过的生产源码文件。两个原生预测进程、一个隔离预测进程和一个从 ZIP 重新解压的隔离进程，在 940 行上产生字节完全一致的结果。独立包约 2.56 MB，另需清单所列的公开 MiniLM-L12 固定权重。Git 提供模型指纹、公开权重摘要和预测文件，模型 ZIP 留作私下交接。[预测包验收](evidence/portable_receipt.json) · [指定验证预测 CSV](evidence/validation_predictions.csv)
@@ -32,10 +38,13 @@ python verify.py
 python verify.py --interval --course-archive /path/to/Released_Task2-Headlines_CTR.zip
 ```
 
-从头复现实验时，单独检出 `a36296f550c85e49376caedd0149d21caf94dd63`，将本目录 `overlay/` 的内容按原目录复制到该工作树，安装此次运行依赖并准备 L6、L12、E5 三套登记过指纹的公开权重。下列第一条可用课程原包和仓库内的旧预测重建历史参照。它只读取 `val.csv` 生成无标签特征并存入参照目录。训练 CLI 只收到匿名训练包，评分程序在模型封存后读取参照文件。后两条从共同工作树根目录执行。[原始运行计划](overlay/docs/batches/B_shared_full_task2_plan_20261123_zh.md) · [生产源码快照](https://github.com/limukun6/python_withai_superagent/tree/a36296f550c85e49376caedd0149d21caf94dd63)
+从头复现实验时，单独检出 `a36296f550c85e49376caedd0149d21caf94dd63`，将本目录 `overlay/` 的内容按原目录复制到该工作树，安装此次运行依赖并准备 L6、L12、E5 三套登记过指纹的公开权重。下列第一条可用课程原包和仓库内的旧预测重建历史参照。它只读取 `val.csv` 生成无标签特征并存入参照目录。训练 CLI 只收到匿名训练包，评分程序在模型封存后读取参照文件。其余命令从共同工作树根目录执行。[原始运行计划](overlay/docs/batches/B_shared_full_task2_plan_20261123_zh.md) · [生产源码快照](https://github.com/limukun6/python_withai_superagent/tree/a36296f550c85e49376caedd0149d21caf94dd63)
 
 ```sh
 python /path/to/this-release/prepare_reference.py --course-archive /path/to/Released_Task2-Headlines_CTR.zip --out /path/to/reference
 python -m scripts.run_b_shared_full_task2 --archive /path/to/Released_Task2-Headlines_CTR.zip --weights /path/to/pretrained_weights --previous /path/to/reference --out runs/shared_full_task2_replay
 python -m scripts.study_b_borderline_stop --original runs/shared_full_task2_replay --weights /path/to/pretrained_weights --out runs/borderline_stop_replay
+python -m scripts.study_b_grouped_blend --parent runs/shared_full_task2_replay --shadow runs/borderline_stop_replay --weights /path/to/pretrained_weights --out runs/grouped_blend_replay
+python -m scripts.study_b_matched_e5 --parent runs/shared_full_task2_replay --shadow runs/borderline_stop_replay --weights /path/to/pretrained_weights --out runs/matched_e5_replay
+python -m scripts.study_b_fresh_single_encoders --parent runs/shared_full_task2_replay --shadow runs/borderline_stop_replay --matched runs/matched_e5_replay --weights /path/to/pretrained_weights --out runs/fresh_singles_replay
 ```

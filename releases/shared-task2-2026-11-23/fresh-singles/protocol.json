@@ -1,0 +1,51 @@
+{
+  "plan": "32a160c5d53853d00884737749547099453ad475489ba9ce45365d892256695c",
+  "runner": "683360fb08957bdaf9ca21e52c50ff0b026b19437c0913fecddb1cc4eb9c0f43",
+  "shared": "a36296f550c85e49376caedd0149d21caf94dd63",
+  "parent": "2eff256ac587c6359ffa4bab349d5c5fa8315f0af61ae34bd44ecace6053c69e",
+  "previous_experiment": "974d4f3e0ae4ba7b44d9453124655d3a5e846f6bd8e0d925181500bece514f92",
+  "names": [
+    "minilm_l12_with_corpus_familiarity",
+    "e5_small_text_with_lexical_features"
+  ],
+  "parameters": [
+    {
+      "encoder": "sentence-transformers/all-MiniLM-L12-v2",
+      "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+      "C": 0.3,
+      "representation": "word_char_minilm_l12_training_surprisal",
+      "swap_augmentation": true
+    },
+    {
+      "encoder": "intfloat/e5-small-v2",
+      "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+      "C": 0.3,
+      "representation": "word_char_e5",
+      "pooling": "mean",
+      "input_prefix": "query: ",
+      "swap_augmentation": true
+    }
+  ],
+  "excluded_evaluation_rows": 3330,
+  "excluded_evaluation_groups": 2456,
+  "train_rows": 7078,
+  "train_ids": "c8f3d05065cb62d039ded50591ae1988b2ed0df747b13bdbad83150c2a1e0b4d",
+  "panels": [
+    {
+      "rows": 631,
+      "groups": 474,
+      "ids": "74c44e134f0a8229e796183fc338657dd63163ebb31757efa4566bcbf20241c4",
+      "prior_shared_groups": 0,
+      "training_shared_groups": 0
+    },
+    {
+      "rows": 592,
+      "groups": 433,
+      "ids": "ce951427fac9743bb45b7a4b527186405a226620d3e691d77e62d5daf32b53b3",
+      "prior_shared_groups": 0,
+      "training_shared_groups": 0
+    }
+  ],
+  "fit_cap": 2,
+  "model_api_cap": 0
+}

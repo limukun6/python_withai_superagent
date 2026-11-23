@@ -41,6 +41,112 @@ def completed(folder):
         require(sha(folder/(name+'.json')) == digest, 'Experiment seal differs: '+name)
 
 
+def check_calibration():
+    folder = ROOT/'calibration'
+    completed(folder)
+    protocol = read(folder/'protocol.json')
+    require(protocol['runner_sha256'] == sha(ROOT/'overlay/scripts/study_b_grouped_blend.py') and
+            protocol['plan_sha256'] == sha(ROOT/'overlay/docs/batches/B_grouped_blend_plan_20261124_zh.md') and
+            protocol['shadow_completion_sha256'] == sha(SHADOW/'completion.json') and
+            protocol['model_digests'] == read(SHADOW/'frozen.json')['models'], 'Calibration sources differ')
+    results = read(folder/'results.json')
+    net = []
+    for n, (groups,panel) in enumerate(zip(read(folder/'grouped.json'), results['panels'], strict=True)):
+        cells = list(map(sum, zip(*groups, strict=True)))
+        counts = [sum(x for k,x in enumerate(cells) if k & bit) for bit in (1,2,4)]
+        expected = [panel[key] for key in ('single','equal','learned')]
+        receipt = read(folder/f'fit_{1-n}_completed.json')
+        require(sum(cells) == panel['rows'] and len(groups) == panel['groups'] and counts == expected and
+                receipt['started'] == sha(folder/f'fit_{1-n}_started.json') and receipt['source_panel'] == 1-n
+                and receipt['target_panel'] == n and receipt['supervised_calibration_fits'] == 1 and
+                0 <= receipt['weight_on_anchor'] == panel['weight_from_other_panel'] <= 1,
+                'Cross-panel training or grouped counts differ')
+        net.append(counts[2]-max(counts[:2]))
+    require(sum(net) == results['net_vs_stronger'] and
+            (min(net) >= 0 and sum(net) >= 8) == results['pass_gate'] and
+            results['new_base_fits'] == results['model_api_calls'] == 0 and results['supervised_calibration_fits'] == 2,
+            'Calibration decision or cost differs')
+    return sum(net)
+
+
+def check_e5():
+    folder = ROOT/'matched-e5'
+    completed(folder)
+    p = read(folder/'protocol.json')
+    frozen = read(folder/'models_frozen.json')
+    workers = [json.loads(line)['candidate'] for line in (folder/'physical.jsonl').read_text().splitlines()]
+    receipt = read(folder/'worker_fit.json')
+    require(p['plan'] == sha(ROOT/'overlay/docs/batches/B_matched_e5_plan_20261124_zh.md') and
+            p['runner'] == sha(ROOT/'overlay/scripts/study_b_matched_e5.py') and
+            p['shadow_completion'] == sha(SHADOW/'completion.json') and p['rows'] == 4971 and
+            p['training_ids'] == read(SHADOW/'protocol.json')['training_ids_sha256'] and
+            p['base_model'] == read(SHADOW/'frozen.json')['models'][0] and
+            frozen['physical'] == sha(folder/'physical.jsonl') and frozen['worker'] == sha(folder/'worker_fit.json')
+            and workers == [p['candidate']] and receipt['completed_classifier_fits'] == receipt['attempted_classifier_fits'] == 1,
+            'E5 comparison sources or supervised counts differ')
+    results = read(folder/'results.json')
+    differences = []
+    for n, (groups,panel) in enumerate(zip(read(folder/'grouped.json'),results['panels'],strict=True)):
+        cells = list(map(sum,zip(*groups,strict=True)))
+        counts = [sum(x for i,x in enumerate(cells) if i & bit) for bit in (1,2,4)]
+        require(counts == [panel[k] for k in ('single','e5','equal')] and
+                counts[0] == read(SHADOW/'results.json')['panels'][n]['anchor'] and
+                sum(cells) == panel['rows'] and len(groups) == panel['groups'] and
+                cells[4]+cells[6] == panel['gained_vs_anchor'] and cells[1]+cells[3] == panel['lost_vs_anchor'],
+                'Matched E5 panel differs')
+        differences.append(counts[2]-max(counts[:2]))
+    require(sum(differences) == results['net_vs_stronger'] and
+            results['pass_gate'] == (min(differences) >= 0 and sum(differences) >= 8) and
+            results['classifier_fits'] == 1 and results['model_api_calls'] == 0,
+            'Matched E5 decision differs')
+    return sum(differences)
+
+
+def check_fresh(interval):
+    folder = ROOT/'fresh-singles'
+    completed(folder)
+    p = read(folder/'protocol.json')
+    f = read(folder/'models_frozen.json')
+    r = read(folder/'results.json')
+    require(p['previous_experiment'] == sha(ROOT/'matched-e5/completion.json') and
+            p['runner'] == sha(ROOT/'overlay/scripts/study_b_fresh_single_encoders.py') and
+            p['plan'] == sha(ROOT/'overlay/docs/batches/B_fresh_single_encoders_plan_20261124_zh.md') and
+            p['train_rows'] + sum(x['rows'] for x in p['panels']) == 8301 and
+            p['excluded_evaluation_rows'] == 3330 and
+            all(x['prior_shared_groups'] == x['training_shared_groups'] == 0 for x in p['panels']),
+            'Fresh panel protocol differs')
+    names = [json.loads(line)['candidate'] for line in (folder/'physical.jsonl').read_text().splitlines()]
+    require(f['physical'] == sha(folder/'physical.jsonl') and names == p['names'] and
+            f['receipts'] == [sha(folder/f'fit_{n}.json') for n in range(2)] and
+            len(names) == r['classifier_fits'] == 2 and r['model_api_calls'] == 0, 'Fresh panel fitting differs')
+    flat = []
+    grouped = read(folder/'grouped.json')
+    for cells, panel, registered in zip(grouped,r['panels'],p['panels'],strict=True):
+        neither,lost,gained,both = map(sum,zip(*cells,strict=True))
+        require(neither+lost+gained+both == panel['rows'] == registered['rows'] and
+                len(cells) == panel['groups'] == registered['groups'] and both+lost == panel['l12']
+                and both+gained == panel['e5'] and gained-lost == panel['net'], 'Fresh grouped counts differ')
+        flat.extend(cells)
+    net = sum(x[2]-x[1] for x in flat)
+    pp = 100*net/sum(map(sum,flat))
+    require(r['net'] == net and abs(r['delta_pp']-pp)<1e-12 and
+            r['pass_gate'] == (all(x['net']>0 for x in r['panels']) and pp>=.5 and r['group_bootstrap_95_pp'][0]>0),
+            'Fresh decision rule differs')
+    if interval:
+        import numpy as np
+
+        values = np.array(flat)
+        sizes, delta = values.sum(axis=1), values[:,2]-values[:,1]
+        rng = np.random.default_rng(60424)
+        reps = []
+        for _ in range(100):
+            picks = rng.integers(0,len(flat),size=(50,len(flat)))
+            reps.extend(100*delta[picks].sum(axis=1)/sizes[picks].sum(axis=1))
+        require(np.allclose(np.quantile(reps,[.025,.975]),r['group_bootstrap_95_pp'],rtol=0,atol=1e-12),
+                'Fresh panel interval differs')
+    return net
+
+
 def main(args):
     for row in (ROOT/'SHA256SUMS').read_text().splitlines():
         digest, name = row.split('  ', 1)
@@ -129,8 +235,13 @@ def main(args):
             values.extend(100*gains[indices].sum(axis=1)/sizes[indices].sum(axis=1))
         require(np.allclose(np.quantile(values,[.025,.975]),r['paired_group_bootstrap_95_pp'],atol=1e-12,rtol=0),
                 'Group bootstrap result differs')
+    calibrated = check_calibration()
+    matched_e5 = check_e5()
+    fresh = check_fresh(args.interval)
     print(f"Task2 {r['correct']}/{r['rows']}, previous {r['previous']}, +{r['gained']}/-{r['lost']}; "
-          f"two training panels net {net:+d}/{count}; H2 train-only 2 x 3 splits; 8 supervised fits, 0 model API.")
+          f"two training panels net {net:+d}/{count}; calibration net {calibrated:+d} versus stronger control per panel; "
+          f"matched E5 vote net {matched_e5:+d}; fresh E5 minus L12 {fresh:+d}; "
+          "H2 train-only 2 x 3 splits; 11 base fits, 2 supervised calibration fits, 0 model API.")
 
 
 if __name__ == '__main__':

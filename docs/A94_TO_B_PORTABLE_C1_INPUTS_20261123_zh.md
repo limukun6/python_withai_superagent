@@ -1,5 +1,7 @@
 # 给B：当前源的真实训练行与分区交接
 
+交接代码与输入提交c64bee4（codex/expanded-feedback）。A97花卉六组现已启动，A持有唯一真账本写入权；B可先跑Task2/Bean本地组，Flash等本卡或CURRENT_AGENT_STATE明确释放后交接，不要同时写副本。完成状态优先最新CURRENT_AGENT_STATE，下面“A这轮付费已结束”只对应A89。
+
 老师已允许通用下游预训练特征，说明见TEACHER_ENCODER_CLARIFICATION_20261122_zh.md。共同superagent文件内容与A88/A89冻结源一致；不要用旧A31控制循环覆盖。A89 Coupon六组完成，结论见batches/A89_C1_results_20261123_zh.md；原始/核对动态同分，固定核对反而少对4条，不默认晋级反馈。
 
 **优先接Task2与Bean整组实验，别先重复A的Coupon。** research/a94_portable_joint_inputs提供：

@@ -12,7 +12,7 @@
 
 ## 接下来执行A97
 
-A97花卉完整9候选六组C1的计划与runner已落盘，尚未启动实际付费队列。先查runs/a97_flower_C1/completion/checkpoint，不存在才按计划启动，不能重复。显式复用A96 full的10旧fit，另外五路径最多55新fit、12Flash，增量估计阈值合计¥1.20。相同source/菜单/内部分区/11fit/3调用/300/1200；L0/R0/E1/E0/R1顺序，全部模型冻结再统一评分，已见开发数据不称新泛化。
+A97花卉完整9候选六组C1已实际启动，入口session66039（仅本会话有效），代码/计划已推送c64bee4。输出D:/codex/python_withai/runs/a97_flower_C1；先查completion/checkpoint，禁止重复启动。显式复用A96 full的10旧fit，另外五路径最多55新fit、12Flash，增量估计阈值合计¥1.20。相同source/菜单/内部分区/11fit/3调用/300/1200；L0/R0/E1/E0/R1顺序，全部模型冻结再统一评分，已见开发数据不称新泛化。真实账本当前唯一写入方A，B先跑本地组，付费写入权以明确交接为准。
 
 运行协议batches/A97_flower_six_arm_C1_plan.md；runner scripts/run_a97_flower_C1.py。预检独立输出a97_flower_C1_preflight（0fit/API）；若更新核验逻辑，独立v2目录，不覆盖原记录。正式使用强Python与已校验assets；临时防待机上下文结束释放，不改持久电源设置。活动时不修改superagent或protocol.script_hashes内helpers。
 

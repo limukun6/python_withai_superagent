@@ -10,6 +10,7 @@ from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
+from . import numeric_kernel
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
 from . import ab_text_recipes, ab_vision, symmetric_text
 
@@ -32,6 +33,7 @@ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minil
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 ROUTES.update(ab_text_recipes.ROUTES)
+ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
 ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
@@ -98,6 +100,12 @@ def _ordered_relation(rows, labels, query):
 
 
 def additions(kind):
+    if kind == 'numeric_tabular':
+        from .general_models import _fit
+        params = dict(C=1.0, kernel_components=numeric_kernel.COMPONENTS,
+                      bandwidth_sample_limit=numeric_kernel.SAMPLE_LIMIT, kernel_seed=numeric_kernel.SEED,
+                      representation='scaled numeric columns with random Fourier features')
+        return [Candidate(numeric_kernel.NAME, params, partial(_fit, kind, 'fourier_logistic'))]
     if kind == 'text_tabular':
         return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
                           representation='ordered columns with word and character pair interactions'), _ordered_relation)]

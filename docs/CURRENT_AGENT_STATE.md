@@ -1,4 +1,12 @@
-# 当前接续状态：2026-11-24，A133–A135完成，1599fit
+# 当前接续状态：2026-11-24，A137完成，1602fit
+
+## A136–A137最新：可选数值核接入，1602fit
+
+A136核验B5bd6b14七项研究全部SHA、配对分组区间/实际fit/导出凭据通过，0训练；Bean新数值核1989→2005/2178、+16/+0.735pp，动态7/固定11同预测；另一真实Wisconsin任务主动试后拒绝，111/114及AUC.987553不变、多1fit。两个Bean池共享402组，不算两独立任务。弱标签+3低于+8门槛，不接。B39恢复后及更早4fit只引用历史，不加入A。
+
+A137在隔离checkout适配四文件旧上下文，接--numeric-kernel默认off，按数值schema/列数/样本数及内存估算开放full候选；baseline、其余默认目录不变，保留全部旧守卫。模块与B原包逐字节一致。七类默认完整菜单对照92源全部相同，46项no-fit/no-network检查通过。匿名240×3二分类/40无标签、固定13724，正式local ab-v1/full/707/fit3自主试线性→Fourier并选后者重训，实际3fit，CLI7.437秒，native/搬迁/93源隔离包预测逐字节一致，未评分查询、未读课程/H数据。它是工程验收，不归为新增真实质量/迁移结果。
+
+累计A1602fit，新API0/费用0，实际ledger仍363/known6.7532615/unknown12/pending0且SHA未改，A持有/队列空闲。用户原12未知继续授权有效。Task1候选仍固定6b6ace8的92源与既有包，不能重标为新93源；本轮没有为了可选数值项重跑Task1。H1已完成，H2/Task2仍B负责，项目最终生产/正式test未冻结。主证据research/a136_numeric_review及a137_numeric_acceptance，报告batches/A136_numeric_and_weak_label_review_results_20261124_zh.md和A137_numeric_adapter_results_20261124_zh.md，复跑runner均已保存。以下累计1599/92源是上一阶段快照，最新以本段为准。
 
 ## 最新：可选置信路由接入，当前源Task1交付候选完成
 

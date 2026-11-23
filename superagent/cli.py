@@ -90,6 +90,8 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args,'numeric_kernel',False) and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
+        raise ValueError('The numeric kernel candidate requires the shared A/B executor')
     if getattr(args, 'confidence_cascade', False) and args.scheduler not in ('ab-complement', 'ab-adaptive-complement'):
         raise ValueError('Confidence routing requires the matched preference scheduler')
     if getattr(args, 'resolve_single_conflict', False) and args.scheduler != 'ab-adaptive-complement':
@@ -314,6 +316,8 @@ def build_parser():
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',
                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+    run.add_argument('--numeric-kernel', action='store_true',
+                     help='Offer a bounded random Fourier classifier for numeric tables')
     run.add_argument('--confidence-cascade', action='store_true',
                      help='Use confirmed training feedback to skip a second encoder for confident preference pairs')
     run.add_argument('--resolve-single-conflict', action='store_true',

@@ -8,6 +8,7 @@ from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
+from . import numeric_kernel
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
@@ -15,7 +16,7 @@ ADAPTER_VERSION = '1.5'
 FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
 
 
-def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
     if task.get('contract_version') != 1 or task.get('objective') != 'classification':
         raise ValueError('Expected an A/B v1 classification task')
     metric = MetricSpec.from_payload({'metric_spec': task['metric']})
@@ -26,9 +27,14 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
         raise ValueError('Full refit row count must be positive')
     if type(kernel_memory_bytes) is not int or kernel_memory_bytes < 0:
         raise ValueError('Invalid kernel memory allowance')
+    if numeric_kernel_width is not None and (type(numeric_kernel_width) is not int or numeric_kernel_width < 1):
+        raise ValueError('Numeric kernel requires a positive feature count')
     menu = []
     for candidate in search_candidates(kind, 'ab-v1'):
         name, params = candidate.family, candidate.params
+        if name == numeric_kernel.NAME and (numeric_kernel_width is None or train_rows is None
+                or numeric_kernel.estimated_workspace(train_rows, numeric_kernel_width) > kernel_memory_bytes):
+            continue
         if name == VISION and not supports_decoder(schema):
             continue
         if name == RELATION:
@@ -77,9 +83,10 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
     return menu
 
 
-def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
     """Build the executor's registry before exploration. Use only locally runnable methods."""
-    entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes)
+    entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes,
+                             numeric_kernel_width=numeric_kernel_width)
     return {
         entry['id']: dict(entry, kind=task['kind'], classifier_fits=entry['expected_classifier_fits'],
                           refit_classifier_fits=1)

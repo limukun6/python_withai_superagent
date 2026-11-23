@@ -1,0 +1,127 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Fixed allocation primary stage. Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 with word features and C=0.3 collapsed to majority-class behavior: macro_f1 0.4630 and class_recall [1.0, 0.0], so spam was never recalled. A character n-gram representation with higher regularization strength is a reasonable next primary-split probe because it changes the feature space and capacity while staying within the registered logistic single-text route.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 with char features and C=3.0 reached macro_f1 0.9257 and nonzero spam recall, while trial 1 with word features and C=0.3 collapsed to majority-class behavior. A word+char representation at C=3.0 is a reasonable primary-split probe because it keeps the capacity that worked for char features while adding word-token information that may capture complementary spam cues.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 3 is the strongest completed primary trial so far with word+char features at C=3.0, but it has a nonzero train/search gap and imperfect spam recall. Testing the same word+char representation at lower regularization strength C=0.3 is a reasonable primary-split probe to see whether reduced capacity improves generalization or preserves the spam recall gained over word-only C=0.3 in trial 1.",
+    "evidence_trials": [
+      3,
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "estimated_classifier_fits": 0,
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "reason": "Fixed primary and top-three replication allocation completed; preserve final refit."
+  }
+]

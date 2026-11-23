@@ -1,0 +1,1026 @@
+[
+  {
+    "trial": 1,
+    "candidate": "single_word_C0.3",
+    "params": {
+      "representation": "word",
+      "C": 0.3
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.4677549375251914,
+    "search_score": 0.46303818034118605,
+    "train_metrics": {
+      "accuracy": 0.878833775085195,
+      "macro_f1": 0.4677549375251914,
+      "primary_metric": "macro_f1",
+      "score": 0.4677549375251914,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.8623298033282905,
+      "macro_f1": 0.46303818034118605,
+      "primary_metric": "macro_f1",
+      "score": 0.46303818034118605,
+      "rows": 661
+    },
+    "score_gap": 0.004716757184005382,
+    "train_accuracy": 0.878833775085195,
+    "search_accuracy": 0.8623298033282905,
+    "generalization_gap": 0.016503971756904545,
+    "class_recall": [
+      1.0,
+      0.0
+    ],
+    "training_seconds": 0.32340630001272075,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "single_word_C0.3",
+      "params": {
+        "representation": "word",
+        "C": 0.3
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "single_word_C0.3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.2969999999913853,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "minilm_text_with_lexical_features",
+    "params": {
+      "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "C": 0.3,
+      "representation": "word_char_minilm",
+      "swap_augmentation": false
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9623949878969101,
+    "search_score": 0.9296509152830992,
+    "train_metrics": {
+      "accuracy": 0.9848542218856494,
+      "macro_f1": 0.9623949878969101,
+      "primary_metric": "macro_f1",
+      "score": 0.9623949878969101,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.9697428139183056,
+      "macro_f1": 0.9296509152830992,
+      "primary_metric": "macro_f1",
+      "score": 0.9296509152830992,
+      "rows": 661
+    },
+    "score_gap": 0.03274407261381096,
+    "train_accuracy": 0.9848542218856494,
+    "search_accuracy": 0.9697428139183056,
+    "generalization_gap": 0.015111407967343782,
+    "class_recall": [
+      1.0,
+      0.7802197802197802
+    ],
+    "training_seconds": 43.03653990000021,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": {
+      "frozen_downstream_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "usage": {
+        "input_tokens": 145872,
+        "feature_transform_calls": 3,
+        "api_calls": 0,
+        "api_rmb": 0
+      }
+    },
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "minilm_text_with_lexical_features",
+      "params": {
+        "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+        "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "C": 0.3,
+        "representation": "word_char_minilm",
+        "swap_augmentation": false
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "minilm_text_with_lexical_features",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 46.155999999988126,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 3,
+    "candidate": "minilm_text_with_nonlinear_lexical_features",
+    "params": {
+      "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "C": 0.3,
+      "representation": "word_char_minilm_rbf",
+      "kernel_components": 512,
+      "bandwidth_sample_limit": 128,
+      "kernel_seed": 12271,
+      "swap_augmentation": false
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9663508772923279,
+    "search_score": 0.9379976654020927,
+    "train_metrics": {
+      "accuracy": 0.9863687996970845,
+      "macro_f1": 0.9663508772923279,
+      "primary_metric": "macro_f1",
+      "score": 0.9663508772923279,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.972768532526475,
+      "macro_f1": 0.9379976654020927,
+      "primary_metric": "macro_f1",
+      "score": 0.9379976654020927,
+      "rows": 661
+    },
+    "score_gap": 0.028353211890235208,
+    "train_accuracy": 0.9863687996970845,
+    "search_accuracy": 0.972768532526475,
+    "generalization_gap": 0.01360026717060947,
+    "class_recall": [
+      0.9982456140350877,
+      0.8131868131868132
+    ],
+    "training_seconds": 58.309070699993754,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": {
+      "frozen_downstream_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "usage": {
+        "input_tokens": 149038,
+        "feature_transform_calls": 3,
+        "api_calls": 0,
+        "api_rmb": 0,
+        "bandwidth_sample_texts": 128,
+        "bandwidth_input_tokens": 3166
+      }
+    },
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "minilm_text_with_nonlinear_lexical_features",
+      "params": {
+        "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+        "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "C": 0.3,
+        "representation": "word_char_minilm_rbf",
+        "kernel_components": 512,
+        "bandwidth_sample_limit": 128,
+        "kernel_seed": 12271,
+        "swap_augmentation": false
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "minilm_text_with_nonlinear_lexical_features",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 61.889999999984866,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 4,
+    "candidate": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+    "params": {
+      "kind": "single_text",
+      "analyzer": "word",
+      "representation": "latent",
+      "classifier": "logistic",
+      "C": 0.3,
+      "dimensions": 64
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8939432277754796,
+    "search_score": 0.9015112813963388,
+    "train_metrics": {
+      "accuracy": 0.9609996213555472,
+      "macro_f1": 0.8939432277754796,
+      "primary_metric": "macro_f1",
+      "score": 0.8939432277754796,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.9576399394856279,
+      "macro_f1": 0.9015112813963388,
+      "primary_metric": "macro_f1",
+      "score": 0.9015112813963388,
+      "rows": 661
+    },
+    "score_gap": -0.007568053620859216,
+    "train_accuracy": 0.9609996213555472,
+    "search_accuracy": 0.9576399394856279,
+    "generalization_gap": 0.0033596818699193065,
+    "class_recall": [
+      0.9929824561403509,
+      0.7362637362637363
+    ],
+    "training_seconds": 0.5004387999942992,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+      "params": {
+        "kind": "single_text",
+        "analyzer": "word",
+        "representation": "latent",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.297000000020489,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 5,
+    "candidate": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+    "params": {
+      "kind": "single_text",
+      "analyzer": "word",
+      "representation": "hybrid",
+      "classifier": "logistic",
+      "C": 0.3,
+      "dimensions": 64
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9267833433735843,
+    "search_score": 0.9045211613462372,
+    "train_metrics": {
+      "accuracy": 0.9719803104884513,
+      "macro_f1": 0.9267833433735843,
+      "primary_metric": "macro_f1",
+      "score": 0.9267833433735843,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.9591527987897126,
+      "macro_f1": 0.9045211613462372,
+      "primary_metric": "macro_f1",
+      "score": 0.9045211613462372,
+      "rows": 661
+    },
+    "score_gap": 0.02226218202734709,
+    "train_accuracy": 0.9719803104884513,
+    "search_accuracy": 0.9591527987897126,
+    "generalization_gap": 0.012827511698738747,
+    "class_recall": [
+      0.9947368421052631,
+      0.7362637362637363
+    ],
+    "training_seconds": 0.5094572000089101,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+      "params": {
+        "kind": "single_text",
+        "analyzer": "word",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.1089999999967404,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+    "params": {
+      "kind": "single_text",
+      "analyzer": "char_wb",
+      "representation": "latent",
+      "classifier": "logistic",
+      "C": 0.3,
+      "dimensions": 64
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9261381878713366,
+    "search_score": 0.9055299417204381,
+    "train_metrics": {
+      "accuracy": 0.9716016660355926,
+      "macro_f1": 0.9261381878713366,
+      "primary_metric": "macro_f1",
+      "score": 0.9261381878713366,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.9591527987897126,
+      "macro_f1": 0.9055299417204381,
+      "primary_metric": "macro_f1",
+      "score": 0.9055299417204381,
+      "rows": 661
+    },
+    "score_gap": 0.020608246150898513,
+    "train_accuracy": 0.9716016660355926,
+    "search_accuracy": 0.9591527987897126,
+    "generalization_gap": 0.012448867245880013,
+    "class_recall": [
+      0.9929824561403509,
+      0.7472527472527473
+    ],
+    "training_seconds": 0.85897699999623,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+      "params": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "latent",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.4070000000065193,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+    "params": {
+      "kind": "single_text",
+      "analyzer": "char_wb",
+      "representation": "hybrid",
+      "classifier": "logistic",
+      "C": 0.3,
+      "dimensions": 64
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9503908564162584,
+    "search_score": 0.9085461898680289,
+    "train_metrics": {
+      "accuracy": 0.9803104884513442,
+      "macro_f1": 0.9503908564162584,
+      "primary_metric": "macro_f1",
+      "score": 0.9503908564162584,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.9606656580937972,
+      "macro_f1": 0.9085461898680289,
+      "primary_metric": "macro_f1",
+      "score": 0.9085461898680289,
+      "rows": 661
+    },
+    "score_gap": 0.04184466654822949,
+    "train_accuracy": 0.9803104884513442,
+    "search_accuracy": 0.9606656580937972,
+    "generalization_gap": 0.01964483035754694,
+    "class_recall": [
+      0.9947368421052631,
+      0.7472527472527473
+    ],
+    "training_seconds": 0.8823464999732096,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "params": {
+        "kind": "single_text",
+        "analyzer": "char_wb",
+        "representation": "hybrid",
+        "classifier": "logistic",
+        "C": 0.3,
+        "dimensions": 64
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.437999999994645,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 8,
+    "candidate": "single_char_C0.3",
+    "params": {
+      "representation": "char",
+      "C": 0.3
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.5928189338112071,
+    "search_score": 0.6016981648863325,
+    "train_metrics": {
+      "accuracy": 0.8954941310109807,
+      "macro_f1": 0.5928189338112071,
+      "primary_metric": "macro_f1",
+      "score": 0.5928189338112071,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.8835098335854765,
+      "macro_f1": 0.6016981648863325,
+      "primary_metric": "macro_f1",
+      "score": 0.6016981648863325,
+      "rows": 661
+    },
+    "score_gap": -0.008879231075125449,
+    "train_accuracy": 0.8954941310109807,
+    "search_accuracy": 0.8835098335854765,
+    "generalization_gap": 0.01198429742550422,
+    "class_recall": [
+      1.0,
+      0.15384615384615385
+    ],
+    "training_seconds": 0.5100796000042465,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "single_char_C0.3",
+      "params": {
+        "representation": "char",
+        "C": 0.3
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "single_char_C0.3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.5,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 9,
+    "candidate": "single_word_char_C0.3",
+    "params": {
+      "representation": "word_char",
+      "C": 0.3
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7872922198210018,
+    "search_score": 0.7481904761904762,
+    "train_metrics": {
+      "accuracy": 0.9322226429382809,
+      "macro_f1": 0.7872922198210018,
+      "primary_metric": "macro_f1",
+      "score": 0.7872922198210018,
+      "rows": 2641
+    },
+    "search_metrics": {
+      "accuracy": 0.913767019667171,
+      "macro_f1": 0.7481904761904762,
+      "primary_metric": "macro_f1",
+      "score": 0.7481904761904762,
+      "rows": 661
+    },
+    "score_gap": 0.039101743630525654,
+    "train_accuracy": 0.9322226429382809,
+    "search_accuracy": 0.913767019667171,
+    "generalization_gap": 0.018455623271109944,
+    "class_recall": [
+      1.0,
+      0.37362637362637363
+    ],
+    "training_seconds": 0.6883124000160024,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "single_word_char_C0.3",
+      "params": {
+        "representation": "word_char",
+        "C": 0.3
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "single_word_char_C0.3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 3.4530000000086147,
+    "evaluation_payload_sha256": "3900418a09170ba1fb815978eca711ee2c34ee8302bab372b311f5433357461b",
+    "label_sha256": "65f252b9ad1184986b024b9c2fd2a0fec44c82821133aa6f605d671ae1ecc6d5",
+    "row_ids_sha256": "ff4b78ce09ab4eceb8d4620e9be462c846ff5cdaa6f538719672c984264472b4",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

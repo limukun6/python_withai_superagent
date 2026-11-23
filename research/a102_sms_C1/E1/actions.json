@@ -1,0 +1,112 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word representation with C=0.3 and collapsed to ham-only predictions (spam recall 0, macro F1 0.463). The next controlled step is to isolate regularization by keeping the same word representation and raising C to 3.0; this is the only remaining single_word configuration and can diagnose whether strong regularization caused the majority-class collapse before changing representation.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed PRIMARY result: word representation with C=3.0 reached macro F1 0.9178 and spam recall 0.747, while the single_word route is now exhausted. The next controlled improvement is word_char with C=3.0, retaining the stronger regularization setting and word features while adding character n-grams that may capture spam-specific token patterns.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "minilm_text_with_lexical_features",
+    "split_id": "primary",
+    "reason": "Trial 3 is the best completed PRIMARY result (word_char C=3.0, macro F1 0.9373, spam recall 0.802), and the single_word_char route has only a lower-C variant left. The next informative improvement attempt is to add a frozen MiniLM sentence embedding to word_char lexical features while keeping logistic classification, because semantic embeddings may capture spam/ham cues not present in n-grams.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9297; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "minilm_text_with_lexical_features",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9297; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      3,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "minilm_text_with_nonlinear_lexical_features",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of minilm_text_with_lexical_features against single_word_char_C3.0. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "minilm_text_with_nonlinear_lexical_features",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9380; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      3,
+      7,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      7,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      7,
+      3
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

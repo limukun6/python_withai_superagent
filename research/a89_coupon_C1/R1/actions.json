@@ -1,0 +1,116 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "primary",
+    "reason": "CatBoost with depth 6 and l2_leaf_reg 3.0 is a moderate-capacity nonlinear model with native categorical handling. It is a reasonable next primary-split probe after a strongly regularized one-hot logistic baseline.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "primary",
+    "reason": "Trial 2 showed CatBoost depth 6 with l2_leaf_reg 3.0 substantially outperforming the regularized logistic baseline on the primary split, but with a larger train-search gap. The most direct next primary probe is the same depth and iteration/learning-rate settings with stronger L2 regularization, testing whether reduced overfitting preserves or improves primary accuracy.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0012). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0012). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "primary",
+    "reason": "The best completed PRIMARY trial is CatBoost depth 6 with l2_leaf_reg 3.0 at 0.7522 search accuracy. A direct capacity probe at the same regularization, depth 8, tests whether higher-order categorical interactions improve primary accuracy before moving to a different representation. Confirmation-split measurements are not compared because they are unmatched to the primary split.",
+    "evidence_trials": [
+      2,
+      3,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7534; hard predictions differ on 100/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      8,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      8,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

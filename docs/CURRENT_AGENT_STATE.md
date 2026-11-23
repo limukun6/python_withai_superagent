@@ -1,22 +1,25 @@
-# 当前接续状态：先查实际产物，再执行
+# 当前接续状态：2026-11-23
 
-## 活动队列
+本卡是当前状态；EXPERIMENT_PROGRESS与各CURRENT_C1/Q旧快照只作历史。继续前核对真实completion/physical_fits/ledger，禁止重复启动已结束批次。
 
-- A89 Coupon六组C1已经实际启动，代码/计划提交87aa0d1；superagent生产文件内容与aa47bb9一致，后续只改文档/工具/环境包装器。输出D:/codex/python_withai/runs/a89_coupon_C1。L1预登记复用A88同源11fit；其余5条最多55新fit/12Flash。先查completion.json、checkpoint.json、physical_fits.jsonl与唯一真ledger，禁止重复启动或编辑superagent/活动runner及其protocol.script_hashes。
-- A91禁用预训练视觉特征的照片full8消融已实际排队等待A89 completion，无并行训练，输出D:/codex/python_withai/runs/a91_restricted_photo_Q。复用A88 baseline7的10fit模型，最多11新fit，0API。教师说明已允许通用下游特征，故它不再是课程资格补救；菜单/顺序/预算仍按原计划保持。先查completion，不重复启动等待器。
-- 两个线程级防待机请求分别等A89/A91 completion释放，另有共同2小时截止；输出runs/a89_sleep_guard、runs/a91_sleep_guard。结束时核对completion，不留下永久配置或启动其它模型。
+## 已完成
 
-## 资源与课程边界
+- A89 Coupon六组C1完成：53新fit＋11预登记复用、12成功Flash、56.8分钟。L0/L1/E0准确率75.0246%，R0/R1/E1为75.2217%，净差4/2030。核对反馈没有稳定胜过原始历史。65966输入/14405输出tokens，新增已知估计¥0.123586。详见batches/A89_C1_results_20261123_zh.md及research/a89_coupon_C1。L1旧时耗不能当新效率因果证据。
+- A91旧photo消融完成10fit，两个旧防待机护栏均已释放。旧photo实际Olivetti人脸身份分类，后续不再扩展，不当作自然花卉证据。
+- A94三任务九分区内容/行号摘要可交接B，0fit/API。Task2 8301行/32候选，Bean8710/5。见A94_TO_B_PORTABLE_C1_INPUTS_20261123_zh.md。两数据版本不同不能直接拼表。
+- A95花卉对象数据准备191.281秒、0fit/API；原TF Flowers包SHA/大小、1000作者与图像去重通过，800训练/200开发留出，B已见开发队列，不是H。
+- A96三路径完整自主Q完成32fit/300.438秒/0API，A累计1353→1385。baseline7与无预训练8均42.5%，full9自主选MobileNet特征达87%，净多89/200。三个模型先冻结再评分，新进程预测一致。生产source未变，临时睡眠请求已随控制器退出释放。见batches/A96_flower_Q_results_20261123_zh.md、research/a96_flower_Q。
 
-A89前A累计1290。当前实耗＝1290+A89 physical行数+A91 physical行数，复用模型不能再计fit；之后优先各批completion的A_cumulative_fits_after，防重复相加。A89前真ledger299/known¥6.1417335/11历史unknown/pending0；新请求实时读真账本，不用这些旧数字覆盖当前。唯一ledger为D:/codex/python_withai/runs/a23_real_local_history/ledger.sqlite，密钥为根api_key.txt，均不提交。
+## 接下来执行A97
 
-A93用户转来老师明确说明：Qwen/DeepSeek限制针对SuperAgent语言模型，下游允许通用预训练特征，但必须自主选用、不得任务名称路由。说明原文在TEACHER_ENCODER_CLARIFICATION_20261122_zh.md；不再等待同一确认。wrapper默认auto，有校验资产时提供通用编码器、无资产保留常规方法，full菜单15/32/16/9/5；restricted保留消融。A90未知状态为历史，不改成当时已知。当前Coupon C1完全不调用编码器、目录不变。H1/H2与课程test封存；独立48案例及24语义标注仍缺。
+A97花卉完整9候选六组C1的计划与runner已落盘，尚未启动实际付费队列。先查runs/a97_flower_C1/completion/checkpoint，不存在才按计划启动，不能重复。显式复用A96 full的10旧fit，另外五路径最多55新fit、12Flash，增量估计阈值合计¥1.20。相同source/菜单/内部分区/11fit/3调用/300/1200；L0/R0/E1/E0/R1顺序，全部模型冻结再统一评分，已见开发数据不称新泛化。
 
-## 已完成与下一步
+运行协议batches/A97_flower_six_arm_C1_plan.md；runner scripts/run_a97_flower_C1.py。预检独立输出a97_flower_C1_preflight（0fit/API）；若更新核验逻辑，独立v2目录，不覆盖原记录。正式使用强Python与已校验assets；临时防待机上下文结束释放，不改持久电源设置。活动时不修改superagent或protocol.script_hashes内helpers。
 
-- A74–A87整合、真实编码器执行/交付、成本校准完成；技术研究结果见batches/A75_A87_encoder_integration_results_zh.md。
-- A88 Q两已见任务四路径43fit/363.890秒：Coupon净+4/2030（+0.1970pp）；photo净+2/80（+2.5pp）。photo full曾自主试视觉但选梯度，资源范围现已澄清；A91补不含视觉的消融，隔离菜单可用性作用。不要拿旧A47分数当本轮对照，也不因此说未知任务已验证。
-- A89发现相同主观测Fields参数/硬预测一致而时耗约5.12倍，根因未定位；复用L1旧秒数不作新效率因果结论。当前两执行环境可见CPU均16，不据此认定权限导致差异。
-- 继续监控A89→A91直到完成/失败，汇总实际新fit、真实请求/tokens/估价、复用、正负结果与边界；完成后更新本卡和EXPERIMENT_PROGRESS并提交推送。不要自行打开H或把单任务C1称完整跨任务矩阵。
+## 资源与边界
 
-具体命令与协议：CURRENT_C1_A89.md，batches/A89_coupon_six_arm_C1_plan.md，batches/A91_restricted_photo_Q_plan.md。运行环境为runs/a79_encoder_assets/venv/Scripts/python.exe（独立覆盖，借只读torch运行库），环境入口scripts.run_with_encoder_assets默认auto；常规主解释器仍根.venv/Scripts/python.exe。
+- A97前A累计1385。真ledger311请求/known¥6.2653195/历史unknown11/pending0；每次先读真实ledger，不用此快照覆盖新数据。唯一ledger D:/codex/python_withai/runs/a23_real_local_history/ledger.sqlite，密钥根api_key.txt，均忽略、不提交。
+- 用户已授权incremental-research，历史11条保留未知，不再等平台记录才研发；strict默认仍拒绝未知，课程总预算/实际扣费不能认证。新增unknown/pending或请求/训练失败立即停，不重试、不清账本。A97检查意外并发账本写入。
+- 老师明确允许通用下游预训练特征，原文TEACHER_ENCODER_CLARIFICATION_20261122_zh.md。默认wrapper auto，有校验资产提供编码器，无资产常规fallback；restricted仅消融。LLM仍DeepSeek/Qwen、任务名不路由。
+- 生产superagent内容自aa47bb9起未变。强Python D:/codex/python_withai/runs/a79_encoder_assets/venv/Scripts/python.exe，assets在runs/a82_encoder_assets；普通环境仍根.venv。学校API timeout60，既有campus_direct包装器固定官方内网解析且保留TLS，不改系统代理。
+- H1/H2与课程test封存；独立48例和24语义标注仍缺，不能宣布D3全面通过。B负责Task2/Bean完整C1；A的花卉是已见开发数据复现，两边都要报告作用范围与新进程交付。

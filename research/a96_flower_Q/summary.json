@@ -1,0 +1,75 @@
+{
+  "arms": [
+    {
+      "arm": "baseline",
+      "candidates": 7,
+      "score": 0.425,
+      "heldout_rows": 200,
+      "fits": 11,
+      "process_seconds": 83.09400000001187,
+      "selected": "image_rbf_svm_C1.0",
+      "prediction_sha256": "733cc1389dc0c4c9bb4e6581375a50552f033ad9aeea0070db336bb4b9bd5cf2",
+      "selected_at_trial": "trial_3",
+      "reload_identical": true
+    },
+    {
+      "arm": "full",
+      "candidates": 9,
+      "score": 0.87,
+      "heldout_rows": 200,
+      "fits": 10,
+      "process_seconds": 66.68799999999464,
+      "selected": "image_mobilenet_v3_small_linear",
+      "prediction_sha256": "92e26c792182cb82ad9e7ab80833e0f96025c84cb1c91b1dd01af062b94ce9c2",
+      "selected_at_trial": "trial_3",
+      "reload_identical": true
+    },
+    {
+      "arm": "no_encoder",
+      "candidates": 8,
+      "score": 0.425,
+      "heldout_rows": 200,
+      "fits": 11,
+      "process_seconds": 89.125,
+      "selected": "image_rbf_svm_C1.0",
+      "prediction_sha256": "733cc1389dc0c4c9bb4e6581375a50552f033ad9aeea0070db336bb4b9bd5cf2",
+      "selected_at_trial": "trial_4",
+      "reload_identical": true
+    }
+  ],
+  "contrasts": [
+    {
+      "left": "no_encoder",
+      "right": "baseline",
+      "left_correct_only": 0,
+      "right_correct_only": 0,
+      "prediction_disagreements": 0
+    },
+    {
+      "left": "full",
+      "right": "no_encoder",
+      "left_correct_only": 95,
+      "right_correct_only": 6,
+      "prediction_disagreements": 106
+    },
+    {
+      "left": "full",
+      "right": "baseline",
+      "left_correct_only": 95,
+      "right_correct_only": 6,
+      "prediction_disagreements": 106
+    }
+  ],
+  "completion": {
+    "status": "completed",
+    "actual_classifier_fits": 32,
+    "A_cumulative_fits_after": 1385,
+    "real_api_requests": 0,
+    "source_unchanged": true,
+    "elapsed_seconds": 300.43799999999464,
+    "formal_test_or_H_opened": false
+  },
+  "scope": "Known B development flower cohort; not unseen H; catalogue availability comparison, not LLM effect",
+  "archiving_classifier_fits": 0,
+  "archiving_API_requests": 0
+}

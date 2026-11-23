@@ -1,5 +1,7 @@
 # 当前A89：Coupon六组整合流程对照
 
+**2026-11-23结项：本批已完成，禁止依据下文旧快照重跑。** 53新fit＋11复用、12成功Flash，3407.812秒；L0/L1/E0 75.0246%，R0/R1/E1 75.2217%。报告batches/A89_C1_results_20261123_zh.md；当前队列以CURRENT_AGENT_STATE.md为准。下文保留当时运行中的判断和协议。
+
 运行中补充：L0已完成11fit/535.687秒，E0至少一次真实Flash成功。只读runtime_variance_audit对同主划分Fields确认fitted参数/预测一致，但训练时间约5.12倍，原因未定位；两种执行进程均可见16CPU/在job中，不能据此认定CPU权限是根因。复用L1旧秒数不用于新效率因果结论。按已观测成本把中心工期修为约30–60分钟（原15–30为预测），预算上限不改；不改活动源码或临时调线程。
 
 A88四路径Q已完成43fit/363.890秒，A89前累计1290。A89计划batches/A89_coupon_six_arm_C1_plan.md与runner scripts/run_a89_coupon_C1.py已提交87aa0d1并推送，实际顺序队列已启动。输出D:/codex/python_withai/runs/a89_coupon_C1，先查completion、checkpoint与唯一真ledger，不重复运行。

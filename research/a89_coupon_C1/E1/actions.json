@@ -1,0 +1,115 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 established a one-hot logistic baseline at 0.6652 search accuracy with a small train-search gap and imbalanced class recalls. The catboost route is untried and uses native categorical handling, so a moderate-depth CatBoost configuration is a reasonable next primary-split experiment to test whether nonlinear categorical structure improves accuracy.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary-split result so far: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy versus 0.6652 for the logistic baseline. Its train-search gap of about 0.062 suggests some overfitting may remain. The next primary-split experiment should stay on the stronger CatBoost route and increase L2 regularization from 3.0 to 10.0 at the same depth, isolating a regularization change rather than changing route or multiple structural settings.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0012). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_2",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7497; hard predictions differ on 78/1622 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0012). Complete a matched pair on confirmation_2.",
+    "evidence_trials": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed PRIMARY result: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy. Trial 3 kept depth 6 and increased l2_leaf_reg to 10.0, but its PRIMARY search accuracy was slightly lower at 0.7497. The next PRIMARY experiment should therefore keep the stronger regularization setting at 3.0 and test a single structural change: increase depth from 6 to 8. This isolates a capacity change on the best PRIMARY route rather than changing route, representation, and multiple parameters at once.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7522 and 0.7534; hard predictions differ on 100/1622 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      8,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      8,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

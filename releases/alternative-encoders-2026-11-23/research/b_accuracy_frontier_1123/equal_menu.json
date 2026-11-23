@@ -1,0 +1,99 @@
+{
+  "kind": "same three heads / frozen action replay",
+  "inputs": {
+    "components/training_payload.joblib": "b12fe8eddfa067bbb1312c8786fdaafa8d5b32d32fb9ad0d2310b9e88103d74b",
+    "components/inner_evidence.json": "91861a9abb4339e0aca9062931397270b6cd0bc508283607b50fbe0ae94e929b",
+    "original/primary.joblib": "145575fea65a3d81ff9d9b51bd894c16a743939cac81959581bed6b1148125d3",
+    "original/state_1.json": "a01ddf1c636932a423e680fc4159886de3e0624e0577daa1855e256ff9b3ef48",
+    "results.json": "3cd4137369c6bfeb81cee9527d15c18fbcf69b06ca45f434d227f1ea6ba26364"
+  },
+  "source": {
+    "replay_b_common_heads.py": "8138fe27369c1cbd59591515f5b51c315c8d521adc410cfe0d508e1dfb53d845",
+    "ab_scheduler.py": "8c95541e15e9d8ad5e869298602c92d1759d2a043b3f93099afed1d80f811399",
+    "ab_comparison.py": "d7c23bdcb254e1bde1520447e4bfa76c6fd04898a6cc8c3b3dbe9643e737434b",
+    "b_component_worker.py": "a372bc53c30056bebb758898c19b48132995e60d129e402d79fcad5161c6d5bd"
+  },
+  "menu": [
+    "word_C0.05",
+    "minilm_text_with_lexical_features",
+    "minilm_l12_text_with_lexical_features"
+  ],
+  "primary_rows": 1372,
+  "row_fingerprint": "02535b8a3f9497de5caa4339397ed02edd9fce4dc5812cec20bec66b0fb92205",
+  "scores": {
+    "word": 856,
+    "base": 961,
+    "deep": 983
+  },
+  "historical_first_two_prediction_differences": {
+    "word": 0,
+    "base": 2
+  },
+  "original_scheduler": {
+    "actions": [
+      {
+        "action": "explore",
+        "candidate_id": "word_C0.05",
+        "split_id": "primary",
+        "reason": "Shared first eligible candidate.",
+        "evidence_trials": [],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "minilm_text_with_lexical_features",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "explore",
+        "candidate_id": "minilm_l12_text_with_lexical_features",
+        "split_id": "primary",
+        "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+        "evidence_trials": [
+          2,
+          1
+        ],
+        "estimated_classifier_fits": 1
+      },
+      {
+        "action": "stop",
+        "candidate_id": null,
+        "split_id": null,
+        "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+        "evidence_trials": [
+          3,
+          2
+        ],
+        "estimated_classifier_fits": 0
+      }
+    ],
+    "selected": "minilm_l12_text_with_lexical_features"
+  },
+  "component_policy": {
+    "replayed": true,
+    "selected": "minilm_l12_text_with_lexical_features",
+    "common_probe_errors": 123,
+    "expansion_threshold": 34,
+    "observed": [
+      "word",
+      "base",
+      "deep"
+    ],
+    "probe_rows": 680,
+    "confirmation_rows": 692,
+    "eight_arm_audit_winner": "deep"
+  },
+  "reused_delivery": {
+    "model_sha256": "7bcbb39f5e4fd0597d5824abb74f7b22f5c82dfce623048fb7a37f5d21ad3818",
+    "rows": 1693,
+    "correct": 1223,
+    "provenance": "same prior frozen artifact; no new training or export"
+  },
+  "actual_new_fits": 0,
+  "model_api_requests": 0
+}

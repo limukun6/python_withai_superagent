@@ -1,0 +1,77 @@
+{
+  "training_packet_sha256": "f4e30ae46244196b927b2ea278c2d900ba2c53bcffa7b93f165e47aed1190bd2",
+  "sample_sha256": "f43af2410f771c1eeaa376b6a7a339ece1ec48e6d9e7f89deea5aa12e32eae16",
+  "titles": 512,
+  "distinct_training_titles": 11505,
+  "mean_top10_overlap": {
+    "e5_deep": 0.3337890625,
+    "bge_e5": 0.4021484375,
+    "bge_deep": 0.4080078125
+  },
+  "technical": {
+    "e5": {
+      "candidate": "e5_small_text_with_lexical_features",
+      "reference_max_abs": 3.166496753692627e-07,
+      "menu_size": 34,
+      "resources": [
+        {
+          "name": "e5",
+          "environment_variable": "SUPERAGENT_E5_SMALL_WEIGHTS",
+          "path_kind": "directory",
+          "model": "intfloat/e5-small-v2",
+          "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+          "files": {
+            "config.json": {
+              "bytes": 615,
+              "sha256": "5dfb0363cd0243be179c03bcaafd1542d0fbb95e8cbcf575fff3e229342adc2f"
+            },
+            "tokenizer.json": {
+              "bytes": 711396,
+              "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+            },
+            "model.safetensors": {
+              "bytes": 133466304,
+              "sha256": "45bfa60070649aae2244fbc9d508537779b93b6f353c17b0f95ceccb1c5116c1"
+            }
+          }
+        }
+      ]
+    },
+    "bge": {
+      "candidate": "bge_small_text_with_lexical_features",
+      "reference_max_abs": 1.4901161193847656e-07,
+      "menu_size": 34,
+      "resources": [
+        {
+          "name": "bge",
+          "environment_variable": "SUPERAGENT_BGE_SMALL_WEIGHTS",
+          "path_kind": "directory",
+          "model": "BAAI/bge-small-en-v1.5",
+          "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+          "files": {
+            "config.json": {
+              "bytes": 743,
+              "sha256": "094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750"
+            },
+            "tokenizer.json": {
+              "bytes": 711396,
+              "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+            },
+            "model.safetensors": {
+              "bytes": 133466304,
+              "sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "order": [
+    "deep-e5",
+    "deep-bge"
+  ],
+  "supervised_fits": 0,
+  "model_api": 0,
+  "target_values_used": false,
+  "method_protocol_sha256": "c891d735ad5efe60c5decef3c8775f37732388bca8dc3bbf35dff6f3583022e9"
+}

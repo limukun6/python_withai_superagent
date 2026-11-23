@@ -1,0 +1,76 @@
+{
+  "routing_checks": [
+    {
+      "threshold": 0.0,
+      "first_rows": 8,
+      "second_rows": 0,
+      "actual_calls": [
+        {
+          "component": 0,
+          "rows": 8
+        }
+      ],
+      "rows_skipped": 8
+    },
+    {
+      "threshold": 1.0,
+      "first_rows": 8,
+      "second_rows": 8,
+      "actual_calls": [
+        {
+          "component": 0,
+          "rows": 8
+        },
+        {
+          "component": 1,
+          "rows": 8
+        }
+      ],
+      "rows_skipped": 0
+    },
+    {
+      "threshold": 0.2,
+      "first_rows": 8,
+      "second_rows": 8,
+      "actual_calls": [
+        {
+          "component": 0,
+          "rows": 8
+        },
+        {
+          "component": 1,
+          "rows": 8
+        }
+      ],
+      "rows_skipped": 0
+    }
+  ],
+  "rows": 8,
+  "portable_predictions_identical": true,
+  "prediction_sha256": "5abecacf86615d641d709c6ee6e1bb3fd4226ce9375a8479ae8c4d0031c8c85b",
+  "external_resources": [
+    {
+      "name": "minilm_l12",
+      "environment_variable": "SUPERAGENT_DEEP_MINILM_WEIGHTS",
+      "path_kind": "directory",
+      "model": "sentence-transformers/all-MiniLM-L12-v2",
+      "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+      "files": {
+        "config.json": {
+          "bytes": 615,
+          "sha256": "bc451f333af67312ba0de5018ef1c9ba663cb18549443e568f0bd35262dc1c48"
+        },
+        "tokenizer.json": {
+          "bytes": 466247,
+          "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+        },
+        "model.safetensors": {
+          "bytes": 133466304,
+          "sha256": "d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542"
+        }
+      }
+    }
+  ],
+  "accuracy_scored": false,
+  "manual_engineering_fixture": true
+}

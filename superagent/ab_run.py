@@ -201,7 +201,8 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
     return chosen, decision, result
 
 
-def finish_complement(task, history, state, trusted, directory, executor, logger, review=None, *, adaptive=False):
+def finish_complement(task, history, state, trusted, directory, executor, logger, review=None, *, adaptive=False,
+                      routing_capabilities=None):
     if review is None:
         from .ab_complement import review
     evidence=review(state,trusted)
@@ -217,11 +218,18 @@ def finish_complement(task, history, state, trusted, directory, executor, logger
         selection_score=evidence['portfolio_score'],selection_rule=(
             'Uncertainty-based opening with matched pair and single controls' if adaptive else 'Matched two-split complement screening'),
         b_scheduler_review=evidence)
+    routing = None
+    if routing_capabilities is not None:
+        from .ab_encoder_routing import assess
+        routing = assess(evidence, state, trusted, routing_capabilities)
+        decision['inference_routing'] = routing
+        if routing['adopted']:
+            decision['selected_candidate'] = 'confidence_routed_vote'
     logger.write_json('confirmation.json',decision)
     result=finalize(task,primary,model,anchor,row['search_score'],joblib.load(directory/'primary.joblib'),
         directory,logger,executor.worker,executor.start,executor.wall,executor.timeout,True,False,
-        confirmation=decision,matched_vote=evidence if evidence['promoted'] else None)
-    return ('equal_soft_vote' if result['ensemble_selected'] else anchor),decision,result
+        confirmation=decision,matched_vote=evidence if evidence['promoted'] else None,preference_routing=routing)
+    return (decision['selected_candidate'] if result['ensemble_selected'] else anchor),decision,result
 
 
 def command(args):
@@ -290,6 +298,7 @@ def command(args):
             **({'adaptive_opening_active':adaptive} if args.scheduler=='ab-adaptive-complement' else {}),
             **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
             **({'resolve_single_conflict':bool(adaptive)} if getattr(args,'resolve_single_conflict',False) else {}),
+            **({'confidence_cascade':True} if getattr(args,'confidence_cascade',False) else {}),
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
             candidate_coverage=getattr(args,'candidate_coverage','off'),
@@ -411,7 +420,8 @@ def command(args):
         # Recheck every completed observation against locally held labels before selection.
         if complement:
             chosen,decision,result=finish_complement(task,history,state,trusted,directory,executor,logger,
-                                                     complement_policy.review,adaptive=adaptive)
+                                                     complement_policy.review,adaptive=adaptive,
+                                                     routing_capabilities=caps if getattr(args,'confidence_cascade',False) else None)
         else:
             chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
                                               matched_finalists=args.scheduler == 'ab-finalists')

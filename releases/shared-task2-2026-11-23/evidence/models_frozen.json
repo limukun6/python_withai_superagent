@@ -1,0 +1,158 @@
+{
+  "protocol": "2eff256ac587c6359ffa4bab349d5c5fa8315f0af61ae34bd44ecace6053c69e",
+  "model": "9cc6e1ca263d39b6b77d9ae4d8f749b1a0992e684d1bde0977ce7bed5ac46e8a",
+  "selection": "minilm_l12_with_corpus_familiarity",
+  "components": [],
+  "training_rows": 8301,
+  "candidates": [
+    "word_C0.05",
+    "word_C0.1",
+    "word_C0.3",
+    "word_C0.7",
+    "word_C1.5",
+    "word_C3.0",
+    "word_C10.0",
+    "word_char_C0.05",
+    "word_char_C0.1",
+    "word_char_C0.3",
+    "word_char_C0.7",
+    "word_char_C1.5",
+    "word_char_C3.0",
+    "word_char_C10.0",
+    "char_C0.1",
+    "char_C0.3",
+    "char_C1.0",
+    "char_C3.0",
+    "word_char_stats_C0.1",
+    "word_char_stats_C0.3",
+    "word_char_stats_C1.0",
+    "word_char_stats_C3.0",
+    "minilm_text_with_lexical_features",
+    "minilm_l12_text_with_lexical_features",
+    "minilm_l12_with_corpus_familiarity",
+    "e5_small_text_with_lexical_features",
+    "minilm_text_with_nonlinear_lexical_features",
+    "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+    "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+    "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+    "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+    "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+    "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+    "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+    "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9"
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "word_C0.05",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Finish the paired comparison and deliver the selected model or pair.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "completed_fits": 6,
+  "physical": "bf79efe176e6b0bacbf060b4e082a69757fcdaf9800ea227d85b82f4e2b470ee",
+  "raw_history": "2fc51901652e68e92dc4c833e269e07b446cfa9c878b7c9a224a64ec61bcf2c7",
+  "trials": [
+    {
+      "trial": 1,
+      "family": "word_C0.05",
+      "split": "primary",
+      "score": 0.6243354991139988,
+      "held_rows": 1693,
+      "row_ids_sha256": "9f71a87253c396ae2c9ac705ceeed08c3a22a669c972c3b2693ba027c48ef0b0"
+    },
+    {
+      "trial": 2,
+      "family": "minilm_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.7082102776137035,
+      "held_rows": 1693,
+      "row_ids_sha256": "9f71a87253c396ae2c9ac705ceeed08c3a22a669c972c3b2693ba027c48ef0b0"
+    },
+    {
+      "trial": 3,
+      "family": "minilm_l12_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.7011222681630243,
+      "held_rows": 1693,
+      "row_ids_sha256": "9f71a87253c396ae2c9ac705ceeed08c3a22a669c972c3b2693ba027c48ef0b0"
+    },
+    {
+      "trial": 4,
+      "family": "minilm_l12_with_corpus_familiarity",
+      "split": "primary",
+      "score": 0.7206142941523922,
+      "held_rows": 1693,
+      "row_ids_sha256": "9f71a87253c396ae2c9ac705ceeed08c3a22a669c972c3b2693ba027c48ef0b0"
+    },
+    {
+      "trial": 5,
+      "family": "e5_small_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.707028942705257,
+      "held_rows": 1693,
+      "row_ids_sha256": "9f71a87253c396ae2c9ac705ceeed08c3a22a669c972c3b2693ba027c48ef0b0"
+    }
+  ]
+}

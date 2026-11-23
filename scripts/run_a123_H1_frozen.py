@@ -16,9 +16,12 @@ PAID='''
 import json,sys
 from pathlib import Path
 from scripts.campus_direct import campus_resolution,CAMPUS_IP
+from contextlib import nullcontext
+from tools.accepted_usage_snapshot import accepted_history
 from tools.ab_registered_run import run
 info=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
-with campus_resolution(CAMPUS_IP):
+waiver=accepted_history(info['accepted_history'],info['accepted_history_sha256']) if info.get('accepted_history') else nullcontext()
+with waiver,campus_resolution(CAMPUS_IP):
     raise SystemExit(run(Path(info['manifest']),info['manifest_sha256'],info['command']))
 '''
 
@@ -85,7 +88,8 @@ def train(a):
         from superagent.task_budget import TaskBudgetLedger
         from superagent.research_budget import research_preflight
         ledger=TaskBudgetLedger(a.ledger);before=ledger.project_summary()
-        if before['requests']<357 or before['unresolved_requests']>11 or before['pending_requests']:
+        accepted=getattr(a,'accepted_history',None)
+        if before['requests']<357 or (before['unresolved_requests']>11 and not accepted) or before['pending_requests']:
             raise ValueError('Returned real history/new unknown still unresolved; zero new API requests')
         if not a.writer_receipt or not a.writer_sha256 or sha(a.writer_receipt)!=a.writer_sha256:
             raise ValueError('Exclusive shared-ledger writer receipt required')
@@ -93,12 +97,18 @@ def train(a):
         if (writer.get('owner')!='A' or writer.get('ledger_sha256')!=sha(a.ledger) or
             writer.get('project_summary')!=before or writer.get('window_status')!='exclusive_active'):
             raise ValueError('Writer handoff identity differs')
-        research_preflight(ledger,'H1_transfer',.30)
-        command+=['--api-key-file',str(a.api_key_file),'--budget-ledger',str(a.ledger),'--task-budget-id','H1_transfer',
+        if accepted:
+            from tools.accepted_usage_snapshot import accepted_history
+            with accepted_history(accepted,a.accepted_history_sha256):
+                research_preflight(ledger,'h1_transfer',.30)
+        else:research_preflight(ledger,'h1_transfer',.30)
+        command+=['--api-key-file',str(a.api_key_file),'--budget-ledger',str(a.ledger),'--task-budget-id','h1_transfer',
                   '--llm-budget-rmb','.30','--history-policy','incremental-research','--proposal-contract','calibrated-v2']
         env['SUPERAGENT_OFFLINE']='0'
     info=dict(manifest=entry['manifest'],manifest_sha256=entry['manifest_sha256'],command=command,
               project_usage_before=before)
+    if paid and getattr(a,'accepted_history',None):
+        info.update(accepted_history=str(a.accepted_history),accepted_history_sha256=a.accepted_history_sha256)
     save(a.output/'command.json',info)
     if a.validate_only:return dict(status='validated_before_training',actual_classifier_fits=0,real_API_requests=0)
     launch=([sys.executable,'-c',PAID,str(a.output/'command.json')] if paid else
@@ -180,8 +190,8 @@ def score(a):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('phase',choices=['prepare','train','score'])
-    for name in ('output','prepared','freeze-receipt','ledger','api-key-file','writer-receipt','matrix'):p.add_argument('--'+name,type=Path,required=name=='output')
-    for name in ('freeze-sha256','writer-sha256','matrix-sha256'):p.add_argument('--'+name)
+    for name in ('output','prepared','freeze-receipt','ledger','api-key-file','writer-receipt','matrix','accepted-history'):p.add_argument('--'+name,type=Path,required=name=='output')
+    for name in ('freeze-sha256','writer-sha256','matrix-sha256','accepted-history-sha256'):p.add_argument('--'+name)
     p.add_argument('--outer',choices=POLICY['outer_seeds']);p.add_argument('--arm',choices=POLICY['arms'])
     p.add_argument('--validate-only',action='store_true');a=p.parse_args();a.output=a.output.resolve()
     a.output.mkdir(parents=True,exist_ok=False);start=time.monotonic()

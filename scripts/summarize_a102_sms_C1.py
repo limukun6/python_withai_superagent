@@ -79,8 +79,14 @@ if __name__ == '__main__':
             new_API_requests=len(usage), input_tokens=inp, output_tokens=out, known_estimated_rmb=cost,
             prediction_sha256=sha(a.run / 'predictions' / arm / 'rows.csv'), reload_identical=True,
             executed_candidates=[r['candidate'] for r in history], evidence=evidence,
+            attempted_encoder_candidates=[r['candidate'] for r in history
+                if manifest['capabilities'].get(r['candidate'],{}).get('resource')=='local_frozen_encoder_cpu'],
             action_counts=outcome.get('action_counts'),
-            independent_confirmation_observed=(outcome.get('confirmation') or {}).get('independent_confirmation_observed'))
+            observed_split_counts=dict(Counter(r['split_id'] for r in history)),
+            selected_candidate_measurements=[dict(trial=r['trial'],split_id=r['split_id'],score=r.get('search_score'))
+                for r in history if r['candidate']==outcome['selected_candidate']],
+            final_selection_basis_as_recorded=((outcome.get('confirmation') or {}).get('b_scheduler_review') or {}).get('basis'),
+            independent_confirmation_flag_as_recorded=(outcome.get('confirmation') or {}).get('independent_confirmation_observed'))
         save(dest / 'measured_usage_summary.json', dict(requests=len(usage), input_tokens=inp,
             output_tokens=out, known_estimated_rmb=cost))
     contrasts = []

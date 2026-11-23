@@ -1,5 +1,7 @@
 # Task2 的替代编码器与按反馈选组合
 
+可选推理开关 `--confidence-cascade` 已通过正式运行和 A117 新进程验收。四组实测跳过 52% 至 78% 的第二编码器行数，其中两组与完整双模型逐行相同。[训练反馈与实测得失](docs/batches/B_encoder_cascade_results_1123_zh.md) · [如何应用接入补丁](docs/batches/B_native_encoder_routing_results_1123_zh.md)
+
 两种抽样在相同 1,591 对标题上测得，训练组从 75% 增至 100% 只多答对 4 对和 2 对。双标题联合编码与训练子集投票均未达到预定晋级条件，最新课程指定验证仍为 689/940。[训练规模对照、两个挑战者与复核命令](docs/batches/B_grouped_titles_results_1123_zh.md)
 
 ## 换任务之后，Agent 会选什么

@@ -1,27 +1,32 @@
-# 当前接续状态：2026-11-23
+# 当前接续状态：2026-11-23，A97–A99已完成
 
-本卡是当前状态；EXPERIMENT_PROGRESS与各CURRENT_C1/Q旧快照只作历史。继续前核对真实completion/physical_fits/ledger，禁止重复启动已结束批次。
+先核对真实completion/physical_fits/ledger；EXPERIMENT_PROGRESS与旧CURRENT_C1/Q快照只作历史。当前没有活动训练或API队列，不重复运行任何已完成批次。
 
-## 已完成
+## 本轮完成与实际资源
 
-- A89 Coupon六组C1完成：53新fit＋11预登记复用、12成功Flash、56.8分钟。L0/L1/E0准确率75.0246%，R0/R1/E1为75.2217%，净差4/2030。核对反馈没有稳定胜过原始历史。65966输入/14405输出tokens，新增已知估计¥0.123586。详见batches/A89_C1_results_20261123_zh.md及research/a89_coupon_C1。L1旧时耗不能当新效率因果证据。
-- A91旧photo消融完成10fit，两个旧防待机护栏均已释放。旧photo实际Olivetti人脸身份分类，后续不再扩展，不当作自然花卉证据。
-- A94三任务九分区内容/行号摘要可交接B，0fit/API。Task2 8301行/32候选，Bean8710/5。见A94_TO_B_PORTABLE_C1_INPUTS_20261123_zh.md。两数据版本不同不能直接拼表。
-- A95花卉对象数据准备191.281秒、0fit/API；原TF Flowers包SHA/大小、1000作者与图像去重通过，800训练/200开发留出，B已见开发队列，不是H。
-- A96三路径完整自主Q完成32fit/300.438秒/0API，A累计1353→1385。baseline7与无预训练8均42.5%，full9自主选MobileNet特征达87%，净多89/200。三个模型先冻结再评分，新进程预测一致。生产source未变，临时睡眠请求已随控制器退出释放。见batches/A96_flower_Q_results_20261123_zh.md、research/a96_flower_Q。
+- A89 Coupon六组：53新fit＋11显式复用，12成功Flash，56.8分钟。L0/L1/E0 75.0246%，R0/R1/E1 75.2217%，净差4/2030；核对反馈没有稳定胜过原始历史。65966输入/14405输出tokens，估算¥0.123586。报告batches/A89_C1_results_20261123_zh.md。L1旧耗时不作新效率因果证据。
+- A91旧photo消融完成10fit，两个旧睡眠护栏均释放。旧数据实际Olivetti身份分类，后续不扩展，不作自然花卉证据。
+- A94三任务九分区实际行号/内容摘要可移交B，0fit/API。Task2 8301行/32候选、Bean8710/5，见A94_TO_B_PORTABLE_C1_INPUTS_20261123_zh.md。
+- A95花卉对象准备191.281秒、0fit/API，TF Flowers原包SHA/大小、1000作者与图像去重通过；800训练/200已见开发留出，不是H。
+- A96三组Q：32新fit/300.438秒/0API；像素7与无预训练8均42.5%，full9自主选MobileNet特征87%，净多89/200。三个模型冻结后统一评分、跨进程一致。报告batches/A96_flower_Q_results_20261123_zh.md。
+- A97六组完整C1：53新fit＋10预登记复用，12成功Flash，51230输入/11559输出tokens、估计¥0.097466，1091秒。六组87%、200行预测完全一致；动态10fit、固定11fit，少fit不始终更快。全部新进程交付通过、原source未变；controller退出，临时防待机请求释放。报告batches/A97_flower_C1_results_20261123_zh.md，原产物runs/a97_flower_C1，脱敏research/a97_flower_C1。
 
-## 接下来执行A97
+A累计1438。唯一真账本D:/codex/python_withai/runs/a23_real_local_history/ledger.sqlite，最新323请求/known¥6.3627855/历史unknown11/pending0。实际扣费、完整课程总预算仍未核验。密钥根api_key.txt，两者不提交。A已经停止付费写入，下一位写入者须明确交接同一原账本，不能各自复制后并发写或新建空账本。
 
-A97花卉完整9候选六组C1已实际启动，入口session66039（仅本会话有效），代码/计划已推送c64bee4。输出D:/codex/python_withai/runs/a97_flower_C1；先查completion/checkpoint，禁止重复启动。显式复用A96 full的10旧fit，另外五路径最多55新fit、12Flash，增量估计阈值合计¥1.20。相同source/菜单/内部分区/11fit/3调用/300/1200；L0/R0/E1/E0/R1顺序，全部模型冻结再统一评分，已见开发数据不称新泛化。真实账本当前唯一写入方A，B先跑本地组，付费写入权以明确交接为准。
+## 审查修复已实整合，不改写旧实验
 
-运行协议batches/A97_flower_six_arm_C1_plan.md；runner scripts/run_a97_flower_C1.py。预检独立输出a97_flower_C1_preflight（0fit/API）；若更新核验逻辑，独立v2目录，不覆盖原记录。正式使用强Python与已校验assets；临时防待机上下文结束释放，不改持久电源设置。活动时不修改superagent或protocol.script_hashes内helpers。
+A98先在隔离工作树runs/a98_prose_scope（分支codex/prose-baseline-scope-20261123，c62c47a）修历史baseline引用范围，A97完成后才合入A。16开发例6→16通过；Coupon原12提案重放机器矛盾1→0，消失项为开发者复核的误报；47相关回归通过。
 
-A98已在隔离工作树runs/a98_prose_scope修复自然日志的历史baseline误报，分支codex/prose-baseline-scope-20261123已推送c62c47a。16开发例6→16通过、A89原12提案重放机器矛盾1→0（消失项是开发者复核误报），47相关回归通过，0fit/API。A97未结束前禁止合入，不能改本轮source；之后可整合并记录新版本。B本轮C1必须固定c64bee4生产内容，不把后续修复HEAD与旧组拼同源表。16例不是独立48/24语义验收。
+A99识别likely/unlikely to干预假设，不再当当前训练器事实；10开发例5→10、花卉原12提案机器矛盾1→0，原16例仍全过，51相关回归通过。两个修复均0fit/API、原日志不覆盖。它们只证明窄句法误报修复，不证明新source端到端增分，也不替代独立语义标注。计划/runner/前后证据分别在batches与research/a98_historical_baseline_scope、research/a99_modal_hypothesis_scope。
 
-## 资源与边界
+## 下一步与共同版本
 
-- A97前A累计1385。真ledger311请求/known¥6.2653195/历史unknown11/pending0；每次先读真实ledger，不用此快照覆盖新数据。唯一ledger D:/codex/python_withai/runs/a23_real_local_history/ledger.sqlite，密钥根api_key.txt，均忽略、不提交。
-- 用户已授权incremental-research，历史11条保留未知，不再等平台记录才研发；strict默认仍拒绝未知，课程总预算/实际扣费不能认证。新增unknown/pending或请求/训练失败立即停，不重试、不清账本。A97检查意外并发账本写入。
-- 老师明确允许通用下游预训练特征，原文TEACHER_ENCODER_CLARIFICATION_20261122_zh.md。默认wrapper auto，有校验资产提供编码器，无资产常规fallback；restricted仅消融。LLM仍DeepSeek/Qwen、任务名不路由。
-- 生产superagent内容自aa47bb9起未变。强Python D:/codex/python_withai/runs/a79_encoder_assets/venv/Scripts/python.exe，assets在runs/a82_encoder_assets；普通环境仍根.venv。学校API timeout60，既有campus_direct包装器固定官方内网解析且保留TLS，不改系统代理。
-- H1/H2与课程test封存；独立48例和24语义标注仍缺，不能宣布D3全面通过。B负责Task2/Bean完整C1；A的花卉是已见开发数据复现，两边都要报告作用范围与新进程交付。
+1. B本轮Task2/Bean整组C1固定c64bee4的完整生产内容，使用A94实际行号和对应原开发val。不要直接拉最新HEAD冒称与A89/A97同source：现在prose_claims已更新；旧实验仍按旧source解释。B先本地组，付费前交接唯一真账本与写入方。共同候选/11fit/3请求/300与1200秒，calibrated-v2，强资产按原SHA。
+2. 补独立48案例及24语义标注。现有26开发例、软件回归和24真实提案后验重放不是独立验收；D3仍不能称全面通过。
+3. 收齐跨任务C1后冻结共同新版本，再按H计划做未见迁移和最终交付。H1/H2及课程test仍封存。不要为追正结果盲加花卉seed/付费；目前方法能力收益明显，核对反馈未稳定增分。
+
+## 稳定环境与限制
+
+老师已明确允许通用下游预训练特征，原文TEACHER_ENCODER_CLARIFICATION_20261122_zh.md；LLM仍Qwen/DeepSeek，不能按任务名路由。wrapper默认auto、无资产常规fallback、restricted仅消融。当前强Python D:/codex/python_withai/runs/a79_encoder_assets/venv/Scripts/python.exe，assets runs/a82_encoder_assets；普通解释器根.venv。
+
+真实API timeout60、失败不重试；校园官方域名经既有campus_direct固定到10.121.10.250且TLS Host/SNI不变，不改系统代理。用户已授权incremental-research；历史11条保持未知，strict默认仍拒绝未知。新增unknown/pending必须停，增量估计阈值不是平台扣费硬上界。每小批先保存计划/代码，输出protocol/results/completion，再执行；数据/模型/权重/SQLite不提交。

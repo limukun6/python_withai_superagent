@@ -126,6 +126,28 @@ class ProseClaimTests(unittest.TestCase):
         self.assertEqual(report['confirmed'],0)
         self.assertEqual(report['contradicted'],0)
 
+    def test_likely_intervention_is_not_current_classifier_evidence(self):
+        for text in ('Increasing logistic C is unlikely to help.', 'A logistic model is likely to help.'):
+            report = check_prose({'reason':text}, {'classifier':'catboost'}, HISTORY)
+            self.assertEqual(report['contradicted'], 0)
+            self.assertEqual(report['confirmed'], 0)
+            self.assertEqual(report['unverifiable'], 1)
+
+    def test_likely_future_trial_is_not_a_completed_reference(self):
+        report = check_prose({'reason':'Trial 9 is likely to improve.'}, FACTS, HISTORY)
+        self.assertEqual(report['unverifiable'], 1)
+        self.assertEqual(report['contradicted'], 0)
+
+    def test_bare_likely_does_not_exempt_current_classifier_conflict(self):
+        report = check_prose({'reason':'The current model is an SVM with likely measurement noise.'}, FACTS, HISTORY)
+        self.assertEqual(report['contradicted'], 1)
+
+    def test_modal_scope_does_not_cross_sentence_boundary(self):
+        report = check_prose({'reason':'This model is CatBoost. Increasing logistic C is unlikely to help.'},
+                             {'classifier':'catboost'}, HISTORY)
+        self.assertEqual(report['confirmed'], 1)
+        self.assertEqual(report['unverifiable'], 1)
+
     def test_measurement_in_a_complex_sentence_stays_uncertain(self):
         report=check_prose({'reason':'Trial 2 search accuracy was 64.63% and train accuracy was 84%.'},FACTS,HISTORY)
         self.assertTrue(all(r['status']=='unverifiable' for r in report['items'] if r['kind']=='percentage'))

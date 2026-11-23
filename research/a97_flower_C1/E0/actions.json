@@ -1,0 +1,127 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Fixed allocation primary stage. Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_mobilenet_v3_small_linear",
+    "split_id": "primary",
+    "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_gradient_histograms_logistic",
+    "split_id": "primary",
+    "reason": "The best completed PRIMARY trial is trial 2 at 0.8375 accuracy using frozen MobileNetV3-Small features, but that route is exhausted. The next untried registered image representation is gradient histograms and cell means with logistic regression, which may capture local edge/texture structure without relying on flattened pixels or a pretrained encoder.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "primary",
+    "reason": "The best completed PRIMARY trial is trial 2 at 0.8375 accuracy with frozen MobileNetV3-Small features, but that route is exhausted. Among remaining available candidates, the flattened-pixel logistic route already showed severe overfitting in trial 1, and gradient histograms in trial 3 reached only 0.4. A regularized ExtraTrees model on flattened standardized pixels is an untried route that can test nonlinear pixel interactions while using min_samples_leaf=3 to reduce overfitting relative to leaf1.",
+    "evidence_trials": [
+      2,
+      3,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_mobilenet_v3_small_linear",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_gradient_histograms_logistic",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_mobilenet_v3_small_linear",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_gradient_histograms_logistic",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "estimated_classifier_fits": 0,
+    "evidence_trials": [
+      2,
+      4,
+      3
+    ],
+    "reason": "Fixed primary and top-three replication allocation completed; preserve final refit."
+  }
+]

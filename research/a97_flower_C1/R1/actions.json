@@ -1,0 +1,109 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_mobilenet_v3_small_linear",
+    "split_id": "primary",
+    "reason": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls. A frozen pretrained image encoder provides a different, higher-level representation and is a stronger next primary-split experiment than only changing C on the same raw-pixel representation.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_gradient_histograms_logistic",
+    "split_id": "primary",
+    "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy. Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "primary",
+    "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates. Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+    "evidence_trials": [
+      2,
+      3,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_rbf_svm_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_rbf_svm_C10.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C10.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

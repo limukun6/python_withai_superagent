@@ -156,7 +156,8 @@ BOUND_MEASUREMENT = re.compile(
     r'(?P<metric>accuracy|macro_f1|balanced_accuracy|roc_auc|log_loss)\s+'
     r'(?:was|is|=|:)\s*(?P<value>\d{1,3}(?:\.\d+)?)\s*%[.!]?$', re.I)
 NEGATION = re.compile(r"\b(?:not|never|no|without)\b|n['’]t\b",re.I)
-UNCERTAIN = re.compile(r'\b(?:will|would|may|might|could|expect\w*|predict\w*|hope\w*|if)\b',re.I)
+UNCERTAIN = re.compile(r'\b(?:will|would|may|might|could|expect\w*|predict\w*|hope\w*|if)\b|'
+                       r'\b(?:un)?likely\s+to\b', re.I)
 
 
 def percentage_evidence(text, position, history, tolerance):

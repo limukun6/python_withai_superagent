@@ -1,0 +1,1831 @@
+[
+  {
+    "trial": 1,
+    "candidate": "image_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.39375,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.39375,
+      "macro_f1": 0.39119323993640936,
+      "primary_metric": "accuracy",
+      "score": 0.39375,
+      "rows": 160
+    },
+    "score_gap": 0.60625,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.39375,
+    "generalization_gap": 0.60625,
+    "class_recall": [
+      0.2571428571428571,
+      0.4827586206896552,
+      0.391304347826087,
+      0.5128205128205128,
+      0.3235294117647059
+    ],
+    "training_seconds": 6.0384393999993335,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 7.48399999999674,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "image_mobilenet_v3_small_linear",
+    "params": {
+      "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+      "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+      "C": 10.0,
+      "representation": "L2-normalized frozen 576-dimensional image features"
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "image_mobilenet_v3_small_linear",
+      "task_kind": "image",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls. A frozen pretrained image encoder provides a different, higher-level representation and is a stronger next primary-split experiment than only changing C on the same raw-pixel representation.",
+      "review": "Only one completed PRIMARY trial is available. It used image_logistic_C0.1 on flattened standardized pixels and had a large train-search gap. No formal test is available, and no confirmation-split comparison is being made.",
+      "hypothesis": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+      "evidence_trials": [
+        1
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "improve",
+      "uncertainty": "The pretrained encoder may not match this dataset's domain, and only one classifier fit is planned for this candidate. Improvement is plausible but not guaranteed; the primary-split result should be treated as evidence for the controller, not proof of generalization."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.975,
+    "search_score": 0.8375,
+    "train_metrics": {
+      "accuracy": 0.975,
+      "macro_f1": 0.9751161231805219,
+      "primary_metric": "accuracy",
+      "score": 0.975,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.8375,
+      "macro_f1": 0.8331292903180249,
+      "primary_metric": "accuracy",
+      "score": 0.8375,
+      "rows": 160
+    },
+    "score_gap": 0.13749999999999996,
+    "train_accuracy": 0.975,
+    "search_accuracy": 0.8375,
+    "generalization_gap": 0.13749999999999996,
+    "class_recall": [
+      0.8857142857142857,
+      0.9310344827586207,
+      0.782608695652174,
+      0.8205128205128205,
+      0.7647058823529411
+    ],
+    "training_seconds": 13.120210799999768,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": {
+      "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+      "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+      "backend": "cpu",
+      "versions": {
+        "torch": "2.13.0+cu126",
+        "torchvision": "0.28.0+cu126"
+      },
+      "trainable_encoder_parameters": 0,
+      "embedding_dimensions": 576
+    },
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_mobilenet_v3_small_linear",
+      "params": {
+        "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+        "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "C": 10.0,
+        "representation": "L2-normalized frozen 576-dimensional image features"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_mobilenet_v3_small_linear",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 15.594000000011874,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "no_comparison",
+        "source": "executor",
+        "latest_trial": 1,
+        "best_prior_trial": null,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.39375,
+        "best_prior_search_score": null,
+        "latest_search_accuracy": 0.39375,
+        "best_prior_search_accuracy": null,
+        "delta_vs_prior_best": null,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 1 internal accuracy score is 39.375000%; no earlier completed score is available.",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 1,
+        "reference_candidate": "image_logistic_C0.1",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_overall",
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selected_status": null,
+        "reference_route": "image_logistic",
+        "selected_route": "frozen_image_features",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": true,
+            "before": 0.1,
+            "after": 10.0,
+            "parameter_effect": {
+              "numeric_direction": "increased",
+              "declared_effect": "weaker_regularization",
+              "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": false,
+              "accuracy_effect_verified": false,
+              "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+            }
+          },
+          {
+            "parameter": "encoder",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+            "parameter_effect": null
+          },
+          {
+            "parameter": "representation",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": "L2-normalized frozen 576-dimensional image features",
+            "parameter_effect": null
+          },
+          {
+            "parameter": "weight_sha256",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls. A frozen pretrained image encoder provides a different, higher-level representation and is a stronger next primary-split experiment than only changing C on the same raw-pixel representation.",
+          "review": "Only one completed PRIMARY trial is available. It used image_logistic_C0.1 on flattened standardized pixels and had a large train-search gap. No formal test is available, and no confirmation-split comparison is being made.",
+          "hypothesis": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 1,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 1 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "image_gradient_histograms_logistic",
+    "params": {
+      "grid": 4,
+      "orientation_bins": 8,
+      "C": 1.0,
+      "representation": "gradient histograms and cell means"
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "image_gradient_histograms_logistic",
+      "task_kind": "image",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy. Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+      "review": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression. No formal test is available, and no confirmation-split comparison is being made. The proposed candidate is evaluated only on the primary search split as evidence for the controller.",
+      "hypothesis": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "improve",
+      "uncertainty": "The gradient-histogram representation may not match the dataset as well as the frozen pretrained encoder, and only one classifier fit is planned. Improvement over the raw-pixel baseline is plausible but not guaranteed; the primary-split result should be treated as search evidence, not proof of generalization."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7640625,
+    "search_score": 0.4,
+    "train_metrics": {
+      "accuracy": 0.7640625,
+      "macro_f1": 0.764457251532977,
+      "primary_metric": "accuracy",
+      "score": 0.7640625,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.4,
+      "macro_f1": 0.3961062912497339,
+      "primary_metric": "accuracy",
+      "score": 0.4,
+      "rows": 160
+    },
+    "score_gap": 0.36406249999999996,
+    "train_accuracy": 0.7640625,
+    "search_accuracy": 0.4,
+    "generalization_gap": 0.36406249999999996,
+    "class_recall": [
+      0.37142857142857144,
+      0.4482758620689655,
+      0.34782608695652173,
+      0.41025641025641024,
+      0.4117647058823529
+    ],
+    "training_seconds": 0.4379250000056345,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_gradient_histograms_logistic",
+      "params": {
+        "grid": 4,
+        "orientation_bins": 8,
+        "C": 1.0,
+        "representation": "gradient histograms and cell means"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_gradient_histograms_logistic",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7339999999967404,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "improved",
+        "source": "executor",
+        "latest_trial": 2,
+        "best_prior_trial": 1,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.8375,
+        "best_prior_search_score": 0.39375,
+        "latest_search_accuracy": 0.8375,
+        "best_prior_search_accuracy": 0.39375,
+        "delta_vs_prior_best": 0.44375000000000003,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 2 internal accuracy score is 83.750000%; best earlier trial 1 is 39.375000%; difference +44.375000 percentage points (improved).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 2,
+        "reference_candidate": "image_mobilenet_v3_small_linear",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_overall",
+        "selected_candidate": "image_gradient_histograms_logistic",
+        "selected_status": null,
+        "reference_route": "frozen_image_features",
+        "selected_route": "gradient_histograms",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": true,
+            "before": 10.0,
+            "after": 1.0,
+            "parameter_effect": {
+              "numeric_direction": "decreased",
+              "declared_effect": "stronger_regularization",
+              "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": false,
+              "accuracy_effect_verified": false,
+              "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+            }
+          },
+          {
+            "parameter": "encoder",
+            "before_present": true,
+            "after_present": false,
+            "before": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "grid",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 4,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "orientation_bins",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 8,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "representation",
+            "before_present": true,
+            "after_present": true,
+            "before": "L2-normalized frozen 576-dimensional image features",
+            "after": "gradient histograms and cell means",
+            "parameter_effect": null
+          },
+          {
+            "parameter": "weight_sha256",
+            "before_present": true,
+            "after_present": false,
+            "before": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+            "after": null,
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "image_gradient_histograms_logistic",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy. Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+          "review": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression. No formal test is available, and no confirmation-split comparison is being made. The proposed candidate is evaluated only on the primary search split as evidence for the controller.",
+          "hypothesis": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 4,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 4 machine-checkable claims inspected, 0 contradicted, 2 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "image_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "image_extra_trees_leaf3",
+      "task_kind": "image",
+      "configuration_claim": {
+        "classifier": "extra_trees"
+      },
+      "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates. Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+      "review": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic. The best observed PRIMARY search accuracy is 0.8375 from the frozen-encoder candidate, but it is not in the available candidate list. No formal test is available, and no confirmation-split comparison is being made. The proposed candidate is evaluated only on the primary search split as evidence for the controller.",
+      "hypothesis": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "improve",
+      "uncertainty": "The available candidates are all raw-pixel models, while the strongest prior PRIMARY result used frozen pretrained features. Extra trees may still overfit high-dimensional flattened pixels, and only one classifier fit is planned. Any primary-split result should be treated as search evidence, not proof of generalization."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.51875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.51875,
+      "macro_f1": 0.5066808245037145,
+      "primary_metric": "accuracy",
+      "score": 0.51875,
+      "rows": 160
+    },
+    "score_gap": 0.48124999999999996,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.51875,
+    "generalization_gap": 0.48124999999999996,
+    "class_recall": [
+      0.5714285714285714,
+      0.5172413793103449,
+      0.4782608695652174,
+      0.6410256410256411,
+      0.35294117647058826
+    ],
+    "training_seconds": 0.8861563999962527,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.3910000000032596,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "extra_trees",
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "lower",
+        "source": "executor",
+        "latest_trial": 3,
+        "best_prior_trial": 2,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.4,
+        "best_prior_search_score": 0.8375,
+        "latest_search_accuracy": 0.4,
+        "best_prior_search_accuracy": 0.8375,
+        "delta_vs_prior_best": -0.4375,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 3 internal accuracy score is 40.000000%; best earlier trial 2 is 83.750000%; difference -43.750000 percentage points (lower).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 2,
+        "reference_candidate": "image_mobilenet_v3_small_linear",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_overall",
+        "selected_candidate": "image_extra_trees_leaf3",
+        "selected_status": null,
+        "reference_route": "frozen_image_features",
+        "selected_route": "image_extra_trees",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": false,
+            "before": 10.0,
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "encoder",
+            "before_present": true,
+            "after_present": false,
+            "before": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "min_samples_leaf",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 3,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "n_estimators",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 300,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "representation",
+            "before_present": true,
+            "after_present": false,
+            "before": "L2-normalized frozen 576-dimensional image features",
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "weight_sha256",
+            "before_present": true,
+            "after_present": false,
+            "before": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+            "after": null,
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "image_extra_trees_leaf3",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates. Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+          "review": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic. The best observed PRIMARY search accuracy is 0.8375 from the frozen-encoder candidate, but it is not in the available candidate list. No formal test is available, and no confirmation-split comparison is being made. The proposed candidate is evaluated only on the primary search split as evidence for the controller.",
+          "hypothesis": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 1,
+        "unverifiable": 2,
+        "informational": 6,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "contradicted",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "extra trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "SVM",
+            "claim": "svm",
+            "compatible_with": [
+              "linear_svm",
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "extra-trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [
+          "logistic"
+        ],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [
+        {
+          "code": "prose_claim_contradiction",
+          "field": "reason",
+          "claim_kind": "classifier",
+          "matched_text": "logistic",
+          "declared": "logistic",
+          "observed": [
+            "extra_trees"
+          ],
+          "review_note": "The quoted claim does not match the recorded facts for this proposal."
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 6 machine-checkable claims inspected, 1 contradicted, 2 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 5,
+    "candidate": "image_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8984375,
+    "search_score": 0.4875,
+    "train_metrics": {
+      "accuracy": 0.8984375,
+      "macro_f1": 0.8987368018071982,
+      "primary_metric": "accuracy",
+      "score": 0.8984375,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.4875,
+      "macro_f1": 0.47998271158414807,
+      "primary_metric": "accuracy",
+      "score": 0.4875,
+      "rows": 160
+    },
+    "score_gap": 0.4109375,
+    "train_accuracy": 0.8984375,
+    "search_accuracy": 0.4875,
+    "generalization_gap": 0.4109375,
+    "class_recall": [
+      0.4857142857142857,
+      0.41379310344827586,
+      0.5217391304347826,
+      0.6153846153846154,
+      0.38235294117647056
+    ],
+    "training_seconds": 37.65410139999585,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 39.280999999988126,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "rbf_svm",
+      "observed_class": "SVC",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "image_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.5125,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.5125,
+      "macro_f1": 0.49811848726980407,
+      "primary_metric": "accuracy",
+      "score": 0.5125,
+      "rows": 160
+    },
+    "score_gap": 0.48750000000000004,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.5125,
+    "generalization_gap": 0.48750000000000004,
+    "class_recall": [
+      0.5428571428571428,
+      0.6206896551724138,
+      0.43478260869565216,
+      0.6410256410256411,
+      0.29411764705882354
+    ],
+    "training_seconds": 0.9340092000202276,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.4839999999967404,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "image_rbf_svm_C10.0",
+    "params": {
+      "C": 10.0,
+      "kernel": "rbf"
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.4875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.4875,
+      "macro_f1": 0.47974673082674063,
+      "primary_metric": "accuracy",
+      "score": 0.4875,
+      "rows": 160
+    },
+    "score_gap": 0.5125,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.4875,
+    "generalization_gap": 0.5125,
+    "class_recall": [
+      0.5142857142857142,
+      0.4482758620689655,
+      0.43478260869565216,
+      0.6153846153846154,
+      0.38235294117647056
+    ],
+    "training_seconds": 39.13200789998518,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_rbf_svm_C10.0",
+      "params": {
+        "C": 10.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_rbf_svm_C10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 40.719000000011874,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "rbf_svm",
+      "observed_class": "SVC",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 8,
+    "candidate": "image_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.3875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.3875,
+      "macro_f1": 0.38243417769856913,
+      "primary_metric": "accuracy",
+      "score": 0.3875,
+      "rows": 160
+    },
+    "score_gap": 0.6125,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.3875,
+    "generalization_gap": 0.6125,
+    "class_recall": [
+      0.22857142857142856,
+      0.5172413793103449,
+      0.391304347826087,
+      0.46153846153846156,
+      0.35294117647058826
+    ],
+    "training_seconds": 1.4435468000010587,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_logistic_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.797000000020489,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 9,
+    "candidate": "image_logistic_C10.0",
+    "params": {
+      "C": 10.0
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.3875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 640
+    },
+    "search_metrics": {
+      "accuracy": 0.3875,
+      "macro_f1": 0.38242909185532137,
+      "primary_metric": "accuracy",
+      "score": 0.3875,
+      "rows": 160
+    },
+    "score_gap": 0.6125,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.3875,
+    "generalization_gap": 0.6125,
+    "class_recall": [
+      0.2571428571428571,
+      0.4482758620689655,
+      0.391304347826087,
+      0.48717948717948717,
+      0.35294117647058826
+    ],
+    "training_seconds": 1.0261160999943968,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "image_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "image_logistic_C10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.3429999999934807,
+    "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+    "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+    "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

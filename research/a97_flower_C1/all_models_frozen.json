@@ -1,0 +1,2394 @@
+[
+  {
+    "arm": "L1",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a96_flower_Q\\full",
+    "reused": true,
+    "new_classifier_fits": 0,
+    "reused_classifier_fits": 10,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a96_flower_Q\\full",
+      "scheduler": "ab-v1",
+      "planner_mode": "local",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 3,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 7.466688099986641,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 9.28200000000652,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 4.254916799982311,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 64.17199999999139,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 9,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 10,
+        "completed_classifier_fits": 10,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "selection": {
+      "selected_experiment": "trial_3",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    },
+    "process_seconds": null,
+    "reference_process_seconds": 66.68799999999464
+  },
+  {
+    "arm": "L0",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\L0",
+    "reused": false,
+    "new_classifier_fits": 11,
+    "reused_classifier_fits": 0,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\L0",
+      "scheduler": "ab-fixed",
+      "planner_mode": "local",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 3,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 6.572886299982201,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 8.60899999999674,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 4.6342297999945,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 49.125,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 4,
+        "confirm": 6,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 11,
+        "completed_classifier_fits": 11,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_10.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "process_seconds": 51.796999999991385,
+    "selection": {
+      "selected_experiment": "trial_3",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    }
+  },
+  {
+    "arm": "R0",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\R0",
+    "reused": false,
+    "new_classifier_fits": 11,
+    "reused_classifier_fits": 0,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\R0",
+      "scheduler": "ab-fixed",
+      "planner_mode": "raw-history",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 3,
+      "known_course_cost_rmb": 0.019167,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": {
+                  "candidate": "image_mobilenet_v3_small_linear",
+                  "task_kind": "image",
+                  "configuration_claim": {
+                    "classifier": "logistic"
+                  },
+                  "reason": "Trial 1 shows flattened-pixel logistic regression overfits severely (train 1.0 vs search 0.39375). A frozen pretrained MobileNetV3-Small feature representation with logistic regression is the strongest available candidate for improving image classification accuracy without training an encoder.",
+                  "review": "Only one completed PRIMARY trial is available: image_logistic_C0.1 at search accuracy 0.39375 with a 0.60625 train-search gap. This indicates the current flattened standardized pixel representation is not generalizing well. The proposed candidate changes representation to L2-normalized frozen 576-dimensional ImageNet features while keeping a registered logistic classifier.",
+                  "hypothesis": "Frozen pretrained image features should provide more discriminative and transferable representations than raw flattened pixels, reducing overfitting and increasing PRIMARY search accuracy.",
+                  "evidence_trials": [
+                    1
+                  ],
+                  "expected_change": null,
+                  "slice_expectation": null,
+                  "purpose": "improve",
+                  "uncertainty": "The expected direction is plausible but not guaranteed; no formal test is available, and the frozen encoder may not match this dataset's domain. The comparison will be on the PRIMARY search split only, and the controller owns replication and final selection."
+                },
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 6.213797400007024,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 8.0,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": "logistic",
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "confirmed",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": {
+                  "executor_comparison": {
+                    "reading": "no_comparison",
+                    "source": "executor",
+                    "latest_trial": 1,
+                    "best_prior_trial": null,
+                    "primary_metric": "accuracy",
+                    "latest_search_score": 0.39375,
+                    "best_prior_search_score": null,
+                    "latest_search_accuracy": 0.39375,
+                    "best_prior_search_accuracy": null,
+                    "delta_vs_prior_best": null,
+                    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                    "text": "Trial 1 internal accuracy score is 39.375000%; no earlier completed score is available.",
+                    "statistical_test_performed": false,
+                    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+                  },
+                  "cited_measured_facts": [],
+                  "configuration_change": {
+                    "available": true,
+                    "source": "executor",
+                    "reference_trial": 1,
+                    "reference_candidate": "image_logistic_C0.1",
+                    "reference_status": "completed",
+                    "reference_rule": "best_completed_overall",
+                    "selected_candidate": "image_mobilenet_v3_small_linear",
+                    "selected_status": null,
+                    "reference_route": "image_logistic",
+                    "selected_route": "frozen_image_features",
+                    "same_declared_route": false,
+                    "changed_parameters": [
+                      {
+                        "parameter": "C",
+                        "before_present": true,
+                        "after_present": true,
+                        "before": 0.1,
+                        "after": 10.0,
+                        "parameter_effect": {
+                          "numeric_direction": "increased",
+                          "declared_effect": "weaker_regularization",
+                          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                          "effect_scope": "definition within a fixed parameterization",
+                          "same_declared_route": false,
+                          "accuracy_effect_verified": false,
+                          "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                        }
+                      },
+                      {
+                        "parameter": "encoder",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "representation",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "L2-normalized frozen 576-dimensional image features",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "weight_sha256",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                        "parameter_effect": null
+                      }
+                    ],
+                    "single_declared_parameter_change": false,
+                    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                    "single_factor_attribution_supported": false,
+                    "statistical_test_performed": false,
+                    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+                  },
+                  "direction_consistency": {
+                    "scope": "same declared route, single changed C; narrow English phrases only",
+                    "applicable": false,
+                    "expected_regularization_direction": null,
+                    "mentions": [],
+                    "warnings": [],
+                    "freeform_semantics_verified": false,
+                    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+                  },
+                  "selected_candidate": "image_mobilenet_v3_small_linear",
+                  "future_hypothesis": {
+                    "source": "LLM, unverified future hypothesis",
+                    "text": "Frozen pretrained image features should provide more discriminative and transferable representations than raw flattened pixels, reducing overfitting and increasing PRIMARY search accuracy.",
+                    "expected_change": null
+                  },
+                  "original_prose": {
+                    "source": "LLM, not certified as measured evidence",
+                    "fields": {
+                      "reason": "Trial 1 shows flattened-pixel logistic regression overfits severely (train 1.0 vs search 0.39375). A frozen pretrained MobileNetV3-Small feature representation with logistic regression is the strongest available candidate for improving image classification accuracy without training an encoder.",
+                      "review": "Only one completed PRIMARY trial is available: image_logistic_C0.1 at search accuracy 0.39375 with a 0.60625 train-search gap. This indicates the current flattened standardized pixel representation is not generalizing well. The proposed candidate changes representation to L2-normalized frozen 576-dimensional ImageNet features while keeping a registered logistic classifier.",
+                      "hypothesis": "Frozen pretrained image features should provide more discriminative and transferable representations than raw flattened pixels, reducing overfitting and increasing PRIMARY search accuracy.",
+                      "assessment.interpretation": "",
+                      "assessment.uncertainty": ""
+                    }
+                  },
+                  "prose_claims": {
+                    "claims_checked": 3,
+                    "confirmed": 1,
+                    "contradicted": 0,
+                    "unverifiable": 2,
+                    "informational": 1,
+                    "items": [
+                      {
+                        "field": "reason",
+                        "kind": "classifier",
+                        "span": "logistic regression",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "Trial 1 shows flattened-pixel logistic regression overfits severely (train 1.0 vs search 0.39375).",
+                        "in_comparison": true,
+                        "observed": null,
+                        "status": "informational"
+                      },
+                      {
+                        "field": "reason",
+                        "kind": "classifier",
+                        "span": "logistic regression",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "A frozen pretrained MobileNetV3-Small feature representation with logistic regression is the strongest available candidate for improving image classification accuracy without training an encoder.",
+                        "in_comparison": false,
+                        "observed": null,
+                        "status": "unverifiable",
+                        "reference_resolution": "current_or_locally_scoped"
+                      },
+                      {
+                        "field": "reason",
+                        "kind": "trial_reference",
+                        "span": "Trial 1",
+                        "claim": 1,
+                        "observed": [
+                          1
+                        ],
+                        "status": "confirmed"
+                      },
+                      {
+                        "field": "review",
+                        "kind": "classifier",
+                        "span": "logistic",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "The proposed candidate changes representation to L2-normalized frozen 576-dimensional ImageNet features while keeping a registered logistic classifier.",
+                        "in_comparison": false,
+                        "observed": null,
+                        "status": "unverifiable",
+                        "reference_resolution": "current_or_locally_scoped"
+                      }
+                    ],
+                    "unique_contradictions": [],
+                    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+                  },
+                  "warnings": [],
+                  "freeform_prose_fully_verified": false,
+                  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 3 machine-checkable claims inspected, 0 contradicted, 2 undecidable.",
+                  "changes_candidate": false,
+                  "triggers_api_retry": false
+                }
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 9.060280300007435,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 265.4530000000086,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 4,
+        "confirm": 6,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 11,
+        "completed_classifier_fits": 11,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0.019167,
+      "unresolved_calls": 0,
+      "task_budget_after_run": {
+        "task_budget_id": "tensorflow_flowers_b_cohort",
+        "task_limit_rmb": 20.0,
+        "known_task_cost_rmb": 0.019167,
+        "shared_known_cost_rmb": 0.002398,
+        "known_cost_counted_against_limit_rmb": 0.021565,
+        "unresolved_requests": 1,
+        "pending_requests": 0,
+        "accounting_complete": false,
+        "remaining_course_allowance_rmb": null,
+        "limit_exceeded": false,
+        "actual_account_debit_rmb": null,
+        "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+        "history_policy": "incremental-research",
+        "course_budget_compliance": "unverified_history",
+        "valid_for_budgeted_final_report": false,
+        "policy_note": "Known charges limited; imported historical unknown charges retain null cost and have no certified upper bound"
+      },
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_10.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "incremental-research",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "unverified_history",
+      "valid_for_budgeted_final_report": false,
+      "project_usage_after_run": {
+        "requests": 314,
+        "known_course_cost_rmb": 6.2844865,
+        "unresolved_requests": 11,
+        "pending_requests": 0,
+        "complete_course_cost_rmb": null,
+        "actual_account_debit_rmb": null
+      },
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "process_seconds": 268.18799999999464,
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    }
+  },
+  {
+    "arm": "E1",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\E1",
+    "reused": false,
+    "new_classifier_fits": 10,
+    "reused_classifier_fits": 0,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\E1",
+      "scheduler": "ab-v1",
+      "planner_mode": "checked-history",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 3,
+      "known_course_cost_rmb": 0.029146000000000002,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": {
+                  "candidate": "image_mobilenet_v3_small_linear",
+                  "task_kind": "image",
+                  "configuration_claim": {
+                    "classifier": "logistic"
+                  },
+                  "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+                  "review": "Only one completed primary trial exists: image_logistic_C0.1 with search accuracy 0.39375 and train accuracy 1.0, indicating a large score gap. No confirmation-split comparison is available, and no prior route has been tested for frozen image features. This choice is for the primary search split only.",
+                  "hypothesis": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+                  "evidence_trials": [
+                    1
+                  ],
+                  "expected_change": null,
+                  "slice_expectation": null,
+                  "purpose": "improve",
+                  "uncertainty": "The direction and magnitude of accuracy change are unknown. The frozen encoder may help if pretrained features transfer to this 64x64 RGB task, but it may also underperform if the domain is far from ImageNet or if the linear head is insufficient. This is a representation change, not proof of improvement."
+                },
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 12.68079569999827,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 15.094000000011874,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": "logistic",
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "confirmed",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": {
+                  "executor_comparison": {
+                    "reading": "no_comparison",
+                    "source": "executor",
+                    "latest_trial": 1,
+                    "best_prior_trial": null,
+                    "primary_metric": "accuracy",
+                    "latest_search_score": 0.39375,
+                    "best_prior_search_score": null,
+                    "latest_search_accuracy": 0.39375,
+                    "best_prior_search_accuracy": null,
+                    "delta_vs_prior_best": null,
+                    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                    "text": "Trial 1 internal accuracy score is 39.375000%; no earlier completed score is available.",
+                    "statistical_test_performed": false,
+                    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+                  },
+                  "cited_measured_facts": [],
+                  "configuration_change": {
+                    "available": true,
+                    "source": "executor",
+                    "reference_trial": 1,
+                    "reference_candidate": "image_logistic_C0.1",
+                    "reference_status": "completed",
+                    "reference_rule": "best_completed_overall",
+                    "selected_candidate": "image_mobilenet_v3_small_linear",
+                    "selected_status": null,
+                    "reference_route": "image_logistic",
+                    "selected_route": "frozen_image_features",
+                    "same_declared_route": false,
+                    "changed_parameters": [
+                      {
+                        "parameter": "C",
+                        "before_present": true,
+                        "after_present": true,
+                        "before": 0.1,
+                        "after": 10.0,
+                        "parameter_effect": {
+                          "numeric_direction": "increased",
+                          "declared_effect": "weaker_regularization",
+                          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                          "effect_scope": "definition within a fixed parameterization",
+                          "same_declared_route": false,
+                          "accuracy_effect_verified": false,
+                          "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                        }
+                      },
+                      {
+                        "parameter": "encoder",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "representation",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "L2-normalized frozen 576-dimensional image features",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "weight_sha256",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                        "parameter_effect": null
+                      }
+                    ],
+                    "single_declared_parameter_change": false,
+                    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                    "single_factor_attribution_supported": false,
+                    "statistical_test_performed": false,
+                    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+                  },
+                  "direction_consistency": {
+                    "scope": "same declared route, single changed C; narrow English phrases only",
+                    "applicable": false,
+                    "expected_regularization_direction": null,
+                    "mentions": [],
+                    "warnings": [],
+                    "freeform_semantics_verified": false,
+                    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+                  },
+                  "selected_candidate": "image_mobilenet_v3_small_linear",
+                  "future_hypothesis": {
+                    "source": "LLM, unverified future hypothesis",
+                    "text": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+                    "expected_change": null
+                  },
+                  "original_prose": {
+                    "source": "LLM, not certified as measured evidence",
+                    "fields": {
+                      "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+                      "review": "Only one completed primary trial exists: image_logistic_C0.1 with search accuracy 0.39375 and train accuracy 1.0, indicating a large score gap. No confirmation-split comparison is available, and no prior route has been tested for frozen image features. This choice is for the primary search split only.",
+                      "hypothesis": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+                      "assessment.interpretation": "",
+                      "assessment.uncertainty": ""
+                    }
+                  },
+                  "prose_claims": {
+                    "claims_checked": 2,
+                    "confirmed": 1,
+                    "contradicted": 0,
+                    "unverifiable": 1,
+                    "informational": 0,
+                    "items": [
+                      {
+                        "field": "reason",
+                        "kind": "trial_reference",
+                        "span": "Trial 1",
+                        "claim": 1,
+                        "observed": [
+                          1
+                        ],
+                        "status": "confirmed"
+                      },
+                      {
+                        "field": "hypothesis",
+                        "kind": "classifier",
+                        "span": "logistic regression",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+                        "in_comparison": false,
+                        "observed": null,
+                        "status": "unverifiable",
+                        "reference_resolution": "current_or_locally_scoped"
+                      }
+                    ],
+                    "unique_contradictions": [],
+                    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+                  },
+                  "warnings": [],
+                  "freeform_prose_fully_verified": false,
+                  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+                  "changes_candidate": false,
+                  "triggers_api_retry": false
+                }
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 9.216535400017165,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 236.60999999998603,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 9,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 10,
+        "completed_classifier_fits": 10,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0.029146000000000002,
+      "unresolved_calls": 0,
+      "task_budget_after_run": {
+        "task_budget_id": "tensorflow_flowers_b_cohort",
+        "task_limit_rmb": 20.0,
+        "known_task_cost_rmb": 0.048313,
+        "shared_known_cost_rmb": 0.002398,
+        "known_cost_counted_against_limit_rmb": 0.050711,
+        "unresolved_requests": 1,
+        "pending_requests": 0,
+        "accounting_complete": false,
+        "remaining_course_allowance_rmb": null,
+        "limit_exceeded": false,
+        "actual_account_debit_rmb": null,
+        "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+        "history_policy": "incremental-research",
+        "course_budget_compliance": "unverified_history",
+        "valid_for_budgeted_final_report": false,
+        "policy_note": "Known charges limited; imported historical unknown charges retain null cost and have no certified upper bound"
+      },
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "incremental-research",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "unverified_history",
+      "valid_for_budgeted_final_report": false,
+      "project_usage_after_run": {
+        "requests": 317,
+        "known_course_cost_rmb": 6.3136325,
+        "unresolved_requests": 11,
+        "pending_requests": 0,
+        "complete_course_cost_rmb": null,
+        "actual_account_debit_rmb": null
+      },
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "process_seconds": 239.57800000000861,
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    }
+  },
+  {
+    "arm": "E0",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\E0",
+    "reused": false,
+    "new_classifier_fits": 11,
+    "reused_classifier_fits": 0,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\E0",
+      "scheduler": "ab-fixed",
+      "planner_mode": "checked-history",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 3,
+      "known_course_cost_rmb": 0.030248,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": {
+                  "candidate": "image_mobilenet_v3_small_linear",
+                  "task_kind": "image",
+                  "configuration_claim": {
+                    "classifier": "logistic"
+                  },
+                  "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+                  "review": "Only one completed primary trial exists: image_logistic_C0.1 with search accuracy 0.39375 and train accuracy 1.0, indicating a large score gap. No confirmation-split comparison is available, and no route has yet been tested beyond image_logistic. The task goal_resolution confirms image input and accuracy maximization over five labels; positive-label and pair semantics are not applicable or unknown.",
+                  "hypothesis": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+                  "evidence_trials": [
+                    1
+                  ],
+                  "expected_change": null,
+                  "slice_expectation": null,
+                  "purpose": "improve",
+                  "uncertainty": "The direction and magnitude of change are unknown. Frozen ImageNet features may or may not transfer to this five-class image task, and the local frozen encoder route has not been tested on the primary split. This is a representation-change experiment, not proof of causal improvement."
+                },
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 12.129820300004212,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 14.452999999979511,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": "logistic",
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "confirmed",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": {
+                  "executor_comparison": {
+                    "reading": "no_comparison",
+                    "source": "executor",
+                    "latest_trial": 1,
+                    "best_prior_trial": null,
+                    "primary_metric": "accuracy",
+                    "latest_search_score": 0.39375,
+                    "best_prior_search_score": null,
+                    "latest_search_accuracy": 0.39375,
+                    "best_prior_search_accuracy": null,
+                    "delta_vs_prior_best": null,
+                    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                    "text": "Trial 1 internal accuracy score is 39.375000%; no earlier completed score is available.",
+                    "statistical_test_performed": false,
+                    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+                  },
+                  "cited_measured_facts": [],
+                  "configuration_change": {
+                    "available": true,
+                    "source": "executor",
+                    "reference_trial": 1,
+                    "reference_candidate": "image_logistic_C0.1",
+                    "reference_status": "completed",
+                    "reference_rule": "best_completed_overall",
+                    "selected_candidate": "image_mobilenet_v3_small_linear",
+                    "selected_status": null,
+                    "reference_route": "image_logistic",
+                    "selected_route": "frozen_image_features",
+                    "same_declared_route": false,
+                    "changed_parameters": [
+                      {
+                        "parameter": "C",
+                        "before_present": true,
+                        "after_present": true,
+                        "before": 0.1,
+                        "after": 10.0,
+                        "parameter_effect": {
+                          "numeric_direction": "increased",
+                          "declared_effect": "weaker_regularization",
+                          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                          "effect_scope": "definition within a fixed parameterization",
+                          "same_declared_route": false,
+                          "accuracy_effect_verified": false,
+                          "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                        }
+                      },
+                      {
+                        "parameter": "encoder",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "representation",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "L2-normalized frozen 576-dimensional image features",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "weight_sha256",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                        "parameter_effect": null
+                      }
+                    ],
+                    "single_declared_parameter_change": false,
+                    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                    "single_factor_attribution_supported": false,
+                    "statistical_test_performed": false,
+                    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+                  },
+                  "direction_consistency": {
+                    "scope": "same declared route, single changed C; narrow English phrases only",
+                    "applicable": false,
+                    "expected_regularization_direction": null,
+                    "mentions": [],
+                    "warnings": [],
+                    "freeform_semantics_verified": false,
+                    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+                  },
+                  "selected_candidate": "image_mobilenet_v3_small_linear",
+                  "future_hypothesis": {
+                    "source": "LLM, unverified future hypothesis",
+                    "text": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+                    "expected_change": null
+                  },
+                  "original_prose": {
+                    "source": "LLM, not certified as measured evidence",
+                    "fields": {
+                      "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+                      "review": "Only one completed primary trial exists: image_logistic_C0.1 with search accuracy 0.39375 and train accuracy 1.0, indicating a large score gap. No confirmation-split comparison is available, and no route has yet been tested beyond image_logistic. The task goal_resolution confirms image input and accuracy maximization over five labels; positive-label and pair semantics are not applicable or unknown.",
+                      "hypothesis": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+                      "assessment.interpretation": "",
+                      "assessment.uncertainty": ""
+                    }
+                  },
+                  "prose_claims": {
+                    "claims_checked": 2,
+                    "confirmed": 1,
+                    "contradicted": 0,
+                    "unverifiable": 1,
+                    "informational": 0,
+                    "items": [
+                      {
+                        "field": "reason",
+                        "kind": "trial_reference",
+                        "span": "Trial 1",
+                        "claim": 1,
+                        "observed": [
+                          1
+                        ],
+                        "status": "confirmed"
+                      },
+                      {
+                        "field": "hypothesis",
+                        "kind": "classifier",
+                        "span": "logistic regression",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+                        "in_comparison": false,
+                        "observed": null,
+                        "status": "unverifiable",
+                        "reference_resolution": "current_or_locally_scoped"
+                      }
+                    ],
+                    "unique_contradictions": [],
+                    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+                  },
+                  "warnings": [],
+                  "freeform_prose_fully_verified": false,
+                  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+                  "changes_candidate": false,
+                  "triggers_api_retry": false
+                }
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 9.146007800009102,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 196.15599999998813,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 4,
+        "confirm": 6,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 11,
+        "completed_classifier_fits": 11,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0.030248,
+      "unresolved_calls": 0,
+      "task_budget_after_run": {
+        "task_budget_id": "tensorflow_flowers_b_cohort",
+        "task_limit_rmb": 20.0,
+        "known_task_cost_rmb": 0.078561,
+        "shared_known_cost_rmb": 0.002398,
+        "known_cost_counted_against_limit_rmb": 0.080959,
+        "unresolved_requests": 1,
+        "pending_requests": 0,
+        "accounting_complete": false,
+        "remaining_course_allowance_rmb": null,
+        "limit_exceeded": false,
+        "actual_account_debit_rmb": null,
+        "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+        "history_policy": "incremental-research",
+        "course_budget_compliance": "unverified_history",
+        "valid_for_budgeted_final_report": false,
+        "policy_note": "Known charges limited; imported historical unknown charges retain null cost and have no certified upper bound"
+      },
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_10.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "incremental-research",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "unverified_history",
+      "valid_for_budgeted_final_report": false,
+      "project_usage_after_run": {
+        "requests": 320,
+        "known_course_cost_rmb": 6.3438805,
+        "unresolved_requests": 11,
+        "pending_requests": 0,
+        "complete_course_cost_rmb": null,
+        "actual_account_debit_rmb": null
+      },
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "process_seconds": 199.25,
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    }
+  },
+  {
+    "arm": "R1",
+    "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\R1",
+    "reused": false,
+    "new_classifier_fits": 10,
+    "reused_classifier_fits": 0,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a97_flower_C1\\R1",
+      "scheduler": "ab-v1",
+      "planner_mode": "raw-history",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 3,
+      "known_course_cost_rmb": 0.018904999999999998,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "image_mobilenet_v3_small_linear",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "image_mobilenet_v3_small_linear"
+        ],
+        "primary_candidate": "image_mobilenet_v3_small_linear",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "image_mobilenet_v3_small_linear",
+            "primary_accuracy": 0.8375,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "image_mobilenet_v3_small_linear",
+                "params": {
+                  "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "C": 10.0,
+                  "representation": "L2-normalized frozen 576-dimensional image features"
+                },
+                "split_id": "primary",
+                "proposal": {
+                  "candidate": "image_mobilenet_v3_small_linear",
+                  "task_kind": "image",
+                  "configuration_claim": {
+                    "classifier": "logistic"
+                  },
+                  "reason": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls. A frozen pretrained image encoder provides a different, higher-level representation and is a stronger next primary-split experiment than only changing C on the same raw-pixel representation.",
+                  "review": "Only one completed PRIMARY trial is available. It used image_logistic_C0.1 on flattened standardized pixels and had a large train-search gap. No formal test is available, and no confirmation-split comparison is being made.",
+                  "hypothesis": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+                  "evidence_trials": [
+                    1
+                  ],
+                  "expected_change": null,
+                  "slice_expectation": null,
+                  "purpose": "improve",
+                  "uncertainty": "The pretrained encoder may not match this dataset's domain, and only one classifier fit is planned for this candidate. Improvement is plausible but not guaranteed; the primary-split result should be treated as evidence for the controller, not proof of generalization."
+                },
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.975,
+                "search_score": 0.8375,
+                "train_metrics": {
+                  "accuracy": 0.975,
+                  "macro_f1": 0.9751161231805219,
+                  "primary_metric": "accuracy",
+                  "score": 0.975,
+                  "rows": 640
+                },
+                "search_metrics": {
+                  "accuracy": 0.8375,
+                  "macro_f1": 0.8331292903180249,
+                  "primary_metric": "accuracy",
+                  "score": 0.8375,
+                  "rows": 160
+                },
+                "score_gap": 0.13749999999999996,
+                "train_accuracy": 0.975,
+                "search_accuracy": 0.8375,
+                "generalization_gap": 0.13749999999999996,
+                "class_recall": [
+                  0.8857142857142857,
+                  0.9310344827586207,
+                  0.782608695652174,
+                  0.8205128205128205,
+                  0.7647058823529411
+                ],
+                "training_seconds": 13.120210799999768,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                  "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                  "backend": "cpu",
+                  "versions": {
+                    "torch": "2.13.0+cu126",
+                    "torchvision": "0.28.0+cu126"
+                  },
+                  "trainable_encoder_parameters": 0,
+                  "embedding_dimensions": 576
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "image_mobilenet_v3_small_linear",
+                  "params": {
+                    "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                    "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                    "C": 10.0,
+                    "representation": "L2-normalized frozen 576-dimensional image features"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "image_mobilenet_v3_small_linear",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 15.594000000011874,
+                "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+                "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+                "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      "c0",
+                      "c1",
+                      "c2",
+                      "c3",
+                      "c4"
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": "logistic",
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "confirmed",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": {
+                  "executor_comparison": {
+                    "reading": "no_comparison",
+                    "source": "executor",
+                    "latest_trial": 1,
+                    "best_prior_trial": null,
+                    "primary_metric": "accuracy",
+                    "latest_search_score": 0.39375,
+                    "best_prior_search_score": null,
+                    "latest_search_accuracy": 0.39375,
+                    "best_prior_search_accuracy": null,
+                    "delta_vs_prior_best": null,
+                    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                    "text": "Trial 1 internal accuracy score is 39.375000%; no earlier completed score is available.",
+                    "statistical_test_performed": false,
+                    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+                  },
+                  "cited_measured_facts": [],
+                  "configuration_change": {
+                    "available": true,
+                    "source": "executor",
+                    "reference_trial": 1,
+                    "reference_candidate": "image_logistic_C0.1",
+                    "reference_status": "completed",
+                    "reference_rule": "best_completed_overall",
+                    "selected_candidate": "image_mobilenet_v3_small_linear",
+                    "selected_status": null,
+                    "reference_route": "image_logistic",
+                    "selected_route": "frozen_image_features",
+                    "same_declared_route": false,
+                    "changed_parameters": [
+                      {
+                        "parameter": "C",
+                        "before_present": true,
+                        "after_present": true,
+                        "before": 0.1,
+                        "after": 10.0,
+                        "parameter_effect": {
+                          "numeric_direction": "increased",
+                          "declared_effect": "weaker_regularization",
+                          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                          "effect_scope": "definition within a fixed parameterization",
+                          "same_declared_route": false,
+                          "accuracy_effect_verified": false,
+                          "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                        }
+                      },
+                      {
+                        "parameter": "encoder",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "representation",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "L2-normalized frozen 576-dimensional image features",
+                        "parameter_effect": null
+                      },
+                      {
+                        "parameter": "weight_sha256",
+                        "before_present": false,
+                        "after_present": true,
+                        "before": null,
+                        "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                        "parameter_effect": null
+                      }
+                    ],
+                    "single_declared_parameter_change": false,
+                    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                    "single_factor_attribution_supported": false,
+                    "statistical_test_performed": false,
+                    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+                  },
+                  "direction_consistency": {
+                    "scope": "same declared route, single changed C; narrow English phrases only",
+                    "applicable": false,
+                    "expected_regularization_direction": null,
+                    "mentions": [],
+                    "warnings": [],
+                    "freeform_semantics_verified": false,
+                    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+                  },
+                  "selected_candidate": "image_mobilenet_v3_small_linear",
+                  "future_hypothesis": {
+                    "source": "LLM, unverified future hypothesis",
+                    "text": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+                    "expected_change": null
+                  },
+                  "original_prose": {
+                    "source": "LLM, not certified as measured evidence",
+                    "fields": {
+                      "reason": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls. A frozen pretrained image encoder provides a different, higher-level representation and is a stronger next primary-split experiment than only changing C on the same raw-pixel representation.",
+                      "review": "Only one completed PRIMARY trial is available. It used image_logistic_C0.1 on flattened standardized pixels and had a large train-search gap. No formal test is available, and no confirmation-split comparison is being made.",
+                      "hypothesis": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+                      "assessment.interpretation": "",
+                      "assessment.uncertainty": ""
+                    }
+                  },
+                  "prose_claims": {
+                    "claims_checked": 1,
+                    "confirmed": 1,
+                    "contradicted": 0,
+                    "unverifiable": 0,
+                    "informational": 2,
+                    "items": [
+                      {
+                        "field": "reason",
+                        "kind": "classifier",
+                        "span": "logistic regression",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls.",
+                        "in_comparison": true,
+                        "observed": null,
+                        "status": "informational"
+                      },
+                      {
+                        "field": "reason",
+                        "kind": "trial_reference",
+                        "span": "Trial 1",
+                        "claim": 1,
+                        "observed": [
+                          1
+                        ],
+                        "status": "confirmed"
+                      },
+                      {
+                        "field": "hypothesis",
+                        "kind": "classifier",
+                        "span": "logistic",
+                        "claim": "logistic",
+                        "compatible_with": [
+                          "logistic"
+                        ],
+                        "sentence": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+                        "in_comparison": true,
+                        "observed": null,
+                        "status": "informational"
+                      }
+                    ],
+                    "unique_contradictions": [],
+                    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+                  },
+                  "warnings": [],
+                  "freeform_prose_fully_verified": false,
+                  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 1 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+                  "changes_candidate": false,
+                  "triggers_api_retry": false
+                }
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.8375,
+            "mean_score": 0.8375,
+            "mean_accuracy": 0.8375,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "image_mobilenet_v3_small_linear",
+        "selection_score": 0.8375,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "image_mobilenet_v3_small_linear",
+          "incumbent": "image_mobilenet_v3_small_linear",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 800,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 9.287174199998844,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 230.46900000001187,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 9,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 10,
+        "completed_classifier_fits": 10,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0.018904999999999998,
+      "unresolved_calls": 0,
+      "task_budget_after_run": {
+        "task_budget_id": "tensorflow_flowers_b_cohort",
+        "task_limit_rmb": 20.0,
+        "known_task_cost_rmb": 0.097466,
+        "shared_known_cost_rmb": 0.002398,
+        "known_cost_counted_against_limit_rmb": 0.099864,
+        "unresolved_requests": 1,
+        "pending_requests": 0,
+        "accounting_complete": false,
+        "remaining_course_allowance_rmb": null,
+        "limit_exceeded": false,
+        "actual_account_debit_rmb": null,
+        "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+        "history_policy": "incremental-research",
+        "course_budget_compliance": "unverified_history",
+        "valid_for_budgeted_final_report": false,
+        "policy_note": "Known charges limited; imported historical unknown charges retain null cost and have no certified upper bound"
+      },
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib",
+        "trial_7.joblib",
+        "trial_8.joblib",
+        "trial_9.joblib"
+      ],
+      "history_policy": "incremental-research",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "unverified_history",
+      "valid_for_budgeted_final_report": false,
+      "project_usage_after_run": {
+        "requests": 323,
+        "known_course_cost_rmb": 6.3627855,
+        "unresolved_requests": 11,
+        "pending_requests": 0,
+        "complete_course_cost_rmb": null,
+        "actual_account_debit_rmb": null
+      },
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "process_seconds": 233.21900000001187,
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "image_mobilenet_v3_small_linear",
+      "single_candidate": "image_mobilenet_v3_small_linear",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.8375,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 800,
+      "model_sha256": "3bf41ba09918f85e1d74adda961b7171f597eedead5a79a8dba9c8afa8bbf5a9",
+      "task_spec_sha256": "095bc023b98e1bfeb42376a550b1c42e96466981b3eb75d35cb00040c1650f50"
+    }
+  }
+]

@@ -1,6 +1,8 @@
 # 给B：当前源的真实训练行与分区交接
 
-交接代码与输入提交c64bee4（codex/expanded-feedback）。A97花卉六组现已启动，A持有唯一真账本写入权；B可先跑Task2/Bean本地组，Flash等本卡或CURRENT_AGENT_STATE明确释放后交接，不要同时写副本。完成状态优先最新CURRENT_AGENT_STATE，下面“A这轮付费已结束”只对应A89。
+交接代码与输入提交c64bee4（codex/expanded-feedback），**本轮C1请固定这个提交的生产内容**。A97已完成：六组均87%、逐行预测全同，53新fit＋10复用、12成功Flash、18.18分钟、估计¥0.097466。A无活动付费队列，已停止写账本；真账本当前323/known¥6.3627855/历史unknown11/pending0。B付费前明确交接唯一原账本及写入方，不能各写副本。本地组可独立推进。
+
+A97结束后A98/A99修复了两类检查器误报，最新HEAD的生产source因此已不同。B本轮不要直接用最新HEAD冒称与A89/A97同源；用c64bee4完整source与A94登记数据完成当前矩阵。后续冻结H或研究新修复时再统一升级，保留旧测量版本。
 
 老师已允许通用下游预训练特征，说明见TEACHER_ENCODER_CLARIFICATION_20261122_zh.md。共同superagent文件内容与A88/A89冻结源一致；不要用旧A31控制循环覆盖。A89 Coupon六组完成，结论见batches/A89_C1_results_20261123_zh.md；原始/核对动态同分，固定核对反而少对4条，不默认晋级反馈。
 

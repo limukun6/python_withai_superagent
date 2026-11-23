@@ -16,6 +16,8 @@ A97花卉完整9候选六组C1已实际启动，入口session66039（仅本会�
 
 运行协议batches/A97_flower_six_arm_C1_plan.md；runner scripts/run_a97_flower_C1.py。预检独立输出a97_flower_C1_preflight（0fit/API）；若更新核验逻辑，独立v2目录，不覆盖原记录。正式使用强Python与已校验assets；临时防待机上下文结束释放，不改持久电源设置。活动时不修改superagent或protocol.script_hashes内helpers。
 
+A98已在隔离工作树runs/a98_prose_scope修复自然日志的历史baseline误报，分支codex/prose-baseline-scope-20261123已推送c62c47a。16开发例6→16通过、A89原12提案重放机器矛盾1→0（消失项是开发者复核误报），47相关回归通过，0fit/API。A97未结束前禁止合入，不能改本轮source；之后可整合并记录新版本。B本轮C1必须固定c64bee4生产内容，不把后续修复HEAD与旧组拼同源表。16例不是独立48/24语义验收。
+
 ## 资源与边界
 
 - A97前A累计1385。真ledger311请求/known¥6.2653195/历史unknown11/pending0；每次先读真实ledger，不用此快照覆盖新数据。唯一ledger D:/codex/python_withai/runs/a23_real_local_history/ledger.sqlite，密钥根api_key.txt，均忽略、不提交。

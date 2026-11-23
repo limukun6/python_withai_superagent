@@ -1,5 +1,9 @@
 # Task2 的替代编码器与按反馈选组合
 
+## 换任务之后，Agent 会选什么
+
+在电影台词任务上，Agent 用 8 次本地拟合自主选择单一 E5，在 136 部留出影片上答对 **335/450（74.44%）**。冻结的标题联合模型在同一批台词上答对 253 对。左右调换后，标题和台词模型分别在 1,693 对和 450 对上全部选回同一句。另一次 Task2 研究发现，共享标题组加权的首轮净增 10、14 对，到两个新确认区分别少对 1、3 对，保留了原主线。可运行 `python scripts/verify_b_quote_delivery.py` 和 `python scripts/verify_b_shared_title_weighting.py` 复算。[迁移结果与完整决策](docs/batches/B_quote_transfer_results_1123_zh.md) · [Task2 加权的筛选和确认](docs/batches/B_shared_title_results_1123_zh.md)
+
 ## 已冻结的课程验证结果
 
 联合目录让 Agent 在一次正式运行中同时看到 E5、六层 MiniLM、普通十二层和带词频特征的十二层。种子 18643 下，它自主选出原来只在研发中验证的组合，课程指定验证为 **689/940（73.30%）**，训练内开发保留区为 **1,237/1,693（73.07%）**。运行 `python scripts/verify_b_joint_delivery.py` 可核对原始预测文件的哈希、模型选择与费用。队友在 A117 的独立检出中可用 `git apply --check /path/to/A117_B_joint_encoder.patch` 检查接入。补丁保留 A 已核验的十二层公开版本 `a50ef00143b4d5391434df20ae11632588ac25be`，三份模型文件均与本研究一致。[结果及准确复跑命令](docs/batches/B_joint_coverage_results_1123_zh.md) · [适配 A117 的源码补丁](docs/integration/A117_B_joint_encoder.patch)

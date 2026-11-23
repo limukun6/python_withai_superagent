@@ -1,0 +1,140 @@
+{
+  "model": "9f687930ca58f571c30f6b440c681174aa71d6a792fdb458c33b80985d91f611",
+  "selected": [
+    "e5_small_text_with_lexical_features"
+  ],
+  "history": [
+    {
+      "candidate": "word_C0.05",
+      "split": "primary",
+      "score": 0.6063218390804598
+    },
+    {
+      "candidate": "minilm_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.75
+    },
+    {
+      "candidate": "minilm_l12_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.7528735632183908
+    },
+    {
+      "candidate": "minilm_l12_with_corpus_familiarity",
+      "split": "primary",
+      "score": 0.75
+    },
+    {
+      "candidate": "e5_small_text_with_lexical_features",
+      "split": "primary",
+      "score": 0.7586206896551724
+    },
+    {
+      "candidate": "e5_small_text_with_lexical_features",
+      "split": "confirmation_1",
+      "score": 0.76
+    },
+    {
+      "candidate": "minilm_l12_text_with_lexical_features",
+      "split": "confirmation_1",
+      "score": 0.7714285714285715
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "word_C0.05",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": []
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ]
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ]
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        3,
+        2
+      ]
+    },
+    {
+      "action": "explore",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_l12_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Finish the paired comparison and deliver the selected model or pair.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "decision_digest": "c783ef1e5fbf6bc6b0d9ca594cb908b335f9b1097c3b3481931b4c0e0beaa11c",
+  "fit_log": "93ae3566991e937f0a5fe91ca872366fdeac8c24a22b5a6e0d513f34a86d428c",
+  "fits": 8,
+  "model_api_calls": 0,
+  "training_rows": 1744
+}

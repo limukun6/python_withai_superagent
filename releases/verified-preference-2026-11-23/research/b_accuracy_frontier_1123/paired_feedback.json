@@ -1,0 +1,343 @@
+{
+  "source": "7be110acb8a72eb877c1fdca0194328a778ae5b49f5c59466de3450f3caec94a",
+  "results": "ee6bf450d7ecc9bfd56c0c9e518dd445bc59da144656873975bbc2418b063a1a",
+  "paths": {
+    "deep": {
+      "selected": "minilm_l12_text_with_lexical_features",
+      "fits": 10,
+      "decisions": [
+        {
+          "action": "explore",
+          "candidate": "word_C0.05",
+          "split": "primary",
+          "evidence": [],
+          "reason": "Shared first eligible candidate."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_text_with_lexical_features",
+          "split": "primary",
+          "evidence": [
+            1
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "split": "primary",
+          "evidence": [
+            2,
+            1
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_text_with_nonlinear_lexical_features",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "word_char_C0.05",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "stop",
+          "candidate": null,
+          "split": null,
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "No eligible new fit or complete matched replication fits the shared budget."
+        }
+      ],
+      "confirmation_review": {
+        "initial": "minilm_l12_text_with_lexical_features",
+        "incumbent": "minilm_l12_text_with_lexical_features",
+        "promotions": [],
+        "basis": [
+          "primary"
+        ],
+        "primary_metric": "accuracy"
+      },
+      "methods_seen": 9
+    },
+    "deep-edit": {
+      "selected": "minilm_l12_text_with_lexical_features",
+      "fits": 10,
+      "decisions": [
+        {
+          "action": "explore",
+          "candidate": "word_C0.05",
+          "split": "primary",
+          "evidence": [],
+          "reason": "Shared first eligible candidate."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_text_with_lexical_features",
+          "split": "primary",
+          "evidence": [
+            1
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "split": "primary",
+          "evidence": [
+            2,
+            1
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_l12_with_edit_context",
+          "split": "primary",
+          "evidence": [
+            3,
+            2
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "confirm",
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "split": "confirmation_1",
+          "evidence": [
+            3,
+            4
+          ],
+          "reason": "Comparable primary accuracy 0.6914 and 0.6899; hard predictions differ on 18/1332 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1."
+        },
+        {
+          "action": "confirm",
+          "candidate": "minilm_l12_with_edit_context",
+          "split": "confirmation_1",
+          "evidence": [
+            3,
+            4,
+            5
+          ],
+          "reason": "Comparable primary accuracy 0.6914 and 0.6899; hard predictions differ on 18/1332 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1."
+        },
+        {
+          "action": "confirm",
+          "candidate": "minilm_l12_text_with_lexical_features",
+          "split": "confirmation_2",
+          "evidence": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "reason": "Comparable primary accuracy 0.6914 and 0.6899; hard predictions differ on 18/1332 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0036). Complete a matched pair on confirmation_2."
+        },
+        {
+          "action": "confirm",
+          "candidate": "minilm_l12_with_edit_context",
+          "split": "confirmation_2",
+          "evidence": [
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "reason": "Comparable primary accuracy 0.6914 and 0.6899; hard predictions differ on 18/1332 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0036). Complete a matched pair on confirmation_2."
+        },
+        {
+          "action": "explore",
+          "candidate": "minilm_text_with_nonlinear_lexical_features",
+          "split": "primary",
+          "evidence": [
+            3,
+            4
+          ],
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores."
+        },
+        {
+          "action": "stop",
+          "candidate": null,
+          "split": null,
+          "evidence": [
+            3,
+            4
+          ],
+          "reason": "No eligible new fit or complete matched replication fits the shared budget."
+        }
+      ],
+      "confirmation_review": {
+        "initial": "minilm_l12_text_with_lexical_features",
+        "incumbent": "minilm_l12_text_with_lexical_features",
+        "promotions": [],
+        "basis": [
+          "primary"
+        ],
+        "primary_metric": "accuracy"
+      },
+      "methods_seen": 5
+    }
+  },
+  "matched_internal_partitions": {
+    "primary": {
+      "rows": 1332,
+      "deep_correct": 921,
+      "edit_correct": 919,
+      "slices": {
+        "active": {
+          "rows": 221,
+          "deep_correct": 135,
+          "edit_correct": 136,
+          "gained": 7,
+          "lost": 6
+        },
+        "inactive": {
+          "rows": 1111,
+          "deep_correct": 786,
+          "edit_correct": 783,
+          "gained": 1,
+          "lost": 4
+        }
+      },
+      "paired": {
+        "groups": 978,
+        "net_correct": -2.0,
+        "net_pp": -0.15015015015015015,
+        "group_bootstrap_95_pp": [
+          -0.7639419404125286,
+          0.45180722891566266
+        ]
+      },
+      "payload_sha256": "b5e15752192ce82f2e15e1826795347917533bc134f160b3b43c85310afe1c6c"
+    },
+    "confirmation_1": {
+      "rows": 1379,
+      "deep_correct": 988,
+      "edit_correct": 993,
+      "slices": {
+        "active": {
+          "rows": 239,
+          "deep_correct": 153,
+          "edit_correct": 157,
+          "gained": 8,
+          "lost": 4
+        },
+        "inactive": {
+          "rows": 1140,
+          "deep_correct": 835,
+          "edit_correct": 836,
+          "gained": 2,
+          "lost": 1
+        }
+      },
+      "paired": {
+        "groups": 1000,
+        "net_correct": 5.0,
+        "net_pp": 0.36258158085569253,
+        "group_bootstrap_95_pp": [
+          -0.1444069405897206,
+          0.8830510461231897
+        ]
+      },
+      "payload_sha256": "229938d02f8ee2cb9333d43fa11c9b72caf94bcc512decc87b52fe113202a5f0"
+    },
+    "confirmation_2": {
+      "rows": 1345,
+      "deep_correct": 942,
+      "edit_correct": 942,
+      "slices": {
+        "active": {
+          "rows": 218,
+          "deep_correct": 126,
+          "edit_correct": 129,
+          "gained": 5,
+          "lost": 2
+        },
+        "inactive": {
+          "rows": 1127,
+          "deep_correct": 816,
+          "edit_correct": 813,
+          "gained": 0,
+          "lost": 3
+        }
+      },
+      "paired": {
+        "groups": 996,
+        "net_correct": 0.0,
+        "net_pp": 0.0,
+        "group_bootstrap_95_pp": [
+          -0.44776955402227103,
+          0.45045045045045046
+        ]
+      },
+      "payload_sha256": "20683db689301410815359762ae556b510a76a9497f209e1b10c852f2bf5e890"
+    }
+  },
+  "external_delta": {
+    "groups": 1245,
+    "net_correct": 0.0,
+    "net_pp": 0.0,
+    "group_bootstrap_95_pp": [
+      0.0,
+      0.0
+    ]
+  },
+  "extra_fits": 0,
+  "model_api": 0,
+  "selection_uses_outer": false
+}

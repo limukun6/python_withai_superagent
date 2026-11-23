@@ -1,8 +1,8 @@
 # 当前接续状态：2026-11-23，A102–A105已结束
 
-## A107：用户要求A自行完成H2输入准备（运行中）
+## A108：用户要求A自行完成H2输入准备（分段下载运行中）
 
-计划batches/A107_H2_local_recovery_plan.md、脚本scripts/prepare_a107_H2_local.py先落盘，输出runs/a107_H2_local。官方服务器已返回206并确认从30408704字节续传，单次下载窗口1800秒、timeout60、无自动重试。整包校验后仅允许打开原登记训练成员并复用B构造器，要求两包/六分区一致；0fit/API，不解封H性能。此节覆盖下文“无下载队列/A无需重复下载”的旧快照；恢复会话先查此目录completion，不重复启动。旧A105 partial保持不变。
+A107已在247.781秒因长连接IncompleteRead停止，保留48234496字节，无图片打开；原失败metadata归档research/a107_H2_download_stopped，旧A105/A107不变。A108计划batches/A108_H2_segmented_download_plan.md、脚本scripts/prepare_a108_H2_segmented.py先落盘，输出runs/a108_H2_segmented。按4MiB分段请求余下12段，每段严格校验Range，失败不重试，累计1800秒窗口。首段37.453秒成功。整包校验后仅允许打开原登记训练成员并复用B构造器，要求两包/六分区一致；0fit/API，不解封H性能。此节覆盖下文“无下载队列/A无需重复下载”的旧快照；恢复会话先查此目录completion，不重复启动。
 
 ## A106收到B新摘要，原件尚缺
 

@@ -19,6 +19,7 @@ TEXT = 'minilm_text_with_lexical_features'
 TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
 TEXT_EDIT = 'minilm_l12_with_edit_context'
+TEXT_FAMILIARITY = 'minilm_l12_with_corpus_familiarity'
 TRANSFER_METHODS={'deep-e5':('e5','e5_small_text_with_lexical_features'),
                   'deep-bge':('bge','bge_small_text_with_lexical_features')}
 PREFERENCE_CATALOG_ENV = 'SUPERAGENT_AB_PREFERENCE_CATALOG'
@@ -31,6 +32,7 @@ ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 ROUTES.update(ab_text_recipes.ROUTES)
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
+ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
 ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
 
 
@@ -118,7 +120,7 @@ def additions(kind):
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
-        if kind=='pair_text' and catalog in ('deep','deep-edit',*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
                         representation='word_char_minilm_l12',swap_augmentation=True)
@@ -126,6 +128,9 @@ def additions(kind):
             if catalog=='deep-edit':
                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
+            if catalog=='deep-familiarity':
+                extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
+                                       partial(fit_sentence,kind=kind,familiarity=True)))
         if catalog in TRANSFER_METHODS:
             from .ab_sentence import ALTERNATIVES,verified_files
             variant,name=TRANSFER_METHODS[catalog]

@@ -307,7 +307,7 @@ def build_parser():
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement'],default='fixed')
-    run.add_argument('--preference-catalog',choices=['standard','deep','deep-edit','deep-e5','deep-bge'],default='standard',
+    run.add_argument('--preference-catalog',choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity'],default='standard',
         help='Expose verified local twelve-layer preference heads to the shared A/B scheduler')
     run.add_argument('--preference-components',action='store_true',
                      help='Enable the local cost-aware component study for binary preference tasks')

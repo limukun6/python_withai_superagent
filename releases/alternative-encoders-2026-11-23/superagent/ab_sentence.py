@@ -208,6 +208,25 @@ class DeepPreferenceFeatures(SentenceFeatures):
         return blocks,tokens
 
 
+class FamiliarityPreferenceFeatures(DeepPreferenceFeatures):
+    def __init__(self, kind):
+        super().__init__(kind)
+
+    def fit(self, rows, y=None):
+        from .word_familiarity import WordFamiliarity
+
+        super().fit(rows, y)
+        self.corpus_ = WordFamiliarity().fit(text for pair in rows for text in pair)
+        differences = self.corpus_.differences(rows)
+        self.familiarity_scale_ = float(np.sqrt(np.mean(differences ** 2))) or 1.0
+        return self
+
+    def semantic_blocks(self, rows, texts):
+        blocks, tokens = super().semantic_blocks(rows, texts)
+        delta = self.corpus_.differences(rows) / self.familiarity_scale_
+        return [*blocks, csr_matrix(delta[:, None])], tokens
+
+
 class AlternativeSentenceFeatures(SentenceFeatures):
     def __init__(self,kind,variant):
         super().__init__(kind)
@@ -251,8 +270,10 @@ class KernelSentenceFeatures(SentenceFeatures):
         return [*original,csr_matrix(extra)]
 
 
-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None):
-    if alternative:
+def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
+    if familiarity:
+        features=FamiliarityPreferenceFeatures(kind)
+    elif alternative:
         features=AlternativeSentenceFeatures(kind,alternative)
     elif deep:
         features=DeepPreferenceFeatures(kind,edit_context)

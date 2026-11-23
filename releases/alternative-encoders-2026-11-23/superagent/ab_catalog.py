@@ -2,7 +2,7 @@
 from copy import deepcopy
 from importlib.util import find_spec
 
-from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_DEEP, TEXT_EDIT, TEXT_KERNEL, TRANSFER_METHODS
+from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_DEEP, TEXT_EDIT, TEXT_FAMILIARITY, TEXT_KERNEL, TRANSFER_METHODS
 from .ab_symmetric import ENCODER
 from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
@@ -12,7 +12,7 @@ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
 ADAPTER_VERSION = '1.5'
-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
+FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):

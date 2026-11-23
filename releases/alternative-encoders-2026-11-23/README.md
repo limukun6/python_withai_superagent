@@ -1,5 +1,9 @@
 # Task2 的替代编码器与按反馈选组合
 
+## 词频特征与 E5 的最新对照
+
+正式 Agent 使用 `--scheduler ab-complement --preference-catalog deep-familiarity`，在匿名训练包上自行选择六层加带熟悉度特征的十二层，训练内开发保留区为 **1,224/1,693（72.30%）**。另行冻结的 E5 加同一新十二层组合为 **1,237/1,693（73.07%）**。运行 `python scripts/verify_b_familiarity_study.py` 可在普通 Python 环境核对四项实验的决策、成绩与资源回执。[完整结果与复跑入口](docs/batches/B_familiarity_results_1123_zh.md)
+
 ## 从零启动的组合调度
 
 `--scheduler ab-complement` 在匿名偏好任务上可以自行决定保留单模型或组成两模型组合。种子 18643 下，它实际选择六层 MiniLM 加词模型，在训练内保留区答对 **1,208/1,693（71.35%）**。这比原十二层模型少 16 对。附匿名候选复现、逐行反馈干预、独立进程加载和并列搭档的补测。[新种子的真实运行和局限](docs/batches/B_native_complement_results_1123_zh.md) · [上一版编码器研究的固定快照](https://github.com/limukun6/python_withai_superagent/tree/06a61897688565cc3d6949ecd34f3822e6a29213/releases/alternative-encoders-2026-11-23)

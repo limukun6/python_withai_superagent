@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-23：A111接收B新强方法交付c658477
+
+fetch已得到codex/b-verified-preference-1123=c658477，展示分支2b76156指向其发布副本。B原生L12/deep-edit标准Agent两组各10fit、0API，同为1224/1693(72.30%)；改写无增益。组件旧配对1208→1223、10→7fit，但候选和调度混杂、时间缓存不同。A独立checkout审查，2无fit作用域测试通过，7任务full/baseline共14默认菜单与A相同，已发布结果/用量/预测指纹元数据一致。本机未取得新权重/模型，不冒称重现其性能；A生产尚未合入。0新fit/API，A累计1501。当前c64 Task2/Bean六组增加0，F*未选；独立48/24对应的9ed包仍另待原件。报告batches/A111_B_verified_delivery_review_20261123_zh.md，证据research/a111_B_verified_intake。
+
 ## 2026-11-23：A110正式H2入口验收完成，尚未开性能
 
 计划和代码先落盘，41.594秒完成4次本地CLI在分区完成/Executor前截停（两外层各L0/L1），真实worker/行号/标签指纹与B登记一致，full9。8份Flash参数只解析校验，未执行handler/资金预检；12份注册分区启动模板备好，正式H2仍L0/R0/F*去重。0fit/API/预测/留出图片访问，A累计1501。fetch后仍缺B新9ed提交/当前Task2-Bean结果，原五任务选F*和共同冻结尚未完成，故不提前用H跑性能。报告batches/A110_H2_entry_results_20261123_zh.md，脱敏证据research/a110_H2_official_entry；无活动队列。

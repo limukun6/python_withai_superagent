@@ -2,6 +2,8 @@
 
 ## 换任务之后，Agent 会选什么
 
+在两边均可用 11 次拟合的对照中，动态调度在训练内留出的标题上比固定安排多答对 **29/1,693**，在台词上少答对 **9/450**。单独比较预算安排，有助于判断收益来自任务标签、搜索方法还是调度选择。[相同预算的对照及逐组证据](docs/batches/B_preference_policy_results_1123_zh.md)
+
 在电影台词任务上，Agent 用 8 次本地拟合自主选择单一 E5，在 136 部留出影片上答对 **335/450（74.44%）**。冻结的标题联合模型在同一批台词上答对 253 对。左右调换后，标题和台词模型分别在 1,693 对和 450 对上全部选回同一句。另一次 Task2 研究发现，共享标题组加权的首轮净增 10、14 对，到两个新确认区分别少对 1、3 对，保留了原主线。可运行 `python scripts/verify_b_quote_delivery.py` 和 `python scripts/verify_b_shared_title_weighting.py` 复算。[迁移结果与完整决策](docs/batches/B_quote_transfer_results_1123_zh.md) · [Task2 加权的筛选和确认](docs/batches/B_shared_title_results_1123_zh.md)
 
 ## 已冻结的课程验证结果

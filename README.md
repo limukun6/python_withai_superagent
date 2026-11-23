@@ -6,6 +6,8 @@ Task2 和 Dry Bean 共 12 份预测、八类 48 个检查案例，以及 24 份�
 
 ## 11 月 23 日已验证的 Task2 方法
 
+固定与动态调度的同预算对照已完成。训练内留出结果为标题 1,208 对 1,237（共 1,693 对），电影台词 344 对 335（共 450 对）；动态调度分别实际使用 10 和 8 次训练，固定调度各用 11 次。[两项同预算比较](releases/alternative-encoders-2026-11-23/docs/batches/B_preference_policy_results_1123_zh.md)
+
 同一套 Agent 在公开电影台词任务上自主改选单一 E5，在从训练中整部留出的 136 部影片上答对 335/450。同一批输入上的冻结标题模型答对 253/450。Task2 的另一项训练加权尝试在两个追加确认区未通过晋级门槛。[台词迁移与逐步选择](releases/alternative-encoders-2026-11-23/docs/batches/B_quote_transfer_results_1123_zh.md) · [Task2 加权的独立确认](releases/alternative-encoders-2026-11-23/docs/batches/B_shared_title_results_1123_zh.md)
 
 正式 Agent 从空目录自主选择 E5 和带词频特征的十二层模型，训练内保留区为 **1,237/1,693（73.07%）**，冻结后课程指定验证集为 **689/940（73.30%）**。本次完整运行 10 次本地拟合，模型 API 0 次。另一个预登记种子选了单模型，开发保留区为 1,232/1,693。A117 接入补丁已用队友分支实测。[正式成绩、逐行结果与 A 侧接入](releases/alternative-encoders-2026-11-23/docs/batches/B_joint_coverage_results_1123_zh.md)

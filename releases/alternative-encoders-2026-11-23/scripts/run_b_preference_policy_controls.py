@@ -89,7 +89,7 @@ def run(a):
     env=offline_environment(a.workspace)
     info=read(a.inputs/'protocol.json')
     movie = a.task=='quotes'
-    n=info['train_rows'] if movie else info['training_rows']
+    n=info['train_rows'] if movie else info['rows']
     packet=ab_run.sha(a.inputs/'anonymous.zip')
     check(packet==(info['train_packet'] if movie else info['training_sha']) and
           ab_run.sha(a.inputs/'features.zip')==(info['features'] if movie else info['feature_sha']),'Wrong input packet')

@@ -1,0 +1,64 @@
+{
+  "task": "quotes",
+  "rows": 450,
+  "groups": 136,
+  "arms": {
+    "dynamic": {
+      "correct": 335,
+      "accuracy": 0.7444444444444445,
+      "fits": 8,
+      "selected": [
+        "e5_small_text_with_lexical_features"
+      ]
+    },
+    "fixed": {
+      "correct": 344,
+      "accuracy": 0.7644444444444445,
+      "fits": 11,
+      "selected": [
+        "minilm_l12_text_with_lexical_features"
+      ]
+    },
+    "first": {
+      "correct": 270,
+      "accuracy": 0.6,
+      "fits": 2,
+      "selected": [
+        "word_C0.05"
+      ]
+    }
+  },
+  "paired": {
+    "dynamic_minus_fixed": {
+      "gained": 22,
+      "lost": 31,
+      "delta": {
+        "groups": 136,
+        "net_correct": -9.0,
+        "net_pp": -2.0,
+        "group_bootstrap_95_pp": [
+          -5.000250501002004,
+          0.9276545463154675
+        ]
+      }
+    },
+    "dynamic_minus_first": {
+      "gained": 99,
+      "lost": 34,
+      "delta": {
+        "groups": 136,
+        "net_correct": 65.0,
+        "net_pp": 14.444444444444443,
+        "group_bootstrap_95_pp": [
+          9.58514963260725,
+          19.189819301759602
+        ]
+      }
+    }
+  },
+  "actual_new_fits": 13,
+  "reused_fits": 8,
+  "model_api_calls": 0,
+  "new_rmb": 0,
+  "designated_or_formal_course_used": false
+}

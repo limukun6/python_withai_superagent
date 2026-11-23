@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-23，A120–A124本地队列已完成
+# 当前接续状态：2026-11-23，A125–A129接入与账本接收完成
+
+## 最新：已接5329503、收回实际账本；28新fit，累计1566
+
+隔离codex/a125-joint-latest生产提交87634a5接B联合编码器/词频L12/E5、预算内组合和额外编码器探索、可选单冲突。保留A120诊断off、A98/A99文字修复及L12公开revision。用户转B确认local/ab-adaptive-complement/deep-e5-familiarity/cover-untried-encoder、seed18643、fit10、单冲突off；924e88a下一轮，不接本轮。两补丁CLI冲突已合；登记划分包装器增加新scheduler及freeze options透传，首H1入口0fit失败保留，82无fit测试/7默认菜单/5真实训练前边界通过。
+
+E5三文件固定SHA匹配，runs/a126_e5_assets/e5-small-v2，34公共请求624.516秒、0学校API。H1两原A13分区61411/61421，standard8/L0各11fit，总22fit60.265秒，已封存但R0未跑/outer未开。H快照改A自动登记，不等B额外同意回执。随后匿名联合full35自主尝试5方法含E5，最后词法单模型6fit、51.453秒，12行原生/搬迁/隔离包一致；合成工程，不是新Task2/H性能，未真实触发ensemble。三个模型源与当前生产一致。本轮28fit/0API，A累计1566，无活动队列。
+
+用户已交真实账本ZIP和B停止写账声明，A129逐文件SHA、SQLite integrity和旧335请求/503转移全通过，真实357/known6.7114475/unknown12/pending0。当前唯一账本接管路径D:/codex/python_withai/runs/a129_B_ledger_return/private/ledger.sqlite，SHA0aaedaaaaa7814ab9ad1f5f7e4bc7d3dd26faba260f936c5ec7abc829c5d4729，owner A/paused_new_unknown。旧a23的335副本过时，不再用于paid。新增Bean未知93c46fb2-af8f-4c1e-b2f3-cd019a6e2d68，HTTP200/286流事件/最终usage和费用null，证据不足以结算或当零；用户与B要求继续暂停paid，未重试。不要再说实际账本没交回，也不为补证据要求队友重新发送已收原件。
+
+B确认H2未跑、输入ready/outer未看、继续负责H2/ReleasedTask2且无当前队列。报告batches/A125_A129_integrated_results_20261123_zh.md；主证据research/a125_a129_summary、a129_B_ledger_return，私密原件不进Git。旧C1和689/940只按原来源引用。下一步共享新集成源、继续本地工作；H完整评分/Released同版结果/最终提交尚未完成，项目未最终冻结。
 
 ## 最新用户对齐：采用B最新交付，不再等待额外“同意冻结”回执
 

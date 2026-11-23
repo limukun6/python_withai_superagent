@@ -90,6 +90,8 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args, 'confidence_cascade', False) and args.scheduler not in ('ab-complement', 'ab-adaptive-complement'):
+        raise ValueError('Confidence routing requires the matched preference scheduler')
     if getattr(args, 'resolve_single_conflict', False) and args.scheduler != 'ab-adaptive-complement':
         raise ValueError('Single-model conflict resolution requires the adaptive complement scheduler')
     if getattr(args,'parameter_semantics','off')!='off' and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
@@ -312,6 +314,8 @@ def build_parser():
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',
                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+    run.add_argument('--confidence-cascade', action='store_true',
+                     help='Use confirmed training feedback to skip a second encoder for confident preference pairs')
     run.add_argument('--resolve-single-conflict', action='store_true',
         help='Compare disagreeing single-model leaders on a third split when the remaining budget permits')
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')

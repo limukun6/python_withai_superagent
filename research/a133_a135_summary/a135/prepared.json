@@ -1,0 +1,363 @@
+{
+  "training_sha256": "6ee663e756af30f7455b260cc6813ab8bd6d30f8c622b656210c46c0460b96ab",
+  "members_sha256": {
+    "in_vehicle_coupon_recommendation/C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+    "in_vehicle_coupon_recommendation/Readme.md": "289f7684d1d8170dccbb7e64e6b196c6881b1c6b982a939c1e0475f8486c6493",
+    "in_vehicle_coupon_recommendation/y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+  },
+  "rows": 8117,
+  "task_spec": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "categorical_tabular",
+    "metric": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {},
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "categorical_tabular",
+          "source": "task_adapter",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "accuracy",
+          "source": "declared_task_readme",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            0,
+            1
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "capabilities": {
+    "logistic_C0.05": {
+      "id": "logistic_C0.05",
+      "params": {
+        "C": 0.05
+      },
+      "route": "logistic",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "logistic_C0.25": {
+      "id": "logistic_C0.25",
+      "params": {
+        "C": 0.25
+      },
+      "route": "logistic",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "logistic_C1.0": {
+      "id": "logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "route": "logistic",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "logistic_C4.0": {
+      "id": "logistic_C4.0",
+      "params": {
+        "C": 4.0
+      },
+      "route": "logistic",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "extra_trees_leaf1": {
+      "id": "extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 400
+      },
+      "route": "extra_trees",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "extra_trees_leaf2": {
+      "id": "extra_trees_leaf2",
+      "params": {
+        "min_samples_leaf": 2,
+        "n_estimators": 400
+      },
+      "route": "extra_trees",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "extra_trees_leaf4": {
+      "id": "extra_trees_leaf4",
+      "params": {
+        "min_samples_leaf": 4,
+        "n_estimators": 400
+      },
+      "route": "extra_trees",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "extra_trees_leaf8": {
+      "id": "extra_trees_leaf8",
+      "params": {
+        "min_samples_leaf": 8,
+        "n_estimators": 400
+      },
+      "route": "extra_trees",
+      "input_kind": "categorical_tabular",
+      "representation": "one-hot categories",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth4_reg3.0": {
+      "id": "catboost_depth4_reg3.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth4_reg10.0": {
+      "id": "catboost_depth4_reg10.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth6_reg3.0": {
+      "id": "catboost_depth6_reg3.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth6_reg10.0": {
+      "id": "catboost_depth6_reg10.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth8_reg3.0": {
+      "id": "catboost_depth8_reg3.0",
+      "params": {
+        "depth": 8,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "catboost_depth8_reg10.0": {
+      "id": "catboost_depth8_reg10.0",
+      "params": {
+        "depth": 8,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "route": "catboost",
+      "input_kind": "categorical_tabular",
+      "representation": "native categories",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    "supported_field_interactions": {
+      "id": "supported_field_interactions",
+      "params": {
+        "pair_limit": 3,
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "representation": "training-selected categorical field interactions"
+      },
+      "route": "field_interactions",
+      "input_kind": "categorical_tabular",
+      "representation": "training-selected categorical field interactions",
+      "estimator": "catboost",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "b_port",
+      "kind": "categorical_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  },
+  "split_sha256": {
+    "primary": "689825c4a1c81a62c76f8f15bac1a73089334b6eccae3c0dcc5320cb5ae310c0",
+    "confirmation_1": "e4849afe3f18b384e1d7c6832b40f8abc31d56783ffe45b840aea7e95078d873",
+    "confirmation_2": "2c7ab1f598b8182f6a03cb1157708e644ee6f97d01d9654cc037cf1e9d6a8ddc"
+  }
+}

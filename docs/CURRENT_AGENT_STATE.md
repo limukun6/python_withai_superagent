@@ -1,4 +1,18 @@
-# 当前接续状态：2026-11-23，A130–A132付费恢复，H1完整对照完成
+# 当前接续状态：2026-11-24，A133–A135完成，1599fit
+
+## 最新：可选置信路由接入，当前源Task1交付候选完成
+
+B924e88a的按需推理接入A，默认off，只匹配偏好组合显式--confidence-cascade。在原primary提出阈值、仅fresh confirmation组确认；不通过保留完整组合，不按任务名路由。两项B凭据验证通过，最终41项no-fit/no-network检查通过；B四组历史推理省第二编码器882/1693、348/450、1241/1693、216/276行，准确数相对完整组合0/-2/-5/0，保持可选不晋级，不当作API节省/四独立任务。
+
+A134复用A127已训练词法/L12装配工程夹具，阈值0/1/.2预登记；第二编码器实际0/8、8/8、8/8行，最后一组没省行，不调阈值。交换/相同文本/空输入、完整组合一致与三种交付通过，29.328秒，0fit/API；手工夹具不算自主选模或性能。
+
+A135当前92生产源训练原Released1，三训练成员SHA对齐A94，8117行/15候选、local ab-fixed full standard/707/11fit，4探索6复核1重训，自主选supported_field_interactions。训练88.578秒、整批101.093秒，封存后才开课程val，1523/2030＝75.0246%，和旧结果相当，非本次提分。2030行native/搬迁/隔离包逐字节一致，无外部编码器依赖，原C_test/y_test没读。首prepare属性错误0fit/API失败保留，v2完成，不重复训练。模型本机runs/a135_task1_current_v2/run，包portable；工程夹具runs/a134_routed_delivery不得拿作正式模型。
+
+新增11fit/0API，A累计1599；唯一ledger仍runs/a129_B_ledger_return/private/ledger.sqlite，363/known6.7532615/unknown12/pending0，文件SHA和A132一致。用户原12未知继续授权仍有效，不再索要官网账单。A持有账本、无活动训练/预测/付费队列。H1完整已做、H2/Task2 B负责；项目最终版本/test尚未冻结。只登记B最新5bd6b14数值核/弱标签研究，未接生产，下一批单独审。
+
+主证据research/a133_a135_summary，报告batches/A133_A135_routing_and_task1_results_20261123_zh.md，可复跑代码run_a133_routing_verification/run_a134_routed_delivery/run_a135_task1_current。九天里程碑文档顶部已更新，不再把48/24、Task2/Bean旧C1当欠交。不按H1重排规则再称新H，不把旧689归到新增路由。下列均历史快照，遇到冲突以本段和真实completion为准。
+
+## A130–A132付费恢复，H1完整对照完成（历史快照）
 
 ## 最新用户授权及H1结果：不等官网账单，1588fit，363请求
 

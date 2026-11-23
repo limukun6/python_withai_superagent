@@ -53,7 +53,8 @@ def propose_vote(kind, history, load_model, x_search, y_search, enabled,metric=N
 
 def finalize(task, history, best_model, best_id, best_score, payload, directory,
              logger, train_candidate, start, time_limit, trial_timeout,
-             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None,*,matched_vote=None):
+             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None,*,matched_vote=None,
+             preference_routing=None):
     confirmation = confirmation or {"enabled": False}
     metric=MetricSpec.for_task(task)
     if confirmation.get("enabled") and ensemble_selection:
@@ -144,9 +145,15 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
             else:
                 vote = None
                 result["ensemble_failure"] = "At least one full-train component refit failed; retain single model"
+    routed = vote is not None and preference_routing is not None and preference_routing['adopted']
+    if routed:
+        from .ab_encoder_routing import routed_model
+        vote = routed_model(vote, chosen_ids, preference_routing)
     final_model = vote if vote is not None else singles[best_id]
     result["ensemble_selected"] = vote is not None
     family = "equal_soft_vote" if vote is not None else best_id
+    if routed:
+        family = 'confidence_routed_vote'
     joblib.dump({"kind": task.kind, "candidate": family, "model": final_model}, directory / "selected_model.joblib")
     single_file = "selected_model.joblib"
     if vote is not None:
@@ -160,6 +167,7 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
     logger.write_json("final_selection.json", {
         "selected_experiment": "ensemble" if vote is not None else f"trial_{next(r['trial'] for r in history if r['candidate'] == best_id)}",
         "family": family, "single_candidate": best_id, "single_model_file": single_file,
+        **({'inference_routing':preference_routing} if preference_routing is not None else {}),
         'primary_metric':metric.name,"selection_metric": selection_metric,
         "selection_score": decision["search_score"] if vote is not None else selection_score,
         "model_file": "selected_model.joblib", "model_format": "candidate_bundle_v1",

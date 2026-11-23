@@ -81,7 +81,7 @@ def validate_options(args):
         raise ValueError('AB fixed control requires fit-limit 11')
     if args.scheduler == 'ab-finalists' and limit < 5:
         raise ValueError('AB matched finalists require at least 5 fits including refit')
-    if args.scheduler == 'ab-complement' and args.planner!='local':
+    if args.scheduler in ('ab-complement','ab-adaptive-complement') and args.planner!='local':
         raise ValueError('The complement scheduler uses the registered local planner')
     if any(not math.isfinite(x) or x <= 0 for x in (args.time_limit, args.trial_timeout)):
         raise ValueError('Time limits must be positive and finite')
@@ -199,19 +199,21 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
     return chosen, decision, result
 
 
-def finish_complement(task, history, state, trusted, directory, executor, logger):
-    from .ab_complement import review
+def finish_complement(task, history, state, trusted, directory, executor, logger, review=None, *, adaptive=False):
+    if review is None:
+        from .ab_complement import review
     evidence=review(state,trusted)
     if evidence.get('pending'):
         raise ValueError('Cannot finalize an incomplete matched confirmation')
     primary=[row for row in history if row['split_id']==PRIMARY]
-    anchor=evidence['anchor']
+    anchor=evidence['members'][0]
     row=next(r for r in primary if r['candidate']==anchor)
     model=joblib.load(directory/f"trial_{row['trial']}.joblib")['model']
     decision=dict(enabled=True,valid_confirmation=bool(evidence['confirmation_rows']),
         independent_confirmation_observed=bool(evidence['confirmation_rows']),primary_metric='accuracy',
         selected_candidate='equal_soft_vote' if evidence['promoted'] else anchor,
-        selection_score=evidence['portfolio_score'],selection_rule='Matched two-split complement screening',
+        selection_score=evidence['portfolio_score'],selection_rule=(
+            'Uncertainty-based opening with matched pair and single controls' if adaptive else 'Matched two-split complement screening'),
         b_scheduler_review=evidence)
     logger.write_json('confirmation.json',decision)
     result=finalize(task,primary,model,anchor,row['search_score'],joblib.load(directory/'primary.joblib'),
@@ -266,16 +268,22 @@ def command(args):
     try:
         caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
         complement=False
-        if args.scheduler=='ab-complement':
-            from . import ab_complement
-            complement=ab_complement.eligible(spec,caps,metric,limit)
+        adaptive=False
+        if args.scheduler in ('ab-complement','ab-adaptive-complement'):
+            from . import ab_complement as complement_policy
+            complement=complement_policy.eligible(spec,caps,metric,limit)
+            adaptive=complement and args.scheduler=='ab-adaptive-complement' and limit>=10
+            if adaptive:
+                from . import ab_adaptive_opening as complement_policy
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
             task_description_source=task.spec.get('task_description_source'),
             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
-            **({'complement_active':complement} if args.scheduler=='ab-complement' else {}),
+            **({'complement_active':complement} if args.scheduler in ('ab-complement','ab-adaptive-complement') else {}),
+            **({'adaptive_opening_active':adaptive} if args.scheduler=='ab-adaptive-complement' else {}),
+            **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
             candidate_coverage=getattr(args,'candidate_coverage','off'),
@@ -328,7 +336,8 @@ def command(args):
                 return proof
 
             if complement:
-                action=ab_complement.action(state,caps,trusted)
+                options={'cover_untried_encoder':True} if adaptive and getattr(args,'cover_untried_encoder',False) else {}
+                action=complement_policy.action(state,caps,trusted,**options)
             elif args.scheduler == 'ab-finalists':
                 from .ab_finalists import finalist_action
                 action = finalist_action(state, capabilities=caps, trusted_partitions=trusted,
@@ -393,7 +402,8 @@ def command(args):
             logger.write_json('prediction_evidence.json', evidence)
         # Recheck every completed observation against locally held labels before selection.
         if complement:
-            chosen,decision,result=finish_complement(task,history,state,trusted,directory,executor,logger)
+            chosen,decision,result=finish_complement(task,history,state,trusted,directory,executor,logger,
+                                                     complement_policy.review,adaptive=adaptive)
         else:
             chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
                                               matched_finalists=args.scheduler == 'ab-finalists')

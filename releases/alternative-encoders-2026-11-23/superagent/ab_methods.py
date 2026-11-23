@@ -23,6 +23,7 @@ TEXT_FAMILIARITY = 'minilm_l12_with_corpus_familiarity'
 TRANSFER_METHODS={'deep-e5':('e5','e5_small_text_with_lexical_features'),
                   'deep-bge':('bge','bge_small_text_with_lexical_features')}
 PREFERENCE_CATALOG_ENV = 'SUPERAGENT_AB_PREFERENCE_CATALOG'
+JOINT_PREFERENCE = 'deep-e5-familiarity'
 IMAGE = 'image_gradient_histograms_logistic'
 RELATION = 'ordered_text_pair_interactions'
 ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minilm_nonlinear_lexical', IMAGE:'gradient_histograms',
@@ -120,7 +121,7 @@ def additions(kind):
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
-        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
                         representation='word_char_minilm_l12',swap_augmentation=True)
@@ -128,12 +129,13 @@ def additions(kind):
             if catalog=='deep-edit':
                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
-            if catalog=='deep-familiarity':
+            if catalog in ('deep-familiarity',JOINT_PREFERENCE):
                 extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
                                        partial(fit_sentence,kind=kind,familiarity=True)))
-        if catalog in TRANSFER_METHODS:
+        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog == JOINT_PREFERENCE else catalog
+        if transfer_catalog in TRANSFER_METHODS:
             from .ab_sentence import ALTERNATIVES,verified_files
-            variant,name=TRANSFER_METHODS[catalog]
+            variant,name=TRANSFER_METHODS[transfer_catalog]
             spec=ALTERNATIVES[variant]
             if verified_files(spec['env'],spec['files']) is not None:
                 params=dict(encoder=spec['model'],revision=spec['revision'],C=.3,representation='word_char_'+variant,

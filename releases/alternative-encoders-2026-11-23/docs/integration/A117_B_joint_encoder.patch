@@ -1,0 +1,978 @@
+diff --git a/superagent/ab_adaptive_opening.py b/superagent/ab_adaptive_opening.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..7356597be84fb615bc752125bbdd1b439378904c
+--- /dev/null
++++ b/superagent/ab_adaptive_opening.py
+@@ -0,0 +1,107 @@
++"""Choose whether to explore one more preference method using paired group uncertainty."""
++from copy import deepcopy
++from itertools import combinations
++import math
++
++import numpy as np
++
++from . import ab_complement
++from .ab_scheduler import _action, CONFIRMATIONS, PRIMARY, next_action, selection_evidence
++from .metrics import MetricSpec
++
++
++def opening_uncertainty(records, y, groups):
++    order = sorted(records, key=lambda n: -int((records[n][0] == y).sum()))
++    first, second = order[:2]
++    d = (records[first][0] == y).astype(float) - (records[second][0] == y)
++    _, ids = np.unique(groups, return_inverse=True)
++    sizes = np.bincount(ids)
++    sums = np.bincount(ids, weights=d)
++    se = None
++    if len(sizes) > 1:
++        residuals = sums - d.mean() * sizes
++        se = math.sqrt(len(sizes) / (len(sizes) - 1) * float(residuals @ residuals)) / len(d)
++    return dict(leader=first, runner_up=second, gap=float(d.mean()), cluster_standard_error=se,
++                groups=len(sizes), disagreements=int(np.count_nonzero(d)),
++                ambiguous=bool(se is not None and np.any(d) and d.mean() <= 1.96 * se))
++
++
++def review(state, trusted):
++    selection_evidence(state, trusted_partitions=trusted)
++    if len(state['prediction_evidence']) != len(state['history']):
++        raise ValueError('Incomplete primary or confirmation records')
++    metric = MetricSpec.from_payload({'metric_spec':state['task']['metric']})
++    y, tie, opening = ab_complement.split_columns(state, trusted, PRIMARY, metric)
++    if len(opening) not in (4, 5):
++        raise ValueError('Expected four or five opening methods')
++    counts = {n:int((r[0] == y).sum()) for n, r in opening.items()}
++    anchor = max(counts, key=counts.get)
++    pairs = {pair:ab_complement.average_hits(opening[pair[0]], opening[pair[1]], tie, y)
++             for pair in combinations(opening, 2)}
++    winning = max(pairs, key=pairs.get)
++    selected = sorted(winning, key=lambda n: -counts[n])
++    uncertainty = opening_uncertainty(dict(list(opening.items())[:4]), y, trusted[PRIMARY]['groups'])
++    result = dict(anchor=anchor, members=[anchor], partner=None, primary_rows=len(y), opening_correct=counts,
++                  opening_combinations=[dict(members=list(k), correct=v) for k, v in pairs.items()],
++                  primary_single_accuracy=counts[anchor]/len(y), portfolio_score=counts[anchor]/len(y),
++                  proposed_pair=selected, comparison_members=[], evidence_trials=[r[2] for r in opening.values()],
++                  opening_uncertainty=uncertainty, confirmation_rows=0, promoted=False)
++    if (pairs[winning] - counts[anchor]) / len(y) < ab_complement.MIN_GAIN:
++        return result
++    comparators = list(dict.fromkeys([*selected, anchor]))
++    second_y, second_tie, second = ab_complement.split_columns(state, trusted, CONFIRMATIONS[0], metric)
++    result.update(comparison_members=comparators, partner=selected[1], pending=[n for n in comparators if n not in second])
++    result['evidence_trials'].extend(r[2] for r in second.values())
++    if result['pending']:
++        return result
++    other_counts = {n:int((second[n][0] == second_y).sum()) for n in comparators}
++    combination = ab_complement.average_hits(second[selected[0]], second[selected[1]], second_tie, second_y)
++    pooled = pairs[winning] + combination - max(counts[n] + other_counts[n] for n in comparators)
++    total = len(y) + len(second_y)
++    promoted = combination > max(other_counts.values()) and pooled / total >= ab_complement.MIN_GAIN
++    result.update(confirmation_rows=len(second_y), confirmation_correct=other_counts,
++                  confirmation_combination=combination, pooled_gain=pooled, promoted=promoted)
++    if promoted:
++        result.update(members=selected, portfolio_score=(pairs[winning] + combination)/total)
++    return result
++
++
++def unseen_encoder_candidates(state, capabilities):
++    def encoder(name):
++        record = capabilities[name]
++        params = record.get('params', {})
++        if (record.get('resource') == 'local_frozen_encoder_cpu' and params.get('revision')
++                and record.get('supports_probabilities') and record.get('classifier_fits') == record.get('refit_classifier_fits') == 1):
++            return params.get('encoder')
++        return None
++
++    used = {encoder(row['candidate']) for row in state['history'] if row['split_id'] == PRIMARY}
++    return [entry for entry in state['available_candidates']
++            if (identity := encoder(entry['id'])) and identity not in used]
++
++
++def action(state, capabilities, trusted, *, cover_untried_encoder=False):
++    if len(state['history']) < 4:
++        return ab_complement.action(state, capabilities, trusted)
++    result = review(state, trusted)
++    budget = state['budget']['remaining_fit_allowance']
++    if len(state['history']) == 4 and budget >= 6:
++        unseen = unseen_encoder_candidates(state, capabilities) if cover_untried_encoder else []
++        if unseen or result['opening_uncertainty']['ambiguous']:
++            projected = deepcopy(state)
++            projected['registered_confirmation_splits'] = []
++            if unseen:
++                projected['available_candidates'] = unseen
++            proposed = next_action(projected, capabilities=capabilities, trusted_partitions={PRIMARY:trusted[PRIMARY]})
++            if proposed['action'] == 'explore':
++                proposed['reason'] = ('An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.'
++                    if unseen else 'Leading methods disagree and their grouped paired gap is uncertain; explore one additional eligible route.')
++                proposed['evidence_trials'] = result['evidence_trials']
++                return proposed
++    pending = result.get('pending', [])
++    if pending:
++        if len(pending) + 2 > budget:
++            raise ValueError('Insufficient fits for matched comparators and both potential refits')
++        return _action('confirm', 'Check the proposed pair and the strongest single on the same confirmation rows.',
++                       result['evidence_trials'], pending[0], CONFIRMATIONS[0], 1)
++    return _action('stop', 'Finish the paired comparison and deliver the selected model or pair.', result['evidence_trials'])
+diff --git a/superagent/ab_catalog.py b/superagent/ab_catalog.py
+index 0ee1ea2d04d6232d51990c34bbfe0262444d2eb4..4b558c129ad5ad8b4917f09b5b8fbabdf68bdc75 100644
+--- a/superagent/ab_catalog.py
++++ b/superagent/ab_catalog.py
+@@ -2,7 +2,7 @@
+ from copy import deepcopy
+ from importlib.util import find_spec
+ 
+-from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_DEEP, TEXT_EDIT, TEXT_KERNEL
++from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_DEEP, TEXT_EDIT, TEXT_FAMILIARITY, TEXT_KERNEL, TRANSFER_METHODS
+ from .ab_symmetric import ENCODER
+ from .ab_vision import NAME as VISION, supports_decoder
+ from .evidence_agent import route_of
+@@ -12,6 +12,7 @@ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+ 
+ 
+ ADAPTER_VERSION = '1.5'
++FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
+ 
+ 
+ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+@@ -71,7 +72,7 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
+                          representation=representation, estimator=estimator,
+                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
+                          supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
+-                         resource='local_frozen_encoder_cpu' if name in (TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_KERNEL,ENCODER,VISION) else 'cpu',
++                         resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
+                          origin='b_port' if name in ROUTES else 'shared_baseline'))
+     return menu
+ 
+diff --git a/superagent/ab_complement.py b/superagent/ab_complement.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2136a478580ede93cf6973b000aa86a7a942f773
+--- /dev/null
++++ b/superagent/ab_complement.py
+@@ -0,0 +1,115 @@
++"""Choose a two-member preference vote only after matched row-level confirmation."""
++from copy import deepcopy
++
++import numpy as np
++
++from .ab_scheduler import CONFIRMATIONS, PRIMARY, _action, next_action, selection_evidence
++from .metrics import MetricSpec
++from .models import SoftVoteModel, probability_with_model
++from .score_evidence import checked_score_record
++
++
++MIN_GAIN=.002
++OPENING=4
++
++
++def eligible(spec, capabilities, metric, limit):
++    return (spec['kind']=='pair_text' and spec['input_schema'].get('pair_semantics')=='preference'
++            and metric.name=='accuracy' and set(metric.labels)=={0,1} and limit>=8
++            and len(capabilities)>=OPENING and all(c['supports_probabilities'] and
++            c['classifier_fits']==c['refit_classifier_fits']==1 for c in capabilities.values()))
++
++
++def canonical_probabilities(model, rows):
++    ordered=[(a,b) if a<=b else (b,a) for a,b in rows]
++    classes,p=probability_with_model('pair_text',model,ordered)
++    if set(classes.tolist())!={0,1}:
++        raise ValueError('Preference probability evidence requires classes 0 and 1')
++    p=p[:,classes.tolist().index(1)]
++    first=np.asarray([a<b for a,b in rows],dtype=bool)
++    equal=np.asarray([a==b for a,b in rows],dtype=bool)
++    positive=np.where(equal,.5,np.where(first,p,1-p))
++    return np.array([0,1]),np.column_stack([1-positive,positive])
++
++
++class PreferenceProbabilityVote(SoftVoteModel):
++    def predict_proba(self, rows):
++        return np.mean([canonical_probabilities(model,rows)[1] for model in self.models],axis=0)
++
++    def predict(self, rows):
++        values=self.predict_proba(rows)[:,1]
++        return ((values>.5)|((values==.5)&np.asarray([a<b for a,b in rows],dtype=bool))).astype(int)
++
++
++def split_columns(state, trusted, split, metric):
++    local=trusted[split]
++    records={}
++    for item in state['prediction_evidence']:
++        if item['split_id']!=split:
++            continue
++        name=item['candidate_id']
++        matrix,classes=checked_score_record(item.get('score_record'),item,metric,name,local['labels'])
++        records[name]=(np.asarray(item['predictions']),matrix[:,classes.index(1)],item['trial'])
++    return np.asarray(local['labels']),np.asarray(local['tie_label_one'],dtype=bool),records
++
++
++def average_hits(a,b,first,y):
++    p=(a[1]+b[1])/2
++    return int(((((p>.5)|((p==.5)&first)).astype(int))==y).sum())
++
++
++def review(state, trusted):
++    # The existing verifier binds the hard predictions, metric, payload, trusted labels and original row order.
++    selection_evidence(state,trusted_partitions=trusted)
++    if len(state['prediction_evidence'])!=len(state['history']):
++        raise ValueError('A completed opening observation lacks prediction evidence')
++    metric=MetricSpec.from_payload({'metric_spec':state['task']['metric']})
++    y,first,opening=split_columns(state,trusted,PRIMARY,metric)
++    if len(opening)!=OPENING:
++        raise ValueError('Four matched opening observations required')
++    hits={n:int((v[0]==y).sum()) for n,v in opening.items()}
++    anchor=max(hits,key=hits.get)
++    mixed={n:average_hits(opening[anchor],v,first,y) for n,v in opening.items() if n!=anchor}
++    partner=max(mixed,key=mixed.get)
++    basis=dict(anchor=anchor,partner=None,members=[anchor],opening_correct=hits,opening_combinations=mixed,
++               primary_rows=len(y),confirmation_rows=0,evidence_trials=[v[2] for v in opening.values()],
++               primary_single_accuracy=hits[anchor]/len(y),portfolio_score=hits[anchor]/len(y),promoted=False)
++    if (mixed[partner]-hits[anchor])/len(y)<MIN_GAIN:
++        return basis
++    y2,first2,second=split_columns(state,trusted,CONFIRMATIONS[0],metric)
++    basis['partner']=partner
++    basis['pending']=[n for n in (anchor,partner) if n not in second]
++    basis['evidence_trials'].extend(v[2] for v in second.values())
++    if basis['pending']:
++        return basis
++    n2=len(y2)
++    single={n:int((second[n][0]==y2).sum()) for n in (anchor,partner)}
++    vote=average_hits(second[anchor],second[partner],first2,y2)
++    pooled=mixed[partner]+vote-max(hits[n]+single[n] for n in (anchor,partner))
++    passed=(mixed[partner]>max(hits[n] for n in (anchor,partner)) and vote>max(single.values())
++            and pooled/(len(y)+n2)>=MIN_GAIN)
++    basis.update(confirmation_correct=single,confirmation_combination=vote,confirmation_rows=n2,
++                 pooled_gain=pooled,promoted=passed)
++    if passed:
++        basis.update(members=[anchor,partner],portfolio_score=(mixed[partner]+vote)/(len(y)+n2))
++    return basis
++
++
++def action(state, capabilities, trusted):
++    if len(state['history'])<OPENING:
++        projected=deepcopy(state)
++        projected['registered_confirmation_splits']=[]
++        proposed=next_action(projected,capabilities=capabilities,trusted_partitions={PRIMARY:trusted[PRIMARY]})
++        if proposed['action']!='explore':
++            raise ValueError('Unable to finish the four eligible opening trials: '+proposed['reason'])
++        return proposed
++    evidence=review(state,trusted)
++    refs=evidence['evidence_trials']
++    pending=evidence.get('pending',[])
++    if pending:
++        if len(pending)+2>state['budget']['remaining_fit_allowance']:
++            raise ValueError('Matched confirmation and final refits exceed remaining allowance')
++        return _action('confirm','Confirm leading model and the partner that corrected the most primary errors together.',
++                       refs,pending[0],CONFIRMATIONS[0],1)
++    return _action('stop','Matched evidence supports the registered vote.' if evidence['promoted'] else
++                   'Retain the primary leader after the registered comparison.',refs)
+diff --git a/superagent/ab_methods.py b/superagent/ab_methods.py
+index 13a72db83191979ec858d6ff398d96490ff6644a..dbe1bb7a2f881204565d98cb36f2ae66c92ba9c2 100644
+--- a/superagent/ab_methods.py
++++ b/superagent/ab_methods.py
+@@ -19,7 +19,11 @@ TEXT = 'minilm_text_with_lexical_features'
+ TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
+ TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
+ TEXT_EDIT = 'minilm_l12_with_edit_context'
++TEXT_FAMILIARITY = 'minilm_l12_with_corpus_familiarity'
++TRANSFER_METHODS={'deep-e5':('e5','e5_small_text_with_lexical_features'),
++                  'deep-bge':('bge','bge_small_text_with_lexical_features')}
+ PREFERENCE_CATALOG_ENV = 'SUPERAGENT_AB_PREFERENCE_CATALOG'
++JOINT_PREFERENCE = 'deep-e5-familiarity'
+ IMAGE = 'image_gradient_histograms_logistic'
+ RELATION = 'ordered_text_pair_interactions'
+ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minilm_nonlinear_lexical', IMAGE:'gradient_histograms',
+@@ -29,6 +33,8 @@ ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
+                for representation in ('word','word_char') for c in (.3,3.)})
+ ROUTES.update(ab_text_recipes.ROUTES)
+ ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
++ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
++ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
+ 
+ 
+ def _field_tree(rows, labels, query):
+@@ -115,7 +121,7 @@ def additions(kind):
+             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
+                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
+-        if kind=='pair_text' and catalog in ('deep','deep-edit') and verified_directory(deep=True) is not None:
++        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
+             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
+                         representation='word_char_minilm_l12',swap_augmentation=True)
+@@ -123,6 +129,18 @@ def additions(kind):
+             if catalog=='deep-edit':
+                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
+                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
++            if catalog in ('deep-familiarity',JOINT_PREFERENCE):
++                extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
++                                       partial(fit_sentence,kind=kind,familiarity=True)))
++        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog == JOINT_PREFERENCE else catalog
++        if transfer_catalog in TRANSFER_METHODS:
++            from .ab_sentence import ALTERNATIVES,verified_files
++            variant,name=TRANSFER_METHODS[transfer_catalog]
++            spec=ALTERNATIVES[variant]
++            if verified_files(spec['env'],spec['files']) is not None:
++                params=dict(encoder=spec['model'],revision=spec['revision'],C=.3,representation='word_char_'+variant,
++                            pooling=spec['pool'],input_prefix=spec['prefix'],swap_augmentation=kind=='pair_text')
++                extra.append(Candidate(name,params,partial(fit_sentence,kind=kind,alternative=variant)))
+         if encoder_ready:
+             extra.append(Candidate(TEXT_KERNEL,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm_rbf',
+                                    kernel_components=KERNEL_DIMENSIONS,bandwidth_sample_limit=KERNEL_SAMPLE_LIMIT,
+diff --git a/superagent/ab_run.py b/superagent/ab_run.py
+index 39b0addfd2a5e9a5c7e8d4844b93c09405db77c4..eb27da478c1765c6e12cb30135aeb435ef12a488 100644
+--- a/superagent/ab_run.py
++++ b/superagent/ab_run.py
+@@ -81,12 +81,14 @@ def validate_options(args):
+         raise ValueError('AB fixed control requires fit-limit 11')
+     if args.scheduler == 'ab-finalists' and limit < 5:
+         raise ValueError('AB matched finalists require at least 5 fits including refit')
++    if args.scheduler in ('ab-complement','ab-adaptive-complement') and args.planner!='local':
++        raise ValueError('The complement scheduler uses the registered local planner')
+     if any(not math.isfinite(x) or x <= 0 for x in (args.time_limit, args.trial_timeout)):
+         raise ValueError('Time limits must be positive and finite')
+     return limit
+ 
+ 
+-def freeze_partitions(task, directory, seed, metric):
++def freeze_partitions(task, directory, seed, metric, *, preference_vote=False):
+     trusted, allowed = {}, {}
+     groups = sample_groups(task, 'shared_text')
+     seen = set()
+@@ -98,11 +100,17 @@ def freeze_partitions(task, directory, seed, metric):
+             raise ValueError('Registered confirmation repeats the same rows; no independent partition available')
+         seen.add(identity)
+         payload = directory / (split + '.joblib')
+-        joblib.dump(dict(kind=task.kind, X_train=take(task.X_train, train), y_train=task.y_train[train],
+-                        X_search=take(task.X_train, held), y_search=task.y_train[held],
+-                        metric_spec=metric.record(), pair_semantics=declared_semantics(task)), payload)
++        evaluation=take(task.X_train, held)
++        contents=dict(kind=task.kind, X_train=take(task.X_train, train), y_train=task.y_train[train],
++                      X_search=evaluation, y_search=task.y_train[held],
++                      metric_spec=metric.record(), pair_semantics=declared_semantics(task))
++        if preference_vote:
++            contents['preference_vote_probabilities']=True
++        joblib.dump(contents,payload)
+         trusted[split] = dict(row_ids=held.tolist(), labels=task.y_train[held].tolist(),
+                              groups=groups[held].tolist(), evaluation_payload_sha256=sha(payload))
++        if preference_vote:
++            trusted[split]['tie_label_one']=[left<right for left,right in evaluation]
+         allowed[split] = dict(id=split, seed=split_seed, row_ids_sha256=fingerprint(held.tolist()),
+                              label_sha256=fingerprint(trusted[split]['labels']),
+                              evaluation_payload_sha256=sha(payload))
+@@ -191,6 +199,29 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
+     return chosen, decision, result
+ 
+ 
++def finish_complement(task, history, state, trusted, directory, executor, logger, review=None, *, adaptive=False):
++    if review is None:
++        from .ab_complement import review
++    evidence=review(state,trusted)
++    if evidence.get('pending'):
++        raise ValueError('Cannot finalize an incomplete matched confirmation')
++    primary=[row for row in history if row['split_id']==PRIMARY]
++    anchor=evidence['members'][0]
++    row=next(r for r in primary if r['candidate']==anchor)
++    model=joblib.load(directory/f"trial_{row['trial']}.joblib")['model']
++    decision=dict(enabled=True,valid_confirmation=bool(evidence['confirmation_rows']),
++        independent_confirmation_observed=bool(evidence['confirmation_rows']),primary_metric='accuracy',
++        selected_candidate='equal_soft_vote' if evidence['promoted'] else anchor,
++        selection_score=evidence['portfolio_score'],selection_rule=(
++            'Uncertainty-based opening with matched pair and single controls' if adaptive else 'Matched two-split complement screening'),
++        b_scheduler_review=evidence)
++    logger.write_json('confirmation.json',decision)
++    result=finalize(task,primary,model,anchor,row['search_score'],joblib.load(directory/'primary.joblib'),
++        directory,logger,executor.worker,executor.start,executor.wall,executor.timeout,True,False,
++        confirmation=decision,matched_vote=evidence if evidence['promoted'] else None)
++    return ('equal_soft_vote' if result['ensemble_selected'] else anchor),decision,result
++
++
+ def command(args):
+     limit = validate_options(args)
+     client = account = picker = None
+@@ -236,12 +267,23 @@ def command(args):
+                    known_course_cost_rmb=0, formal_test_accessed=False, automatic_retries=False)
+     try:
+         caps = registered_capabilities(spec,len(task.y_train),args.catalog_scope)
++        complement=False
++        adaptive=False
++        if args.scheduler in ('ab-complement','ab-adaptive-complement'):
++            from . import ab_complement as complement_policy
++            complement=complement_policy.eligible(spec,caps,metric,limit)
++            adaptive=complement and args.scheduler=='ab-adaptive-complement' and limit>=10
++            if adaptive:
++                from . import ab_adaptive_opening as complement_policy
+         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+             preference_catalog=getattr(args,'preference_catalog','standard'),
+             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,
+             task_description_source=task.spec.get('task_description_source'),
+             seed=args.seed, split_seed_offsets=[0, 101, 202], capabilities=caps, fit_limit=limit,
++            **({'complement_active':complement} if args.scheduler in ('ab-complement','ab-adaptive-complement') else {}),
++            **({'adaptive_opening_active':adaptive} if args.scheduler=='ab-adaptive-complement' else {}),
++            **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
+             llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
+             history_policy=args.history_policy,
+             candidate_coverage=getattr(args,'candidate_coverage','off'),
+@@ -258,10 +300,10 @@ def command(args):
+             provided_validation_role='score only after final model freeze'))
+         if not caps:
+             raise ValueError('No registered executable method supports this task/semantics/dependencies')
+-        trusted, allowed = freeze_partitions(task, directory, args.seed, metric)
++        trusted, allowed = freeze_partitions(task, directory, args.seed, metric, preference_vote=complement)
+         executor = Executor(directory, caps, metric, began, args.time_limit, args.trial_timeout, limit, logger)
+         budget = dict(fit_limit=limit, attempted_classifier_fits=0, completed_classifier_fits=0,
+-                      remaining_fit_allowance=limit, reserved_final_refit=1, unknown_failed_attempts=0,
++                      remaining_fit_allowance=limit, reserved_final_refit=2 if complement else 1, unknown_failed_attempts=0,
+                       llm_request_limit=3 if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
+         while True:
+             budget['elapsed_seconds'] = time.monotonic() - began
+@@ -293,7 +335,10 @@ def command(args):
+                     logger.event('local_text_recipe_proposal',trial=number,proposal=proof)
+                 return proof
+ 
+-            if args.scheduler == 'ab-finalists':
++            if complement:
++                options={'cover_untried_encoder':True} if adaptive and getattr(args,'cover_untried_encoder',False) else {}
++                action=complement_policy.action(state,caps,trusted,**options)
++            elif args.scheduler == 'ab-finalists':
+                 from .ab_finalists import finalist_action
+                 action = finalist_action(state, capabilities=caps, trusted_partitions=trusted,
+                                          on_explore=choose if picker else None)
+@@ -352,12 +397,16 @@ def command(args):
+             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
+                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),
+                 **{k:raw[k] for k in ('prediction_sha256','label_sha256','evaluation_payload_sha256')},
+-                **({'score_record':raw['score_record']} if metric.requires_scores else {})))
++                **({'score_record':raw['score_record']} if 'score_record' in raw else {})))
+             logger.write_json('history.json', history)
+             logger.write_json('prediction_evidence.json', evidence)
+         # Recheck every completed observation against locally held labels before selection.
+-        chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
+-                                          matched_finalists=args.scheduler == 'ab-finalists')
++        if complement:
++            chosen,decision,result=finish_complement(task,history,state,trusted,directory,executor,logger,
++                                                     complement_policy.review,adaptive=adaptive)
++        else:
++            chosen, decision, result = finish(task, history, state, trusted, allowed, caps, directory, executor, logger,
++                                              matched_finalists=args.scheduler == 'ab-finalists')
+         outcome.update(selected_candidate=chosen, primary_metric=metric.name, model_available=True,
+             full_refit_completed=result['refit_succeeded'], confirmation=decision,
+             validation_score=result.get('official_validation_score'),
+diff --git a/superagent/ab_sentence.py b/superagent/ab_sentence.py
+index 2f92bab9fdaa3ec8917fd18703d12d747247c7bc..47960e1bfcc8a39841e94446e92daea290d938b3 100644
+--- a/superagent/ab_sentence.py
++++ b/superagent/ab_sentence.py
+@@ -1,4 +1,4 @@
+-"""Pinned local MiniLM features for one supervised lexical classifier. No generation or network access."""
++"""Pinned local sentence encoders for supervised lexical classifiers."""
+ from functools import lru_cache
+ import hashlib
+ from importlib.util import find_spec
+@@ -38,6 +38,19 @@ DEEP_FILES = {
+     'tokenizer.json':FILES['tokenizer.json'],
+     'model.safetensors':(133466304,'d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542'),
+ }
++_ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
++ALTERNATIVES={
++    'e5':dict(model='intfloat/e5-small-v2',revision='ffb93f3bd4047442299a41ebb6fa998a38507c52',
++        env='SUPERAGENT_E5_SMALL_WEIGHTS',prefix='query: ',pool='mean',
++        files={'config.json':(615,'5dfb0363cd0243be179c03bcaafd1542d0fbb95e8cbcf575fff3e229342adc2f'),
++               'tokenizer.json':_ALT_TOKENIZER,
++               'model.safetensors':(133466304,'45bfa60070649aae2244fbc9d508537779b93b6f353c17b0f95ceccb1c5116c1')}),
++    'bge':dict(model='BAAI/bge-small-en-v1.5',revision='5c38ec7c405ec4b44b94cc5a9bb96e735b38267a',
++        env='SUPERAGENT_BGE_SMALL_WEIGHTS',prefix='',pool='cls',
++        files={'config.json':(743,'094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750'),
++               'tokenizer.json':_ALT_TOKENIZER,
++               'model.safetensors':(133466304,'3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad')}),
++}
+ 
+ 
+ @lru_cache(maxsize=16)
+@@ -47,11 +60,15 @@ def _checksum(path, identity):
+ 
+ 
+ def verified_directory(*, deep=False):
+-    folder = os.environ.get(DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS')
++    return verified_files(DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS',DEEP_FILES if deep else FILES)
++
++
++def verified_files(env,files):
++    folder = os.environ.get(env)
+     if not folder or any(find_spec(p) is None for p in ('torch','transformers','tokenizers','safetensors')):
+         return None
+     root = Path(folder).resolve()
+-    for name,(size,sha) in (DEEP_FILES if deep else FILES).items():
++    for name,(size,sha) in files.items():
+         path = root/name
+         if not path.is_file():
+             return None
+@@ -78,17 +95,32 @@ def _encoder(root,max_length=256):
+ 
+ 
+ def encode(texts, *, deep=False):
+-    import torch
+     root=verified_directory(deep=True) if deep else verified_directory()
+     if root is None:
+         key = DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS'
+         raise ValueError(f'Set {key} to the directory of the pinned local files')
+     tokenizer,model=_encoder(root,128) if deep else _encoder(root)
++    return encode_frozen(texts,tokenizer,model)
++
++
++def encode_alternative(texts,variant):
++    spec=ALTERNATIVES[variant]
++    root=verified_files(spec['env'],spec['files'])
++    if root is None:
++        raise ValueError('Missing verified local weights: '+spec['env'])
++    tokenizer,model=_encoder(root,512)
++    return encode_frozen(texts,tokenizer,model,prefix=spec['prefix'],pool=spec['pool'])
++
++
++def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):
++    import torch
+     unique=list(dict.fromkeys(texts))
+-    encoded=tokenizer.encode_batch(unique)
++    if not unique:
++        return np.empty((0,model.config.hidden_size),dtype=np.float32),0
++    encoded=tokenizer.encode_batch([prefix+s for s in unique] if prefix else unique)
+     lengths=np.array([len(x.ids) for x in encoded])
+     order=np.argsort(lengths,kind='stable')
+-    vectors=np.empty((len(unique),384),dtype=np.float32)
++    vectors=np.empty((len(unique),model.config.hidden_size),dtype=np.float32)
+     with torch.inference_mode():
+         for offset in range(0,len(order),48):
+             idx=order[offset:offset+48]
+@@ -98,7 +130,7 @@ def encode(texts, *, deep=False):
+                 tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)
+                 mask[row,:lengths[j]]=1
+             hidden=model(input_ids=tokens,attention_mask=mask).last_hidden_state
+-            pooled=(hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
++            pooled=hidden[:,0] if pool=='cls' else (hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
+             vectors[idx]=torch.nn.functional.normalize(pooled,dim=1).numpy()
+     if not np.isfinite(vectors).all():
+         raise ValueError('Nonfinite frozen features')
+@@ -177,6 +209,43 @@ class DeepPreferenceFeatures(SentenceFeatures):
+         return blocks,tokens
+ 
+ 
++class FamiliarityPreferenceFeatures(DeepPreferenceFeatures):
++    def __init__(self, kind):
++        super().__init__(kind)
++
++    def fit(self, rows, y=None):
++        from .word_familiarity import WordFamiliarity
++
++        super().fit(rows, y)
++        self.corpus_ = WordFamiliarity().fit(text for pair in rows for text in pair)
++        differences = self.corpus_.differences(rows)
++        self.familiarity_scale_ = float(np.sqrt(np.mean(differences ** 2))) or 1.0
++        return self
++
++    def semantic_blocks(self, rows, texts):
++        blocks, tokens = super().semantic_blocks(rows, texts)
++        delta = self.corpus_.differences(rows) / self.familiarity_scale_
++        return [*blocks, csr_matrix(delta[:, None])], tokens
++
++
++class AlternativeSentenceFeatures(SentenceFeatures):
++    def __init__(self,kind,variant):
++        super().__init__(kind)
++        self.variant=variant
++
++    @property
++    def encoder_model(self):
++        return ALTERNATIVES[self.variant]['model']
++
++    @property
++    def encoder_revision(self):
++        return ALTERNATIVES[self.variant]['revision']
++
++    def semantic_blocks(self,rows,texts):
++        values,tokens=encode_alternative(texts,self.variant)
++        return self.embedding_features(values),tokens
++
++
+ class KernelSentenceFeatures(SentenceFeatures):
+     """Add a fixed-size nonlinear utility for each individual sentence."""
+     def fit(self,rows,y=None):
+@@ -202,8 +271,12 @@ class KernelSentenceFeatures(SentenceFeatures):
+         return [*original,csr_matrix(extra)]
+ 
+ 
+-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False):
+-    if deep:
++def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
++    if familiarity:
++        features=FamiliarityPreferenceFeatures(kind)
++    elif alternative:
++        features=AlternativeSentenceFeatures(kind,alternative)
++    elif deep:
+         features=DeepPreferenceFeatures(kind,edit_context)
+     else:
+         features=KernelSentenceFeatures(kind) if nonlinear else SentenceFeatures(kind)
+diff --git a/superagent/cli.py b/superagent/cli.py
+index 890289fa5752c3fde70324cd9afa9bdeb1418450..f3b8b47cc75c1283717e9c674c8a43e257cc1f4e 100644
+--- a/superagent/cli.py
++++ b/superagent/cli.py
+@@ -90,7 +90,9 @@ def _validate(args):
+ 
+ def _run(args):
+     catalog = getattr(args, 'preference_catalog', 'standard')
+-    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
++    if getattr(args, 'cover_untried_encoder', False) and args.scheduler != 'ab-adaptive-complement':
++        raise ValueError('Encoder coverage applies to the adaptive complement scheduler')
++    if args.scheduler in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'):
+         from .ab_methods import PREFERENCE_CATALOG_ENV
+         from .ab_run import command
+         previous = os.environ.get(PREFERENCE_CATALOG_ENV)
+@@ -300,10 +302,12 @@ def build_parser():
+     run.add_argument('--policy',choices=['random','balanced_blind','greedy_routes','protected_routes','interleaved_routes'],help='Local mode only; default balanced_blind')
+     run.add_argument('--seed',type=int,default=707)
+     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
+-    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
++    run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'],default='fixed')
+     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit'], default='standard',
++    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
+                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
++    run.add_argument('--cover-untried-encoder', action='store_true',
++                     help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
+     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
+     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
+diff --git a/superagent/experiment_worker.py b/superagent/experiment_worker.py
+index e3ca5fdea758e4b411a8a49adf34d65e0abdfc8c..0aff8909215b43e21c31857ac20c536a5f8a6276 100644
+--- a/superagent/experiment_worker.py
++++ b/superagent/experiment_worker.py
+@@ -64,11 +64,15 @@ def main() -> None:
+     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
+     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
+     score_evidence={}
+-    if metric.requires_scores:
++    if payload.get('preference_vote_probabilities'):
++        from .ab_complement import canonical_probabilities
++        classes,scores=canonical_probabilities(model,payload['X_search'])
++        score_evidence={'search_scores':scores,'score_classes':classes}
++    elif metric.requires_scores:
+         classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
+         score_evidence={'search_scores':scores,'score_classes':classes}
+     prediction_record=make_prediction_record(predictions,payload['y_search'],payload_sha256)
+-    if metric.requires_scores:
++    if score_evidence:
+         from .score_evidence import make_score_record
+         prediction_record['score_record']=make_score_record(prediction_record,scores,classes,metric,candidate_id)
+     train_accuracy=train_metrics["accuracy"];search_accuracy=search_metrics["accuracy"]
+diff --git a/superagent/external_assets.py b/superagent/external_assets.py
+index c5d35f3b54e57d7220e2ff28002e13558ac4467d..b74c01f16d28e59b7473d7a26ec9afac76a7c14c 100644
+--- a/superagent/external_assets.py
++++ b/superagent/external_assets.py
+@@ -5,7 +5,7 @@ from pathlib import Path
+ 
+ 
+ def model_resources(model):
+-    from .ab_sentence import (DEEP_ENV, DEEP_FILES, DEEP_MODEL, DEEP_REVISION, DeepPreferenceFeatures,
++    from .ab_sentence import (ALTERNATIVES,AlternativeSentenceFeatures,DEEP_ENV, DEEP_FILES, DEEP_MODEL, DEEP_REVISION, DeepPreferenceFeatures,
+                               FILES, MODEL, REVISION, SentenceFeatures)
+     from .ab_symmetric import UnorderedSentenceFeatures
+     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
+@@ -14,7 +14,8 @@ def model_resources(model):
+     def walk(value):
+         if id(value) in visited:return
+         visited.add(id(value))
+-        if isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
++        if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
++        elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
+         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
+         if isinstance(value,FrozenVisionFeatures):found.add('vision')
+         if isinstance(value,dict):
+@@ -37,6 +38,12 @@ def model_resources(model):
+             model=DEEP_MODEL,revision=DEEP_REVISION,
+             files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in DEEP_FILES.items()}))
+         packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
++    for variant,spec in ALTERNATIVES.items():
++        if variant in found:
++            resources.append(dict(name=variant,environment_variable=spec['env'],path_kind='directory',
++                model=spec['model'],revision=spec['revision'],
++                files={n:dict(bytes=size,sha256=h) for n,(size,h) in spec['files'].items()}))
++            packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
+     if 'vision' in found:
+         resources.append(dict(name='vision',environment_variable=WEIGHT_ENV,path_kind='file',model=WEIGHT_ID,
+                               file=dict(bytes=WEIGHT_BYTES,sha256=WEIGHT_SHA256)))
+diff --git a/superagent/finalization.py b/superagent/finalization.py
+index a9393df691471e47fc86da54abc256119a768b03..543252d83637167a94feb7c773f80454ae2afcdb 100644
+--- a/superagent/finalization.py
++++ b/superagent/finalization.py
+@@ -53,7 +53,7 @@ def propose_vote(kind, history, load_model, x_search, y_search, enabled,metric=N
+ 
+ def finalize(task, history, best_model, best_id, best_score, payload, directory,
+              logger, train_candidate, start, time_limit, trial_timeout,
+-             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None):
++             refit_full_train, ensemble_selection, confirmation=None,feature_cache_dir=None,*,matched_vote=None):
+     confirmation = confirmation or {"enabled": False}
+     metric=MetricSpec.for_task(task)
+     if confirmation.get("enabled") and ensemble_selection:
+@@ -79,8 +79,20 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
+     selection_score = confirmation["selection_score"] if confirmed else best_score
+     def load_model(row):
+         return best_model if row["candidate"] == best_id else joblib.load(directory / f"trial_{row['trial']}.joblib")["model"]
+-    vote, decision = propose_vote(task.kind, history, load_model, payload["X_search"],
+-                                  payload["y_search"], ensemble_selection,metric)
++    if matched_vote is None:
++        vote, decision = propose_vote(task.kind, history, load_model, payload["X_search"],
++                                      payload["y_search"], ensemble_selection,metric)
++    else:
++        from .ab_complement import PreferenceProbabilityVote
++        ids=matched_vote['members']
++        if (not confirmed or ensemble_selection or not matched_vote['promoted'] or task.kind!='pair_text'
++                or len(ids)!=2 or ids[0]!=best_id or len(set(ids))!=2):
++            raise ValueError('Invalid matched preference vote')
++        rows={r['candidate']:r for r in history}
++        vote=PreferenceProbabilityVote(task.kind,[load_model(rows[n]) for n in ids],np.array([0,1]))
++        decision=dict(enabled=True,evaluations=len(matched_vote['opening_combinations'])+1,components=ids,
++                      adopted_on_inner=True,rule=selection_rule,search_score=matched_vote['portfolio_score'],
++                      primary_metric=metric.name,pooled_gain=matched_vote['pooled_gain'])
+     if "predictions" in decision:
+         logger.write_json("ensemble_search_predictions.json", decision.pop("predictions"))
+     result["ensemble_evaluations"] = decision["evaluations"]
+@@ -128,7 +140,7 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
+             result["final_training_rows"] = len(task.y_train)
+         if vote is not None:
+             if all(refit_success.values()):
+-                vote = SoftVoteModel(task.kind, [singles[c] for c in chosen_ids], vote.classes_)
++                vote = type(vote)(task.kind, [singles[c] for c in chosen_ids], vote.classes_)
+             else:
+                 vote = None
+                 result["ensemble_failure"] = "At least one full-train component refit failed; retain single model"
+diff --git a/superagent/word_familiarity.py b/superagent/word_familiarity.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..7ba3a14556a2ab2c4defbdc21712485d33732a08
+--- /dev/null
++++ b/superagent/word_familiarity.py
+@@ -0,0 +1,56 @@
++"""Estimate average token surprisal using only a fitted corpus of unique texts."""
++from collections import Counter
++from hashlib import sha256
++import math
++import re
++
++import numpy as np
++
++
++TOKENS = re.compile(r"[^\W\d_]+(?:['’][^\W\d_]+)?|\d+|[^\w\s]", re.UNICODE)
++UNKNOWN = '<UNK>'
++START = '<BOS>'
++
++
++class WordFamiliarity:
++    def fit(self, texts):
++        unique = set(texts)
++        tokens = [TOKENS.findall(text.casefold()) for text in unique]
++        counts = Counter(word for title in tokens for word in title)
++        self.vocabulary_ = {word for word, count in counts.items() if count >= 2}
++        self.title_digests_ = {sha256(text.encode()).digest() for text in unique}
++        self.unigrams_, self.contexts_, self.bigrams_ = Counter(), Counter(), Counter()
++        for title in tokens:
++            previous = START
++            for word in title:
++                word = word if word in self.vocabulary_ else UNKNOWN
++                self.unigrams_[word] += 1
++                self.contexts_[previous] += 1
++                self.bigrams_[previous, word] += 1
++                previous = word
++        self.total_ = sum(self.unigrams_.values())
++        return self
++
++    def score(self, text):
++        words = [word if word in self.vocabulary_ else UNKNOWN
++                 for word in TOKENS.findall(text.casefold())]
++        if not words:
++            return 0.0
++        context = [START, *words[:-1]]
++        pairs = list(zip(context, words))
++        own = sha256(text.encode()).digest() in self.title_digests_
++        own_words = Counter(words) if own else {}
++        own_context = Counter(context) if own else {}
++        own_pairs = Counter(pairs) if own else {}
++        denominator = self.total_ - (len(words) if own else 0) + len(self.vocabulary_) + 1
++        total = 0.0
++        for previous, word in pairs:
++            marginal = (self.unigrams_[word] - own_words.get(word, 0) + 1) / denominator
++            matches = self.bigrams_[previous, word] - own_pairs.get((previous, word), 0)
++            contexts = self.contexts_[previous] - own_context.get(previous, 0)
++            total -= math.log((matches + 10 * marginal) / (contexts + 10))
++        return total / len(words)
++
++    def differences(self, rows):
++        scores = {text: self.score(text) for text in {t for pair in rows for t in pair}}
++        return np.asarray([scores[left] - scores[right] for left, right in rows], dtype=float)
+diff --git a/tests/test_ab_adaptive_opening.py b/tests/test_ab_adaptive_opening.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..abfa299554984c3451f6efdbbab06757afaace42
+--- /dev/null
++++ b/tests/test_ab_adaptive_opening.py
+@@ -0,0 +1,65 @@
++import os
++import unittest
++from unittest.mock import patch
++
++import numpy as np
++
++from superagent import ab_adaptive_opening as policy
++from superagent.ab_methods import additions, PREFERENCE_CATALOG_ENV, TEXT_FAMILIARITY, TRANSFER_METHODS
++from superagent.metrics import MetricSpec
++
++
++class AdaptiveOpeningTests(unittest.TestCase):
++    def test_uncertainty_uses_independent_groups_and_actual_disagreement(self):
++        y = np.zeros(8, dtype=int)
++        groups = np.repeat(range(4), 2)
++        def measure(a, b):
++            return policy.opening_uncertainty({'a':(np.array(a),), 'b':(np.array(b),)}, y, groups)
++        self.assertFalse(measure(y, y)['ambiguous'])
++        self.assertFalse(measure(y, np.ones(8))['ambiguous'])
++        self.assertTrue(measure([0,0,0,0,1,1,0,0], [1,1,0,0,0,0,0,0])['ambiguous'])
++
++    def test_pair_that_excludes_leader_must_confirm_against_it(self):
++        y = np.zeros(10, dtype=int)
++        tie = np.zeros(10, dtype=bool)
++        p = {'leader':[.10]*8+[.99]*2, 'one':[.55]*3+[.05]*7,
++             'two':[.05]*3+[.55]*3+[.05]*4, 'same':[.10]*8+[.99]*2}
++        columns = {n:((np.array(v)>.5).astype(int), np.array(v), i+1) for i,(n,v) in enumerate(p.items())}
++        state = dict(history=[],prediction_evidence=[],task={'metric':MetricSpec('accuracy',(0,1)).record()})
++        trusted = {'primary':{'groups':np.arange(10)}}
++        second = {}
++        def split(_state, _trusted, which, _metric):
++            return y, tie, columns if which=='primary' else second
++        with patch.object(policy,'selection_evidence'), patch.object(policy.ab_complement,'split_columns',side_effect=split):
++            first = policy.review(state,trusted)
++            self.assertEqual(first['pending'], ['one','two','leader'])
++            second.update({k:columns[k] for k in ('one','two')})
++            self.assertEqual(policy.review(state,trusted)['pending'], ['leader'])
++            second['leader'] = columns['leader']
++            self.assertEqual(policy.review(state,trusted)['members'], ['one','two'])
++            second['leader'] = (y, np.full(10,.05), 9)
++            self.assertEqual(policy.review(state,trusted)['members'], ['leader'])
++
++    def test_budget_and_feedback_determine_whether_to_explore_a_fifth_method(self):
++        review = dict(opening_uncertainty={'ambiguous':True}, evidence_trials=[1,2,3,4])
++        state = dict(history=[{}]*4, budget={'remaining_fit_allowance':6})
++        with patch.object(policy,'review',return_value=review), patch.object(policy,'next_action',
++                side_effect=lambda *a,**k:dict(action='explore',candidate_id='untried')) as choose:
++            self.assertEqual(policy.action(state,{}, {'primary':{}})['candidate_id'], 'untried')
++            state['budget']['remaining_fit_allowance'] = 5
++            self.assertEqual(policy.action(state,{}, {})['action'], 'stop')
++            state['budget']['remaining_fit_allowance'] = 6
++            review['opening_uncertainty']['ambiguous'] = False
++            self.assertEqual(policy.action(state,{}, {})['action'], 'stop')
++            choose.assert_called_once()
++
++    def test_joint_menu_is_the_union_of_both_available_preference_routes(self):
++        def options(flavor, kind='pair_text'):
++            with patch.dict(os.environ,{PREFERENCE_CATALOG_ENV:flavor}):
++                return {c.family for c in additions(kind)}
++        with patch('superagent.ab_sentence.verified_directory',return_value=True), patch(
++                'superagent.ab_sentence.verified_files',return_value=True):
++            joint = options('deep-e5-familiarity')
++            self.assertEqual(joint, options('deep-e5') | options('deep-familiarity'))
++            self.assertTrue({TEXT_FAMILIARITY, TRANSFER_METHODS['deep-e5'][1]} <= joint)
++            self.assertNotIn(TEXT_FAMILIARITY, options('deep-e5-familiarity','single_text'))
+diff --git a/tests/test_ab_complement.py b/tests/test_ab_complement.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..3aabbe51f87d4f92840263ff8384eb88f437292c
+--- /dev/null
++++ b/tests/test_ab_complement.py
+@@ -0,0 +1,30 @@
++import unittest
++from unittest.mock import patch
++
++import numpy as np
++
++from superagent.ab_complement import PreferenceProbabilityVote, eligible
++from superagent.metrics import MetricSpec
++
++
++class ComplementScopeTests(unittest.TestCase):
++    def test_scope_and_two_refit_budget(self):
++        schema={'kind':'pair_text','input_schema':{'pair_semantics':'preference'}}
++        caps={str(i):dict(classifier_fits=1,refit_classifier_fits=1,supports_probabilities=True) for i in range(4)}
++        metric=MetricSpec('accuracy',(0,1))
++        self.assertTrue(eligible(schema,caps,metric,8))
++        self.assertFalse(eligible(schema,caps,metric,7))
++        self.assertFalse(eligible(dict(schema,input_schema={'pair_semantics':'symmetric'}),caps,metric,8))
++        self.assertFalse(eligible(schema,dict(list(caps.items())[:3]),metric,8))
++
++    def test_class_order_swaps_identical_text_and_exact_ties(self):
++        def score(kind,model,rows):
++            self.assertTrue(all(a<=b for a,b in rows))
++            v=np.array([model]*len(rows))
++            return np.array([1,0]),np.column_stack([v,1-v])
++        with patch('superagent.ab_complement.probability_with_model',side_effect=score):
++            rows=[('a','b'),('b','a'),('a','a')]
++            strong=PreferenceProbabilityVote('pair_text',[.7,.9],np.array([0,1]))
++            np.testing.assert_allclose(strong.predict_proba(rows)[:,1],[.8,.2,.5])
++            tie=PreferenceProbabilityVote('pair_text',[.25,.75],np.array([0,1]))
++            self.assertEqual(tie.predict(rows).tolist(),[1,0,0])
+diff --git a/tests/test_ab_encoder_coverage.py b/tests/test_ab_encoder_coverage.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..b030332dbe3a49e5d6503a8cd911bbd9f6b6cb3d
+--- /dev/null
++++ b/tests/test_ab_encoder_coverage.py
+@@ -0,0 +1,33 @@
++import unittest
++from unittest.mock import patch
++
++from superagent import ab_adaptive_opening as policy
++
++
++class EncoderCoverageTests(unittest.TestCase):
++    def row(self, name, backbone, revision='pin', fits=1):
++        return {'id':name, 'resource':'local_frozen_encoder_cpu','params':{'encoder':backbone,'revision':revision},
++                'classifier_fits':fits, 'refit_classifier_fits':1, 'supports_probabilities':True}
++
++    def test_unseen_means_a_new_verified_backbone_within_the_registered_atomic_fit_budget(self):
++        items=[self.row('r0','backbone-a'),self.row('r1','backbone-a','second-revision'),
++               self.row('r2','backbone-b'),self.row('r3','backbone-c',''),self.row('r4','backbone-d',fits=2)]
++        caps={r['id']:r for r in items}
++        state={'history':[{'candidate':'r0','split_id':'primary'}], 'available_candidates':items[1:]}
++        self.assertEqual(policy.unseen_encoder_candidates(state,caps),[items[2]])
++
++    def test_a_clear_leader_can_leave_an_encoder_untested_and_the_budget_still_controls_exploration(self):
++        observed=[self.row('seen'+str(i),'a') for i in range(4)]
++        fifth=self.row('opaque-5','b')
++        caps={r['id']:r for r in [*observed,fifth]}
++        state=dict(history=[dict(candidate=r['id'],split_id='primary') for r in observed],
++                   available_candidates=[fifth],budget={'remaining_fit_allowance':6})
++        receipt=dict(opening_uncertainty={'ambiguous':False},evidence_trials=[1,2,3,4])
++        def choose(projected,**_kwargs):
++            self.assertEqual(projected['available_candidates'],[fifth])
++            return dict(action='explore',candidate_id=fifth['id'])
++        with patch.object(policy,'review',return_value=receipt),patch.object(policy,'next_action',side_effect=choose):
++            self.assertEqual(policy.action(state,caps,{})['action'],'stop')
++            self.assertEqual(policy.action(state,caps,{'primary':{}},cover_untried_encoder=True)['candidate_id'],'opaque-5')
++            state['budget']['remaining_fit_allowance']=5
++            self.assertEqual(policy.action(state,caps,{},cover_untried_encoder=True)['action'],'stop')
+diff --git a/tests/test_native_familiarity_integration.py b/tests/test_native_familiarity_integration.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..ef6c933df033af92bf108fc88b2f1c1550ba651f
+--- /dev/null
++++ b/tests/test_native_familiarity_integration.py
+@@ -0,0 +1,22 @@
++import json
++import math
++from pathlib import Path
++import unittest
++
++from superagent.ab_sentence import DEEP_FILES, DEEP_REVISION
++from superagent.word_familiarity import WordFamiliarity
++
++
++class NativeFamiliarityIntegrationTests(unittest.TestCase):
++    def test_unseen_and_seen_titles_use_the_expected_reference_counts(self):
++        f = WordFamiliarity().fit(['red blue', 'red green', 'blue green', 'red green'])
++        self.assertAlmostEqual(f.score('RED'), -math.log(5/13))
++        self.assertAlmostEqual(f.score('red blue'), -(math.log(7/24) + math.log(5/22))/2)
++        first, reverse = f.differences([('red blue','RED'),('RED','red blue')])
++        self.assertEqual(first, -reverse)
++
++    def test_joint_candidates_keep_the_A113R_verified_deep_asset(self):
++        root = Path(__file__).resolve().parents[1]
++        actual = json.loads((root / 'research/a113R_deep_assets/assets.json').read_text())
++        self.assertEqual(DEEP_REVISION, 'a50ef00143b4d5391434df20ae11632588ac25be')
++        self.assertEqual(DEEP_FILES, {a['name']:(a['bytes'], a['sha256']) for a in actual})

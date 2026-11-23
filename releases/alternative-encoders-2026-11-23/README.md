@@ -1,5 +1,9 @@
 # Task2 的替代编码器与按反馈选组合
 
+## 已冻结的课程验证结果
+
+联合目录让 Agent 在一次正式运行中同时看到 E5、六层 MiniLM、普通十二层和带词频特征的十二层。种子 18643 下，它自主选出原来只在研发中验证的组合，课程指定验证为 **689/940（73.30%）**，训练内开发保留区为 **1,237/1,693（73.07%）**。运行 `python scripts/verify_b_joint_delivery.py` 可核对原始预测文件的哈希、模型选择与费用。队友在 A117 的独立检出中可用 `git apply --check /path/to/A117_B_joint_encoder.patch` 检查接入。补丁保留 A 已核验的十二层公开版本 `a50ef00143b4d5391434df20ae11632588ac25be`，三份模型文件均与本研究一致。[结果及准确复跑命令](docs/batches/B_joint_coverage_results_1123_zh.md) · [适配 A117 的源码补丁](docs/integration/A117_B_joint_encoder.patch)
+
 ## 词频特征与 E5 的最新对照
 
 正式 Agent 使用 `--scheduler ab-complement --preference-catalog deep-familiarity`，在匿名训练包上自行选择六层加带熟悉度特征的十二层，训练内开发保留区为 **1,224/1,693（72.30%）**。另行冻结的 E5 加同一新十二层组合为 **1,237/1,693（73.07%）**。运行 `python scripts/verify_b_familiarity_study.py` 可在普通 Python 环境核对四项实验的决策、成绩与资源回执。[完整结果与复跑入口](docs/batches/B_familiarity_results_1123_zh.md)

@@ -1,0 +1,234 @@
+{
+  "decision": {
+    "anchor": "minilm_text_with_lexical_features",
+    "members": [
+      "minilm_l12_with_corpus_familiarity",
+      "e5_small_text_with_lexical_features"
+    ],
+    "partner": "e5_small_text_with_lexical_features",
+    "primary_rows": 1295,
+    "opening_correct": {
+      "word_C0.05": 836,
+      "minilm_text_with_lexical_features": 924,
+      "minilm_l12_text_with_lexical_features": 917,
+      "minilm_l12_with_corpus_familiarity": 915,
+      "e5_small_text_with_lexical_features": 902
+    },
+    "opening_combinations": [
+      {
+        "members": [
+          "word_C0.05",
+          "minilm_text_with_lexical_features"
+        ],
+        "correct": 928
+      },
+      {
+        "members": [
+          "word_C0.05",
+          "minilm_l12_text_with_lexical_features"
+        ],
+        "correct": 924
+      },
+      {
+        "members": [
+          "word_C0.05",
+          "minilm_l12_with_corpus_familiarity"
+        ],
+        "correct": 913
+      },
+      {
+        "members": [
+          "word_C0.05",
+          "e5_small_text_with_lexical_features"
+        ],
+        "correct": 916
+      },
+      {
+        "members": [
+          "minilm_text_with_lexical_features",
+          "minilm_l12_text_with_lexical_features"
+        ],
+        "correct": 928
+      },
+      {
+        "members": [
+          "minilm_text_with_lexical_features",
+          "minilm_l12_with_corpus_familiarity"
+        ],
+        "correct": 929
+      },
+      {
+        "members": [
+          "minilm_text_with_lexical_features",
+          "e5_small_text_with_lexical_features"
+        ],
+        "correct": 921
+      },
+      {
+        "members": [
+          "minilm_l12_text_with_lexical_features",
+          "minilm_l12_with_corpus_familiarity"
+        ],
+        "correct": 921
+      },
+      {
+        "members": [
+          "minilm_l12_text_with_lexical_features",
+          "e5_small_text_with_lexical_features"
+        ],
+        "correct": 919
+      },
+      {
+        "members": [
+          "minilm_l12_with_corpus_familiarity",
+          "e5_small_text_with_lexical_features"
+        ],
+        "correct": 931
+      }
+    ],
+    "primary_single_accuracy": 0.7135135135135136,
+    "portfolio_score": 0.7182828669988501,
+    "proposed_pair": [
+      "minilm_l12_with_corpus_familiarity",
+      "e5_small_text_with_lexical_features"
+    ],
+    "comparison_members": [
+      "minilm_l12_with_corpus_familiarity",
+      "e5_small_text_with_lexical_features",
+      "minilm_text_with_lexical_features"
+    ],
+    "evidence_trials": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "opening_uncertainty": {
+      "leader": "minilm_text_with_lexical_features",
+      "runner_up": "minilm_l12_text_with_lexical_features",
+      "gap": 0.005405405405405406,
+      "cluster_standard_error": 0.009029957177503042,
+      "groups": 965,
+      "disagreements": 123,
+      "ambiguous": true
+    },
+    "confirmation_rows": 1314,
+    "promoted": true,
+    "pending": [],
+    "confirmation_correct": {
+      "minilm_l12_with_corpus_familiarity": 927,
+      "e5_small_text_with_lexical_features": 932,
+      "minilm_text_with_lexical_features": 935
+    },
+    "confirmation_combination": 943,
+    "pooled_gain": 15
+  },
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Finish the paired comparison and deliver the selected model or pair.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "receipts": {
+    "primary_e5_small_text_with_lexical_features": {
+      "source": "prior native exploratory trial",
+      "physical_new_fits": 0,
+      "predictions": "ce573aaea9f1ead2da42e54009e7c0525d4312b804faea35005cac4c8a5973ec"
+    },
+    "confirmation_1_minilm_l12_with_corpus_familiarity": {
+      "source": "same-run matched observation",
+      "artifact": "d8e18091f5751f7468bab3f7a82b7af1feb6af45ed8c6a0d59969b5dbf13adf7",
+      "physical_new_fits": 0
+    },
+    "confirmation_1_e5_small_text_with_lexical_features": {
+      "source": "additional physical confirmation",
+      "artifact": "f04d8c7d6ef0a4f830ad33b51cd850927e080892c82a11b00557e3b22cf2b923",
+      "physical_new_fits": 1,
+      "fit_ledger": "443c798107729aed2256b6178c3d19987c21cca8c1234475ab9f14e7dbcc7a28",
+      "physical_log": "226d2dd3fe1d3846b42b69490fa826248f0368d28556b221f7a864bdd15a3547"
+    },
+    "confirmation_1_minilm_text_with_lexical_features": {
+      "source": "same-run matched observation",
+      "artifact": "848ed8ce4708d48d406065db7861693d25e4e7ec6509137887b197607216f587",
+      "physical_new_fits": 0
+    }
+  },
+  "fit_equivalents": 10,
+  "actual_new_fits": 1,
+  "source_state": "76cd36fbebaa398e6e9dc2453844d0414eb0137e272b93ed90d810cb512806fb"
+}

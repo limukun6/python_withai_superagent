@@ -1,0 +1,133 @@
+[
+  {
+    "action": "measure",
+    "candidate": "word",
+    "probe_correct": 442,
+    "probe_rows": 680,
+    "refit_fits": 1
+  },
+  {
+    "action": "measure",
+    "candidate": "base",
+    "probe_correct": 494,
+    "probe_rows": 680,
+    "refit_fits": 1
+  },
+  {
+    "action": "consider_expansion",
+    "observed": [
+      "word",
+      "base"
+    ],
+    "shared_probe_errors": 123,
+    "required": 34,
+    "additional_fits": 1,
+    "reserve": 2,
+    "open": true
+  },
+  {
+    "action": "measure",
+    "candidate": "deep",
+    "probe_correct": 502,
+    "probe_rows": 680,
+    "refit_fits": 1
+  },
+  {
+    "action": "measure",
+    "candidate": "plain_equal",
+    "probe_correct": 499,
+    "probe_rows": 680,
+    "refit_fits": 2
+  },
+  {
+    "action": "consider_expansion",
+    "observed": [
+      "word",
+      "base",
+      "deep",
+      "plain_equal"
+    ],
+    "shared_probe_errors": 99,
+    "required": 34,
+    "additional_fits": 3,
+    "reserve": 4,
+    "open": true
+  },
+  {
+    "action": "measure",
+    "candidate": "stream_adapter",
+    "probe_correct": 497,
+    "probe_rows": 680,
+    "refit_fits": 4
+  },
+  {
+    "action": "measure",
+    "candidate": "adapter",
+    "probe_correct": 497,
+    "probe_rows": 680,
+    "refit_fits": 4
+  },
+  {
+    "action": "measure",
+    "candidate": "stream_hybrid",
+    "probe_correct": 500,
+    "probe_rows": 680,
+    "refit_fits": 5
+  },
+  {
+    "action": "measure",
+    "candidate": "full_hybrid",
+    "probe_correct": 503,
+    "probe_rows": 680,
+    "refit_fits": 5
+  },
+  {
+    "action": "stop_and_refit",
+    "selected": "deep",
+    "scores": {
+      "word": {
+        "probe": 442,
+        "confirmation": 414,
+        "total": 856
+      },
+      "base": {
+        "probe": 494,
+        "confirmation": 467,
+        "total": 961
+      },
+      "deep": {
+        "probe": 502,
+        "confirmation": 481,
+        "total": 983
+      },
+      "plain_equal": {
+        "probe": 499,
+        "confirmation": 479,
+        "total": 978
+      },
+      "stream_adapter": {
+        "probe": 497,
+        "confirmation": 474,
+        "total": 971
+      },
+      "adapter": {
+        "probe": 497,
+        "confirmation": 476,
+        "total": 973
+      },
+      "stream_hybrid": {
+        "probe": 500,
+        "confirmation": 474,
+        "total": 974
+      },
+      "full_hybrid": {
+        "probe": 503,
+        "confirmation": 475,
+        "total": 978
+      }
+    },
+    "spent": 6,
+    "reserved_for_selected": 1,
+    "threshold": 0.3209856453394181
+  }
+]

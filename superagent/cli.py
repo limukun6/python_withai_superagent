@@ -89,6 +89,9 @@ def _validate(args):
 
 
 def _run(args):
+    if getattr(args,'preference_components',False):
+        from .component_preferences import run
+        return run(args)
     if args.scheduler in ('ab-v1','ab-fixed','ab-finalists'):
         from .ab_run import command
         return command(args)
@@ -289,6 +292,8 @@ def build_parser():
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
+    run.add_argument('--preference-components',action='store_true',
+                     help='Enable the local cost-aware component study for binary preference tasks')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
     run.add_argument('--catalog-scope',choices=['full','baseline'],default='full',help='AB catalogue study: baseline excludes B-added methods; full is shared by all C1 arms')
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')

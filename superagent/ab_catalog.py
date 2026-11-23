@@ -2,7 +2,7 @@
 from copy import deepcopy
 from importlib.util import find_spec
 
-from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_KERNEL
+from .ab_methods import FIELDS, RELATION, ROUTES, TEXT, TEXT_DEEP, TEXT_EDIT, TEXT_KERNEL
 from .ab_symmetric import ENCODER
 from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
@@ -71,7 +71,7 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20):
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
-                         resource='local_frozen_encoder_cpu' if name in (TEXT, TEXT_KERNEL, ENCODER, VISION) else 'cpu',
+                         resource='local_frozen_encoder_cpu' if name in (TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_KERNEL,ENCODER,VISION) else 'cpu',
                          origin='b_port' if name in ROUTES else 'shared_baseline'))
     return menu
 

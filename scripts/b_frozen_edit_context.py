@@ -9,7 +9,8 @@ from types import SimpleNamespace
 import numpy as np
 
 from b_frozen_head_frontier import REPO, SEEDS, load_head, paired, read, require, save, sha
-from b_preference_views import edit_view
+sys.path.insert(0,str(REPO/'superagent'))
+from ab_edit_views import edit_view
 
 
 def vectors_for(study, cache_dir, data, ids):
@@ -107,7 +108,7 @@ def run(args):
     study.verified(args.archive,study.ARCHIVE_SHA)
     out = args.output
     out.mkdir(parents=True,exist_ok=False)
-    helper = Path(__file__).with_name('b_preference_views.py')
+    helper = REPO/'superagent/ab_edit_views.py'
     save(out/'protocol.json',dict(plan=sha(REPO/'docs/batches/B_edit_context_protocol_1123_zh.md'),
         source={p.name:sha(p) for p in (Path(__file__),helper,Path(__file__).with_name('b_frozen_head_frontier.py'),old/'study.py')},
         archive=study.ARCHIVE_SHA,member=study.MEMBER,old_dev_seal=sha(old_run/'dev_seal.json'),

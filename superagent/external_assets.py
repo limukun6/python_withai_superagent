@@ -5,7 +5,8 @@ from pathlib import Path
 
 
 def model_resources(model):
-    from .ab_sentence import FILES, MODEL, REVISION, SentenceFeatures
+    from .ab_sentence import (DEEP_ENV, DEEP_FILES, DEEP_MODEL, DEEP_REVISION, DeepPreferenceFeatures,
+                              FILES, MODEL, REVISION, SentenceFeatures)
     from .ab_symmetric import UnorderedSentenceFeatures
     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
 
@@ -13,7 +14,8 @@ def model_resources(model):
     def walk(value):
         if id(value) in visited:return
         visited.add(id(value))
-        if isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
+        if isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
+        elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')
         if isinstance(value,dict):
             for child in value.values():walk(child)
@@ -29,6 +31,11 @@ def model_resources(model):
     if 'minilm' in found:
         resources.append(dict(name='minilm',environment_variable='SUPERAGENT_MINILM_WEIGHTS',path_kind='directory',
             model=MODEL,revision=REVISION,files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in FILES.items()}))
+        packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
+    if 'minilm_l12' in found:
+        resources.append(dict(name='minilm_l12',environment_variable=DEEP_ENV,path_kind='directory',
+            model=DEEP_MODEL,revision=DEEP_REVISION,
+            files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in DEEP_FILES.items()}))
         packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
     if 'vision' in found:
         resources.append(dict(name='vision',environment_variable=WEIGHT_ENV,path_kind='file',model=WEIGHT_ID,

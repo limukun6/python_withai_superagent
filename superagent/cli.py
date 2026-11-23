@@ -89,6 +89,21 @@ def _validate(args):
 
 
 def _run(args):
+    catalog=getattr(args,'preference_catalog','standard')
+    if catalog!='standard':
+        if args.scheduler not in ('ab-v1','ab-fixed','ab-finalists') or getattr(args,'preference_components',False):
+            raise ValueError('The expanded preference catalog requires the standard A/B executor')
+        from .ab_methods import PREFERENCE_CATALOG_ENV
+        from .ab_run import command
+        previous=os.environ.get(PREFERENCE_CATALOG_ENV)
+        os.environ[PREFERENCE_CATALOG_ENV]=catalog
+        try:
+            return command(args)
+        finally:
+            if previous is None:
+                os.environ.pop(PREFERENCE_CATALOG_ENV,None)
+            else:
+                os.environ[PREFERENCE_CATALOG_ENV]=previous
     if getattr(args,'preference_components',False):
         from .component_preferences import run
         return run(args)
@@ -292,6 +307,8 @@ def build_parser():
     run.add_argument('--seed',type=int,default=707)
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists'],default='fixed')
+    run.add_argument('--preference-catalog',choices=['standard','deep','deep-edit'],default='standard',
+        help='Expose verified local twelve-layer preference heads to the shared A/B scheduler')
     run.add_argument('--preference-components',action='store_true',
                      help='Enable the local cost-aware component study for binary preference tasks')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')

@@ -27,9 +27,9 @@ from tools.pilot_challenger import STRATEGIES, approve, compare_vote, nominate, 
 PUBLIC = ROOT / "research/pilot_nomination_1124"
 
 
-def receipts(folder):
+def receipts(folder, strategies=STRATEGIES):
     parts = {}
-    for arm in STRATEGIES:
+    for arm in strategies:
         run = folder / arm / "run"
         for a in read(run / "pilot_completion.json")["actions"]:
             src = run / a["stage"] / a["candidate"]

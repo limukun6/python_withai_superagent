@@ -12,7 +12,7 @@
 
 过程偏差已留档：attempt_01漏传key/ledger（0花费）；attempt_02因自建包无test split导致`predict`失败，计划修正为"重载+验证集"渠道；attempt_03的`w2_confirm`被验收逻辑误判（字段在`confirmation`内），离线重算`recheck.json`后五条全pass，未重跑。
 
-不能声称提分/迁移收益/通用性/压缩省时：grounded单文本0.9347低于L0 0.9474，单样本且与之前同向。账本406请求/known¥7.262944/unknown16未增/pending0。报告batches/A151_matrix_results_20261124_zh.md。
+不能声称提分/迁移收益/通用性/压缩省时：grounded单文本0.9347低于L0 0.9474，单样本且与之前同向。账本406请求/known¥7.262944/unknown16未增/pending0。报告batches/A151_matrix_results_20261124_zh.md。定位建议见batches/A151_grounded_position_decision_20261124_zh.md：grounded两条路径都可执行但都不比普通路径好、调用为2倍，保留为可选研究开关，不晋级默认（本轮未改默认、0新增fit/API）。
 
 ## A151端到端验收：两条路径在压缩菜单下都跑完（复核后的口径）
 

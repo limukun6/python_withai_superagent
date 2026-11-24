@@ -1,0 +1,164 @@
+{
+  "training": {
+    "entrypoint_sha256": "ff33aff094e6df8e3fe92d07d37ee53b4dbcf25eaff3cc8a965fc1c57727aca0",
+    "source_training_rows": 8117,
+    "partition_reason": "no declared directional preference",
+    "model_training_rows": 8117,
+    "audit_rows": 0
+  },
+  "model": "8c50b3ffef883b00aeb9dd23793362b713bea3dfbcf8ee5efd6e3f2936792c96",
+  "winner": "catboost_depth8_reg3.0",
+  "members": [],
+  "fits": [
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg3.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth8_reg3.0"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "logistic_C0.05"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "open_SVC_31dc89c424cf73021415"
+    },
+    {
+      "classifier": "HistGradientBoostingClassifier",
+      "candidate": "open_HistGradientBoostingClassifier_dbe192942a1b919a3f31"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "supported_field_interactions"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth8_reg3.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "supported_field_interactions"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth8_reg3.0"
+    }
+  ],
+  "api_calls": 0,
+  "source_members_opened": [
+    "in_vehicle_coupon_recommendation/C_train.npy",
+    "in_vehicle_coupon_recommendation/y_train.npy",
+    "in_vehicle_coupon_recommendation/Readme.md",
+    "in_vehicle_coupon_recommendation/C_train.npy",
+    "in_vehicle_coupon_recommendation/y_train.npy",
+    "in_vehicle_coupon_recommendation/Readme.md"
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth4_reg3.0",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth8_reg3.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "logistic_C0.05",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_SVC_31dc89c424cf73021415",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_HistGradientBoostingClassifier_dbe192942a1b919a3f31",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "supported_field_interactions",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "catboost_depth8_reg3.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7599 and 0.7593; hard predictions differ on 101/1620 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        2,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "supported_field_interactions",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7599 and 0.7593; hard predictions differ on 101/1620 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        2,
+        6,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        2,
+        6
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "independent_training_audit": null
+}

@@ -1,5 +1,9 @@
 # 当前接续状态：2026-11-24，A151迁移与复核验收完成，1674fit／406请求／16未知
 
+## 共同原始包入口已复现两项历史最高
+
+同一条 `python -m unified_agent train TASK.zip --run-dir DIR` 从两个原始包分别冷启动。Task1 为 1,532/2,030（75.47%），Task2 为 689/940（73.30%）。两份逐行输出均与历史记录完全一致。Task2 自动留出共享标题组后使用 6,608 对训练；全部 8,301 对训练的对照为 684/940。学习融合权重与按置信分歧选模型均未晋级。B 本轮研究与重复验收共 45 次实际拟合，新增模型 API 0 次。此前 A 线账本计数按原口径保存。[记录、模型和复现方法](UNIFIED_AGENT_20261124_zh.md)
+
 ## A151矩阵：五条路径全通过，17fit/6调用/¥0.067218
 
 按预登记执行五条路径：三条迁移（类别表格`released_task1`、数值表格`dry_bean`、单文本`sms_spam`，均`calibrated-v2`+compact）＋单文本grounded修复＋一次真正含confirm的复核验收。全部通过：`requested_planner_completed=true`、fit计数完整、无新增unknown、交付校验一致（CLI predict 2,537/3,232行；无test split的包用新进程重载+验证集评分2,723/1,032行）。

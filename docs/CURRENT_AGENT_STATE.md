@@ -1,4 +1,12 @@
-# 当前接续状态：2026-11-24，A147完成，1644fit／387请求
+# 当前接续状态：2026-11-24，A151完成，1644fit／387请求
+
+## A151最新：知识纠正与执行修复已分层，零成本验收通过，默认不变
+
+接续交接第8节第一项。新增`--issue-layering off|by-class`（默认off）：issue按命题种类分knowledge/execution/measurement，知识类由已核复述关闭为`resolved_semantic`，执行类仍需匹配执行证据，测量类不被无关成功试验关闭。默认strict/full与`grounded-v1`旧行为逐字节未改，旧6项grounded测试一行未改全过；新增12项分层测试。
+
+零成本验收：程序oracle 5/5；封存A146 12条响应回放中6条grounded，3条受控纠错（coupon/sms/flowers）由`addressed_pending_check`变为`resolved_semantic`且`new_fit_required=false`，6/6候选选择不变，0条知识类仍open。短信那条`inverse_C_between_bound_configurations`正是A147起因，现在免fit关闭。行为后果已如实记录：诊断动作未被禁，但知识类关闭后"只存在知识类问题"的轨迹上不再有可引用的open issue。
+
+本批0 fit/0 API/¥0，0.985秒；15个相关模块94项回归通过。A累计仍1644fit；唯一真实ledger未改，仍387/known¥7.0165495/unknown12/pending0，SHA5b1f5c58…，A空闲。报告batches/A151_issue_layering_results_20261124_zh.md，计划同名前缀plan，证据research/a151_issue_layering。不是外层提分证据，A147原始负结果未改写，A148仍未启动。
 
 用户因Codex额度将尽转交DeepSeek；完整接续入口为docs/DEEPSEEK_A_LINE_HANDOFF_20261124_ZH.md，含版本/结构/证据/账本/演讲资料与下一轮建议。交接核验97生产源SHA均匹配473ba84冻结清单、演讲manifest源及文件SHA均匹配、当前ledger SHA仍5b1f5c58…；没有启动新训练或API。建议优先将知识纠正与执行修复分层，先离线验收再另登记小试；不自动启动旧A148。下文近期结果继续有效。
 

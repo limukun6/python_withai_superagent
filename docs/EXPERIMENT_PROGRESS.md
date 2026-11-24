@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 知识纠正与执行修复分层，0 fit／0 API
+
+按交接第8节第一项实现`--issue-layering off|by-class`（默认off）。issue按命题种类分knowledge/execution/measurement；知识类由已核复述关闭为`resolved_semantic`并标`new_fit_required=false`，执行类等匹配执行证据，测量类不被无关成功试验关闭。默认strict/full与grounded-v1旧行为逐字节未改，旧6项测试未改全过，新增12项分层测试。
+
+零成本验收：程序oracle 5/5；封存A146六条grounded响应回放，3条受控纠错全部由`addressed_pending_check`变为`resolved_semantic`（coupon/sms/flowers），6/6候选选择不变，0条知识类仍open。短信`inverse_C_between_bound_configurations`即A147起因，现免fit关闭。如实记录后果：诊断动作未被禁，但知识类关闭后该轨迹不再有可引用的open issue，故诊断提案会被契约拒绝；已写成测试。
+
+本批0 fit/0学校API/¥0、0.985秒；15个相关模块94项回归通过。A累计仍1644fit；唯一ledger未改仍387/known¥7.0165495/unknown12/pending0、SHA5b1f5c58…，A空闲。报告batches/A151_issue_layering_results_20261124_zh.md，计划plan、证据research/a151_issue_layering。不宣称外层提分，A147负结果与A148决定不变。
+
 ## 2026-11-24：DeepSeek接续交接，0新增fit/API
 
 用户额度将尽，整理docs/DEEPSEEK_A_LINE_HANDOFF_20261124_ZH.md作为单一接续入口：A/B职责、最新生产与结果版本、八类瓶颈/结构、完整数据流、各批资源与结论边界、唯一账本和已授权历史未知、演讲/流程图源、建议五小时工作与runner。校验全部97生产源、演讲源/交付SHA及真实ledger SHA均匹配。下一步知识纠正/执行修复分层尚未实施，A148不启动；交接不是追加实验授权或最终冻结。A1644/387请求/known7.0165495/unknown12/pending0不变。

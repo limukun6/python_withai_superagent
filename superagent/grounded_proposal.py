@@ -30,9 +30,9 @@ def registry_for(state,capabilities):
     return build_registry(state,capabilities,state.get('grounding_binding'))
 
 
-def issues_for(state,registry):
+def issues_for(state,registry,layering='off'):
     result={}
-    for issue in historical_issues(state,registry):result[issue['issue_id']]=issue
+    for issue in historical_issues(state,registry,layering):result[issue['issue_id']]=issue
     for original in state.get('grounding_issues',[]):
         issue=deepcopy(original)
         if issue.get('namespace')!=registry['namespace']:issue['status']='superseded'
@@ -40,17 +40,23 @@ def issues_for(state,registry):
     return list(result.values())
 
 
-def augment_context(base,state,capabilities):
+def augment_context(base,state,capabilities,layering='off'):
     registry=registry_for(state,capabilities)
     value=deepcopy(base);value['context_version']='ab-grounded-v1';value['instruction']+=INSTRUCTION
-    value['fact_registry']=wire_registry(registry);value['grounding_issues']=issues_for(state,registry)
+    value['issue_layering']=layering
+    if layering!='off':
+        value['instruction']+=(' Issue layering is on. A knowledge correction (a wrong recorded number, '
+            'a declared parameter value, the task kind, a cross-scope reference) is closed by restating '
+            'the same bound proposition correctly and does not need a new experiment. Execution facts '
+            'and claims of improvement still do.')
+    value['fact_registry']=wire_registry(registry);value['grounding_issues']=issues_for(state,registry,layering)
     return value
 
 
-def assess(answer,state,capabilities,eligible_ids):
+def assess(answer,state,capabilities,eligible_ids,layering='off'):
     from .ab_flash import validate_proposal
     from .contracts import ExperimentProposal
-    registry=registry_for(state,capabilities);issues=issues_for(state,registry);errors=[];checks=[]
+    registry=registry_for(state,capabilities);issues=issues_for(state,registry,layering);errors=[];checks=[]
     def reject():
         raise GroundingError(dict(status='requires_semantic_repair',namespace=registry['namespace'],errors=errors,
              assertion_checks=checks,issues=issues,freeform_prose_verified=False))
@@ -82,9 +88,9 @@ def assess(answer,state,capabilities,eligible_ids):
         report=check_claim(claim,registry);checks.append(report)
         if report['status']!='confirmed':
             errors.append('Assertion is '+report['status']+': '+report['reason'])
-            issue=issue_for(claim,registry)
+            issue=issue_for(claim,registry,layering=layering)
             if issue is not None and issue['issue_id'] not in {i['issue_id'] for i in issues}:issues.append(issue)
-    issues,issue_errors=address_issues(issues,assertions,packet['addresses_issue_ids'],registry);errors.extend(issue_errors)
+    issues,issue_errors=address_issues(issues,assertions,packet['addresses_issue_ids'],registry,layering);errors.extend(issue_errors)
     if errors:reject()
     verified_basis=[dict(id=r,value=deepcopy(facts[r]['value']),role=facts[r]['role']) for r in refs]
     compiled='Checked '+answer['purpose']+' proposal '+candidate+' using '+', '.join(refs)+'. Future hypothesis remains unverified.'

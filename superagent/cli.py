@@ -92,6 +92,8 @@ def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
         raise ValueError('Grounded proposals require checked-history planning')
+    if getattr(args,'issue_layering','off')!='off' and getattr(args,'proposal_contract','strict-v1')!='grounded-v1':
+        raise ValueError('Issue layering only applies to the grounded-v1 proposal contract')
     if getattr(args,'feedback_view','full')!='full' and (args.planner!='checked-history' or
             args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement')):
         raise ValueError('Compact feedback requires the shared checked-history executor')
@@ -335,6 +337,8 @@ def build_parser():
     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2','grounded-v1'],default='strict-v1',help='AB Flash: optional calibrated or evidence-bound proposal contract')
+    run.add_argument('--issue-layering',choices=['off','by-class'],default='off',
+        help='grounded-v1 only: close knowledge corrections by a checked restatement instead of waiting for a new fit')
     run.add_argument('--parameter-semantics',choices=['off','diagnostic'],default='off',help='AB checked-history only: optional source-backed C semantics warnings, without action veto')
     run.add_argument('--partial-delivery',choices=['off','checkpoint'],default='off',help='AB: on failure freeze an already fitted checkpoint; the requested run remains failed')
     run.add_argument('--anchor',choices=['catalog','schema'],default='catalog')

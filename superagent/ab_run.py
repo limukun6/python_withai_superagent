@@ -272,7 +272,7 @@ def command(args):
             allowed_served_models={args.model},account=account,streaming=True)
         client.set_deadline(began+args.time_limit)
         picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'),
-                             getattr(args,'feedback_view','full'))
+                             getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'))
     history, evidence, actions = [], [], []
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
@@ -427,7 +427,7 @@ def command(args):
             if proposal is not None and getattr(args,'proposal_contract','strict-v1')=='grounded-v1':
                 from .grounding_issues import confirm_execution
                 row['grounding_report']=deepcopy(picker.last_grounding_report)
-                picker.grounding_issues=confirm_execution(picker.grounding_issues,row)
+                picker.grounding_issues=confirm_execution(picker.grounding_issues,row,getattr(args,'issue_layering','off'))
                 logger.write_json('grounding_issues.json',picker.grounding_issues)
             history.append(row)
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,

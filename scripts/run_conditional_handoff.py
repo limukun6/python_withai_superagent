@@ -13,6 +13,7 @@ from scripts.unified_confidence_study import paired_interval
 from scripts.unified_released_study import EVIDENCE, ROOT, read, require, save, sha
 from scripts.unified_third_member import same_split
 from superagent.data import load_prediction_features, load_training_task
+from superagent.fact_registry import digest
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import sample_groups
 from tools.preference_handoff import POLICIES, changes, fit_policy, inputs, predictions, select
@@ -56,7 +57,7 @@ def historical_panels(out, run):
 def learned(path, name, train, labels):
     path.mkdir(parents=True,exist_ok=True)
     rec=path/(name+".json")
-    identity=fingerprint({"probabilities":train["p"].tolist(), "features":train["features"].tolist(),
+    identity=digest({"probabilities":train["p"].tolist(), "features":train["features"].tolist(),
                           "labels":labels.tolist(),"policy":name,"gate_code":sha(GATE)})
     if rec.exists():
         record=read(rec)

@@ -95,3 +95,28 @@ class FlashBoundaryTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class PlanFragmentFieldTests(unittest.TestCase):
+    def test_the_instruction_only_grows_when_advisory(self):
+        state, caps, ids = fixture_state()
+        plain = context_for(state, caps, ids, True, 'strict-v1')
+        advisory = context_for(state, caps, ids, True, 'strict-v1', plan_fragment='advisory')
+        self.assertEqual(set(plain) | set(advisory), set(advisory))
+        self.assertEqual(advisory['instruction'][:len(plain['instruction'])], plain['instruction'])
+        self.assertGreater(len(advisory['instruction']), len(plain['instruction']))
+
+    def test_a_plan_field_is_rejected_unless_it_was_requested(self):
+        state, caps, ids = fixture_state()
+        answer = answer_for(state, caps, ids)
+        answer['plan'] = {'steps': [{'candidate': ids[0], 'requires': {'reference_trial': 1}}]}
+        with self.assertRaises(ValueError):
+            validate_proposal(answer, state, caps, ids, 'strict-v1')
+        proposal = validate_proposal(answer, state, caps, ids, 'strict-v1', allow_plan=True)
+        self.assertEqual(proposal.candidate, ids[0])
+
+    def test_an_absent_plan_is_still_a_valid_proposal(self):
+        state, caps, ids = fixture_state()
+        proposal = validate_proposal(answer_for(state, caps, ids), state, caps, ids,
+                                     'strict-v1', allow_plan=True)
+        self.assertEqual(proposal.candidate, ids[0])

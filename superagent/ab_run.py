@@ -302,7 +302,8 @@ def command(args):
         client.set_deadline(began+args.time_limit)
         picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'),
                              getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'),
-                             getattr(args,'menu_view','full'))
+
+                             getattr(args,'menu_view','full'),getattr(args,'plan_fragment','off'))
     history, evidence, actions = [], [], []
     if resume_record is not None:
         history = [dict(row) for row in resume_record['history']]
@@ -460,6 +461,12 @@ def command(args):
                     logger.event('plan_fragment_skipped', trial=number, status=planned_report['status'],
                                  reason=planned_report['reason'])
             proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
+            if picker is not None and getattr(picker, 'last_plan', None) is not None:
+                # A model-offered plan applies from the next decision onward.
+                fragment_state = picker.last_plan
+                fragment_cursor[0] = 0
+                logger.event('plan_fragment_adopted', trial=number,
+                             steps=len(fragment_state['steps']))
             if proposal is not None:
                 action['reason'] = proposal['reason']
                 if getattr(args,'proposal_contract','strict-v1')=='grounded-v1':action['reason']=picker.last_proposal.reason

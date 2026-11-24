@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A149 片段探测，模型两次都没有返回 `plan`
+
+按预登记执行单次探测（sms，fit 上限 4、调用上限 3、`--plan-fragment advisory`）：**模型两次提案都没有返回 `plan` 字段**，`plan_fragment_offered` 与 `plan_fragment_rejected` 均为 0。已核对片段指令确实进了 payload。
+
+按预登记"模型从不返回 plan 即停"，不再调提示词重试。结论：片段机制代码可用（零成本四组已证），但模型没有动机产出；`--plan-fragment` 保持默认关闭。
+
+attempt_01 无效：运行器漏传 `--plan-fragment`（我的字符串替换 bug），该次 ¥0.022225 只算普通运行。有效部分 ¥0.021502。合计 4 调用 / 8 fit / ¥0.043727，无新增 unknown。账本 457 请求 / known ¥7.925792 / unknown 16。报告 batches/A149_fragment_probe_results_20261124_zh.md。
+
 ## 2026-11-24：A149 片段接入执行入口，零成本验证通过
 
 `--plan-fragment advisory` 已接入决策循环：片段步骤成立且候选可选时直接采用、不调用模型；调度给 stop/confirm 时一律作废。

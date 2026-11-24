@@ -1,0 +1,39 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word-only logistic regression with C=0.3 and achieved high accuracy but spam recall of only 0.0303, yielding macro_f1 about 0.498. This indicates the model is effectively favoring ham and missing spam. A word+char representation with C=3.0 should broaden feature coverage and reduce regularization, which is a reasonable next step to improve minority-class recall and macro_f1.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed PRIMARY result: word_char with C=3.0 reached macro_f1 0.9572 and spam recall 0.8586, but it also shows a train-search gap of about 0.0359. Testing the same word_char representation with C=0.3 is a controlled regularization check on the strongest route rather than switching to an untried representation.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 word C=0.3 has macro_f1 0.498 and spam recall 0.030, indicating a severe ham-only bias. Switching to char n-grams with C=3.0 tests a different feature space and less regularization that may capture spam-specific substrings missed by word tokens; no improvement is assumed.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 (char C=3.0) is the best completed primary result with macro_f1 0.9439 and spam recall 0.8182, while trial 1 (word C=0.3) had severe ham-only bias with spam recall 0.0303. A word+char representation at C=3.0 tests whether adding word-token features to the successful char feature space captures complementary cues.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

@@ -1,0 +1,149 @@
+{
+  "primary_metric": "accuracy",
+  "enabled": true,
+  "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+  "seeds": [
+    707
+  ],
+  "shortlist": [
+    "word_C0.05"
+  ],
+  "primary_candidate": "word_C0.05",
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "candidates": [
+    {
+      "candidate": "word_C0.05",
+      "primary_accuracy": 0.6227909811090798,
+      "measurements": [
+        {
+          "seed": 707,
+          "trial": 1,
+          "candidate": "word_C0.05",
+          "params": {
+            "C": 0.05,
+            "representation": "word",
+            "swap_augmentation": true
+          },
+          "split_id": "primary",
+          "proposal": null,
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "accuracy",
+          "metric_spec": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.8145645645645646,
+          "search_score": 0.6227909811090798,
+          "train_metrics": {
+            "accuracy": 0.8145645645645646,
+            "macro_f1": 0.8145594431214508,
+            "primary_metric": "accuracy",
+            "score": 0.8145645645645646,
+            "rows": 6660
+          },
+          "search_metrics": {
+            "accuracy": 0.6227909811090798,
+            "macro_f1": 0.622647488332404,
+            "primary_metric": "accuracy",
+            "score": 0.6227909811090798,
+            "rows": 1641
+          },
+          "score_gap": 0.1917735834554848,
+          "train_accuracy": 0.8145645645645646,
+          "search_accuracy": 0.6227909811090798,
+          "generalization_gap": 0.1917735834554848,
+          "class_recall": [
+            0.6281287246722288,
+            0.6172069825436409
+          ],
+          "training_seconds": 1.00225620000856,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "word_C0.05",
+              "swap_label_rule": "flips"
+            }
+          },
+          "worker_wall_seconds": 2.8130000000237487,
+          "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+          "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+          "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+          "metric_identity": {
+            "status": "confirmed",
+            "expected": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "observed": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            }
+          },
+          "configuration_fact_check": {
+            "declared": null,
+            "observed": "logistic",
+            "observed_class": "LogisticRegression",
+            "status": "not_declared",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          },
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "explanation_audit": null
+        }
+      ],
+      "complete": true,
+      "primary_score": 0.6227909811090798,
+      "mean_score": 0.6227909811090798,
+      "mean_accuracy": 0.6227909811090798,
+      "sample_sd": null
+    }
+  ],
+  "valid_confirmation": true,
+  "selected_candidate": "word_C0.05",
+  "selection_score": 0.6227909811090798,
+  "changed": false,
+  "b_scheduler_review": {
+    "initial": "word_C0.05",
+    "incumbent": "word_C0.05",
+    "promotions": [],
+    "basis": [
+      "primary"
+    ],
+    "primary_metric": "accuracy"
+  },
+  "independent_confirmation_observed": false
+}

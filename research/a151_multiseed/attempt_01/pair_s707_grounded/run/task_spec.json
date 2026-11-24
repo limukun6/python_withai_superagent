@@ -1,0 +1,63 @@
+{
+  "task_kind": "pair_text_binary",
+  "metric": "accuracy",
+  "goal_sources": {
+    "primary_metric": "declared_task_readme"
+  },
+  "train_rows": 8301,
+  "validation_rows": 940,
+  "provided_validation_available": true,
+  "input_fields": [
+    "headline_A",
+    "headline_B"
+  ],
+  "label_values": [
+    "0",
+    "1"
+  ],
+  "test_accessed": false,
+  "input_schema": {
+    "modality": "pair_text",
+    "pair_semantics": "preference",
+    "pair_label_one": "left",
+    "columns": [
+      {
+        "name": "headline_A",
+        "type": "text"
+      },
+      {
+        "name": "headline_B",
+        "type": "text"
+      }
+    ],
+    "target": "label_pairwise"
+  },
+  "input_format": "csv",
+  "task_description_source": {
+    "member": "Released_Task2-Headlines_CTR/README.md",
+    "sha256": "020196bc21301804050b7542fa0a6371510ae87a10d16b30d71fbc2eef183c82",
+    "parser_version": "legacy-explicit-declarations-v1",
+    "recognized": {
+      "primary_metric": {
+        "value": "accuracy",
+        "excerpt": "Use the labeled test.csv (3,232 pairs) only for final evaluation and report test accuracy."
+      },
+      "pair_semantics": {
+        "value": "preference",
+        "pair_label_one": "left",
+        "excerpt": "The target label_pairwise is 1 if A had the higher rate and 0 if B did."
+      }
+    },
+    "scope": "A limited declaration grammar; unrecognized prose remains unknown, never executed"
+  },
+  "metric_spec": {
+    "name": "accuracy",
+    "labels": [
+      0,
+      1
+    ],
+    "direction": "maximize"
+  },
+  "model_kind": "pair_text",
+  "class_count": 2
+}

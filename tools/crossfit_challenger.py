@@ -13,13 +13,18 @@ def ranked_groups(groups, salt):
     return sorted(set(groups), key=lambda g: hashlib.sha256((salt+g).encode()).digest())
 
 
-def training_roles(groups, labels):
+def role_indices(groups):
     groups = np.asarray(groups)
     ordered = ranked_groups(groups, "crossfit-challenger-v1/")
     buckets = {g:i%9 for i,g in enumerate(ordered)}
     code = np.asarray([buckets[g] for g in groups])
-    roles = {k:np.flatnonzero(mask) for k,mask in
-             (("nominate",code==0),("a",(code>=1)&(code<=4)),("b",code>=5))}
+    return {k:np.flatnonzero(mask) for k,mask in
+            (("nominate",code==0),("a",(code>=1)&(code<=4)),("b",code>=5))}
+
+
+def training_roles(groups, labels):
+    groups = np.asarray(groups)
+    roles = role_indices(groups)
     if any(len(set(groups[ids])) < 4 or set(labels[ids])!={0,1} for ids in roles.values()):
         return None
     return roles

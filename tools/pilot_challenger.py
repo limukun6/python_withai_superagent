@@ -13,7 +13,7 @@ from superagent.data import load_training_task
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import sample_groups
 from tools.challenger_training import rows_at, score_members, ties
-from tools.crossfit_challenger import ranked_groups, training_roles
+from tools.crossfit_challenger import ranked_groups, role_indices
 from tools.feedback_policy_pool import grouped_error
 from tools.pilot_fit_cache import FitCache
 from tools.portfolio_training import configure, fit_one, write_selection
@@ -24,9 +24,7 @@ STRATEGIES = ("pilot-accuracy", "pilot-brier")
 
 
 def pilot_roles(groups, labels):
-    previous = training_roles(groups, labels)
-    if previous is None:
-        return None
+    previous = role_indices(groups)
     remaining = np.sort(np.concatenate((previous["b"], previous["nominate"])))
     ordered = ranked_groups(groups[remaining], "pilot-feedback-v1/")
     learn = np.isin(groups[remaining], ordered[::2])

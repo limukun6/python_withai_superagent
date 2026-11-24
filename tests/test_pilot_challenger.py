@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 
 from tools.pilot_challenger import approve, nominate, panel_scores, pilot_roles
+from tools.crossfit_challenger import role_indices, training_roles
 
 
 class PilotChallengerTests(unittest.TestCase):
@@ -38,6 +39,16 @@ class PilotChallengerTests(unittest.TestCase):
             flat = panel_scores(names, np.full_like(values, .5), rows, y, g)
             self.assertIsNone(nominate(flat, strategy))
             self.assertIsNone(approve(None, flat, None, n)["approved"])
+
+    def test_unused_old_nomination_role_can_have_a_single_class(self):
+        groups = np.asarray([f"example{i}" for i in range(90)])
+        old = role_indices(groups)
+        y = np.arange(len(groups)) % 2
+        y[old["nominate"]] = 0
+        self.assertIsNone(training_roles(groups, y))
+        parts = pilot_roles(groups, y)
+        self.assertIsNotNone(parts)
+        self.assertTrue(all(set(y[ix]) == {0, 1} for ix in parts.values()))
 
     def test_names_only_resolve_exact_ties(self):
         row = dict(net=2, brier_gain=.01, brier_lower=.005)

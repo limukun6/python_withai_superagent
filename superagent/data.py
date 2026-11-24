@@ -36,16 +36,25 @@ class TrainingTask:
     spec: dict[str, Any] = field(default_factory=dict)
 
 
+def _training_split(archive, manifest):
+    from .schema import load_manifest_split
+    from .task_readme import legacy_declarations
+    kind, x, y, spec = load_manifest_split(archive, manifest, 'train')
+    if spec.get('goal_sources', {}).get('primary_metric') == 'default_accuracy':
+        spec = legacy_declarations(archive, kind, spec, y, legacy_pair=False)
+    return kind, x, y, spec
+
+
 def load_training_task(path: str | Path) -> TrainingTask:
     """Train-only capability for selection studies; never opens val or test."""
     with zipfile.ZipFile(Path(path).expanduser().resolve()) as archive:
-        from .schema import read_manifest,load_manifest_split
+        from .schema import read_manifest
         manifest=read_manifest(archive)
         if manifest is None:
             from .native_schema import infer_manifest
             manifest=infer_manifest(archive)
         if manifest is not None:
-            kind,x,y,spec=load_manifest_split(archive,manifest,'train')
+            kind,x,y,spec=_training_split(archive,manifest)
             if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')
             return TrainingTask(kind,x,y,spec)
         names = [n for n in archive.namelist() if not n.startswith("__MACOSX/")]
@@ -55,13 +64,14 @@ def load_training_task(path: str | Path) -> TrainingTask:
             if x.ndim != 2 or len(x) != len(y):
                 raise TaskFormatError("Training feature/label dimensions do not agree")
             from .task_readme import legacy_declarations
-            return TrainingTask("categorical_tabular", x, y, legacy_declarations(archive,'categorical_tabular',{}))
+            return TrainingTask("categorical_tabular", x, y, legacy_declarations(archive,'categorical_tabular',{},y))
         rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
         if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
             raise TaskFormatError("Unsupported training CSV schema")
         from .task_readme import legacy_declarations
+        y = np.asarray([int(r["label_pairwise"]) for r in rows])
         return TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
-                            np.asarray([int(r["label_pairwise"]) for r in rows]),legacy_declarations(archive,'pair_text',{}))
+                            y,legacy_declarations(archive,'pair_text',{},y))
 
 
 def _member_by_suffix(names: list[str], suffix: str) -> str:
@@ -88,7 +98,7 @@ def _load_archive(path: Path) -> DevelopmentTask:
             manifest=infer_manifest(archive)
             if manifest is not None:add_native_split(archive,manifest,'validation')
         if manifest is not None:
-            kind,x,y,spec=load_manifest_split(archive,manifest,'train')
+            kind,x,y,spec=_training_split(archive,manifest)
             x_val=y_val=None
             if 'validation' in manifest.get('splits',{}):
                 val_kind,x_val,y_val,val_spec=load_manifest_split(archive,manifest,'validation')
@@ -139,7 +149,7 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
     }
     from .task_readme import legacy_declarations
     return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val,
-                           legacy_declarations(archive,'categorical_tabular',spec))
+                           legacy_declarations(archive,'categorical_tabular',spec,y_train))
 
 
 def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> DevelopmentTask:
@@ -165,7 +175,7 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
     }
     from .task_readme import legacy_declarations
     return DevelopmentTask("pair_text", str(path), x_train, y_train, x_val, y_val,
-                           legacy_declarations(archive,'pair_text',spec))
+                           legacy_declarations(archive,'pair_text',spec,y_train))
 
 
 def load_development_task(path: str | Path) -> DevelopmentTask:

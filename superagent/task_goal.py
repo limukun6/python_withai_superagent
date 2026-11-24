@@ -38,7 +38,7 @@ def resolve_goal(task, metric):
                           'effective_policy':'maximize'},
         'label_domain':{'value':list(metric.labels),'source':'training_labels','status':'confirmed'},
         'positive_label':{'value':positive if positive is not None else (metric.labels[-1] if applies else None),
-            'source':'declared_spec' if positive is not None else ('default_sorted_last' if applies else 'not_applicable'),
+            'source':sources.get('positive_label','declared_spec') if positive is not None else ('default_sorted_last' if applies else 'not_applicable'),
             'status':'confirmed' if positive is not None else ('unknown' if applies else 'not_applicable')},
         'pair_semantics':{'value':pair,'source':'input_schema' if pair is not None else 'undeclared',
                           'status':'confirmed' if pair is not None else 'unknown'}},

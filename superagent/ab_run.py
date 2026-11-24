@@ -172,6 +172,39 @@ class Executor:
         return model, facts
 
 
+def confirmation_coverage(trusted, executed, selection):
+    """Describe evaluation reuse separately for inspected trials and the final decision."""
+    executed = set(executed)
+    selection = set(selection) | {PRIMARY}
+    if not selection <= executed or not executed <= set(trusted):
+        raise ValueError("Confirmation references an unobserved partition")
+    panels = {}
+    for name in trusted:
+        if name not in executed:
+            continue
+        ids, groups = trusted[name]['row_ids'], trusted[name]['groups']
+        if len(ids) != len(groups) or len(set(ids)) != len(ids) or not ids:
+            raise ValueError("Confirmation coverage requires one group per unique evaluation row")
+        panels[name] = (set(ids), set(groups))
+    def summarize(names):
+        seen_rows, seen_groups, entries = set(), set(), {}
+        for name in (PRIMARY, *CONFIRMATIONS):
+            if name not in names:
+                continue
+            rows, groups = panels[name]
+            entries[name] = dict(rows=len(rows), groups=len(groups), reused_rows=len(rows & seen_rows),
+                                 reused_groups=len(groups & seen_groups))
+            seen_rows.update(rows)
+            seen_groups.update(groups)
+        return entries
+    used = summarize(selection)
+    other = [v for name, v in used.items() if name != PRIMARY]
+    disjoint = bool(other) and all(v['reused_groups'] == v['reused_rows'] == 0 for v in other)
+    return dict(different_confirmation_split_used=bool(other), independent_confirmation_observed=disjoint,
+                evaluation_coverage=dict(executed=summarize(executed), used_for_selection=used,
+                    scope="Group and row overlap among held-out panels; estimator training sets may overlap."))
+
+
 def finish(task, history, state, trusted, allowed, caps, directory, executor, logger, *, matched_finalists=False):
     if matched_finalists:
         from .ab_finalists import finalist_review
@@ -194,7 +227,7 @@ def finish(task, history, state, trusted, allowed, caps, directory, executor, lo
     decision.update(b_scheduler_review=review,
         selection_rule=review['selection_rule'] if matched_finalists else
             'Best of initial three; replace on two paired wins and mean gain >= 0.002',
-        independent_confirmation_observed=any(s != PRIMARY for s in basis))
+        **confirmation_coverage(trusted, [r['split_id'] for r in history if r['status']=='completed'], basis))
     logger.write_json('confirmation.json', decision)
     row = lookup[chosen, PRIMARY]
     model = joblib.load(directory / f"trial_{row['trial']}.joblib")['model']
@@ -215,8 +248,10 @@ def finish_complement(task, history, state, trusted, directory, executor, logger
     anchor=evidence['members'][0]
     row=next(r for r in primary if r['candidate']==anchor)
     model=joblib.load(directory/f"trial_{row['trial']}.joblib")['model']
+    used = [PRIMARY, CONFIRMATIONS[0]] if evidence['confirmation_rows'] else [PRIMARY]
     decision=dict(enabled=True,valid_confirmation=bool(evidence['confirmation_rows']),
-        independent_confirmation_observed=bool(evidence['confirmation_rows']),primary_metric='accuracy',
+        **confirmation_coverage(trusted, [r['split_id'] for r in history if r['status']=='completed'], used),
+        primary_metric='accuracy',
         selected_candidate='equal_soft_vote' if evidence['promoted'] else anchor,
         selection_score=evidence['portfolio_score'],selection_rule=(
             'Uncertainty-based opening with matched pair and single controls' if adaptive else 'Matched two-split complement screening'),

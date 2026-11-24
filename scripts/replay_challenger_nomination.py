@@ -20,6 +20,7 @@ from tools.portfolio_training import configure
 from tools.preference_handoff import binary, changes
 
 PLAN = ROOT / "docs/batches/challenger_nomination_replay_plan_20261124_zh.md"
+ROTATION_PLAN = ROOT / "docs/batches/challenger_nomination_rotation_plan_20261124_zh.md"
 HISTORY = ROOT / "research/unified_encoder_fusion_1124"
 
 
@@ -73,7 +74,13 @@ def evaluate_rows(p, rows, choice):
     return c
 
 
-def freeze(out, archive, weights=None, cache=None):
+def orient(parts, rotate):
+    if not rotate:
+        return parts
+    return dict(parts, learn=parts["outer"], outer=parts["learn"])
+
+
+def freeze(out, archive, weights=None, cache=None, *, rotate=False):
     out.mkdir(parents=True, exist_ok=True)
     task, groups, splits = context(archive)
     if weights is not None:
@@ -84,6 +91,7 @@ def freeze(out, archive, weights=None, cache=None):
             dest = out / f"fold_{i}"
             dest.mkdir(exist_ok=True)
             p = probabilities(i, roles)
+            roles, p = orient(roles, rotate), orient(p, rotate)
             learn = roles["learn"]
             blocks = {k: [task.X_train[j] for j in ids] for k, ids in roles.items() if k != "base"}
             gradients = dest / "screen.npz"
@@ -113,16 +121,17 @@ def freeze(out, archive, weights=None, cache=None):
             else:
                 save_csv(rows, roles["outer"], columns)
             records.append({k: sha(dest / k) for k in ("screen.npz", "choice.json", "rows.csv")})
-    save(out / "frozen.json", dict(folds=records, plan=sha(PLAN), archive_seal=sha(HISTORY / "frozen.json"),
+    save(out / "frozen.json", dict(folds=records, plan=sha(ROTATION_PLAN if rotate else PLAN), archive_seal=sha(HISTORY / "frozen.json"),
                                   new_classifier_fits=0, model_api_calls=0, supervised_nominations=10))
 
 
-def score(out, archive):
+def score(out, archive, *, rotate=False):
     task, groups, splits = context(archive)
     sealed = read(out / "frozen.json")
-    require(sealed["plan"] == sha(PLAN), "Replay plan changed")
+    require(sealed["plan"] == sha(ROTATION_PLAN if rotate else PLAN), "Replay plan changed")
     cols, truth, used_groups, folds = {}, [], [], []
     for i, roles in enumerate(splits):
+        roles = orient(roles, rotate)
         folder = out / f"fold_{i}"
         require(all(sha(folder / name) == v for name, v in sealed["folds"][i].items()), "Replay output changed")
         pred = load_export(folder / "rows.csv")
@@ -139,7 +148,8 @@ def score(out, archive):
     y = np.asarray(truth)
     predictions = {k: np.concatenate(v) for k, v in cols.items()}
     arms = {k: comparison(predictions["baseline"], v, y, used_groups) for k, v in predictions.items()}
-    require(len(y) == 6608 and arms["baseline"]["correct"] == read(HISTORY / "result.json")["pooled"]["methods"]["baseline"]["correct"],
+    archived = read(HISTORY / ("rotation_result.json" if rotate else "result.json"))["pooled"]["methods"]["baseline"]
+    require(len(y) == 6608 and arms["baseline"]["correct"] == archived["correct"],
             "Original archived baseline or coverage differs")
     direct = comparison(predictions["proxy"], predictions["observed"], y, used_groups)
     save(out / "result.json", dict(frozen=sha(out / "frozen.json"), rows=len(y), groups=len(set(used_groups)),
@@ -154,8 +164,9 @@ if __name__ == "__main__":
     p.add_argument("archive", type=Path)
     p.add_argument("--weights", type=Path)
     p.add_argument("--cache", type=Path)
+    p.add_argument("--rotate", action="store_true")
     args = p.parse_args()
     if args.stage == "freeze":
-        freeze(args.out, args.archive, args.weights, args.cache)
+        freeze(args.out, args.archive, args.weights, args.cache, rotate=args.rotate)
     else:
-        score(args.out, args.archive)
+        score(args.out, args.archive, rotate=args.rotate)

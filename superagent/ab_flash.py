@@ -69,7 +69,8 @@ CALIBRATED_INSTRUCTION = ('Choose exactly one available candidate for the PRIMAR
 
 
 def context_for(state, capabilities, eligible_ids, checked, contract='strict-v1',feedback_view='full'):
-    if contract not in ('strict-v1','calibrated-v2'):raise ValueError('Unknown proposal contract')
+    if contract not in ('strict-v1','calibrated-v2','grounded-v1'):raise ValueError('Unknown proposal contract')
+    if contract=='grounded-v1' and not checked:raise ValueError('Grounded proposals require checked history')
     if feedback_view not in ('full','compact') or feedback_view=='compact' and not checked:
         raise ValueError('Compact feedback requires checked history')
     eligible = set(eligible_ids)
@@ -90,7 +91,7 @@ def context_for(state, capabilities, eligible_ids, checked, contract='strict-v1'
         budget={k:state['budget'][k] for k in budget_fields}, instruction=INSTRUCTION)
     if 'training_profile' in state:
         value['training_profile']=deepcopy(state['training_profile'])
-    if contract=='calibrated-v2':
+    if contract in ('calibrated-v2','grounded-v1'):
         value.update(context_version='ab-history-calibrated-v2',instruction=CALIBRATED_INSTRUCTION)
     if checked:
         value['checks'] = [{k:deepcopy(r.get(k)) for k in ('trial','split_id','metric_identity',
@@ -98,11 +99,17 @@ def context_for(state, capabilities, eligible_ids, checked, contract='strict-v1'
         value['memory'] = build_memory(state['history'], menu, state['task']['metric']['name'])
     if feedback_view=='compact':
         from .compact_feedback import compact_context
-        return compact_context(value)
+        value=compact_context(value)
+    if contract=='grounded-v1':
+        from .grounded_proposal import augment_context
+        value=augment_context(value,state,capabilities)
     return value
 
 
 def validate_proposal(answer, state, capabilities, eligible_ids, contract='strict-v1'):
+    if contract=='grounded-v1':
+        from .grounded_proposal import assess
+        return assess(answer,state,capabilities,eligible_ids)[0]
     if contract not in ('strict-v1','calibrated-v2'):raise ValueError('Unknown proposal contract')
     fields = {'candidate','task_kind','configuration_claim','reason','review','hypothesis',
               'evidence_trials','expected_change','slice_expectation'}
@@ -153,12 +160,41 @@ class FlashPicker:
         self.last_proposal = None
         self.contract=contract
         self.feedback_view=feedback_view
+        self.grounding_issues=[]
+        self.last_grounding_report=None
 
     def choose(self, state, capabilities, eligible_ids):
         self.last_proposal = None
+        if self.contract=='grounded-v1':return self.choose_grounded(state,capabilities,eligible_ids)
         value = context_for(state, capabilities, eligible_ids, self.checked,self.contract,self.feedback_view)
         answer = self.client.ask(value,self.logger,'ab_checked_history' if self.checked else 'ab_raw_history')
         proposal = validate_proposal(answer,state,capabilities,eligible_ids,self.contract)
         self.last_proposal = proposal
         self.logger.event('ab_flash_proposal', trial=proposal.trial, proposal=proposal.record())
         return proposal.candidate
+
+    def choose_grounded(self,state,capabilities,eligible_ids):
+        from .grounded_proposal import assess,GroundingError
+        current=deepcopy(state);current['grounding_issues']=deepcopy(self.grounding_issues or state.get('grounding_issues',[]))
+        repair=None
+        for attempt in range(2):
+            value=context_for(current,capabilities,eligible_ids,True,'grounded-v1',self.feedback_view)
+            if repair is not None:value['semantic_repair']=repair
+            # Never catch ask failures: transport, JSON parsing and usage failures stop.
+            answer=self.client.ask(value,self.logger,'ab_grounded_history' if attempt==0 else 'ab_grounded_semantic_repair')
+            try:proposal,report=assess(answer,current,capabilities,eligible_ids)
+            except GroundingError as error:
+                self.last_grounding_report=error.report;self.grounding_issues=deepcopy(error.report['issues'])
+                self.logger.event('grounded_semantic_rejection',report=error.report,raw_proposal=answer)
+                used=getattr(self.client,'request_count',3);cap=getattr(self.client,'max_requests',3) or 3
+                can_repair=(attempt==0 and used<min(cap,3) and not getattr(self.client,'blocked',True)
+                            and getattr(self.client,'account',None) is not None)
+                if not can_repair:raise
+                repair=dict(prior_proposal=answer,errors=error.report['errors'],
+                    policy='One new semantic correction action inside original request limit; no transport retry.')
+                current['grounding_issues']=deepcopy(self.grounding_issues);current['budget']['used_llm_requests']=used
+                continue
+            self.last_proposal=proposal;self.last_grounding_report=report;self.grounding_issues=deepcopy(report['issues'])
+            self.logger.event('ab_grounded_proposal',trial=proposal.trial,proposal=proposal.record(),grounding_report=report)
+            return proposal.candidate
+        raise RuntimeError('Grounded semantic action did not produce an accepted proposal')

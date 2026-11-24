@@ -8,6 +8,7 @@ import math
 from pathlib import Path
 import platform
 import time
+from copy import deepcopy
 
 import joblib
 
@@ -48,6 +49,8 @@ def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kern
 
 
 def validate_options(args):
+    if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
+        raise ValueError('Grounded proposals require checked-history planning')
     if getattr(args,'parameter_semantics','off')!='off' and args.planner!='checked-history':
         raise ValueError('Parameter semantics diagnostics require checked-history planning')
     if args.planner not in ('local','raw-history','checked-history'):
@@ -310,7 +313,8 @@ def command(args):
             task_profile=getattr(args,'task_profile','off'),proposal_contract=getattr(args,'proposal_contract','strict-v1'),
             partial_delivery=getattr(args,'partial_delivery','off'),
             local_text_proposals=getattr(args,'local_text_proposals','off'),
-            decision_context_version='ab-history-v1' if history_mode else None,
+            decision_context_version=('ab-grounded-v1' if getattr(args,'proposal_contract','strict-v1')=='grounded-v1'
+                                      else 'ab-history-v1') if history_mode else None,
             planner_failure_policy='stop_without_retry_or_fallback', task_budget_before_run=accounting,
             project_usage_before_run=ledger.project_summary() if history_mode else None,
             incremental_run_allowance_rmb=allowance if history_mode else 0,
@@ -330,6 +334,10 @@ def command(args):
             state = dict(ab_schema_version=1, task=spec, history=history,
                          available_candidates=untried_candidates(caps, history), prediction_evidence=evidence,
                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
+            if picker and getattr(args,'proposal_contract','strict-v1')=='grounded-v1':
+                from .fact_registry import digest
+                state['grounding_binding']=dict(run_sha256=sha(directory/'run_manifest.json'),source_sha256=digest(frozen),origin='executor_record')
+                state['grounding_issues']=deepcopy(picker.grounding_issues)
             if training_profile_value is not None:state['training_profile']=training_profile_value
             number = len(history) + 1
             logger.write_json(f'state_{number}.json', state)
@@ -373,6 +381,7 @@ def command(args):
             proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
             if proposal is not None:
                 action['reason'] = proposal['reason']
+                if getattr(args,'proposal_contract','strict-v1')=='grounded-v1':action['reason']=picker.last_proposal.reason
                 action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'],*proposal['evidence_trials']]))
             logger.event('planner_routing', trial=number, action=action['action'],
                 source='local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
@@ -415,6 +424,11 @@ def command(args):
             row['explanation_audit'] = audit_explanation(proposal,history,{'id':name,'params':caps[name]['params']},
                 parameter_semantics=getattr(args,'parameter_semantics','off')=='diagnostic',
                 selected_facts={'classifier':caps[name]['estimator'],'source':'shared_ab_catalogue'}) if proposal else None
+            if proposal is not None and getattr(args,'proposal_contract','strict-v1')=='grounded-v1':
+                from .grounding_issues import confirm_execution
+                row['grounding_report']=deepcopy(picker.last_grounding_report)
+                picker.grounding_issues=confirm_execution(picker.grounding_issues,row)
+                logger.write_json('grounding_issues.json',picker.grounding_issues)
             history.append(row)
             evidence.append(dict(trial=number, candidate_id=name, split_id=split, row_id_scope=ROW_SCOPE,
                 row_ids=trusted[split]['row_ids'], predictions=raw['predictions'].tolist(),

@@ -8,6 +8,8 @@
 
 **未做**：续跑执行本身、预算继承接线、幂等去重键、以及"续跑后总账等于一次跑完"的验证——因为续跑动作还不存在。报告 batches/A150_resume_status_20261124_zh.md。
 
+续跑锚点另有结论：**从日志重建状态做不到**（`llm_usage.jsonl` 无试验编号），但 **139 个 `state_k.json` 全部是其运行的忠实前缀快照**（history/prediction_evidence/预算计数逐项对账 139/139），所以续跑应锚定最后一个状态文件。证据 `research/a150_resume/state_prefix_check.json`。
+
 ## 2026-11-24：探索广度对照，加宽无分辨收益
 
 8 条路径（2 任务 × 2 seed × 2 臂）：32 fit / 16 调用 / ¥0.203370，无新增 unknown。breadth2 = anchor + 1 次探索 + refit；breadth4 = anchor + 3 次探索 + refit。

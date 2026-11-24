@@ -1,0 +1,254 @@
+{
+  "plan": "1b80ec2d7ccc995ecaae6c1a0f4ab101e08c326176c79463f0e9afc8d12b8ed4",
+  "cases": {
+    "numbers": {
+      "package": "52a0c80a09a4adb81ec63255d18bff7493c9e2a0c05e235ebe23469ec286ad2c",
+      "same_on_rename": true,
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "roc_auc",
+        "labels": [
+          1,
+          0
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "numeric_tabular_extra_trees_leaf1",
+        "numeric_tabular_extra_trees_leaf3",
+        "numeric_tabular_logistic_C0.1",
+        "numeric_tabular_logistic_C1.0",
+        "numeric_tabular_logistic_C10.0"
+      ],
+      "excluded": {}
+    },
+    "fields": {
+      "package": "f8cec4c17717a6b5e119c64c563c04c747dacc893a7c933c5d1b3a4d69c2676b",
+      "same_on_rename": true,
+      "kind": "mixed_tabular",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "0",
+          "1",
+          "2"
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "mixed_tabular_extra_trees_leaf1",
+        "mixed_tabular_extra_trees_leaf3",
+        "mixed_tabular_logistic_C0.1",
+        "mixed_tabular_logistic_C1.0",
+        "mixed_tabular_logistic_C10.0"
+      ],
+      "excluded": {}
+    },
+    "text": {
+      "package": "c9732edafb4f3733f47ff10862d267f429c1525b18b52f99051f7c815fc12223",
+      "same_on_rename": true,
+      "kind": "single_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          "0",
+          "1"
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "minilm_text_with_lexical_features",
+        "minilm_text_with_nonlinear_lexical_features",
+        "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+        "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+        "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+        "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+        "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+        "recipe_single_text_latent_word_logistic_5fd03d4294addcee",
+        "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+        "single_char_C0.3",
+        "single_char_C3.0",
+        "single_word_C0.3",
+        "single_word_C3.0",
+        "single_word_char_C0.3",
+        "single_word_char_C3.0"
+      ],
+      "excluded": {}
+    },
+    "pixels": {
+      "package": "b118fd90b5aaf64fa2aa10c18f0c78d8e1a710bd300616ea1c10342dbf064e51",
+      "same_on_rename": true,
+      "kind": "image",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          0,
+          1,
+          2
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "image_extra_trees_leaf1",
+        "image_extra_trees_leaf3",
+        "image_gradient_histograms_logistic",
+        "image_logistic_C0.1",
+        "image_logistic_C1.0",
+        "image_logistic_C10.0",
+        "image_rbf_svm_C1.0",
+        "image_rbf_svm_C10.0"
+      ],
+      "excluded": {}
+    },
+    "equivalent": {
+      "package": "6786de4e92634c559322836b5d021ddc4556842e6bf7b889f809c68da998b2ee",
+      "same_on_rename": true,
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "symmetric_word_C0.3",
+        "symmetric_word_C3.0",
+        "symmetric_word_char_C0.3",
+        "symmetric_word_char_C3.0",
+        "unordered_char",
+        "unordered_minilm_lexical",
+        "unordered_word",
+        "unordered_word_char"
+      ],
+      "excluded": {}
+    },
+    "preference": {
+      "package": "952eac0c77c0465189d14773719a08a9e069fe4ca198c07e376d758b59f9d228",
+      "same_on_rename": true,
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "route": "challenger",
+      "candidates": [
+        "all-mpnet-base-v2",
+        "bge-small-en-v1.5",
+        "e5_small_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "minilm_text_with_lexical_features",
+        "roberta-base"
+      ],
+      "excluded": {}
+    }
+  },
+  "variations": {
+    "without_bge": {
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "route": "challenger",
+      "candidates": [
+        "all-mpnet-base-v2",
+        "e5_small_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "minilm_text_with_lexical_features",
+        "roberta-base"
+      ],
+      "excluded": {
+        "bge-small-en-v1.5": "not_installed"
+      }
+    },
+    "without_reference": {
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "route": "common",
+      "candidates": [
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "minilm_l12_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "minilm_text_with_lexical_features",
+        "minilm_text_with_nonlinear_lexical_features",
+        "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+        "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+        "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+        "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+        "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+        "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+        "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+        "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C10.0",
+        "word_C3.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C10.0",
+        "word_char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0"
+      ],
+      "excluded": {}
+    },
+    "reversed_inventory": {
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "route": "challenger",
+      "candidates": [
+        "all-mpnet-base-v2",
+        "bge-small-en-v1.5",
+        "e5_small_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity",
+        "minilm_text_with_lexical_features",
+        "roberta-base"
+      ],
+      "excluded": {}
+    }
+  },
+  "calls_before_first_fit": 15,
+  "classifier_fits": 0,
+  "model_api_calls": 0
+}

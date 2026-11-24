@@ -194,9 +194,10 @@ def verify(archive, weights=None, cache=None):
         whole, _, splits = study_splits(archive)
         if weights is not None:
             configure(weights, cache)
-        with reuse_frozen_vectors():
-            for i, (_, held) in enumerate(splits):
-                packet = packets / f"fold_{i}" / "train.zip"
+        for i, (_, held) in enumerate(splits):
+            packet = packets / f"fold_{i}" / "train.zip"
+            # Native folds train in separate processes. Match their input batches as well as their weights.
+            with reuse_frozen_vectors():
                 verify_fold(PUBLIC / f"fold_{i}", packet, load_training_task(packet),
                             [whole.X_train[j] for j in held], verify_features=weights is not None)
         score(PUBLIC, archive)

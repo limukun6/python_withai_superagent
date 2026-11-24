@@ -1,0 +1,392 @@
+{
+  "base_configs": 15,
+  "model": "9f68f414684c93411d566d1663bbefe55c0741004940a432833b01429807234c",
+  "winner": "catboost_depth4_reg10.0",
+  "winner_generated": false,
+  "initial_generated": 21,
+  "actual_fits": 10,
+  "physical": [
+    {
+      "classifier": "GradientBoostingClassifier",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "logistic_C0.05"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "open_SVC_69017f15d2699aff3814"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg10.0"
+    },
+    {
+      "classifier": "GradientBoostingClassifier",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg10.0"
+    },
+    {
+      "classifier": "GradientBoostingClassifier",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg10.0"
+    },
+    {
+      "classifier": "RandomForestClassifier",
+      "candidate": "open_RandomForestClassifier_90f0e6293cefb51d11dc"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg10.0"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "logistic_C0.05",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_SVC_69017f15d2699aff3814",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth4_reg10.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7442 and 0.7394; hard predictions differ on 195/1040 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "catboost_depth4_reg10.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7442 and 0.7394; hard predictions differ on 195/1040 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.7442 and 0.7394; hard predictions differ on 195/1040 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0038). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "catboost_depth4_reg10.0",
+      "split_id": "confirmation_2",
+      "reason": "Comparable primary accuracy 0.7442 and 0.7394; hard predictions differ on 195/1040 aligned rows (paired hard-label disagreement). The first replication did not resolve the primary ordering (gap -0.0038). Complete a matched pair on confirmation_2.",
+      "evidence_trials": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_RandomForestClassifier_90f0e6293cefb51d11dc",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        1,
+        4
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "actual_class": "GradientBoostingClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.7442307692307693,
+      "generated": true,
+      "specification": {
+        "kind": "categorical_tabular",
+        "semantics": null,
+        "class": "GradientBoostingClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_estimators": 192,
+          "max_depth": 12,
+          "min_samples_leaf": 1
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_categorical_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "logistic_C0.05",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.675,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "open_SVC_69017f15d2699aff3814",
+      "actual_class": "SVC",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.7134615384615385,
+      "generated": true,
+      "specification": {
+        "kind": "categorical_tabular",
+        "semantics": null,
+        "class": "SVC",
+        "kwargs": {
+          "random_state": 42,
+          "C": 0.706977,
+          "cache_size": 128,
+          "max_iter": 1500
+        },
+        "projection": "latent",
+        "dimensions": 52,
+        "representation": "latent_categorical_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "explore",
+      "candidate": "catboost_depth4_reg10.0",
+      "actual_class": "CatBoostClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.739423076923077,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "step": 5,
+      "action": "confirm",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "actual_class": "GradientBoostingClassifier",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.7074569789674953,
+      "generated": true,
+      "specification": {
+        "kind": "categorical_tabular",
+        "semantics": null,
+        "class": "GradientBoostingClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_estimators": 192,
+          "max_depth": 12,
+          "min_samples_leaf": 1
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_categorical_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        4
+      ]
+    },
+    {
+      "step": 6,
+      "action": "confirm",
+      "candidate": "catboost_depth4_reg10.0",
+      "actual_class": "CatBoostClassifier",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.7112810707456979,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "step": 7,
+      "action": "confirm",
+      "candidate": "open_GradientBoostingClassifier_3e4582743fe588af39ee",
+      "actual_class": "GradientBoostingClassifier",
+      "split": "confirmation_2",
+      "metric": "accuracy",
+      "score": 0.7240384615384615,
+      "generated": true,
+      "specification": {
+        "kind": "categorical_tabular",
+        "semantics": null,
+        "class": "GradientBoostingClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_estimators": 192,
+          "max_depth": 12,
+          "min_samples_leaf": 1
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_categorical_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "step": 8,
+      "action": "confirm",
+      "candidate": "catboost_depth4_reg10.0",
+      "actual_class": "CatBoostClassifier",
+      "split": "confirmation_2",
+      "metric": "accuracy",
+      "score": 0.7317307692307692,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "step": 9,
+      "action": "explore",
+      "candidate": "open_RandomForestClassifier_90f0e6293cefb51d11dc",
+      "actual_class": "RandomForestClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6596153846153846,
+      "generated": true,
+      "specification": {
+        "kind": "categorical_tabular",
+        "semantics": null,
+        "class": "RandomForestClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "n_estimators": 192,
+          "max_depth": 7,
+          "min_samples_leaf": 19
+        },
+        "projection": "latent",
+        "dimensions": 52,
+        "representation": "latent_categorical_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "actions_replayed": 10,
+  "api_calls": 0
+}

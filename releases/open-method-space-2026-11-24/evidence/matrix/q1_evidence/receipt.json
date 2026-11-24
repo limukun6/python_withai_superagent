@@ -1,0 +1,145 @@
+{
+  "base_configs": 7,
+  "model": "6e7a068ef32c0c1420e31288ce3aa355d553f35f84e3ac8abe34ffb901b67016",
+  "winner": "numeric_tabular_extra_trees_leaf1",
+  "winner_generated": false,
+  "initial_generated": 0,
+  "actual_fits": 5,
+  "physical": [
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf3"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "numeric_tabular_logistic_C10.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "numeric_tabular_rbf_svm_C1.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "numeric_tabular_extra_trees_leaf1"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_extra_trees_leaf3",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_logistic_C10.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_extra_trees_leaf1",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        3,
+        1
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "numeric_tabular_extra_trees_leaf3",
+      "actual_class": "ExtraTreesClassifier",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 1.0,
+      "generated": false,
+      "specification": null,
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "numeric_tabular_logistic_C10.0",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.9691228070175438,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "numeric_tabular_extra_trees_leaf1",
+      "actual_class": "ExtraTreesClassifier",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 1.0,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "explore",
+      "candidate": "numeric_tabular_rbf_svm_C1.0",
+      "actual_class": "SVC",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 1.0,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "actions_replayed": 5,
+  "api_calls": 0
+}

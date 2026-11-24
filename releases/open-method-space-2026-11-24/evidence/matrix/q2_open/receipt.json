@@ -1,0 +1,224 @@
+{
+  "base_configs": 16,
+  "model": "2cd2fd6a1dc451fc43298ab7b198a31679d020d7d1f93bfb58e42bb82b41ee34",
+  "winner": "open_LogisticRegression_9cb0674482820cf98578",
+  "winner_generated": true,
+  "initial_generated": 21,
+  "actual_fits": 6,
+  "physical": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_9cb0674482820cf98578"
+    },
+    {
+      "classifier": "QuadraticDiscriminantAnalysis",
+      "candidate": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_9cb0674482820cf98578"
+    },
+    {
+      "classifier": "QuadraticDiscriminantAnalysis",
+      "candidate": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_9cb0674482820cf98578"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "open_LogisticRegression_9cb0674482820cf98578",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "open_LogisticRegression_9cb0674482820cf98578",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary macro_f1 0.8883 and 0.8795; hard predictions differ on 28/323 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary macro_f1 0.8883 and 0.8795; hard predictions differ on 28/323 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        2,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "open_LogisticRegression_9cb0674482820cf98578",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8882546272271233,
+      "generated": true,
+      "specification": {
+        "kind": "single_text",
+        "semantics": null,
+        "class": "LogisticRegression",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "C": 1.864242
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_single_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457",
+      "actual_class": "QuadraticDiscriminantAnalysis",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8794776119402985,
+      "generated": true,
+      "specification": {
+        "kind": "single_text",
+        "semantics": null,
+        "class": "QuadraticDiscriminantAnalysis",
+        "kwargs": {},
+        "projection": "latent",
+        "dimensions": 34,
+        "representation": "latent_single_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "minilm_text_with_lexical_features",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8451829365713373,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "confirm",
+      "candidate": "open_LogisticRegression_9cb0674482820cf98578",
+      "actual_class": "LogisticRegression",
+      "split": "confirmation_1",
+      "metric": "macro_f1",
+      "score": 0.9501976284584981,
+      "generated": true,
+      "specification": {
+        "kind": "single_text",
+        "semantics": null,
+        "class": "LogisticRegression",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "C": 1.864242
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_single_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 5,
+      "action": "confirm",
+      "candidate": "open_QuadraticDiscriminantAnalysis_bf0975d3567205e94457",
+      "actual_class": "QuadraticDiscriminantAnalysis",
+      "split": "confirmation_1",
+      "metric": "macro_f1",
+      "score": 0.8076923076923077,
+      "generated": true,
+      "specification": {
+        "kind": "single_text",
+        "semantics": null,
+        "class": "QuadraticDiscriminantAnalysis",
+        "kwargs": {},
+        "projection": "latent",
+        "dimensions": 34,
+        "representation": "latent_single_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "actions_replayed": 6,
+  "api_calls": 0
+}

@@ -1,0 +1,172 @@
+{
+  "base_configs": 8,
+  "model": "d187de411107ec984195535c886222e132af60d00a2138ac15f4bc4126253ae1",
+  "winner": "image_extra_trees_leaf1",
+  "winner_generated": false,
+  "initial_generated": 0,
+  "actual_fits": 6,
+  "physical": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "image_logistic_C1.0"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "image_rbf_svm_C10.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "image_extra_trees_leaf1"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "image_extra_trees_leaf1"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "image_rbf_svm_C10.0"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "image_extra_trees_leaf1"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "image_logistic_C1.0",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "image_rbf_svm_C10.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "image_extra_trees_leaf1",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "image_extra_trees_leaf1",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.9824 and 0.9789; hard predictions differ on 8/284 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "image_rbf_svm_C10.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.9824 and 0.9789; hard predictions differ on 8/284 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        2,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "image_logistic_C1.0",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.9647887323943662,
+      "generated": false,
+      "specification": null,
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "image_rbf_svm_C10.0",
+      "actual_class": "SVC",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.9788732394366197,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "image_extra_trees_leaf1",
+      "actual_class": "ExtraTreesClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.9823943661971831,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "confirm",
+      "candidate": "image_extra_trees_leaf1",
+      "actual_class": "ExtraTreesClassifier",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.9859154929577465,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        3,
+        2
+      ]
+    },
+    {
+      "step": 5,
+      "action": "confirm",
+      "candidate": "image_rbf_svm_C10.0",
+      "actual_class": "SVC",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.9859154929577465,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        3,
+        2,
+        4
+      ]
+    }
+  ],
+  "actions_replayed": 6,
+  "api_calls": 0
+}

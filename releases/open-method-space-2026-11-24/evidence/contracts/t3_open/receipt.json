@@ -1,0 +1,155 @@
+{
+  "base_configs": 8,
+  "model": "20197e05280f1116c0d186b5c0f65f0a3a572b5a318debc9edf7288d4dd2e1dd",
+  "winner": "open_LogisticRegression_ce21c305d9a0701fdd36",
+  "winner_generated": true,
+  "initial_generated": 22,
+  "actual_fits": 4,
+  "physical": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_ce21c305d9a0701fdd36"
+    },
+    {
+      "classifier": "SGDClassifier",
+      "candidate": "open_SGDClassifier_e7b7c8a0628b1192b7b7"
+    },
+    {
+      "classifier": "HistGradientBoostingClassifier",
+      "candidate": "open_HistGradientBoostingClassifier_48ba6bacd38bc3b9825d"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_ce21c305d9a0701fdd36"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "open_LogisticRegression_ce21c305d9a0701fdd36",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_SGDClassifier_e7b7c8a0628b1192b7b7",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_HistGradientBoostingClassifier_48ba6bacd38bc3b9825d",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "open_LogisticRegression_ce21c305d9a0701fdd36",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6333333333333333,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "symmetric",
+        "class": "LogisticRegression",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "C": 1.958725
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "open_SGDClassifier_e7b7c8a0628b1192b7b7",
+      "actual_class": "SGDClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6333333333333333,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "symmetric",
+        "class": "SGDClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "alpha": 0.380592
+        },
+        "projection": "fourier",
+        "dimensions": 15,
+        "representation": "fourier_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "open_HistGradientBoostingClassifier_48ba6bacd38bc3b9825d",
+      "actual_class": "HistGradientBoostingClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.5,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "symmetric",
+        "class": "HistGradientBoostingClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "max_depth": 6,
+          "min_samples_leaf": 2
+        },
+        "projection": "latent",
+        "dimensions": 15,
+        "representation": "latent_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    }
+  ],
+  "actions_replayed": 4,
+  "api_calls": 0
+}

@@ -1,0 +1,359 @@
+{
+  "base_configs": 40,
+  "model": "daa41083fcc18b6144afdde270b97c07b060dafc15416cc2ff6e484248fa838e",
+  "winner": "minilm_text_with_lexical_features",
+  "winner_generated": false,
+  "initial_generated": 21,
+  "actual_fits": 10,
+  "physical": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_527b18444e791eca6893"
+    },
+    {
+      "classifier": "LinearSVC",
+      "candidate": "word_char_stats_svm_C0.2"
+    },
+    {
+      "classifier": "SVC",
+      "candidate": "open_SVC_39e965970160e1c99579"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "open_LogisticRegression_527b18444e791eca6893"
+    },
+    {
+      "classifier": "LinearSVC",
+      "candidate": "word_char_stats_svm_C0.2"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "style_tree_depth3"
+    },
+    {
+      "classifier": "BernoulliNB",
+      "candidate": "binary_word_direction_naive_bayes"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "open_LogisticRegression_527b18444e791eca6893",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "word_char_stats_svm_C0.2",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_SVC_39e965970160e1c99579",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "open_LogisticRegression_527b18444e791eca6893",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6607 and 0.6607; hard predictions differ on 140/1503 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "word_char_stats_svm_C0.2",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6607 and 0.6607; hard predictions differ on 140/1503 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        2,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty. Skipped replication of word_char_stats_svm_C0.2 against open_LogisticRegression_527b18444e791eca6893. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.6607 and 0.6886; hard predictions differ on 290/1503 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        1,
+        6,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "style_tree_depth3",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "binary_word_direction_naive_bayes",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        6,
+        1
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "open_LogisticRegression_527b18444e791eca6893",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6606786427145709,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "preference",
+        "class": "LogisticRegression",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "C": 2.740491
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": true
+      },
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "word_char_stats_svm_C0.2",
+      "actual_class": "LinearSVC",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6606786427145709,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "open_SVC_39e965970160e1c99579",
+      "actual_class": "SVC",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.5316034597471723,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "preference",
+        "class": "SVC",
+        "kwargs": {
+          "random_state": 42,
+          "C": 0.654613,
+          "cache_size": 128,
+          "max_iter": 1500
+        },
+        "projection": "latent",
+        "dimensions": 58,
+        "representation": "latent_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": true
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "confirm",
+      "candidate": "open_LogisticRegression_527b18444e791eca6893",
+      "actual_class": "LogisticRegression",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.6699539776462854,
+      "generated": true,
+      "specification": {
+        "kind": "pair_text",
+        "semantics": "preference",
+        "class": "LogisticRegression",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "C": 2.740491
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_pair_text",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": true
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 5,
+      "action": "confirm",
+      "candidate": "word_char_stats_svm_C0.2",
+      "actual_class": "LinearSVC",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.6666666666666666,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "step": 6,
+      "action": "explore",
+      "candidate": "minilm_text_with_lexical_features",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.688622754491018,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "step": 7,
+      "action": "confirm",
+      "candidate": "minilm_text_with_lexical_features",
+      "actual_class": "LogisticRegression",
+      "split": "confirmation_1",
+      "metric": "accuracy",
+      "score": 0.7146614069690993,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        6,
+        4
+      ]
+    },
+    {
+      "step": 8,
+      "action": "explore",
+      "candidate": "style_tree_depth3",
+      "actual_class": "CatBoostClassifier",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.5934797072521624,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3,
+        6
+      ]
+    },
+    {
+      "step": 9,
+      "action": "explore",
+      "candidate": "binary_word_direction_naive_bayes",
+      "actual_class": "BernoulliNB",
+      "split": "primary",
+      "metric": "accuracy",
+      "score": 0.6447105788423154,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ]
+    }
+  ],
+  "actions_replayed": 10,
+  "api_calls": 0
+}

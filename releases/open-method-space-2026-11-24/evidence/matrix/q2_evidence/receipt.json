@@ -1,0 +1,145 @@
+{
+  "base_configs": 16,
+  "model": "1beed51372021ce8b15454e4180ff3c65a538d9df17f207b73b7b2047d2e79cf",
+  "winner": "single_word_char_C3.0",
+  "winner_generated": false,
+  "initial_generated": 0,
+  "actual_fits": 5,
+  "physical": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "single_word_char_C3.0"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_nonlinear_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "single_char_C3.0"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "single_word_char_C3.0"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "single_word_char_C3.0",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_nonlinear_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "single_char_C3.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        1,
+        4
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "single_word_char_C3.0",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.9195182724252491,
+      "generated": false,
+      "specification": null,
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "minilm_text_with_nonlinear_lexical_features",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8800174806074511,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8715989399293287,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 4,
+      "action": "explore",
+      "candidate": "single_char_C3.0",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "macro_f1",
+      "score": 0.8882546272271233,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "actions_replayed": 5,
+  "api_calls": 0
+}

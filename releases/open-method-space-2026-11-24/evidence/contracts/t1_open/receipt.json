@@ -1,0 +1,141 @@
+{
+  "base_configs": 5,
+  "model": "4b3cf9c3ddf5b05e3902a2d37e6b107474e141f1f475ecfbcda2c35a646faf55",
+  "winner": "mixed_tabular_logistic_C10.0",
+  "winner_generated": false,
+  "initial_generated": 14,
+  "actual_fits": 4,
+  "physical": [
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "open_ExtraTreesClassifier_209e4b8a3b1413c1c022"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "mixed_tabular_logistic_C10.0"
+    },
+    {
+      "classifier": "MLPClassifier",
+      "candidate": "open_MLPClassifier_d246a781d1c613f43d25"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "mixed_tabular_logistic_C10.0"
+    }
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "open_ExtraTreesClassifier_209e4b8a3b1413c1c022",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "mixed_tabular_logistic_C10.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "open_MLPClassifier_d246a781d1c613f43d25",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Search is closed; preserve the recorded final refit allowance.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "step": 1,
+      "action": "explore",
+      "candidate": "open_ExtraTreesClassifier_209e4b8a3b1413c1c022",
+      "actual_class": "ExtraTreesClassifier",
+      "split": "primary",
+      "metric": "roc_auc",
+      "score": 0.6127946127946128,
+      "generated": true,
+      "specification": {
+        "kind": "mixed_tabular",
+        "semantics": null,
+        "class": "ExtraTreesClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "n_jobs": 1,
+          "n_estimators": 49,
+          "max_depth": 7,
+          "min_samples_leaf": 1
+        },
+        "projection": "native",
+        "dimensions": 2,
+        "representation": "native_mixed_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": []
+    },
+    {
+      "step": 2,
+      "action": "explore",
+      "candidate": "mixed_tabular_logistic_C10.0",
+      "actual_class": "LogisticRegression",
+      "split": "primary",
+      "metric": "roc_auc",
+      "score": 0.7173400673400674,
+      "generated": false,
+      "specification": null,
+      "prior_observations": [
+        1
+      ]
+    },
+    {
+      "step": 3,
+      "action": "explore",
+      "candidate": "open_MLPClassifier_d246a781d1c613f43d25",
+      "actual_class": "MLPClassifier",
+      "split": "primary",
+      "metric": "roc_auc",
+      "score": 0.6816498316498317,
+      "generated": true,
+      "specification": {
+        "kind": "mixed_tabular",
+        "semantics": null,
+        "class": "MLPClassifier",
+        "kwargs": {
+          "random_state": 42,
+          "alpha": 0.375257
+        },
+        "projection": "fourier",
+        "dimensions": 12,
+        "representation": "fourier_mixed_tabular",
+        "runtime_composed": true,
+        "classifier_fits_per_evaluation": 1,
+        "swap_augmentation": false
+      },
+      "prior_observations": [
+        1,
+        2
+      ]
+    }
+  ],
+  "actions_replayed": 4,
+  "api_calls": 0
+}

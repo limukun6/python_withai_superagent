@@ -1,0 +1,226 @@
+{
+  "cases": [
+    {
+      "case": "after_trial",
+      "status": "recovered",
+      "mode": "verified_partial_checkpoint",
+      "delivery_status": "partial",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [],
+        "known_completed_classifier_fits": 1,
+        "additional_past_fit_cost_unknown": false,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": []
+    },
+    {
+      "case": "before_refit",
+      "status": "recovered",
+      "mode": "verified_partial_checkpoint",
+      "delivery_status": "partial",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          },
+          {
+            "file": "trial_2.fits.json",
+            "sha256": "b8354d62346e1d371f2c93a7a2e9bc5141684dd0e0a50f0bf0abf873fa3496ac",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [],
+        "known_completed_classifier_fits": 2,
+        "additional_past_fit_cost_unknown": false,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": []
+    },
+    {
+      "case": "unknown_worker",
+      "status": "recovered",
+      "mode": "verified_partial_checkpoint",
+      "delivery_status": "partial",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          },
+          {
+            "file": "trial_2.fits.json",
+            "sha256": "b8354d62346e1d371f2c93a7a2e9bc5141684dd0e0a50f0bf0abf873fa3496ac",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [
+          "trial_3.admission.json"
+        ],
+        "known_completed_classifier_fits": 2,
+        "additional_past_fit_cost_unknown": true,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": []
+    },
+    {
+      "case": "torn_state",
+      "status": "recovered",
+      "mode": "verified_partial_checkpoint",
+      "delivery_status": "partial",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          },
+          {
+            "file": "trial_2.fits.json",
+            "sha256": "b8354d62346e1d371f2c93a7a2e9bc5141684dd0e0a50f0bf0abf873fa3496ac",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [],
+        "known_completed_classifier_fits": 2,
+        "additional_past_fit_cost_unknown": false,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": [
+        "state_3.json"
+      ]
+    },
+    {
+      "case": "corrupt_model",
+      "status": "expected_rejection",
+      "error": "No module named 'nterrupted write: not a valid mode'"
+    },
+    {
+      "case": "wrong_task",
+      "status": "expected_rejection",
+      "error": "Original training archive digest differs"
+    },
+    {
+      "case": "full_export",
+      "status": "recovered",
+      "mode": "existing_frozen_selection",
+      "delivery_status": "complete",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "refit_component_0.fits.json",
+            "sha256": "b8354d62346e1d371f2c93a7a2e9bc5141684dd0e0a50f0bf0abf873fa3496ac",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          },
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          },
+          {
+            "file": "trial_2.fits.json",
+            "sha256": "b8354d62346e1d371f2c93a7a2e9bc5141684dd0e0a50f0bf0abf873fa3496ac",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [],
+        "known_completed_classifier_fits": 3,
+        "additional_past_fit_cost_unknown": false,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": []
+    },
+    {
+      "case": "repeat_restore",
+      "status": "recovered",
+      "mode": "verified_partial_checkpoint",
+      "delivery_status": "partial",
+      "rows": 32,
+      "isolated_identical": true,
+      "inherited_resources": {
+        "inherited_worker_receipts": [
+          {
+            "file": "trial_1.fits.json",
+            "sha256": "a4d5ce395fbd12cbe87cbc3d7f62e102f9d8eefdbc48fffbcb33f180f73fe3a2",
+            "status": "completed",
+            "attempted": 1,
+            "completed": 1
+          }
+        ],
+        "incomplete_or_unknown_worker_files": [],
+        "known_completed_classifier_fits": 1,
+        "additional_past_fit_cost_unknown": false,
+        "new_classifier_fits": 0,
+        "new_API_requests": 0,
+        "training_resume_supported": false,
+        "original_global_API_ledger_modified": false
+      },
+      "ignored_incomplete_states": []
+    },
+    {
+      "case": "wrong_source",
+      "status": "expected_rejection",
+      "error": "Exact original training source is required"
+    }
+  ],
+  "passed": 9,
+  "total": 9,
+  "source_run_unchanged": true,
+  "API_ledger_unchanged": true,
+  "actual_power_loss_tested": false,
+  "training_resume_supported": false
+}

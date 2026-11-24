@@ -8,6 +8,7 @@ import numpy as np
 
 from scripts.unified_encoder_portfolio import training_roles
 from tools.encoder_assets import BGE, MPNET, ROBERTA
+from tools.feedback_policy_pool import evidence_pool, grouped_error
 from tools.portfolio_encoders import PortfolioFeatures, pair_key
 from tools.preference_portfolio import choose, outputs, panel, probabilities, weights
 
@@ -91,3 +92,15 @@ class EncoderPortfolioTests(unittest.TestCase):
         self.assertEqual(sum(map(len,used)),len(set.union(*used)))
         self.assertTrue(set(groups[:20]).isdisjoint(set.union(*used)))
         self.assertIsNone(training_roles(groups,labels,np.arange(8)))
+
+    def test_grouped_feedback_does_not_reward_duplicate_or_unhelpful_models(self):
+        effect = np.asarray([.1,-.1,.2,-.2])
+        self.assertAlmostEqual(grouped_error(effect,np.arange(4)),
+                               grouped_error(np.repeat(effect,3),np.repeat(np.arange(4),3)))
+        p = np.tile([.75,.75,.75,.75],(80,1))
+        x = panel(p,[("a","b")]*len(p))
+        y = x["base"]
+        choice = choose(list("abcd"),x,y,x,y)
+        pool = evidence_pool(choice,x,y,np.arange(80),x,y,np.arange(80))
+        self.assertFalse(pool["adopted"])
+        self.assertEqual(pool["deployed_weights"],{"baseline":1.})

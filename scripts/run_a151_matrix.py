@@ -44,7 +44,7 @@ def command_for(path, fixed, out, args):
             '--planner', 'checked-history', '--scheduler', path['scheduler'],
             '--portfolio', 'ab-v1', '--catalog-scope', 'full', '--preference-catalog', 'standard',
             '--parameter-semantics', 'off', '--fit-limit', str(path['fit_limit']),
-            '--seed', str(fixed['seed']), '--trial-timeout', str(fixed['trial_timeout']),
+            '--seed', str(path.get('seed', fixed.get('seed', 707))), '--trial-timeout', str(fixed['trial_timeout']),
             '--time-limit', str(fixed['time_limit']), '--partial-delivery', fixed['partial_delivery'],
             '--history-policy', 'incremental-research',
             '--api-key-file', str(args.api_key_file), '--budget-ledger', str(args.ledger),

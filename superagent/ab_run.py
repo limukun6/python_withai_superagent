@@ -268,7 +268,8 @@ def command(args):
         client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
             allowed_served_models={args.model},account=account,streaming=True)
         client.set_deadline(began+args.time_limit)
-        picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'))
+        picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'),
+                             getattr(args,'feedback_view','full'))
     history, evidence, actions = [], [], []
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
@@ -292,6 +293,7 @@ def command(args):
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
+            **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
             **({'numeric_kernel_width':numeric_width} if numeric_width is not None else {}),
             parameter_semantics=getattr(args,'parameter_semantics','off'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,

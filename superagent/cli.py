@@ -90,6 +90,9 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args,'feedback_view','full')!='full' and (args.planner!='checked-history' or
+            args.scheduler not in ('ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement')):
+        raise ValueError('Compact feedback requires the shared checked-history executor')
     if getattr(args,'numeric_kernel',False) and args.scheduler not in ('ab-v1','ab-fixed','ab-finalists'):
         raise ValueError('The numeric kernel candidate requires the shared A/B executor')
     if getattr(args, 'confidence_cascade', False) and args.scheduler not in ('ab-complement', 'ab-adaptive-complement'):
@@ -316,6 +319,8 @@ def build_parser():
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',
                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+    run.add_argument('--feedback-view',choices=['full','compact'],default='full',
+                     help='Optional lossless deduplication of checked evidence; shared checked-history only')
     run.add_argument('--numeric-kernel', action='store_true',
                      help='Offer a bounded random Fourier classifier for numeric tables')
     run.add_argument('--confidence-cascade', action='store_true',

@@ -1,5 +1,7 @@
 # 当前接续状态：2026-11-24，A151端到端验收完成，1657fit／400请求／16未知
 
+2026-11-24汇总复核：真实grounded拒绝→修复→接受及两条路径交付证据成立；两条实际均explore→explore→stop→refit，independent_confirmation_observed=false，本轮未验独立复核训练。L1/L0费用为2.4094倍（非4倍）；成功三段含单调用探测合计6fit/4API/¥.065158，6fit/3API/¥.055246仅为端到端阶段。离线3/3免fit关闭不代表实测省3fit。文档已纠正，本次0新增fit/API；不改变默认，不宣称提分或通用性。下一步可优先用少量不同类型真实任务验证表示/修复迁移，并另登记确实含confirm动作的工程验收；尚未启动。
+
 ## A151端到端验收：两条路径在压缩菜单下都跑完，6fit/3调用/¥0.055246
 
 L0（calibrated-v2，分层off）：2次搜索（anchor `word_C0.05`→`word_char_C0.05`）、1次Flash、3 fit，选中`word_char_C0.05`，内部0.6520/验证0.7011。L1（grounded-v1 + by-class）：2次搜索（anchor→`word_C0.1` 0.6216，低于anchor）、**2次Flash（第1次被拒`no_same_penalized_parameterization_and_observed_reference`，修复后8条断言全confirmed而接受）**、3 fit，选中anchor `word_C0.05`，验证0.6755。两条都`requested_planner_completed=true`、无重试、独立进程predict各3,232行、源码前后一致。

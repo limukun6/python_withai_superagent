@@ -21,6 +21,7 @@ from tools.preference_handoff import binary, changes
 from unified_agent import save, train as common_train
 
 STRATEGIES = ("pilot-accuracy", "pilot-brier")
+BACKUP_STRATEGIES = ("pilot-no-backup", "pilot-backup")
 
 
 def pilot_roles(groups, labels):
@@ -64,8 +65,77 @@ def approve(name, learning, check, n):
     return dict(nominee=name, approved=name if passed else None, confirm=check, minimum_net=minimum)
 
 
+def backup_roles(roles, groups, labels):
+    if roles is None:
+        return None
+    remaining = roles["confirm"]
+    ranked = ranked_groups(groups[remaining], "pilot-backup-check-v1/")
+    first = np.isin(groups[remaining], ranked[::2])
+    portions = {"first_check": remaining[first], "confirm": remaining[~first]}
+    if any(len(set(groups[ix])) < 4 or set(labels[ix]) != {0, 1} for ix in portions.values()):
+        return None
+    return {**roles, **portions}
+
+
+def shortlist(results):
+    first = nominate(results, "pilot-accuracy")
+    eligible = {n: row for n, row in results.items() if n != first and row["net"] > 0}
+    return first, nominate(eligible, "pilot-brier")
+
+
+def advance(first, backup, check, strategy):
+    require(strategy in BACKUP_STRATEGIES, "Invalid backup strategy")
+    if first is not None and check["net"] > 0 and check["brier_gain"] > 0:
+        return first
+    return backup if strategy == "pilot-backup" else None
+
+
+def confirmation_for(candidate, ids, names, models, task, groups):
+    if candidate is None:
+        return np.empty((0, 0)), np.array([], dtype=int), None
+    rows = rows_at(task, ids)
+    p = score_members([*models[:2], models[names.index(candidate)]], rows)
+    summary = compare_vote(p[:, :2].mean(1), p[:, 2], ties(rows), task.y_train[ids], groups[ids])
+    return p, ids, summary
+
+
+def choose_from_pilots(directory, strategy, task, names, models, groups, roles):
+    learn = roles["learn"]
+    rows = rows_at(task, learn)
+    scores = score_members(models, rows)
+    feedback = panel_scores(names, scores, rows, task.y_train[learn], groups[learn])
+    arrays = dict(learn=scores, learn_ids=learn)
+    extra = {}
+    is_backup_study = strategy in BACKUP_STRATEGIES
+    if is_backup_study:
+        selected, backup = shortlist(feedback)
+    else:
+        selected = nominate(feedback, strategy)
+    admission = dict(strategy=strategy, chosen=selected, learning=feedback, members=names,
+                     learning_rows=fingerprint(learn.tolist()))
+    if is_backup_study:
+        admission["backup"] = backup
+    save(directory / "nomination.json", admission)
+    if is_backup_study:
+        first_scores, ids, check = confirmation_for(selected, roles["first_check"], names, models, task, groups)
+        arrays.update(first_check=first_scores, first_check_ids=ids)
+        finalist = advance(selected, backup, check, strategy)
+        stage = dict(first=selected, backup=backup, first_check=check, advanced=finalist,
+                     nomination=sha(directory / "nomination.json"))
+        save(directory / "first_check.json", stage)
+        extra["first_check_sha256"] = sha(directory / "first_check.json")
+        selected = finalist
+    confirm = roles["confirm"]
+    confirmed, ids, check = confirmation_for(selected, confirm, names, models, task, groups)
+    decision = approve(selected, feedback, check, len(confirm))
+    np.savez_compressed(directory / "feedback.npz", **arrays, confirm=confirmed, confirm_ids=ids)
+    decision.update(nomination=sha(directory / "nomination.json"), feedback=sha(directory / "feedback.npz"), **extra)
+    save(directory / "decision.json", decision)
+    return decision
+
+
 def train(package, directory, weights, feature_bank=None, cache_path=None, strategy=STRATEGIES[0]):
-    require(strategy in STRATEGIES, "Invalid pilot strategy")
+    require(strategy in (*STRATEGIES, *BACKUP_STRATEGIES), "Invalid pilot strategy")
     task = load_training_task(package)
     inventory = dict(candidates=[], excluded={}, reason="weight_directory_not_configured")
     if weights is not None:
@@ -76,6 +146,8 @@ def train(package, directory, weights, feature_bank=None, cache_path=None, strat
     if names:
         groups = sample_groups(task, "shared_text")
         roles = pilot_roles(groups, task.y_train)
+        if strategy in BACKUP_STRATEGIES:
+            roles = backup_roles(roles, groups, task.y_train)
         if roles is None:
             inventory["reason"] = "insufficient_disjoint_training_groups"
     if roles is None:
@@ -104,27 +176,8 @@ def train(package, directory, weights, feature_bank=None, cache_path=None, strat
 
     with reuse_frozen_vectors():
         pilots = [fit(n, "pilot", roles["pilot"]) for n in names]
-        learn, confirm = roles["learn"], roles["confirm"]
-        learn_rows = rows_at(task, learn)
-        scores = score_members(pilots, learn_rows)
-        feedback = panel_scores(names, scores, learn_rows, task.y_train[learn], groups[learn])
-        selected = nominate(feedback, strategy)
-        nomination_path = directory / "nomination.json"
-        save(nomination_path, dict(strategy=strategy, chosen=selected, learning=feedback, members=names,
-                                   learning_rows=roles_record["learn"]["ids"]))
-        confirmed, confirmation = np.empty((0, 0)), None
-        if selected:
-            check_models = [*pilots[:2], pilots[names.index(selected)]]
-            check_rows = rows_at(task, confirm)
-            confirmed = score_members(check_models, check_rows)
-            confirmation = compare_vote(confirmed[:, :2].mean(1), confirmed[:, 2], ties(check_rows),
-                                        task.y_train[confirm], groups[confirm])
-        decision = approve(selected, feedback, confirmation, len(confirm))
-        np.savez_compressed(directory / "feedback.npz", learn=scores, learn_ids=learn,
-                            confirm=confirmed, confirm_ids=confirm if selected else np.asarray([], dtype=int))
-        decision.update(nomination=sha(nomination_path), feedback=sha(directory / "feedback.npz"))
-        save(directory / "decision.json", decision)
-        members = names[:2] + ([selected] if decision["approved"] else [])
+        decision = choose_from_pilots(directory, strategy, task, names, pilots, groups, roles)
+        members = names[:2] + ([decision["approved"]] if decision["approved"] else [])
         full = np.arange(len(task.y_train))
         final = [fit(n, "refit", full) for n in members]
         vote = PreferenceProbabilityVote("pair_text", final, np.array([0, 1]))
@@ -135,5 +188,6 @@ def train(package, directory, weights, feature_bank=None, cache_path=None, strat
          supervised_nominations=1, decision_sha256=sha(directory / "decision.json"),
          model_sha256=sha(directory / "agent/selected_model.joblib"), model_api_calls=0,
          elapsed_seconds=round(time.monotonic()-started, 4)))
-    print(strategy, "nominee", selected, "approved", decision["approved"], "fits", fits, "reused", len(actions)-fits, flush=True)
+    print(strategy, "nominee", decision["nominee"], "approved", decision["approved"], "fits", fits,
+          "reused", len(actions)-fits, flush=True)
     return 0

@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from tools.pilot_challenger import approve, nominate, panel_scores, pilot_roles
+from tools.pilot_challenger import advance, approve, backup_roles, nominate, panel_scores, pilot_roles, shortlist
 from tools.crossfit_challenger import role_indices, training_roles
 
 
@@ -56,3 +56,26 @@ class PilotChallengerTests(unittest.TestCase):
             self.assertEqual(nominate({"z": row, "a": row}, strategy), "a")
             self.assertEqual(nominate({"a": row, "z": row}, strategy), "a")
         self.assertIsNone(approve("z", {"z": row}, {"net": 1, "brier_gain": .2}, 200)["approved"])
+
+    def test_predeclared_backup_is_checked_only_if_primary_loses_first_check(self):
+        learn = {"a": dict(net=4, brier_gain=.01, brier_lower=.003),
+                 "b": dict(net=3, brier_gain=.05, brier_lower=.04),
+                 "c": dict(net=-1, brier_gain=.09, brier_lower=.06)}
+        a, b = shortlist(learn)
+        self.assertEqual((a, b), ("a", "b"))
+        good, bad = dict(net=3, brier_gain=.01), dict(net=-1, brier_gain=.03)
+        self.assertEqual(advance(a, b, good, "pilot-backup"), a)
+        self.assertEqual(advance(a, b, bad, "pilot-backup"), b)
+        self.assertIsNone(advance(a, b, bad, "pilot-no-backup"))
+        self.assertIsNone(approve(b, learn, bad, 150)["approved"])
+        self.assertEqual(approve(b, learn, good, 150)["approved"], b)
+
+    def test_final_confirmation_has_no_overlap_with_first_check(self):
+        g = np.repeat([f"g{i}" for i in range(100)], 2)
+        y = np.tile([0, 1], 100)
+        original = pilot_roles(g, y)
+        extended = backup_roles(original, g, y)
+        self.assertEqual(set(extended["confirm"]) | set(extended["first_check"]), set(original["confirm"]))
+        self.assertFalse(set(g[extended["confirm"]]) & set(g[extended["first_check"]]))
+        y[extended["first_check"]] = 1
+        self.assertIsNone(backup_roles(original, g, y))

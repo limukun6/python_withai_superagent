@@ -1,0 +1,204 @@
+{
+  "training": {
+    "entrypoint_sha256": "ff33aff094e6df8e3fe92d07d37ee53b4dbcf25eaff3cc8a965fc1c57727aca0",
+    "source_training_rows": 8301,
+    "partition_reason": "repeated text components with a class-preserving audit",
+    "model_training_rows": 6608,
+    "audit_rows": 1693,
+    "audit_seed": 41101,
+    "fit_row_ids_sha256": "d80e2a9e36c07b9bf4a373d9f1d1befa6bdd6c12949c953ef373bd86700210a8",
+    "audit_row_ids_sha256": "425d9394aaf09e66853b017f6d9283f89db0ac4d3668ed16c40c02fa6313cc12",
+    "partition": {
+      "folds": 5,
+      "heldout_fold": 0,
+      "total_groups": 6119,
+      "train_groups": 4874,
+      "heldout_groups": 1245,
+      "class_domain_preserved": true,
+      "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+      "small_data_reduction": false
+    }
+  },
+  "model": "16e0a33c05bec0b0932d1d6a40af5604bf4102b64a8837259e8a35cc5dd91f56",
+  "winner": "equal_soft_vote",
+  "members": [
+    "minilm_l12_with_corpus_familiarity",
+    "e5_small_text_with_lexical_features"
+  ],
+  "fits": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "word_C0.05"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    }
+  ],
+  "api_calls": 0,
+  "source_members_opened": [
+    "Released_Task2-Headlines_CTR/train.csv",
+    "Released_Task2-Headlines_CTR/train.csv",
+    "Released_Task2-Headlines_CTR/README.md"
+  ],
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "word_C0.05",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Finish the paired comparison and deliver the selected model or pair.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "independent_training_audit": {
+    "accuracy": 0.7306556408741879,
+    "macro_f1": 0.7305871185683576,
+    "primary_metric": "accuracy",
+    "score": 0.7306556408741879,
+    "rows": 1693,
+    "correct": 1237,
+    "scope": "training-only, after final selection",
+    "model_sha256": "16e0a33c05bec0b0932d1d6a40af5604bf4102b64a8837259e8a35cc5dd91f56",
+    "prediction_sha256": "1d96a64ad65bbaa4b3010174cb1b4e6684faf9a0d5dea4357c8e8069cc98b8ff"
+  }
+}

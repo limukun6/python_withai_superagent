@@ -1,8 +1,12 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
-## 整合分支的实验与复现入口
+## 当前统一入口
 
-当前统一配置为本地 `interleaved_routes`、四次搜索、前三名三划分复核、全训练集重训。两个发布任务使用相同配置。整合分支的发布验证、本地复验和阶段性实验协议见下列文档。此节之后的 v0.42 结果对应仓库随附的历史模型和报告。
+在仓库根目录执行 `python -m unified_agent train TASK.zip --run-dir runs/my-task`。同一命令接收原始任务包，自动处理训练划分、方法搜索、反馈和重训。两个 Released Tasks 的复现环境、成绩与逐行证据见[统一 Agent 说明](docs/UNIFIED_AGENT_20261124_zh.md)。
+
+## 历史四次搜索对照
+
+该阶段使用本地 `interleaved_routes`、四次搜索、前三名三划分复核、全训练集重训。两个发布任务使用相同配置。该阶段的发布验证、本地复验和实验协议见下列文档。此节之后的 v0.42 结果对应仓库随附的历史模型和报告。
 
 - [预算复验和当前发布验证](docs/search_budget_replication_results_zh.md)
 - [搜索分数反馈与实际复核耗时的配对协议](docs/current_stage_10h_zh.md)

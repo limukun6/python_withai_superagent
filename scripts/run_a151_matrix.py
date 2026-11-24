@@ -36,7 +36,8 @@ def read(path):
 
 
 def command_for(path, fixed, out, args):
-    extra = ['--feedback-view', fixed['feedback_view'], '--menu-view', fixed['menu_view'],
+    menu_view = path.get('menu_view', fixed.get('menu_view', 'full'))
+    extra = ['--feedback-view', fixed['feedback_view'], '--menu-view', menu_view,
              '--proposal-contract', path['contract']]
     if path['layering'] != 'off':
         extra += ['--issue-layering', path['layering']]

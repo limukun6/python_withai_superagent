@@ -1,0 +1,28 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word-only features with C=0.3 and achieved high accuracy but near-zero spam recall, so macro_f1 was dominated by the ham class. Selecting word+char features with C=3.0 broadens the representation and reduces regularization strength, directly targeting the observed minority-class failure while staying within the available shared baselines.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

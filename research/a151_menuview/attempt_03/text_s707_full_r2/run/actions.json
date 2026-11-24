@@ -1,0 +1,28 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 on the primary split used word-only logistic regression with C=0.3 and achieved macro_f1 0.498404 with class recalls [1.0, 0.030303], showing the spam class was almost never recovered. The next primary-search candidate should test a representation that adds character n-grams and uses less regularization, because character features can capture spam patterns that word-only features may miss while retaining word-level signal.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

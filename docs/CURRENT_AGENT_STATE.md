@@ -1,4 +1,12 @@
-# 当前接续状态：2026-11-24，A151探索广度对照完成，1790fit／453请求／16未知
+# 当前接续状态：2026-11-24，A150续跑执行接通，1790fit／453请求／16未知
+
+## A150续跑：`--resume-from`已接，零成本端到端验证通过
+
+`adopt()`把可续跑的中断件搬进新目录（抄trial_*.joblib、history、classifier_fits、prediction_evidence、划分负载，写`resume_from.json`记父目录与清单SHA），`ab_run`以继承的trial为起点、预算与执行器fit计数从已用开始。五条硬约束：新目录、同fit上限与seed、源码一致、任务包一致、账本已结清。
+
+零成本验证（`--planner local`，0 API）：一次跑完3fit、验证0.920173080213678；中断到1fit后续跑，**同一候选、同一验证分**，fit计账3=1继承+2新增，父目录未被改动。两个真实拦截：改过`resume.py`后源码漂移被拒；预算与执行器派发计数不一致被拒（改用父运行真实fit记录预置，不伪造占位）。
+
+未做：带LLM的续跑验证、显式幂等去重键。142项测试全绿，0 fit／0 API。报告batches/A150_resume_execution_20261124_zh.md 与 batches/A150_resume_status_20261124_zh.md。
 
 ## A151探索广度：加宽两次探索没有可分辨收益
 

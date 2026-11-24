@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from superagent.resume import BLOCKED, COMPLETE, RESUMABLE, inspect
+from superagent.resume import BLOCKED, COMPLETE, RESUMABLE, adopt, inspect
 
 SOURCES = {'ab_run.py': 'a' * 64, 'cli.py': 'b' * 64}
 
@@ -118,6 +118,36 @@ class BlockedTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             report = inspect(Path(root))
             self.assertEqual(report['status'], BLOCKED)
+
+
+class AdoptTests(unittest.TestCase):
+    def test_adoption_copies_evidence_and_records_provenance(self):
+        with tempfile.TemporaryDirectory() as root:
+            parent = make_run(root, trials=1, attempts=1, completed=1)
+            (parent / 'trial_1.joblib').write_bytes(b'fake-model')
+            target = Path(root) / 'resumed'
+            adopted = adopt(parent, target, sources_now=SOURCES)
+            self.assertTrue((target / 'history.json').is_file())
+            self.assertTrue((target / 'trial_1.joblib').is_file())
+            provenance = json.loads((target / 'resume_from.json').read_text(encoding='utf-8'))
+            self.assertEqual(provenance['adopted_trials'], [1])
+            self.assertEqual(adopted['fits_used'], 1)
+            self.assertEqual(len(adopted['history']), 1)
+            self.assertEqual(sorted(p.name for p in parent.iterdir()),
+                             ['classifier_fits.json', 'history.json', 'llm_usage.jsonl',
+                              'run_manifest.json', 'trial_1.joblib'])
+
+    def test_adoption_refuses_a_completed_run(self):
+        with tempfile.TemporaryDirectory() as root:
+            parent = make_run(root, outcome='completed')
+            with self.assertRaises(ValueError):
+                adopt(parent, Path(root) / 'resumed')
+
+    def test_adoption_refuses_to_overwrite_the_parent(self):
+        with tempfile.TemporaryDirectory() as root:
+            parent = make_run(root, trials=1, attempts=1, completed=1)
+            with self.assertRaises(ValueError):
+                adopt(parent, parent, sources_now=SOURCES)
 
 
 class CliWiringTests(unittest.TestCase):

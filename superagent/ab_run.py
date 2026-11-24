@@ -258,6 +258,17 @@ def command(args):
     logger.initialize_usage_ledger()  # Per-run zero-call log, never a replacement for the project API ledger.
     began = time.monotonic()
     frozen = sources()
+    resume_record = None
+    if getattr(args, 'resume_from', None):
+        from .resume import adopt
+        parent = Path(args.resume_from).expanduser().resolve()
+        parent_manifest = json.loads((parent / 'run_manifest.json').read_text(encoding='utf-8'))
+        if parent_manifest.get('fit_limit') != limit:
+            raise ValueError('A resume must keep the interrupted fit limit')
+        if parent_manifest.get('seed') != args.seed:
+            raise ValueError('A resume must keep the interrupted seed')
+        resume_record = adopt(parent, directory, ledger_path=(args.budget_ledger if history_mode else None),
+                              sources_now=frozen, task_archive_sha256=sha(task_path))
     training_profile_value=None
     if getattr(args,'task_profile','off')=='train':
         from .task_profile import training_facts
@@ -281,6 +292,13 @@ def command(args):
                              getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'),
                              getattr(args,'menu_view','full'))
     history, evidence, actions = [], [], []
+    if resume_record is not None:
+        history = [dict(row) for row in resume_record['history']]
+        evidence = [dict(row) for row in resume_record['evidence']]
+        logger.event('resume_adopted', **{'from': resume_record['provenance']['resumed_from'],
+                                          'adopted_trials': resume_record['provenance']['adopted_trials'],
+                                          'parent_fits': resume_record['provenance']['parent_fits'],
+                                          'parent_requests': resume_record['provenance']['parent_requests']})
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
                    local_text_proposals=getattr(args,'local_text_proposals','off'),
@@ -336,9 +354,15 @@ def command(args):
             raise ValueError('No registered executable method supports this task/semantics/dependencies')
         trusted, allowed = freeze_partitions(task, directory, args.seed, metric, preference_vote=complement)
         executor = Executor(directory, caps, metric, began, args.time_limit, args.trial_timeout, limit, logger)
-        budget = dict(fit_limit=limit, attempted_classifier_fits=0, completed_classifier_fits=0,
-                      remaining_fit_allowance=limit, reserved_final_refit=2 if complement else 1, unknown_failed_attempts=0,
-                      llm_request_limit=request_limit if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
+        if resume_record is not None:
+            executor.records = [dict(worker) for worker in resume_record['workers']]
+        adopted_fits = len(history) if resume_record is not None else 0
+        adopted_requests = resume_record['requests_used'] if resume_record is not None else 0
+        budget = dict(fit_limit=limit, attempted_classifier_fits=adopted_fits, completed_classifier_fits=adopted_fits,
+                      remaining_fit_allowance=limit - adopted_fits, reserved_final_refit=2 if complement else 1,
+                      unknown_failed_attempts=0,
+                      llm_request_limit=request_limit if history_mode else 0, used_llm_requests=adopted_requests,
+                      time_limit_seconds=args.time_limit)
         while True:
             budget['elapsed_seconds'] = time.monotonic() - began
             state = dict(ab_schema_version=1, task=spec, history=history,

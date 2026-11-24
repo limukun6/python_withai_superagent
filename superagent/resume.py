@@ -73,7 +73,7 @@ def inspect(run_dir, ledger_path=None, sources_now=None, task_archive_sha256=Non
                 'blockers': [], 'reason': 'the run already finished; a resume would repeat work',
                 'recorded_fits': recorded_fits, 'recorded_requests': recorded_requests}
 
-    if not scope:
+    if not scope and (manifest.get('llm_request_limit') or 0) > 0:
         blockers.append('the manifest does not record a task budget id')
     ledger = _ledger_state(ledger_path, scope) if scope else None
     if ledger is not None:
@@ -106,7 +106,7 @@ def inspect(run_dir, ledger_path=None, sources_now=None, task_archive_sha256=Non
     remaining_requests = None if request_limit is None else request_limit - recorded_requests
     if remaining_fits is not None and remaining_fits <= 1:
         blockers.append(f'only {remaining_fits} fit(s) remain; one is reserved for the final refit')
-    if remaining_requests is not None and remaining_requests <= 0:
+    if remaining_requests is not None and (request_limit or 0) > 0 and remaining_requests <= 0:
         blockers.append('no planning request remains')
 
     return {'status': BLOCKED if blockers else RESUMABLE,
@@ -116,3 +116,55 @@ def inspect(run_dir, ledger_path=None, sources_now=None, task_archive_sha256=Non
             'fit_limit': fit_limit, 'request_limit': request_limit,
             'remaining_fits': remaining_fits, 'remaining_requests': remaining_requests,
             'ledger': ledger}
+
+
+def adopt(parent_run_dir, target_run_dir, report=None, ledger_path=None,
+          sources_now=None, task_archive_sha256=None):
+    """Copy an interrupted run's evidence into a new directory, or refuse.
+
+    A resume must never write into the interrupted directory: the original stays
+    the record of what actually happened. Only the artifacts a continuation needs
+    are copied, and a provenance file records where they came from.
+    """
+    import hashlib
+    import shutil
+
+    parent = Path(parent_run_dir).resolve()
+    target = Path(target_run_dir).resolve()
+    if parent == target:
+        raise ValueError('A resume must write to a new directory, not the interrupted one')
+    report = report or inspect(parent, ledger_path, sources_now=sources_now,
+                               task_archive_sha256=task_archive_sha256)
+    if report['status'] != RESUMABLE:
+        raise ValueError('Refusing to adopt a run that is not resumable: '
+                         + (report.get('reason') or '; '.join(report.get('blockers') or [])))
+    target.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for artifact in sorted(parent.glob('trial_*.joblib')) + sorted(parent.glob('*.joblib')):
+        if artifact.name.startswith('trial_') or artifact.name in (
+                'primary.joblib', 'confirmation_1.joblib', 'confirmation_2.joblib'):
+            if artifact.name in copied:
+                continue
+            shutil.copy2(artifact, target / artifact.name)
+            copied.append(artifact.name)
+    for name in ('history.json', 'classifier_fits.json', 'prediction_evidence.json',
+                 'primary_split.json', 'confirmation_1_split.json', 'confirmation_2_split.json'):
+        source = parent / name
+        if source.is_file():
+            shutil.copy2(source, target / name)
+            copied.append(name)
+    history = _read(target / 'history.json') if (target / 'history.json').is_file() else []
+    evidence = _read(target / 'prediction_evidence.json') if (target / 'prediction_evidence.json').is_file() else []
+    provenance = {'resumed_from': str(parent),
+                  'parent_manifest_sha256': hashlib.sha256((parent / 'run_manifest.json').read_bytes()).hexdigest(),
+                  'adopted_files': copied, 'adopted_trials': sorted(row['trial'] for row in history),
+                  'parent_fits': report.get('recorded_fits'),
+                  'parent_requests': report.get('recorded_requests'),
+                  'next_trial': report.get('next_trial')}
+    (target / 'resume_from.json').write_text(json.dumps(provenance, indent=2, ensure_ascii=False) + '\n',
+                                            encoding='utf-8')
+    adopted_fits = _read(target / 'classifier_fits.json') if (target / 'classifier_fits.json').is_file() else {}
+    return {'history': history, 'evidence': evidence, 'provenance': provenance,
+            'workers': adopted_fits.get('workers') or [],
+            'fits_used': report.get('recorded_fits', 0),
+            'requests_used': report.get('recorded_requests', 0)}

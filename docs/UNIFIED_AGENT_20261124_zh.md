@@ -18,6 +18,8 @@ python -m unified_agent predict FEATURES.zip --run-dir runs/my-task --output del
 
 ## 在这个基线上继续做的 Task2 实验
 
+随后完成了第三模型按题接手的五折对照。统一版原交付仍为 689/940，新规则和扩大反馈量的迭代均已在训练集内部实测。[何时听第三模型的实测与可选入口](UNIFIED_CONDITIONAL_HANDOFF_20261124_zh.md)
+
 1. 将全部 8,301 对训练标题直接交给相同的内层选模器，6 次拟合后选中 12 层 MiniLM 加语料特征。指定验证为 **684/940（72.77%）**，比保留分组核对的双模型少 5 题。训练规模与选中的模型同时变化，这个对照无法单独估计多用训练数据的影响。[全量训练记录](../research/unified_release_1124/titles_full/model_frozen.json) · [指定验证](../research/unified_release_1124/full_scores.json)
 2. 用两个模型在 1,314 对确认标题上的训练外预测学习一个融合权重，MiniLM 的权重为 50.71%。在隔离的 1,693 对训练标题上，等权答对 1,237 题，改权重答对 1,236 题，改对 1 题、改错 2 题，保留等权。[训练内权重对照](../research/unified_release_1124/calibration/result.json)
 

@@ -6,6 +6,8 @@
 
 在这份统一版上完成的全过程审查实测了匿名任务指标误读、跨轮复核行重叠、可选权重故障，以及把提名与批准分开的效果。研究分支提供可合入的修复、逐行结果和课程冻结前的验收顺序。[审查报告与分工](https://github.com/limukun6/python_withai_superagent/blob/f11b8cfa9866e210ca9382889cb533133e8382c0/docs/AGENT_LIFECYCLE_AUDIT_20261124_zh.md)
 
+新版单挑战者策略由同一训练入口启动。Task2 五次冷启动都尝试了第三个模型，最后保留双模型，训练内答对 4,733/6,608。两轮历史预测中，固定加入 MPNet 分别多对 55 题和 19 题。课程指定验证基线仍为 689/940（73.30%）。队友可以从 `410ab95` 取回可运行源码、拟合账本和逐行复核命令。[实验报告与接入说明](https://github.com/limukun6/python_withai_superagent/blob/410ab95fd9f341f64752fda2f3a2d1175e6eaa42/docs/CROSSFIT_CHALLENGER_20261124_zh.md)
+
 ## 个人分支的历史交付
 
 各阶段的入口、选项和依赖随当时的源码保存。[取回此前的个人分支环境](legacy/README.md)

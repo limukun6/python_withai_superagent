@@ -274,7 +274,8 @@ def command(args):
             reasoning_effort=getattr(args,'reasoning_effort_level',None))
         client.set_deadline(began+args.time_limit)
         picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'),
-                             getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'))
+                             getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'),
+                             getattr(args,'menu_view','full'))
     history, evidence, actions = [], [], []
     executor = None
     outcome = dict(run_dir=str(directory), scheduler=args.scheduler, planner_mode=args.planner,
@@ -301,6 +302,7 @@ def command(args):
             **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
             **({'thinking_mode':args.thinking_mode} if getattr(args,'thinking_mode',None) else {}),
             **({'reasoning_effort':args.reasoning_effort_level} if getattr(args,'reasoning_effort_level',None) else {}),
+            **({'menu_view':args.menu_view} if getattr(args,'menu_view','full')!='full' else {}),
             **({'numeric_kernel_width':numeric_width} if numeric_width is not None else {}),
             parameter_semantics=getattr(args,'parameter_semantics','off'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,

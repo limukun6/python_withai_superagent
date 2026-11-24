@@ -6,7 +6,9 @@
 
 ## 0 一句话
 
-小试的第一条路径在**第一次 Flash 提案**处失败：DeepSeek 把输出预算全部用于 reasoning、`content` 始终为空，`data_events: 0`，417 秒后连接被服务端关闭。**不是网络问题，也不是超时配置问题。**
+小试的第一条路径在**第一次 Flash 提案**处失败：`data_events: 0`，417 秒后连接被服务端关闭，最终没有 usage，账本记为 unknown。
+
+两次短预算重放（1,024 / 2,048）都出现"推理耗尽、`content` 为空、`finish=length`"，说明**在这个 payload 上推理长度超过 2,000 token 仍不出答案**；但原始调用用的是 16,384 预算且没有最终 usage，**它到底是长推理、排队、网关保活/转发还是上游断开，缺服务端 trace 无法唯一定位**。不能据此称该 payload "不可解"，也不能把"输入大 / 字段多 → 推理长"当成已证因果。
 
 ## 1 小试怎么停的
 
@@ -63,18 +65,20 @@
 | `evidence_projection` | 1.3% |
 | `budget` | 0.9% |
 
-**这个分布很重要**：先前设想的"去掉 checks/memory/evidence_projection"只能省约 10%，而**候选菜单本身占六成**。输出侧的约束是 11 个顶层字段 + 一个 4 子字段的 `grounding` 包。
+**这个分布很重要**：先前设想的"去掉 checks/memory/evidence_projection"只能省约 10%，而**候选菜单本身占六成**。输出侧的约束是 calibrated-v2 的 11 个顶层字段；**这次 L0 没有 `grounding` 输出包**（grounding 只在 `grounded-v1`，L1 未启动）。
 
-## 5 尚未区分的两种解释
+## 5 尚未区分的两种解释（已按复核意见更正）
 
-读超时是 60 秒，却等了 416.8 秒，只有两种可能需要同时成立：
+读超时是 60 秒，却等了 416.8 秒。原稿把可能原因写成"心跳保活"或"传输级重试（约 7×60 秒）"两条，**其中"传输级重试"这一条已被复核否掉**：
 
-- **心跳保活**：网关在整个 reasoning 阶段持续发非 `data:` 行（注释/空行），旧代码把它们直接丢弃，所以 `data_events` 停在 0；
-- **传输级重试**：底层 HTTP 库对同一 POST 重试（约 7×60 秒）。
+- 本机实际环境 requests 2.34.2 / urllib3 2.7.0，`Session` 默认 `Retry(total=0, read=False)`；对连接、读取、协议错误分别调用实际 retry 策略都立即抛出，不允许重试。
+- `ExperimentLLM` 自己新建 `Session`、没有重试循环、禁止 redirect；`campus_direct` 只改进程内域名解析。
 
-旧代码无法区分。已改为同时统计 `other_events` / `first_other_seconds` / `last_other_seconds`（`superagent/experiment_llm.py`），**但必须有一次同类失败才能观测**。
+因此**不能由 417≈7×60 推断客户端重复调用过**。网关内部是否重试，客户端无法免费查清，需要服务端请求 trace；这也不是把 unknown 结算成零的理由。
 
-若是传输重试，账本会低估费用（服务端可能生成了多次，账本只记 1 条 unknown）。
+关于观测：原稿说"已加 `other_events` 就能区分"，同样不足。`Response.iter_lines` 默认 `chunk_size=512`，要经 `iter_content` 缓冲后才分行——异常前若不足一块，即便 TCP 收到字节，计数仍可能为 0；而新代码里 `if line:` 又排除了空行，只收到空行时仍是 0。所以 **`other_events=0` 不能证明连接没有字节**，`data_events=0` 也不等于 `reasoning_tokens=0`。
+
+要真正观测，需要在 `iter_content` 层记字节数、首末字节时间、终止类型与服务端 request-id，并显式声明零重试策略；观测本身仍不保证打断阻塞读。**不要为了收集失败证据再付费重放原请求。**
 
 ## 6 账本处置
 

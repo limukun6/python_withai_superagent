@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 菜单表示接入生产开关，0 fit／0 API
+
+按 Codex 复核第 4 节：新增 `superagent/menu_view.py`（`menu-tables-v3`）与 `--menu-view full|compact`（默认 full），只改表示。真实失败 payload 实测 21,473→13,949 字节（−35.039%），`decode_menu` 往返相等，29 个候选与参数逐项保留；提案仍按原 capabilities 校验。11 项 menu 测试 + 相关 9 模块 71 项回归通过。
+
+单调用机制计划已落盘（batches/A151_menu_probe_plan），runner 默认只校验并已跑通；上限 1 次 Flash/0 fit，未发起真实调用。按复核撤回三处过头结论：客户端无默认重试、`other_events=0` 不能证明无字节、失败 payload 是 calibrated-v2 的 11 字段且无 grounding 包。
+
+账本不变：396 请求 / known ¥7.130568 / unknown 16 / pending 0 / 快照 v3。A 累计 1651 fit。
+
 ## 2026-11-24：A151堵点二免费复核与菜单编码原型，0fit/0API
 
 核实当前requests/urllib3默认零重试及连接/读取/协议错误分支；修正“417秒即七次POST”与“原16384预算必然推理耗尽”的过度归因，指出原失败在calibrated L0、无grounding。空行漏统计和iter_lines缓冲使零事件不足以证明零字节。9定向测试通过。原型1增2.356%字节、原型2少6.625%、共享列名+重复值原型少35.502%(20030→12919紧凑JSON字节)，全部29候选及原核验字段可还原，非token或真实模型效果。首次日志kind键误写导致免费拒绝保留原件，后续各原型独立目录。

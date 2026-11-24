@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-24，A151小试未闭环，1651fit／396请求／16未知
+# 当前接续状态：2026-11-24，A151菜单表示已接开关，1651fit／396请求／16未知
+
+## A151菜单表示：生产开关已接，单调用机制探测仅validate通过
+
+按Codex复核第4节顺序，新增`superagent/menu_view.py`（`menu-tables-v3`：候选表列共享+重复值共享）和`--menu-view full|compact`（默认full）。**只改表示**：`decode_menu`必须还原原payload，候选全集、精确参数、omitted/null区别、history/checks/memory与输出契约不变；提案仍按原capabilities严格校验，B排序/eligibility/fit预算/选型不受影响。
+
+真实失败payload实测：**21,473→13,949字节（−35.039%）**，往返相等，29候选与参数逐项保留。这是字节口径，**不是token实测**，不能声称省35%推理或费用。`tests/test_menu_view.py` 11项通过；相关9模块71项回归通过。
+
+单调用机制计划已落盘batches/A151_menu_probe_plan_20261124_zh.md；runner `scripts/run_a151_menu_probe.py` 默认只校验，已跑通（original 21,473 / compact 13,949 / −35.039%），**尚未发起任何真实调用**。上限1次Flash/0fit，不换模型、不换输出契约、不重试、不自动转Qwen。
+
+另按复核更正三处：原"417≈7×60推断传输重试"已撤回（本机默认`Retry(total=0,read=False)`）；`other_events=0`不能证明无字节（`iter_lines` 512字节缓冲且`if line:`漏空行）；失败payload是calibrated-v2的11字段，**无grounding输出包**，不能说grounded分层导致失败。
 
 ## A151堵点二Codex复核：本机无默认重试，先压缩菜单表示，0新增fit/API
 

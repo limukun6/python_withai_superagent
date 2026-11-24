@@ -337,6 +337,8 @@ def build_parser():
     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2','grounded-v1'],default='strict-v1',help='AB Flash: optional calibrated or evidence-bound proposal contract')
+    run.add_argument('--menu-view',choices=['full','compact'],default='full',
+        help='AB Flash only: send the candidate menu as lossless shared tables; default full')
     run.add_argument('--issue-layering',choices=['off','by-class'],default='off',
         help='grounded-v1 only: close knowledge corrections by a checked restatement instead of waiting for a new fit')
     run.add_argument('--parameter-semantics',choices=['off','diagnostic'],default='off',help='AB checked-history only: optional source-backed C semantics warnings, without action veto')

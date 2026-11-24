@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-24：A141中断成果恢复9项通过，0新fit/API
+
+新增独立tools/recover_run_checkpoint.py，核原训练source/包/指标/分区/prediction/fit，另目录恢复partial checkpoint或保留已有完整模型重交付。A138已有组件生成9工程快照，6恢复路径32行native/隔离一致、3错误拒绝；包含state截断回退、在途unknown保留、重复恢复原件不改。不是实际断电试验，不支持继续原训练/搜索/API。94生产源及实际372ledger均未变。累计1614fit/372请求，known6.8218955/unknown12/pending0，A持有空闲。报告batches/A141_interruption_recovery_results_20261124_zh.md，证据research/a141_interruption_recovery；目标/反馈/中断三项独立补证本轮完成。
+
 ## 2026-11-24：A139–A140紧凑反馈与9次真实Flash完成
 
 第一版仅引用少3.268%附加字节、未过20%门，0付费负结果保留f61cfc3；另登记无损表格化，40检查/三上下文还原通过，附加字节减23.9898%/整请求约5.75%，同3已见工程状态不算独立验证。显式compact只checked，默认full不改。真实3任务×raw/full/compact轮换共9请求，9动作合法，三任务各候选均相同；输入10157/13157/12348，compact少809/6.149%输入token；总费.019945/.026421/.022268，compact比full少.004153含输出长度差，不宣称稳定15.7%或质量/纠错改善，仍比raw贵。自动prose矛盾0但unknown6/3/7，非人工真值。

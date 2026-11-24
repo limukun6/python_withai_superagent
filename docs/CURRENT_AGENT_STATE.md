@@ -1,4 +1,12 @@
-# 当前接续状态：2026-11-24，A140完成，1614fit／372请求
+# 当前接续状态：2026-11-24，A141完成，1614fit／372请求
+
+## A141最新：独立中断成果恢复完成，9项工程验收通过
+
+用户要求可不等B的工作已按1目标稳健性→2紧凑反馈→3中断交付完成本小轮。新tools/recover_run_checkpoint.py不改94生产源码；只读旧运行、核原训练源/包SHA与指标/分区/预测/fit证据，在新目录恢复partial checkpoint，或保留已有完整模型的refit状态重交付。保留在途unknown凭据、不重置预算，不会继续搜索/重训/重发API。
+
+A138真实已训组件生成9受控磁盘快照：trial后、refit前、仅admission、最新state截断、模型损坏、训练包错、CSV截断、重复恢复、源码错。6成功路径全部32行native/隔离包一致，3错误拒绝；首trial与重复等为同一来源工程状态，不算独立任务。torn state显式退到前完整，unknownworker保留未知；原完整模型/source/真实372ledger未变。实际断电未测试、自动续训不支持。
+
+本批0fit/API/费用，A仍1614；实际ledger372/known6.8218955/unknown12/pending0，A持有空闲，原12未知继续授权有效。最新账本owner仍research/a140_flash_projection/paid/current_ledger_owner.json，不用旧363副本。报告batches/A141_interruption_recovery_results_20261124_zh.md，证据research/a141_interruption_recovery；工具与runner可独立复跑，输出不能嵌套原目录/覆盖原件。H2/Task2仍B，最终项目/test未冻结；下步若加真实迁移另登记预算，不重复已完成组。
 
 ## A139–A140最新：无损紧凑反馈已接，9真实Flash完成，默认full不变
 

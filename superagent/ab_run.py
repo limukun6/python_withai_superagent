@@ -244,7 +244,12 @@ def command(args):
         from .ab_flash import preflight
         ledger, allowance, accounting = preflight(args)  # Before data, credentials, or a request.
     task_path = Path(args.task_package).expanduser().resolve()
-    task = load_development_task(task_path)
+    unified_mode = getattr(args,'unified',False)
+    if unified_mode:
+        from .unified import training_input
+        task = training_input(task_path)
+    else:
+        task = load_development_task(task_path)
     spec = TaskSpec.from_task(task).record()
     metric = MetricSpec.for_task(task)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S_%fZ')
@@ -257,7 +262,7 @@ def command(args):
     training_profile_value=None
     search_mode=getattr(args,'local_method_search','off')
     shared_space=getattr(args,'method_space','existing')=='runtime'
-    method_search=shared_space or search_mode in ('evidence','open')
+    method_search=unified_mode or shared_space or search_mode in ('evidence','open')
     if getattr(args,'task_profile','off')=='train' or method_search:
         from .task_profile import training_facts
         training_profile_value=training_facts(task)
@@ -300,6 +305,8 @@ def command(args):
                 if getattr(args,'resolve_single_conflict',False):
                     from . import ab_single_conflict as complement_policy
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+            **({'invoked_as':'superagent unified','training_only':True,
+                'unified_policy':'matched_preference' if complement else 'open_search'} if unified_mode else {}),
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
             **({'local_method_search':search_mode} if search_mode!='off' else {}),
@@ -335,7 +342,7 @@ def command(args):
             provided_validation_role='score only after final model freeze'))
         baseline_caps=caps
         method_space=None
-        if shared_space or search_mode=='open':
+        if shared_space or search_mode=='open' or (unified_mode and not complement):
             from .open_methods import MethodSpace
             method_space=MethodSpace(spec,training_profile_value,directory)
             caps,_=method_space.refresh([],baseline_caps)
@@ -379,7 +386,11 @@ def command(args):
             local_method_choices=[]
             def select_method(eligible, verified):
                 from .ab_method_search import choose_with_history
-                choice=choose_with_history(state,caps,eligible,verified,choose if picker else None)
+                if unified_mode:
+                    from .unified import categorical_opening
+                    choice=categorical_opening(state,caps,eligible,verified)
+                else:
+                    choice=choose_with_history(state,caps,eligible,verified,choose if picker else None)
                 if 'candidates' not in choice:
                     return choice
                 local_method_choices.append(choice)

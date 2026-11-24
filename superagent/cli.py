@@ -307,6 +307,15 @@ def _budget_status(args):
 def build_parser():
     parser=argparse.ArgumentParser(description='Schema-driven classification SuperAgent')
     commands=parser.add_subparsers(dest='command',required=True)
+    from . import unified
+    common=commands.add_parser('unified',help='Train with the common budgeted, training-only classification planner')
+    common.add_argument('task_package')
+    common.add_argument('--run-dir',required=True)
+    common.add_argument('--seed',type=int,default=18643)
+    common.add_argument('--fit-limit',type=int,default=10)
+    common.add_argument('--trial-timeout',type=float,default=300)
+    common.add_argument('--time-limit',type=float,default=1200)
+    common.set_defaults(handler=unified.command)
     from .adaptive_local import command
     adaptive=commands.add_parser('adaptive-local',help='Offline accuracy prototype: explore, replicate, or stop')
     adaptive.add_argument('task_package')

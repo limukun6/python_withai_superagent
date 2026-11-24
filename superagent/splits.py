@@ -14,7 +14,7 @@ def normalized_text(text):
 
 
 def effective_grouping(kind, grouping):
-    if grouping not in ("exact_rows", "shared_text"):
+    if grouping not in ("exact_rows", "shared_text", "near_text"):
         raise ValueError("Unknown development grouping")
     return grouping if kind == "pair_text" else "exact_rows"
 
@@ -45,7 +45,11 @@ def sample_groups(task, grouping="exact_rows"):
     for left, right in pairs:
         a, b = root(left), root(right)
         parents[max(a,b)] = min(a,b)
-    return np.asarray([hashlib.sha256(root(left).encode()).hexdigest() for left, _ in pairs])
+    exact = np.asarray([hashlib.sha256(root(left).encode()).hexdigest() for left, _ in pairs])
+    if mode == "near_text":
+        from .near_text import merged_title_groups
+        return merged_title_groups(task.X_train, exact)
+    return exact
 
 
 def grouped_partition(task, seed, grouping="exact_rows"):

@@ -1,0 +1,62 @@
+{
+  "candidate": "catboost_depth6_reg3.0",
+  "task_kind": "categorical_tabular",
+  "configuration_claim": {
+    "classifier": "catboost"
+  },
+  "reason": "The best completed PRIMARY search accuracy is trial 2 CatBoost with training-selected field interactions. Among available untried candidates, catboost_depth6_reg3.0 is the closest native-category CatBoost configuration to that depth and regularization setting.",
+  "review": "Trial 3's prior proposal cited t1.search.accuracy as 0.7652281134401973, but the recorded PRIMARY search value is 0.6652281134401973. The correction is pending execution confirmation; no experiment is claimed to have already run.",
+  "hypothesis": "A native-category CatBoost at depth 6 with l2_leaf_reg 3.0 may preserve useful categorical signal from the best completed CatBoost trial while avoiding the interaction representation; the direction and magnitude are not verified.",
+  "evidence_trials": [
+    2,
+    1,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "The chosen candidate is untried, and native categories may not reproduce the interaction representation's PRIMARY search accuracy. No verified improvement prediction is made.",
+  "grounding": {
+    "namespace": "4828cb77fd27a7adc30c4f5b8522cbcb6245340c9ee78d986b53483389e577a1",
+    "evidence_refs": [
+      "c:catboost_depth6_reg3.0.classifier",
+      "c:catboost_depth6_reg3.0.untried",
+      "t2.search.accuracy",
+      "t1.search.accuracy",
+      "t3.search.accuracy",
+      "t2.classifier"
+    ],
+    "assertions": [
+      {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.classifier",
+        "value": "catboost"
+      },
+      {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.untried",
+        "value": true
+      },
+      {
+        "kind": "value",
+        "ref": "t1.search.accuracy",
+        "value": 0.6652281134401973
+      },
+      {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t1.search.accuracy"
+      },
+      {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t3.search.accuracy"
+      }
+    ],
+    "addresses_issue_ids": [
+      "issue:7b90460c0980887cbe26"
+    ]
+  }
+}

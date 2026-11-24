@@ -1,5 +1,17 @@
 # 实验持续工作记录
 
+## 2026-11-24：A145–A147完成，8新增fit／12真实Flash，保留可选而不扩大当前variant
+
+按已保存计划先冻结48程序oracle再实现97生产源473ba84：运行/任务/目录/生产者绑定事实、机器断言、带状态的纠错、可核验执行理由；显式grounded-v1，默认strict/full及B目录/调度不改。55回归/7菜单一致，开发24/24与一次保留24/24；错误确认0/6、未知误确认0/6、合法12/12。首轮43测试1夹具错误保留，修正后55通过；训练分数不借验证集SHA认证。
+
+A146三真实已见任务同state_4×自然/受控×旧compact/新协议12请求全合法；新23断言通过，3受控问题明确纠正pending，0真实语义重发。旧组也能发现部分错误，未要求其输出新字段；原prose两标记为疑似其它分类器引用误报，不能当2条真实错误收益。新旧输入47106/27213、输出13899/8032、费用.102702/.059341，新的更贵约73.1%；全12请求74319输入/21931输出、课程折算.162043、726.625秒。
+
+A147只追两个不同动作，primary707/confirmation_1 808同payload，8实际fit/0API/92.547秒。SMS受控新diagnose相对旧improve的macroF1平均低3.1840pp；Flowers自然coverage平均+.625pp，两个划分方向相反。四个同动作配对不重复训练，不把跳过量换算为实测省费。没有外层评价/最终refit，不能作完整Agent或新任务泛化收益。
+
+当前不启动A148 44fit/12调用，不改默认；决定非预登记显著性检验。后续考虑知识纠正与执行/测量修复分层，尚未实现。A149/150未启动；新97源完整grounded路径和交付尚待未来验证。研发未最终冻结，H2/Released2仍B，旧模型源码不重标。
+
+A累计1644；唯一实账本runs/a129_B_ledger_return/private/ledger.sqlite已387/known7.0165495/unknown12/pending0，原375 requests/transitions未改，A空闲；owner research/a145_a146_grounded_pilot/paid/current_ledger_owner.json。原12未知按用户授权保留null不再等官网，新未知仍停。报告batches/A145_A147_grounded_protocol_results_20261124_zh.md，证据research/a145_a146_grounded_pilot、research/a147_grounded_action_followup，失败原件/计划/复跑脚本已落盘。下文设计时1636/375为历史快照。
+
 ## 2026-11-24：A145–A150下一轮A线方案已设计，尚未运行
 
 用户要求按当前瓶颈设计提升方向。基于fb791d5代码/既有结果，主攻可核验决策协议和有关闭条件的问题闭环；带失效检查的短程计划、资源继承续跑为条件扩展。复用现有measurement/configuration/metric/scope模块，不把已有基础或B调度称新贡献。A145离线48程序oracle，A146最多12真实请求区分自然/受控，动作不同才A147最多12fit，有信号再A148两任务四路径44fit/12请求；全主线条件上限56fit/24请求，不是已消耗。A149/A150另记，不同时全开。计划docs/A_LINE_NEXT_ARCHITECTURE_AND_EXPERIMENTS_20261124_zh.md及预算JSON已保存；本次0新增fit/API，A1636/ledger375/known6.8545065/unknown12/pending0不变，未启动队列。

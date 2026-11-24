@@ -1,4 +1,16 @@
-# 当前接续状态：2026-11-24，A144完成，1636fit／375请求
+# 当前接续状态：2026-11-24，A147完成，1644fit／387请求
+
+## A145–A147最新：可核验协议已接，真实纠错通过，尚无稳定提分
+
+用户“开始”后按先前方案完成A145/A146及有动作差异才跑的A147。生产473ba84固定97文件：fact_registry/grounded_proposal/grounding_issues，加显式checked-history/grounded-v1；默认strict-v1/full不变，未改B方法库和调度。55无fit/无网络回归、七默认菜单一致；程序oracle开发24/24、源码冻结后一次保留24/24，错误确认0/6、未知误确认0/6、合法12/12。首次43回归中的夹具接口错误另存，未复评保留例。
+
+A146三已见任务state_4自然/受控×新旧共12次真实Flash，全合法；新23条结构化断言确认，三类故障均被明确纠正并记addressed_pending_check，不冒称真实执行后关闭。真实语义修复重发0次，仅单元测试验证其一次上限/不捕获ask异常。旧组没有同样结构化输出要求，不能说旧0/3纠错；旧Flowers也发现任务类型错误。旧prose两处标记经Codex上下文复查为疑似其它分类器引用误报，原自动标记保留，不称消除2条真实推理错误。受控历史注入未重算旧训练后audit，非两完整重新审计路径对照。
+
+新旧各6回复：输入47106/27213，输出13899/8032，课程折算¥.102702/.059341，API等待424.623/300.875秒；新更贵约73.1%。本批总74319输入/21931输出、¥.162043、726.625秒。A147仅SMS受控和Flowers自然两个不同动作，2相同内部分区各候选1fit，总8fit/92.547秒/0API；SMS诊断动作macroF1平均低3.1840pp，Flowers覆盖动作均值高.625pp但一负一正。不当最终Agent成绩、任务泛化或稳定优势。
+
+当前variant不启动A148的44fit/12调用，不晋级默认；不是整个项目冻结或开发完成。下一结构建议分开“知识性纠正”和“必须执行/测量的修复”，避免纠正一个已知定义也占用低收益诊断拟合。此分层、A149短计划、A150续训尚未实施；新97源的真实完整grounded路径/refit/跨进程交付尚未验证，旧已交付模型保留原源。B的H2/Released2分工、原F*=L0不变。
+
+A累计1644fit；唯一真实ledger仍runs/a129_B_ledger_return/private/ledger.sqlite，387/known¥7.0165495/unknown12/pending0，原375请求及transitions未改。用户接受的原12未知保持null、无需再问学校账单；新增未知仍停。最新owner research/a145_a146_grounded_pilot/paid/current_ledger_owner.json，A持有空闲，SHA5b1f5c5825f15cf139252626d00d838c7a6fe1403fd0c4c9b50366ad512d82db；勿用旧375/372副本。A147前后账本未改，全部控制器退出。报告batches/A145_A147_grounded_protocol_results_20261124_zh.md，证据research/a145_a146_grounded_pilot及research/a147_grounded_action_followup；plan/prepare/run/evaluate/archive脚本齐全，模型/SQLite/密钥未提交。以下1636/375为旧快照。
 
 ## A142–A144最新：新真实数值任务补充迁移完成，L0/EC0均280/280
 

@@ -1,0 +1,94 @@
+{
+  "status": "accepted",
+  "namespace": "4828cb77fd27a7adc30c4f5b8522cbcb6245340c9ee78d986b53483389e577a1",
+  "errors": [],
+  "assertion_checks": [
+    {
+      "status": "confirmed",
+      "reason": "exact_bound_fact",
+      "claim": {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.classifier",
+        "value": "catboost"
+      },
+      "accuracy_effect_verified": false,
+      "observed": "catboost",
+      "fact_id": "c:catboost_depth6_reg3.0.classifier",
+      "role": "declared"
+    },
+    {
+      "status": "confirmed",
+      "reason": "exact_bound_fact",
+      "claim": {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.untried",
+        "value": true
+      },
+      "accuracy_effect_verified": false,
+      "observed": true,
+      "fact_id": "c:catboost_depth6_reg3.0.untried",
+      "role": "observed"
+    },
+    {
+      "status": "confirmed",
+      "reason": "matched_measurement_comparison",
+      "claim": {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t1.search.accuracy"
+      },
+      "accuracy_effect_verified": false,
+      "left_value": 0.7552404438964242,
+      "right_value": 0.6652281134401973
+    },
+    {
+      "status": "confirmed",
+      "reason": "matched_measurement_comparison",
+      "claim": {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t3.search.accuracy"
+      },
+      "accuracy_effect_verified": false,
+      "left_value": 0.7552404438964242,
+      "right_value": 0.7065351418002466
+    }
+  ],
+  "verified_basis": [
+    {
+      "id": "c:catboost_depth6_reg3.0.classifier",
+      "value": "catboost",
+      "role": "declared"
+    },
+    {
+      "id": "c:catboost_depth6_reg3.0.untried",
+      "value": true,
+      "role": "observed"
+    },
+    {
+      "id": "t2.classifier",
+      "value": "catboost",
+      "role": "observed"
+    },
+    {
+      "id": "t2.search.accuracy",
+      "value": 0.7552404438964242,
+      "role": "observed"
+    },
+    {
+      "id": "t3.search.accuracy",
+      "value": 0.7065351418002466,
+      "role": "observed"
+    },
+    {
+      "id": "t1.search.accuracy",
+      "value": 0.6652281134401973,
+      "role": "observed"
+    }
+  ],
+  "issues": [],
+  "freeform_prose_verified": false,
+  "execution_confirmation_pending": true
+}

@@ -1,0 +1,17 @@
+{
+  "candidate": "catboost_depth6_reg3.0",
+  "task_kind": "categorical_tabular",
+  "configuration_claim": {
+    "classifier": "catboost"
+  },
+  "reason": "Trial 2 was the strongest completed primary result (search accuracy 0.7552) using CatBoost with depth 6 and l2_leaf_reg 3.0. This candidate tests the registered native-category CatBoost route with matching core parameters.",
+  "review": "The extra-trees trial overfit strongly (train 0.9946 vs search 0.7065), and logistic underperformed. CatBoost has the best primary evidence so far, while the native-category CatBoost route remains untried.",
+  "hypothesis": "Native-category CatBoost with depth 6 and l2_leaf_reg 3.0 may retain the strong primary accuracy seen in trial 2 without relying on the exhausted field-interaction representation.",
+  "evidence_trials": [
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Trial 2 used a different representation (training-selected field interactions), so native-category performance is not guaranteed; no numerical improvement is predicted."
+}

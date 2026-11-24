@@ -1,0 +1,316 @@
+{
+  "executor_comparison": {
+    "reading": "improved",
+    "source": "executor",
+    "latest_trial": 3,
+    "best_prior_trial": 2,
+    "primary_metric": "macro_f1",
+    "latest_search_score": 0.9379976654020927,
+    "best_prior_search_score": 0.9296509152830992,
+    "latest_search_accuracy": 0.972768532526475,
+    "best_prior_search_accuracy": 0.9697428139183056,
+    "delta_vs_prior_best": 0.008346750118993551,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 3 internal macro_f1 score is 93.799767%; best earlier trial 2 is 92.965092%; difference +0.834675 percentage points (improved).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 3,
+    "reference_candidate": "minilm_text_with_nonlinear_lexical_features",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+    "selected_status": null,
+    "reference_route": "minilm_nonlinear_lexical",
+    "selected_route": "recipe_single_text_hybrid_char_wb_logistic",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "analyzer",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": "char_wb",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "bandwidth_sample_limit",
+        "before_present": true,
+        "after_present": false,
+        "before": 128,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "classifier",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": "logistic",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "dimensions",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 64,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "encoder",
+        "before_present": true,
+        "after_present": false,
+        "before": "sentence-transformers/all-MiniLM-L6-v2",
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "kernel_components",
+        "before_present": true,
+        "after_present": false,
+        "before": 512,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "kernel_seed",
+        "before_present": true,
+        "after_present": false,
+        "before": 12271,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "kind",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": "single_text",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": true,
+        "before": "word_char_minilm_rbf",
+        "after": "hybrid",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "revision",
+        "before_present": true,
+        "after_present": false,
+        "before": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "swap_augmentation",
+        "before_present": true,
+        "after_present": false,
+        "before": false,
+        "after": null,
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "Hybrid char_wb features with logistic regression may provide complementary subword and word signals, potentially improving spam recall and macro_f1 relative to the word-only baseline, but this is not established by prior trials.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Choose an untried hybrid char_wb logistic recipe with C=0.3. Trial 1 showed word-only features can collapse spam recall, while trials 2-3 show strong macro_f1 with richer representations. This candidate tests a registered logistic classifier on hybrid char_wb features, which may capture subword spam cues plus word-level signal.",
+      "review": "Evidence is limited to primary-split trials 1-3. Trial 1 word-only scored macro_f1 0.463 with spam recall 0.0. Trials 2 and 3 scored 0.930 and 0.938 macro_f1, but those routes are exhausted. The selected candidate is untried and uses the registered logistic classifier; no direct evidence establishes its expected score.",
+      "hypothesis": "Hybrid char_wb features with logistic regression may provide complementary subword and word signals, potentially improving spam recall and macro_f1 relative to the word-only baseline, but this is not established by prior trials.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 9,
+    "confirmed": 5,
+    "contradicted": 0,
+    "unverifiable": 4,
+    "informational": 0,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "Choose an untried hybrid char_wb logistic recipe with C=0.3.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "This candidate tests a registered logistic classifier on hybrid char_wb features, which may capture subword spam cues plus word-level signal.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "Trial 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "trials 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "The selected candidate is untried and uses the registered logistic classifier;",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "trials 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trials 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "logistic regression",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "Hybrid char_wb features with logistic regression may provide complementary subword and word signals, potentially improving spam recall and macro_f1 relative to the word-only baseline, but this is not established by prior trials.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 9 machine-checkable claims inspected, 0 contradicted, 4 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": true,
+    "definition": {
+      "estimator_class": "LogisticRegression",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+      "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+      "accuracy_effect_verified": false
+    },
+    "items": [
+      {
+        "field": "reason",
+        "span": "Choose an untried hybrid char_wb logistic recipe with C=0.3.",
+        "status": "unknown",
+        "reason": "Unsupported or ambiguous parameter statement",
+        "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "parameter": "C",
+        "candidate_parameter_value": 0.3,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      }
+    ],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

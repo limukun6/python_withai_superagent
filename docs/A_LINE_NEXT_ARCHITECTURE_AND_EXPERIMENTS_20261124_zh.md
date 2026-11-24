@@ -1,5 +1,7 @@
 # A线下一轮：可核验决策、纠错闭环与按证据更新的短程计划
 
+执行更新：A145–A147已完成，新增8fit/12Flash；当前variant不展开A148、默认不改。实际结果和局限见[batches/A145_A147_grounded_protocol_results_20261124_zh.md](batches/A145_A147_grounded_protocol_results_20261124_zh.md)。以下为开跑前方案与预算快照，不能当成已消耗或当前计数。
+
 设计基线：fb791d5，94个生产Python源。此文是下一轮方案，尚未实施或运行。当前A累计1636fit；真实唯一ledger375/known¥6.8545065/unknown12/pending0，A持有空闲。原12未知按用户授权保留，不等待官网账单；新增unknown/pending仍停止当前付费批、失败不自动重试。H2/Released2由B继续，本文不要求其补交已有材料。
 
 ## 1. 判断：A线应该突破哪里

@@ -1,0 +1,258 @@
+{
+  "executor_comparison": {
+    "reading": "lower",
+    "source": "executor",
+    "latest_trial": 3,
+    "best_prior_trial": 2,
+    "primary_metric": "accuracy",
+    "latest_search_score": 0.7065351418002466,
+    "best_prior_search_score": 0.7552404438964242,
+    "latest_search_accuracy": 0.7065351418002466,
+    "best_prior_search_accuracy": 0.7552404438964242,
+    "delta_vs_prior_best": -0.04870530209617763,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 3 internal accuracy score is 70.653514%; best earlier trial 2 is 75.524044%; difference -4.870530 percentage points (lower).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 2,
+    "reference_candidate": "supported_field_interactions",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "catboost_depth6_reg3.0",
+    "selected_status": null,
+    "reference_route": "field_interactions",
+    "selected_route": "catboost",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "learning_rate",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 0.05,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "pair_limit",
+        "before_present": true,
+        "after_present": false,
+        "before": 3,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": false,
+        "before": "training-selected categorical field interactions",
+        "after": null,
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "catboost_depth6_reg3.0",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "Native categorical handling at depth 6 and l2_leaf_reg 3.0 may retain the useful signal seen in trial 2 without relying on explicit training-selected field interactions; the direction and magnitude of any change are not predicted.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Trial 2 is the best completed PRIMARY result (accuracy 0.7552) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected field interactions. The available catboost_depth6_reg3.0 candidate keeps the same core CatBoost settings with native categorical handling, making it the most direct next PRIMARY search candidate on the strongest observed route.",
+      "review": "Trial 2 CatBoost scored 0.7552 with a 0.0717 train-search gap. Trial 3 ExtraTrees scored 0.7065 with a much larger 0.2881 gap, indicating overfitting. Logistic trial 1 was weaker at 0.6652. CatBoost native-category configurations remain untried in the available candidate list.",
+      "hypothesis": "Native categorical handling at depth 6 and l2_leaf_reg 3.0 may retain the useful signal seen in trial 2 without relying on explicit training-selected field interactions; the direction and magnitude of any change are not predicted.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 8,
+    "confirmed": 5,
+    "contradicted": 0,
+    "unverifiable": 3,
+    "informational": 3,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "Trial 2 is the best completed PRIMARY result (accuracy 0.7552) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected field interactions.",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      },
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "The available catboost_depth6_reg3.0 candidate keeps the same core CatBoost settings with native categorical handling, making it the most direct next PRIMARY search candidate on the strongest observed route.",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "confirmed",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "Trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "Trial 2 CatBoost scored 0.7552 with a 0.0717 train-search gap.",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "ExtraTrees",
+        "claim": "extra_trees",
+        "compatible_with": [
+          "extra_trees"
+        ],
+        "sentence": "Trial 3 ExtraTrees scored 0.7065 with a much larger 0.2881 gap, indicating overfitting.",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "Logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "Logistic trial 1 was weaker at 0.6652.",
+        "in_comparison": false,
+        "observed": [
+          "catboost",
+          "logistic"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "CatBoost native-category configurations remain untried in the available candidate list.",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "unbound_review_subject"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 3",
+        "claim": 3,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "trial 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "trial_reference",
+        "span": "trial 2",
+        "claim": 2,
+        "observed": null,
+        "status": "unverifiable"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 8 machine-checkable claims inspected, 0 contradicted, 3 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": false,
+    "definition": null,
+    "items": [],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

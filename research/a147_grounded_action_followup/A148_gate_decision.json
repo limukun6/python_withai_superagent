@@ -1,0 +1,98 @@
+{
+  "stage": "A148",
+  "decision": "do_not_launch_current_full_loop_variant",
+  "decision_made_after_A147": true,
+  "numerical_cutoff_preregistered": false,
+  "rationale": "No stable task-quality advantage: SMS controlled diagnostic lower on both splits; flower coverage changes sign. New protocol increases cost and latency. Do not spend 44 fits/12 calls merely to expand this pilot.",
+  "same_task_split_evidence_not_new_task_generalization": true,
+  "A145_reliability_gate_passed": true,
+  "A146_real_typed_corrections": 3,
+  "A146_real_semantic_repair_reasks": 0,
+  "comparisons": [
+    {
+      "task": "sms",
+      "condition": "controlled",
+      "candidates": {
+        "legacy": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+        "grounded": "single_word_C3.0"
+      },
+      "splits": [
+        {
+          "split": "primary",
+          "scores": {
+            "legacy": 0.9470543473907646,
+            "grounded": 0.9177847358544644
+          },
+          "grounded_minus_legacy": -0.029269611536300144
+        },
+        {
+          "split": "confirmation_1",
+          "scores": {
+            "legacy": 0.9502503980315531,
+            "grounded": 0.9158390628978864
+          },
+          "grounded_minus_legacy": -0.034411335133666676
+        }
+      ],
+      "mean_grounded_minus_legacy": -0.03184047333498341
+    },
+    {
+      "task": "flowers",
+      "condition": "natural",
+      "candidates": {
+        "legacy": "image_extra_trees_leaf3",
+        "grounded": "image_rbf_svm_C1.0"
+      },
+      "splits": [
+        {
+          "split": "primary",
+          "scores": {
+            "legacy": 0.51875,
+            "grounded": 0.4875
+          },
+          "grounded_minus_legacy": -0.031250000000000056
+        },
+        {
+          "split": "confirmation_1",
+          "scores": {
+            "legacy": 0.48125,
+            "grounded": 0.525
+          },
+          "grounded_minus_legacy": 0.04375000000000001
+        }
+      ],
+      "mean_grounded_minus_legacy": 0.006249999999999978
+    }
+  ],
+  "by_mode": {
+    "legacy": {
+      "calls": 6,
+      "valid_actions": 6,
+      "input_tokens": 27213,
+      "output_tokens": 8032,
+      "cost_rmb": 0.059341000000000005,
+      "latency_seconds": 300.875,
+      "typed_assertions": {},
+      "prose_contradicted": 2,
+      "prose_unverifiable": 20
+    },
+    "grounded": {
+      "calls": 6,
+      "valid_actions": 6,
+      "input_tokens": 47106,
+      "output_tokens": 13899,
+      "cost_rmb": 0.102702,
+      "latency_seconds": 424.623,
+      "typed_assertions": {
+        "confirmed": 23
+      },
+      "prose_contradicted": 0,
+      "prose_unverifiable": 12
+    }
+  },
+  "default_protocol_changed": false,
+  "final_project_frozen": false,
+  "additional_fits_launched": 0,
+  "additional_API_calls_launched": 0,
+  "next_design": "Separate knowledge-only correction from execution/measurement-required repair, so correcting a definition need not consume a low-value training action; new protocol and experiment needed before running."
+}

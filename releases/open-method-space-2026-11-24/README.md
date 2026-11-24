@@ -29,6 +29,8 @@
 
 ## 运行与整合
 
+队友的候选菜单压缩版 `9779944d3467b9df8379101355179cb9916d5d84` 已有独立接入补丁。在该提交使用 `git apply current-team.patch` 后，`--method-space runtime` 可用于 local、raw-history 和 checked-history。共同入口仍管理真实调用预算。五个真实历史状态中，两个历史规划器看到相同的 27、37、29、36、61 个可行配置，压缩后解码完全还原参数。联调时发现 checked 的历史记忆无法识别新生成的方法名，已修正并重验。额外的本地匿名小样用了 4 次拟合，重现原来的所有动作和两个进程的相同预测。两种历史规划器的菜单及验证器已做离线检查；真实 Flash 决策效果仍待实测。本开放选模批次连同这次接入验收合计 81 次拟合、0 次模型 API。[当前共同分支补丁](followup/shared-menu/current-team.patch) · [五份菜单验收](followup/shared-menu/menu_receipts.json)
+
 解压本包的 `runtime-source.zip`，在解压目录使用 `requirements-tested.txt` 对应的 Python 环境。把匿名训练包作为唯一任务输入，以下命令在同一入口启用运行时生成。预算可按实验约定设置，旧方法照常可见。冻结编码器依赖根据现有本地环境与权重的核验结果开放。
 
 ```bash
@@ -39,3 +41,7 @@ python -m superagent predict features.zip --run-dir run_open --output prediction
 队友可在共同分支提交 `6ecaaa802c18f0f4fcbab50e6113edd71c871e08` 的独立检出目录应用补丁。它包含原有证据调度及本次开放方法。个人分支根目录继续保存团队以前的交付，独立源码包和补丁均对应实际实测程序。[共同分支补丁](team-integration.patch)
 
 在本发布包目录运行 `python verify.py` 会核验文件指纹、分数、真实拟合、两次独立导出、50 次探索排名及所有运行时目录的重建。加 `--repo /path/to/team-repo` 可同时检验补丁应用后逐文件得到相同生产源码。在含原始训练包和本地权重的环境中，源包内的三个实验程序还能从训练内划分开始复现；评分真值、课程数据、权重与凭证未包含在本包。[核验程序](verify.py)
+
+## 增加新旧路线之间的探索平衡是否有帮助
+
+在五个任务已训练模型的主划分上另做四折回放。两个自动策略各可观察最多四个配置，之后对独立反馈折以外的样本计分。按已看过的次数和成绩给两类来源调整探索权重，改变了 20 个折中的 14 个试验次序。四项任务的最终指标持平，手写数字少答对 1/284；这条调整没有达到事先约定的追加训练条件。此回放仅覆盖实际训练过的配置，新增拟合与模型调用均为零。[事前设计](followup/allocation/protocol.md) · [五项结果](followup/allocation/results.json)

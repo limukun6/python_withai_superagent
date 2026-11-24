@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -93,7 +94,26 @@ def inspect():
             fits+=len(physical)
             actions+=record['actions_replayed']
             rankings+=sum(s['action']=='explore' for s in sets['steps'])
-    return fits,actions,rankings
+    follow=ROOT/'followup'
+    alloc=read(follow/'allocation/results.json')
+    check(sha(follow/'allocation/paths.json')==alloc['paths_sha256'] and not alloc['advance_to_training'] and
+          alloc['api_calls']==alloc['supervised_fits']==0 and len(alloc['tasks'])==5,'Allocation result')
+    routes=read(follow/'allocation/paths.json')
+    check(routes['plan']==sha(follow/'allocation/protocol.md') and routes['runner']==sha(follow/'allocation/replay_b_open_allocation.py'),
+          'Allocation source receipt')
+    shared=follow/'shared-menu'
+    report=read(shared/'result.json')
+    meta=read(shared/'protocol.json')
+    menus=read(shared/'menu_receipts.json')
+    meter=[json.loads(s) for s in (shared/'physical.jsonl').read_text().splitlines()]
+    check(sha(shared/'protocol.json')==report['protocol'] and sha(shared/'menu_receipts.json')==report['menu_receipts'] and
+          meta['plan']==sha(shared/'protocol.md') and meta['runner']==sha(shared/'check_b_open_shared.py') and
+          len(meter)==report['actual_fits']==report['native_actions']==4 and report['real_api_calls']==0 and
+          all(v['visible']['raw']==v['visible']['checked'] and v['full_equals_decoded'] and v['generated_visible']>0 and
+              v['request_cap_local'] and v['live_flash_calls']==0 for v in menus.values()),'Shared planner-engineering evidence')
+    check(report['exports']==[sha(shared/f'export_{i}.csv') for i in (0,1)] and
+          report['exports'][0]==report['exports'][1]==sha(E/'matrix/q0_open/export_0.csv'),'Shared fixture exports')
+    return fits+len(meter),actions+report['native_actions'],rankings
 
 
 def check_runtime(repo):
@@ -117,6 +137,17 @@ def check_runtime(repo):
             subprocess.run(['git','apply',str(ROOT/'team-integration.patch')],cwd=base,check=True)
             check(hashes(base/'superagent')==p['source'] and sha(base/'scripts/ab_acceptance_guard/sitecustomize.py')==p['guard'],
                   'Integration patch does not reproduce measured code')
+            shared=ROOT/'followup/shared-menu'
+            current=read(shared/'protocol.json')
+            staged=Path(temp)/'current'
+            staged.mkdir()
+            newer=subprocess.check_output(['git','-C',str(repo),'archive',current['upstream'],'--','superagent','scripts/ab_acceptance_guard'])
+            with tarfile.open(fileobj=io.BytesIO(newer)) as a:
+                a.extractall(staged,filter='data')
+            subprocess.run(['git','apply',str(shared/'current-team.patch')],cwd=staged,check=True)
+            check(hashes(staged/'superagent')==current['source'],'Current shared adapter differs from the tested local integration')
+            shutil.copy(runtime/'scripts/replay_b_open_choices.py',staged/'scripts')
+            subprocess.run([sys.executable,'-m','scripts.replay_b_open_choices',str(ROOT/'choices.json')],cwd=staged,check=True)
 
 
 if __name__=='__main__':

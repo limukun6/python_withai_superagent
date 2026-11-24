@@ -9,17 +9,23 @@ import numpy as np
 
 from scripts.diagnose_crossfit_challenger import diagnose
 from scripts.evaluate_crossfit_challenger import decision_from_feedback, project, score
+from scripts.probe_challenger_dispatch import probe
+from scripts import replay_challenger_nomination as replay
 from scripts.run_conditional_handoff import load_export
 from scripts.study_crossfit_challenger import prepare, study_splits
 from scripts.unified_released_study import ROOT, read, require, sha
 from scripts.verify_lifecycle_audit import copy
 from scripts.verify_unified_raw import MEMBERS
+from superagent.ab_sentence import reuse_frozen_vectors
 from superagent.data import load_training_task
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import sample_groups
-from tools.crossfit_challenger import nominate, training_roles
+from tools.challenger_training import screen_vectors
+from tools.crossfit_challenger import nominate, residual_directions, training_roles
+from tools.portfolio_training import configure
 
 PUBLIC = ROOT / "research/crossfit_challenger_1124"
+ROTATED_PUBLIC = ROOT / "research/challenger_nomination_rotation_1124"
 
 
 def checksums(root):
@@ -27,8 +33,18 @@ def checksums(root):
                    if p.is_file() and p.name != "SHA256SUMS")
 
 
+def seal_directory(directory):
+    total = checksums(directory)
+    sums = directory / "SHA256SUMS"
+    if sums.exists():
+        require(sums.read_text() == total, "Existing evidence differs")
+    else:
+        sums.write_text(total)
+
+
 def publish(out, smoke):
-    for name in ("protocol.json", "sealed.json", "result.json", "diagnostics.json"):
+    for name in ("protocol.json", "sealed.json", "result.json", "diagnostics.json", "dispatch.json",
+                 "replay/frozen.json", "replay/result.json"):
         copy(out / name, PUBLIC / name)
     for name in ("smoke.json", "run/decision.json", "run/challenger_completion.json", "run/agent/final_selection.json",
                  "cached/predictions.csv", "direct/predictions.csv"):
@@ -36,6 +52,8 @@ def publish(out, smoke):
     for i in range(5):
         folder = out / f"fold_{i}"
         dest = PUBLIC / folder.name
+        for name in ("screen.npz", "rows.csv", "choice.json"):
+            copy(out / "replay" / folder.name / name, PUBLIC / "replay" / folder.name / name)
         sealed = read(folder / "sealed.json")
         for name in ("sealed.json", "run/challenger_protocol.json", "run/agent/final_selection.json", *sealed["records"]):
             copy(folder / name, dest / name)
@@ -44,12 +62,14 @@ def publish(out, smoke):
                 for name in ("fits.json", "admission.json", "trained.json"):
                     path = ledger.parent / name
                     copy(path, dest / path.relative_to(folder))
-    total = checksums(PUBLIC)
-    sums = PUBLIC / "SHA256SUMS"
-    if sums.exists():
-        require(sums.read_text() == total, "Existing evidence differs")
-    else:
-        sums.write_text(total)
+    seal_directory(PUBLIC)
+    for name in ("frozen.json", "result.json"):
+        copy(out / "rotation" / name, ROTATED_PUBLIC / name)
+    for i in range(5):
+        for name in ("screen.npz", "choice.json", "rows.csv"):
+            rel = Path(f"fold_{i}") / name
+            copy(out / "rotation" / rel, ROTATED_PUBLIC / rel)
+    seal_directory(ROTATED_PUBLIC)
 
 
 def verify_fit(path, name, package, ids):
@@ -65,7 +85,7 @@ def verify_fit(path, name, package, ids):
     return trained
 
 
-def verify_fold(folder, packet, task, held):
+def verify_fold(folder, packet, task, held, verify_features=False):
     run = folder / "run"
     meta, end, decision, nom = (read(run / n) for n in ("challenger_protocol.json", "challenger_completion.json",
                                                         "decision.json", "nomination.json"))
@@ -93,6 +113,12 @@ def verify_fold(folder, packet, task, held):
             require(gradients.ndim == 2 and gradients.shape[0] == 2 and
                     np.isclose(gradients[0] @ gradients[1], nom["scores"][n], atol=1e-14, rtol=1e-10),
                     "Nomination score differs")
+            if verify_features:
+                ids = roles["nominate"]
+                actual = residual_directions(screen_vectors(n, [task.X_train[j] for j in ids]),
+                                             task.y_train[ids] - packed["anchors"].mean(1), groups[ids])
+                require(np.allclose(actual, gradients, rtol=1e-6, atol=1e-9),
+                        "Archived screen does not match raw features, labels and anchor residuals")
     nominee = nominate(nom["scores"])
     require(set(nom["scores"]) == set(inventory[2:]) and nominee == nom["candidate"]
             and names == inventory[:2] + ([nominee] if nominee else [])
@@ -143,8 +169,9 @@ def verify_fold(folder, packet, task, held):
             "Saved, reconstructed or cold native predictions differ")
 
 
-def verify(archive):
+def verify(archive, weights=None, cache=None):
     require(checksums(PUBLIC) == (PUBLIC / "SHA256SUMS").read_text(), "Public evidence checksum differs")
+    require(checksums(ROTATED_PUBLIC) == (ROTATED_PUBLIC / "SHA256SUMS").read_text(), "Rotated evidence differs")
     smoke = PUBLIC / "smoke"
     summary = read(smoke / "smoke.json")
     require(summary["matches"] and sha(smoke / "cached/predictions.csv") ==
@@ -165,12 +192,26 @@ def verify(archive):
         prepare(archive, packets)
         require(sha(PUBLIC / "protocol.json") == sha(packets / "protocol.json"), "Input packages or split differ")
         whole, _, splits = study_splits(archive)
-        for i, (_, held) in enumerate(splits):
-            packet = packets / f"fold_{i}" / "train.zip"
-            verify_fold(PUBLIC / f"fold_{i}", packet, load_training_task(packet), [whole.X_train[j] for j in held])
+        if weights is not None:
+            configure(weights, cache)
+        with reuse_frozen_vectors():
+            for i, (_, held) in enumerate(splits):
+                packet = packets / f"fold_{i}" / "train.zip"
+                verify_fold(PUBLIC / f"fold_{i}", packet, load_training_task(packet),
+                            [whole.X_train[j] for j in held], verify_features=weights is not None)
         score(PUBLIC, archive)
         diagnose(PUBLIC, archive)
+        replay.freeze(PUBLIC / "replay", archive, weights, cache)
+        replay.score(PUBLIC / "replay", archive)
+        replay.freeze(ROTATED_PUBLIC, archive, weights, cache, rotate=True)
+        replay.score(ROTATED_PUBLIC, archive, rotate=True)
     require(seen == set(MEMBERS["titles"]), "Course training member audit failed")
+    dispatcher = read(PUBLIC / "dispatch.json")
+    require(dispatcher["classifier_fits"] == dispatcher["model_api_calls"] == 0 and
+            dispatcher["calls_before_first_fit"] == 15 and len(dispatcher["cases"]) == 6 and
+            all(v["same_on_rename"] for v in dispatcher["cases"].values()), "Incomplete dispatch evidence")
+    if weights is not None:
+        require(probe(weights.resolve()) == dispatcher, "Live task/asset dispatch differs")
     print("Verified five nominations, fit admissions, independent raw predictions, paired score and diagnostic strata.")
     print("Read course members:", sorted(seen))
 
@@ -183,8 +224,10 @@ if __name__ == "__main__":
     publish_cmd.add_argument("smoke", type=Path)
     verify_cmd = stages.add_parser("verify")
     verify_cmd.add_argument("archive", type=Path)
+    verify_cmd.add_argument("--weights", type=Path)
+    verify_cmd.add_argument("--cache", type=Path)
     args = p.parse_args()
     if args.stage == "publish":
         publish(args.out, args.smoke)
     else:
-        verify(args.archive)
+        verify(args.archive, args.weights, args.cache)

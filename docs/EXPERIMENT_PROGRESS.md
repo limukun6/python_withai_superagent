@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 条件小试，1 fit／1 次失败调用，账本新增第 13 条未知
+
+按计划执行（`ab-v1`、fit-limit 3、每路径最多 3 次 Flash）。L0 在第一次 Flash 提案处报 `ConnectionError: RemoteDisconnected`，按停止规则中止：1 次 fit、1 次失败调用、无自动重试、L1 未启动。部分交付保留 trial_1 检查点（6660/8301 行），独立进程 predict 输出 3232 行。
+
+账本 387→388 请求，known 仍 ¥7.0165495（未增），unknown 12→13（新 ID `153d96d3…`，scope `a151_loop_off`），pending 0，SHA `5b1f5c58…`→`d671c424…`。新 unknown 不在已接受快照内，`check_snapshot` 会拒绝后续付费；处理前不再发起真实请求。A 累计 1651。
+
+闭环未跑通（断在第一次提案），L1 未运行，无分数结论。另记：失败调用约 7 分钟才报断连，而文档读超时 60 秒，再次付费前需确认底层传输重试。两次尝试原件均保留：`runs/a151_small_trial`（0 花费的参数冲突）、`runs/a151_small_trial_attempt_02`（真实失败）。报告 batches/A151_small_trial_results_20261124_zh.md。
+
 ## 2026-11-24：A151 知识纠正与执行修复分层，0 fit／0 API
 
 按交接第8节第一项实现`--issue-layering off|by-class`（默认off）。issue按命题种类分knowledge/execution/measurement；知识类由已核复述关闭为`resolved_semantic`并标`new_fit_required=false`，执行类等匹配执行证据，测量类不被无关成功试验关闭。默认strict/full与grounded-v1旧行为逐字节未改，旧6项测试未改全过，新增12项分层测试。

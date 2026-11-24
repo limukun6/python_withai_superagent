@@ -1,6 +1,16 @@
-# 当前接续状态：2026-11-24，A151完成，1644fit／387请求
+# 当前接续状态：2026-11-24，A151完成，1651fit／388请求／13未知
 
-## A151最新：知识纠正与执行修复已分层，零成本验收通过，默认不变
+## A151小试最新：第一条路径遇传输故障，已停止，账本新增第13条未知
+
+按A151小试计划执行（`ab-v1`、fit-limit 3、每路径最多3次Flash）。L0（calibrated-v2，分层off）在第一次Flash提案处报`ConnectionError: RemoteDisconnected`，按停止规则中止：**1次fit、1次失败调用、无自动重试**、L1未启动。部分交付保留trial_1检查点（6660/8301行），独立进程`predict`输出3232行。
+
+账本：387→**388请求**，known仍**¥7.0165495**（未增），unknown 12→**13**，新ID`153d96d3…`（scope `a151_loop_off`），pending0，SHA由`5b1f5c58…`变为`d671c424…`。**这条新unknown不在已接受快照里，`check_snapshot`会拒绝后续付费**；在处理它之前不要再发起真实请求。A累计拟合1651。
+
+闭环未跑通（断在第一次提案），两条路径对照未发生，无任何分数结论。另记：失败调用约7分钟才报断连，而文档读超时60秒；再次付费前应确认底层HTTP库是否对同一请求做传输级重试。
+
+本批两次尝试均保留：`runs/a151_small_trial`（`ab-fixed`要求fit-limit11，0花费即停）、`runs/a151_small_trial_attempt_02`（真实失败）。报告batches/A151_small_trial_results_20261124_zh.md。
+
+## A151机制层：知识纠正与执行修复已分层，零成本验收通过，默认不变
 
 接续交接第8节第一项。新增`--issue-layering off|by-class`（默认off）：issue按命题种类分knowledge/execution/measurement，知识类由已核复述关闭为`resolved_semantic`，执行类仍需匹配执行证据，测量类不被无关成功试验关闭。默认strict/full与`grounded-v1`旧行为逐字节未改，旧6项grounded测试一行未改全过；新增12项分层测试。
 

@@ -297,6 +297,13 @@ def _budget_status(args):
     print(json.dumps(ledger.snapshot(args.task_budget_id) if args.task_budget_id else ledger.project_summary(),ensure_ascii=False));return 0
 
 
+def _resume_status(args):
+    from .resume import inspect as resume_inspection
+    report=resume_inspection(args.run_dir,args.ledger)
+    print(json.dumps(report,ensure_ascii=False,indent=1))
+    return {'complete':0,'resumable':0,'blocked':2}.get(report['status'],2)
+
+
 def build_parser():
     parser=argparse.ArgumentParser(description='Schema-driven classification SuperAgent')
     commands=parser.add_subparsers(dest='command',required=True)
@@ -378,6 +385,9 @@ def build_parser():
     initialize.set_defaults(handler=_budget_init)
     status=commands.add_parser('budget-status',help='Read course-cost accounting, not the platform account balance')
     status.add_argument('ledger');status.add_argument('--task-budget-id');status.set_defaults(handler=_budget_status)
+    resume=commands.add_parser('resume-status',help='Read-only: decide whether an interrupted run may continue')
+    resume.add_argument('run_dir');resume.add_argument('--ledger')
+    resume.set_defaults(handler=_resume_status)
     return parser
 
 

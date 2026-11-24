@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A150 只读续跑判定落地，续跑执行未接入
+
+新增 `superagent/resume.py` 与 `python -m superagent resume-status`：给出 `complete / resumable / blocked` 三种判定，护栏覆盖账本未结清、账本落后、源码漂移、任务包变化、试验编号不连续、fit 未完成、预算不足、清单缺失。`inspect` 只读——测试断言账本哈希不变、运行目录不新增文件。
+
+真实中断件验证（0 花费）：已完成的 `pair_s707_b2` → `complete`；被墙钟停止的 `text_s911_full` → **`resumable`**（0 fit / 0 请求，剩 3 fit / 3 请求，scope 账本一致）；不存在路径 → `blocked`（退出码 2）。
+
+**未做**：续跑执行本身、预算继承接线、幂等去重键、以及"续跑后总账等于一次跑完"的验证——因为续跑动作还不存在。报告 batches/A150_resume_status_20261124_zh.md。
+
 ## 2026-11-24：探索广度对照，加宽无分辨收益
 
 8 条路径（2 任务 × 2 seed × 2 臂）：32 fit / 16 调用 / ¥0.203370，无新增 unknown。breadth2 = anchor + 1 次探索 + refit；breadth4 = anchor + 3 次探索 + refit。

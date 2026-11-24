@@ -116,7 +116,7 @@ def score(archive, out):
         data = {k:np.concatenate(v) for k,v in columns.items()}
         ids = data.pop("row_id")
         require(len(set(ids)) == len(ids) == 6608, "Wrong number of frozen evaluation rows")
-        arms = {k:dict(correct=int((v==y[ids]).sum()), **comparison(data["baseline"],v,y[ids],groups[ids])) for k,v in data.items()}
+        arms = {k:comparison(data["baseline"],v,y[ids],groups[ids]) for k,v in data.items()}
         wins = sum(f["net"]["agent"]>0 for f in folds)
         result = arms["agent"]
         results[name] = dict(rows=len(ids),groups=len(seen_groups),folds=folds,arms=arms,

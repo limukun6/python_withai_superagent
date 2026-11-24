@@ -33,6 +33,33 @@
 
 开关直接比较，允许备选改对 65 题也改错 60 题，净增 5 题，95% 组配对区间为 **−0.256 至 +0.419 个百分点**。第一折真的改用 BGE，评价净变化为零。第五折真的改用 MPNet，多对五题。第二折首选通过第一半，第二半只多对一题，未过门槛。两种分半路径都低于首次用完整复核区的 4,760 和 4,765 题。可单独归因于开关的是 4,750 与 4,745 之间的差值。该扩展复用了可核对身份的头，另拟合一个 BGE 分类头，十份新进程原始文本预测均已复核。[逐折选择、拟合账本和逐行对照](../research/pilot_backup_1124/result.json)
 
+## 换一次分组并把分类头从零训练
+
+在打开新外层评分前固定概率提名规则。重新分配同一批 4,874 个标题组，每折均从空分类头缓存启动，单独训练、单独导出两个参考成员和实际选择的模型。双模型 **4,740/6,608（71.73%）**，Agent **4,744/6,608（71.79%）**。Agent 改对 131 题、改错 127 题，净增 4 题。五折依次为 **+7、−7、−2、0、+6**，95% 组配对区间为 **−0.421 至 +0.505 个百分点**。此次主检验未通过晋级标准，依登记未启动外部回复偏好任务。两次划分共用同一批开发题，不能把分母加倍。[预先登记的方案](batches/pilot_brier_replication_plan_20261124_zh.md) · [全部冷启动证据](../research/pilot_brier_replication_1124/result.json)
+
+五折都提名 MPNet，四折批准。第三折的训练复核多对 34 题，交付在外层少对 2 题。第四折复核多对 19 题，但提名区少对 2 题，Agent 按规则保留双模型。依原始行号对齐，两套划分都被第三个成员救回的只有 30 题，两次都被改错的有 19 题。实际交付标签在两套划分间有 621 处变化，双模型本身也有 593 处变化。瓶颈已经从能否找到 MPNet 转向训练反馈能否预告重训模型在下一批题上的收益。[同题配对与划分敏感性](../research/pilot_brier_replication_1124/partition_sensitivity.json)
+
+## 哪些题该交给第三个模型
+
+在已批准第三成员的路径上，允许 Agent 从训练反馈提名“一致”或“分歧”这类题继续由双模型单独回答，并在独立标题组复核。一共十条路径，八条曾批准第三模型，也都完成了这次离散选择。没有一条在提名区找到同时满足改对数和概率改善的类别，十份最终逐行预测与原交付完全一致。这里的逐题实验复用已训练分类头；八次决策另行计数。[事前方案](batches/pilot_consensus_veto_plan_20261124_zh.md) · [逐行数据与两套结果](../research/pilot_consensus_veto_1124/result.json)
+
+| 两个参考模型的意见 | 第一套五折，第三成员改对 / 改错 | 第二套五折，第三成员改对 / 改错 |
+|---|---:|---:|
+| 一致 | 45 / 26，净增 19 | 36 / 30，净增 6 |
+| 分歧 | 95 / 82，净增 13 | 95 / 97，净减 2 |
+
+因此，把两模型一致的题全部锁死会损失实际能救回的题。光看两模型是否分歧，也不足以判断下一次交给第三个成员是否划算。
+
+## 近似标题是否让成绩显得更好
+
+课程训练 CSV 没有文章编号。原来的共享标题分组只能保证完全匹配的规范化标题不跨折。事先固定近似匹配条件后，11,505 个不同原文标题中发现 166 对跨原组的近似标题，连接了 140 对原组；连通合并后剩 4,737 组。第一套五折有 266 行的至少一个标题与当折训练侧直接近似，第二套有 249 行。只看扩大后的整组均留在外层的行，第一套净增 **31/6,303**，第二套净增 **11/6,320**。近似样本不能单独解释 +32 与 +4 之间的差距。这个标准衡量措辞相似，无法单凭它识别文章身份。[定义及审查方案](batches/pilot_title_overlap_plan_20261124_zh.md) · [逐行分组与结果](../research/pilot_title_overlap_1124/result.json)
+
+后续本地 benchmark 已接入 `--search-grouping near_text --confirmation-grouping near_text`。生产划分器逐行复现独立审查器得到的 4,737 个组。五个预定随机种子的训练与评价之间均有零个近似连通组重叠。在 240 行匿名构造任务上，普通 benchmark 完成了搜索和三次分组评价，首次数值复用，三个真实分类器拟合均从子进程计数。这是独立的分组工程验收。[划分规则与验收设计](batches/near_text_grouping_plan_20261124_zh.md) · [真实入口与五次分组记录](../research/near_text_grouping_1124/)
+
+## 本地拟合与调用
+
+首轮五折新增 26 次实际下游分类器拟合，其中 2 次用于决策封存后的强制对照；首轮匿名验收另有 8 次。备选实验新增 1 次，重新分组的五条全冷路径分别为 9、9、9、8、9 次，合计 44 次。以上共 79 次实际拟合，单条独立 Agent 路径从零启动最多 9 次。新冷启动只共用固定编码器的输入表示。严格分组的匿名 benchmark 另做 3 次，计入后本组共 **82 次实际拟合**。逐题决策、相似度审查、五次开发划分和额外匿名复核均未新增分类器拟合。模型 API **0 次、0 个计费 token、¥0**。
+
 ## 少数类任务的入口修复
 
 原入口会检查旧提名方法使用过的一小块数据是否同时有两个类别。这一版的 Agent 已经把该小块并入更大的反馈区，旧检查会误拒可运行任务。用 1,800 个构造任务检查后，按实际三区条件可运行的有 1,313 个。旧版误拒 304 个，修复后误拒 0 个，额外误放 0 个。两次真实入口路由从回退改为走试用策略，五个课程开发折的行指纹全部一致。这些是可用性结果，没有分类准确率含义。[修复前后记录](../research/pilot_eligibility_1124/)
@@ -46,4 +73,8 @@ python -m unified_agent train TASK.zip --run-dir runs/trial --strategy pilot-bri
 python -m unified_agent predict FEATURES.zip --run-dir runs/trial --weights /path/to/weights --output predictions.csv
 python -m scripts.verify_pilot_nomination verify /path/to/Released_Task2-Headlines_CTR.zip
 python -m scripts.verify_pilot_backup verify /path/to/Released_Task2-Headlines_CTR.zip
+python -m scripts.verify_brier_replication verify /path/to/Released_Task2-Headlines_CTR.zip
+python -m scripts.study_consensus_veto verify /path/to/Released_Task2-Headlines_CTR.zip
+python -m scripts.audit_pilot_title_overlap verify /path/to/Released_Task2-Headlines_CTR.zip
+python -m scripts.accept_near_text_grouping verify /path/to/Released_Task2-Headlines_CTR.zip
 ```

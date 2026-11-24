@@ -1,0 +1,320 @@
+{
+  "primary_metric": "macro_f1",
+  "search_score": 0.9447528416600581,
+  "candidate": "single_char_C3.0",
+  "search_accuracy": 0.9769696969696969,
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "selection_metric": "confirmation_mean_macro_f1",
+  "selection_score": 0.9447528416600581,
+  "refit_requested": true,
+  "ensemble": {
+    "enabled": false,
+    "evaluations": 0,
+    "adopted_on_inner": false,
+    "minimum_gain": 0.002,
+    "components": [],
+    "rule": "Best per visited route; max 3 routes; equal probability weights; inner gain >= .002"
+  },
+  "confirmation": {
+    "primary_metric": "macro_f1",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      811
+    ],
+    "shortlist": [
+      "single_char_C3.0"
+    ],
+    "primary_candidate": "single_char_C3.0",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "single_char_C3.0",
+        "primary_accuracy": 0.9769696969696969,
+        "measurements": [
+          {
+            "seed": 811,
+            "trial": 2,
+            "candidate": "single_char_C3.0",
+            "params": {
+              "representation": "char",
+              "C": 3.0
+            },
+            "split_id": "primary",
+            "proposal": {
+              "candidate": "single_char_C3.0",
+              "task_kind": "single_text",
+              "configuration_claim": {
+                "classifier": "logistic"
+              },
+              "reason": "Trial 1 used word features with C=0.3 and achieved high accuracy but very low spam recall, leaving macro_f1 at 0.484. A char n-gram representation may capture spam-specific character patterns and obfuscations that word tokens miss; C=3.0 tests whether less regularization helps the minority class signal.",
+              "review": "Primary trial 1 is completed: single_word_C0.3, macro_f1 0.4843, accuracy 0.8727, spam recall 0.0187. The fitted estimator was logistic, but no classifier was declared in the trial configuration. This candidate is a new primary-search configuration, not a confirmation-split comparison.",
+              "hypothesis": "Char n-gram features with C=3.0 will represent spam-specific character patterns better than the word-only C=0.3 baseline and may improve spam recall enough to raise macro_f1.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": null,
+              "slice_expectation": null,
+              "purpose": "improve",
+              "uncertainty": "Unknown whether char features and C=3.0 will improve macro_f1 or overfit; the prior trial shows only that word C=0.3 had near-zero spam recall. No formal test is available, and this is a single primary-search proposal."
+            },
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "macro_f1",
+            "metric_spec": {
+              "name": "macro_f1",
+              "labels": [
+                "ham",
+                "spam"
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.9812680932446651,
+            "search_score": 0.9447528416600581,
+            "train_metrics": {
+              "accuracy": 0.9921283681501665,
+              "macro_f1": 0.9812680932446651,
+              "primary_metric": "macro_f1",
+              "score": 0.9812680932446651,
+              "rows": 3303
+            },
+            "search_metrics": {
+              "accuracy": 0.9769696969696969,
+              "macro_f1": 0.9447528416600581,
+              "primary_metric": "macro_f1",
+              "score": 0.9447528416600581,
+              "rows": 825
+            },
+            "score_gap": 0.036515251584607,
+            "train_accuracy": 0.9921283681501665,
+            "search_accuracy": 0.9769696969696969,
+            "generalization_gap": 0.01515867118046954,
+            "class_recall": [
+              1.0,
+              0.822429906542056
+            ],
+            "training_seconds": 0.5956859000143595,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "single_char_C3.0",
+              "params": {
+                "representation": "char",
+                "C": 3.0
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "single_char_C3.0",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 2.3119999999762513,
+            "evaluation_payload_sha256": "018dcd12ef1e84e593b0f6e70c39d5744401f50211840d5d6c46e59fcd945746",
+            "label_sha256": "3a97bb4bb1f1e4ae35e893b532812bd21b0f0c11da7b26f16060acafbdacc261",
+            "row_ids_sha256": "1305d54237ef3330abfc484917156af179bcbdb14151a0ebf02d6b5b8abd3658",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "macro_f1",
+                "labels": [
+                  "ham",
+                  "spam"
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "macro_f1",
+                "labels": [
+                  "ham",
+                  "spam"
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": "logistic",
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "confirmed",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "macro_f1",
+                "latest_search_score": 0.48427983735093977,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.8727272727272727,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal macro_f1 score is 48.427984%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "single_word_C0.3",
+                "reference_status": "completed",
+                "reference_rule": "best_completed_overall",
+                "selected_candidate": "single_char_C3.0",
+                "selected_status": null,
+                "reference_route": "single_word",
+                "selected_route": "single_char",
+                "same_declared_route": false,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.3,
+                    "after": 3.0,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": false,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                    }
+                  },
+                  {
+                    "parameter": "representation",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": "word",
+                    "after": "char",
+                    "parameter_effect": null
+                  }
+                ],
+                "single_declared_parameter_change": false,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+              },
+              "direction_consistency": {
+                "scope": "same declared route, single changed C; narrow English phrases only",
+                "applicable": false,
+                "expected_regularization_direction": null,
+                "mentions": [],
+                "warnings": [],
+                "freeform_semantics_verified": false,
+                "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+              },
+              "selected_candidate": "single_char_C3.0",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Char n-gram features with C=3.0 will represent spam-specific character patterns better than the word-only C=0.3 baseline and may improve spam recall enough to raise macro_f1.",
+                "expected_change": null
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Trial 1 used word features with C=0.3 and achieved high accuracy but very low spam recall, leaving macro_f1 at 0.484. A char n-gram representation may capture spam-specific character patterns and obfuscations that word tokens miss; C=3.0 tests whether less regularization helps the minority class signal.",
+                  "review": "Primary trial 1 is completed: single_word_C0.3, macro_f1 0.4843, accuracy 0.8727, spam recall 0.0187. The fitted estimator was logistic, but no classifier was declared in the trial configuration. This candidate is a new primary-search configuration, not a confirmation-split comparison.",
+                  "hypothesis": "Char n-gram features with C=3.0 will represent spam-specific character patterns better than the word-only C=0.3 baseline and may improve spam recall enough to raise macro_f1.",
+                  "assessment.interpretation": "",
+                  "assessment.uncertainty": ""
+                }
+              },
+              "prose_claims": {
+                "claims_checked": 3,
+                "confirmed": 2,
+                "contradicted": 0,
+                "unverifiable": 1,
+                "informational": 0,
+                "items": [
+                  {
+                    "field": "reason",
+                    "kind": "trial_reference",
+                    "span": "Trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "review",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "The fitted estimator was logistic, but no classifier was declared in the trial configuration.",
+                    "in_comparison": false,
+                    "observed": [
+                      "logistic"
+                    ],
+                    "status": "unverifiable",
+                    "reference_resolution": "unbound_review_subject"
+                  },
+                  {
+                    "field": "review",
+                    "kind": "trial_reference",
+                    "span": "trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  }
+                ],
+                "unique_contradictions": [],
+                "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 3 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            }
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.9447528416600581,
+        "mean_score": 0.9447528416600581,
+        "mean_accuracy": 0.9769696969696969,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "single_char_C3.0",
+    "selection_score": 0.9447528416600581,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "single_char_C3.0",
+      "incumbent": "single_char_C3.0",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "macro_f1"
+    },
+    "independent_confirmation_observed": false
+  }
+}

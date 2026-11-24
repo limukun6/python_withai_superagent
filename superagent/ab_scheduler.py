@@ -28,7 +28,7 @@ def _allowance(budget):
         return 0, 'Unknown usage; reconcile the existing task ledger before any new fit.'
     limit, attempted, completed, left, reserve, llm_limit, used = [budget[k] for k in fields]
     if not (0 <= completed <= attempted <= limit <= 11 and left == limit - attempted
-            and 0 <= reserve <= limit and 0 <= used <= llm_limit <= 3):
+            and 0 <= reserve <= limit and 0 <= used <= llm_limit <= 12):
         return 0, 'Budget counters or caps disagree; check the task ledger.'
     elapsed = budget.get('elapsed_seconds')
     wall = budget.get('time_limit_seconds')

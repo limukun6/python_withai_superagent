@@ -319,6 +319,8 @@ def build_parser():
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'],default='fixed')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+    run.add_argument('--llm-request-limit',type=int,default=3,
+                     help='AB planning-request cap per run (default 3, accepted range 1..12)')
     run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',

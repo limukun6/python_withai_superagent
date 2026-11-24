@@ -1,0 +1,998 @@
+[
+  {
+    "trial": 1,
+    "candidate": "word_C0.05",
+    "params": {
+      "C": 0.05,
+      "representation": "word",
+      "swap_augmentation": true
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8145645645645646,
+    "search_score": 0.6227909811090798,
+    "train_metrics": {
+      "accuracy": 0.8145645645645646,
+      "macro_f1": 0.8145594431214508,
+      "primary_metric": "accuracy",
+      "score": 0.8145645645645646,
+      "rows": 6660
+    },
+    "search_metrics": {
+      "accuracy": 0.6227909811090798,
+      "macro_f1": 0.622647488332404,
+      "primary_metric": "accuracy",
+      "score": 0.6227909811090798,
+      "rows": 1641
+    },
+    "score_gap": 0.1917735834554848,
+    "train_accuracy": 0.8145645645645646,
+    "search_accuracy": 0.6227909811090798,
+    "generalization_gap": 0.1917735834554848,
+    "class_recall": [
+      0.6281287246722288,
+      0.6172069825436409
+    ],
+    "training_seconds": 0.7121513999882154,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "word_C0.05",
+      "params": {
+        "C": 0.05,
+        "representation": "word",
+        "swap_augmentation": true
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "word_C0.05",
+        "swap_label_rule": "flips"
+      }
+    },
+    "worker_wall_seconds": 2.2969999999622814,
+    "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+    "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+    "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "word_C0.1",
+    "params": {
+      "C": 0.1,
+      "representation": "word",
+      "swap_augmentation": true
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "word_C0.1",
+      "task_kind": "pair_text",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Only one primary trial is completed, word_C0.05, with search accuracy 0.6228 and a large train-search gap of 0.1918. The cheapest next diagnostic is the adjacent C value on the same active word route, before changing representation.",
+      "review": "Trial 1 is the sole completed primary evidence: word_C0.05, logistic, swap augmentation, search accuracy 0.6228, train accuracy 0.8146, class recalls approximately balanced. No failures are recorded. The configuration fact check was not declared for trial 1, but the fitted estimator was logistic.",
+      "hypothesis": "Testing word_C0.1 will show whether the current search score is sensitive to regularization strength on the word representation; the direction and magnitude are unknown.",
+      "evidence_trials": [
+        1
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "diagnose",
+      "uncertainty": "Single primary trial only; no confirmation split and no formal test available. The observed train-search gap may indicate overfitting, so increasing C could worsen search accuracy rather than improve it. This proposal is diagnostic, not a predicted improvement."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8442942942942943,
+    "search_score": 0.6215722120658135,
+    "train_metrics": {
+      "accuracy": 0.8442942942942943,
+      "macro_f1": 0.8442930270311473,
+      "primary_metric": "accuracy",
+      "score": 0.8442942942942943,
+      "rows": 6660
+    },
+    "search_metrics": {
+      "accuracy": 0.6215722120658135,
+      "macro_f1": 0.6214282556614263,
+      "primary_metric": "accuracy",
+      "score": 0.6215722120658135,
+      "rows": 1641
+    },
+    "score_gap": 0.22272208222848078,
+    "train_accuracy": 0.8442942942942943,
+    "search_accuracy": 0.6215722120658135,
+    "generalization_gap": 0.22272208222848078,
+    "class_recall": [
+      0.6269368295589988,
+      0.6159600997506235
+    ],
+    "training_seconds": 0.7293079000082798,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "word_C0.1",
+      "params": {
+        "C": 0.1,
+        "representation": "word",
+        "swap_augmentation": true
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "word_C0.1",
+        "swap_label_rule": "flips"
+      }
+    },
+    "worker_wall_seconds": 2.375,
+    "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+    "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+    "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "no_comparison",
+        "source": "executor",
+        "latest_trial": 1,
+        "best_prior_trial": null,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.6227909811090798,
+        "best_prior_search_score": null,
+        "latest_search_accuracy": 0.6227909811090798,
+        "best_prior_search_accuracy": null,
+        "delta_vs_prior_best": null,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 1 internal accuracy score is 62.279098%; no earlier completed score is available.",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 1,
+        "reference_candidate": "word_C0.05",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_in_selected_route",
+        "selected_candidate": "word_C0.1",
+        "selected_status": null,
+        "reference_route": "word",
+        "selected_route": "word",
+        "same_declared_route": true,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": true,
+            "before": 0.05,
+            "after": 0.1,
+            "parameter_effect": {
+              "numeric_direction": "increased",
+              "declared_effect": "weaker_regularization",
+              "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": true,
+              "accuracy_effect_verified": false,
+              "cross_route_note": null
+            }
+          }
+        ],
+        "single_declared_parameter_change": true,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": true,
+        "expected_regularization_direction": "weaker",
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false
+      },
+      "selected_candidate": "word_C0.1",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "Testing word_C0.1 will show whether the current search score is sensitive to regularization strength on the word representation; the direction and magnitude are unknown.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Only one primary trial is completed, word_C0.05, with search accuracy 0.6228 and a large train-search gap of 0.1918. The cheapest next diagnostic is the adjacent C value on the same active word route, before changing representation.",
+          "review": "Trial 1 is the sole completed primary evidence: word_C0.05, logistic, swap augmentation, search accuracy 0.6228, train accuracy 0.8146, class recalls approximately balanced. No failures are recorded. The configuration fact check was not declared for trial 1, but the fitted estimator was logistic.",
+          "hypothesis": "Testing word_C0.1 will show whether the current search score is sensitive to regularization strength on the word representation; the direction and magnitude are unknown.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 2,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 2,
+        "items": [
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 is the sole completed primary evidence: word_C0.05, logistic, swap augmentation, search accuracy 0.6228, train accuracy 0.8146, class recalls approximately balanced.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The configuration fact check was not declared for trial 1, but the fitted estimator was logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "word_char_C0.05",
+    "params": {
+      "C": 0.05,
+      "representation": "word_char",
+      "swap_augmentation": true
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "word_char_C0.05",
+      "task_kind": "pair_text",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "The word route has two completed primary trials with similar search accuracy and large train-search gaps; increasing C from 0.05 to 0.1 did not improve search and increased the gap. The next diagnostic is to hold C at 0.05 and switch to word_char representation to test whether subword features change the search score before spending more fits on higher-C word models.",
+      "review": "Trials 1 and 2 are both primary word-route logistic runs with swap augmentation. Trial 1: search accuracy 0.6228, train accuracy 0.8146, gap 0.1918. Trial 2: search accuracy 0.6216, train accuracy 0.8443, gap 0.2227. Class recalls are approximately balanced. Trial 2 configuration fact check confirmed logistic; trial 1 fitted estimator was logistic though not declared. No failures are recorded.",
+      "hypothesis": "word_char_C0.05 will test whether character n-gram features alter search accuracy relative to word_C0.05; direction and magnitude are unknown.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "diagnose",
+      "uncertainty": "Only two primary word-route trials are available; no confirmation split or formal test is available. The observed train-search gap may indicate overfitting, but a representation change could reduce, leave unchanged, or worsen search accuracy. This is diagnostic, not a predicted improvement."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8144144144144144,
+    "search_score": 0.6520414381474711,
+    "train_metrics": {
+      "accuracy": 0.8144144144144144,
+      "macro_f1": 0.8144047738864774,
+      "primary_metric": "accuracy",
+      "score": 0.8144144144144144,
+      "rows": 6660
+    },
+    "search_metrics": {
+      "accuracy": 0.6520414381474711,
+      "macro_f1": 0.6518133548262672,
+      "primary_metric": "accuracy",
+      "score": 0.6520414381474711,
+      "rows": 1641
+    },
+    "score_gap": 0.16237297626694336,
+    "train_accuracy": 0.8144144144144144,
+    "search_accuracy": 0.6520414381474711,
+    "generalization_gap": 0.16237297626694336,
+    "class_recall": [
+      0.6626936829558999,
+      0.6408977556109726
+    ],
+    "training_seconds": 5.407179099973291,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "word_char_C0.05",
+      "params": {
+        "C": 0.05,
+        "representation": "word_char",
+        "swap_augmentation": true
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "word_char_C0.05",
+        "swap_label_rule": "flips"
+      }
+    },
+    "worker_wall_seconds": 8.655999999959022,
+    "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+    "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+    "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "lower",
+        "source": "executor",
+        "latest_trial": 2,
+        "best_prior_trial": 1,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.6215722120658135,
+        "best_prior_search_score": 0.6227909811090798,
+        "latest_search_accuracy": 0.6215722120658135,
+        "best_prior_search_accuracy": 0.6227909811090798,
+        "delta_vs_prior_best": -0.0012187690432663434,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 2 internal accuracy score is 62.157221%; best earlier trial 1 is 62.279098%; difference -0.121877 percentage points (lower).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 1,
+        "reference_candidate": "word_C0.05",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_overall",
+        "selected_candidate": "word_char_C0.05",
+        "selected_status": null,
+        "reference_route": "word",
+        "selected_route": "word_char",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "representation",
+            "before_present": true,
+            "after_present": true,
+            "before": "word",
+            "after": "word_char",
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "word_char_C0.05",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "word_char_C0.05 will test whether character n-gram features alter search accuracy relative to word_C0.05; direction and magnitude are unknown.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "The word route has two completed primary trials with similar search accuracy and large train-search gaps; increasing C from 0.05 to 0.1 did not improve search and increased the gap. The next diagnostic is to hold C at 0.05 and switch to word_char representation to test whether subword features change the search score before spending more fits on higher-C word models.",
+          "review": "Trials 1 and 2 are both primary word-route logistic runs with swap augmentation. Trial 1: search accuracy 0.6228, train accuracy 0.8146, gap 0.1918. Trial 2: search accuracy 0.6216, train accuracy 0.8443, gap 0.2227. Class recalls are approximately balanced. Trial 2 configuration fact check confirmed logistic; trial 1 fitted estimator was logistic though not declared. No failures are recorded.",
+          "hypothesis": "word_char_C0.05 will test whether character n-gram features alter search accuracy relative to word_C0.05; direction and magnitude are unknown.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 5,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 3,
+        "items": [
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trials 1 and 2 are both primary word-route logistic runs with swap augmentation.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 configuration fact check confirmed logistic;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "trial 1 fitted estimator was logistic though not declared.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 5 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "word_char_C0.1",
+    "params": {
+      "C": 0.1,
+      "representation": "word_char",
+      "swap_augmentation": true
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "word_char_C0.1",
+      "task_kind": "pair_text",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Trial 3 is the best completed primary result: word_char_C0.05 with search accuracy 0.6520, above the word-route trials. The active word_char route has an adjacent available C value, word_char_C0.1, so the cheapest next diagnostic is to hold representation and swap augmentation fixed and test whether the word_char search score is sensitive to a small regularization change before making larger C jumps.",
+      "review": "Trials 1-3 are completed primary logistic runs with swap augmentation. Trial 1 word_C0.05: search accuracy 0.6228, train accuracy 0.8146, gap 0.1918. Trial 2 word_C0.1: search accuracy 0.6216, train accuracy 0.8443, gap 0.2227. Trial 3 word_char_C0.05: search accuracy 0.6520, train accuracy 0.8144, gap 0.1624. Class recalls are approximately balanced. Trial 3 configuration fact check confirmed logistic. No failures are recorded.",
+      "hypothesis": "Testing word_char_C0.1 will show whether the word_char search score is sensitive to a small increase in C from 0.05 to 0.1; the direction and magnitude are unknown.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "diagnose",
+      "uncertainty": "Only one word_char primary trial is available, and no confirmation split or formal test is available. The observed train-search gap may indicate overfitting, so increasing C could worsen search accuracy rather than improve it. This proposal is diagnostic, not a predicted improvement."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8531531531531531,
+    "search_score": 0.6526508226691042,
+    "train_metrics": {
+      "accuracy": 0.8531531531531531,
+      "macro_f1": 0.8531330082610147,
+      "primary_metric": "accuracy",
+      "score": 0.8531531531531531,
+      "rows": 6660
+    },
+    "search_metrics": {
+      "accuracy": 0.6526508226691042,
+      "macro_f1": 0.6525567649969244,
+      "primary_metric": "accuracy",
+      "score": 0.6526508226691042,
+      "rows": 1641
+    },
+    "score_gap": 0.20050233048404886,
+    "train_accuracy": 0.8531531531531531,
+    "search_accuracy": 0.6526508226691042,
+    "generalization_gap": 0.20050233048404886,
+    "class_recall": [
+      0.6543504171632897,
+      0.6508728179551122
+    ],
+    "training_seconds": 5.3953152999747545,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "word_char_C0.1",
+      "params": {
+        "C": 0.1,
+        "representation": "word_char",
+        "swap_augmentation": true
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "word_char_C0.1",
+        "swap_label_rule": "flips"
+      }
+    },
+    "worker_wall_seconds": 8.65600000001723,
+    "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+    "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+    "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "improved",
+        "source": "executor",
+        "latest_trial": 3,
+        "best_prior_trial": 1,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.6520414381474711,
+        "best_prior_search_score": 0.6227909811090798,
+        "latest_search_accuracy": 0.6520414381474711,
+        "best_prior_search_accuracy": 0.6227909811090798,
+        "delta_vs_prior_best": 0.029250457038391242,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 3 internal accuracy score is 65.204144%; best earlier trial 1 is 62.279098%; difference +2.925046 percentage points (improved).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 3,
+        "reference_candidate": "word_char_C0.05",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_in_selected_route",
+        "selected_candidate": "word_char_C0.1",
+        "selected_status": null,
+        "reference_route": "word_char",
+        "selected_route": "word_char",
+        "same_declared_route": true,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": true,
+            "before": 0.05,
+            "after": 0.1,
+            "parameter_effect": {
+              "numeric_direction": "increased",
+              "declared_effect": "weaker_regularization",
+              "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": true,
+              "accuracy_effect_verified": false,
+              "cross_route_note": null
+            }
+          }
+        ],
+        "single_declared_parameter_change": true,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": true,
+        "expected_regularization_direction": "weaker",
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false
+      },
+      "selected_candidate": "word_char_C0.1",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "Testing word_char_C0.1 will show whether the word_char search score is sensitive to a small increase in C from 0.05 to 0.1; the direction and magnitude are unknown.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 3 is the best completed primary result: word_char_C0.05 with search accuracy 0.6520, above the word-route trials. The active word_char route has an adjacent available C value, word_char_C0.1, so the cheapest next diagnostic is to hold representation and swap augmentation fixed and test whether the word_char search score is sensitive to a small regularization change before making larger C jumps.",
+          "review": "Trials 1-3 are completed primary logistic runs with swap augmentation. Trial 1 word_C0.05: search accuracy 0.6228, train accuracy 0.8146, gap 0.1918. Trial 2 word_C0.1: search accuracy 0.6216, train accuracy 0.8443, gap 0.2227. Trial 3 word_char_C0.05: search accuracy 0.6520, train accuracy 0.8144, gap 0.1624. Class recalls are approximately balanced. Trial 3 configuration fact check confirmed logistic. No failures are recorded.",
+          "hypothesis": "Testing word_char_C0.1 will show whether the word_char search score is sensitive to a small increase in C from 0.05 to 0.1; the direction and magnitude are unknown.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 6,
+        "confirmed": 6,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trials 1-3 are completed primary logistic runs with swap augmentation.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 3 configuration fact check confirmed logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 6 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  }
+]

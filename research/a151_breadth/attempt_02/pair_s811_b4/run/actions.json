@@ -1,0 +1,54 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.1",
+    "split_id": "primary",
+    "reason": "Trial 1 is the only completed primary result; word_C0.1 is the nearest untried regularization step in the active word route, so it isolates the effect of C before changing representation.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.05",
+    "split_id": "primary",
+    "reason": "Trial 1 word_C0.05 is the best completed primary result, and Trial 2 word_C0.1 did not exceed it while showing a larger train-search gap. Before further word-route C tuning, test the untried word_char representation at the same C=0.05 to see whether character n-gram features add signal.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.1",
+    "split_id": "primary",
+    "reason": "Trial 3 word_char_C0.05 is the best completed PRIMARY result, and word_char_C0.1 is the nearest untried regularization step within the same active word_char route. This keeps representation fixed and changes only C, making it the cleanest next diagnostic before broader route changes.",
+    "evidence_trials": [
+      3,
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

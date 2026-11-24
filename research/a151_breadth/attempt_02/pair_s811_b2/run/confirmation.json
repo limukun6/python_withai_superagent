@@ -1,0 +1,294 @@
+{
+  "primary_metric": "accuracy",
+  "enabled": true,
+  "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+  "seeds": [
+    811
+  ],
+  "shortlist": [
+    "word_char_C0.3"
+  ],
+  "primary_candidate": "word_char_C0.3",
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "candidates": [
+    {
+      "candidate": "word_char_C0.3",
+      "primary_accuracy": 0.665673420738975,
+      "measurements": [
+        {
+          "seed": 811,
+          "trial": 2,
+          "candidate": "word_char_C0.3",
+          "params": {
+            "C": 0.3,
+            "representation": "word_char",
+            "swap_augmentation": true
+          },
+          "split_id": "primary",
+          "proposal": {
+            "candidate": "word_char_C0.3",
+            "task_kind": "pair_text",
+            "configuration_claim": {
+              "classifier": "logistic"
+            },
+            "reason": "Trial 1 is the only completed PRIMARY evidence: word C=0.05 scored 0.6448 search accuracy with a 0.1729 train-search gap. The word_char route is untried and C=0.3 is a moderate regularization point, so this tests whether subword features improve generalization over the word-only baseline without committing to a predicted gain.",
+            "review": "Only one PRIMARY trial is available. It used word representation with C=0.05 and logistic regression, achieving search accuracy 0.6448, train accuracy 0.8178, and balanced class recalls. No confirmation split is available, and no word_char or C=0.3 evidence exists yet.",
+            "hypothesis": "Word_char features may capture character-level cues in headlines that word-only features miss, and C=0.3 may provide a reasonable bias-variance tradeoff. This is a coverage/improvement test, not a guaranteed improvement.",
+            "evidence_trials": [
+              1
+            ],
+            "expected_change": null,
+            "slice_expectation": null,
+            "purpose": "coverage",
+            "uncertainty": "Only one primary trial exists, so route and regularization behavior are largely unknown. The direction and magnitude of any accuracy change from word_char C=0.3 are uncertain, and single-split measurements may be noisy."
+          },
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "accuracy",
+          "metric_spec": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.9092556243394232,
+          "search_score": 0.665673420738975,
+          "train_metrics": {
+            "accuracy": 0.9092556243394232,
+            "macro_f1": 0.9092529431466498,
+            "primary_metric": "accuracy",
+            "score": 0.9092556243394232,
+            "rows": 6623
+          },
+          "search_metrics": {
+            "accuracy": 0.665673420738975,
+            "macro_f1": 0.6654328047570797,
+            "primary_metric": "accuracy",
+            "score": 0.665673420738975,
+            "rows": 1678
+          },
+          "score_gap": 0.24358220360044824,
+          "train_accuracy": 0.9092556243394232,
+          "search_accuracy": 0.665673420738975,
+          "generalization_gap": 0.24358220360044824,
+          "class_recall": [
+            0.6584766584766585,
+            0.6724537037037037
+          ],
+          "training_seconds": 5.415838100016117,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "word_char_C0.3",
+            "params": {
+              "C": 0.3,
+              "representation": "word_char",
+              "swap_augmentation": true
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "word_char_C0.3",
+              "swap_label_rule": "flips"
+            }
+          },
+          "worker_wall_seconds": 8.73399999999674,
+          "evaluation_payload_sha256": "020758f1fe7d4d6f700b96ccfe3479e4b5e7ea4a870e014487b496e090b1269b",
+          "label_sha256": "9f93e1ec3e04d7a6ac5d6eae0744dd68a78bea2756bf033e564c388b995da848",
+          "row_ids_sha256": "35d4088f354b875286417568437a10cd884648aa2a5fa1aac98cd20e5a9ee0c5",
+          "metric_identity": {
+            "status": "confirmed",
+            "expected": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "observed": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            }
+          },
+          "configuration_fact_check": {
+            "declared": "logistic",
+            "observed": "logistic",
+            "observed_class": "LogisticRegression",
+            "status": "confirmed",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          },
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "explanation_audit": {
+            "executor_comparison": {
+              "reading": "no_comparison",
+              "source": "executor",
+              "latest_trial": 1,
+              "best_prior_trial": null,
+              "primary_metric": "accuracy",
+              "latest_search_score": 0.6448152562574494,
+              "best_prior_search_score": null,
+              "latest_search_accuracy": 0.6448152562574494,
+              "best_prior_search_accuracy": null,
+              "delta_vs_prior_best": null,
+              "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+              "text": "Trial 1 internal accuracy score is 64.481526%; no earlier completed score is available.",
+              "statistical_test_performed": false,
+              "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+            },
+            "cited_measured_facts": [],
+            "configuration_change": {
+              "available": true,
+              "source": "executor",
+              "reference_trial": 1,
+              "reference_candidate": "word_C0.05",
+              "reference_status": "completed",
+              "reference_rule": "best_completed_overall",
+              "selected_candidate": "word_char_C0.3",
+              "selected_status": null,
+              "reference_route": "word",
+              "selected_route": "word_char",
+              "same_declared_route": false,
+              "changed_parameters": [
+                {
+                  "parameter": "C",
+                  "before_present": true,
+                  "after_present": true,
+                  "before": 0.05,
+                  "after": 0.3,
+                  "parameter_effect": {
+                    "numeric_direction": "increased",
+                    "declared_effect": "weaker_regularization",
+                    "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                    "effect_scope": "definition within a fixed parameterization",
+                    "same_declared_route": false,
+                    "accuracy_effect_verified": false,
+                    "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+                  }
+                },
+                {
+                  "parameter": "representation",
+                  "before_present": true,
+                  "after_present": true,
+                  "before": "word",
+                  "after": "word_char",
+                  "parameter_effect": null
+                }
+              ],
+              "single_declared_parameter_change": false,
+              "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+              "single_factor_attribution_supported": false,
+              "statistical_test_performed": false,
+              "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+            },
+            "direction_consistency": {
+              "scope": "same declared route, single changed C; narrow English phrases only",
+              "applicable": false,
+              "expected_regularization_direction": null,
+              "mentions": [],
+              "warnings": [],
+              "freeform_semantics_verified": false,
+              "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+            },
+            "selected_candidate": "word_char_C0.3",
+            "future_hypothesis": {
+              "source": "LLM, unverified future hypothesis",
+              "text": "Word_char features may capture character-level cues in headlines that word-only features miss, and C=0.3 may provide a reasonable bias-variance tradeoff. This is a coverage/improvement test, not a guaranteed improvement.",
+              "expected_change": null
+            },
+            "original_prose": {
+              "source": "LLM, not certified as measured evidence",
+              "fields": {
+                "reason": "Trial 1 is the only completed PRIMARY evidence: word C=0.05 scored 0.6448 search accuracy with a 0.1729 train-search gap. The word_char route is untried and C=0.3 is a moderate regularization point, so this tests whether subword features improve generalization over the word-only baseline without committing to a predicted gain.",
+                "review": "Only one PRIMARY trial is available. It used word representation with C=0.05 and logistic regression, achieving search accuracy 0.6448, train accuracy 0.8178, and balanced class recalls. No confirmation split is available, and no word_char or C=0.3 evidence exists yet.",
+                "hypothesis": "Word_char features may capture character-level cues in headlines that word-only features miss, and C=0.3 may provide a reasonable bias-variance tradeoff. This is a coverage/improvement test, not a guaranteed improvement.",
+                "assessment.interpretation": "",
+                "assessment.uncertainty": ""
+              }
+            },
+            "prose_claims": {
+              "claims_checked": 2,
+              "confirmed": 1,
+              "contradicted": 0,
+              "unverifiable": 1,
+              "informational": 0,
+              "items": [
+                {
+                  "field": "reason",
+                  "kind": "trial_reference",
+                  "span": "Trial 1",
+                  "claim": 1,
+                  "observed": [
+                    1
+                  ],
+                  "status": "confirmed"
+                },
+                {
+                  "field": "review",
+                  "kind": "classifier",
+                  "span": "logistic regression",
+                  "claim": "logistic",
+                  "compatible_with": [
+                    "logistic"
+                  ],
+                  "sentence": "It used word representation with C=0.05 and logistic regression, achieving search accuracy 0.6448, train accuracy 0.8178, and balanced class recalls.",
+                  "in_comparison": false,
+                  "observed": [
+                    "logistic"
+                  ],
+                  "status": "unverifiable",
+                  "reference_resolution": "unbound_review_subject"
+                }
+              ],
+              "unique_contradictions": [],
+              "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+            },
+            "warnings": [],
+            "freeform_prose_fully_verified": false,
+            "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+            "changes_candidate": false,
+            "triggers_api_retry": false
+          }
+        }
+      ],
+      "complete": true,
+      "primary_score": 0.665673420738975,
+      "mean_score": 0.665673420738975,
+      "mean_accuracy": 0.665673420738975,
+      "sample_sd": null
+    }
+  ],
+  "valid_confirmation": true,
+  "selected_candidate": "word_char_C0.3",
+  "selection_score": 0.665673420738975,
+  "changed": false,
+  "b_scheduler_review": {
+    "initial": "word_char_C0.3",
+    "incumbent": "word_char_C0.3",
+    "promotions": [],
+    "basis": [
+      "primary"
+    ],
+    "primary_metric": "accuracy"
+  },
+  "independent_confirmation_observed": false
+}

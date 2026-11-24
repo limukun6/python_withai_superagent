@@ -1,0 +1,54 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word features with C=0.3 and achieved macro_f1 about 0.498, with ham recall 1.0 but spam recall only 0.0303. This indicates the current word-level model is effectively failing on the spam class. A character n-gram representation with C=3.0 is a reasonable next primary-split candidate because it changes the feature space and reduces regularization strength, which may help capture spam-specific substrings and improve minority-class recall.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 2 showed char n-gram features with C=3.0 reached macro_f1 about 0.944 and spam recall 0.818, but train score was higher than search score by about 0.039. Trial 1 showed word features with C=0.3 were poor on spam recall. A same-route char candidate with C=0.3 tests stronger regularization while keeping the representation that worked, to see whether the train-search gap can be reduced without losing spam recall.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary result: char features with C=3.0 reached macro_f1 about 0.944 and spam recall about 0.818. Trial 3 showed the same char route with C=0.3 fell to macro_f1 about 0.684 and spam recall about 0.263, while Trial 1 showed word features with C=0.3 were poor on spam recall. The single_char route is exhausted, so single_word_char_C3.0 tests a new representation that combines the char signal that worked at C=3.0 with word features at the same regularization setting.",
+    "evidence_trials": [
+      2,
+      3,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

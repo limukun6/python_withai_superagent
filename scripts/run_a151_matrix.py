@@ -41,6 +41,8 @@ def command_for(path, fixed, out, args):
              '--proposal-contract', path['contract']]
     if path['layering'] != 'off':
         extra += ['--issue-layering', path['layering']]
+    if path.get('request_limit'):
+        extra += ['--llm-request-limit', str(path['request_limit'])]
     return ['run', path['task'], '--run-dir', str(out / path['name'] / 'run'),
             '--planner', 'checked-history', '--scheduler', path['scheduler'],
             '--portfolio', 'ab-v1', '--catalog-scope', 'full', '--preference-catalog', 'standard',

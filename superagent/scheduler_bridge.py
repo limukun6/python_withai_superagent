@@ -38,7 +38,7 @@ def validate_action(state,action,capabilities,allowed_splits):
     reserved=integer(budget['reserved_final_refit'],'reserved refit')
     request_limit=integer(budget['llm_request_limit'],'request limit')
     requests=integer(budget['used_llm_requests'],'used requests')
-    if limit>11 or request_limit>3 or requests>request_limit:raise ValueError('AB experiment cap exceeded')
+    if limit>11 or request_limit>12 or requests>request_limit:raise ValueError('AB experiment cap exceeded')
     if budget.get('unknown_failed_attempts',0)!=0:raise ValueError('Unknown failed fit costs must be resolved before scheduling')
     if completed>used or used>limit or remaining!=limit-used:raise ValueError('Inconsistent actual fit budget')
     if reserved>remaining:raise ValueError('No budget for reserved final refit')

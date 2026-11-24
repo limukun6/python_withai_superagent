@@ -1,0 +1,53 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word-only logistic regression with C=0.3 and achieved macro_f1 0.4843, but class recall was [1.0, 0.0187], indicating the spam class is almost never recovered. A word+char representation with C=3.0 is a reasonable next primary-split experiment because char n-grams can capture obfuscated spam patterns and lower regularization may allow the model to fit minority-class signal better than the heavily regularized word-only baseline.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary-split result: word_char with C=3.0 achieved macro_f1 0.9632 and spam recall 0.8785, versus trial 1's word-only C=0.3 macro_f1 0.4843 and near-zero spam recall. The next primary experiment should stay on the active word_char route and change only C to 0.3, giving a cleaner within-route probe of regularization strength around the current best configuration.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary result: word_char with C=3.0 achieved macro_f1 0.9632 and spam recall 0.8785. Trial 3 held the same word_char route and lowered C to 0.3, scoring 0.8086, so that route is exhausted. The next primary experiment should cover an untried char_wb hybrid route; this candidate uses char_wb hybrid features with C=1.0, which may capture subword obfuscation while retaining word-level context.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      4,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

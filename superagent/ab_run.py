@@ -49,6 +49,9 @@ def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kern
 
 
 def validate_options(args):
+    request_limit = getattr(args, 'llm_request_limit', 3)
+    if type(request_limit) is not int or not 1 <= request_limit <= 12:
+        raise ValueError('AB request limit must be an integer between 1 and 12')
     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
         raise ValueError('Grounded proposals require checked-history planning')
     if getattr(args,'parameter_semantics','off')!='off' and args.planner!='checked-history':
@@ -237,6 +240,7 @@ def finish_complement(task, history, state, trusted, directory, executor, logger
 
 def command(args):
     limit = validate_options(args)
+    request_limit = getattr(args, 'llm_request_limit', 3)
     client = account = picker = None
     history_mode = args.planner in ('raw-history','checked-history')
     accounting = None
@@ -268,7 +272,7 @@ def command(args):
             account=IncrementalResearchAccount(ledger,args.task_budget_id,str(directory))
         else:
             account = TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
-        client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
+        client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=request_limit,
             allowed_served_models={args.model},account=account,streaming=True,
             thinking_mode=getattr(args,'thinking_mode',None),
             reasoning_effort=getattr(args,'reasoning_effort_level',None))
@@ -313,7 +317,7 @@ def command(args):
             **({'cover_untried_encoder':bool(adaptive)} if getattr(args,'cover_untried_encoder',False) else {}),
             **({'resolve_single_conflict':bool(adaptive)} if getattr(args,'resolve_single_conflict',False) else {}),
             **({'confidence_cascade':True} if getattr(args,'confidence_cascade',False) else {}),
-            llm_request_limit=3 if history_mode else 0, planner_mode=args.planner,
+            llm_request_limit=request_limit if history_mode else 0, planner_mode=args.planner,
             history_policy=args.history_policy,
             candidate_coverage=getattr(args,'candidate_coverage','off'),
             task_profile=getattr(args,'task_profile','off'),proposal_contract=getattr(args,'proposal_contract','strict-v1'),
@@ -334,7 +338,7 @@ def command(args):
         executor = Executor(directory, caps, metric, began, args.time_limit, args.trial_timeout, limit, logger)
         budget = dict(fit_limit=limit, attempted_classifier_fits=0, completed_classifier_fits=0,
                       remaining_fit_allowance=limit, reserved_final_refit=2 if complement else 1, unknown_failed_attempts=0,
-                      llm_request_limit=3 if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
+                      llm_request_limit=request_limit if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
         while True:
             budget['elapsed_seconds'] = time.monotonic() - began
             state = dict(ab_schema_version=1, task=spec, history=history,

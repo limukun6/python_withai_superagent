@@ -1,0 +1,54 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.1",
+    "split_id": "primary",
+    "reason": "Only one primary trial is completed, word_C0.05, with search accuracy 0.6228 and a large train-search gap of 0.1918. The cheapest next diagnostic is the adjacent C value on the same active word route, before changing representation.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.05",
+    "split_id": "primary",
+    "reason": "The word route has two completed primary trials with similar search accuracy and large train-search gaps; increasing C from 0.05 to 0.1 did not improve search and increased the gap. The next diagnostic is to hold C at 0.05 and switch to word_char representation to test whether subword features change the search score before spending more fits on higher-C word models.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.1",
+    "split_id": "primary",
+    "reason": "Trial 3 is the best completed primary result: word_char_C0.05 with search accuracy 0.6520, above the word-route trials. The active word_char route has an adjacent available C value, word_char_C0.1, so the cheapest next diagnostic is to hold representation and swap augmentation fixed and test whether the word_char search score is sensitive to a small regularization change before making larger C jumps.",
+    "evidence_trials": [
+      3,
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      4,
+      3
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

@@ -1,0 +1,148 @@
+{
+  "plan": "1a541d6e64e5b831af72339b93a5ebf767a05813488922fa8116905103c3e07a",
+  "source": {
+    "unified_agent.py": "9af1cfcb140499d37fc47d29513de5cbd0a60ff6d61adbb9d1407bf922c29c65",
+    "tools/pilot_challenger.py": "a471279a095a6ec8933b3f55f9c809d8a8a8cdae0aa58bd42044f4a04490056f",
+    "tools/crossfit_challenger.py": "1c2e8b263dfa09e3c543b1586a14cbfb41e63574b367a6f1b9c1d3088dc2f0fb",
+    "tools/challenger_training.py": "88f1909c2b6e24a56e5426c1668b7ca09414b2b0f086766f5431c6f7c41bc758",
+    "tools/pilot_fit_cache.py": "ebe62352eba8ba037cf4deafeccb4dc1f231ca94b272b0bf6aa82973921f9e8e",
+    "scripts/unified_encoder_portfolio.py": "cb04ab0ebe977d60bb06ac55a29350b871d6536be146f6e76dfbd1d330cb7745",
+    "tools/feedback_policy_pool.py": "e0f1f7aa52732c633625a9fc928e1fff1f167452495e0ad70cad4bf73a7c84a5",
+    "scripts/study_brier_replication.py": "4cdd6e82e7c7994c456bf2ab3a890dbe06957de891f3df5d072770bbd7a65607"
+  },
+  "fit_recipe": {
+    "files": {
+      "tools/portfolio_training.py": "bfc0de4cdb566be517c5e40135730618de77a1ce3f64aa01d870fca36044c63b",
+      "tools/portfolio_encoders.py": "ebe2dfb85e585336449da38d281c0a024a7b6ddb23928fc4dc2dc8bd06d3a733",
+      "tools/encoder_assets.py": "e2e7b6b6fa491beae43d0f3a22c02d4cd58f588f9df2cd994d6a5e5e12c436be",
+      "superagent/ab_sentence.py": "32a773250b170ec49c9039b93942eb1dab2a8d4543c8619bfbcbfb5e0dcb89b1",
+      "superagent/word_familiarity.py": "2077e8e5fcd9df96c804967e357ef28b72831a2eb4700cc9c1ef18195925235a",
+      "superagent/ab_methods.py": "778259582a34d7c7aaa42b7227b17f4fe014b25fb1e91793cbb9903a8dac1665",
+      "superagent/fit_guard.py": "c5a3a5e364f64ff5b0a22f006a65ffafc5bc77e5cee3ab7991344927e97b418a",
+      "superagent/models.py": "6a611c9cfcc35b83c394cc69326797497864f989cfd0e5ef34cf35ba5aa75c21",
+      "requirements-ab-encoder-tested.txt": "c97f8aa21fd3c21575f415b307ba7b5a01051b516836907c0a9ef100586480e3",
+      "requirements-tested.txt": "a422fa1052f5d18de96a0dc274e57113bb0d67cf77afaa5212ecdc3ed8da2e54"
+    },
+    "runtime": {
+      "scikit-learn": "1.7.2",
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "joblib": "1.5.2",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2"
+    }
+  },
+  "folds": {
+    "0": {
+      "train": {
+        "ids": "b1ea241961d1df8d96fc406f43889f290e6f698d8d1f75cf1b1804b1db50bba6",
+        "rows": 5270,
+        "groups": 3899
+      },
+      "outer": {
+        "ids": "709dd737754bc8262fa4f7aeacb75bf6281c31cd61721c07bfb6377af6d29cc7",
+        "rows": 1338,
+        "groups": 975
+      },
+      "training": "c64c1b78f9d05bc8c2024f4352d0bf70b622c40c7215015e2dd8e49cc66c48d0",
+      "features": "1449076cab9ecf135cf0ffbba4aa9fb2b9b8805c6d40afe287aaf3be06f9df0d",
+      "rows_from_original_folds": [
+        286,
+        257,
+        272,
+        249,
+        274
+      ]
+    },
+    "1": {
+      "train": {
+        "ids": "ef6ad9d5b538a8c29cea8e945b03651a569622f982a26bdc8be1ce256e7f42dd",
+        "rows": 5315,
+        "groups": 3899
+      },
+      "outer": {
+        "ids": "b994c417908665b994d419e947a2346cab6833e21e541388df3601630919f848",
+        "rows": 1293,
+        "groups": 975
+      },
+      "training": "e50f986ef973760b4bd03462a3caf5fcac7d919febe7a4a196635f88a26c8657",
+      "features": "10eb4a9e9eb7fa11f561ea1a28c95abdd74babbda199b1d3a9a04a7ac716be55",
+      "rows_from_original_folds": [
+        249,
+        271,
+        265,
+        284,
+        224
+      ]
+    },
+    "2": {
+      "train": {
+        "ids": "4a3370cb567b9ecfcffdcf2643db8be80ba789ec0b4eeaf0980bcb06d9525227",
+        "rows": 5285,
+        "groups": 3899
+      },
+      "outer": {
+        "ids": "de90d97b1da304190cec42561342a02b38533d3991aa3a8e3a0ba590089e5227",
+        "rows": 1323,
+        "groups": 975
+      },
+      "training": "b085b1250990a9f2b458d6686562d56cf2afbad093921565b20d9938d1b4b3a3",
+      "features": "fc6afc00d04aefbbf51f81feacc26553c7abe375cb06323ffe79f63835244ee3",
+      "rows_from_original_folds": [
+        290,
+        242,
+        243,
+        277,
+        271
+      ]
+    },
+    "3": {
+      "train": {
+        "ids": "6419d74c9a489a771a2428b4ec3e52e097c28323c4d0ff935319c979b1d95cf3",
+        "rows": 5258,
+        "groups": 3899
+      },
+      "outer": {
+        "ids": "2a8c5acc20035da2a0fe251cea21ba3281937f71b053c29bc0a190ed00b57f2b",
+        "rows": 1350,
+        "groups": 975
+      },
+      "training": "97d5fd38a626d9ef8defc5bffaeb9c6ddd84127e30c6be803566085e97a69736",
+      "features": "16a3c40239755cd9d176bfa250f01211f57f1cfdce8cb8ad0bd87f4d8919f425",
+      "rows_from_original_folds": [
+        240,
+        299,
+        298,
+        256,
+        257
+      ]
+    },
+    "4": {
+      "train": {
+        "ids": "e02ef3820f085c161651f2397b90d169c9da053a87f6cc37eebf95edf553de84",
+        "rows": 5304,
+        "groups": 3900
+      },
+      "outer": {
+        "ids": "4230db5b3dabdd36f66a591c0498735c981d22d7c0cafd5748c79c746ac6b915",
+        "rows": 1304,
+        "groups": 974
+      },
+      "training": "0b77cbfeddec03587575b0a359120ca3d1ab5f4e989f135b42c5efeb5022edf7",
+      "features": "246d047412f911686cc626c86e7da9b3aeeaaaea851cb770d04683a95ca0d6ed",
+      "rows_from_original_folds": [
+        251,
+        260,
+        268,
+        255,
+        270
+      ]
+    }
+  },
+  "budget": 45,
+  "model_api_calls": 0,
+  "nomination": "pilot-brier",
+  "group_salt": "pilot-replicate-outer-v2/"
+}

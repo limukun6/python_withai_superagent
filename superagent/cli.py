@@ -90,6 +90,13 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args,'method_space','existing')=='runtime' and (
+            args.scheduler!='ab-v1' or args.planner not in ('local','raw-history','checked-history') or
+            getattr(args,'local_text_proposals','off')!='off'):
+        raise ValueError('Runtime method space requires the adaptive A/B entry and its method selector')
+    if getattr(args,'local_method_search','off') in ('evidence','open') and (
+            args.scheduler!='ab-v1' or args.planner!='local' or getattr(args,'local_text_proposals','off')!='off'):
+        raise ValueError('Local method search requires the local adaptive A/B scheduler')
     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
         raise ValueError('Grounded proposals require checked-history planning')
     if getattr(args,'issue_layering','off')!='off' and getattr(args,'proposal_contract','strict-v1')!='grounded-v1':
@@ -319,7 +326,7 @@ def build_parser():
     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'],default='fixed')
     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
+    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity','varied'], default='standard',
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',
                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
@@ -335,6 +342,10 @@ def build_parser():
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
+    run.add_argument('--method-space',choices=['existing','runtime'],default='existing',
+                     help='Discover and compose the same compatible methods for local or history planning')
+    run.add_argument('--local-method-search',choices=['off','evidence','open'],default='off',
+                     help='Rank all feasible model configurations by training profile, observed results and unexplored representations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2','grounded-v1'],default='strict-v1',help='AB Flash: optional calibrated or evidence-bound proposal contract')
     run.add_argument('--menu-view',choices=['full','compact'],default='full',

@@ -271,8 +271,11 @@ class KernelSentenceFeatures(SentenceFeatures):
         return [*original,csr_matrix(extra)]
 
 
-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
-    if familiarity:
+def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False,topic_style=False):
+    if topic_style:
+        from .ab_varied_preferences import TopicStyleFeatures
+        features=TopicStyleFeatures(kind)
+    elif familiarity:
         features=FamiliarityPreferenceFeatures(kind)
     elif alternative:
         features=AlternativeSentenceFeatures(kind,alternative)

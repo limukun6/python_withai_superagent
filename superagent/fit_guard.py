@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 @contextmanager
-def admitted_fits(admission, candidate):
+def admitted_fits(admission, candidate, *, runtime_estimator=None):
     if admission is None:
         yield None
         return
@@ -32,11 +32,15 @@ def admitted_fits(admission, candidate):
 
     from sklearn.linear_model import LogisticRegression
     from sklearn.ensemble import ExtraTreesClassifier
-    from sklearn.svm import SVC
-    classes = [LogisticRegression, ExtraTreesClassifier, SVC]
+    from sklearn.naive_bayes import BernoulliNB
+    from sklearn.svm import LinearSVC, SVC
+    classes = [LogisticRegression, ExtraTreesClassifier, SVC, LinearSVC, BernoulliNB]
+    if runtime_estimator is not None and runtime_estimator not in classes:
+        classes.append(runtime_estimator)
     if find_spec('catboost') is not None:
         from catboost import CatBoostClassifier
-        classes.append(CatBoostClassifier)
+        if CatBoostClassifier not in classes:
+            classes.append(CatBoostClassifier)
     originals = []
 
     def instrument(original):
@@ -63,9 +67,9 @@ def admitted_fits(admission, candidate):
 
     save()
     try:
-        for cls in classes:
-            originals.append((cls, cls.fit))
-            cls.fit = instrument(cls.fit)
+        originals = [(cls, cls.fit, 'fit' in vars(cls)) for cls in classes]
+        for cls, original, _ in originals:
+            cls.fit = instrument(original)
         yield record
         if record['attempted_classifier_fits'] != limit or record['completed_classifier_fits'] != limit:
             raise ValueError('Actual supervised fits differ from the registered completed candidate cost')
@@ -74,6 +78,9 @@ def admitted_fits(admission, candidate):
         record['status'] = 'failed'
         raise
     finally:
-        for cls, original in originals:
-            cls.fit = original
+        for cls, original, owned in originals:
+            if owned:
+                cls.fit = original
+            else:
+                del cls.fit
         save()

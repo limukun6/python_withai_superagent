@@ -341,7 +341,7 @@ def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]
     if portfolio in ('ab-v1', 'all'):
         from .ab_methods import additions
         prior = 'expanded' if portfolio == 'ab-v1' else 'all'
-        return _legacy_candidates(kind, prior) + additions(kind)
+        return _legacy_candidates(kind, prior) + additions(kind, include_legacy_methods=portfolio!='all')
     return _legacy_candidates(kind, portfolio)
 
 

@@ -42,7 +42,11 @@ def main() -> None:
                    'semantic_check':semantic_check}
     start = time.perf_counter()
     from .fit_guard import admitted_fits
-    with admitted_fits(fit_admission, candidate_id) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
+    runtime_estimator=None
+    if candidate.params.get('runtime_composed') and origin=='registry':
+        from .runtime_inventory import runtime_classifiers
+        runtime_estimator=runtime_classifiers()[candidate.params['class']]
+    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
         if payload.get("mode") != "refit":
             training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
@@ -54,6 +58,10 @@ def main() -> None:
     selected_iterations=training_metadata.get('selected_iterations') if training_metadata else None
     from .estimator_facts import observed_classifier
     observed=observed_classifier(model)
+    if runtime_estimator is not None:
+        if (observed['class'],observed['module'])!=(runtime_estimator.__name__,runtime_estimator.__module__):
+            raise ValueError('The fitted estimator differs from the generated pipeline')
+        observed['family']=observed['family'] or observed['class']
     if payload.get("mode") == "refit":
         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,

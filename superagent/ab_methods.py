@@ -13,6 +13,7 @@ from .models import Candidate
 from . import numeric_kernel
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
 from . import ab_text_recipes, ab_vision, symmetric_text
+from . import ab_varied_preferences
 
 
 FIELDS = 'supported_field_interactions'
@@ -37,6 +38,7 @@ ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
 ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
+ROUTES.update({name:name for name in (ab_varied_preferences.TOPIC,ab_varied_preferences.BINARY)})
 
 
 def _field_tree(rows, labels, query):
@@ -99,7 +101,7 @@ def _ordered_relation(rows, labels, query):
     return model, model.predict(query)
 
 
-def additions(kind):
+def additions(kind, *, include_legacy_methods=True):
     if kind == 'numeric_tabular':
         from .general_models import _fit
         params = dict(C=1.0, kernel_components=numeric_kernel.COMPONENTS,
@@ -129,7 +131,7 @@ def additions(kind):
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
-        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
                         representation='word_char_minilm_l12',swap_augmentation=True)
@@ -137,10 +139,10 @@ def additions(kind):
             if catalog=='deep-edit':
                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
-            if catalog in ('deep-familiarity',JOINT_PREFERENCE):
+            if catalog in ('deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG):
                 extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
                                        partial(fit_sentence,kind=kind,familiarity=True)))
-        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog == JOINT_PREFERENCE else catalog
+        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog in (JOINT_PREFERENCE,ab_varied_preferences.CATALOG) else catalog
         if transfer_catalog in TRANSFER_METHODS:
             from .ab_sentence import ALTERNATIVES,verified_files
             variant,name=TRANSFER_METHODS[transfer_catalog]
@@ -155,5 +157,7 @@ def additions(kind):
                                    kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),
                                    partial(fit_sentence,kind=kind,nonlinear=True)))
         extra.extend(ab_text_recipes.candidates(kind))
+        if kind == 'pair_text' and catalog == ab_varied_preferences.CATALOG:
+            extra.extend(ab_varied_preferences.additions(verified_directory(deep=True) is not None, include_legacy_methods))
         return extra
     return []

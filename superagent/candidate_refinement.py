@@ -49,6 +49,9 @@ def materialize(kind,spec):
 
 
 def resolve_registered(kind,candidate_id,document):
+    if isinstance(document,dict) and document.get('schema_version')==4:
+        from .open_methods import resolve
+        return resolve(kind,candidate_id,document)
     if isinstance(document,dict) and document.get('schema_version')==3:
         from .generated_pipeline import resolve_generated_registry
         return resolve_generated_registry(kind,candidate_id,document)

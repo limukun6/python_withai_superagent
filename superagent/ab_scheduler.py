@@ -274,7 +274,8 @@ def _fixed_confirm(front, attempted, records, splits, available, reserve, known_
     return _action('stop', 'Completed the registered fixed exploration and confirmation allocation.', refs)
 
 
-def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None):
+def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None,
+                on_local_method=None):
     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
     if allocation not in ('adaptive', 'fixed'):
         raise ValueError('Unknown AB budget allocation')
@@ -346,6 +347,19 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
                   'No eligible new fit or complete matched replication fits the shared budget.')
         action = _action('stop',reason,[r['trial'] for r in front[:2]])
         return _explain_skips(action, skipped)
+    if on_local_method is not None:
+        if allocation!='adaptive' or on_explore is not None or on_local_recipe is not None or trusted_partitions is None:
+            raise ValueError('Local method selection needs its own verified adaptive route')
+        choices={entry['id']:cost for entry,cost in feasible}
+        verified=[r for r in front if r['trial'] in records]
+        decision=on_local_method(tuple(choices),verified)
+        name=decision['chosen']
+        refs=decision['evidence_trials']
+        if name not in choices or set(refs)!={r['trial'] for r in verified}:
+            raise ValueError('Local search selected outside the verified feasible set')
+        reason=('Explore the highest ranked feasible configuration using paired observations and method novelty.'
+                if verified else 'Choose a representative initial configuration using the training profile and eligible method attributes.')
+        return _explain_skips(_action('explore',reason,refs,name,PRIMARY,choices[name]),skipped)
     def route(record):
         name = record.get('id',record.get('candidate'))
         if record.get('route'):

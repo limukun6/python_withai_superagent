@@ -1,6 +1,6 @@
 # 第三个模型该不该加入，先让 Agent 实际试一轮
 
-上一版按参考模型的错误来猜谁能帮忙，五折都退回了原双模型。这一版让每个可用候选在同一批训练题上试用，再用两批不同的标题组提名、复核。同样的 6,608 道训练内留出题上，按改对数提名多答对 27 题，按概率改善的稳定性提名多答对 32 题。课程指定验证的最近实测仍是 Task1 **1,532/2,030（75.47%）**、Task2 **689/940（73.30%）**。[上一版逐折结果](CROSSFIT_CHALLENGER_20261124_zh.md) · [统一版指定验证](UNIFIED_AGENT_20261124_zh.md)
+让候选模型先实际试用，再由 Agent 根据两批不同标题组的反馈提名和复核。首批五折比同期双模型多答对 32/6,608 题，重划后从零训练只多答对 4/6,608 题。保留课程指定验证基线 Task1 **1,532/2,030（75.47%）**、Task2 **689/940（73.30%）**。交付端得到一项可用改进：只在第三票可能改变答案时运行第三模型，四个 MPNet 模型包共 5,258 行，答案完全一致，这台机器的整批导出总时间少了 21.9%。[上一版逐折结果](CROSSFIT_CHALLENGER_20261124_zh.md) · [统一版指定验证](UNIFIED_AGENT_20261124_zh.md) · [配对计时与逐行导出](../research/bounded_preference_vote_1124/result.json)
 
 ## 谁作了哪些决定
 
@@ -60,6 +60,22 @@
 
 后续本地 benchmark 已接入 `--search-grouping near_text --confirmation-grouping near_text`。生产划分器逐行复现独立审查器得到的 4,737 个组。五个预定随机种子的训练与评价之间均有零个近似连通组重叠。在 240 行匿名构造任务上，普通 benchmark 完成了搜索和三次分组评价，首次数值复用，三个真实分类器拟合均从子进程计数。这是独立的分组工程验收。[划分规则与验收设计](batches/near_text_grouping_plan_20261124_zh.md) · [真实入口与五次分组记录](../research/near_text_grouping_1124/)
 
+## 只在第三票可能改变答案时计算它
+
+三个成员对正类给出的概率等权平均。如果前两个概率加起来已经超过 1.5，第三个即使给 0 也推翻不了结果；如果总和低于 0.5，第三个即使给 1 也无济于事。实现只对这两种远离数值边界的行跳过第三成员，其余行照常投票。子批预测非常接近平分时，改用原批次重算第三个模型。需要输出概率时仍计算所有三个成员。该规则只依赖已交付模型的投票方式。[实现](../superagent/bounded_vote.py) · [计时前登记的验收规则](batches/preference_bounded_vote_plan_20261124_zh.md)
+
+| 重划后实际采用 MPNet 的折 | 行数 | 送入第三编码器 | 全计算 / 按需计算的导出秒数 | 改变的标签 |
+|---|---:|---:|---:|---:|
+| 1 | 1,338 | 880 | 25.8 / 21.8 | 0 |
+| 2 | 1,293 | 829 | 26.7 / 22.2 | 0 |
+| 3 | 1,323 | 882 | 25.8 / 20.4 | 0 |
+| 5 | 1,304 | 848 | 32.2 / 21.7 | 0 |
+| 合计 | 5,258 | 3,439 | 110.4 / 86.2 | 0 |
+
+四折都加快，共少把 1,819 行送入第三个编码器，占 **34.6%**；八个新进程均从无标签原始文本预测，四折交替安排先后顺序，完整和按需两套导出都逐行等于原交付。本机墙钟减少 **21.9%**，这四折未触发近边界整批补算。该比例与输入、硬件、模型和批大小有关。[两种原始导出、实际编码行数和计时](../research/bounded_preference_vote_1124/)
+
+个人分支现已包含可运行的试用提名、严格分组和按需投票源码。该分支以匿名 192 行训练包自主重走提名与复核，复用 8 个有凭证的分类头，24 行原始预测与研究分支完全相同。另用真正选择了 BGE 的三模型包，把第一折的 1,316 对标题原序、左右交换各跑一次，再加 8 对相同文本。个人分支两次普通预测命令的 **2,640 行逐行一致**，1,316 对交换后全部翻转，自配对均按既有规则输出。该构造面板用来检查模型兼容性和左右标签规则，不能换算成新的准确率。研究分支相关回归 158 项通过，个人分支相关回归 37 项通过，两组测试有重叠。[个人分支可执行提交](https://github.com/limukun6/python_withai_superagent/commit/6ca66a5e57222a841a0b68392ab97854c66f70ae) · [移植验收结果与逐行输出](../research/pilot_personal_port_1124/result.json)
+
 ## 本地拟合与调用
 
 首轮五折新增 26 次实际下游分类器拟合，其中 2 次用于决策封存后的强制对照；首轮匿名验收另有 8 次。备选实验新增 1 次，重新分组的五条全冷路径分别为 9、9、9、8、9 次，合计 44 次。以上共 79 次实际拟合，单条独立 Agent 路径从零启动最多 9 次。新冷启动只共用固定编码器的输入表示。严格分组的匿名 benchmark 另做 3 次，扩大参考训练量的实验做了 16 次，共 **98 次实际拟合**。后者每条完整路径从零启动最多 11 次。逐题决策、相似度审查、五次开发划分和额外匿名复核均未新增分类器拟合。模型 API **0 次、0 个计费 token、¥0**。
@@ -84,4 +100,13 @@ python -m scripts.study_consensus_veto verify /path/to/Released_Task2-Headlines_
 python -m scripts.audit_pilot_title_overlap verify /path/to/Released_Task2-Headlines_CTR.zip
 python -m scripts.accept_near_text_grouping verify /path/to/Released_Task2-Headlines_CTR.zip
 python -m scripts.verify_reference_scale verify /path/to/Released_Task2-Headlines_CTR.zip
+python -m scripts.study_bounded_vote verify
+python -m scripts.accept_personal_pilot_port verify-course /path/to/Released_Task2-Headlines_CTR.zip
+```
+
+已有三成员等权偏好模型可以从同一个模型包生成按需预测版本，再通过原有统一预测入口导出。两个参数分别为训练完成的运行目录和一个新的预测目录。
+
+```sh
+python -m scripts.bounded_preference_delivery runs/trial runs/trial-fast
+python -m unified_agent predict FEATURES.zip --run-dir runs/trial-fast --weights /path/to/weights --output predictions.csv
 ```

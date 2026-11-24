@@ -12,6 +12,7 @@ import zipfile
 import numpy as np
 
 from scripts.run_conditional_handoff import load_export
+from scripts.study_crossfit_challenger import study_splits
 from scripts.unified_released_study import ROOT, read, require, save, sha, text_packet
 from scripts.verify_brier_replication import ORIGINAL, PUBLIC as COLD
 from scripts.verify_crossfit_challenger import checksums, seal_directory
@@ -135,10 +136,17 @@ if __name__ == "__main__":
         run_cmd.add_argument(key, type=lambda x: Path(x).resolve())
     stages.add_parser("publish").add_argument("out", type=Path)
     stages.add_parser("verify").add_argument("original_packet", type=Path)
+    stages.add_parser("verify-course").add_argument("archive", type=Path)
     args = parser.parse_args()
     if args.stage == "run":
         run(args.out, args.personal, args.source, args.smoke, args.weights)
     elif args.stage == "publish":
         publish(args.out)
-    else:
+    elif args.stage == "verify":
         verify(args.original_packet)
+    else:
+        task, _, splits = study_splits(args.archive)
+        with tempfile.TemporaryDirectory() as tmp:
+            packet = Path(tmp) / "features.zip"
+            text_packet(packet, [task.X_train[i] for i in splits[0][1]], False)
+            verify(packet)

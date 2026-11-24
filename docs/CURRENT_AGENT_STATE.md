@@ -1,6 +1,8 @@
 # 当前接续状态：2026-11-24，A147完成，1644fit／387请求
 
-演讲材料已按用户最新评分表准备：presentation/A_LINE_2M30_SCRIPT_ZH.txt含5页150秒中文稿、评分对应和技术问答；个人Spaces文稿page_eaad92b193048191a12e0df2303c4031，5页主讲+2页隐藏附页，逐页备注和渲染均已检查；源码presentation/build_a_line_deck.mjs，连接信息及来源SHA见delivery_manifest.json。可在查看器导出PPTX，未额外生成本地PPT副本。此项0新增fit/学校API，不代表项目最终冻结或A148启动，下面实验计数不变。
+用户因Codex额度将尽转交DeepSeek；完整接续入口为docs/DEEPSEEK_A_LINE_HANDOFF_20261124_ZH.md，含版本/结构/证据/账本/演讲资料与下一轮建议。交接核验97生产源SHA均匹配473ba84冻结清单、演讲manifest源及文件SHA均匹配、当前ledger SHA仍5b1f5c58…；没有启动新训练或API。建议优先将知识纠正与执行修复分层，先离线验收再另登记小试；不自动启动旧A148。下文近期结果继续有效。
+
+演讲材料已按用户“结构没讲清”反馈修订：presentation/A_LINE_2M30_SCRIPT_ZH.txt为5页150秒、约609汉字的结构版稿；个人Spaces文稿page_eaad92b193048191a12e0df2303c4031，现5页主讲+5页隐藏附页。主讲前3页分别是全项目数据/证据回路、六项瓶颈→结构→行为、带探索/复核/结束/纠错/异常的处理流；附页9详细数据边界，附页10对应代码。presentation/ARCHITECTURE_AND_BOTTLENECKS_ZH.txt另列8项瓶颈、A/B归属、默认/可选/待实现及已验证边界，两份.mmd为图源。原位更新主讲页，保留原问答/来源页，追加原成本图表；构建器build_a_line_deck.mjs＋修订器revise_architecture.mjs，manifest记录源SHA。可在查看器导出PPTX，未生成额外PPT副本。此项0新增fit/学校API，不代表最终冻结或A148启动，下面计数不变。
 
 ## A145–A147最新：可核验协议已接，真实纠错通过，尚无稳定提分
 

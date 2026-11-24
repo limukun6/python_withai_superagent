@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-24，A141完成，1614fit／372请求
+# 当前接续状态：2026-11-24，A144完成，1636fit／375请求
+
+## A142–A144最新：新真实数值任务补充迁移完成，L0/EC0均280/280
+
+用户ok后继续预登记新任务，固定00b16f2同94源，不改生产。UCI Banknote Authentication（CC BY4.0/DOI10.24432/C55P57），官方1372×4数值二分类，旧项目记录未发现使用，不保证LLM预训练未见。一次公共下载ZIP SHA1e2acd9a...，外层71424/特征同组；1092训练/280封存，原24重复行无跨界，内部707/808/909先签名。匿名train-only交入口，外层y另存；不是原图像任务或B H2替代。
+
+两完整路径L0 local/ab-fixed与EC0 checked-history/compact/calibrated-v2/ab-fixed，共同默认full7候选、11fit各含refit，数值核/诊断/置信路由off。全封存后统一评分，两组均280/280、macroF1=1，逐行相同；训练多数类159/280。各4探索6复核1refit，自主选ExtraTrees leaf1/leaf3，三种独立预测与模型重载一致。不宣称Flash提分或任意数据满分，不为追收益换划分；补充迁移T1只有一个任务/一个分区，不变更原F*=L0。
+
+新22fit/3成功Flash，15611输入4250输出tokens、折算¥.032611；循环L015.562秒/EC0155.312秒，API等待140.766秒已含后者，队列173.297秒，评分18.828秒0额外fit/API。A累计1636。唯一真实ledger仍runs/a129_B_ledger_return/private/ledger.sqlite，已375/known6.8545065/unknown12/pending0，原372 requests/transitions全保留，A持有空闲。原12未知继续授权有效，最新owner research/a142_a144_banknote_transfer/training/EC0/current_ledger_owner.json，勿再用旧372或363副本写账。
+
+证据research/a142_a144_banknote_transfer，报告batches/A142_A144_new_numeric_transfer_results_20261124_zh.md，全部准备/路径/队列/评价/归档runner已保存；原包/训练/标签/模型/ledger留ignored目录。H2/Task2仍B负责，最终项目/test未冻结。以下1614/372为旧阶段快照，以本段为准。
 
 ## A141最新：独立中断成果恢复完成，9项工程验收通过
 

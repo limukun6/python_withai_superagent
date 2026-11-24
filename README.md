@@ -8,7 +8,20 @@
 
 新版单挑战者策略由同一训练入口启动。Task2 五次冷启动都尝试了第三个模型，最后保留双模型，训练内答对 4,733/6,608。两轮历史预测中，固定加入 MPNet 分别多对 55 题和 19 题。课程指定验证基线仍为 689/940（73.30%）。队友可以从 `410ab95` 取回可运行源码、拟合账本和逐行复核命令。[实验报告与接入说明](https://github.com/limukun6/python_withai_superagent/blob/410ab95fd9f341f64752fda2f3a2d1175e6eaa42/docs/CROSSFIT_CHALLENGER_20261124_zh.md)
 
-让每个编码器先实际试用之后，Task2 首批五折按改对数提名多对 27 题，概率提名多对 32 题。将同一批 6,608 题重新分组并冷启动，概率提名答对 4,744 题，比同期双模型多对 4 题，未通过稳定性检验。备选开关净增五题；逐题恢复双模型的实验在两套划分均与原交付一致。研究分支还交付了经过五次划分和真实 benchmark 验收的近似标题分组。课程指定验证继续引用冻结版。[最新试用、提名、冷启动与严格分组证据](https://github.com/limukun6/python_withai_superagent/blob/be42295a0227dabfb414ab52a5cb8691bfd06693/docs/PILOT_NOMINATION_20261124_zh.md)
+## 在个人分支试用候选与按需投票
+
+从当前分支根目录执行下面的训练命令。Agent 在兼容的匿名偏好任务上试用本机已安装的候选，再用分开的训练反馈决定是否加入第三个编码器。Task2 首套五折的概率提名比同期双模型多对 32/6,608 题；重划后从零训练只多对 4/6,608 题。扩大参考模型的训练量也未改善交付。课程指定验证继续引用统一冻结版。[全部对照、预算和复现命令](https://github.com/limukun6/python_withai_superagent/blob/801b1a4ca6135f8d199b0ec389f7c40829191178/docs/PILOT_NOMINATION_20261124_zh.md)
+
+```sh
+python -m unified_agent train TASK.zip --run-dir runs/trial --strategy pilot-brier --weights /path/to/weights
+```
+
+对已选定的三个等权模型，下面的命令生成一个按需预测目录。四个实际选中 MPNet 的模型包在 5,258 行上少算 1,819 次第三成员的逐行预测，答案完全一致，本机总导出耗时从 110.4 秒降至 86.2 秒。个人分支另以真实 BGE 包验收了包括左右交换和自配对在内的 2,640 行。用于比较的新 benchmark 可同时传入 `--search-grouping near_text --confirmation-grouping near_text`，将近似标题留在同一组。[个人分支逐行验收](https://github.com/limukun6/python_withai_superagent/blob/801b1a4ca6135f8d199b0ec389f7c40829191178/research/pilot_personal_port_1124/result.json)
+
+```sh
+python -m scripts.bounded_preference_delivery runs/trial runs/trial-fast
+python -m unified_agent predict FEATURES.zip --run-dir runs/trial-fast --weights /path/to/weights --output predictions.csv
+```
 
 ## 个人分支的历史交付
 

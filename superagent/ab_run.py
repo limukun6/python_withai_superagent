@@ -176,14 +176,14 @@ def confirmation_coverage(trusted, executed, selection):
     """Describe evaluation reuse separately for inspected trials and the final decision."""
     executed = set(executed)
     selection = set(selection) | {PRIMARY}
-    if not selection <= executed or not executed <= set(trusted):
+    if not selection <= executed or not executed <= set(trusted) or not executed <= {PRIMARY, *CONFIRMATIONS}:
         raise ValueError("Confirmation references an unobserved partition")
     panels = {}
     for name in trusted:
         if name not in executed:
             continue
         ids, groups = trusted[name]['row_ids'], trusted[name]['groups']
-        if len(ids) != len(groups) or len(set(ids)) != len(ids) or not ids:
+        if len(ids) != len(groups) or len(set(ids)) != len(ids) or len(ids) == 0:
             raise ValueError("Confirmation coverage requires one group per unique evaluation row")
         panels[name] = (set(ids), set(groups))
     def summarize(names):

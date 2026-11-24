@@ -46,6 +46,7 @@ class AnonymousGoalTests(unittest.TestCase):
     def test_defaults_precedence_and_primary_versus_secondary(self):
         cases = [("Primary metric: macro-F1. Also report accuracy.", "macro_f1", "declared_task_readme"),
                  ("Report weighted F1.", "weighted_f1", "declared_task_readme"),
+                 ("Report test accuracy on the held-out rows.", "accuracy", "declared_task_readme"),
                  ("We might report macro-F1.", "accuracy", "default_accuracy"),
                  ("Report accuracy. Report F1.", "accuracy", "default_accuracy"),
                  ("No objective provided.", "accuracy", "default_accuracy")]

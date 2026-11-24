@@ -28,7 +28,12 @@ def declared_metric(sentences):
             continue
         name = (claim or report).group(1).casefold().strip(' .!')
         name = re.sub(r'[\s_–-]+', ' ', name).removesuffix(' score')
-        item = (METRIC_NAMES.get(name), sentence)
+        metric = METRIC_NAMES.get(name)
+        if not claim and metric is None and re.fullmatch(r'accuracy (?:on|for|over) .+', name):
+            # Retain legacy "report accuracy on the held-out set" without absorbing a second metric.
+            if not re.search(r'\b(?:f1|auc|precision|recall|loss|accuracy)\b', name.removeprefix('accuracy ')):
+                metric = 'accuracy'
+        item = (metric, sentence)
         if claim:
             strong.append(item)
         else:
@@ -63,7 +68,7 @@ def legacy_declarations(archive, kind, spec, labels=(), *, legacy_pair=True):
         result.setdefault('goal_sources',{})['primary_metric']='declared_task_readme'
         recognised['primary_metric']=dict(value=result['metric'],excerpt=excerpt[:500])
     if result.get('metric') in ('binary_f1','roc_auc') and 'positive_label' not in result:
-        declarations=[(m.group(1).rstrip('.!').strip(' "\' '), s) for s in fields
+        declarations=[(m.group(1).rstrip('.!').strip().strip('"\''), s) for s in fields
                       if not s.endswith('?') and (m := POSITIVE.match(s))]
         if declarations:
             values={name for name,_ in declarations}

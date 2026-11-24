@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151堵点二免费复核与菜单编码原型，0fit/0API
+
+核实当前requests/urllib3默认零重试及连接/读取/协议错误分支；修正“417秒即七次POST”与“原16384预算必然推理耗尽”的过度归因，指出原失败在calibrated L0、无grounding。空行漏统计和iter_lines缓冲使零事件不足以证明零字节。9定向测试通过。原型1增2.356%字节、原型2少6.625%、共享列名+重复值原型少35.502%(20030→12919紧凑JSON字节)，全部29候选及原核验字段可还原，非token或真实模型效果。首次日志kind键误写导致免费拒绝保留原件，后续各原型独立目录。
+
+生产与账本未改，无新付费/训练，A1651。按已导入8条用户诊断后的最新真账记录为396/known7.130568/unknown16/pending0(v3接受清单)，下文388/13过期。下一步代码开关/真实最多单调用探测未启动，不重放旧失败。计划/结论见batches/A151_blocker2_offline_review_plan_20261124_zh.md与A151_blocker2_codex_resolution_20261124_zh.md；runner scripts.review_a151_blocker2，证据research/a151_blocker2_codex_review_v4。
+
 ## 2026-11-24：A151 条件小试，1 fit／1 次失败调用，账本新增第 13 条未知
 
 按计划执行（`ab-v1`、fit-limit 3、每路径最多 3 次 Flash）。L0 在第一次 Flash 提案处报 `ConnectionError: RemoteDisconnected`，按停止规则中止：1 次 fit、1 次失败调用、无自动重试、L1 未启动。部分交付保留 trial_1 检查点（6660/8301 行），独立进程 predict 输出 3232 行。

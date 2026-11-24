@@ -1,4 +1,10 @@
-# 当前接续状态：2026-11-24，A151完成，1651fit／388请求／13未知
+# 当前接续状态：2026-11-24，A151小试未闭环，1651fit／396请求／16未知
+
+## A151堵点二Codex复核：本机无默认重试，先压缩菜单表示，0新增fit/API
+
+最新导入后的账本为396请求/known课程¥7.130568/unknown16/pending0，接受清单为research/a130_accepted_history_v3/accepted_history.json，下面388/13为导入前历史。0模型API离线核验requests2.34.2/urllib3 2.7.0，默认Retry(total=0,read=False)，connect/read/protocol错误均不允许客户端重试；不能排除上游行为。原16384token断流无最终usage，1024/2048重放推理耗尽不能唯一证明原失败原因；L0未启grounded。分行缓冲/漏空行使事件为0不等于无字节。
+
+研究原型保留所有29候选、参数与核验字段，完整payload解码相等；20030→12919紧凑JSON字节、少35.502%，不是token实测/线上可靠性证据。9定向测试通过，负原型和一次脚本键名错误也保留。生产源码/默认/账本未改，0新增fit/API/费用；菜单开关、传输字节观测、单调用探测均未实施。下一步先离线接显式菜单表示开关，再另登记最多1次Flash/0fit探测，不能重试原失败或直接恢复两条路径。方案及解释见docs/batches/A151_blocker2_codex_resolution_20261124_zh.md，runner scripts.review_a151_blocker2，最新证据research/a151_blocker2_codex_review_v4。
 
 ## A151小试最新：第一条路径遇传输故障，已停止，账本新增第13条未知
 

@@ -95,10 +95,13 @@ def score(raw, study, out):
     deltas = np.bincount(ids, weights=new.astype(int) - control.astype(int)).astype(int)
     interval = paired_interval(sizes, deltas)
     gained, lost = int((new & ~control).sum()), int((control & ~new).sum())
+    disagree = np.asarray([bool(int(r["disagree"])) for r in rows])
+    shared_errors = int((~control & ~disagree).sum())
     save(out / "groups.json", dict(rows=sizes.tolist(), differences=deltas.tolist()))
     result = dict(rows=len(rows), groups=len(sizes),
                   control_correct=int(control.sum()), candidate_correct=int(new.sum()),
-                  member_disagreements=sum(int(r["disagree"]) for r in rows), gained=gained, lost=lost,
+                  member_disagreements=int(disagree.sum()), errors_both_members_share=shared_errors,
+                  control_errors_on_disagreements=int((~control & disagree).sum()), gained=gained, lost=lost,
                   interval_fraction=interval, passed=bool(gained - lost >= 5 and interval[0] > 0),
                   fits=0, model_api_calls=0, designated_validation_used=False, official_test_used=False)
     save(out / "result.json", result)

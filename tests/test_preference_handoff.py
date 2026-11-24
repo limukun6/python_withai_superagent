@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 
 from scripts.prepare_conditional_handoff import partition
+from tools.local_preference_handoff import build_memory, competence, learn_threshold, route
 from tools.preference_handoff import POLICIES, fit_policy, inputs, predict, predictions, select
 
 
@@ -54,3 +55,26 @@ class PreferenceHandoffTests(unittest.TestCase):
             self.assertTrue(set(reserved) <= set(role["base"]))
             outer.extend(role["outer"])
         self.assertEqual(sorted(outer), list(range(20,200)))
+
+    def test_local_memory_excludes_query_group_from_neighbors_and_prior(self):
+        p, pairs, labels = self.sample()
+        groups = np.arange(len(p)) // 10
+        features = inputs(p, pairs)
+        first = build_memory(features, pairs, groups, labels)
+        changed = labels.copy()
+        changed[groups == groups[0]] = 1 - changed[groups == groups[0]]
+        altered = build_memory(features, pairs, groups, changed)
+        query = inputs(p[:1], pairs[:1])
+        a = competence(first, query, pairs[:1], groups[:1])
+        b = competence(altered, query, pairs[:1], groups[:1])
+        np.testing.assert_array_equal(a, b)
+        swapped = [tuple(reversed(pairs[0]))]
+        rev = inputs(1 - p[:1], swapped)
+        np.testing.assert_allclose(a, competence(first, rev, swapped, groups[:1]))
+
+    def test_local_threshold_can_decline_every_switch(self):
+        p, pairs, _ = self.sample()
+        data = inputs(p, pairs)
+        threshold, _ = learn_threshold(data, data['base'], np.full(len(pairs), .9))
+        self.assertIsNone(threshold)
+        np.testing.assert_array_equal(route(data, np.full(len(pairs), .9), threshold), data['base'])

@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-24：A138目标稳健性完成，累计1614
+
+先冻结18案例和四条3fit计划。正式CLI预训练截停18/18通过；四完整匿名路径在共同注册行号上检查accuracy/标签反向改名/binaryF1正类0/AUC正类0，每条自主线性→树→refit，各3fit，整体54.454秒，四独立包预测一致、标签映回32行一致、正类和概率列序区分正确。0API，无生产修复；同数据变换不是新真实任务或新质量增益。新增12fit/累计1614，ledger363未调用；接续A139紧凑反馈。证据research/a138_goal_robustness、报告batches/A138_goal_robustness_results_20261124_zh.md。
+
 ## 2026-11-24：A137可选数值核正式接入与匿名自主交付
 
 计划/runner先行、隔离适配B5bd6b14旧补丁，数值核默认off、只按数值schema及资源资格进入共同full，原守卫保留、弱标签不接。七类默认菜单完全一致，46无fit/无网络检查通过；匿名240×3/40查询由正式local ab-v1/full/707/fit3自主试线性和核、选择核并refit，实际3fit/CLI7.437秒，native/搬迁/93源隔离包预测逐字节一致，不评分、不读课程/H。新增3fit/0API，A1602，账本363未改。它验证工程闭环，不把合成当真实泛化；真实核效果仍B Bean+16、Wisconsin未提分。Task1候选保持6b6ace8的92源不重标/不重跑；最终项目/test尚未冻结，H2/Released2仍B。报告batches/A137_numeric_adapter_results_20261124_zh.md，证据research/a137_numeric_acceptance，无活动队列。

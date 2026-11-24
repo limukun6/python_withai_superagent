@@ -127,11 +127,17 @@ def main():
         if action == "predict":
             command.add_argument("--output", required=True, type=Path)
         else:
-            command.add_argument("--strategy",choices=("default","crossfit-challenger"),default="default")
+            command.add_argument("--strategy",choices=("default","crossfit-challenger","pilot-accuracy","pilot-brier"),default="default")
+            command.add_argument("--fit-cache", type=Path, help="Optional trusted local pilot component cache")
     args = parser.parse_args()
     if args.feature_bank is not None and args.weights is None:
         parser.error("--feature-bank requires --weights")
     if args.action == "train":
+        if args.strategy in ("pilot-accuracy", "pilot-brier"):
+            from tools.pilot_challenger import train as train_pilot
+            return train_pilot(args.task_package, args.run_dir, args.weights, args.feature_bank, args.fit_cache, args.strategy)
+        if args.fit_cache is not None:
+            parser.error("--fit-cache requires a pilot strategy")
         if args.strategy=="crossfit-challenger":
             from tools.challenger_training import train as train_challenger
             return train_challenger(args.task_package,args.run_dir,args.weights,args.feature_bank)

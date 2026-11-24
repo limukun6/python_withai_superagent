@@ -1,0 +1,1052 @@
+{
+  "native": {
+    "smoke": {
+      "actions": 5,
+      "explorations": 4,
+      "confirmations": 0,
+      "stable_reordered_actions": 5,
+      "fit_count": 5,
+      "selected": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+      "candidate_count": 40,
+      "partitions": {
+        "primary": {
+          "id": "primary",
+          "seed": 51803,
+          "row_ids_sha256": "bba0f5a96dfd70e406af2f6909f395e6592103f6aa7b55f931616ce2fb62afb7",
+          "label_sha256": "567b34e4e2bc179cec2955152e019b8cace0e9aa2e3aa170afef9c53c8b72d5a",
+          "evaluation_payload_sha256": "97c73395b5b1b5229f6b34ba7ba19b3c3c89ee9b1a63e9b8289f0d601f528488"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 51904,
+          "row_ids_sha256": "bbfa6970bba092f824348ddde8b47a34e2786f1c6a6ed19a9954f8a18910fe05",
+          "label_sha256": "e97d46e52e649213149cc9f7c9e5f4bff1b765b4ec3a49c8bf808e7f0b6caf19",
+          "evaluation_payload_sha256": "c67d2eb6acf6844b991d853af6b44de2750c0abdd3b62fb9240f4717129d4083"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 52005,
+          "row_ids_sha256": "916f386448803231f6ed2bc035f615e9c67193c354d2c3ba569e6bb9f4f577e1",
+          "label_sha256": "cb2cc8345e5f798d27c7dc72c5e19e5a999b7308e68ae8e2f2755144a754b1df",
+          "evaluation_payload_sha256": "6ae04f5b37b514845ef94beb5e545f1a46cdd777a59d63bc961e1c3335e067f2"
+        }
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": [
+            "explore",
+            "word_char_C0.7",
+            "primary"
+          ],
+          "state_digest": "f6a91bddebfd9f8defad1f07b59a1f29deeca34c44470897569b0b24fc5e47ac",
+          "evidence": [],
+          "remaining": 6,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 2,
+          "action": [
+            "explore",
+            "word_char_stats_svm_C0.2",
+            "primary"
+          ],
+          "state_digest": "e32f73aec983ff9776febb19fbf19cce524ec27ad48b19989b0f95b08afef6bc",
+          "evidence": [
+            1
+          ],
+          "remaining": 5,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 3,
+          "action": [
+            "explore",
+            "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+            "primary"
+          ],
+          "state_digest": "402d78d200e7725444cd581d7f335942ae7e2e5d88d937238018c026dca10c9d",
+          "evidence": [
+            1,
+            2
+          ],
+          "remaining": 4,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 1,
+          "swaps_changing_action": 0,
+          "mean_score_mask_winner": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "mask_changes_candidate": false
+        },
+        {
+          "step": 4,
+          "action": [
+            "explore",
+            "style_tree_depth3",
+            "primary"
+          ],
+          "state_digest": "e6d9e3f1231c7f3a192bf76be7eab8c41614c3a9d342f336f8b356126968f2fe",
+          "evidence": [
+            1,
+            2,
+            3
+          ],
+          "remaining": 3,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 3,
+          "swaps_changing_action": 0,
+          "mean_score_mask_winner": "style_tree_depth3",
+          "mask_changes_candidate": false
+        },
+        {
+          "step": 5,
+          "action": [
+            "stop",
+            null,
+            null
+          ],
+          "state_digest": "671fa8a7a93f8e051e37c6beac204327cc0596388330b8b67f5af97f7c467851",
+          "evidence": [
+            3,
+            1
+          ],
+          "remaining": 2,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 0
+        }
+      ],
+      "swap_tests": 10,
+      "swap_tests_changing_action": 0
+    },
+    "reference": {
+      "actions": 10,
+      "explorations": 7,
+      "confirmations": 2,
+      "stable_reordered_actions": 10,
+      "fit_count": 10,
+      "selected": "minilm_l12_with_corpus_familiarity",
+      "candidate_count": 35,
+      "partitions": {
+        "primary": {
+          "id": "primary",
+          "seed": 51803,
+          "row_ids_sha256": "6571508ed4d51f3781465b79d8d4323331242645a85899b03b28f0baf33df1ef",
+          "label_sha256": "34d0e7e2f355ea0b78a83ff5ce225338620cbd258c9a9496c9370301c0aa68ad",
+          "evaluation_payload_sha256": "7418edde0e163449c71d74b41688807c30c4f217758c1c2e4a9a3daeae9b7de0"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 51904,
+          "row_ids_sha256": "0ffeb65d0c7cd851df323da89b6935835a7dff758dadeb8e40b8263ac88c980a",
+          "label_sha256": "c1e317936739b485aee5bf3dd1c800b1788d82a6ac063204f2986baacd83fce4",
+          "evaluation_payload_sha256": "81b748341587c2bba0aac07bdf8bdf7f7f8e7dd43a1da709d8e83a2d940ae44d"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 52005,
+          "row_ids_sha256": "df934a782bafddfce8b4a3c8d4f328fbfe4cdad527ee2bd6d675d4261d942c0d",
+          "label_sha256": "08dccd5c1642b6a631a863e7fce3b5630f46775d71fc1d53cbbd304931598c20",
+          "evaluation_payload_sha256": "fd5e75ec999f79d7a4956a4ead051d78a4eebfc6d7646bb6e1611714076dafe6"
+        }
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": [
+            "explore",
+            "word_char_C0.7",
+            "primary"
+          ],
+          "state_digest": "aadc2d279ee4770d0bca3ff28676d76a701cc78cd8e14ba7ee8c638686d72fd6",
+          "evidence": [],
+          "remaining": 11,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 2,
+          "action": [
+            "explore",
+            "minilm_text_with_nonlinear_lexical_features",
+            "primary"
+          ],
+          "state_digest": "39924692ad56d2d77cad19ee676872525453f0e50aa2e6c777e782a929f02fa8",
+          "evidence": [
+            1
+          ],
+          "remaining": 10,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 3,
+          "action": [
+            "explore",
+            "minilm_l12_with_corpus_familiarity",
+            "primary"
+          ],
+          "state_digest": "c06018834c3111fd528caa8fdda6a227605d4f70dfdc9a80e2f0d289a0756ac7",
+          "evidence": [
+            1,
+            2
+          ],
+          "remaining": 9,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 1,
+          "swaps_changing_action": 0,
+          "mean_score_mask_winner": "minilm_l12_with_corpus_familiarity",
+          "mask_changes_candidate": false
+        },
+        {
+          "step": 4,
+          "action": [
+            "explore",
+            "e5_small_text_with_lexical_features",
+            "primary"
+          ],
+          "state_digest": "4e5a65e5e065e67a450ab4a6431ffb8eac27fdd8441d260a99686ad2ad72b9d6",
+          "evidence": [
+            1,
+            2,
+            3
+          ],
+          "remaining": 8,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 3,
+          "swaps_changing_action": 1,
+          "mean_score_mask_winner": "e5_small_text_with_lexical_features",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "explore",
+              "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+              "primary"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "action": [
+            "confirm",
+            "minilm_l12_with_corpus_familiarity",
+            "confirmation_1"
+          ],
+          "state_digest": "f2d2adb9bc5b22057c137827de8aa861710542e26a8a8ac3df5bef562e52a26b",
+          "evidence": [
+            3,
+            4
+          ],
+          "remaining": 7,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 2,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "action": [
+            "confirm",
+            "e5_small_text_with_lexical_features",
+            "confirmation_1"
+          ],
+          "state_digest": "7daf46c57f4de885a521a8755bc3d7358e55cd724e03706a58c5d7fbe903059f",
+          "evidence": [
+            3,
+            4,
+            5
+          ],
+          "remaining": 6,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 4,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 7,
+          "action": [
+            "explore",
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "primary"
+          ],
+          "state_digest": "8c5d28dd4b7ca66da2dcdf022ec852673ca15a454a96ded5fca623f86555ee8e",
+          "evidence": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "remaining": 5,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "mean_score_mask_winner": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 8,
+          "action": [
+            "explore",
+            "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+            "primary"
+          ],
+          "state_digest": "0f30941417e075da6cdedf15fc89e0b39b0b892a1570faad777a05f6580fa2d1",
+          "evidence": [
+            1,
+            2,
+            3,
+            4,
+            7
+          ],
+          "remaining": 4,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 8,
+          "mean_score_mask_winner": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 9,
+          "action": [
+            "explore",
+            "minilm_l12_text_with_lexical_features",
+            "primary"
+          ],
+          "state_digest": "4330ae005e08271f6a73ad5a0e61bf0a74f494b8c62d2939f198361cb77d65a1",
+          "evidence": [
+            1,
+            2,
+            3,
+            4,
+            7,
+            8
+          ],
+          "remaining": 3,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 15,
+          "swaps_changing_action": 9,
+          "mean_score_mask_winner": "word_C10.0",
+          "mask_changes_candidate": true,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 10,
+          "action": [
+            "stop",
+            null,
+            null
+          ],
+          "state_digest": "5d0e3eb17fcec2d1f3b995cad10c9b75b848b4a1240443830754fae9aab2b5a7",
+          "evidence": [
+            3,
+            4
+          ],
+          "remaining": 2,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 21,
+          "swaps_changing_action": 11,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        }
+      ],
+      "swap_tests": 68,
+      "swap_tests_changing_action": 40
+    },
+    "expanded": {
+      "actions": 11,
+      "explorations": 7,
+      "confirmations": 3,
+      "stable_reordered_actions": 11,
+      "fit_count": 11,
+      "selected": "minilm_l12_topic_style_interactions",
+      "candidate_count": 40,
+      "partitions": {
+        "primary": {
+          "id": "primary",
+          "seed": 51803,
+          "row_ids_sha256": "6571508ed4d51f3781465b79d8d4323331242645a85899b03b28f0baf33df1ef",
+          "label_sha256": "34d0e7e2f355ea0b78a83ff5ce225338620cbd258c9a9496c9370301c0aa68ad",
+          "evaluation_payload_sha256": "7418edde0e163449c71d74b41688807c30c4f217758c1c2e4a9a3daeae9b7de0"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 51904,
+          "row_ids_sha256": "0ffeb65d0c7cd851df323da89b6935835a7dff758dadeb8e40b8263ac88c980a",
+          "label_sha256": "c1e317936739b485aee5bf3dd1c800b1788d82a6ac063204f2986baacd83fce4",
+          "evaluation_payload_sha256": "81b748341587c2bba0aac07bdf8bdf7f7f8e7dd43a1da709d8e83a2d940ae44d"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 52005,
+          "row_ids_sha256": "df934a782bafddfce8b4a3c8d4f328fbfe4cdad527ee2bd6d675d4261d942c0d",
+          "label_sha256": "08dccd5c1642b6a631a863e7fce3b5630f46775d71fc1d53cbbd304931598c20",
+          "evaluation_payload_sha256": "fd5e75ec999f79d7a4956a4ead051d78a4eebfc6d7646bb6e1611714076dafe6"
+        }
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": [
+            "explore",
+            "word_char_C0.7",
+            "primary"
+          ],
+          "state_digest": "39ed30e2c45ad39acf50d72c1c061ab7a433a8daea0140ee12851310a2969494",
+          "evidence": [],
+          "remaining": 11,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 2,
+          "action": [
+            "explore",
+            "style_tree_depth3",
+            "primary"
+          ],
+          "state_digest": "930a2b9425157e825497d9d3f2f54f09d90c598bf5a8ed2517027c84be59b1a3",
+          "evidence": [
+            1
+          ],
+          "remaining": 10,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 3,
+          "action": [
+            "explore",
+            "binary_word_direction_naive_bayes",
+            "primary"
+          ],
+          "state_digest": "cf8abe652a466693ed91b9d1acd16b0afbb383ce5bca201363801f173bb277ed",
+          "evidence": [
+            1,
+            2
+          ],
+          "remaining": 9,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 1,
+          "swaps_changing_action": 0,
+          "mean_score_mask_winner": "binary_word_direction_naive_bayes",
+          "mask_changes_candidate": false
+        },
+        {
+          "step": 4,
+          "action": [
+            "explore",
+            "minilm_l12_topic_style_interactions",
+            "primary"
+          ],
+          "state_digest": "dead2fcbf6225bd3c58ae4430a70bae457b90c99b72d52dd834551db1fef3a5e",
+          "evidence": [
+            1,
+            2,
+            3
+          ],
+          "remaining": 8,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 3,
+          "swaps_changing_action": 1,
+          "mean_score_mask_winner": "minilm_l12_topic_style_interactions",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "explore",
+              "word_char_stats_svm_C0.2",
+              "primary"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "action": [
+            "confirm",
+            "word_char_C0.7",
+            "confirmation_1"
+          ],
+          "state_digest": "4cf56a633c4e9a7115e64949f9337a7b020644417eb2f5abcd597389ce768fb8",
+          "evidence": [
+            1,
+            4
+          ],
+          "remaining": 7,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "action": [
+            "confirm",
+            "minilm_l12_topic_style_interactions",
+            "confirmation_1"
+          ],
+          "state_digest": "0b418cb7eeb45ea1f329b53fd9e9bf7ca887638c000dde9bd22c86c988f97cef",
+          "evidence": [
+            1,
+            4,
+            5
+          ],
+          "remaining": 6,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 7,
+          "action": [
+            "explore",
+            "minilm_text_with_nonlinear_lexical_features",
+            "primary"
+          ],
+          "state_digest": "ba94e6c94a649117c345e632ae899a352dda1dc99dbbe98809d281756696067b",
+          "evidence": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "remaining": 5,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "mean_score_mask_winner": "word_char_stats_svm_C0.2",
+          "mask_changes_candidate": true,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 8,
+          "action": [
+            "explore",
+            "word_char_stats_svm_C0.2",
+            "primary"
+          ],
+          "state_digest": "ecea97ec4c4c2497f63cae5df85f412080a5d75cb1d3ca6fe6f816e45b306b3d",
+          "evidence": [
+            1,
+            2,
+            3,
+            4,
+            7
+          ],
+          "remaining": 4,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 5,
+          "mean_score_mask_winner": "word_char_stats_svm_C0.2",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 9,
+          "action": [
+            "explore",
+            "e5_small_text_with_lexical_features",
+            "primary"
+          ],
+          "state_digest": "a4726e9a5676878488c00acc838bbd891cbb2cee8b3de16569f731d4e7e90646",
+          "evidence": [
+            1,
+            2,
+            3,
+            4,
+            7,
+            8
+          ],
+          "remaining": 3,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 15,
+          "swaps_changing_action": 7,
+          "mean_score_mask_winner": "e5_small_text_with_lexical_features",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 10,
+          "action": [
+            "confirm",
+            "e5_small_text_with_lexical_features",
+            "confirmation_1"
+          ],
+          "state_digest": "59f26dab1bbc6f41dd3e18161efc2f82c12dad8b4fa7c8c2c8a9d082d177510c",
+          "evidence": [
+            4,
+            9,
+            6
+          ],
+          "remaining": 2,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 21,
+          "swaps_changing_action": 13,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "style_tree_depth3",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 11,
+          "action": [
+            "stop",
+            null,
+            null
+          ],
+          "state_digest": "52caf13deab11109723fc109c0cd3fb80c8ab866b507604cbc346165e59d86b5",
+          "evidence": [],
+          "remaining": 1,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 21,
+          "swaps_changing_action": 0
+        }
+      ],
+      "swap_tests": 89,
+      "swap_tests_changing_action": 41
+    },
+    "transfer": {
+      "actions": 11,
+      "explorations": 5,
+      "confirmations": 5,
+      "stable_reordered_actions": 11,
+      "fit_count": 11,
+      "selected": "minilm_text_with_nonlinear_lexical_features",
+      "candidate_count": 40,
+      "partitions": {
+        "primary": {
+          "id": "primary",
+          "seed": 51803,
+          "row_ids_sha256": "f104aa11c9d8690a023cc8b0141075e3fe5b0524d767485962aae760c254e2bd",
+          "label_sha256": "b5aa5557084877c4d16c013258ad1e09332f4f3263b703e5fd79b5dae210bbf3",
+          "evaluation_payload_sha256": "843e0e7ae8644ce9cddba94d8984bb14a4f6823917f2800c5fa7668694c06428"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 51904,
+          "row_ids_sha256": "151eea21ceb758c8416a29a5a852879f99fcff2f3d801f0c91269a1ee162af7c",
+          "label_sha256": "aa2ffe7f122a7f061f6898002ba7b273b8fea4499f37c43f242e6851f566b98f",
+          "evaluation_payload_sha256": "fd893df83758c52aac79c12c67fdfe3ef462a8f3daaa50f0a942ed722b7aa038"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 52005,
+          "row_ids_sha256": "4ade4b58ef28aeab05349bae48fde26e4c4fa23e00886ecbfb51f7e4e1b357ae",
+          "label_sha256": "3648dd51af0e5db0b3e0a75f602c4a52431f75c4ae3e6195de077ed268f4bac4",
+          "evaluation_payload_sha256": "6a584c5df99f0afbc4c41578063dad02734acd458bcb9ba2c0bba50526df34dc"
+        }
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": [
+            "explore",
+            "word_char_C0.7",
+            "primary"
+          ],
+          "state_digest": "329baa0bde5de13e79180a55462737630249253f3c626e4cf1dbbd20cd97a734",
+          "evidence": [],
+          "remaining": 11,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 2,
+          "action": [
+            "explore",
+            "style_tree_depth3",
+            "primary"
+          ],
+          "state_digest": "30755a9643df40e5e484c357697aafed52e8236c10d713aa68f4d3505311c21d",
+          "evidence": [
+            1
+          ],
+          "remaining": 10,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 0,
+          "swaps_changing_action": 0
+        },
+        {
+          "step": 3,
+          "action": [
+            "explore",
+            "binary_word_direction_naive_bayes",
+            "primary"
+          ],
+          "state_digest": "9d150c830c30425976dae8c777b3a517bdba8240d1737e469db0db902580fe04",
+          "evidence": [
+            1,
+            2
+          ],
+          "remaining": 9,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 1,
+          "swaps_changing_action": 0,
+          "mean_score_mask_winner": "binary_word_direction_naive_bayes",
+          "mask_changes_candidate": false
+        },
+        {
+          "step": 4,
+          "action": [
+            "explore",
+            "minilm_l12_topic_style_interactions",
+            "primary"
+          ],
+          "state_digest": "e65ea186540201a01a528e02770d81a457bffcf602f233561f790a0fd25b903b",
+          "evidence": [
+            1,
+            2,
+            3
+          ],
+          "remaining": 8,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 3,
+          "swaps_changing_action": 1,
+          "mean_score_mask_winner": "minilm_l12_topic_style_interactions",
+          "mask_changes_candidate": false,
+          "example_change": {
+            "trials": [
+              1,
+              3
+            ],
+            "alternative": [
+              "explore",
+              "word_char_stats_svm_C0.2",
+              "primary"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "action": [
+            "confirm",
+            "style_tree_depth3",
+            "confirmation_1"
+          ],
+          "state_digest": "fb8d41b74a667a6745f9682e2146778e1ae900f8ae6f25b9ebcc3598aaf0012f",
+          "evidence": [
+            2,
+            4
+          ],
+          "remaining": 7,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "action": [
+            "confirm",
+            "minilm_l12_topic_style_interactions",
+            "confirmation_1"
+          ],
+          "state_digest": "f17daaba4029963db4d829f53281ec23257e80db6caf8308efd04343e2417e00",
+          "evidence": [
+            2,
+            4,
+            5
+          ],
+          "remaining": 6,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 7,
+          "action": [
+            "explore",
+            "minilm_text_with_nonlinear_lexical_features",
+            "primary"
+          ],
+          "state_digest": "4ff8cffc5cae947015c702cecbdad1353afd295f9ac395b45e642df38dfaaa05",
+          "evidence": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "remaining": 5,
+          "source": "local_model_evidence",
+          "trial_pairs_swapped": 6,
+          "swaps_changing_action": 5,
+          "mean_score_mask_winner": "word_char_stats_svm_C0.2",
+          "mask_changes_candidate": true,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 8,
+          "action": [
+            "confirm",
+            "minilm_text_with_nonlinear_lexical_features",
+            "confirmation_1"
+          ],
+          "state_digest": "a908216841b2e43b22cc640a0cc82b9ae54df012267740b84aedaecc02c78978",
+          "evidence": [
+            4,
+            7,
+            6
+          ],
+          "remaining": 4,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 7,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 9,
+          "action": [
+            "confirm",
+            "minilm_l12_topic_style_interactions",
+            "confirmation_2"
+          ],
+          "state_digest": "fccdcb99721905cb11d30715259d34b3c292e82322f3a4baedeb72c16f16bb17",
+          "evidence": [
+            4,
+            7,
+            6,
+            8
+          ],
+          "remaining": 3,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 8,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 10,
+          "action": [
+            "confirm",
+            "minilm_text_with_nonlinear_lexical_features",
+            "confirmation_2"
+          ],
+          "state_digest": "58ab826909ef02d0d570090fcc33a706ed5324c4625e0a8a8955ff5bbfa8bea3",
+          "evidence": [
+            4,
+            7,
+            6,
+            8,
+            9
+          ],
+          "remaining": 2,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 8,
+          "example_change": {
+            "trials": [
+              1,
+              2
+            ],
+            "alternative": [
+              "confirm",
+              "word_char_C0.7",
+              "confirmation_1"
+            ]
+          }
+        },
+        {
+          "step": 11,
+          "action": [
+            "stop",
+            null,
+            null
+          ],
+          "state_digest": "d88b09e7f9ea45ecefb4f229b0bd79bfb4b6ebed994cf2de5471a260a89dc165",
+          "evidence": [],
+          "remaining": 1,
+          "source": "shared_local_rule",
+          "trial_pairs_swapped": 10,
+          "swaps_changing_action": 0
+        }
+      ],
+      "swap_tests": 62,
+      "swap_tests_changing_action": 39
+    }
+  },
+  "portable_input_sha256": "46856990816ffc22d363333fe8cf3e629c4356437526bb1df6ed50a93e4382a8",
+  "hypothetical_cases_executed_as_training": 0
+}

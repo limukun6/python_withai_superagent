@@ -1,0 +1,384 @@
+diff --git a/scripts/ab_acceptance_guard/sitecustomize.py b/scripts/ab_acceptance_guard/sitecustomize.py
+index 4f00049263013abc3bd3b0e22bbc5c10e5942253..25b9003643b52666382fc5e24c3026988254d8f7 100644
+--- a/scripts/ab_acceptance_guard/sitecustomize.py
++++ b/scripts/ab_acceptance_guard/sitecustomize.py
+@@ -18,3 +18,4 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
+         from sklearn.linear_model import LogisticRegression
+-        from sklearn.svm import SVC
++        from sklearn.naive_bayes import BernoulliNB
++        from sklearn.svm import LinearSVC, SVC
+ 
+@@ -39,5 +40,5 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
+ 
+-        for cls in (LogisticRegression,ExtraTreesClassifier,SVC):
++        for cls in (LogisticRegression,ExtraTreesClassifier,SVC,LinearSVC,BernoulliNB):
+             observe(cls)
+-        if len(sys.argv) > 2 and ('catboost' in sys.argv[2] or sys.argv[2] == 'supported_field_interactions'):
++        if len(sys.argv) > 2 and ('catboost' in sys.argv[2] or sys.argv[2] == 'supported_field_interactions' or sys.argv[2].startswith('style_tree_depth')):
+             from catboost import CatBoostClassifier
+diff --git a/superagent/ab_catalog.py b/superagent/ab_catalog.py
+index 747589c265eca446812ba2579172abcc431f328b..8bed9930c86eda34c658a77b1e5a2a6559945027 100644
+--- a/superagent/ab_catalog.py
++++ b/superagent/ab_catalog.py
+@@ -11,2 +11,3 @@ from .models import search_candidates
+ from . import numeric_kernel
++from . import ab_varied_preferences
+ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+@@ -15,3 +16,3 @@ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+ ADAPTER_VERSION = '1.5'
+-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
++FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
+ 
+@@ -57,3 +58,7 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
+         route = route_of(name)
+-        if name == FIELDS or 'catboost' in route:
++        if name in ab_varied_preferences.ESTIMATORS:
++            estimator=ab_varied_preferences.ESTIMATORS[name]
++            if (estimator=='catboost' and find_spec('catboost') is None) or (estimator=='linear_svm' and metric.requires_scores):
++                continue
++        elif name == FIELDS or 'catboost' in route:
+             estimator = 'catboost'
+@@ -79,5 +84,5 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
+                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
+-                         supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
++                         supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
+                          resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
+-                         origin='b_port' if name in ROUTES else 'shared_baseline'))
++                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
+     return menu
+diff --git a/superagent/ab_method_search.py b/superagent/ab_method_search.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..6b7ae2c8bf48164d88148492d0c7e4d2b39c7b95
+--- /dev/null
++++ b/superagent/ab_method_search.py
+@@ -0,0 +1,74 @@
++"""Select a feasible configuration by observed performance and distance from previous experiments."""
++from itertools import combinations
++import hashlib
++import json
++import math
++
++import numpy as np
++
++from .metrics import score_of
++
++
++def attributes(cap):
++    params = cap['params']
++    representation = str(cap.get('representation','')).lower()
++    tags = frozenset(k for k in ('word','char','style','stats','surprisal','topic','latent','hybrid','rbf','direction')
++                     if k in representation)
++    return (cap['estimator'], params.get('encoder',''), cap['resource'], tags or frozenset([representation]),
++            float(params.get('C',1.)))
++
++
++def distance(first, second):
++    a, b = first, second
++    jaccard = 1 - len(a[3] & b[3]) / len(a[3] | b[3])
++    regularization = min(1., abs(math.log(a[4]/b[4]))/math.log(100.))
++    return .35*(a[0]!=b[0]) + .2*(a[1]!=b[1]) + .1*(a[2]!=b[2]) + .27*jaccard + .08*regularization
++
++
++def signature(cap):
++    # The order of the enumerated menu has no influence, even on ties.
++    config = {'estimator':cap['estimator'],'representation':cap['representation'],'params':cap['params']}
++    return hashlib.sha256(json.dumps(config,sort_keys=True,separators=(',',':')).encode()).hexdigest()
++
++
++def rank(state, capabilities, eligible, verified):
++    profile = state['training_profile']
++    rows = int(profile['statistics']['train_rows'])
++    lengths = profile['statistics'].get('word_count', {})
++    length_factor = math.sqrt(1 + lengths.get('p95', 0) / max(1, lengths.get('median', 1)))
++    margin = float(profile['majority_class_fraction'])
++    if rows < 1:
++        raise ValueError('Missing training profile for local method selection')
++    configs = {name:attributes(cap) for name,cap in capabilities.items()}
++    structures = list({v[:4]: (*v[:4],1.) for v in configs.values()}.values())
++    measured = [configs[r['candidate']] for r in verified]
++    observed = [score_of(r) for r in verified]
++    predictions = {v['trial']:np.asarray(v['predictions']) for v in state['prediction_evidence']}
++    pairwise = [float(np.mean(predictions[a['trial']]!=predictions[b['trial']])) for a,b in combinations(verified,2)]
++    disagreement = sum(pairwise)/len(pairwise) if pairwise else 0.
++    # More unresolved errors or disagreement justify trying a more distant model.
++    best = max(observed, default=margin)
++    exploration = ((1-best) + disagreement)/math.sqrt(max(len(verified),1))
++    scores = []
++    for name in eligible:
++        desc = configs[name]
++        gaps = [distance(desc, other) for other in measured]
++        center_distance = math.fsum(distance(desc,c) for c in structures)/len(structures)
++        if observed:
++            weights = [math.exp(-6*d) for d in gaps]
++            expected = float(np.average(observed,weights=weights))
++            novel = min(gaps)
++            value = expected + exploration*novel
++        else:
++            # A central, economical first measurement. Small training sets penalize expensive extraction more.
++            complexity = float(capabilities[name]['resource']!='cpu') * length_factor + min(1.,abs(math.log(desc[4]))/5.)
++            expected, novel = margin, 0.
++            value = -center_distance - complexity/math.sqrt(rows)
++        scores.append(dict(candidate=name, strength=expected, nearest_distance=novel, acquisition=value,
++                           config_sha256=signature(capabilities[name])))
++    scores.sort(key=lambda x:(-x['acquisition'],x['config_sha256'],x['candidate']))
++    if not scores:
++        raise ValueError('No eligible configuration for local method search')
++    return dict(chosen=scores[0]['candidate'], evidence_trials=sorted(r['trial'] for r in verified),
++                observed_scores={r['candidate']:score_of(r) for r in verified}, rows=rows, disagreement=disagreement,
++                exploration_weight=exploration, candidates=scores)
+diff --git a/superagent/ab_methods.py b/superagent/ab_methods.py
+index 79e6d73f4b292955663b35b291e4cc5e45f071b0..c35bc9cc4c4f238be7ee70cc8066093e32a2e91d 100644
+--- a/superagent/ab_methods.py
++++ b/superagent/ab_methods.py
+@@ -15,2 +15,3 @@ from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates a
+ from . import ab_text_recipes, ab_vision, symmetric_text
++from . import ab_varied_preferences
+ 
+@@ -39,2 +40,3 @@ ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
+ ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
++ROUTES.update({name:name for name in (ab_varied_preferences.TOPIC,ab_varied_preferences.BINARY)})
+ 
+@@ -101,3 +103,3 @@ def _ordered_relation(rows, labels, query):
+ 
+-def additions(kind):
++def additions(kind, *, include_legacy_methods=True):
+     if kind == 'numeric_tabular':
+@@ -131,3 +133,3 @@ def additions(kind):
+         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
+-        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
++        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
+@@ -139,6 +141,6 @@ def additions(kind):
+                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
+-            if catalog in ('deep-familiarity',JOINT_PREFERENCE):
++            if catalog in ('deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG):
+                 extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
+                                        partial(fit_sentence,kind=kind,familiarity=True)))
+-        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog == JOINT_PREFERENCE else catalog
++        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog in (JOINT_PREFERENCE,ab_varied_preferences.CATALOG) else catalog
+         if transfer_catalog in TRANSFER_METHODS:
+@@ -157,2 +159,4 @@ def additions(kind):
+         extra.extend(ab_text_recipes.candidates(kind))
++        if kind == 'pair_text' and catalog == ab_varied_preferences.CATALOG:
++            extra.extend(ab_varied_preferences.additions(verified_directory(deep=True) is not None, include_legacy_methods))
+         return extra
+diff --git a/superagent/ab_run.py b/superagent/ab_run.py
+index 48a89559eae9f1aff99d0ed699e5c6e3726ebaa2..0cc7c43c450fceeafb617cff18eea4e80a81b121 100644
+--- a/superagent/ab_run.py
++++ b/superagent/ab_run.py
+@@ -257,3 +257,4 @@ def command(args):
+     training_profile_value=None
+-    if getattr(args,'task_profile','off')=='train':
++    method_search=getattr(args,'local_method_search','off')=='evidence'
++    if getattr(args,'task_profile','off')=='train' or method_search:
+         from .task_profile import training_facts
+@@ -298,2 +299,3 @@ def command(args):
+             preference_catalog=getattr(args,'preference_catalog','standard'),
++            **({'local_method_search':'evidence'} if method_search else {}),
+             **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
+@@ -357,2 +359,9 @@ def command(args):
+             local_recipe_proposals=[]
++            local_method_choices=[]
++            def select_method(eligible, verified):
++                from .ab_method_search import rank
++                choice=rank(state,caps,eligible,verified)
++                local_method_choices.append(choice)
++                logger.write_json(f'method_choice_{number}.json',choice)
++                return choice
+             def compose(eligible, verified, capabilities):
+@@ -377,3 +386,4 @@ def command(args):
+             else:
+-                optional_local=({'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
++                optional_local=({'on_local_method':select_method} if method_search else
++                                {'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
+                 action = next_action(state, capabilities=caps, trusted_partitions=trusted,
+@@ -386,3 +396,3 @@ def command(args):
+             logger.event('planner_routing', trial=number, action=action['action'],
+-                source='local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
++                source='local_model_evidence' if local_method_choices else 'local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
+                     and action['action']=='explore' else 'shared_local_rule',
+diff --git a/superagent/ab_scheduler.py b/superagent/ab_scheduler.py
+index dda46b09e8d7077f71beb984203184e24076c1f4..39c7831650047a5539a58d85882e1f927c82c98c 100644
+--- a/superagent/ab_scheduler.py
++++ b/superagent/ab_scheduler.py
+@@ -276,3 +276,4 @@ def _fixed_confirm(front, attempted, records, splits, available, reserve, known_
+ 
+-def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None):
++def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None,
++                on_local_method=None):
+     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
+@@ -348,2 +349,15 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
+         return _explain_skips(action, skipped)
++    if on_local_method is not None:
++        if allocation!='adaptive' or on_explore is not None or on_local_recipe is not None or trusted_partitions is None:
++            raise ValueError('Local method selection needs its own verified adaptive route')
++        choices={entry['id']:cost for entry,cost in feasible}
++        verified=[r for r in front if r['trial'] in records]
++        decision=on_local_method(tuple(choices),verified)
++        name=decision['chosen']
++        refs=decision['evidence_trials']
++        if name not in choices or set(refs)!={r['trial'] for r in verified}:
++            raise ValueError('Local search selected outside the verified feasible set')
++        reason=('Explore the highest ranked feasible configuration using paired observations and method novelty.'
++                if verified else 'Choose a representative initial configuration using the training profile and eligible method attributes.')
++        return _explain_skips(_action('explore',reason,refs,name,PRIMARY,choices[name]),skipped)
+     def route(record):
+diff --git a/superagent/ab_sentence.py b/superagent/ab_sentence.py
+index 47960e1bfcc8a39841e94446e92daea290d938b3..f2ae76cf19acb4fd5ee770c01abdc529ec460158 100644
+--- a/superagent/ab_sentence.py
++++ b/superagent/ab_sentence.py
+@@ -273,4 +273,7 @@ class KernelSentenceFeatures(SentenceFeatures):
+ 
+-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
+-    if familiarity:
++def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False,topic_style=False):
++    if topic_style:
++        from .ab_varied_preferences import TopicStyleFeatures
++        features=TopicStyleFeatures(kind)
++    elif familiarity:
+         features=FamiliarityPreferenceFeatures(kind)
+diff --git a/superagent/ab_varied_preferences.py b/superagent/ab_varied_preferences.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..53fd82e9f572c260b28497d2f1a1e4eb6d01a1a4
+--- /dev/null
++++ b/superagent/ab_varied_preferences.py
+@@ -0,0 +1,98 @@
++"""Generic feature and estimator alternatives for ordered binary text preferences."""
++from functools import partial
++import hashlib
++
++import numpy as np
++from scipy.sparse import csr_matrix, hstack
++from sklearn.base import BaseEstimator, TransformerMixin
++from sklearn.decomposition import PCA
++from sklearn.feature_extraction.text import CountVectorizer
++from sklearn.naive_bayes import BernoulliNB
++
++from . import ab_sentence
++from .ab_preference_output import CanonicalPreferencePipeline
++from .models import Candidate, style_differences
++from .nonlinear_text import nonlinear_candidates
++from .supervised_text import research_candidates
++
++
++CATALOG = 'varied'
++TOPIC = 'minilm_l12_topic_style_interactions'
++BINARY = 'binary_word_direction_naive_bayes'
++TOPICS = 8
++SAMPLE_LIMIT = 384
++
++
++def legacy_methods():
++    return [c for c in research_candidates() if c.params['C'] == .2] + [
++        c for c in nonlinear_candidates() if c.params.get('depth') == 3 and c.params.get('classifier_fits_per_evaluation') == 1]
++
++
++ESTIMATORS = {c.family: c.params.get('classifier','catboost') for c in legacy_methods()}
++ESTIMATORS[BINARY] = 'naive_bayes'
++ESTIMATORS[TOPIC] = 'logistic'
++
++
++class DirectionalWords(TransformerMixin, BaseEstimator):
++    def fit(self, rows, y=None):
++        self.vectorizer_ = CountVectorizer(ngram_range=(1,2), binary=True, min_df=1, max_features=40000)
++        self.vectorizer_.fit([text for pair in rows for text in pair])
++        return self
++
++    def transform(self, rows):
++        left, right = zip(*rows)
++        difference = self.vectorizer_.transform(left) - self.vectorizer_.transform(right)
++        return hstack([difference.maximum(0), (-difference).maximum(0)],format='csr')
++
++
++def fit_bernoulli(rows, y, query):
++    labels=np.asarray(y)
++    model = CanonicalPreferencePipeline([('features', DirectionalWords()), ('classifier', BernoulliNB(alpha=1.))])
++    model.fit([*rows, *((b,a) for a,b in rows)], np.r_[labels,1-labels])
++    return model, model.predict(query)
++
++
++class TopicStyleFeatures(ab_sentence.FamiliarityPreferenceFeatures):
++    """Cross symmetric topic coordinates with signed style and training-corpus familiarity differences."""
++    def fit(self, rows, y=None):
++        super().fit(rows,y)
++        pairs = {tuple(sorted((a,b))) for a,b in rows}
++        def order(pair):
++            return hashlib.sha256(repr(pair).encode('utf-8')).digest(), pair
++        subset = sorted(pairs,key=order)[:SAMPLE_LIMIT]
++        vectors,tokens = ab_sentence.encode([s for pair in subset for s in pair],deep=True)
++        center = .5*(vectors[::2]+vectors[1::2])
++        self.components_ = None
++        if len(center)>1 and np.any(center != center[0]):
++            self.components_ = PCA(n_components=min(TOPICS,len(center)-1,center.shape[1]),svd_solver='full').fit(center)
++        self.usage_['input_tokens'] += tokens
++        self.usage_['topic_sample_rows'] = len(subset)
++        return self
++
++    def semantic_blocks(self, rows, texts):
++        vectors,tokens = ab_sentence.encode(texts,deep=True)
++        difference = vectors[::2]-vectors[1::2]
++        familiarity = self.corpus_.differences(rows)/self.familiarity_scale_
++        blocks = [csr_matrix(difference), csr_matrix(familiarity[:,None])]
++        if self.components_ is not None:
++            model = self.components_
++            context = model.transform(.5*(vectors[::2]+vectors[1::2]))
++            scale = np.sqrt(np.maximum(model.explained_variance_,1e-6))
++            context = np.clip(context/scale,-3,3)/np.sqrt(context.shape[1])
++            style = np.column_stack([self.scaler_.transform(style_differences(rows)),familiarity])
++            style /= np.sqrt(style.shape[1])
++            interaction = (context[:,:,None]*style[:,None,:]).reshape(len(rows),-1)
++            blocks.append(csr_matrix(interaction))
++        return blocks,tokens
++
++
++def additions(has_deep_weights, include_legacy_methods=True):
++    methods = legacy_methods() if include_legacy_methods else []
++    methods.append(Candidate(BINARY,dict(representation='word_ngram_direction_presence',classifier='naive_bayes',
++                                         alpha=1.,swap_augmentation=True),fit_bernoulli))
++    if has_deep_weights:
++        params = dict(encoder=ab_sentence.DEEP_MODEL,revision=ab_sentence.DEEP_REVISION,C=.3,
++                      representation='word_char_minilm_l12_training_surprisal_topic_style',topic_dimensions=TOPICS,
++                      topic_sample_limit=SAMPLE_LIMIT,swap_augmentation=True)
++        methods.append(Candidate(TOPIC,params,partial(ab_sentence.fit_sentence,kind='pair_text',topic_style=True)))
++    return methods
+diff --git a/superagent/cli.py b/superagent/cli.py
+index 847a8535aa2e1c86586b10228ad48e99585ee795..2ec38cf0c9b97ba1ffe066a9f19eea9a8eb37db0 100644
+--- a/superagent/cli.py
++++ b/superagent/cli.py
+@@ -92,2 +92,5 @@ def _run(args):
+     catalog = getattr(args, 'preference_catalog', 'standard')
++    if getattr(args,'local_method_search','off')=='evidence' and (
++            args.scheduler!='ab-v1' or args.planner!='local' or getattr(args,'local_text_proposals','off')!='off'):
++        raise ValueError('Local method search requires the local adaptive A/B scheduler')
+     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
+@@ -321,3 +324,3 @@ def build_parser():
+     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
++    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity','varied'], default='standard',
+                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
+@@ -337,2 +340,4 @@ def build_parser():
+     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
++    run.add_argument('--local-method-search',choices=['off','evidence'],default='off',
++                     help='Rank all feasible model configurations by training profile, observed results and unexplored representations')
+     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
+diff --git a/superagent/fit_guard.py b/superagent/fit_guard.py
+index dcf727266c6348df188b12613a0586dfd16faa73..6c9288ed1434969cfe2939cbe12b28058f7831df 100644
+--- a/superagent/fit_guard.py
++++ b/superagent/fit_guard.py
+@@ -34,4 +34,5 @@ def admitted_fits(admission, candidate):
+     from sklearn.ensemble import ExtraTreesClassifier
+-    from sklearn.svm import SVC
+-    classes = [LogisticRegression, ExtraTreesClassifier, SVC]
++    from sklearn.naive_bayes import BernoulliNB
++    from sklearn.svm import LinearSVC, SVC
++    classes = [LogisticRegression, ExtraTreesClassifier, SVC, LinearSVC, BernoulliNB]
+     if find_spec('catboost') is not None:
+diff --git a/superagent/models.py b/superagent/models.py
+index 59cd1f19b83dc6d86cefc2becb9d0caeb034d66f..de81541b03a48bc0e23e1429af64278a37d1accc 100644
+--- a/superagent/models.py
++++ b/superagent/models.py
+@@ -343,3 +343,3 @@ def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]
+         prior = 'expanded' if portfolio == 'ab-v1' else 'all'
+-        return _legacy_candidates(kind, prior) + additions(kind)
++        return _legacy_candidates(kind, prior) + additions(kind, include_legacy_methods=portfolio!='all')
+     return _legacy_candidates(kind, portfolio)

@@ -1,0 +1,239 @@
+{
+  "selection": {
+    "initial": "supported_field_interactions",
+    "incumbent": "supported_field_interactions",
+    "promotions": [],
+    "basis": [
+      "primary"
+    ],
+    "primary_metric": "accuracy"
+  },
+  "selected": "supported_field_interactions",
+  "physical": [
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg10.0"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "logistic_C0.05"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "supported_field_interactions"
+    },
+    {
+      "classifier": "ExtraTreesClassifier",
+      "candidate": "extra_trees_leaf1"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth6_reg10.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth4_reg3.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth8_reg3.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "supported_field_interactions"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "catboost_depth8_reg3.0"
+    },
+    {
+      "classifier": "CatBoostClassifier",
+      "candidate": "supported_field_interactions"
+    }
+  ],
+  "model": "61ca87a0e73423f6a8702d1811a34659fd60221e62e7c22d9464e4cc75f6c150",
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth4_reg10.0",
+      "split_id": "primary",
+      "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "logistic_C0.05",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "supported_field_interactions",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "extra_trees_leaf1",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth6_reg10.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth4_reg3.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "catboost_depth8_reg3.0",
+      "split_id": "primary",
+      "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "supported_field_interactions",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7596 and 0.7606; hard predictions differ on 95/1040 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "catboost_depth8_reg3.0",
+      "split_id": "confirmation_1",
+      "reason": "Comparable primary accuracy 0.7596 and 0.7606; hard predictions differ on 95/1040 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+      "evidence_trials": [
+        3,
+        7,
+        8
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+      "evidence_trials": [
+        7,
+        3
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "trials": [
+    {
+      "candidate": "catboost_depth4_reg10.0",
+      "family": "CatBoostClassifier",
+      "split": "primary",
+      "score": 0.739423076923077,
+      "rows": 1040
+    },
+    {
+      "candidate": "logistic_C0.05",
+      "family": "LogisticRegression",
+      "split": "primary",
+      "score": 0.675,
+      "rows": 1040
+    },
+    {
+      "candidate": "supported_field_interactions",
+      "family": "CatBoostClassifier",
+      "split": "primary",
+      "score": 0.7596153846153846,
+      "rows": 1040
+    },
+    {
+      "candidate": "extra_trees_leaf1",
+      "family": "ExtraTreesClassifier",
+      "split": "primary",
+      "score": 0.6913461538461538,
+      "rows": 1040
+    },
+    {
+      "candidate": "catboost_depth6_reg10.0",
+      "family": "CatBoostClassifier",
+      "split": "primary",
+      "score": 0.7355769230769231,
+      "rows": 1040
+    },
+    {
+      "candidate": "catboost_depth4_reg3.0",
+      "family": "CatBoostClassifier",
+      "split": "primary",
+      "score": 0.7346153846153847,
+      "rows": 1040
+    },
+    {
+      "candidate": "catboost_depth8_reg3.0",
+      "family": "CatBoostClassifier",
+      "split": "primary",
+      "score": 0.760576923076923,
+      "rows": 1040
+    },
+    {
+      "candidate": "supported_field_interactions",
+      "family": "CatBoostClassifier",
+      "split": "confirmation_1",
+      "score": 0.7332695984703633,
+      "rows": 1046
+    },
+    {
+      "candidate": "catboost_depth8_reg3.0",
+      "family": "CatBoostClassifier",
+      "split": "confirmation_1",
+      "score": 0.7246653919694073,
+      "rows": 1046
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-24：A142–A144新真实Banknote补充迁移完成
+
+先预登记同94源/默认full7目录，官方一次公开下载，1372×4、1092训练/280封存，24重复特征同组无跨界，outer71424/内部707808909固定并签名。L0与EC0两完整路径各11fit，全封存后统一评分均280/280、F1=1、逐行相同；自主选ExtraTrees leaf1/leaf3，native/搬迁/隔离包一致，训练多数类参照56.79%。不是新图像/H2或最终Unseen，不宣称Flash增益、总体100%或单独压缩收益，不为追差异换seed。
+
+新22fit/3Flash，输入15611输出4250、¥.032611；循环15.562/155.312秒（后者含API140.766），队列173.297秒，评估18.828秒0fit/API。A累计1636；ledger375/known6.8545065/unknown12/pending0，原372行及全部旧transition保持，A持有空闲。报告batches/A142_A144_new_numeric_transfer_results_20261124_zh.md、证据research/a142_a144_banknote_transfer，B继续H2/Released2，无活动队列。
+
 ## 2026-11-24：A141中断成果恢复9项通过，0新fit/API
 
 新增独立tools/recover_run_checkpoint.py，核原训练source/包/指标/分区/prediction/fit，另目录恢复partial checkpoint或保留已有完整模型重交付。A138已有组件生成9工程快照，6恢复路径32行native/隔离一致、3错误拒绝；包含state截断回退、在途unknown保留、重复恢复原件不改。不是实际断电试验，不支持继续原训练/搜索/API。94生产源及实际372ledger均未变。累计1614fit/372请求，known6.8218955/unknown12/pending0，A持有空闲。报告batches/A141_interruption_recovery_results_20261124_zh.md，证据research/a141_interruption_recovery；目标/反馈/中断三项独立补证本轮完成。

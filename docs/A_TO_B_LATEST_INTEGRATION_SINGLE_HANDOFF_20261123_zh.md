@@ -1,5 +1,7 @@
 # 给B：采用最新交付，接入和剩余交接一次说明
 
+**A144最新：** A额外完成Banknote新真实数值任务冻结流程迁移，默认94源未改，L0/紧凑checked两条各11fit，均280/280且独立交付一致，没有Flash提分收益，不替代你的H2/Released2、不改原F*。新3成功Flash/¥.032611，A累计1636；实际ledger现375/known6.8545065/unknown12/pending0，A持有空闲，原372历史未改。后续写账须接回最新375实际文件，不能用旧372/363副本。owner research/a142_a144_banknote_transfer/training/EC0/current_ledger_owner.json；报告batches/A142_A144_new_numeric_transfer_results_20261124_zh.md。无需重复已交材料，按原分工继续即可。
+
 **A141接续：** A已补独立中断成果恢复工具，9工程验收通过，0新增训练/API，94生产源码不改；核原训练版本后在新目录交付partial或已有完整模型，保留在途用量unknown，不会重发请求/续训。账本仍最新372/known6.8218955/unknown12/pending0，A持有空闲，B继续H2/Released2即可。报告batches/A141_interruption_recovery_results_20261124_zh.md；之前已交的材料不再重复催。
 
 **A140最新（2026-11-24）：** A目标稳健性18案例/四条3fit完整链路通过，累计1614。可选--feedback-view compact已接，默认full；三真实任务固定前缀×三视图9Flash全部成功，下一候选均相同，compact比full少809输入token（6.15%），总折算少.004153含输出差，非稳定提分/纠错结论。实际唯一ledger现372/known6.8218955/unknown12/pending0，A持有空闲，原363行未改。最新owner research/a140_flash_projection/paid/current_ledger_owner.json；B以后写账须接回最新372实际文件，不能继续写旧363/357副本。原12未知继续授权有效，不再等官网对账。H2/Task2仍B，不要求重复已有材料。报告batches/A139_A140_compact_feedback_results_20261124_zh.md。

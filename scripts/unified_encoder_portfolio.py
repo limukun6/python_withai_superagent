@@ -31,7 +31,7 @@ def training_roles(groups, labels, allowed):
     return parts
 
 
-def candidate_inventory(task, weights):
+def candidate_inventory(task, weights, *, l6_as_challenger=False):
     spec = task.spec
     schema = spec.get("input_schema", {})
     if (task.kind != "pair_text" or schema.get("pair_semantics") != "preference" or schema.get("pair_label_one") != "left"
@@ -42,7 +42,8 @@ def candidate_inventory(task, weights):
                 (REFERENCE[1], lambda: verified_files(e5["env"], e5["files"])),
                 (REFERENCE[2], verified_directory))
     excluded = {}
-    for name, check in required:
+    reference = REFERENCE[:2] if l6_as_challenger else REFERENCE
+    for name, check in required[:len(reference)]:
         try:
             if not check():
                 excluded[name] = "reference_missing_or_unverified"
@@ -51,6 +52,14 @@ def candidate_inventory(task, weights):
     if excluded:
         return {"candidates": [], "reason": "reference_unavailable", "excluded": excluded}
     extra = []
+    if l6_as_challenger:
+        try:
+            if verified_directory():
+                extra.append(REFERENCE[2])
+            else:
+                excluded[REFERENCE[2]] = "not_installed_or_unverified"
+        except OSError:
+            excluded[REFERENCE[2]] = "unreadable_asset"
     for name in MODELS:
         if not (weights/name).exists():
             excluded[name] = "not_installed"
@@ -64,7 +73,7 @@ def candidate_inventory(task, weights):
             excluded[name] = "unreadable_asset"
             continue
         extra.append(name)
-    return {"candidates": [*REFERENCE, *extra] if extra else [], "excluded": excluded,
+    return {"candidates": [*reference, *extra] if extra else [], "excluded": excluded,
             "reason": "eligible" if extra else "no_verified_extra_encoder"}
 
 

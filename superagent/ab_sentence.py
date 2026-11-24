@@ -1,4 +1,6 @@
 """Pinned local sentence encoders for supervised lexical classifiers."""
+from contextlib import contextmanager
+from contextvars import ContextVar
 from functools import lru_cache
 import hashlib
 from importlib.util import find_spec
@@ -94,13 +96,40 @@ def _encoder(root,max_length=256):
     return tokenizer, model.eval().requires_grad_(False)
 
 
+_RUN_VECTORS = ContextVar("frozen_sentence_vectors", default=None)
+
+
+@contextmanager
+def reuse_frozen_vectors():
+    """Keep input-only features for pinned encoders within this execution."""
+    token = _RUN_VECTORS.set({})
+    try:
+        yield
+    finally:
+        _RUN_VECTORS.reset(token)
+
+
+def _pinned_vectors(texts, root, max_length, *, prefix='', pool='mean'):
+    caches = _RUN_VECTORS.get()
+    if caches is None or not len(texts):
+        tokenizer,model = _encoder(root,max_length)
+        return encode_frozen(texts,tokenizer,model,prefix=prefix,pool=pool)
+    cache = caches.setdefault((root,max_length,prefix,pool),{})
+    absent = list(dict.fromkeys(s for s in texts if s not in cache))
+    tokens = 0
+    if absent:
+        tokenizer,model = _encoder(root,max_length)
+        values,tokens = encode_frozen(absent,tokenizer,model,prefix=prefix,pool=pool)
+        cache.update(zip(absent,values,strict=True))
+    return np.stack([cache[s] for s in texts]),tokens
+
+
 def encode(texts, *, deep=False):
     root=verified_directory(deep=True) if deep else verified_directory()
     if root is None:
         key = DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS'
         raise ValueError(f'Set {key} to the directory of the pinned local files')
-    tokenizer,model=_encoder(root,128) if deep else _encoder(root)
-    return encode_frozen(texts,tokenizer,model)
+    return _pinned_vectors(texts,root,128 if deep else 256)
 
 
 def encode_alternative(texts,variant):
@@ -108,8 +137,7 @@ def encode_alternative(texts,variant):
     root=verified_files(spec['env'],spec['files'])
     if root is None:
         raise ValueError('Missing verified local weights: '+spec['env'])
-    tokenizer,model=_encoder(root,512)
-    return encode_frozen(texts,tokenizer,model,prefix=spec['prefix'],pool=spec['pool'])
+    return _pinned_vectors(texts,root,512,prefix=spec['prefix'],pool=spec['pool'])
 
 
 def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):

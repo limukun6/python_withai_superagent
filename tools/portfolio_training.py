@@ -56,17 +56,21 @@ def fit_one(folder, name, rows, labels, identity):
 
 
 def export(directory, models, choice, specification):
+    rule = choice["rules"][choice["chosen"]]
+    used = [choice["members"][i] for i in rule["indices"]] if rule["kind"] == "subset" else choice["members"]
+    write_selection(directory, delivery(models, choice), used, specification, choice["chosen"],
+                    "feedback_selected_preference_portfolio")
+
+
+def write_selection(directory, model, used, specification, selected, family):
     directory.mkdir(parents=True, exist_ok=False)
     spec = dict(specification, task_kind="pair_text_binary", kind="pair_text", metric="accuracy", test_accessed=False,
                 metric_spec={"name": "accuracy", "labels": [0, 1], "direction": "maximize"})
     spec.setdefault("input_columns", spec["input_schema"]["columns"])
     save(directory/"task_spec.json", spec)
-    family = "feedback_selected_preference_portfolio"
     with (directory/"selected_model.joblib").open("xb") as stream:
-        joblib.dump({"kind": "pair_text", "candidate": family, "model": delivery(models, choice)}, stream, compress=1)
-    rule = choice["rules"][choice["chosen"]]
-    used = [choice["members"][i] for i in rule["indices"]] if rule["kind"] == "subset" else choice["members"]
-    save(directory/"final_selection.json", {"family": family, "selected_experiment": choice["chosen"],
+        joblib.dump({"kind": "pair_text", "candidate": family, "model": model}, stream, compress=1)
+    save(directory/"final_selection.json", {"family": family, "selected_experiment": selected,
          "model_format": "candidate_bundle_v1", "model_file": "selected_model.joblib",
          "model_sha256": sha(directory/"selected_model.joblib"), "task_spec_sha256": sha(directory/"task_spec.json"),
          "test_accessed": False, "ensemble_components": used})

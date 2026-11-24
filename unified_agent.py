@@ -122,9 +122,22 @@ def main():
         command = commands.add_parser(action)
         command.add_argument("task_package", type=Path)
         command.add_argument("--run-dir", required=True, type=Path)
+        command.add_argument("--weights",type=Path,help="Root containing locally pinned encoders")
+        command.add_argument("--feature-bank",type=Path,help="Optional cache of frozen input-only representations")
         if action == "predict":
             command.add_argument("--output", required=True, type=Path)
+        else:
+            command.add_argument("--strategy",choices=("default","crossfit-challenger"),default="default")
     args = parser.parse_args()
+    if args.feature_bank is not None and args.weights is None:
+        parser.error("--feature-bank requires --weights")
+    if args.action == "train":
+        if args.strategy=="crossfit-challenger":
+            from tools.challenger_training import train as train_challenger
+            return train_challenger(args.task_package,args.run_dir,args.weights,args.feature_bank)
+    if args.weights is not None:
+        from tools.portfolio_training import configure
+        configure(args.weights,args.feature_bank)
     if args.action == "train":
         return train(args.task_package, args.run_dir)
     path = create_predictions(str(args.task_package), args.run_dir / "agent", args.output)

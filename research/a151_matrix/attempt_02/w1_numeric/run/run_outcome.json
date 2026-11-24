@@ -1,0 +1,260 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration\\research\\a151_matrix\\attempt_02\\w1_numeric\\run",
+  "scheduler": "ab-v1",
+  "planner_mode": "checked-history",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 1,
+  "known_course_cost_rmb": 0.007201,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "numeric_tabular_logistic_C0.1",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "numeric_tabular_logistic_C0.1"
+    ],
+    "primary_candidate": "numeric_tabular_logistic_C0.1",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "primary_accuracy": 0.9231830726770929,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 1,
+            "candidate": "numeric_tabular_logistic_C0.1",
+            "params": {
+              "C": 0.1
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                "BARBUNYA",
+                "BOMBAY",
+                "CALI",
+                "DERMASON",
+                "HOROZ",
+                "SEKER",
+                "SIRA"
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.9224236860224926,
+            "search_score": 0.9231830726770929,
+            "train_metrics": {
+              "accuracy": 0.9224236860224926,
+              "macro_f1": 0.9345439535119018,
+              "primary_metric": "accuracy",
+              "score": 0.9224236860224926,
+              "rows": 8714
+            },
+            "search_metrics": {
+              "accuracy": 0.9231830726770929,
+              "macro_f1": 0.9329963243187418,
+              "primary_metric": "accuracy",
+              "score": 0.9231830726770929,
+              "rows": 2174
+            },
+            "score_gap": -0.0007593866546002914,
+            "train_accuracy": 0.9224236860224926,
+            "search_accuracy": 0.9231830726770929,
+            "generalization_gap": -0.0007593866546002914,
+            "class_recall": [
+              0.8826530612244898,
+              1.0,
+              0.9455252918287937,
+              0.9212328767123288,
+              0.95,
+              0.934984520123839,
+              0.8894009216589862
+            ],
+            "training_seconds": 0.14844359998824075,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "numeric_tabular_logistic_C0.1",
+              "params": {
+                "C": 0.1
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "numeric_tabular_logistic_C0.1",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 1.2959999999729916,
+            "evaluation_payload_sha256": "bf5754028efaf18a5be26c8584b497f62ffa11ecc964fc887a2ab6b156e16908",
+            "label_sha256": "7f9d34d02c1a1914e1f3af740be5b9b75bcfb5a447926d1c00741479127ea2f9",
+            "row_ids_sha256": "99dc7382dad8dca78deec05e95762556c24d5bbdf061c21a918794941d5bbdc4",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  "BARBUNYA",
+                  "BOMBAY",
+                  "CALI",
+                  "DERMASON",
+                  "HOROZ",
+                  "SEKER",
+                  "SIRA"
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  "BARBUNYA",
+                  "BOMBAY",
+                  "CALI",
+                  "DERMASON",
+                  "HOROZ",
+                  "SEKER",
+                  "SIRA"
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.9231830726770929,
+        "mean_score": 0.9231830726770929,
+        "mean_accuracy": 0.9231830726770929,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "numeric_tabular_logistic_C0.1",
+    "selection_score": 0.9231830726770929,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "numeric_tabular_logistic_C0.1",
+      "incumbent": "numeric_tabular_logistic_C0.1",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.9225119353654058,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": 0.9225119353654058,
+    "pre_refit_validation_score": 0.9232464193903782,
+    "single_model_validation_score": 0.9225119353654058,
+    "official_validation_accuracy": 0.9225119353654058,
+    "pre_refit_validation_accuracy": 0.9232464193903782,
+    "single_model_validation_accuracy": 0.9225119353654058,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 10888,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.1421097000129521,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.9225119353654058,
+      "macro_f1": 0.9358291787796424,
+      "primary_metric": "accuracy",
+      "score": 0.9225119353654058,
+      "rows": 2723
+    }
+  },
+  "elapsed_seconds": 45.84399999998277,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.007201,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "a151_w1_num",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 0.007201,
+    "shared_known_cost_rmb": 0.1164165,
+    "known_cost_counted_against_limit_rmb": 0.1236175,
+    "unresolved_requests": 4,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "user-accepted-snapshot-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "User accepts enumerated existing unknown charges without settlement. Costs stay null; any new unknown/pending blocks. Known-cost limit remains enforced.",
+    "accepted_history_sha256": "7747be18949269e3a018a88e44849ea8d09c408b434674e97ed844cd07cc8621",
+    "accepted_unknown_request_count": 16
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 402,
+    "known_course_cost_rmb": 7.211491,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

@@ -1,0 +1,67 @@
+{
+  "batch": "A151-matrix",
+  "preregistered": "2026-11-24",
+  "plan_doc": "docs/batches/A151_matrix_plan_20261124_zh.md",
+  "fixed": {
+    "seed": 707,
+    "menu_view": "compact",
+    "feedback_view": "compact",
+    "time_limit": 600,
+    "trial_timeout": 120,
+    "partial_delivery": "checkpoint",
+    "allowance_rmb": 0.15,
+    "maximum_requests": 3
+  },
+  "paths": [
+    {
+      "name": "w1_categorical",
+      "task": "D:\\codex\\python_withai\\data\\released_task1.zip",
+      "scheduler": "ab-v1",
+      "fit_limit": 3,
+      "contract": "calibrated-v2",
+      "layering": "off",
+      "task_budget_id": "a151_w1_cat",
+      "require_independent_confirmation": false
+    },
+    {
+      "name": "w1_numeric",
+      "task": "D:\\codex\\python_withai\\data\\dry_bean_numeric_tabular.zip", "predict": "reload",
+      "scheduler": "ab-v1",
+      "fit_limit": 3,
+      "contract": "calibrated-v2",
+      "layering": "off",
+      "task_budget_id": "a151_w1_num",
+      "require_independent_confirmation": false
+    },
+    {
+      "name": "w1_single_text",
+      "task": "D:\\codex\\python_withai\\data\\sms_spam_single_text.zip", "predict": "reload",
+      "scheduler": "ab-v1",
+      "fit_limit": 3,
+      "contract": "calibrated-v2",
+      "layering": "off",
+      "task_budget_id": "a151_w1_txt",
+      "require_independent_confirmation": false
+    },
+    {
+      "name": "w1_single_text_grounded",
+      "task": "D:\\codex\\python_withai\\data\\sms_spam_single_text.zip", "predict": "reload",
+      "scheduler": "ab-v1",
+      "fit_limit": 3,
+      "contract": "grounded-v1",
+      "layering": "by-class",
+      "task_budget_id": "a151_w1_txtg",
+      "require_independent_confirmation": false
+    },
+    {
+      "name": "w2_confirm",
+      "task": "D:\\codex\\python_withai\\data\\released_task2.zip",
+      "scheduler": "ab-finalists",
+      "fit_limit": 5,
+      "contract": "calibrated-v2",
+      "layering": "off",
+      "task_budget_id": "a151_w2_confirm",
+      "require_independent_confirmation": true
+    }
+  ]
+}

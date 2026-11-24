@@ -1,0 +1,50 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "word_C0.05",
+    "split_id": "primary",
+    "reason": "Reserve two matched finalist checks and a full refit. Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "word_char_C0.05",
+    "split_id": "primary",
+    "reason": "Trial 1 word-only C=0.05 shows a large train-search gap (0.192), consistent with overfitting. Testing word_char_C0.05 keeps the same strong regularization and swap augmentation while changing representation to word+char, isolating whether character n-grams improve primary accuracy.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_char_C0.05",
+    "split_id": "confirmation_1",
+    "reason": "Primary top-two shortlist; give every finalist the same confirmation split.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "word_C0.05",
+    "split_id": "confirmation_1",
+    "reason": "Primary top-two shortlist; give every finalist the same confirmation split.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

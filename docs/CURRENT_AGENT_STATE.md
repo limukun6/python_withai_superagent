@@ -1,8 +1,18 @@
-# 当前接续状态：2026-11-24，A151端到端验收完成，1657fit／400请求／16未知
+# 当前接续状态：2026-11-24，A151迁移与复核验收完成，1674fit／406请求／16未知
 
-2026-11-24汇总复核：真实grounded拒绝→修复→接受及两条路径交付证据成立；两条实际均explore→explore→stop→refit，independent_confirmation_observed=false，本轮未验独立复核训练。L1/L0费用为2.4094倍（非4倍）；成功三段含单调用探测合计6fit/4API/¥.065158，6fit/3API/¥.055246仅为端到端阶段。离线3/3免fit关闭不代表实测省3fit。文档已纠正，本次0新增fit/API；不改变默认，不宣称提分或通用性。下一步可优先用少量不同类型真实任务验证表示/修复迁移，并另登记确实含confirm动作的工程验收；尚未启动。
+## A151矩阵：五条路径全通过，17fit/6调用/¥0.067218
 
-## A151端到端验收：两条路径在压缩菜单下都跑完，6fit/3调用/¥0.055246
+按预登记执行五条路径：三条迁移（类别表格`released_task1`、数值表格`dry_bean`、单文本`sms_spam`，均`calibrated-v2`+compact）＋单文本grounded修复＋一次真正含confirm的复核验收。全部通过：`requested_planner_completed=true`、fit计数完整、无新增unknown、交付校验一致（CLI predict 2,537/3,232行；无test split的包用新进程重载+验证集评分2,723/1,032行）。
+
+**W1迁移成立**：压缩表示在三种新类型跑通；grounded在单文本第1次被拒（`no_same_penalized_parameterization_and_observed_reference`），修复后7条断言全confirmed并接受。**W2复核成立**：`ab-finalists`动作`explore×2→confirm×2→stop`，`basis=["primary","confirmation_1"]`，两finalist各在两划分测量（word_char 0.6547 vs word 0.6368），`independent_confirmation_observed=true`，为A151首次真正训练独立确认分区。
+
+过程偏差已留档：attempt_01漏传key/ledger（0花费）；attempt_02因自建包无test split导致`predict`失败，计划修正为"重载+验证集"渠道；attempt_03的`w2_confirm`被验收逻辑误判（字段在`confirmation`内），离线重算`recheck.json`后五条全pass，未重跑。
+
+不能声称提分/迁移收益/通用性/压缩省时：grounded单文本0.9347低于L0 0.9474，单样本且与之前同向。账本406请求/known¥7.262944/unknown16未增/pending0。报告batches/A151_matrix_results_20261124_zh.md。
+
+## A151端到端验收：两条路径在压缩菜单下都跑完（复核后的口径）
+
+2026-11-24汇总复核：真实grounded拒绝→修复→接受及两条路径交付证据成立；两条实际均explore→explore→stop→refit，independent_confirmation_observed=false，本轮未验独立复核训练（该缺口已由下面A151矩阵的w2_confirm补上）。L1/L0费用为2.4094倍（非4倍）；成功三段含单调用探测合计6fit/4API/¥.065158，6fit/3API/¥.055246仅为端到端阶段。离线3/3免fit关闭不代表实测省3fit。不改变默认，不宣称提分或通用性。
 
 L0（calibrated-v2，分层off）：2次搜索（anchor `word_C0.05`→`word_char_C0.05`）、1次Flash、3 fit，选中`word_char_C0.05`，内部0.6520/验证0.7011。L1（grounded-v1 + by-class）：2次搜索（anchor→`word_C0.1` 0.6216，低于anchor）、**2次Flash（第1次被拒`no_same_penalized_parameterization_and_observed_reference`，修复后8条断言全confirmed而接受）**、3 fit，选中anchor `word_C0.05`，验证0.6755。两条都`requested_planner_completed=true`、无重试、独立进程predict各3,232行、源码前后一致。
 

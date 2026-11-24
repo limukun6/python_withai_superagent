@@ -1,5 +1,15 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 矩阵五条路径全通过，17 fit／6 调用／¥0.067218
+
+按预登记执行五行：三条迁移（类别表格、数值表格、单文本，calibrated-v2 + compact）、单文本 grounded 修复、一次真含 confirm 的复核验收。全部通过，每条 `requested_planner_completed=true`、fit 计数完整、无新增 unknown。
+
+W1：压缩表示在三种新类型跑通；grounded 在单文本第 1 次被拒后修复接受（7 条断言全 confirmed）。W2：`ab-finalists` 动作 explore×2→confirm×2→stop，`basis=["primary","confirmation_1"]`，两 finalist 各在两划分测量（word_char 0.6547 vs word 0.6368），`independent_confirmation_observed=true`，为 A151 首次真正训练独立确认分区。
+
+过程偏差留档：attempt_01 漏参 0 花费；attempt_02 因自建包无 test split 改用"重载+验证集"交付渠道；attempt_03 的 w2_confirm 被验收逻辑误判，离线重算 recheck.json 后五条全 pass，未重跑。
+
+不声称提分/迁移收益/通用性/压缩省时：grounded 单文本 0.9347 低于 L0 的 0.9474，单样本且同向。账本 406 请求 / known ¥7.262944 / unknown 16 未增 / pending 0。报告 batches/A151_matrix_results_20261124_zh.md。
+
 ## 2026-11-24：A151汇总证据复核与口径修正，0新增实验
 
 核对completion、actions、confirmation及delivery_check：两条路径均完成，grounded真实语义拒绝/修复/接受成立，两次独立进程预测SHA相同；但实际动作explore→explore→stop，无独立confirmation训练。修正汇总中L1费用4倍为2.4094倍（+140.94%）；成功三阶段合计6fit/4API/¥.065158，原6fit/3API/¥.055246只指端到端阶段。3/3知识纠错免fit仍是离线机制证据，不等于实测节省3fit。未新增训练或API，A1657/400请求/known7.195726/unknown16/pending0不变；不因一次可用而晋级默认。

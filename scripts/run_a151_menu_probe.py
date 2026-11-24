@@ -101,6 +101,7 @@ def main():
     ledger = TaskBudgetLedger(args.ledger)
     before = ledger.project_summary()
     auth_sha = sha(args.authorization)
+    (out / 'run').mkdir(parents=True, exist_ok=True)
     logger = RunLogger(out / 'run')
     logger.initialize_usage_ledger()
     account = IncrementalResearchAccount(ledger, SCOPE, str(out / 'run'))

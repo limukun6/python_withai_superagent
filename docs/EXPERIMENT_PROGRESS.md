@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 单调用菜单探测成功，1 API／0 fit
+
+按预登记执行 1 次真实 Flash、0 fit：`accepted=true`，选中 `word_char_C0.1`（原 29 菜单内、参数与目录一致），`calibrated-v2` 11 字段齐全、`finish=stop`，4,724/1,297 token、¥0.009912、52.7 秒、444 个 SSE 数据事件，**无新增 unknown**。账本 397 请求 / known ¥7.14048 / unknown 16 / pending 0。
+
+对照原失败 6,821 输入、417 秒零事件、无 usage，本次输入 token 少约 30.7%。**仅一次提案**：无执行/反馈/复核/重训/交付，不是闭环；不声称压缩降低推理时间；不声称 grounded 可用（本次未开）。首次尝试因运行目录缺失在发请求前失败（0 请求），原件保留。
+
+报告 batches/A151_menu_probe_results_20261124_zh.md；下一步为两条路径的端到端验收（每路径 ≤3 调用 / ≤3 fit）。
+
 ## 2026-11-24：A151 菜单表示接入生产开关，0 fit／0 API
 
 按 Codex 复核第 4 节：新增 `superagent/menu_view.py`（`menu-tables-v3`）与 `--menu-view full|compact`（默认 full），只改表示。真实失败 payload 实测 21,473→13,949 字节（−35.039%），`decode_menu` 往返相等，29 个候选与参数逐项保留；提案仍按原 capabilities 校验。11 项 menu 测试 + 相关 9 模块 71 项回归通过。

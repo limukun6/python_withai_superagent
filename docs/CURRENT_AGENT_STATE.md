@@ -1,5 +1,7 @@
 # 当前接续状态：2026-11-24，A147完成，1644fit／387请求
 
+演讲材料已按用户最新评分表准备：presentation/A_LINE_2M30_SCRIPT_ZH.txt含5页150秒中文稿、评分对应和技术问答；个人Spaces文稿page_eaad92b193048191a12e0df2303c4031，5页主讲+2页隐藏附页，逐页备注和渲染均已检查；源码presentation/build_a_line_deck.mjs，连接信息及来源SHA见delivery_manifest.json。可在查看器导出PPTX，未额外生成本地PPT副本。此项0新增fit/学校API，不代表项目最终冻结或A148启动，下面实验计数不变。
+
 ## A145–A147最新：可核验协议已接，真实纠错通过，尚无稳定提分
 
 用户“开始”后按先前方案完成A145/A146及有动作差异才跑的A147。生产473ba84固定97文件：fact_registry/grounded_proposal/grounding_issues，加显式checked-history/grounded-v1；默认strict-v1/full不变，未改B方法库和调度。55无fit/无网络回归、七默认菜单一致；程序oracle开发24/24、源码冻结后一次保留24/24，错误确认0/6、未知误确认0/6、合法12/12。首次43回归中的夹具接口错误另存，未复评保留例。

@@ -353,6 +353,10 @@ def build_parser():
     run.add_argument('--api-url')
     run.add_argument('--api-key-file')
     run.add_argument('--model')
+    run.add_argument('--thinking',dest='thinking_mode',choices=['enabled','disabled'],
+        help='AB Flash: send an explicit thinking switch when the endpoint honours it')
+    run.add_argument('--reasoning-effort',dest='reasoning_effort_level',
+        choices=['none','low','medium','high'],help='AB Flash: explicit reasoning budget hint')
     run.add_argument('--budget-ledger',help='Previously initialized SQLite course-cost ledger')
     run.add_argument('--task-budget-id',help='Stable lowercase ID for this evaluation task; reuse it across seeds and iterations')
     run.add_argument('--llm-budget-rmb',type=float,help='Incremental allowance for this run, default 0.10 in LLM mode; aggregate prior task costs separately')

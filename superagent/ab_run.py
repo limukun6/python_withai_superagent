@@ -269,7 +269,9 @@ def command(args):
         else:
             account = TaskBudgetAccount(ledger,args.task_budget_id,str(directory))
         client = ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
-            allowed_served_models={args.model},account=account,streaming=True)
+            allowed_served_models={args.model},account=account,streaming=True,
+            thinking_mode=getattr(args,'thinking_mode',None),
+            reasoning_effort=getattr(args,'reasoning_effort_level',None))
         client.set_deadline(began+args.time_limit)
         picker = FlashPicker(client,logger,args.planner=='checked-history',getattr(args,'proposal_contract','strict-v1'),
                              getattr(args,'feedback_view','full'),getattr(args,'issue_layering','off'))
@@ -297,6 +299,8 @@ def command(args):
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
             **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
+            **({'thinking_mode':args.thinking_mode} if getattr(args,'thinking_mode',None) else {}),
+            **({'reasoning_effort':args.reasoning_effort_level} if getattr(args,'reasoning_effort_level',None) else {}),
             **({'numeric_kernel_width':numeric_width} if numeric_width is not None else {}),
             parameter_semantics=getattr(args,'parameter_semantics','off'),
             task_contract=spec, task_archive_sha256=sha(task_path), source_files=frozen,

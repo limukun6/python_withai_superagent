@@ -5,19 +5,22 @@ import io
 import json
 from pathlib import Path
 import shutil
+from types import SimpleNamespace
 import zipfile
 
 import numpy as np
 
 from scripts.unified_confidence_study import paired_interval
 from scripts.unified_released_study import EVIDENCE, ROOT, archive, predictions, read, require, sha, title_rows
+from scripts.unified_third_member import assess
 from scripts.verify_unified_raw import MEMBERS, TAGS, signatures
 from superagent.prediction_evidence import fingerprint
+from superagent.splits import sample_groups
 
 PUBLIC = ROOT / "research/unified_raw_1124"
 
 
-def publish(raw, confidence):
+def publish(raw, confidence, third=None):
     selections = {name: raw / name for name in ("protocol.json", "results.json", "designated/predictions_frozen.json", "portable.json")}
     for tag in TAGS:
         for suffix in ("completion.json", "physical.jsonl"):
@@ -26,6 +29,9 @@ def publish(raw, confidence):
         selections[rel] = raw / rel
     for name in ("freeze.json", "groups.json", "predictions.csv", "result.json"):
         selections["confidence/" + name] = confidence / name
+    if third:
+        for name in ("freeze.json", "selection.json", "predictions.csv", "result.json"):
+            selections["third/" + name] = third / name
     for name, origin in selections.items():
         dest = PUBLIC / name
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -101,14 +107,43 @@ def verify(packages):
                 int((control & ~candidate).sum()) == follow["lost"] and int(disagree.sum()) == follow["member_disagreements"] and
                 int((~control & ~disagree).sum()) == follow["errors_both_members_share"] and
                 int((~control & disagree).sum()) == follow["control_errors_on_disagreements"], "Training reserve counts differ")
-    print("Verified raw-package grades, portable prediction hashes and the paired Task2 experiment.")
+    third = PUBLIC / "third"
+    choice, frozen, comparison = (read(third / name) for name in ("selection.json", "freeze.json", "result.json"))
+    candidates = choice["candidates"]
+    best = max(candidates, key=lambda k: (candidates[k]["net"], candidates[k]["rescued_by_candidate_alone"], -candidates[k]["trial"]))
+    independent = choice["independent"]
+    gate = bool(candidates[best]["net"] > 0 and independent and all(r["net"] > 0 for r in independent.values())
+                and comparison["matched"]["passes"] and comparison["delivered"]["passes"])
+    require(comparison["refit_gate_passed"] == gate and best == comparison["chosen"] == choice["chosen"] and
+            comparison["additional_fits"] == comparison["model_api_calls"] == 0 and not comparison["course_validation_used"] and
+            not comparison["course_test_used"] and frozen["predictions"] == sha(third / "predictions.csv") and
+            frozen["selection"] == sha(third / "selection.json") and choice["delivered"] == title["model"] and
+            choice["study"] == sha(ROOT / "scripts/unified_third_member.py") and
+            choice["plan"] == sha(ROOT / "docs/batches/unified_third_member_protocol_20261124_zh.md"), "Third-member provenance differs")
+    if packages:
+        with (third / "predictions.csv").open() as stream:
+            observations = list(csv.DictReader(stream))
+        require([int(r["row_id"]) for r in observations] == list(range(len(ids))), "Third-member row order changed")
+        groups = sample_groups(SimpleNamespace(kind="pair_text", X_train=[training[i][:2] for i in ids]), "shared_text")
+        _, group_numbers = np.unique(groups, return_inverse=True)
+        hard = {k: np.asarray([int(r[k]) for r in observations]) for k in observations[0]}
+        for label in ("matched", "delivered"):
+            require(assess(truth, (hard[label + "_pair"], hard[label + "_triple"]), group_numbers) == comparison[label],
+                    "Third-member comparison failed to reproduce")
+        common_errors = (hard["first_delivered"] != truth) & (hard["second_delivered"] != truth)
+        require(int(common_errors.sum()) == comparison["delivered_common_errors"] == follow["errors_both_members_share"] and
+                int((common_errors & (hard["third"] == truth)).sum()) == comparison["corrected_by_third_alone"] and
+                int((common_errors & (hard["delivered_triple"] == truth)).sum()) == comparison["corrected_by_actual_triple"],
+                "Third-member common-error counts differ")
+    print("Verified raw-package grades, portable predictions and both paired Task2 experiments.")
 
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--packages", type=Path)
     p.add_argument("--publish", nargs=2, type=Path, metavar=("RAW_RUN", "CONFIDENCE_RUN"))
+    p.add_argument("--third-run", type=Path)
     args = p.parse_args()
     if args.publish:
-        publish(*args.publish)
+        publish(*args.publish, third=args.third_run)
     verify(args.packages)

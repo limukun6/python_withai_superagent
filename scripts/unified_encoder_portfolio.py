@@ -31,35 +31,64 @@ def training_roles(groups, labels, allowed):
     return parts
 
 
-def candidates(task, weights):
+def candidate_inventory(task, weights):
     spec = task.spec
     schema = spec.get("input_schema", {})
     if (task.kind != "pair_text" or schema.get("pair_semantics") != "preference" or schema.get("pair_label_one") != "left"
             or spec.get("metric", "accuracy") != "accuracy" or set(task.y_train) != {0, 1}):
-        return []
+        return {"candidates": [], "reason": "incompatible_task_contract", "excluded": {}}
     e5 = ALTERNATIVES["e5"]
-    if not (verified_directory() and verified_directory(deep=True) and verified_files(e5["env"], e5["files"])):
-        return []
+    required = ((REFERENCE[0], lambda: verified_directory(deep=True)),
+                (REFERENCE[1], lambda: verified_files(e5["env"], e5["files"])),
+                (REFERENCE[2], verified_directory))
+    excluded = {}
+    for name, check in required:
+        try:
+            if not check():
+                excluded[name] = "reference_missing_or_unverified"
+        except OSError:
+            excluded[name] = "unreadable_reference"
+    if excluded:
+        return {"candidates": [], "reason": "reference_unavailable", "excluded": excluded}
     extra = []
     for name in MODELS:
-        if (weights/name).is_dir():
+        if not (weights/name).exists():
+            excluded[name] = "not_installed"
+            continue
+        try:
             verified(weights, name)
-            extra.append(name)
-    return [*REFERENCE, *extra] if extra else []
+        except ValueError:
+            excluded[name] = "missing_or_mismatched_pinned_file"
+            continue
+        except OSError:
+            excluded[name] = "unreadable_asset"
+            continue
+        extra.append(name)
+    return {"candidates": [*REFERENCE, *extra] if extra else [], "excluded": excluded,
+            "reason": "eligible" if extra else "no_verified_extra_encoder"}
+
+
+def candidates(task, weights):
+    return candidate_inventory(task, weights)["candidates"]
 
 
 def train(package, directory, weights, cache):
     configure(weights, cache)
     task = load_training_task(package)
-    names = candidates(task, weights)
-    if not names:
-        return unified_train(package, directory)
-    audit, reason = audit_partition(task)
-    allowed = np.arange(len(task.y_train)) if audit is None else np.asarray(audit[0])
-    groups = sample_groups(task, "shared_text")
-    roles = training_roles(groups, task.y_train, allowed)
+    inventory = candidate_inventory(task, weights)
+    names = inventory["candidates"]
+    roles = None
+    if names:
+        audit, reason = audit_partition(task)
+        allowed = np.arange(len(task.y_train)) if audit is None else np.asarray(audit[0])
+        groups = sample_groups(task, "shared_text")
+        roles = training_roles(groups, task.y_train, allowed)
+        if roles is None:
+            inventory["reason"] = "insufficient_disjoint_training_groups"
     if roles is None:
-        return unified_train(package, directory)
+        status = unified_train(package, directory)
+        save(directory/"portfolio_availability.json", inventory)
+        return status
     directory.mkdir(parents=True, exist_ok=False)
     reserve = np.array([], dtype=int) if audit is None else audit[1]
     memberships = {k: {"rows": len(v), "groups": len(set(groups[v])), "ids": fingerprint(v.tolist())}
@@ -67,7 +96,7 @@ def train(package, directory, weights, cache):
     seen = [set(groups[ix]) for ix in (*roles.values(), reserve)]
     require(sum(map(len, seen)) == len(set.union(*seen)), "Training and audit share a connected title")
     record = {"train_sha256": sha(package), "roles": memberships, "audit_reason": reason,
-              "candidates": names, "maximum_classifier_fits": len(names), "maximum_supervised_routing_steps": 4,
+              "candidates": names, "availability": inventory, "maximum_classifier_fits": len(names), "maximum_supervised_routing_steps": 4,
               "path_limit": 11, "model_api_limit": 0}
     save(directory/"protocol.json", record)
     base = roles["base"]

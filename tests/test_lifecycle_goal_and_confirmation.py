@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 import zipfile
 
 import numpy as np
@@ -11,6 +12,7 @@ from superagent.ab_run import confirmation_coverage
 from superagent.contracts import TaskSpec
 from superagent.data import load_development_task, load_training_task
 from superagent.metrics import SUPPORTED
+from scripts import unified_encoder_portfolio as portfolio
 
 
 class AnonymousGoalTests(unittest.TestCase):
@@ -102,3 +104,18 @@ class ConfirmationCoverageTests(unittest.TestCase):
         self.assertFalse(confirmation_coverage(trusted,trusted,trusted)["independent_confirmation_observed"])
         with self.assertRaises(ValueError):
             confirmation_coverage(trusted,["primary"],["confirmation_1"])
+
+
+class PortfolioFallbackTests(unittest.TestCase):
+    def test_incompatible_task_runs_common_trainer_and_records_reason(self):
+        task = SimpleNamespace(kind="numeric_tabular", spec={}, y_train=np.array([0,1]))
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)/"run"
+            def common(package, directory):
+                directory.mkdir()
+                return 0
+            with patch.object(portfolio,"configure"), patch.object(portfolio,"load_training_task",return_value=task), \
+                    patch.object(portfolio,"unified_train",side_effect=common) as trainer:
+                self.assertEqual(portfolio.train("anonymous.zip",folder,Path(tmp),None),0)
+            trainer.assert_called_once_with("anonymous.zip",folder)
+            self.assertEqual(json.loads((folder/"portfolio_availability.json").read_text())["reason"],"incompatible_task_contract")

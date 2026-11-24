@@ -1,0 +1,19 @@
+{
+  "batch": "A151-menuview-repeat",
+  "preregistered": "2026-11-24",
+  "plan_doc": "docs/batches/A151_menuview_plan_20261124_zh.md",
+  "fixed": {
+    "feedback_view": "compact",
+    "time_limit": 600,
+    "trial_timeout": 120,
+    "partial_delivery": "checkpoint",
+    "allowance_rmb": 0.15,
+    "maximum_requests": 3
+  },
+  "paths": [
+    {"name": "text_s707_full_r2", "seed": 707, "menu_view": "full", "task": "D:\\codex\\python_withai\\data\\sms_spam_single_text.zip", "scheduler": "ab-v1", "fit_limit": 3, "contract": "calibrated-v2", "layering": "off", "task_budget_id": "a151_mv_text_full", "require_independent_confirmation": false, "predict": "reload"},
+    {"name": "text_s707_compact_r2", "seed": 707, "menu_view": "compact", "task": "D:\\codex\\python_withai\\data\\sms_spam_single_text.zip", "scheduler": "ab-v1", "fit_limit": 3, "contract": "calibrated-v2", "layering": "off", "task_budget_id": "a151_mv_text_compact", "require_independent_confirmation": false, "predict": "reload"},
+    {"name": "pair_s707_full_r2", "seed": 707, "menu_view": "full", "task": "D:\\codex\\python_withai\\data\\released_task2.zip", "scheduler": "ab-v1", "fit_limit": 3, "contract": "calibrated-v2", "layering": "off", "task_budget_id": "a151_mv_pair_full", "require_independent_confirmation": false},
+    {"name": "pair_s707_compact_r2", "seed": 707, "menu_view": "compact", "task": "D:\\codex\\python_withai\\data\\released_task2.zip", "scheduler": "ab-v1", "fit_limit": 3, "contract": "calibrated-v2", "layering": "off", "task_budget_id": "a151_mv_pair_compact", "require_independent_confirmation": false}
+  ]
+}

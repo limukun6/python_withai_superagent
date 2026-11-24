@@ -1,0 +1,380 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration\\research\\a151_menuview\\attempt_02\\pair_s911_full\\run",
+  "scheduler": "ab-v1",
+  "planner_mode": "checked-history",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 1,
+  "known_course_cost_rmb": 0.010657,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "word_C0.1",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      911
+    ],
+    "shortlist": [
+      "word_C0.1"
+    ],
+    "primary_candidate": "word_C0.1",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "word_C0.1",
+        "primary_accuracy": 0.6467423789599522,
+        "measurements": [
+          {
+            "seed": 911,
+            "trial": 2,
+            "candidate": "word_C0.1",
+            "params": {
+              "C": 0.1,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "split_id": "primary",
+            "proposal": {
+              "candidate": "word_C0.1",
+              "task_kind": "pair_text",
+              "configuration_claim": {
+                "classifier": "logistic"
+              },
+              "reason": "Trial 1 on the active word route used C=0.05 and produced primary accuracy 0.6438 with a large train-search gap of 0.1687. The closest controlled next step is word_C0.1, which keeps representation and swap augmentation fixed while testing a less regularized logistic model before changing routes.",
+              "review": "Only one completed primary trial is available, so this is a local regularization probe rather than a confirmed improvement path. The prior trial's high train score and lower search score could reflect overfitting, variance, or split difficulty; no formal test is available to the agent.",
+              "hypothesis": "Increasing C from 0.05 to 0.1 on the same word representation may reduce underfitting and change primary accuracy, but the direction is not established from one trial.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": null,
+              "slice_expectation": null,
+              "purpose": "improve",
+              "uncertainty": "Only one primary trial exists; no confirmation split is available. The observed train-search gap may be variance or overfitting, and a small C change may not improve primary accuracy. Direction and magnitude are unknown, so no predicted improvement is claimed."
+            },
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.8375075437537719,
+            "search_score": 0.6467423789599522,
+            "train_metrics": {
+              "accuracy": 0.8375075437537719,
+              "macro_f1": 0.8375070961901594,
+              "primary_metric": "accuracy",
+              "score": 0.8375075437537719,
+              "rows": 6628
+            },
+            "search_metrics": {
+              "accuracy": 0.6467423789599522,
+              "macro_f1": 0.6465403247168996,
+              "primary_metric": "accuracy",
+              "score": 0.6467423789599522,
+              "rows": 1673
+            },
+            "score_gap": 0.19076516479381966,
+            "train_accuracy": 0.8375075437537719,
+            "search_accuracy": 0.6467423789599522,
+            "generalization_gap": 0.19076516479381966,
+            "class_recall": [
+              0.6384803921568627,
+              0.6546091015169195
+            ],
+            "training_seconds": 0.713560400006827,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "word",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_C0.1",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 2.2969999999622814,
+            "evaluation_payload_sha256": "4607dee3726a28c7465c5570307e39f93472d9cccf29d02c88246e889fd584da",
+            "label_sha256": "ccd77b673c9601ba9cb1bc653f3daa25bdf040864300b531c5cb2e1a71b6bd9e",
+            "row_ids_sha256": "027fda66ab59f278351669e598534682a132e19e9311bceaf8442181518f0520",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": "logistic",
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "confirmed",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.643753735803945,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.643753735803945,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal accuracy score is 64.375374%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "word_C0.05",
+                "reference_status": "completed",
+                "reference_rule": "best_completed_in_selected_route",
+                "selected_candidate": "word_C0.1",
+                "selected_status": null,
+                "reference_route": "word",
+                "selected_route": "word",
+                "same_declared_route": true,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.05,
+                    "after": 0.1,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": true,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": null
+                    }
+                  }
+                ],
+                "single_declared_parameter_change": true,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+              },
+              "direction_consistency": {
+                "scope": "same declared route, single changed C; narrow English phrases only",
+                "applicable": true,
+                "expected_regularization_direction": "weaker",
+                "mentions": [],
+                "warnings": [],
+                "freeform_semantics_verified": false
+              },
+              "selected_candidate": "word_C0.1",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Increasing C from 0.05 to 0.1 on the same word representation may reduce underfitting and change primary accuracy, but the direction is not established from one trial.",
+                "expected_change": null
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Trial 1 on the active word route used C=0.05 and produced primary accuracy 0.6438 with a large train-search gap of 0.1687. The closest controlled next step is word_C0.1, which keeps representation and swap augmentation fixed while testing a less regularized logistic model before changing routes.",
+                  "review": "Only one completed primary trial is available, so this is a local regularization probe rather than a confirmed improvement path. The prior trial's high train score and lower search score could reflect overfitting, variance, or split difficulty; no formal test is available to the agent.",
+                  "hypothesis": "Increasing C from 0.05 to 0.1 on the same word representation may reduce underfitting and change primary accuracy, but the direction is not established from one trial.",
+                  "assessment.interpretation": "",
+                  "assessment.uncertainty": ""
+                }
+              },
+              "prose_claims": {
+                "claims_checked": 2,
+                "confirmed": 2,
+                "contradicted": 0,
+                "unverifiable": 0,
+                "informational": 0,
+                "items": [
+                  {
+                    "field": "reason",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "The closest controlled next step is word_C0.1, which keeps representation and swap augmentation fixed while testing a less regularized logistic model before changing routes.",
+                    "in_comparison": false,
+                    "observed": [
+                      "logistic"
+                    ],
+                    "status": "confirmed",
+                    "reference_resolution": "current_or_locally_scoped"
+                  },
+                  {
+                    "field": "reason",
+                    "kind": "trial_reference",
+                    "span": "Trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  }
+                ],
+                "unique_contradictions": [],
+                "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            }
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6467423789599522,
+        "mean_score": 0.6467423789599522,
+        "mean_accuracy": 0.6467423789599522,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "word_C0.1",
+    "selection_score": 0.6467423789599522,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "word_C0.1",
+      "incumbent": "word_C0.1",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.6819148936170213,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": 0.6819148936170213,
+    "pre_refit_validation_score": 0.6712765957446809,
+    "single_model_validation_score": 0.6819148936170213,
+    "official_validation_accuracy": 0.6819148936170213,
+    "pre_refit_validation_accuracy": 0.6712765957446809,
+    "single_model_validation_accuracy": 0.6819148936170213,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 8301,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.6249693999998271,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.6819148936170213,
+      "macro_f1": 0.6816897420651774,
+      "primary_metric": "accuracy",
+      "score": 0.6819148936170213,
+      "rows": 940
+    }
+  },
+  "elapsed_seconds": 48.61000000004424,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.010657,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "a151_mv_pair_full",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 0.025678,
+    "shared_known_cost_rmb": 0.1164165,
+    "known_cost_counted_against_limit_rmb": 0.1420945,
+    "unresolved_requests": 4,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "user-accepted-snapshot-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "User accepts enumerated existing unknown charges without settlement. Costs stay null; any new unknown/pending blocks. Known-cost limit remains enforced.",
+    "accepted_history_sha256": "7747be18949269e3a018a88e44849ea8d09c408b434674e97ed844cd07cc8621",
+    "accepted_unknown_request_count": 16
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 432,
+    "known_course_cost_rmb": 7.620342,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

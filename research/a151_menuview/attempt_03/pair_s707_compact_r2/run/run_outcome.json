@@ -1,0 +1,244 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration\\research\\a151_menuview\\attempt_03\\pair_s707_compact_r2\\run",
+  "scheduler": "ab-v1",
+  "planner_mode": "checked-history",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 1,
+  "known_course_cost_rmb": 0.008428,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "word_C0.05",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "word_C0.05"
+    ],
+    "primary_candidate": "word_C0.05",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "word_C0.05",
+        "primary_accuracy": 0.6227909811090798,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 1,
+            "candidate": "word_C0.05",
+            "params": {
+              "C": 0.05,
+              "representation": "word",
+              "swap_augmentation": true
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.8145645645645646,
+            "search_score": 0.6227909811090798,
+            "train_metrics": {
+              "accuracy": 0.8145645645645646,
+              "macro_f1": 0.8145594431214508,
+              "primary_metric": "accuracy",
+              "score": 0.8145645645645646,
+              "rows": 6660
+            },
+            "search_metrics": {
+              "accuracy": 0.6227909811090798,
+              "macro_f1": 0.622647488332404,
+              "primary_metric": "accuracy",
+              "score": 0.6227909811090798,
+              "rows": 1641
+            },
+            "score_gap": 0.1917735834554848,
+            "train_accuracy": 0.8145645645645646,
+            "search_accuracy": 0.6227909811090798,
+            "generalization_gap": 0.1917735834554848,
+            "class_recall": [
+              0.6281287246722288,
+              0.6172069825436409
+            ],
+            "training_seconds": 0.7081919999909587,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "word_C0.05",
+              "params": {
+                "C": 0.05,
+                "representation": "word",
+                "swap_augmentation": true
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "word_C0.05",
+                "swap_label_rule": "flips"
+              }
+            },
+            "worker_wall_seconds": 2.3119999999762513,
+            "evaluation_payload_sha256": "baf3aaccb373f758ece48ae909cebc71c38cc3eaa502b5d34352c22be5ca2467",
+            "label_sha256": "07ad6baa8cf236f6cc51e631407085add72abe86ba21b5a8a027d711066fb1ee",
+            "row_ids_sha256": "523dd647c6d8e824ce3b631e069654bd42906c6161fe81dcddf77738834023fb",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.6227909811090798,
+        "mean_score": 0.6227909811090798,
+        "mean_accuracy": 0.6227909811090798,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "word_C0.05",
+    "selection_score": 0.6227909811090798,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "word_C0.05",
+      "incumbent": "word_C0.05",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.675531914893617,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": 0.675531914893617,
+    "pre_refit_validation_score": 0.6606382978723404,
+    "single_model_validation_score": 0.675531914893617,
+    "official_validation_accuracy": 0.675531914893617,
+    "pre_refit_validation_accuracy": 0.6606382978723404,
+    "single_model_validation_accuracy": 0.675531914893617,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 8301,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.6299609999987297,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.675531914893617,
+      "macro_f1": 0.6753022452504318,
+      "primary_metric": "accuracy",
+      "score": 0.675531914893617,
+      "rows": 940
+    }
+  },
+  "elapsed_seconds": 53.73399999999674,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.008428,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "a151_mv_pair_compact",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 0.030808,
+    "shared_known_cost_rmb": 0.1164165,
+    "known_cost_counted_against_limit_rmb": 0.1472245,
+    "unresolved_requests": 4,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "user-accepted-snapshot-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "User accepts enumerated existing unknown charges without settlement. Costs stay null; any new unknown/pending blocks. Known-cost limit remains enforced.",
+    "accepted_history_sha256": "7747be18949269e3a018a88e44849ea8d09c408b434674e97ed844cd07cc8621",
+    "accepted_unknown_request_count": 16
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 437,
+    "known_course_cost_rmb": 7.678695,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

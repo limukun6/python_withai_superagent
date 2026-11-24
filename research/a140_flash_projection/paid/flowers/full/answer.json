@@ -1,0 +1,18 @@
+{
+  "candidate": "image_mobilenet_v3_small_linear",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Both completed PRIMARY trials are weak (accuracy 0.39375 and 0.4) and rely on raw-pixel or handcrafted gradient representations. The frozen MobileNet feature route is untried and provides a different representation that may better separate the five image classes.",
+  "review": "Trials 1 and 2 are PRIMARY measurements only; no confirmation split is available. Trial 1 shows severe overfitting with train accuracy 1.0 versus search accuracy 0.39375, while trial 2 reduces the gap but remains near 0.4. This candidate is selected for the PRIMARY search split, not as a final confirmation claim.",
+  "hypothesis": "Frozen pretrained MobileNet features may capture image structure more effectively than flattened standardized pixels or gradient histograms, allowing a linear classifier to improve PRIMARY accuracy.",
+  "evidence_trials": [
+    1,
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Transfer from ImageNet-pretrained features to this 64x64 five-class task is unknown, and no magnitude or direction of improvement is predicted. The candidate requires one classifier fit and may or may not outperform the current PRIMARY best of 0.4."
+}

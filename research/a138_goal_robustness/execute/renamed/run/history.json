@@ -1,0 +1,212 @@
+[
+  {
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "alpha",
+        "zulu"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.96875,
+    "search_score": 0.96875,
+    "train_metrics": {
+      "accuracy": 0.96875,
+      "macro_f1": 0.9684729064039409,
+      "primary_metric": "accuracy",
+      "score": 0.96875,
+      "rows": 128
+    },
+    "search_metrics": {
+      "accuracy": 0.96875,
+      "macro_f1": 0.9687194525904204,
+      "primary_metric": "accuracy",
+      "score": 0.96875,
+      "rows": 32
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 0.96875,
+    "search_accuracy": 0.96875,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      0.9411764705882353,
+      1.0
+    ],
+    "training_seconds": 0.09232240001438186,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7190000000409782,
+    "evaluation_payload_sha256": "0c527773caa0b6e52e353e4bb69573256ff222fd431367a68a7b4f9441e90698",
+    "label_sha256": "7fec2778263dc0159942357eb8b93b75949b019883ff65a5f362898a4a8f3f1c",
+    "row_ids_sha256": "9f099213ab9f0fa7a968b32c4c48e3ce14a69a7204de077a71fb87fbe6b4f861",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "alpha",
+          "zulu"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "alpha",
+          "zulu"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        "alpha",
+        "zulu"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 0.96875,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 128
+    },
+    "search_metrics": {
+      "accuracy": 0.96875,
+      "macro_f1": 0.9687194525904204,
+      "primary_metric": "accuracy",
+      "score": 0.96875,
+      "rows": 32
+    },
+    "score_gap": 0.03125,
+    "train_accuracy": 1.0,
+    "search_accuracy": 0.96875,
+    "generalization_gap": 0.03125,
+    "class_recall": [
+      0.9411764705882353,
+      1.0
+    ],
+    "training_seconds": 0.29079840000486,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.9839999999967404,
+    "evaluation_payload_sha256": "0c527773caa0b6e52e353e4bb69573256ff222fd431367a68a7b4f9441e90698",
+    "label_sha256": "7fec2778263dc0159942357eb8b93b75949b019883ff65a5f362898a4a8f3f1c",
+    "row_ids_sha256": "9f099213ab9f0fa7a968b32c4c48e3ce14a69a7204de077a71fb87fbe6b4f861",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          "alpha",
+          "zulu"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          "alpha",
+          "zulu"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

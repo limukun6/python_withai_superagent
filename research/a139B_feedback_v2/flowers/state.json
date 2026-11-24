@@ -1,0 +1,461 @@
+{
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "image",
+    "metric": {
+      "name": "accuracy",
+      "labels": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "image",
+      "columns": [
+        {
+          "name": "image",
+          "type": "image_path"
+        }
+      ],
+      "target": "label",
+      "image_preprocessing": {
+        "height": 64,
+        "mode": "RGB",
+        "resize": "stretch_bilinear",
+        "width": 64
+      }
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "image",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "accuracy",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            "c0",
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [
+    {
+      "trial": 1,
+      "candidate": "image_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "split_id": "primary",
+      "proposal": null,
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "accuracy",
+      "metric_spec": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 1.0,
+      "search_score": 0.39375,
+      "train_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "primary_metric": "accuracy",
+        "score": 1.0,
+        "rows": 640
+      },
+      "search_metrics": {
+        "accuracy": 0.39375,
+        "macro_f1": 0.39119323993640936,
+        "primary_metric": "accuracy",
+        "score": 0.39375,
+        "rows": 160
+      },
+      "score_gap": 0.60625,
+      "train_accuracy": 1.0,
+      "search_accuracy": 0.39375,
+      "generalization_gap": 0.60625,
+      "class_recall": [
+        0.2571428571428571,
+        0.4827586206896552,
+        0.391304347826087,
+        0.5128205128205128,
+        0.3235294117647059
+      ],
+      "training_seconds": 3.6829398999980185,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "image_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "image_logistic_C0.1",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 5.437999999994645,
+      "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+      "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+      "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "accuracy",
+          "labels": [
+            "c0",
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "accuracy",
+          "labels": [
+            "c0",
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": null
+    },
+    {
+      "trial": 2,
+      "candidate": "image_gradient_histograms_logistic",
+      "params": {
+        "grid": 4,
+        "orientation_bins": 8,
+        "C": 1.0,
+        "representation": "gradient histograms and cell means"
+      },
+      "split_id": "primary",
+      "proposal": null,
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "accuracy",
+      "metric_spec": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.7640625,
+      "search_score": 0.4,
+      "train_metrics": {
+        "accuracy": 0.7640625,
+        "macro_f1": 0.764457251532977,
+        "primary_metric": "accuracy",
+        "score": 0.7640625,
+        "rows": 640
+      },
+      "search_metrics": {
+        "accuracy": 0.4,
+        "macro_f1": 0.3961062912497339,
+        "primary_metric": "accuracy",
+        "score": 0.4,
+        "rows": 160
+      },
+      "score_gap": 0.36406249999999996,
+      "train_accuracy": 0.7640625,
+      "search_accuracy": 0.4,
+      "generalization_gap": 0.36406249999999996,
+      "class_recall": [
+        0.37142857142857144,
+        0.4482758620689655,
+        0.34782608695652173,
+        0.41025641025641024,
+        0.4117647058823529
+      ],
+      "training_seconds": 0.4087779999827035,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "image_gradient_histograms_logistic",
+        "params": {
+          "grid": 4,
+          "orientation_bins": 8,
+          "C": 1.0,
+          "representation": "gradient histograms and cell means"
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "image_gradient_histograms_logistic",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 2.1570000000065193,
+      "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+      "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+      "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "accuracy",
+          "labels": [
+            "c0",
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "accuracy",
+          "labels": [
+            "c0",
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": null
+    }
+  ],
+  "available_candidates": [
+    {
+      "id": "image_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "route": "image_logistic",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "route": "image_logistic",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "route": "image_extra_trees",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "route": "image_extra_trees",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "route": "image_rbf_svm",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_rbf_svm_C10.0",
+      "params": {
+        "C": 10.0,
+        "kernel": "rbf"
+      },
+      "route": "image_rbf_svm",
+      "input_kind": "image",
+      "representation": "flattened standardized pixels",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "image_mobilenet_v3_small_linear",
+      "params": {
+        "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+        "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "C": 10.0,
+        "representation": "L2-normalized frozen 576-dimensional image features"
+      },
+      "route": "frozen_image_features",
+      "input_kind": "image",
+      "representation": "L2-normalized frozen 576-dimensional image features",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "local_frozen_encoder_cpu",
+      "origin": "b_port",
+      "kind": "image",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "budget": {
+    "fit_limit": 11,
+    "attempted_classifier_fits": 2,
+    "completed_classifier_fits": 2,
+    "remaining_fit_allowance": 9,
+    "reserved_final_refit": 1,
+    "unknown_failed_attempts": 0,
+    "llm_request_limit": 3,
+    "used_llm_requests": 0,
+    "time_limit_seconds": 900.0,
+    "elapsed_seconds": 8.187999999994645
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "executor_comparison": {
+    "reading": "improved",
+    "source": "executor",
+    "latest_trial": 2,
+    "best_prior_trial": 1,
+    "primary_metric": "macro_f1",
+    "latest_search_score": 0.9296509152830992,
+    "best_prior_search_score": 0.46303818034118605,
+    "latest_search_accuracy": 0.9697428139183056,
+    "best_prior_search_accuracy": 0.8623298033282905,
+    "delta_vs_prior_best": 0.46661273494191313,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 2 internal macro_f1 score is 92.965092%; best earlier trial 1 is 46.303818%; difference +46.661273 percentage points (improved).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 2,
+    "reference_candidate": "minilm_text_with_lexical_features",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "minilm_text_with_nonlinear_lexical_features",
+    "selected_status": null,
+    "reference_route": "minilm_lexical",
+    "selected_route": "minilm_nonlinear_lexical",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "bandwidth_sample_limit",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 128,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "kernel_components",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 512,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "kernel_seed",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 12271,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": true,
+        "before": "word_char_minilm",
+        "after": "word_char_minilm_rbf",
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "minilm_text_with_nonlinear_lexical_features",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "An RBF expansion over word/char plus MiniLM lexical features may separate ham/spam boundaries that the linear logistic model underfits, potentially increasing macro_f1 on the same PRIMARY split.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Trial 2 is the strongest completed PRIMARY result (macro_f1 0.92965) and uses the MiniLM plus lexical route. The nonlinear lexical candidate is the closest available extension of that route, adding an RBF expansion while keeping the registered logistic classifier, so it is the most targeted next test for improving the primary search score.",
+      "review": "Trial 1 collapsed to majority ham (spam recall 0.0). Trial 2 recovered spam recall 0.7802 with a modest train-search gap of 0.0327, indicating the MiniLM/lexical representation is materially better. The nonlinear variant may capture interactions missed by the linear model, but it also adds overfitting risk and has no completed PRIMARY evidence yet.",
+      "hypothesis": "An RBF expansion over word/char plus MiniLM lexical features may separate ham/spam boundaries that the linear logistic model underfits, potentially increasing macro_f1 on the same PRIMARY split.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 6,
+    "confirmed": 3,
+    "contradicted": 0,
+    "unverifiable": 3,
+    "informational": 1,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "RBF",
+        "claim": "rbf_svm",
+        "compatible_with": [
+          "rbf_svm"
+        ],
+        "sentence": "The nonlinear lexical candidate is the closest available extension of that route, adding an RBF expansion while keeping the registered logistic classifier, so it is the most targeted next test for improving the primary search score.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "The nonlinear lexical candidate is the closest available extension of that route, adding an RBF expansion while keeping the registered logistic classifier, so it is the most targeted next test for improving the primary search score.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "Trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "RBF",
+        "claim": "rbf_svm",
+        "compatible_with": [
+          "rbf_svm"
+        ],
+        "sentence": "An RBF expansion over word/char plus MiniLM lexical features may separate ham/spam boundaries that the linear logistic model underfits, potentially increasing macro_f1 on the same PRIMARY split.",
+        "in_comparison": false,
+        "observed": null,
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "An RBF expansion over word/char plus MiniLM lexical features may separate ham/spam boundaries that the linear logistic model underfits, potentially increasing macro_f1 on the same PRIMARY split.",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 6 machine-checkable claims inspected, 0 contradicted, 3 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": true,
+    "definition": {
+      "estimator_class": "LogisticRegression",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+      "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+      "accuracy_effect_verified": false
+    },
+    "items": [],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "candidate": "minilm_text_with_nonlinear_lexical_features",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Trial 2 is the strongest completed PRIMARY result (macro_f1 0.92965) and uses the MiniLM plus lexical route. The nonlinear lexical candidate is the closest available extension of that route, adding an RBF expansion while keeping the registered logistic classifier, so it is the most targeted next test for improving the primary search score.",
+  "review": "Trial 1 collapsed to majority ham (spam recall 0.0). Trial 2 recovered spam recall 0.7802 with a modest train-search gap of 0.0327, indicating the MiniLM/lexical representation is materially better. The nonlinear variant may capture interactions missed by the linear model, but it also adds overfitting risk and has no completed PRIMARY evidence yet.",
+  "hypothesis": "An RBF expansion over word/char plus MiniLM lexical features may separate ham/spam boundaries that the linear logistic model underfits, potentially increasing macro_f1 on the same PRIMARY split.",
+  "evidence_trials": [
+    1,
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Direction and magnitude are unknown because this exact nonlinear candidate has not been evaluated on the PRIMARY split. The RBF expansion may overfit, duplicate existing linear signal, or reduce macro_f1; comparison must use the same PRIMARY split, and the controller should retain the reserved final refit and stopping authority."
+}

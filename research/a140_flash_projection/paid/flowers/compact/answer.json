@@ -1,0 +1,18 @@
+{
+  "candidate": "image_mobilenet_v3_small_linear",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Two completed PRIMARY trials show weak search accuracy: flattened-pixel logistic C0.1 reached 0.39375 with severe overfit (train 1.0), and gradient-histogram logistic reached 0.4 with train 0.7640625. The untried frozen MobileNet-v3-small feature route provides a different representation and a regularized linear classifier, making it the most promising available candidate to test on the primary split without relying on an assumed gain.",
+  "review": "Evidence is limited to two completed PRIMARY trials and no confirmation split is available. The candidate is untried, so its search accuracy is unknown; prior results do not establish that any route will improve.",
+  "hypothesis": "Frozen pretrained image features may capture shape and texture information that is poorly represented by flattened standardized pixels, while an L2-normalized 576-dimensional representation with logistic regression may reduce the overfitting seen in trial 1.",
+  "evidence_trials": [
+    1,
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Unknown whether ImageNet-pretrained MobileNet-v3-small features transfer well to 64x64 stretched RGB inputs and this five-class training partition. No predicted improvement is claimed; the candidate is selected as an untried representation with plausible regularization benefits."
+}

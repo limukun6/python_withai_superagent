@@ -44,7 +44,7 @@ def read(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
 
 
-def command_for(arm, task, run_dir, args):
+def command_for(arm, task, run_dir, args, menu_view='full'):
     return ['run', str(task), '--run-dir', str(run_dir),
             '--planner', 'checked-history', '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
             '--catalog-scope', 'full', '--preference-catalog', 'standard', '--parameter-semantics', 'off',
@@ -52,7 +52,7 @@ def command_for(arm, task, run_dir, args):
             '--partial-delivery', 'checkpoint', '--history-policy', 'incremental-research',
             '--api-key-file', str(args.api_key_file), '--budget-ledger', str(args.ledger),
             '--task-budget-id', ARMS[arm]['task_budget_id'], '--llm-budget-rmb', str(ALLOWANCE),
-            *ARMS[arm]['extra']]
+            *ARMS[arm]['extra'], *(['--menu-view', menu_view] if menu_view != 'full' else [])]
 
 
 def check_outcome(outcome, calls, delta):
@@ -81,6 +81,7 @@ def main():
     parser.add_argument('--authorization', type=Path, required=True)
     parser.add_argument('--api-key-file', type=Path, required=True)
     parser.add_argument('--output', type=Path, default=EVIDENCE)
+    parser.add_argument('--menu-view', choices=['full', 'compact'], default='full')
     parser.add_argument('--execute', action='store_true')
     args = parser.parse_args()
     out = args.output.resolve()
@@ -98,6 +99,7 @@ def main():
                 'plan_sha256': sha(REPO / 'docs/batches/A151_small_trial_plan_20261124_zh.md'),
                 'task': str(args.task.resolve()), 'task_sha256': sha(args.task),
                 'task_kind': 'pair_text', 'seed': 707, 'scheduler': 'ab-v1', 'portfolio': 'ab-v1',
+                'menu_view': args.menu_view,
                 'maximum_fits_per_arm': MAX_FITS, 'maximum_requests_per_arm': MAX_REQUESTS,
                 'allowance_rmb_per_arm': ALLOWANCE, 'arms': ARMS,
                 'ledger_path': str(args.ledger.resolve()), 'ledger_sha256_before': sha(args.ledger),
@@ -107,7 +109,7 @@ def main():
     save(out / 'protocol.json', protocol)
     commands = {}
     for arm in ARMS:
-        commands[arm] = command_for(arm, args.task.resolve(), out / arm / 'run', args)
+        commands[arm] = command_for(arm, args.task.resolve(), out / arm / 'run', args, args.menu_view)
         parsed = build_parser().parse_args(commands[arm])
         if parsed.planner != 'checked-history' or parsed.fit_limit != MAX_FITS:
             raise SystemExit(f'{arm}: unexpected parsed budget')

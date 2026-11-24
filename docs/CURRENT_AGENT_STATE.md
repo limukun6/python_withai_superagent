@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-24，A151菜单探测成功，1651fit／397请求／16未知
+# 当前接续状态：2026-11-24，A151端到端验收完成，1657fit／400请求／16未知
+
+## A151端到端验收：两条路径在压缩菜单下都跑完，6fit/3调用/¥0.055246
+
+L0（calibrated-v2，分层off）：2次搜索（anchor `word_C0.05`→`word_char_C0.05`）、1次Flash、3 fit，选中`word_char_C0.05`，内部0.6520/验证0.7011。L1（grounded-v1 + by-class）：2次搜索（anchor→`word_C0.1` 0.6216，低于anchor）、**2次Flash（第1次被拒`no_same_penalized_parameterization_and_observed_reference`，修复后8条断言全confirmed而接受）**、3 fit，选中anchor `word_C0.05`，验证0.6755。两条都`requested_planner_completed=true`、无重试、独立进程predict各3,232行、源码前后一致。
+
+账本397→**400请求**，known¥7.14048→**¥7.195726**，unknown**16未增**，pending0，SHA`9031531e…`。**压缩表示下grounded链路真实跑通**（断言核验→拒绝→一次语义修复→接受）。
+
+不能声称：提分（单任务单划分、每路径一次）、压缩省时（无full/compact配对）、通用性（已见任务）、L1优于L0（候选不同只是调度差异，样本1）。L1把第二次探索换成0.6216的候选，是A147"改变动作不保证更好"的同向结果，不改写A147。
+
+报告batches/A151_e2e_acceptance_results_20261124_zh.md，证据research/a151_e2e_acceptance/。
 
 ## A151单调用机制探测成功：压缩菜单后返回合法提案
 

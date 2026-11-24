@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-24：A151 端到端验收完成，6 fit／3 调用／¥0.055246
+
+L0（calibrated-v2，分层 off）2 次搜索、1 次 Flash、3 fit，选中 `word_char_C0.05`（内部 0.6520 / 验证 0.7011）。L1（grounded-v1 + by-class）2 次搜索、**2 次 Flash**（第 1 次断言未知被拒，修复后 8 条断言全 confirmed 而接受）、3 fit，停在 anchor `word_C0.05`（验证 0.6755）。两条均 `requested_planner_completed=true`、无重试、独立进程各 3,232 行预测、源码前后一致。
+
+账本 397→400 请求、known ¥7.14048→¥7.195726、unknown 16 未增、pending 0。**压缩表示下 grounded 链路真实跑通**。
+
+不声称提分/省时/通用性/L1 优于 L0；L1 第二次探索取到 0.6216，低于 L0 同一步的 0.6520，是 A147 同向的负结果。报告 batches/A151_e2e_acceptance_results_20261124_zh.md。
+
 ## 2026-11-24：A151 单调用菜单探测成功，1 API／0 fit
 
 按预登记执行 1 次真实 Flash、0 fit：`accepted=true`，选中 `word_char_C0.1`（原 29 菜单内、参数与目录一致），`calibrated-v2` 11 字段齐全、`finish=stop`，4,724/1,297 token、¥0.009912、52.7 秒、444 个 SSE 数据事件，**无新增 unknown**。账本 397 请求 / known ¥7.14048 / unknown 16 / pending 0。

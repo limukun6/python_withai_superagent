@@ -1,0 +1,34 @@
+{
+  "installed": {
+    "course-method-demo@1.0/median=independent_methods:MedianPrototypeClassifier": "MedianPrototypeClassifier",
+    "course-method-demo@1.0/threshold=independent_methods:BinaryThresholdClassifier": "BinaryThresholdClassifier"
+  },
+  "invalid": {
+    "course-method-demo@1.0/missing=nonexistent_method_fixture:MissingClassifier": "ModuleNotFoundError"
+  },
+  "contracts": {
+    "binary": {
+      "visible": [
+        "BinaryThresholdClassifier",
+        "MedianPrototypeClassifier"
+      ],
+      "excluded": {}
+    },
+    "multiclass": {
+      "visible": [
+        "MedianPrototypeClassifier"
+      ],
+      "excluded": {
+        "BinaryThresholdClassifier": "requires binary labels"
+      }
+    },
+    "probabilities": {
+      "visible": [
+        "MedianPrototypeClassifier"
+      ],
+      "excluded": {
+        "BinaryThresholdClassifier": "requires probabilities in frozen class order"
+      }
+    }
+  }
+}

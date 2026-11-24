@@ -1,5 +1,7 @@
 # 让 Agent 在运行中生成模型方案
 
+**队友整合请用支持外部分类器的最新完整补丁。** 除本机 sklearn 分类器和原有方法外，已安装的其他包也可声明新分类器。Agent 自动判断是否适用，选择与重训仍在运行中完成。已在匿名任务验证两个生产代码中没有写过名字的扩展，并单独测试版本检查和独立进程预测。共同基线为 `9779944`，开关为 `--method-space runtime`。[最新整合说明和源码](followup/installed-providers/README.md) · [完整补丁](followup/installed-providers/current-team.patch)
+
 **同一份可运行源码在三种真实分类任务上完成了从选模到导出的全过程。** 启动时只给匿名训练包、指标和预算。Agent 读取本机 sklearn 的分类器清单，在这套环境中发现 29 类；它按稀疏输入、数据规模、类别数、概率输出和内存要求筛选，再组合预处理、投影、分类器和参数。训练内成绩及训练与开发分数差距会改变下一批组合。旧的可执行方法仍参与竞争。[完整运行源码](runtime-source.zip) · [事前配对方案](protocols/B_open_methods_protocol_20261124_zh.md)
 
 数值表的开放组在第一轮反馈后生成了此前目录里没有的 SGD 配置，并实际训练。短信开放组同样生成并实际训练了二次判别分析配置；最后选择了自己生成的逻辑回归。手写数字上，Agent 尝试了新生成的逻辑回归，再根据结果回到已有极端随机树。每一步都保存了可见方法、训练反馈、参数摘要和真实拟合回执。[数值表动作](evidence/matrix/q1_open/receipt.json) · [短信动作](evidence/matrix/q2_open/receipt.json) · [图像动作](evidence/matrix/q3_open/receipt.json)

@@ -4,6 +4,7 @@ import csv
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -113,7 +114,36 @@ def inspect():
               v['request_cap_local'] and v['live_flash_calls']==0 for v in menus.values()),'Shared planner-engineering evidence')
     check(report['exports']==[sha(shared/f'export_{i}.csv') for i in (0,1)] and
           report['exports'][0]==report['exports'][1]==sha(E/'matrix/q0_open/export_0.csv'),'Shared fixture exports')
-    return fits+len(meter),actions+report['native_actions'],rankings
+    ext=follow/'installed-providers'
+    addition=read(ext/'result.json')
+    setup=read(ext/'protocol.json')
+    contracts=read(ext/'contracts.json')
+    trials=read(ext/'actions.json')
+    native=[json.loads(s) for s in (ext/'physical.jsonl').read_text().splitlines()]
+    explicit=[json.loads(s) for s in (ext/'interface_physical.jsonl').read_text().splitlines()]
+    old=read(ext/'first_attempt.json')
+    check(sha(ext/'protocol.json')==addition['protocol'] and sha(ext/'contracts.json')==addition['contracts'] and
+          setup['runner']==sha(ext/'check_b_installed_methods.py') and setup['fixture']==sha(ext/'provider_fixture.py') and
+          setup['plan']==sha(ext/'protocol.md') and old['classifier_fit_accounting']['attempted_classifier_fits']==0 and
+          old['new_api_requests']==addition['new_model_api_calls']==0,'Installed-provider protocol/first attempt')
+    check(len(native)==addition['native_fit_count']==4 and addition['native_fits_on_installed']==0 and
+          len(explicit)==addition['explicit_interface_fits']==1 and explicit[0]['candidate']==addition['explicit_interface_candidate'] and
+          native[-1]['candidate']==addition['native_winner'] and trials[-1]['action']=='stop' and addition['version_mismatch_rejected'],
+          'Installed-provider native/interface evidence')
+    explored=[a['candidate_id'] for a in trials if a['action']=='explore']
+    check(explored==[v['chosen'] for v in addition['choices']]==[v['candidate'] for v in native[:-1]] and
+          all(len(v['installed_eligible'])==2 and v['chosen'] not in v['installed_eligible'] for v in addition['choices']),
+          'Native planner eligibility and decisions')
+    rules=contracts['contracts']
+    check(len(contracts['installed'])==2 and len(contracts['invalid'])==1 and len(rules['binary']['visible'])==2 and
+          rules['multiclass']['visible']==rules['probabilities']['visible']==['MedianPrototypeClassifier'],
+          'Installed-provider filter contract')
+    for prefix in ('native','interface'):
+        exports=[ext/f'{prefix}_{i}.csv' for i in (0,1)]
+        check(list(map(sha,exports))==addition[prefix+'_exports'] and sha(exports[0])==sha(exports[1]) and
+              [r['row_id'] for r in csv.DictReader(exports[0].read_text().splitlines())]==list(map(str,range(33))),
+              'Installed-provider export pair')
+    return fits+len(meter)+len(native)+len(explicit),actions+report['native_actions']+len(trials),rankings+len(explored)
 
 
 def check_runtime(repo):
@@ -128,6 +158,22 @@ def check_runtime(repo):
             check(meta['source']==p['source'] and sha(runtime/'scripts'/(script+'.py'))==meta['runner'],'Exact measured runtime and experiment runner')
         subprocess.run([sys.executable,'-m','scripts.replay_b_open_choices',str(ROOT/'choices.json')],cwd=runtime,check=True)
         subprocess.run([sys.executable,'-m','unittest','discover','-s','tests'],cwd=runtime,check=True)
+        ext=ROOT/'followup/installed-providers'
+        latest=Path(temp)/'extensible'
+        with zipfile.ZipFile(ext/'runtime-source.zip') as z:
+            z.extractall(latest)
+        expected=read(ext/'protocol.json')
+        check(hashes(latest/'superagent')==expected['source'] and
+              sha(latest/'scripts/check_b_installed_methods.py')==expected['runner'] and
+              sha(latest/'scripts/provider_fixture.py')==expected['fixture'],'Extensible standalone runtime')
+        shutil.copy(runtime/'scripts/replay_b_open_choices.py',latest/'scripts')
+        replay=[sys.executable,'-m','scripts.replay_b_open_choices']
+        subprocess.run(replay+[str(ROOT/'choices.json')],cwd=latest,check=True)
+        install=Path(temp)/'extensions'
+        subprocess.run([sys.executable,'-c',
+                        "from pathlib import Path; from scripts.check_b_installed_methods import install_example; import sys; install_example(Path(sys.argv[1]),'1.0')",
+                        str(install)],cwd=latest,check=True)
+        subprocess.run(replay+[str(ext/'choices.json')],cwd=latest,env=dict(os.environ,PYTHONPATH=str(install)),check=True)
         if repo:
             base=Path(temp)/'team'
             base.mkdir()
@@ -148,6 +194,17 @@ def check_runtime(repo):
             check(hashes(staged/'superagent')==current['source'],'Current shared adapter differs from the tested local integration')
             shutil.copy(runtime/'scripts/replay_b_open_choices.py',staged/'scripts')
             subprocess.run([sys.executable,'-m','scripts.replay_b_open_choices',str(ROOT/'choices.json')],cwd=staged,check=True)
+            provider_base=Path(temp)/'provider-patch'
+            provider_base.mkdir()
+            with tarfile.open(fileobj=io.BytesIO(newer)) as a:
+                a.extractall(provider_base,filter='data')
+            subprocess.run(['git','apply',str(ext/'current-team.patch')],cwd=provider_base,check=True)
+            check(hashes(provider_base/'superagent')==expected['source'] and
+                  sha(provider_base/'scripts/ab_acceptance_guard/sitecustomize.py')==sha(latest/'scripts/ab_acceptance_guard/sitecustomize.py') and
+                  sha(provider_base/'scripts/check_b_installed_methods.py')==expected['runner'] and
+                  sha(provider_base/'scripts/provider_fixture.py')==expected['fixture'] and
+                  sha(provider_base/'docs/batches/B_runtime_provider_20261124_zh.md')==expected['plan'],
+                  'Latest team patch differs from the tested extensible runtime')
 
 
 if __name__=='__main__':

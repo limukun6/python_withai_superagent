@@ -1,0 +1,1248 @@
+diff --git a/docs/batches/B_runtime_provider_20261124_zh.md b/docs/batches/B_runtime_provider_20261124_zh.md
+new file mode 100644
+index 00000000..e77d4f50
+--- /dev/null
++++ b/docs/batches/B_runtime_provider_20261124_zh.md
+@@ -0,0 +1,8 @@
++# 安装新分类器后的接入验收
++
++冻结本轮程序和两个独立的教学用分类器。扩展包用标准 Python 包元数据公布一个支持多类概率的中位数原型分类器和一个只输出二类标签的单特征分类器。生产代码不含这两个类名。扩展约定为可默认构造、CPU、单次监督拟合和 sklearn 分类接口，隐式交叉验证及嵌套分类器需要单独记账。包版本和入口绑定到配置，随模型交付。
++
++1. 用上一轮 127 行匿名数值训练包和原有完整目录运行原生本地 Agent。随机种子 60281，最多 5 次实际分类器拟合（含重训），模型 API 0 次。Agent 自选全部动作。记录是否在目录可见、是否真正选到新增方法。无论选什么都验收结果，不改名字、排序、任务或预算重跑。
++2. 在同一程序里把输入契约换为数值三分类和要求类概率的二分类，检查自动排除只支持二类标签的方法。注入一个缺失的可选包入口，检查其他方法可用。重放无扩展环境的已公开 14 条路径和 50 次选择。
++3. 独立的接口验收用已公布的多类概率扩展，在正式 worker 上计 1 次真实拟合，使用同一匿名训练资料。用两个新进程执行正式预测命令，对比 33 行无标签输出。再仅替换扩展的版本元数据，检查旧模型拒绝加载。此步骤显式指名分类器用于测接口，单独记录，不能计作 Agent 自主选中过该方法。
++4. 只用本地工程夹具，不访问发布任务、课程验证、正式测试、H2 或模型 API。整轮至多 6 次真实监督拟合。
+diff --git a/scripts/ab_acceptance_guard/sitecustomize.py b/scripts/ab_acceptance_guard/sitecustomize.py
+index 4f000492..567c0b70 100644
+--- a/scripts/ab_acceptance_guard/sitecustomize.py
++++ b/scripts/ab_acceptance_guard/sitecustomize.py
+@@ -16,16 +16,15 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
+         from functools import wraps
+         from sklearn.ensemble import ExtraTreesClassifier
+         from sklearn.linear_model import LogisticRegression
+-        from sklearn.svm import SVC
++        from sklearn.naive_bayes import BernoulliNB
++        from sklearn.svm import LinearSVC, SVC
+ 
+         # The anonymous controller launches one worker per admitted action.
+         ceiling = os.environ.get('AB_B1_PER_WORKER_FIT_LIMIT')
+         component_limit = int(ceiling) if ceiling is not None else None
+         component_calls = 0
+ 
+-        def observe(cls):
+-            original = cls.fit
+-
++        def observe(cls, original):
+             @wraps(original)
+             def fit(self, *args, **kwargs):
+                 global component_calls
+@@ -37,8 +36,16 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
+                 return original(self,*args,**kwargs)
+             cls.fit = fit
+ 
+-        for cls in (LogisticRegression,ExtraTreesClassifier,SVC):
+-            observe(cls)
+-        if len(sys.argv) > 2 and ('catboost' in sys.argv[2] or sys.argv[2] == 'supported_field_interactions'):
++        classes=[LogisticRegression,ExtraTreesClassifier,SVC,LinearSVC,BernoulliNB]
++        if len(sys.argv)>2 and sys.argv[2].startswith('open_'):
++            from superagent.runtime_inventory import runtime_classifiers
++            registry=json.loads(Path(sys.argv[4]).read_text(encoding='utf-8'))
++            selected=runtime_classifiers()[registry['entries'][sys.argv[2]]['class']]
++            if selected not in classes:
++                classes.append(selected)
++        if len(sys.argv) > 2 and ('catboost' in sys.argv[2] or sys.argv[2] == 'supported_field_interactions' or sys.argv[2].startswith('style_tree_depth')):
+             from catboost import CatBoostClassifier
+-            observe(CatBoostClassifier)
++            if CatBoostClassifier not in classes:
++                classes.append(CatBoostClassifier)
++        for cls, original in [(cls, cls.fit) for cls in classes]:
++            observe(cls, original)
+diff --git a/scripts/check_b_installed_methods.py b/scripts/check_b_installed_methods.py
+new file mode 100644
+index 00000000..dc4aabad
+--- /dev/null
++++ b/scripts/check_b_installed_methods.py
+@@ -0,0 +1,187 @@
++"""Offline engineering audit of classifiers added after the Agent was packaged."""
++import argparse
++import copy
++import csv
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++
++from superagent.ab_run import sha, sources
++
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURE = ROOT / "scripts/provider_fixture.py"
++PLAN = ROOT / "docs/batches/B_runtime_provider_20261124_zh.md"
++ALIAS = "course-method-demo"
++
++
++def read(path):
++    return json.loads(path.read_text())
++
++
++def write(path, value):
++    with path.open("x", encoding="utf-8") as stream:
++        json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
++
++
++def require(ok, message):
++    if not ok:
++        raise ValueError(message)
++
++
++def install_example(directory, version):
++    directory.mkdir()
++    shutil.copyfile(FIXTURE, directory / "independent_methods.py")
++    info = directory / f"course_method_demo-{version}.dist-info"
++    info.mkdir()
++    (info / "METADATA").write_text(f"Metadata-Version: 2.1\nName: {ALIAS}\nVersion: {version}\n")
++    (info / "entry_points.txt").write_text(
++        "[superagent.classifiers.v1]\n"
++        "median = independent_methods:MedianPrototypeClassifier\n"
++        "threshold = independent_methods:BinaryThresholdClassifier\n"
++        "missing = nonexistent_method_fixture:MissingClassifier\n")
++
++
++def inspect_contracts(agent, out):
++    from superagent.open_methods import propose
++    from superagent.runtime_inventory import installed_extensions
++
++    extensions, rejected = installed_extensions()
++    own = {key: cls.__name__ for key, cls in extensions.items() if key.startswith(ALIAS + "@")}
++    require(len(own) == 2, "Wrong number of compatible fixture classifiers")
++    own_errors = {key: reason for key, reason in rejected.items() if key.startswith(ALIAS + "@")}
++    require(len(own_errors) == 1, "Broken optional entry was not isolated")
++    manifest = read(agent / "run_manifest.json")
++    profile = read(agent / "training_profile.json")
++    result = {}
++    for case, labels, metric in (("binary", [0, 1], "accuracy"), ("multiclass", [0, 1, 2], "accuracy"),
++                                 ("probabilities", [0, 1], "roc_auc")):
++        task = copy.deepcopy(manifest["task_contract"])
++        task["metric"].update(labels=labels, name=metric)
++        proposals, evidence = propose(task, profile, [])
++        visible = sorted(own[spec["class"]] for spec in proposals.values() if spec["class"] in own)
++        expected = sorted(own.values()) if case == "binary" else ["MedianPrototypeClassifier"]
++        require(visible == expected, "Incorrect task-compatibility decision for " + case)
++        result[case] = dict(visible=visible, excluded={own[k]: v for k,v in evidence["excluded"].items() if k in own})
++    write(out, dict(installed=own, invalid=own_errors, contracts=result))
++
++
++def bundle(output, evidence, spec, name):
++    import joblib
++    model = joblib.load(evidence)["model"]
++    require(model.provider_requirement_.key.startswith(ALIAS + "@1.0/median="), "Provider pin missing from the fitted model")
++    selected = output / "selected_model.joblib"
++    joblib.dump(dict(kind="numeric_tabular", candidate=name, model=model), selected)
++    shutil.copyfile(spec, output / "task_spec.json")
++    write(output / "final_selection.json", dict(selected_experiment="explicit_interface_fixture", family=name,
++          model_file=selected.name, model_format="candidate_bundle_v1", test_accessed=False,
++          model_sha256=sha(selected), task_spec_sha256=sha(spec)))
++
++
++def run(out, inputs):
++    out.mkdir(parents=True, exist_ok=False)
++    train, features = inputs / "train.zip", inputs / "features.zip"
++    write(out / "protocol.json", dict(source=sources(), plan=sha(PLAN), runner=sha(Path(__file__)),
++          fixture=sha(FIXTURE), train=sha(train), features=sha(features), native_fit_limit=5, transport_fit_limit=1,
++          seed=60281, real_api_limit=0))
++    for folder, version in (("installed", "1.0"), ("upgraded", "2.0")):
++        install_example(out / folder, version)
++
++    def command(args, log, *, version="installed", physical="physical.jsonl", reject=False):
++        env = dict(os.environ, PYTHONPATH=os.pathsep.join(map(str, (ROOT / "scripts/ab_acceptance_guard", ROOT, out / version))),
++                   AB_B1_OFFLINE="1", AB_B1_FIT_LOG=str(out / physical), AB_B1_PER_WORKER_FIT_LIMIT="1",
++                   HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", OPENBLAS_NUM_THREADS="2", OMP_NUM_THREADS="2")
++        with (out / log).open("x") as stream:
++            child = subprocess.run([sys.executable, "-m", *map(str,args)], env=env, cwd=ROOT, timeout=660,
++                                   stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT)
++        if reject:
++            require(child.returncode != 0 and "Required installed classifier version or entry point" in (out/log).read_text(),
++                    "A different provider version loaded, or failed for an unrelated reason")
++        else:
++            require(child.returncode == 0, f"{log} failed ({child.returncode})")
++
++    agent = out / "agent"
++    command(["superagent", "run", train, "--scheduler", "ab-v1", "--planner", "local", "--portfolio", "ab-v1",
++             "--method-space", "runtime", "--task-profile", "train", "--fit-limit", "5", "--seed", "60281",
++             "--time-limit", "600", "--trial-timeout", "180", "--run-dir", agent], "native.log")
++    outcome = read(agent / "run_outcome.json")
++    require(outcome["status"] == "completed" and outcome["full_refit_completed"] and outcome["source_unchanged"]
++            and outcome["new_api_requests"] == 0, "Incomplete autonomous training")
++    charges = read(agent / "classifier_fits.json")
++    actual = [json.loads(s) for s in (out / "physical.jsonl").read_text().splitlines()]
++    require(1 <= len(actual) == charges["attempted_classifier_fits"] == charges["completed_classifier_fits"] <= 5,
++            "Native and independent fit counts differ")
++    command(["scripts.check_b_installed_methods", "inspect", agent, out/"contracts.json"], "contract.log")
++    seen = read(out / "contracts.json")["installed"]
++    start = read(agent / "runtime_registry_0.json")
++    require(set(seen) <= {s["class"] for s in start["entries"].values()}, "Native Agent did not discover both extensions")
++    registry = read(agent / "candidate_registry.json")
++    installed_ids = {n for n,s in registry["entries"].items() if s["class"] in seen}
++    actions = read(agent / "actions.json")
++    choices = []
++    for index, item in enumerate(actions, 1):
++        if item["action"] == "explore":
++            ranked = read(agent / f"method_choice_{index}.json")
++            choices.append(dict(chosen=ranked["chosen"], candidates=len(ranked["candidates"]),
++                                installed_eligible=[v["candidate"] for v in ranked["candidates"] if v["candidate"] in installed_ids]))
++    require(any(c["installed_eligible"] for c in choices), "Extension absent from actual scheduler choices")
++
++    def exports(directory, prefix):
++        hashes = []
++        for i in range(2):
++            dest = out / f"{prefix}_{i}" / "rows.csv"
++            command(["superagent", "predict", features, "--run-dir", directory, "--output", dest], f"{prefix}_{i}.log")
++            meta = read(dest.parent / "prediction_manifest.json")
++            with dest.open() as f:
++                ids = [int(r["row_id"]) for r in csv.DictReader(f)]
++            require(ids == list(range(33)) and meta["prediction_count"] == 33 and not meta["test_labels_read"], "Wrong output rows")
++            hashes.append(sha(dest))
++        require(hashes[0] == hashes[1], "Cross-process prediction differs")
++        return hashes
++
++    autonomous_exports = exports(agent, "native_export")
++    transport = out / "transport"
++    transport.mkdir()
++    audit_candidate = next(n for n,s in start["entries"].items() if seen.get(s["class"]) == "MedianPrototypeClassifier")
++    write(transport / "registry.json", start)
++    fitted, ledger = transport / "refit.joblib", transport / "fits.json"
++    admit = transport / "admission.json"
++    write(admit, dict(maximum_classifier_fits=1, ledger_path=str(ledger)))
++    command(["superagent.experiment_worker", agent/"refit_data.joblib", audit_candidate, fitted, transport/"registry.json",
++             "--fit-admission", admit], "interface_fit.log", physical="interface_physical.jsonl")
++    physical = [json.loads(s) for s in (out/"interface_physical.jsonl").read_text().splitlines()]
++    require(len(physical) == read(ledger)["completed_classifier_fits"] == 1 and physical[0]["candidate"] == audit_candidate,
++            "Interface fixture cost changed")
++    command(["scripts.check_b_installed_methods", "bundle", transport, fitted, agent/"task_spec.json", audit_candidate], "bundle.log")
++    interface_exports = exports(transport, "interface_export")
++    invalid = out / "invalid" / "rows.csv"
++    command(["superagent", "predict", features, "--run-dir", transport, "--output", invalid],
++            "version_mismatch.log", version="upgraded", reject=True)
++    require(not invalid.exists(), "Wrote predictions using a mismatched version")
++    final = read(agent / "final_selection.json")["family"]
++    result = dict(protocol=sha(out/"protocol.json"), contracts=sha(out/"contracts.json"), initial_installed=len(seen),
++                  choices=choices, native_fit_count=len(actual), native_fits_on_installed=sum(v["candidate"] in installed_ids for v in actual),
++                  native_winner=final, winner_installed=final in installed_ids, native_exports=autonomous_exports, exported_rows=33,
++                  explicit_interface_candidate=audit_candidate, explicit_interface_fits=len(physical), interface_exports=interface_exports,
++                  version_mismatch_rejected=True, new_model_api_calls=0)
++    write(out/"result.json", result)
++    print(json.dumps(result, indent=2))
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    commands = parser.add_subparsers(dest="operation", required=True)
++    for mode, args in (("run", ("out", "inputs")), ("inspect", ("agent", "out")), ("bundle", ("output", "fitted", "spec", "name"))):
++        sub = commands.add_parser(mode)
++        for arg in args:
++            sub.add_argument(arg, type=str if arg=="name" else lambda v: Path(v).resolve())
++    a = parser.parse_args()
++    if a.operation == "run":
++        run(a.out, a.inputs)
++    elif a.operation == "inspect":
++        inspect_contracts(a.agent, a.out)
++    else:
++        bundle(a.output, a.fitted, a.spec, a.name)
+diff --git a/scripts/provider_fixture.py b/scripts/provider_fixture.py
+new file mode 100644
+index 00000000..4bee4879
+--- /dev/null
++++ b/scripts/provider_fixture.py
+@@ -0,0 +1,43 @@
++"""Two independent installed-package fixture estimators, using only NumPy during supervised fitting."""
++import numpy as np
++from sklearn.base import BaseEstimator, ClassifierMixin
++
++
++class MedianPrototypeClassifier(ClassifierMixin, BaseEstimator):
++    def fit(self, X, y):
++        X, y = np.asarray(X, dtype=float), np.asarray(y)
++        self.classes_ = np.unique(y)
++        self.centers_ = np.stack([np.median(X[y == label], axis=0) for label in self.classes_])
++        self.scale_ = np.maximum(np.median(np.abs(X - np.median(X, axis=0)), axis=0), 1e-6)
++        return self
++
++    def predict_proba(self, X):
++        delta = np.asarray(X)[:, None, :] - self.centers_
++        scores = -np.mean(np.abs(delta) / self.scale_, axis=2)
++        weights = np.exp(scores - scores.max(axis=1, keepdims=True))
++        return weights / weights.sum(axis=1, keepdims=True)
++
++    def predict(self, X):
++        return self.classes_[self.predict_proba(X).argmax(axis=1)]
++
++
++class BinaryThresholdClassifier(ClassifierMixin, BaseEstimator):
++    def __sklearn_tags__(self):
++        tags = super().__sklearn_tags__()
++        tags.classifier_tags.multi_class = False
++        return tags
++
++    def fit(self, X, y):
++        X, y = np.asarray(X, dtype=float), np.asarray(y)
++        self.classes_ = np.unique(y)
++        if len(self.classes_) != 2:
++            raise ValueError("Two labels required")
++        centers = np.stack([X[y == label].mean(axis=0) for label in self.classes_])
++        separation = np.abs(centers[0] - centers[1]) / np.maximum(X.std(axis=0), 1e-6)
++        self.feature_ = int(separation.argmax())
++        self.centers_ = centers[:, self.feature_]
++        return self
++
++    def predict(self, X):
++        column = np.asarray(X)[:, self.feature_, None]
++        return self.classes_[np.abs(column - self.centers_).argmin(axis=1)]
+diff --git a/superagent/ab_catalog.py b/superagent/ab_catalog.py
+index 747589c2..8bed9930 100644
+--- a/superagent/ab_catalog.py
++++ b/superagent/ab_catalog.py
+@@ -9,11 +9,12 @@ from .evidence_agent import route_of
+ from .metrics import MetricSpec
+ from .models import search_candidates
+ from . import numeric_kernel
++from . import ab_varied_preferences
+ from .task_semantics import candidate_swap_rule, validate_candidate_semantics
+ 
+ 
+ ADAPTER_VERSION = '1.5'
+-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
++FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
+ 
+ 
+ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
+@@ -55,7 +56,11 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
+                 continue
+             validate_candidate_semantics(kind, pair, candidate)
+         route = route_of(name)
+-        if name == FIELDS or 'catboost' in route:
++        if name in ab_varied_preferences.ESTIMATORS:
++            estimator=ab_varied_preferences.ESTIMATORS[name]
++            if (estimator=='catboost' and find_spec('catboost') is None) or (estimator=='linear_svm' and metric.requires_scores):
++                continue
++        elif name == FIELDS or 'catboost' in route:
+             estimator = 'catboost'
+             if find_spec('catboost') is None:
+                 continue
+@@ -77,9 +82,9 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
+         menu.append(dict(id=name, params=dict(params), route=route, input_kind=kind,
+                          representation=representation, estimator=estimator,
+                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
+-                         supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
++                         supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
+                          resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
+-                         origin='b_port' if name in ROUTES else 'shared_baseline'))
++                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
+     return menu
+ 
+ 
+diff --git a/superagent/ab_method_search.py b/superagent/ab_method_search.py
+new file mode 100644
+index 00000000..9e2770c8
+--- /dev/null
++++ b/superagent/ab_method_search.py
+@@ -0,0 +1,84 @@
++"""Select a feasible configuration by observed performance and distance from previous experiments."""
++from itertools import combinations
++import hashlib
++import json
++import math
++
++import numpy as np
++
++from .metrics import score_of
++
++
++def attributes(cap):
++    params = cap['params']
++    representation = str(cap.get('representation','')).lower()
++    tags = frozenset(k for k in ('word','char','style','stats','surprisal','topic','latent','hybrid','rbf','direction')
++                     if k in representation)
++    return (cap['estimator'], params.get('encoder',''), cap['resource'], tags or frozenset([representation]),
++            float(params.get('C',params.get('kwargs',{}).get('C',1.))))
++
++
++def distance(first, second):
++    a, b = first, second
++    jaccard = 1 - len(a[3] & b[3]) / len(a[3] | b[3])
++    regularization = min(1., abs(math.log(a[4]/b[4]))/math.log(100.))
++    return .35*(a[0]!=b[0]) + .2*(a[1]!=b[1]) + .1*(a[2]!=b[2]) + .27*jaccard + .08*regularization
++
++
++def signature(cap):
++    # The order of the enumerated menu has no influence, even on ties.
++    config = {'estimator':cap['estimator'],'representation':cap['representation'],'params':cap['params']}
++    return hashlib.sha256(json.dumps(config,sort_keys=True,separators=(',',':')).encode()).hexdigest()
++
++
++def choose_with_history(state,capabilities,eligible,verified,picker=None):
++    budget=state['budget']
++    if picker is not None and verified and budget['used_llm_requests']<budget['llm_request_limit']:
++        chosen=picker(tuple(eligible))
++        if chosen not in eligible:
++            raise ValueError('History planner selected outside the feasible runtime menu')
++        return dict(chosen=chosen,evidence_trials=[r['trial'] for r in verified])
++    return rank(state,capabilities,eligible,verified)
++
++
++def rank(state, capabilities, eligible, verified):
++    profile = state['training_profile']
++    rows = int(profile['statistics']['train_rows'])
++    lengths = profile['statistics'].get('word_count', {})
++    length_factor = math.sqrt(1 + lengths.get('p95', 0) / max(1, lengths.get('median', 1)))
++    margin = float(profile['majority_class_fraction'])
++    if rows < 1:
++        raise ValueError('Missing training profile for local method selection')
++    configs = {name:attributes(cap) for name,cap in capabilities.items()}
++    structures = list({v[:4]: (*v[:4],1.) for v in configs.values()}.values())
++    measured = [configs[r['candidate']] for r in verified]
++    observed = [score_of(r) for r in verified]
++    predictions = {v['trial']:np.asarray(v['predictions']) for v in state['prediction_evidence']}
++    pairwise = [float(np.mean(predictions[a['trial']]!=predictions[b['trial']])) for a,b in combinations(verified,2)]
++    disagreement = sum(pairwise)/len(pairwise) if pairwise else 0.
++    # More unresolved errors or disagreement justify trying a more distant model.
++    best = max(observed, default=margin)
++    exploration = ((1-best) + disagreement)/math.sqrt(max(len(verified),1))
++    scores = []
++    for name in eligible:
++        desc = configs[name]
++        gaps = [distance(desc, other) for other in measured]
++        center_distance = math.fsum(distance(desc,c) for c in structures)/len(structures)
++        if observed:
++            weights = [math.exp(-6*d) for d in gaps]
++            expected = float(np.average(observed,weights=weights))
++            novel = min(gaps)
++            value = expected + exploration*novel
++        else:
++            # A central, economical first measurement. Small training sets penalize expensive extraction more.
++            complexity = float(capabilities[name]['resource']!='cpu') * length_factor + min(1.,abs(math.log(desc[4]))/5.)
++            expected, novel = margin, 0.
++            value = -center_distance - complexity/math.sqrt(rows)
++        scores.append(dict(candidate=name, strength=expected, nearest_distance=novel, acquisition=value,
++                           config_sha256=signature(capabilities[name])))
++    scores.sort(key=lambda x:(-x['acquisition'],x['config_sha256'],x['candidate']))
++    if not scores:
++        raise ValueError('No eligible configuration for local method search')
++    return dict(chosen=scores[0]['candidate'], evidence_trials=sorted(r['trial'] for r in verified),
++                observed_scores={r['candidate']:score_of(r) for r in verified}, rows=rows, disagreement=disagreement,
++                exploration_weight=exploration, candidates=scores)
+diff --git a/superagent/ab_methods.py b/superagent/ab_methods.py
+index 79e6d73f..c35bc9cc 100644
+--- a/superagent/ab_methods.py
++++ b/superagent/ab_methods.py
+@@ -13,6 +13,7 @@ from .models import Candidate
+ from . import numeric_kernel
+ from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
+ from . import ab_text_recipes, ab_vision, symmetric_text
++from . import ab_varied_preferences
+ 
+ 
+ FIELDS = 'supported_field_interactions'
+@@ -37,6 +38,7 @@ ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
+ ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
+ ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
+ ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
++ROUTES.update({name:name for name in (ab_varied_preferences.TOPIC,ab_varied_preferences.BINARY)})
+ 
+ 
+ def _field_tree(rows, labels, query):
+@@ -99,7 +101,7 @@ def _ordered_relation(rows, labels, query):
+     return model, model.predict(query)
+ 
+ 
+-def additions(kind):
++def additions(kind, *, include_legacy_methods=True):
+     if kind == 'numeric_tabular':
+         from .general_models import _fit
+         params = dict(C=1.0, kernel_components=numeric_kernel.COMPONENTS,
+@@ -129,7 +131,7 @@ def additions(kind):
+             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
+                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
+         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
+-        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
++        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
+             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
+                         representation='word_char_minilm_l12',swap_augmentation=True)
+@@ -137,10 +139,10 @@ def additions(kind):
+             if catalog=='deep-edit':
+                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
+                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
+-            if catalog in ('deep-familiarity',JOINT_PREFERENCE):
++            if catalog in ('deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG):
+                 extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
+                                        partial(fit_sentence,kind=kind,familiarity=True)))
+-        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog == JOINT_PREFERENCE else catalog
++        transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog in (JOINT_PREFERENCE,ab_varied_preferences.CATALOG) else catalog
+         if transfer_catalog in TRANSFER_METHODS:
+             from .ab_sentence import ALTERNATIVES,verified_files
+             variant,name=TRANSFER_METHODS[transfer_catalog]
+@@ -155,5 +157,7 @@ def additions(kind):
+                                    kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),
+                                    partial(fit_sentence,kind=kind,nonlinear=True)))
+         extra.extend(ab_text_recipes.candidates(kind))
++        if kind == 'pair_text' and catalog == ab_varied_preferences.CATALOG:
++            extra.extend(ab_varied_preferences.additions(verified_directory(deep=True) is not None, include_legacy_methods))
+         return extra
+     return []
+diff --git a/superagent/ab_run.py b/superagent/ab_run.py
+index 3b60bb9e..1495f6a1 100644
+--- a/superagent/ab_run.py
++++ b/superagent/ab_run.py
+@@ -255,7 +255,10 @@ def command(args):
+     began = time.monotonic()
+     frozen = sources()
+     training_profile_value=None
+-    if getattr(args,'task_profile','off')=='train':
++    search_mode=getattr(args,'local_method_search','off')
++    shared_space=getattr(args,'method_space','existing')=='runtime'
++    method_search=shared_space or search_mode in ('evidence','open')
++    if getattr(args,'task_profile','off')=='train' or method_search:
+         from .task_profile import training_facts
+         training_profile_value=training_facts(task)
+         logger.write_json('training_profile.json',training_profile_value)
+@@ -299,6 +302,8 @@ def command(args):
+         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
+             preference_catalog=getattr(args,'preference_catalog','standard'),
++            **({'local_method_search':search_mode} if search_mode!='off' else {}),
++            **({'method_space':'runtime'} if shared_space else {}),
+             **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
+             **({'thinking_mode':args.thinking_mode} if getattr(args,'thinking_mode',None) else {}),
+             **({'reasoning_effort':args.reasoning_effort_level} if getattr(args,'reasoning_effort_level',None) else {}),
+@@ -328,6 +333,12 @@ def command(args):
+             python=platform.python_version(), dependencies={k:importlib.metadata.version(k)
+             for k in ('numpy','scipy','scikit-learn','joblib')},
+             provided_validation_role='score only after final model freeze'))
++        baseline_caps=caps
++        method_space=None
++        if shared_space or search_mode=='open':
++            from .open_methods import MethodSpace
++            method_space=MethodSpace(spec,training_profile_value,directory)
++            caps,_=method_space.refresh([],baseline_caps)
+         if not caps:
+             raise ValueError('No registered executable method supports this task/semantics/dependencies')
+         trusted, allowed = freeze_partitions(task, directory, args.seed, metric, preference_vote=complement)
+@@ -337,6 +348,10 @@ def command(args):
+                       llm_request_limit=3 if history_mode else 0, used_llm_requests=0, time_limit_seconds=args.time_limit)
+         while True:
+             budget['elapsed_seconds'] = time.monotonic() - began
++            if method_space is not None:
++                caps,generation=method_space.refresh(history,baseline_caps)
++                executor.caps=caps
++                logger.write_json(f'method_space_{len(history)+1}.json',generation)
+             state = dict(ab_schema_version=1, task=spec, history=history,
+                          available_candidates=untried_candidates(caps, history), prediction_evidence=evidence,
+                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
+@@ -361,6 +376,15 @@ def command(args):
+                     budget['used_llm_requests'] = client.request_count
+ 
+             local_recipe_proposals=[]
++            local_method_choices=[]
++            def select_method(eligible, verified):
++                from .ab_method_search import choose_with_history
++                choice=choose_with_history(state,caps,eligible,verified,choose if picker else None)
++                if 'candidates' not in choice:
++                    return choice
++                local_method_choices.append(choice)
++                logger.write_json(f'method_choice_{number}.json',choice)
++                return choice
+             def compose(eligible, verified, capabilities):
+                 from .ab_text_recipes import propose
+                 proof=propose(eligible,verified,capabilities)
+@@ -381,16 +405,17 @@ def command(args):
+                 action = fixed_action(state, capabilities=caps, trusted_partitions=trusted,
+                                       on_explore=choose if picker else None)
+             else:
+-                optional_local=({'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
++                optional_local=({'on_local_method':select_method} if method_search else
++                                {'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
+                 action = next_action(state, capabilities=caps, trusted_partitions=trusted,
+-                                     on_explore=choose if picker else None,**optional_local)
++                                     on_explore=choose if picker and not method_search else None,**optional_local)
+             proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
+             if proposal is not None:
+                 action['reason'] = proposal['reason']
+                 if getattr(args,'proposal_contract','strict-v1')=='grounded-v1':action['reason']=picker.last_proposal.reason
+                 action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'],*proposal['evidence_trials']]))
+             logger.event('planner_routing', trial=number, action=action['action'],
+-                source='local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
++                source='local_model_evidence' if local_method_choices else 'local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
+                     and action['action']=='explore' else 'shared_local_rule',
+                 used_llm_requests=client.request_count if client else 0)
+             actions.append(action)
+diff --git a/superagent/ab_scheduler.py b/superagent/ab_scheduler.py
+index dda46b09..39c78316 100644
+--- a/superagent/ab_scheduler.py
++++ b/superagent/ab_scheduler.py
+@@ -274,7 +274,8 @@ def _fixed_confirm(front, attempted, records, splits, available, reserve, known_
+     return _action('stop', 'Completed the registered fixed exploration and confirmation allocation.', refs)
+ 
+ 
+-def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None):
++def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities=None, allocation='adaptive', on_local_recipe=None,
++                on_local_method=None):
+     """on_explore receives eligible IDs only; A owns the Flash request and cumulative ledger."""
+     if allocation not in ('adaptive', 'fixed'):
+         raise ValueError('Unknown AB budget allocation')
+@@ -346,6 +347,19 @@ def next_action(state, *, on_explore=None, trusted_partitions=None, capabilities
+                   'No eligible new fit or complete matched replication fits the shared budget.')
+         action = _action('stop',reason,[r['trial'] for r in front[:2]])
+         return _explain_skips(action, skipped)
++    if on_local_method is not None:
++        if allocation!='adaptive' or on_explore is not None or on_local_recipe is not None or trusted_partitions is None:
++            raise ValueError('Local method selection needs its own verified adaptive route')
++        choices={entry['id']:cost for entry,cost in feasible}
++        verified=[r for r in front if r['trial'] in records]
++        decision=on_local_method(tuple(choices),verified)
++        name=decision['chosen']
++        refs=decision['evidence_trials']
++        if name not in choices or set(refs)!={r['trial'] for r in verified}:
++            raise ValueError('Local search selected outside the verified feasible set')
++        reason=('Explore the highest ranked feasible configuration using paired observations and method novelty.'
++                if verified else 'Choose a representative initial configuration using the training profile and eligible method attributes.')
++        return _explain_skips(_action('explore',reason,refs,name,PRIMARY,choices[name]),skipped)
+     def route(record):
+         name = record.get('id',record.get('candidate'))
+         if record.get('route'):
+diff --git a/superagent/ab_sentence.py b/superagent/ab_sentence.py
+index 47960e1b..f2ae76cf 100644
+--- a/superagent/ab_sentence.py
++++ b/superagent/ab_sentence.py
+@@ -271,8 +271,11 @@ class KernelSentenceFeatures(SentenceFeatures):
+         return [*original,csr_matrix(extra)]
+ 
+ 
+-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False):
+-    if familiarity:
++def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False,topic_style=False):
++    if topic_style:
++        from .ab_varied_preferences import TopicStyleFeatures
++        features=TopicStyleFeatures(kind)
++    elif familiarity:
+         features=FamiliarityPreferenceFeatures(kind)
+     elif alternative:
+         features=AlternativeSentenceFeatures(kind,alternative)
+diff --git a/superagent/ab_varied_preferences.py b/superagent/ab_varied_preferences.py
+new file mode 100644
+index 00000000..53fd82e9
+--- /dev/null
++++ b/superagent/ab_varied_preferences.py
+@@ -0,0 +1,98 @@
++"""Generic feature and estimator alternatives for ordered binary text preferences."""
++from functools import partial
++import hashlib
++
++import numpy as np
++from scipy.sparse import csr_matrix, hstack
++from sklearn.base import BaseEstimator, TransformerMixin
++from sklearn.decomposition import PCA
++from sklearn.feature_extraction.text import CountVectorizer
++from sklearn.naive_bayes import BernoulliNB
++
++from . import ab_sentence
++from .ab_preference_output import CanonicalPreferencePipeline
++from .models import Candidate, style_differences
++from .nonlinear_text import nonlinear_candidates
++from .supervised_text import research_candidates
++
++
++CATALOG = 'varied'
++TOPIC = 'minilm_l12_topic_style_interactions'
++BINARY = 'binary_word_direction_naive_bayes'
++TOPICS = 8
++SAMPLE_LIMIT = 384
++
++
++def legacy_methods():
++    return [c for c in research_candidates() if c.params['C'] == .2] + [
++        c for c in nonlinear_candidates() if c.params.get('depth') == 3 and c.params.get('classifier_fits_per_evaluation') == 1]
++
++
++ESTIMATORS = {c.family: c.params.get('classifier','catboost') for c in legacy_methods()}
++ESTIMATORS[BINARY] = 'naive_bayes'
++ESTIMATORS[TOPIC] = 'logistic'
++
++
++class DirectionalWords(TransformerMixin, BaseEstimator):
++    def fit(self, rows, y=None):
++        self.vectorizer_ = CountVectorizer(ngram_range=(1,2), binary=True, min_df=1, max_features=40000)
++        self.vectorizer_.fit([text for pair in rows for text in pair])
++        return self
++
++    def transform(self, rows):
++        left, right = zip(*rows)
++        difference = self.vectorizer_.transform(left) - self.vectorizer_.transform(right)
++        return hstack([difference.maximum(0), (-difference).maximum(0)],format='csr')
++
++
++def fit_bernoulli(rows, y, query):
++    labels=np.asarray(y)
++    model = CanonicalPreferencePipeline([('features', DirectionalWords()), ('classifier', BernoulliNB(alpha=1.))])
++    model.fit([*rows, *((b,a) for a,b in rows)], np.r_[labels,1-labels])
++    return model, model.predict(query)
++
++
++class TopicStyleFeatures(ab_sentence.FamiliarityPreferenceFeatures):
++    """Cross symmetric topic coordinates with signed style and training-corpus familiarity differences."""
++    def fit(self, rows, y=None):
++        super().fit(rows,y)
++        pairs = {tuple(sorted((a,b))) for a,b in rows}
++        def order(pair):
++            return hashlib.sha256(repr(pair).encode('utf-8')).digest(), pair
++        subset = sorted(pairs,key=order)[:SAMPLE_LIMIT]
++        vectors,tokens = ab_sentence.encode([s for pair in subset for s in pair],deep=True)
++        center = .5*(vectors[::2]+vectors[1::2])
++        self.components_ = None
++        if len(center)>1 and np.any(center != center[0]):
++            self.components_ = PCA(n_components=min(TOPICS,len(center)-1,center.shape[1]),svd_solver='full').fit(center)
++        self.usage_['input_tokens'] += tokens
++        self.usage_['topic_sample_rows'] = len(subset)
++        return self
++
++    def semantic_blocks(self, rows, texts):
++        vectors,tokens = ab_sentence.encode(texts,deep=True)
++        difference = vectors[::2]-vectors[1::2]
++        familiarity = self.corpus_.differences(rows)/self.familiarity_scale_
++        blocks = [csr_matrix(difference), csr_matrix(familiarity[:,None])]
++        if self.components_ is not None:
++            model = self.components_
++            context = model.transform(.5*(vectors[::2]+vectors[1::2]))
++            scale = np.sqrt(np.maximum(model.explained_variance_,1e-6))
++            context = np.clip(context/scale,-3,3)/np.sqrt(context.shape[1])
++            style = np.column_stack([self.scaler_.transform(style_differences(rows)),familiarity])
++            style /= np.sqrt(style.shape[1])
++            interaction = (context[:,:,None]*style[:,None,:]).reshape(len(rows),-1)
++            blocks.append(csr_matrix(interaction))
++        return blocks,tokens
++
++
++def additions(has_deep_weights, include_legacy_methods=True):
++    methods = legacy_methods() if include_legacy_methods else []
++    methods.append(Candidate(BINARY,dict(representation='word_ngram_direction_presence',classifier='naive_bayes',
++                                         alpha=1.,swap_augmentation=True),fit_bernoulli))
++    if has_deep_weights:
++        params = dict(encoder=ab_sentence.DEEP_MODEL,revision=ab_sentence.DEEP_REVISION,C=.3,
++                      representation='word_char_minilm_l12_training_surprisal_topic_style',topic_dimensions=TOPICS,
++                      topic_sample_limit=SAMPLE_LIMIT,swap_augmentation=True)
++        methods.append(Candidate(TOPIC,params,partial(ab_sentence.fit_sentence,kind='pair_text',topic_style=True)))
++    return methods
+diff --git a/superagent/candidate_refinement.py b/superagent/candidate_refinement.py
+index eda05958..e7aff950 100644
+--- a/superagent/candidate_refinement.py
++++ b/superagent/candidate_refinement.py
+@@ -49,6 +49,9 @@ def materialize(kind,spec):
+ 
+ 
+ def resolve_registered(kind,candidate_id,document):
++    if isinstance(document,dict) and document.get('schema_version')==4:
++        from .open_methods import resolve
++        return resolve(kind,candidate_id,document)
+     if isinstance(document,dict) and document.get('schema_version')==3:
+         from .generated_pipeline import resolve_generated_registry
+         return resolve_generated_registry(kind,candidate_id,document)
+diff --git a/superagent/cli.py b/superagent/cli.py
+index ca69827d..fb1b59bf 100644
+--- a/superagent/cli.py
++++ b/superagent/cli.py
+@@ -90,6 +90,13 @@ def _validate(args):
+ 
+ def _run(args):
+     catalog = getattr(args, 'preference_catalog', 'standard')
++    if getattr(args,'method_space','existing')=='runtime' and (
++            args.scheduler!='ab-v1' or args.planner not in ('local','raw-history','checked-history') or
++            getattr(args,'local_text_proposals','off')!='off'):
++        raise ValueError('Runtime method space requires the adaptive A/B entry and its method selector')
++    if getattr(args,'local_method_search','off') in ('evidence','open') and (
++            args.scheduler!='ab-v1' or args.planner!='local' or getattr(args,'local_text_proposals','off')!='off'):
++        raise ValueError('Local method search requires the local adaptive A/B scheduler')
+     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
+         raise ValueError('Grounded proposals require checked-history planning')
+     if getattr(args,'issue_layering','off')!='off' and getattr(args,'proposal_contract','strict-v1')!='grounded-v1':
+@@ -319,7 +326,7 @@ def build_parser():
+     run.add_argument('--trials',type=int,help='Fixed scheduler primary trials (default 5); incompatible with ab-v1')
+     run.add_argument('--scheduler',choices=['fixed','ab-v1','ab-fixed','ab-finalists','ab-complement','ab-adaptive-complement'],default='fixed')
+     run.add_argument('--fit-limit',type=int,help='ab-v1 total actual classifier fits including final refit (default 11)')
+-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
++    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity','varied'], default='standard',
+                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
+     run.add_argument('--cover-untried-encoder', action='store_true',
+                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
+@@ -335,6 +342,10 @@ def build_parser():
+     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
+     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
+     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
++    run.add_argument('--method-space',choices=['existing','runtime'],default='existing',
++                     help='Discover and compose the same compatible methods for local or history planning')
++    run.add_argument('--local-method-search',choices=['off','evidence','open'],default='off',
++                     help='Rank all feasible model configurations by training profile, observed results and unexplored representations')
+     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
+     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2','grounded-v1'],default='strict-v1',help='AB Flash: optional calibrated or evidence-bound proposal contract')
+     run.add_argument('--menu-view',choices=['full','compact'],default='full',
+diff --git a/superagent/evidence_agent.py b/superagent/evidence_agent.py
+index 2941b4fe..81100285 100644
+--- a/superagent/evidence_agent.py
++++ b/superagent/evidence_agent.py
+@@ -38,6 +38,10 @@ def route_of(candidate):
+     from .ab_methods import ROUTES
+     if candidate in ROUTES:
+         return ROUTES[candidate]
++    if candidate.startswith('open_'):
++        route, _, signature=candidate.rpartition('_')
++        if route[5:].isidentifier() and len(signature)==20 and all(ch in '0123456789abcdef' for ch in signature):
++            return route
+     if candidate.startswith('generated_'):return candidate.rsplit('_',1)[0]
+     if candidate.startswith("recipe_"):return candidate.rsplit("_",1)[0]
+     for name in ('edit_pair','category_cross','style_tree','style_blend','symmetric_stats','adaptive_catboost','neural_pair','learned_stack'):
+diff --git a/superagent/experiment_worker.py b/superagent/experiment_worker.py
+index 0aff8909..c3453c54 100644
+--- a/superagent/experiment_worker.py
++++ b/superagent/experiment_worker.py
+@@ -42,7 +42,11 @@ def main() -> None:
+                    'semantic_check':semantic_check}
+     start = time.perf_counter()
+     from .fit_guard import admitted_fits
+-    with admitted_fits(fit_admission, candidate_id) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
++    runtime_estimator=None
++    if candidate.params.get('runtime_composed') and origin=='registry':
++        from .runtime_inventory import runtime_classifiers
++        runtime_estimator=runtime_classifiers()[candidate.params['class']]
++    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
+         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
+         if payload.get("mode") != "refit":
+             training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
+@@ -54,6 +58,10 @@ def main() -> None:
+     selected_iterations=training_metadata.get('selected_iterations') if training_metadata else None
+     from .estimator_facts import observed_classifier
+     observed=observed_classifier(model)
++    if runtime_estimator is not None:
++        if (observed['class'],observed['module'])!=(runtime_estimator.__name__,runtime_estimator.__module__):
++            raise ValueError('The fitted estimator differs from the generated pipeline')
++        observed['family']=observed['family'] or observed['class']
+     if payload.get("mode") == "refit":
+         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
+                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
+diff --git a/superagent/fit_guard.py b/superagent/fit_guard.py
+index dcf72726..d24c6679 100644
+--- a/superagent/fit_guard.py
++++ b/superagent/fit_guard.py
+@@ -11,7 +11,7 @@ from pathlib import Path
+ 
+ 
+ @contextmanager
+-def admitted_fits(admission, candidate):
++def admitted_fits(admission, candidate, *, runtime_estimator=None):
+     if admission is None:
+         yield None
+         return
+@@ -32,11 +32,15 @@ def admitted_fits(admission, candidate):
+ 
+     from sklearn.linear_model import LogisticRegression
+     from sklearn.ensemble import ExtraTreesClassifier
+-    from sklearn.svm import SVC
+-    classes = [LogisticRegression, ExtraTreesClassifier, SVC]
++    from sklearn.naive_bayes import BernoulliNB
++    from sklearn.svm import LinearSVC, SVC
++    classes = [LogisticRegression, ExtraTreesClassifier, SVC, LinearSVC, BernoulliNB]
++    if runtime_estimator is not None and runtime_estimator not in classes:
++        classes.append(runtime_estimator)
+     if find_spec('catboost') is not None:
+         from catboost import CatBoostClassifier
+-        classes.append(CatBoostClassifier)
++        if CatBoostClassifier not in classes:
++            classes.append(CatBoostClassifier)
+     originals = []
+ 
+     def instrument(original):
+@@ -63,9 +67,9 @@ def admitted_fits(admission, candidate):
+ 
+     save()
+     try:
+-        for cls in classes:
+-            originals.append((cls, cls.fit))
+-            cls.fit = instrument(cls.fit)
++        originals = [(cls, cls.fit, 'fit' in vars(cls)) for cls in classes]
++        for cls, original, _ in originals:
++            cls.fit = instrument(original)
+         yield record
+         if record['attempted_classifier_fits'] != limit or record['completed_classifier_fits'] != limit:
+             raise ValueError('Actual supervised fits differ from the registered completed candidate cost')
+@@ -74,6 +78,9 @@ def admitted_fits(admission, candidate):
+         record['status'] = 'failed'
+         raise
+     finally:
+-        for cls, original in originals:
+-            cls.fit = original
++        for cls, original, owned in originals:
++            if owned:
++                cls.fit = original
++            else:
++                del cls.fit
+         save()
+diff --git a/superagent/models.py b/superagent/models.py
+index 59cd1f19..de81541b 100644
+--- a/superagent/models.py
++++ b/superagent/models.py
+@@ -341,7 +341,7 @@ def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]
+     if portfolio in ('ab-v1', 'all'):
+         from .ab_methods import additions
+         prior = 'expanded' if portfolio == 'ab-v1' else 'all'
+-        return _legacy_candidates(kind, prior) + additions(kind)
++        return _legacy_candidates(kind, prior) + additions(kind, include_legacy_methods=portfolio!='all')
+     return _legacy_candidates(kind, portfolio)
+ 
+ 
+diff --git a/superagent/open_methods.py b/superagent/open_methods.py
+new file mode 100644
+index 00000000..9b1c5796
+--- /dev/null
++++ b/superagent/open_methods.py
+@@ -0,0 +1,246 @@
++"""Create executable pipelines from the installed estimator inventory and observed training evidence."""
++from functools import lru_cache, partial
++import hashlib
++import json
++import math
++from pathlib import Path
++
++import numpy as np
++from sklearn.base import BaseEstimator, TransformerMixin
++from sklearn.decomposition import TruncatedSVD
++from sklearn.kernel_approximation import RBFSampler
++from sklearn.pipeline import Pipeline
++from sklearn.utils import get_tags
++
++from .ab_preference_output import CanonicalPreferencePipeline
++from .ab_symmetric import UnorderedPairFeatures
++from .estimator_facts import observed_classifier
++from .generated_pipeline import KINDS, make_preprocessor
++from .metrics import score_of
++from .models import Candidate, search_candidates
++from .runtime_inventory import ProviderRequirement, installed_extensions, runtime_classifiers
++
++
++VERSION=4
++PROJECTIONS=('native','latent','fourier')
++
++
++def digest(value):
++    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
++
++
++class LatentFeatures(TransformerMixin,BaseEstimator):
++    def __init__(self,dimensions):
++        self.dimensions=dimensions
++
++    def fit(self,x,y=None):
++        count=min(self.dimensions,x.shape[0]-1,x.shape[1]-1)
++        self.reducer_=TruncatedSVD(n_components=count,random_state=42).fit(x) if count>=1 else None
++        return self
++
++    def transform(self,x):
++        if self.reducer_ is not None:
++            return self.reducer_.transform(x)
++        return x.toarray() if hasattr(x,'toarray') else np.asarray(x)
++
++
++class PreferencePipeline(CanonicalPreferencePipeline):
++    def predict(self,rows,**params):
++        if hasattr(self.steps[-1][1],'predict_proba'):
++            return super().predict(rows,**params)
++        ordered=[(a,b) if a<=b else (b,a) for a,b in rows]
++        labels=np.asarray(Pipeline.predict(self,ordered,**params))
++        return np.where([a<=b for a,b in rows],labels,1-labels)
++
++
++def valid_spec(kind,spec):
++    required={'kind','semantics','class','kwargs','projection','dimensions'}
++    if not isinstance(spec,dict) or set(spec)!=required or kind not in KINDS or spec['kind']!=kind:
++        raise ValueError('Invalid open pipeline task or fields')
++    if spec['semantics'] not in (('preference','symmetric') if kind=='pair_text' else (None,)):
++        raise ValueError('Incompatible open pipeline pair semantics')
++    if spec['projection'] not in PROJECTIONS or type(spec['dimensions']) is not int or not 2<=spec['dimensions']<=96:
++        raise ValueError('Invalid open projection')
++    cls=runtime_classifiers().get(spec['class'])
++    args=spec['kwargs']
++    if cls is None or not isinstance(args,dict) or not set(args)<=cls().get_params(deep=False).keys():
++        raise ValueError('Unknown runtime classifier or constructor parameters')
++    # Only scalar parameters used by the synthesizer are accepted in a saved registry.
++    bounds={'C':(.001,64),'alpha':(.000001,8),'n_estimators':(24,192),'max_depth':(2,18),'min_samples_leaf':(1,64),
++            'n_neighbors':(1,32),'max_iter':(1,2000),'n_jobs':(1,1),'random_state':(42,42),'cache_size':(128,128),
++            'nu':(.001,.5),'n_restarts_optimizer':(0,0)}
++    for key,value in args.items():
++        if key=='outlier_label' and value=='most_frequent':
++            continue
++        if key not in bounds or type(value) not in (float,int) or not math.isfinite(value) or not bounds[key][0]<=value<=bounds[key][1]:
++            raise ValueError('Open constructor parameter outside its resource boundary')
++    estimator=cls(**args)
++    if hasattr(estimator,'_parameter_constraints') and hasattr(estimator,'_validate_params'):
++        estimator._validate_params()
++    return estimator
++
++
++def fit_pipeline(spec,x,y,query):
++    estimator=valid_spec(spec['kind'],spec)
++    pref=spec['semantics']=='preference'
++    base=(UnorderedPairFeatures(('word','char'),bins=4096) if spec['semantics']=='symmetric' else make_preprocessor(spec['kind']))
++    steps=[('features',base)]
++    if spec['projection']=='latent':
++        steps.append(('latent',LatentFeatures(spec['dimensions'])))
++    elif spec['projection']=='fourier':
++        steps.append(('fourier',RBFSampler(n_components=spec['dimensions'],gamma='scale',random_state=42)))
++    steps.append(('classifier',estimator))
++    model=PreferencePipeline(steps) if pref else Pipeline(steps)
++    if pref:
++        x=[*x,*[(b,a) for a,b in x]]
++        y=np.r_[y,1-np.asarray(y)]
++    model.fit(x,y)
++    if spec['class'] in installed_extensions()[0]:
++        model.provider_requirement_=ProviderRequirement(spec['class'])
++    return model,model.predict(query)
++
++
++def materialize(spec):
++    estimator=valid_spec(spec['kind'],spec)
++    key='open_'+type(estimator).__name__+'_'+digest(spec)[:20]
++    params=dict(spec,representation=spec['projection']+'_'+spec['kind'],runtime_composed=True,
++                classifier_fits_per_evaluation=1,swap_augmentation=spec['semantics']=='preference')
++    return Candidate(key,params,partial(fit_pipeline,spec))
++
++
++def capability(spec):
++    candidate=materialize(spec)
++    estimator=valid_spec(spec['kind'],spec)
++    facts=observed_classifier(estimator)
++    family=facts['family'] or type(estimator).__name__
++    rule={'preference':'flips','symmetric':'preserves',None:'not_applicable'}[spec['semantics']]
++    return dict(id=candidate.family,params=candidate.params,route='open_'+type(estimator).__name__,input_kind=spec['kind'],
++                kind=spec['kind'],representation=candidate.params['representation'],estimator=family,estimator_class=type(estimator).__name__,
++                supports_probabilities=hasattr(estimator,'predict_proba'),classifier_fits=1,refit_classifier_fits=1,
++                expected_classifier_fits=1,origin='runtime_composed',resource='cpu',swap_label_rule=rule)
++
++
++@lru_cache(maxsize=1)
++def discovered():
++    return {n:(cls,get_tags(cls()),cls().get_params(deep=False)) for n,cls in runtime_classifiers().items()}
++
++
++def propose(task,profile,history):
++    """The classifier names originate in the installed distribution. No task or dataset name is an input."""
++    kind=task['kind']
++    semantics=task['input_schema'].get('pair_semantics') if kind=='pair_text' else None
++    if kind=='pair_text' and semantics is None and task['input_schema'].get('pair_label_one')=='left':
++        semantics='preference'
++    primary=[r for r in history if r['split_id']=='primary' and r['status']=='completed']
++    best=max(primary,key=score_of,default=None)
++    statistics=profile['statistics']
++    n=statistics['train_rows']
++    shape=statistics.get('feature_shape') or [statistics.get('feature_count',statistics.get('word_count',{}).get('median',8))]
++    width=max(1,math.prod(shape))
++    gap=max(0.,best['train_score']-score_of(best)) if best else 0.
++    error=1-score_of(best) if best else 1-profile['majority_class_fraction']
++    strength=round(float(np.clip(math.log1p(n)/(math.sqrt(width)+1)*math.exp(-4*gap)*(1+error),.001,64.)),6)
++    dimensions=max(2,min(96,round(math.sqrt(n)*(1+error)/(1+3*gap))))
++    sparse=kind in ('single_text','pair_text','categorical_tabular','mixed_tabular','text_tabular')
++    nonnegative=kind in ('categorical_tabular','single_text') or semantics=='symmetric'
++    minority=profile['minority_class_fraction']
++    entries,excluded={},{}
++    for name,(cls,tags,defaults) in discovered().items():
++        classifier=tags.classifier_tags
++        reason=None
++        if classifier is None or classifier.poor_score or not tags.target_tags.single_output or cls.__module__.startswith('sklearn.semi_supervised'):
++            reason='not an ordinary single-target inductive classifier'
++        elif len(task['metric']['labels'])>2 and not classifier.multi_class:
++            reason='requires binary labels'
++        elif task['metric']['name']=='roc_auc' and not hasattr(cls(),'predict_proba'):
++            reason='requires probabilities in frozen class order'
++        elif tags.input_tags.pairwise or tags.input_tags.categorical or (tags.input_tags.positive_only and not nonnegative):
++            reason='incompatible feature domain'
++        elif cls.__module__.startswith('sklearn.gaussian_process.') and (n>180 or len(task['metric']['labels'])>2):
++            reason='cubic kernel fit exceeds this worker budget'
++        elif ('kernel' in defaults and n>12000) or (cls.__module__.startswith('sklearn.discriminant_analysis') and width>512):
++            reason='quadratic workspace exceeds this worker budget'
++        if reason:
++            excluded[name]=reason
++            continue
++        projection='native'
++        if sparse and not tags.input_tags.sparse:
++            if tags.input_tags.positive_only:
++                excluded[name]='signed dense projection incompatible with count features'
++                continue
++            projection='latent'
++        elif best and not tags.input_tags.positive_only:
++            if gap>.12:
++                projection='latent'
++            elif best['train_score']<.9 and width<=256:
++                projection='fourier'
++        if projection!='native' and n*dimensions*8>128*2**20:
++            excluded[name]='dense projection exceeds memory allowance'
++            continue
++        values=dict(random_state=42,n_jobs=1,C=strength,alpha=round(max(.000001,min(8.,1/(strength+1))),6),
++                    n_estimators=max(24,min(192,round(4*math.sqrt(n)))),max_depth=max(2,min(18,round(math.log2(n+1)/(1+3*gap)))),
++                    min_samples_leaf=max(1,min(64,round(1+gap*math.sqrt(n)))),
++                    n_neighbors=max(1,min(32,n//5 or 1,round(math.sqrt(math.log1p(n))*(1+4*gap)))),
++                    nu=max(.001,min(.5,minority/2)),cache_size=128,n_restarts_optimizer=0,outlier_label='most_frequent')
++        limit=defaults.get('max_iter')
++        if 'max_iter' in defaults and (limit is None or isinstance(limit,(int,float)) and (limit<=0 or limit>2000)):
++            values['max_iter']=1500
++        kwargs={k:v for k,v in values.items() if k in defaults}
++        spec=dict(kind=kind,semantics=semantics,**{'class':name},kwargs=kwargs,projection=projection,dimensions=dimensions if projection!='native' else 2)
++        if name in installed_extensions()[0]:
++            try:
++                candidate=materialize(spec)
++            except Exception as error:
++                excluded[name]='unsupported generated parameters: '+type(error).__name__
++                continue
++        else:
++            candidate=materialize(spec)
++        entries[candidate.family]=spec
++    provenance=dict(trials=[r['trial'] for r in primary],best_trial=best['trial'] if best else None,
++                    score=score_of(best) if best else None,gap=gap,error=error,rows=n,width=width,
++                    inventory=sorted(discovered()),excluded={**installed_extensions()[1],**excluded})
++    return entries,provenance
++
++
++def resolve(kind,name,document):
++    if set(document)!={'schema_version','kind','entries'} or document['schema_version']!=VERSION or document['kind']!=kind:
++        raise ValueError('Invalid open-search registry')
++    if name in document['entries']:
++        spec=document['entries'][name]
++        if spec['kind']!=kind:
++            raise ValueError('Runtime pipeline has the wrong modality')
++        method=materialize(spec)
++        if method.family!=name:
++            raise ValueError('Runtime configuration digest differs')
++        return method
++    return next(c for c in search_candidates(kind,'all') if c.family==name)
++
++
++class MethodSpace:
++    def __init__(self,spec,profile,folder):
++        self.spec,self.profile,self.folder=spec,profile,Path(folder)
++        self.entries={}
++        self.frontier=()
++        self.generations={}
++
++    def refresh(self,history,baseline):
++        key=tuple(r['trial'] for r in history if r['split_id']=='primary' and r['status']=='completed')
++        if key not in self.generations:
++            proposals,why=propose(self.spec,self.profile,history)
++            new=sorted(proposals.keys()-self.entries.keys())
++            self.entries.update(proposals)
++            self.frontier=tuple(proposals)
++            document=dict(schema_version=VERSION,kind=self.spec['kind'],entries=self.entries)
++            payload=json.dumps(document,sort_keys=True,ensure_ascii=False,allow_nan=False).encode()
++            version=self.folder/f'runtime_registry_{len(self.generations)}.json'
++            with version.open('xb') as f:
++                f.write(payload)
++            current=self.folder/'candidate_registry.json'
++            temporary=current.with_suffix('.tmp')
++            temporary.write_bytes(payload)
++            temporary.replace(current)
++            self.generations[key]=dict(file=version.name,sha256=hashlib.sha256(payload).hexdigest(),
++                                       generated=list(proposals),newly_seen=new,evidence=why)
++        visible=set(self.frontier)|{r['candidate'] for r in history}
++        caps={**baseline,**{n:capability(self.entries[n]) for n in sorted(visible&self.entries.keys())}}
++        return caps,self.generations[key]
+diff --git a/superagent/runtime_inventory.py b/superagent/runtime_inventory.py
+new file mode 100644
+index 00000000..24661957
+--- /dev/null
++++ b/superagent/runtime_inventory.py
+@@ -0,0 +1,75 @@
++"""Discover single-fit CPU classifiers advertised by installed Python distributions."""
++from collections import Counter
++from functools import lru_cache
++from importlib import metadata
++import inspect
++import re
++
++from sklearn.base import BaseEstimator
++from sklearn.utils import get_tags
++
++from .generated_pipeline import classifier_inventory
++
++
++ENTRY_POINT_GROUP = "superagent.classifiers.v1"
++
++
++def _distribution(point):
++    name = point.dist.metadata["Name"] or ""
++    return re.sub(r"[-_.]+", "-", name).lower()
++
++
++@lru_cache(maxsize=1)
++def installed_extensions():
++    """Only package metadata can supply a constructor. Task files never supply imports."""
++    points = metadata.entry_points(group=ENTRY_POINT_GROUP)
++    aliases = Counter((_distribution(point), point.name) for point in points)
++    accepted = {}
++    rejected = {}
++    for point in sorted(points, key=lambda item: (_distribution(item), item.name, item.value)):
++        distribution = _distribution(point)
++        alias = (distribution, point.name)
++        # A different distribution, version or import target must never resolve an old registry entry.
++        key = f"{distribution}@{point.dist.version}/{point.name}={point.value}"
++        if not distribution or aliases[alias] != 1:
++            rejected[key] = "missing distribution name or duplicate classifier alias"
++            continue
++        try:
++            cls = point.load()
++            if not inspect.isclass(cls) or not issubclass(cls, BaseEstimator):
++                raise ValueError("entry point must export an estimator class")
++            estimator = cls()
++            params = estimator.get_params(deep=False)
++            tags = get_tags(estimator)
++            if tags.classifier_tags is None or not tags.target_tags.single_output:
++                raise ValueError("requires a single-output classifier")
++            if not tags.input_tags.two_d_array or not callable(getattr(estimator, "predict", None)):
++                raise ValueError("requires a two-dimensional feature matrix and predict")
++            if not callable(getattr(estimator, "fit", None)) or cls.__name__.endswith("CV"):
++                raise ValueError("requires one supervised fit")
++            if {"estimator", "estimators", "base_estimator", "cv"}.intersection(params):
++                raise ValueError("implicit component fits require separate accounting")
++        except Exception as error:
++            # A broken optional installation must not hide the other executable methods.
++            rejected[key] = type(error).__name__
++            continue
++        accepted[key] = cls
++    return accepted, rejected
++
++
++@lru_cache(maxsize=1)
++def runtime_classifiers():
++    extensions, _ = installed_extensions()
++    return {**classifier_inventory(), **extensions}
++
++
++class ProviderRequirement:
++    """Verify the same package registration when a saved model is loaded in another process."""
++
++    def __init__(self, key):
++        if key not in installed_extensions()[0]:
++            raise ValueError("Required installed classifier version or entry point is unavailable: " + key)
++        self.key = key
++
++    def __reduce__(self):
++        return type(self), (self.key,)
+diff --git a/superagent/task_semantics.py b/superagent/task_semantics.py
+index dd2aae63..f63b0db5 100644
+--- a/superagent/task_semantics.py
++++ b/superagent/task_semantics.py
+@@ -43,6 +43,10 @@ def candidate_swap_rule(candidate):
+     function = candidate.fit_predict
+     while isinstance(function, partial):
+         function = function.func
++    if candidate.params.get('runtime_composed'):
++        from .open_methods import fit_pipeline
++        if function is fit_pipeline and candidate.params.get('kind')=='pair_text':
++            return {'symmetric':'preserves','preference':'flips'}[candidate.params['semantics']]
+     if function is fit_hashed_pair or function is fit_tfidf_pair:
+         return 'preserves'
+     if function is fit_recipe and candidate.params.get('kind') == 'pair_text':

@@ -1,0 +1,42 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "text",
+  "metric": "macro_f1",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "text",
+    "columns": [
+      {
+        "name": "message",
+        "type": "text"
+      }
+    ],
+    "target": "label"
+  },
+  "input_columns": [
+    {
+      "name": "message",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "single_text",
+  "train_rows": 4128,
+  "validation_rows": 1032,
+  "provided_validation_available": true,
+  "class_count": 2,
+  "task_kind": "single_text_classification",
+  "model_kind": "single_text",
+  "metric_spec": {
+    "name": "macro_f1",
+    "labels": [
+      "ham",
+      "spam"
+    ],
+    "direction": "maximize"
+  }
+}

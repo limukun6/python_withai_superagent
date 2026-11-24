@@ -127,7 +127,8 @@ def fragment_status(fragment, state, scheduler_action, step_index=0):
     failed = [c for c in checks if c['status'] != 'holds']
     record['checks'] = checks
     if failed:
-        return {**record, 'status': 'invalidated',
+        awaiting = all(check['condition'] == 'reference_trial' for check in failed)
+        return {**record, 'status': 'deferred' if awaiting else 'invalidated',
                 'reason': '; '.join(f"{c['condition']} expected {c['required']} observed {c['observed']}"
                                     for c in failed),
                 'candidate': None}
@@ -138,3 +139,21 @@ def fragment_status(fragment, state, scheduler_action, step_index=0):
 def next_step(fragment, state, scheduler_action, step_index=0):
     """Convenience wrapper: the candidate to explore, or None."""
     return fragment_status(fragment, state, scheduler_action, step_index)['candidate']
+
+
+def choose_with_fragment(fragment, step_index, state, eligible_ids, scheduler_action=None):
+    """Prefer a valid planned step over the planner, and never over the scheduler.
+
+    Returns (candidate, report). A candidate is returned only when the step is
+    valid, its candidate is eligible, and the scheduler is exploring. When the
+    scheduler confirms or stops, or any recorded condition no longer holds, the
+    caller must fall back to its normal single-step path.
+    """
+    report = fragment_status(fragment, state, scheduler_action or {'action': 'explore'}, step_index)
+    if report['status'] != 'valid':
+        return None, report
+    if report['candidate'] not in set(eligible_ids):
+        report = {**report, 'status': 'invalidated', 'candidate': None,
+                  'reason': 'planned candidate is not in the eligible ids offered now'}
+        return None, report
+    return report['candidate'], report

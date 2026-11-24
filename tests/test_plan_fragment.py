@@ -98,6 +98,15 @@ class StatusTests(unittest.TestCase):
                                    {c['id'] for c in MENU})
         self.assertEqual(fragment_status(below, STATE, EXPLORE, 0)['status'], 'invalidated')
 
+    def test_a_step_waiting_for_a_later_trial_is_deferred_not_dropped(self):
+        waiting, _ = validate_fragment(fragment({'candidate': 'word_char_C0.05',
+                                               'requires': {'reference_trial': 3}}),
+                                     {c['id'] for c in MENU})
+        report = fragment_status(waiting, STATE, EXPLORE, 0)
+        self.assertEqual(report['status'], 'deferred')
+        self.assertIsNone(report['candidate'])
+        self.assertIsNone(next_step(waiting, STATE, EXPLORE, 0))
+
     def test_a_candidate_leaving_the_menu_invalidates_the_step(self):
         shrunk = {'history': STATE['history'], 'available_candidates': [MENU[1]]}
         self.assertEqual(fragment_status(self.good, shrunk, EXPLORE, 0)['status'], 'invalidated')

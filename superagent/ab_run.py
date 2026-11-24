@@ -259,6 +259,18 @@ def command(args):
     began = time.monotonic()
     frozen = sources()
     resume_record = None
+    fragment_state = None
+    fragment_cursor = [0]
+    if getattr(args, 'plan_fragment', 'off') == 'advisory' and getattr(args, 'plan_fragment_file', None):
+        from .plan_fragment import validate_fragment
+        raw = json.loads(Path(args.plan_fragment_file).read_text(encoding='utf-8'))
+        numeric_width = (task.X_train.shape[1] if getattr(args, 'numeric_kernel', False)
+                         and task.kind == 'numeric_tabular' else None)
+        catalogue = registered_capabilities(spec, len(task.y_train), args.catalog_scope,
+                                            numeric_kernel_width=numeric_width)
+        fragment_state, fragment_errors = validate_fragment(raw, set(catalogue))
+        if fragment_state is None:
+            raise ValueError('Plan fragment rejected: ' + '; '.join(fragment_errors))
     if getattr(args, 'resume_from', None):
         from .resume import adopt
         parent = Path(args.resume_from).expanduser().resolve()
@@ -378,11 +390,34 @@ def command(args):
             if picker:
                 picker.last_proposal = None
 
+            def planned(ids):
+                """A planned step replaces the planner call only while it still holds.
+
+                The cursor advances only when a step is consumed or permanently
+                invalidated: a step that merely awaits a later trial stays
+                pending instead of being skipped.
+                """
+                if fragment_state is None:
+                    return None, None
+                from .plan_fragment import choose_with_fragment
+                candidate, report = choose_with_fragment(fragment_state, fragment_cursor[0], state, list(ids))
+                if report['status'] in ('valid', 'invalidated'):
+                    fragment_cursor[0] += 1
+                return candidate, report
+
             def choose(ids):
                 if getattr(args,'candidate_coverage','off')=='routes':
                     from .candidate_coverage import project_routes
                     ids,coverage=project_routes(state,caps,ids)
                     logger.event('candidate_coverage_projection',trial=number,**coverage)
+                candidate, report = planned(ids)
+                if candidate is not None:
+                    logger.event('plan_fragment_used', trial=number, candidate=candidate,
+                                 checks=report['checks'])
+                    return candidate
+                if report is not None:
+                    logger.event('plan_fragment_skipped', trial=number, status=report['status'],
+                                 reason=report['reason'])
                 try:
                     return picker.choose(state,caps,ids)
                 finally:
@@ -412,6 +447,18 @@ def command(args):
                 optional_local=({'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
                 action = next_action(state, capabilities=caps, trusted_partitions=trusted,
                                      on_explore=choose if picker else None,**optional_local)
+            if action['action'] == 'explore' and fragment_state is not None:
+                planned_candidate, planned_report = planned(
+                    [cap_id for cap_id in (candidate['id'] for candidate in state['available_candidates'])
+                     if cap_id in caps])
+                if planned_candidate is not None and planned_candidate != action['candidate_id']:
+                    action = dict(action, candidate_id=planned_candidate,
+                                  reason='plan fragment step: ' + action['reason'])
+                    logger.event('plan_fragment_used', trial=number, candidate=planned_candidate,
+                                 checks=planned_report['checks'])
+                elif planned_report is not None:
+                    logger.event('plan_fragment_skipped', trial=number, status=planned_report['status'],
+                                 reason=planned_report['reason'])
             proposal = picker.last_proposal.raw_proposal if picker and picker.last_proposal else None
             if proposal is not None:
                 action['reason'] = proposal['reason']

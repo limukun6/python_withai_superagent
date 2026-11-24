@@ -329,6 +329,9 @@ def build_parser():
     run.add_argument('--llm-request-limit',type=int,default=3,
                      help='AB planning-request cap per run (default 3, accepted range 1..12)')
     run.add_argument('--resume-from',help='AB: continue an interrupted run into a new directory')
+    run.add_argument('--plan-fragment',choices=['off','advisory'],default='off',
+                     help='AB: let a validated plan step replace the planner call while it still holds')
+    run.add_argument('--plan-fragment-file',help='AB: JSON file holding the plan fragment (test hook, default none)')
     run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',

@@ -1,0 +1,110 @@
+{
+  "paths": 12,
+  "fits": 36,
+  "calls": 15,
+  "cost": 0.238386,
+  "tasks": {
+    "pair": {
+      "pairs": [
+        {
+          "seed": 707,
+          "plain": 0.6957446808510638,
+          "grounded": 0.675531914893617,
+          "delta_pp": -2.0213,
+          "plain_candidate": "word_char_C0.1",
+          "grounded_candidate": "word_C0.05",
+          "plain_calls": 1,
+          "grounded_calls": 2,
+          "same_candidate": false
+        },
+        {
+          "seed": 811,
+          "plain": 0.701063829787234,
+          "grounded": 0.675531914893617,
+          "delta_pp": -2.5532,
+          "plain_candidate": "word_char_C0.05",
+          "grounded_candidate": "word_C0.05",
+          "plain_calls": 1,
+          "grounded_calls": 1,
+          "same_candidate": false
+        },
+        {
+          "seed": 823,
+          "plain": 0.6819148936170213,
+          "grounded": 0.701063829787234,
+          "delta_pp": 1.9149,
+          "plain_candidate": "word_C0.1",
+          "grounded_candidate": "word_char_C0.05",
+          "plain_calls": 1,
+          "grounded_calls": 1,
+          "same_candidate": false
+        }
+      ],
+      "mean_delta_pp": -0.8865,
+      "min_pp": -2.5532,
+      "max_pp": 1.9149,
+      "wins": 1,
+      "ties": 0,
+      "losses": 2,
+      "grounded_calls": 4,
+      "plain_calls": 3,
+      "same_candidate_count": 0
+    },
+    "text": {
+      "pairs": [
+        {
+          "seed": 707,
+          "plain": 0.939525060767938,
+          "grounded": 0.8684491895140205,
+          "delta_pp": -7.1076,
+          "plain_candidate": "single_char_C3.0",
+          "grounded_candidate": "single_word_char_C0.3",
+          "plain_calls": 1,
+          "grounded_calls": 1,
+          "same_candidate": false
+        },
+        {
+          "seed": 811,
+          "plain": 0.947372325038015,
+          "grounded": 0.934687065629373,
+          "delta_pp": -1.2685,
+          "plain_candidate": "single_word_char_C3.0",
+          "grounded_candidate": "single_word_C3.0",
+          "plain_calls": 1,
+          "grounded_calls": 2,
+          "same_candidate": false
+        },
+        {
+          "seed": 823,
+          "plain": 0.947372325038015,
+          "grounded": 0.934687065629373,
+          "delta_pp": -1.2685,
+          "plain_candidate": "single_word_char_C3.0",
+          "grounded_candidate": "single_word_C3.0",
+          "plain_calls": 1,
+          "grounded_calls": 2,
+          "same_candidate": false
+        }
+      ],
+      "mean_delta_pp": -3.2149,
+      "min_pp": -7.1076,
+      "max_pp": -1.2685,
+      "wins": 0,
+      "ties": 0,
+      "losses": 3,
+      "grounded_calls": 5,
+      "plain_calls": 3,
+      "same_candidate_count": 0
+    }
+  },
+  "decision": {
+    "means_pp": {
+      "pair": -0.8865,
+      "text": -3.2149
+    },
+    "task_with_two_of_three_wins": [],
+    "grounded_not_better": true,
+    "positive_signal": false,
+    "rule": "not_better if both means <= 0 or no task has 2/3 positive seeds; signal if some task has 2/3 positive and mean > 0.2pp"
+  }
+}

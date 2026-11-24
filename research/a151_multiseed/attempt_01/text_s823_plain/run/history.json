@@ -1,0 +1,353 @@
+[
+  {
+    "trial": 1,
+    "candidate": "single_word_C0.3",
+    "params": {
+      "representation": "word",
+      "C": 0.3
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.49416958261471333,
+    "search_score": 0.49410307854425517,
+    "train_metrics": {
+      "accuracy": 0.8798062367544657,
+      "macro_f1": 0.49416958261471333,
+      "primary_metric": "macro_f1",
+      "score": 0.49416958261471333,
+      "rows": 3303
+    },
+    "search_metrics": {
+      "accuracy": 0.8751515151515151,
+      "macro_f1": 0.49410307854425517,
+      "primary_metric": "macro_f1",
+      "score": 0.49410307854425517,
+      "rows": 825
+    },
+    "score_gap": 6.650407045816209e-05,
+    "train_accuracy": 0.8798062367544657,
+    "search_accuracy": 0.8751515151515151,
+    "generalization_gap": 0.004654721602950551,
+    "class_recall": [
+      1.0,
+      0.02830188679245283
+    ],
+    "training_seconds": 0.24066740000853315,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "single_word_C0.3",
+      "params": {
+        "representation": "word",
+        "C": 0.3
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "single_word_C0.3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7650000000139698,
+    "evaluation_payload_sha256": "f637145a5a423b995867e729f0c941efa9e45454e43b06ad39fe12f3a22e13e0",
+    "label_sha256": "46919884a5cfd78f1933ad45092d4eedfd96e6015ac256835a5be00a7e3d05b7",
+    "row_ids_sha256": "656e39bd20bc9b4b37114af669b9d39bbdfbcb32ac8ab2ef46cdce6484f67848",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "single_word_char_C3.0",
+    "params": {
+      "representation": "word_char",
+      "C": 3.0
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "single_word_char_C3.0",
+      "task_kind": "single_text",
+      "configuration_claim": {
+        "classifier": "logistic"
+      },
+      "reason": "Trial 1 shows high accuracy but near-zero spam recall, so macro_f1 is dominated by the ham class. A word+char representation with weaker regularization is a targeted next probe for spam recall.",
+      "review": "Primary trial 1: single_word_C0.3 achieved macro_f1 0.4941 and accuracy 0.8752, with class recalls [1.0, 0.0283]. This is consistent with majority-class-like behavior rather than useful spam detection. No char or word_char trial has been run yet.",
+      "hypothesis": "Word-only C=0.3 is too regularized or majority-biased for this label balance. Adding char n-grams and using C=3.0 may capture spam-specific substrings and increase spam recall, improving macro_f1.",
+      "evidence_trials": [
+        1
+      ],
+      "expected_change": null,
+      "slice_expectation": null,
+      "purpose": "improve",
+      "uncertainty": "No char or word_char evidence exists on the primary split, so the direction and magnitude of macro_f1 change are unknown. C=3.0 may overfit, and improved spam recall is not guaranteed. This is a diagnostic probe, not a predicted improvement."
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "macro_f1",
+    "metric_spec": {
+      "name": "macro_f1",
+      "labels": [
+        "ham",
+        "spam"
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9950699106332013,
+    "search_score": 0.9601724137931035,
+    "train_metrics": {
+      "accuracy": 0.9978807145019679,
+      "macro_f1": 0.9950699106332013,
+      "primary_metric": "macro_f1",
+      "score": 0.9950699106332013,
+      "rows": 3303
+    },
+    "search_metrics": {
+      "accuracy": 0.983030303030303,
+      "macro_f1": 0.9601724137931035,
+      "primary_metric": "macro_f1",
+      "score": 0.9601724137931035,
+      "rows": 825
+    },
+    "score_gap": 0.0348974968400978,
+    "train_accuracy": 0.9978807145019679,
+    "search_accuracy": 0.983030303030303,
+    "generalization_gap": 0.014850411471664882,
+    "class_recall": [
+      0.9986091794158554,
+      0.8773584905660378
+    ],
+    "training_seconds": 0.7978392000077292,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "single_word_char_C3.0",
+      "params": {
+        "representation": "word_char",
+        "C": 3.0
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "single_word_char_C3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 2.797000000020489,
+    "evaluation_payload_sha256": "f637145a5a423b995867e729f0c941efa9e45454e43b06ad39fe12f3a22e13e0",
+    "label_sha256": "46919884a5cfd78f1933ad45092d4eedfd96e6015ac256835a5be00a7e3d05b7",
+    "row_ids_sha256": "656e39bd20bc9b4b37114af669b9d39bbdfbcb32ac8ab2ef46cdce6484f67848",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "logistic",
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "no_comparison",
+        "source": "executor",
+        "latest_trial": 1,
+        "best_prior_trial": null,
+        "primary_metric": "macro_f1",
+        "latest_search_score": 0.49410307854425517,
+        "best_prior_search_score": null,
+        "latest_search_accuracy": 0.8751515151515151,
+        "best_prior_search_accuracy": null,
+        "delta_vs_prior_best": null,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 1 internal macro_f1 score is 49.410308%; no earlier completed score is available.",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 1,
+        "reference_candidate": "single_word_C0.3",
+        "reference_status": "completed",
+        "reference_rule": "best_completed_overall",
+        "selected_candidate": "single_word_char_C3.0",
+        "selected_status": null,
+        "reference_route": "single_word",
+        "selected_route": "single_word_char",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": true,
+            "before": 0.3,
+            "after": 3.0,
+            "parameter_effect": {
+              "numeric_direction": "increased",
+              "declared_effect": "weaker_regularization",
+              "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": false,
+              "accuracy_effect_verified": false,
+              "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+            }
+          },
+          {
+            "parameter": "representation",
+            "before_present": true,
+            "after_present": true,
+            "before": "word",
+            "after": "word_char",
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "single_word_char_C3.0",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "Word-only C=0.3 is too regularized or majority-biased for this label balance. Adding char n-grams and using C=3.0 may capture spam-specific substrings and increase spam recall, improving macro_f1.",
+        "expected_change": null
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 1 shows high accuracy but near-zero spam recall, so macro_f1 is dominated by the ham class. A word+char representation with weaker regularization is a targeted next probe for spam recall.",
+          "review": "Primary trial 1: single_word_C0.3 achieved macro_f1 0.4941 and accuracy 0.8752, with class recalls [1.0, 0.0283]. This is consistent with majority-class-like behavior rather than useful spam detection. No char or word_char trial has been run yet.",
+          "hypothesis": "Word-only C=0.3 is too regularized or majority-biased for this label balance. Adding char n-grams and using C=3.0 may capture spam-specific substrings and increase spam recall, improving macro_f1.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 2,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  }
+]

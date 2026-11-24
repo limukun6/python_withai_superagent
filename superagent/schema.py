@@ -154,8 +154,12 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
                 spec['feature_shape']=[len(names)]
         y=np.asarray(labels) if include_labels else None
         if kind=='pair_text' and include_labels:
-            if not set(labels)<={'0','1'}:raise ValueError('Pair targets must be 0/1 with declared left/right meaning')
-            if manifest.get('pair_label_one')!='left':raise ValueError('Declare pair_label_one=left explicitly')
+            if not set(labels)<={'0','1'}:raise ValueError('Pair targets must be 0/1 with explicit label meaning')
+            if manifest.get('pair_semantics')=='symmetric':
+                if manifest.get('pair_label_one')!='equivalent':
+                    raise ValueError('Symmetric pair tasks require pair_label_one=equivalent, not left/right preference')
+            elif manifest.get('pair_label_one')!='left':
+                raise ValueError('Declare pair_label_one=left explicitly')
             y=np.asarray(labels,dtype=int)
         spec['input_columns']=[{'name':name,'type':t} for name,t in zip(names,types)]
     else:raise ValueError('Supported split formats are csv, npz and numeric npy pairs')
@@ -163,5 +167,7 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
         y=_validate_labels(y,len(x))
         if 'positive_label' in spec and y.dtype.kind in 'US':spec['positive_label']=str(spec['positive_label'])
     if len(x)==0:raise ValueError('Empty split')
+    spec['goal_sources']={'primary_metric':('default_accuracy' if manifest.get('_schema_origin')=='native_v1' or 'metric' not in manifest
+                                           else 'declared_manifest')}
     spec['kind']=kind
     return kind,x,y,spec

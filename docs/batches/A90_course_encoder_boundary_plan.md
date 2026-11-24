@@ -1,0 +1,9 @@
+# A90：区分技术可用与课程资格，0fit/0API
+
+重新核对用户原始assignment第4节：只允许指定日期前的Qwen/DeepSeek模型，按官方token价格计费；原文未明确豁免MiniLM/ImageNet冻结特征。分类器与LLM的具体边界须课程说明，不能因B代码已跑通就自行认证编码器例外。已向用户异步问老师是否明确允许；等待回复期间继续不依赖这些模型的Coupon C1，不修改其冻结源码。
+
+现仅改环境包装器和候选快照工具（都不在A89活动immutable列表），默认encoder-policy=restricted清空两权重环境变量；research须显式指定资产并标开发资格未核验。正式superagent核心不改，已有研究模型/成绩原样保留。restricted无需先下载编码器权重，可用当前解释器，或只借已安装环境；不是另一套调度器。
+
+先dry-run检查restricted无资产/restricted借环境/research有资产、缺资产research拒绝，再实际转发help，生成restricted实际候选快照。0fit/0模型API。若老师后续明确允许，可显式research配置对应合格资源，不回填原来已确认。A88照片full实际试过预训练视觉，当前仅作资格待定开发对照；之后补仅梯度的full8对baseline7（可复用合法原baseline），不重跑优惠券。
+
+此项承认之前将可执行性直接写成正式入口建议的遗漏，不放松原文件SHA或API模型白名单，不修改在跑C1源码、请求或数据。H/test封存。

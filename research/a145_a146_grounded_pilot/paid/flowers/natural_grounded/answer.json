@@ -1,0 +1,50 @@
+{
+  "candidate": "image_rbf_svm_C1.0",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "rbf_svm"
+  },
+  "reason": "The best completed primary trial is frozen-feature logistic (trial 3, accuracy 0.8375), but that route is exhausted and not among the available candidates. Among available candidates, rbf_svm is an untried estimator family; C1.0 is a moderate-capacity configuration. Selecting it adds coverage on the primary split without claiming a predicted improvement.",
+  "review": "Prior primary trials show frozen MobileNet features logistic C10 at 0.8375 accuracy, while pixel logistic and gradient histogram routes are lower. Available untried routes include extra_trees and rbf_svm. This proposal covers rbf_svm C1.0 on standardized pixels.",
+  "hypothesis": "An RBF SVM on standardized pixel features may capture nonlinear class boundaries not represented by linear pixel logistic; this is a coverage probe, not a verified causal claim.",
+  "evidence_trials": [
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "coverage",
+  "uncertainty": "No primary measurement exists for rbf_svm on this task; expected direction and magnitude are unknown. Pixel features may be weak, and C1.0 may underfit or overfit relative to untested alternatives.",
+  "grounding": {
+    "namespace": "fd6b31f0cb469dcb62ece67813eefda606db96a2de68ff06e9df872e0a363548",
+    "evidence_refs": [
+      "c:image_rbf_svm_C1.0.classifier",
+      "c:image_rbf_svm_C1.0.untried",
+      "c:image_rbf_svm_C1.0.C",
+      "task.metric",
+      "t3.search.accuracy"
+    ],
+    "assertions": [
+      {
+        "kind": "value",
+        "ref": "c:image_rbf_svm_C1.0.classifier",
+        "value": "rbf_svm"
+      },
+      {
+        "kind": "value",
+        "ref": "c:image_rbf_svm_C1.0.untried",
+        "value": true
+      },
+      {
+        "kind": "value",
+        "ref": "c:image_rbf_svm_C1.0.C",
+        "value": 1.0
+      },
+      {
+        "kind": "value",
+        "ref": "task.metric",
+        "value": "accuracy"
+      }
+    ],
+    "addresses_issue_ids": []
+  }
+}

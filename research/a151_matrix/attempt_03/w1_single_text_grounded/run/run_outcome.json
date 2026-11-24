@@ -1,0 +1,575 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration\\research\\a151_matrix\\attempt_03\\w1_single_text_grounded\\run",
+  "scheduler": "ab-v1",
+  "planner_mode": "checked-history",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 2,
+  "known_course_cost_rmb": 0.030517000000000002,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "single_word_C3.0",
+  "primary_metric": "macro_f1",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "macro_f1",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "single_word_C3.0"
+    ],
+    "primary_candidate": "single_word_C3.0",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "single_word_C3.0",
+        "primary_accuracy": 0.9757575757575757,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 2,
+            "candidate": "single_word_C3.0",
+            "params": {
+              "representation": "word",
+              "C": 3.0
+            },
+            "split_id": "primary",
+            "proposal": {
+              "candidate": "single_word_C3.0",
+              "task_kind": "single_text",
+              "configuration_claim": {
+                "classifier": "logistic"
+              },
+              "reason": "Trial 1 on the primary search split used the word-level logistic route with C=0.3 and achieved macro_f1 0.49840401276789786, with class recalls [1.0, 0.030303030303030304]. The available single_word_C3.0 candidate is untried, keeps the same registered classifier and representation, and changes only C from 0.3 to 3.0. Testing this regularization change is a focused next step before switching representation families.",
+              "review": "The prior trial is a completed primary search measurement. The candidate is available and untried. No formal test is available to the agent, and the expected direction or magnitude of macro_f1 change is not established. The grounding correction uses the recorded trial configuration t1.C as the observed reference for the C parameter relation.",
+              "hypothesis": "Weakening regularization on the same word-level logistic model may allow spam-associated features to contribute more, potentially improving macro_f1 by increasing spam recall; however, this is speculative and could also increase overfitting or reduce ham performance.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": null,
+              "slice_expectation": null,
+              "purpose": "improve",
+              "uncertainty": "The effect of changing C from 0.3 to 3.0 on macro_f1 is unknown. The prior model had near-zero spam recall, but the cause may involve representation, class balance, thresholding, or regularization; this candidate tests only the regularization change on the same word-level route.",
+              "grounding": {
+                "namespace": "78c2d73b6d44cd82f3ff906d18e0687303a026451017a100129c9b21b464bc4a",
+                "evidence_refs": [
+                  "c:single_word_C3.0.classifier",
+                  "c:single_word_C3.0.untried",
+                  "c:single_word_C3.0.C",
+                  "t1.classifier",
+                  "t1.C",
+                  "t1.search.macro_f1"
+                ],
+                "assertions": [
+                  {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.classifier",
+                    "value": "logistic"
+                  },
+                  {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.untried",
+                    "value": true
+                  },
+                  {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.C",
+                    "value": 3.0
+                  },
+                  {
+                    "kind": "value",
+                    "ref": "t1.classifier",
+                    "value": "logistic"
+                  },
+                  {
+                    "kind": "value",
+                    "ref": "t1.C",
+                    "value": 0.3
+                  },
+                  {
+                    "kind": "parameter_relation",
+                    "before": "t1.C",
+                    "after": "c:single_word_C3.0.C",
+                    "direction": "weaker_regularization"
+                  },
+                  {
+                    "kind": "value",
+                    "ref": "t1.search.macro_f1",
+                    "value": 0.49840401276789786
+                  }
+                ],
+                "addresses_issue_ids": []
+              }
+            },
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "macro_f1",
+            "metric_spec": {
+              "name": "macro_f1",
+              "labels": [
+                "ham",
+                "spam"
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.9704935906360732,
+            "search_score": 0.937641723356009,
+            "train_metrics": {
+              "accuracy": 0.9875870420829549,
+              "macro_f1": 0.9704935906360732,
+              "primary_metric": "macro_f1",
+              "score": 0.9704935906360732,
+              "rows": 3303
+            },
+            "search_metrics": {
+              "accuracy": 0.9757575757575757,
+              "macro_f1": 0.937641723356009,
+              "primary_metric": "macro_f1",
+              "score": 0.937641723356009,
+              "rows": 825
+            },
+            "score_gap": 0.03285186728006417,
+            "train_accuracy": 0.9875870420829549,
+            "search_accuracy": 0.9757575757575757,
+            "generalization_gap": 0.011829466325379179,
+            "class_recall": [
+              0.9986225895316805,
+              0.8080808080808081
+            ],
+            "training_seconds": 0.282856100006029,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "single_word_C3.0",
+              "params": {
+                "representation": "word",
+                "C": 3.0
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "single_word_C3.0",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 1.9060000000172295,
+            "evaluation_payload_sha256": "264fba528497ec927da037babf730381e8ea1282bbf41e242e22d5984381d8d1",
+            "label_sha256": "ba69904637657c374d9c0476b40c327877dd249b4f1d3da42b0c54c2a78f60e0",
+            "row_ids_sha256": "6b8f5e1eda4de4a5eb23b6abbb2fc59d152d659f30d92f62b7ac3817e808f46f",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "macro_f1",
+                "labels": [
+                  "ham",
+                  "spam"
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "macro_f1",
+                "labels": [
+                  "ham",
+                  "spam"
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": "logistic",
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "confirmed",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "macro_f1",
+                "latest_search_score": 0.49840401276789786,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.8836363636363637,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal macro_f1 score is 49.840401%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "single_word_C0.3",
+                "reference_status": "completed",
+                "reference_rule": "best_completed_in_selected_route",
+                "selected_candidate": "single_word_C3.0",
+                "selected_status": null,
+                "reference_route": "single_word",
+                "selected_route": "single_word",
+                "same_declared_route": true,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": true,
+                    "before": 0.3,
+                    "after": 3.0,
+                    "parameter_effect": {
+                      "numeric_direction": "increased",
+                      "declared_effect": "weaker_regularization",
+                      "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+                      "effect_scope": "definition within a fixed parameterization",
+                      "same_declared_route": true,
+                      "accuracy_effect_verified": false,
+                      "cross_route_note": null
+                    }
+                  }
+                ],
+                "single_declared_parameter_change": true,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+              },
+              "direction_consistency": {
+                "scope": "same declared route, single changed C; narrow English phrases only",
+                "applicable": true,
+                "expected_regularization_direction": "weaker",
+                "mentions": [],
+                "warnings": [],
+                "freeform_semantics_verified": false
+              },
+              "selected_candidate": "single_word_C3.0",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "Weakening regularization on the same word-level logistic model may allow spam-associated features to contribute more, potentially improving macro_f1 by increasing spam recall; however, this is speculative and could also increase overfitting or reduce ham performance.",
+                "expected_change": null
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Trial 1 on the primary search split used the word-level logistic route with C=0.3 and achieved macro_f1 0.49840401276789786, with class recalls [1.0, 0.030303030303030304]. The available single_word_C3.0 candidate is untried, keeps the same registered classifier and representation, and changes only C from 0.3 to 3.0. Testing this regularization change is a focused next step before switching representation families.",
+                  "review": "The prior trial is a completed primary search measurement. The candidate is available and untried. No formal test is available to the agent, and the expected direction or magnitude of macro_f1 change is not established. The grounding correction uses the recorded trial configuration t1.C as the observed reference for the C parameter relation.",
+                  "hypothesis": "Weakening regularization on the same word-level logistic model may allow spam-associated features to contribute more, potentially improving macro_f1 by increasing spam recall; however, this is speculative and could also increase overfitting or reduce ham performance.",
+                  "assessment.interpretation": "",
+                  "assessment.uncertainty": ""
+                }
+              },
+              "prose_claims": {
+                "claims_checked": 2,
+                "confirmed": 1,
+                "contradicted": 0,
+                "unverifiable": 1,
+                "informational": 1,
+                "items": [
+                  {
+                    "field": "reason",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "Trial 1 on the primary search split used the word-level logistic route with C=0.3 and achieved macro_f1 0.49840401276789786, with class recalls [1.0, 0.030303030303030304].",
+                    "in_comparison": true,
+                    "observed": null,
+                    "status": "informational"
+                  },
+                  {
+                    "field": "reason",
+                    "kind": "trial_reference",
+                    "span": "Trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "hypothesis",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "Weakening regularization on the same word-level logistic model may allow spam-associated features to contribute more, potentially improving macro_f1 by increasing spam recall;",
+                    "in_comparison": false,
+                    "observed": [
+                      "logistic"
+                    ],
+                    "status": "unverifiable",
+                    "reference_resolution": "current_or_locally_scoped"
+                  }
+                ],
+                "unique_contradictions": [],
+                "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            },
+            "grounding_report": {
+              "status": "accepted",
+              "namespace": "78c2d73b6d44cd82f3ff906d18e0687303a026451017a100129c9b21b464bc4a",
+              "errors": [],
+              "assertion_checks": [
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.classifier",
+                    "value": "logistic"
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": "logistic",
+                  "fact_id": "c:single_word_C3.0.classifier",
+                  "role": "declared"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.untried",
+                    "value": true
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": true,
+                  "fact_id": "c:single_word_C3.0.untried",
+                  "role": "observed"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "c:single_word_C3.0.C",
+                    "value": 3.0
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": 3.0,
+                  "fact_id": "c:single_word_C3.0.C",
+                  "role": "declared"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "t1.classifier",
+                    "value": "logistic"
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": "logistic",
+                  "fact_id": "t1.classifier",
+                  "role": "observed"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "t1.C",
+                    "value": 0.3
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": 0.3,
+                  "fact_id": "t1.C",
+                  "role": "recorded_configuration"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "inverse_C_between_bound_configurations",
+                  "claim": {
+                    "kind": "parameter_relation",
+                    "before": "t1.C",
+                    "after": "c:single_word_C3.0.C",
+                    "direction": "weaker_regularization"
+                  },
+                  "accuracy_effect_verified": false,
+                  "expected_direction": "weaker_regularization",
+                  "definition_source_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+                  "scope": "Recorded/declared configuration relation only, not a verified accuracy or causal effect"
+                },
+                {
+                  "status": "confirmed",
+                  "reason": "exact_bound_fact",
+                  "claim": {
+                    "kind": "value",
+                    "ref": "t1.search.macro_f1",
+                    "value": 0.49840401276789786
+                  },
+                  "accuracy_effect_verified": false,
+                  "observed": 0.49840401276789786,
+                  "fact_id": "t1.search.macro_f1",
+                  "role": "observed"
+                }
+              ],
+              "verified_basis": [
+                {
+                  "id": "c:single_word_C3.0.classifier",
+                  "value": "logistic",
+                  "role": "declared"
+                },
+                {
+                  "id": "c:single_word_C3.0.untried",
+                  "value": true,
+                  "role": "observed"
+                },
+                {
+                  "id": "c:single_word_C3.0.C",
+                  "value": 3.0,
+                  "role": "declared"
+                },
+                {
+                  "id": "t1.classifier",
+                  "value": "logistic",
+                  "role": "observed"
+                },
+                {
+                  "id": "t1.C",
+                  "value": 0.3,
+                  "role": "recorded_configuration"
+                },
+                {
+                  "id": "t1.search.macro_f1",
+                  "value": 0.49840401276789786,
+                  "role": "observed"
+                }
+              ],
+              "issues": [],
+              "freeform_prose_verified": false,
+              "execution_confirmation_pending": true
+            }
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.937641723356009,
+        "mean_score": 0.937641723356009,
+        "mean_accuracy": 0.9757575757575757,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "single_word_C3.0",
+    "selection_score": 0.937641723356009,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "single_word_C3.0",
+      "incumbent": "single_word_C3.0",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "macro_f1"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.934687065629373,
+  "finalization": {
+    "primary_metric": "macro_f1",
+    "official_validation_score": 0.934687065629373,
+    "pre_refit_validation_score": 0.9287793153504753,
+    "single_model_validation_score": 0.934687065629373,
+    "official_validation_accuracy": 0.9738372093023255,
+    "pre_refit_validation_accuracy": 0.9718992248062015,
+    "single_model_validation_accuracy": 0.9738372093023255,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 4128,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.284594000026118,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.9738372093023255,
+      "macro_f1": 0.934687065629373,
+      "primary_metric": "macro_f1",
+      "score": 0.934687065629373,
+      "rows": 1032
+    }
+  },
+  "elapsed_seconds": 128.98399999999674,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.030517000000000002,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "a151_w1_txtg",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 0.030517,
+    "shared_known_cost_rmb": 0.1164165,
+    "known_cost_counted_against_limit_rmb": 0.1469335,
+    "unresolved_requests": 4,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "user-accepted-snapshot-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "User accepts enumerated existing unknown charges without settlement. Costs stay null; any new unknown/pending blocks. Known-cost limit remains enforced.",
+    "accepted_history_sha256": "7747be18949269e3a018a88e44849ea8d09c408b434674e97ed844cd07cc8621",
+    "accepted_unknown_request_count": 16
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 405,
+    "known_course_cost_rmb": 7.252956,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

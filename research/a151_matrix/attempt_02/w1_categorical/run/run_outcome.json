@@ -1,0 +1,462 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration\\research\\a151_matrix\\attempt_02\\w1_categorical\\run",
+  "scheduler": "ab-v1",
+  "planner_mode": "checked-history",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 1,
+  "known_course_cost_rmb": 0.008564,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "catboost_depth6_reg3.0",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "catboost_depth6_reg3.0"
+    ],
+    "primary_candidate": "catboost_depth6_reg3.0",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "catboost_depth6_reg3.0",
+        "primary_accuracy": 0.752157829839704,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 2,
+            "candidate": "catboost_depth6_reg3.0",
+            "params": {
+              "depth": 6,
+              "l2_leaf_reg": 3.0,
+              "iterations": 600,
+              "learning_rate": 0.05
+            },
+            "split_id": "primary",
+            "proposal": {
+              "candidate": "catboost_depth6_reg3.0",
+              "task_kind": "categorical_tabular",
+              "configuration_claim": {
+                "classifier": "catboost"
+              },
+              "reason": "Trial 1 established a logistic one-hot baseline at primary accuracy 0.6652 with a small train-search gap. The next search fit should test a stronger nonlinear categorical model rather than only tuning the linear baseline. CatBoost with native category handling and moderate depth/regularization is a reasonable primary-split candidate for this categorical tabular task.",
+              "review": "Only trial 1 is available: logistic_C0.05 on the primary split, search_accuracy 0.6652281134401973, train_accuracy 0.6788298691301001, score_gap 0.01360175568990285. No confirmation-split measurements are available, so no unmatched split comparison is made.",
+              "hypothesis": "A native-category CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture nonlinear categorical interactions that the one-hot logistic baseline cannot, potentially improving primary accuracy.",
+              "evidence_trials": [
+                1
+              ],
+              "expected_change": null,
+              "slice_expectation": null,
+              "purpose": "improve",
+              "uncertainty": "Data size, categorical cardinality, and class balance are unknown. CatBoost may overfit or fail to improve over the logistic baseline, and only one prior primary trial exists with no confirmation evidence."
+            },
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.8140107775211701,
+            "search_score": 0.752157829839704,
+            "train_metrics": {
+              "accuracy": 0.8140107775211701,
+              "macro_f1": 0.8076511591099288,
+              "primary_metric": "accuracy",
+              "score": 0.8140107775211701,
+              "rows": 6495
+            },
+            "search_metrics": {
+              "accuracy": 0.752157829839704,
+              "macro_f1": 0.7407672453687137,
+              "primary_metric": "accuracy",
+              "score": 0.752157829839704,
+              "rows": 1622
+            },
+            "score_gap": 0.0618529476814661,
+            "train_accuracy": 0.8140107775211701,
+            "search_accuracy": 0.752157829839704,
+            "generalization_gap": 0.0618529476814661,
+            "class_recall": [
+              0.6395348837209303,
+              0.8351177730192719
+            ],
+            "training_seconds": 41.638080700009596,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "catboost",
+              "class": "CatBoostClassifier",
+              "module": "catboost.core",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "catboost_depth6_reg3.0",
+              "params": {
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "catboost_depth6_reg3.0",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 42.875,
+            "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+            "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+            "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": "catboost",
+              "observed": "catboost",
+              "observed_class": "CatBoostClassifier",
+              "status": "confirmed",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": {
+              "executor_comparison": {
+                "reading": "no_comparison",
+                "source": "executor",
+                "latest_trial": 1,
+                "best_prior_trial": null,
+                "primary_metric": "accuracy",
+                "latest_search_score": 0.6652281134401973,
+                "best_prior_search_score": null,
+                "latest_search_accuracy": 0.6652281134401973,
+                "best_prior_search_accuracy": null,
+                "delta_vs_prior_best": null,
+                "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+                "text": "Trial 1 internal accuracy score is 66.522811%; no earlier completed score is available.",
+                "statistical_test_performed": false,
+                "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+              },
+              "cited_measured_facts": [],
+              "configuration_change": {
+                "available": true,
+                "source": "executor",
+                "reference_trial": 1,
+                "reference_candidate": "logistic_C0.05",
+                "reference_status": "completed",
+                "reference_rule": "best_completed_overall",
+                "selected_candidate": "catboost_depth6_reg3.0",
+                "selected_status": null,
+                "reference_route": "logistic",
+                "selected_route": "catboost",
+                "same_declared_route": false,
+                "changed_parameters": [
+                  {
+                    "parameter": "C",
+                    "before_present": true,
+                    "after_present": false,
+                    "before": 0.05,
+                    "after": null,
+                    "parameter_effect": null
+                  },
+                  {
+                    "parameter": "depth",
+                    "before_present": false,
+                    "after_present": true,
+                    "before": null,
+                    "after": 6,
+                    "parameter_effect": null
+                  },
+                  {
+                    "parameter": "iterations",
+                    "before_present": false,
+                    "after_present": true,
+                    "before": null,
+                    "after": 600,
+                    "parameter_effect": null
+                  },
+                  {
+                    "parameter": "l2_leaf_reg",
+                    "before_present": false,
+                    "after_present": true,
+                    "before": null,
+                    "after": 3.0,
+                    "parameter_effect": null
+                  },
+                  {
+                    "parameter": "learning_rate",
+                    "before_present": false,
+                    "after_present": true,
+                    "before": null,
+                    "after": 0.05,
+                    "parameter_effect": null
+                  }
+                ],
+                "single_declared_parameter_change": false,
+                "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+                "single_factor_attribution_supported": false,
+                "statistical_test_performed": false,
+                "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+              },
+              "direction_consistency": {
+                "scope": "same declared route, single changed C; narrow English phrases only",
+                "applicable": false,
+                "expected_regularization_direction": null,
+                "mentions": [],
+                "warnings": [],
+                "freeform_semantics_verified": false,
+                "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+              },
+              "selected_candidate": "catboost_depth6_reg3.0",
+              "future_hypothesis": {
+                "source": "LLM, unverified future hypothesis",
+                "text": "A native-category CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture nonlinear categorical interactions that the one-hot logistic baseline cannot, potentially improving primary accuracy.",
+                "expected_change": null
+              },
+              "original_prose": {
+                "source": "LLM, not certified as measured evidence",
+                "fields": {
+                  "reason": "Trial 1 established a logistic one-hot baseline at primary accuracy 0.6652 with a small train-search gap. The next search fit should test a stronger nonlinear categorical model rather than only tuning the linear baseline. CatBoost with native category handling and moderate depth/regularization is a reasonable primary-split candidate for this categorical tabular task.",
+                  "review": "Only trial 1 is available: logistic_C0.05 on the primary split, search_accuracy 0.6652281134401973, train_accuracy 0.6788298691301001, score_gap 0.01360175568990285. No confirmation-split measurements are available, so no unmatched split comparison is made.",
+                  "hypothesis": "A native-category CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture nonlinear categorical interactions that the one-hot logistic baseline cannot, potentially improving primary accuracy.",
+                  "assessment.interpretation": "",
+                  "assessment.uncertainty": ""
+                }
+              },
+              "prose_claims": {
+                "claims_checked": 5,
+                "confirmed": 3,
+                "contradicted": 0,
+                "unverifiable": 2,
+                "informational": 1,
+                "items": [
+                  {
+                    "field": "reason",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "Trial 1 established a logistic one-hot baseline at primary accuracy 0.6652 with a small train-search gap.",
+                    "in_comparison": true,
+                    "observed": null,
+                    "status": "informational"
+                  },
+                  {
+                    "field": "reason",
+                    "kind": "classifier",
+                    "span": "CatBoost",
+                    "claim": "catboost",
+                    "compatible_with": [
+                      "catboost"
+                    ],
+                    "sentence": "CatBoost with native category handling and moderate depth/regularization is a reasonable primary-split candidate for this categorical tabular task.",
+                    "in_comparison": false,
+                    "observed": [
+                      "catboost"
+                    ],
+                    "status": "confirmed",
+                    "reference_resolution": "current_or_locally_scoped"
+                  },
+                  {
+                    "field": "reason",
+                    "kind": "trial_reference",
+                    "span": "Trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "review",
+                    "kind": "trial_reference",
+                    "span": "trial 1",
+                    "claim": 1,
+                    "observed": [
+                      1
+                    ],
+                    "status": "confirmed"
+                  },
+                  {
+                    "field": "hypothesis",
+                    "kind": "classifier",
+                    "span": "CatBoost",
+                    "claim": "catboost",
+                    "compatible_with": [
+                      "catboost"
+                    ],
+                    "sentence": "A native-category CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture nonlinear categorical interactions that the one-hot logistic baseline cannot, potentially improving primary accuracy.",
+                    "in_comparison": false,
+                    "observed": [
+                      "catboost"
+                    ],
+                    "status": "unverifiable",
+                    "reference_resolution": "current_or_locally_scoped"
+                  },
+                  {
+                    "field": "hypothesis",
+                    "kind": "classifier",
+                    "span": "logistic",
+                    "claim": "logistic",
+                    "compatible_with": [
+                      "logistic"
+                    ],
+                    "sentence": "A native-category CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture nonlinear categorical interactions that the one-hot logistic baseline cannot, potentially improving primary accuracy.",
+                    "in_comparison": false,
+                    "observed": [
+                      "catboost"
+                    ],
+                    "status": "unverifiable",
+                    "reference_resolution": "current_or_locally_scoped"
+                  }
+                ],
+                "unique_contradictions": [],
+                "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+              },
+              "warnings": [],
+              "freeform_prose_fully_verified": false,
+              "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 5 machine-checkable claims inspected, 0 contradicted, 2 undecidable.",
+              "changes_candidate": false,
+              "triggers_api_retry": false
+            }
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.752157829839704,
+        "mean_score": 0.752157829839704,
+        "mean_accuracy": 0.752157829839704,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "catboost_depth6_reg3.0",
+    "selection_score": 0.752157829839704,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "catboost_depth6_reg3.0",
+      "incumbent": "catboost_depth6_reg3.0",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.7482758620689656,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": 0.7482758620689656,
+    "pre_refit_validation_score": 0.7369458128078817,
+    "single_model_validation_score": 0.7482758620689656,
+    "official_validation_accuracy": 0.7482758620689656,
+    "pre_refit_validation_accuracy": 0.7369458128078817,
+    "single_model_validation_accuracy": 0.7482758620689656,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 8117,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 42.1445403000107,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.7482758620689656,
+      "macro_f1": 0.7386800968062356,
+      "primary_metric": "accuracy",
+      "score": 0.7482758620689656,
+      "rows": 2030
+    }
+  },
+  "elapsed_seconds": 148.46900000004098,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0.008564,
+  "unresolved_calls": 0,
+  "task_budget_after_run": {
+    "task_budget_id": "a151_w1_cat",
+    "task_limit_rmb": 20.0,
+    "known_task_cost_rmb": 0.008564,
+    "shared_known_cost_rmb": 0.1164165,
+    "known_cost_counted_against_limit_rmb": 0.1249805,
+    "unresolved_requests": 4,
+    "pending_requests": 0,
+    "accounting_complete": false,
+    "remaining_course_allowance_rmb": null,
+    "limit_exceeded": false,
+    "actual_account_debit_rmb": null,
+    "shared_cost_rule": "Fully reserve shared diagnostics against each task limit; count once in the project total",
+    "history_policy": "user-accepted-snapshot-research",
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false,
+    "policy_note": "User accepts enumerated existing unknown charges without settlement. Costs stay null; any new unknown/pending blocks. Known-cost limit remains enforced.",
+    "accepted_history_sha256": "7747be18949269e3a018a88e44849ea8d09c408b434674e97ed844cd07cc8621",
+    "accepted_unknown_request_count": 16
+  },
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "incremental-research",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "unverified_history",
+  "valid_for_budgeted_final_report": false,
+  "project_usage_after_run": {
+    "requests": 401,
+    "known_course_cost_rmb": 7.20429,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

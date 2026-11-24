@@ -1,0 +1,19 @@
+{
+  "candidate": "image_extra_trees_leaf3",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "extra_trees"
+  },
+  "reason": "Trial 3 shows frozen MobileNet features with logistic C10 is strongest so far at 0.8375 search accuracy, but that route is exhausted and not among available candidates. Among available raw-pixel candidates, trial 1 logistic C0.1 had low search accuracy 0.39375 with train 1.0, indicating severe overfit. Extra trees with min_samples_leaf=3 is an untried regularized nonlinear raw-pixel option and is preferable to leaf1 or more aggressive logistic/SVM settings for a first probe of this route.",
+  "review": "Evidence is limited to primary-split trials. Trial 1 raw-pixel logistic overfit strongly; trial 2 gradient-histogram logistic reached 0.4; trial 3 frozen-feature logistic reached 0.8375. Available candidates are all raw-pixel baselines, so this choice is a coverage-oriented probe rather than a predicted improvement over trial 3.",
+  "hypothesis": "A regularized extra-trees ensemble on flattened standardized pixels may capture local nonlinear pixel interactions that linear logistic regression misses, while min_samples_leaf=3 reduces overfitting relative to leaf1. It is still expected to be weaker than frozen pretrained features, but it is the most reasonable untried raw-pixel route among the available candidates.",
+  "evidence_trials": [
+    1,
+    2,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "coverage",
+  "uncertainty": "No direct evidence exists for extra trees on this dataset. Raw-pixel models may underperform the frozen-feature result, and the direction or magnitude of change versus trial 1 is unknown. This is a coverage probe, not proof of causal learning or a predicted accuracy gain."
+}

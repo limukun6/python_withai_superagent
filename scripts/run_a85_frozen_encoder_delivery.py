@@ -1,0 +1,91 @@
+"""No-fit delivery of actual frozen encoder worker models, with missing/corrupt asset rejection."""
+import argparse
+import csv
+import io
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import time
+import zipfile
+
+import joblib
+import numpy as np
+from scripts import a38_predict_guard
+from scripts.a_batch_common import save
+from scripts.run_a10_real_task_pilot import read,sha
+from scripts.run_a29_choice_matrix import launch
+from superagent.ab_run import sources
+from tools.export_model_bundle import export
+
+ROOT=Path(__file__).resolve().parents[1]
+if __name__=='__main__':
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--reference',type=Path,required=True)
+    p.add_argument('--assets',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--batch',default='A85');p.add_argument('--plan',default='docs/batches/A85_frozen_encoder_delivery_plan.md');a=p.parse_args()
+    out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);began=time.monotonic();frozen=sources();records=[]
+    save(out/'protocol.json',dict(batch=a.batch,runner_sha256=sha(Path(__file__)),
+        plan_sha256=sha(ROOT/a.plan),source_files=frozen,
+        source_A81_protocol_sha256=sha(a.reference/'protocol.json'),actual_classifier_fits=0,real_api_requests=0))
+    env={**os.environ,'SUPERAGENT_MINILM_WEIGHTS':str(a.assets/'minilm'),
+        'SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS':str(a.assets/'mobilenet_v3_small-047dcff4.pth'),
+        'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1','PYTHONIOENCODING':'utf-8'}
+    os.environ.update({k:env[k] for k in ('SUPERAGENT_MINILM_WEIGHTS','SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS')})
+    try:
+        if frozen!=read(a.reference/'protocol.json')['source_files']:raise ValueError('Actual encoder training source differs')
+        for name,candidate in [('nonlinear','minilm_text_with_nonlinear_lexical_features'),('vision','image_mobilenet_v3_small_linear')]:
+            folder=out/name;folder.mkdir();run=folder/'worker_delivery';run.mkdir();payload=joblib.load(a.reference/name/'payload.joblib')
+            model=joblib.load(a.reference/name/'model.joblib')['model'];kind=payload['kind'];query=payload['X_search'];metric=payload['metric_spec']
+            schema=dict(modality='text' if kind=='single_text' else 'image')
+            if kind=='single_text':schema.update(columns=[dict(name='message',type='text')],target='label')
+            spec=dict(task_kind=kind+'_classification',kind=kind,metric=metric['name'],metric_spec=metric,input_schema=schema)
+            save(run/'task_spec.json',spec)
+            joblib.dump(dict(model=model,kind=kind,candidate=candidate),run/'frozen_worker.joblib')
+            save(run/'run_manifest.json',dict(source_files=frozen,delivery_scope='frozen_worker_probe_not_autonomous',
+                original_worker_artifact_sha256=sha(a.reference/name/'model.joblib')))
+            save(run/'final_selection.json',dict(selected_experiment='frozen_worker_probe',family=candidate,
+                model_file='frozen_worker.joblib',model_format='candidate_bundle_v1',model_sha256=sha(run/'frozen_worker.joblib'),
+                task_spec_sha256=sha(run/'task_spec.json'),test_accessed=False,refit=False,delivery_status='worker_probe'))
+            manifest=dict(schema_version=1,objective='classification',metric=metric['name'],**schema)
+            archive=folder/'query.zip'
+            with zipfile.ZipFile(archive,'x') as z:
+                if kind=='single_text':
+                    text=io.StringIO(newline='');writer=csv.writer(text);writer.writerow(['message']);writer.writerows([[s] for s in query])
+                    manifest['splits']={'test':dict(format='csv',path='rows.csv')};z.writestr('rows.csv',text.getvalue())
+                else:
+                    data=io.BytesIO();np.savez(data,X=query);manifest['splits']={'test':dict(format='npz',path='rows.npz')};z.writestr('rows.npz',data.getvalue())
+                z.writestr('manifest.json',json.dumps(manifest))
+            bundle=export(run,folder/'export');fresh=folder/'new_cwd';fresh.mkdir();prediction=folder/'official.csv'
+            code,_=launch([sys.executable,'-m','scripts.a38_predict_guard',str(archive),'--run-dir',str(run),'--output',str(prediction)],folder/'official.log',env,180)
+            if code:raise RuntimeError(name+' official frozen-worker prediction failed')
+            def infer(label,active):
+                with (folder/(label+'.log')).open('w',encoding='utf-8') as log:
+                    return subprocess.run([sys.executable,'-I',str(bundle/'predict.py'),'--features',str(archive),
+                        '--output',str(folder/(label+'.csv'))],cwd=fresh,env=active,stdout=log,stderr=subprocess.STDOUT,timeout=180).returncode
+            if infer('isolated',env) or (folder/'isolated.csv').read_bytes()!=prediction.read_bytes():raise ValueError('Actual frozen encoder bundle differs')
+            missing={**env,'SUPERAGENT_MINILM_WEIGHTS':'','SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS':''}
+            if infer('missing',missing)==0 or (folder/'missing.csv').exists():raise ValueError('Missing actual weight was accepted')
+            corrupt={**env}
+            if name=='nonlinear':
+                target=folder/'corrupt_minilm';target.mkdir()
+                for source in (a.assets/'minilm').iterdir():
+                    if source.name=='config.json':shutil.copyfile(source,target/source.name)
+                    else:shutil.copyfile(source,target/source.name)
+                config=target/'config.json';data=bytearray(config.read_bytes());data[-1]^=1;config.write_bytes(data)
+                corrupt['SUPERAGENT_MINILM_WEIGHTS']=str(target)
+            else:
+                target=folder/'corrupt_vision.pth';shutil.copyfile(a.assets/'mobilenet_v3_small-047dcff4.pth',target)
+                with target.open('r+b') as stream:first=stream.read(1);stream.seek(0);stream.write(bytes([first[0]^1]))
+                corrupt['SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS']=str(target)
+            if infer('corrupt',corrupt)==0 or (folder/'corrupt.csv').exists():raise ValueError('Corrupt actual weight was accepted')
+            records.append(dict(probe=name,worker_model_sha256=sha(a.reference/name/'model.joblib'),prediction_rows=len(query),
+                actual_encoder_model=True,CSV_byte_identical=True,missing_asset_rejected=True,equal_size_corruption_rejected=True,
+                delivery_scope='frozen_worker_probe_not_autonomous',external_resources=read(bundle/'bundle_manifest.json')['external_resources']))
+            save(out/'results.json',records)
+        save(out/'completion.json',dict(status='passed',actual_classifier_fits=0,real_api_requests=0,source_unchanged=sources()==frozen,
+            elapsed_seconds=time.monotonic()-began,formal_test_or_H_opened=False))
+    except Exception as error:
+        save(out/'completion.json',dict(status='stopped',error=str(error),actual_classifier_fits=0,real_api_requests=0,
+            elapsed_seconds=time.monotonic()-began,automatic_retry=False));raise

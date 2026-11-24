@@ -1,0 +1,7 @@
+# A126：联合目录和跨类型接口定向验收
+
+在A125隔离接入后运行，0监督fit/0API。先保存runner，再在真实强环境禁止网络/分类器fit。测试modules：ab_adaptive_opening、ab_complement、ab_encoder_coverage、native_familiarity_integration、ab_single_conflict、a112_native_scope、a120_parameter_semantics、ab_text_kernel、ab_vision、external_assets、prose_claims、configuration_facts、explanation_audit、ab_flash。不存在模块须明确登记，不用运行失败伪称通过；包含监督fit的测试先检查后单列不运行。
+
+额外比较A125基线与新源7种任务元数据/标准目录身份；新编码器与组合仅在合格schema及依赖存在时启用，无任务名路由。新scheduler在其它任务回到原通用动作规则；不能带Flash使用本地组合控制器。检查A120诊断仍off、公开L12 revision没退回，未改默认原菜单。
+
+新freeze_partitions参数需要登记划分包装器透传；新增无fit测试覆盖此接口。若发现真实bug，先保留首轮结果/来源，再以独立目录复验相关失败。只修接入/正确性，不按H成绩调策略。输出protocol/results/completion和测试日志；不得把模拟反馈与fixture成绩称为真实迁移结果。

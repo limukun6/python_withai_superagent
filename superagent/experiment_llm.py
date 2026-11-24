@@ -26,6 +26,12 @@ def read_chat_stream(response, deadline, started, progress):
         if deadline is not None and time.monotonic() >= deadline:
             raise requests.Timeout('Planning deadline expired while receiving the stream')
         if not line.startswith(b'data:'):
+            # Keepalive comments and blank lines still prove the socket is alive,
+            # so a failure must distinguish "no bytes" from "bytes but no events".
+            if line:
+                progress['other_events'] = progress.get('other_events', 0) + 1
+                progress.setdefault('first_other_seconds', time.monotonic() - started)
+                progress['last_other_seconds'] = time.monotonic() - started
             continue
         payload = line[5:].strip()
         if payload == b'[DONE]':

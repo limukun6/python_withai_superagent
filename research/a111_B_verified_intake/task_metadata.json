@@ -1,0 +1,499 @@
+{
+  "coupon": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "categorical_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "categorical_tabular",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 8117
+  },
+  "preference": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "pair_text",
+        "pair_semantics": "preference",
+        "pair_label_one": "left",
+        "columns": [
+          {
+            "name": "headline_A",
+            "type": "text"
+          },
+          {
+            "name": "headline_B",
+            "type": "text"
+          }
+        ],
+        "target": "label_pairwise"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "pair_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": "preference",
+            "source": "input_schema",
+            "status": "confirmed"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 8301
+  },
+  "bean": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          "BARBUNYA",
+          "BOMBAY",
+          "CALI",
+          "DERMASON",
+          "HOROZ",
+          "SEKER",
+          "SIRA"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "tabular"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "numeric_tabular",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "BARBUNYA",
+              "BOMBAY",
+              "CALI",
+              "DERMASON",
+              "HOROZ",
+              "SEKER",
+              "SIRA"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 8710
+  },
+  "sms": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          "ham",
+          "spam"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "text",
+        "columns": [
+          {
+            "name": "text",
+            "type": "text"
+          }
+        ],
+        "target": "label"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "ham",
+              "spam"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 3302
+  },
+  "flowers": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "image",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "image",
+        "columns": [
+          {
+            "name": "image",
+            "type": "image_path"
+          }
+        ],
+        "target": "label",
+        "image_preprocessing": {
+          "height": 64,
+          "mode": "RGB",
+          "resize": "stretch_bilinear",
+          "width": 64
+        }
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "image",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "c0",
+              "c1",
+              "c2",
+              "c3",
+              "c4"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 800
+  },
+  "H2_45101": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "image",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          "AnnualCrop",
+          "Forest",
+          "HerbaceousVegetation",
+          "Highway",
+          "Industrial",
+          "Pasture",
+          "PermanentCrop",
+          "Residential",
+          "River",
+          "SeaLake"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "image",
+        "columns": [
+          {
+            "name": "image",
+            "type": "image_path"
+          }
+        ],
+        "target": "label",
+        "image_preprocessing": {
+          "height": 64,
+          "mode": "RGB",
+          "resize": "stretch_bilinear",
+          "width": 64
+        }
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "image",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "AnnualCrop",
+              "Forest",
+              "HerbaceousVegetation",
+              "Highway",
+              "Industrial",
+              "Pasture",
+              "PermanentCrop",
+              "Residential",
+              "River",
+              "SeaLake"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 2500
+  },
+  "H2_45102": {
+    "spec": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "image",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          "AnnualCrop",
+          "Forest",
+          "HerbaceousVegetation",
+          "Highway",
+          "Industrial",
+          "Pasture",
+          "PermanentCrop",
+          "Residential",
+          "River",
+          "SeaLake"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "image",
+        "columns": [
+          {
+            "name": "image",
+            "type": "image_path"
+          }
+        ],
+        "target": "label",
+        "image_preprocessing": {
+          "height": 64,
+          "mode": "RGB",
+          "resize": "stretch_bilinear",
+          "width": 64
+        }
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "image",
+            "source": "manifest_v1",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_manifest",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              "AnnualCrop",
+              "Forest",
+              "HerbaceousVegetation",
+              "Highway",
+              "Industrial",
+              "Pasture",
+              "PermanentCrop",
+              "Residential",
+              "River",
+              "SeaLake"
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    },
+    "rows": 2500
+  }
+}

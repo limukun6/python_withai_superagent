@@ -1,0 +1,87 @@
+[
+  {
+    "contract_version": 1,
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "status": "completed",
+    "measurements": {
+      "primary_metric": "accuracy",
+      "search_score": 0.25,
+      "train_score": 0.3333333333333333,
+      "search_accuracy": 0.25,
+      "train_accuracy": 0.3333333333333333,
+      "score_gap": 0.08333333333333331,
+      "generalization_gap": 0.08333333333333331,
+      "training_seconds": 0.018483700026990846,
+      "classifier_fits": 1,
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      }
+    },
+    "score_available": true,
+    "selection_score": 0.25
+  },
+  {
+    "contract_version": 1,
+    "trial": 2,
+    "candidate": "numeric_tabular_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "status": "completed",
+    "measurements": {
+      "primary_metric": "accuracy",
+      "search_score": 0.25,
+      "train_score": 0.3333333333333333,
+      "search_accuracy": 0.25,
+      "train_accuracy": 0.3333333333333333,
+      "score_gap": 0.08333333333333331,
+      "generalization_gap": 0.08333333333333331,
+      "training_seconds": 0.019614399992860854,
+      "classifier_fits": 1,
+      "hypothesis_check": {
+        "status": "not_supported",
+        "metric": "search_score",
+        "reference_trial": 1,
+        "reference_value": 0.25,
+        "observed_value": 0.25,
+        "observed_delta": 0.0,
+        "direction": "increase",
+        "required_delta": 0.001
+      },
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "configuration_fact_check": {
+        "declared": "logistic",
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "confirmed",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      }
+    },
+    "score_available": true,
+    "selection_score": 0.25
+  }
+]

@@ -1,0 +1,512 @@
+{
+  "deep": {
+    "candidate": "minilm_l12_text_with_lexical_features",
+    "fits": 2,
+    "rows": 12,
+    "native_portable_identical": true,
+    "missing_assets_rejected_before_output": true,
+    "external_resources": [
+      {
+        "name": "minilm_l12",
+        "environment_variable": "SUPERAGENT_DEEP_MINILM_WEIGHTS",
+        "path_kind": "directory",
+        "model": "sentence-transformers/all-MiniLM-L12-v2",
+        "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+        "files": {
+          "config.json": {
+            "bytes": 615,
+            "sha256": "bc451f333af67312ba0de5018ef1c9ba663cb18549443e568f0bd35262dc1c48"
+          },
+          "tokenizer.json": {
+            "bytes": 466247,
+            "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+          },
+          "model.safetensors": {
+            "bytes": 133466304,
+            "sha256": "d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542"
+          }
+        }
+      }
+    ],
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a113_native_delivery\\deep\\run",
+      "scheduler": "ab-v1",
+      "planner_mode": "local",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "minilm_l12_text_with_lexical_features",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "minilm_l12_text_with_lexical_features"
+        ],
+        "primary_candidate": "minilm_l12_text_with_lexical_features",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "minilm_l12_text_with_lexical_features",
+            "primary_accuracy": 1.0,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 1,
+                "candidate": "minilm_l12_text_with_lexical_features",
+                "params": {
+                  "encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                  "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                  "C": 0.3,
+                  "representation": "word_char_minilm_l12",
+                  "swap_augmentation": true
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 1.0,
+                "search_score": 1.0,
+                "train_metrics": {
+                  "accuracy": 1.0,
+                  "macro_f1": 1.0,
+                  "primary_metric": "accuracy",
+                  "score": 1.0,
+                  "rows": 32
+                },
+                "search_metrics": {
+                  "accuracy": 1.0,
+                  "macro_f1": 1.0,
+                  "primary_metric": "accuracy",
+                  "score": 1.0,
+                  "rows": 8
+                },
+                "score_gap": 0.0,
+                "train_accuracy": 1.0,
+                "search_accuracy": 1.0,
+                "generalization_gap": 0.0,
+                "class_recall": [
+                  1.0,
+                  1.0
+                ],
+                "training_seconds": 7.354796599975089,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                  "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                  "usage": {
+                    "input_tokens": 1584,
+                    "feature_transform_calls": 3,
+                    "api_calls": 0,
+                    "api_rmb": 0
+                  }
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "minilm_l12_text_with_lexical_features",
+                  "params": {
+                    "encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                    "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                    "C": 0.3,
+                    "representation": "word_char_minilm_l12",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "minilm_l12_text_with_lexical_features",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 9.797000000020489,
+                "evaluation_payload_sha256": "aee5d1cc99833fc2a6516f7b98873253f4a97a373923f3521b18ce2bb0cb9838",
+                "label_sha256": "fa5667846eb4e007188b7da9ccdf03331ca185f96a87bdeda85c79a0c0d5c54d",
+                "row_ids_sha256": "e139568eea6a7e37324c0d9628fe1c685ddeeca621e7f9ca00e4362d88aa870a",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 1.0,
+            "mean_score": 1.0,
+            "mean_accuracy": 1.0,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "minilm_l12_text_with_lexical_features",
+        "selection_score": 1.0,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "minilm_l12_text_with_lexical_features",
+          "incumbent": "minilm_l12_text_with_lexical_features",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 40,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 5.228223499987507,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 17.671000000002095,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 1,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 2,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "model_sha256": "bda06ebc451839bbdf54e0990262293c8b5eeb0cadd40fdf9e665712e9399ad7"
+  },
+  "deep-edit": {
+    "candidate": "minilm_l12_with_edit_context",
+    "fits": 2,
+    "rows": 12,
+    "native_portable_identical": true,
+    "missing_assets_rejected_before_output": true,
+    "external_resources": [
+      {
+        "name": "minilm_l12",
+        "environment_variable": "SUPERAGENT_DEEP_MINILM_WEIGHTS",
+        "path_kind": "directory",
+        "model": "sentence-transformers/all-MiniLM-L12-v2",
+        "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+        "files": {
+          "config.json": {
+            "bytes": 615,
+            "sha256": "bc451f333af67312ba0de5018ef1c9ba663cb18549443e568f0bd35262dc1c48"
+          },
+          "tokenizer.json": {
+            "bytes": 466247,
+            "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+          },
+          "model.safetensors": {
+            "bytes": 133466304,
+            "sha256": "d2d541e5f101695ae495eacd867a8d025ecfe8f9674fb23aa6cf93cdb60a5542"
+          }
+        }
+      }
+    ],
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a113_native_delivery\\deep-edit\\run",
+      "scheduler": "ab-v1",
+      "planner_mode": "local",
+      "local_text_proposals": "off",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "minilm_l12_with_edit_context",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "minilm_l12_with_edit_context"
+        ],
+        "primary_candidate": "minilm_l12_with_edit_context",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "minilm_l12_with_edit_context",
+            "primary_accuracy": 1.0,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 1,
+                "candidate": "minilm_l12_with_edit_context",
+                "params": {
+                  "encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                  "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                  "C": 0.3,
+                  "representation": "word_char_minilm_l12_edit_residual",
+                  "swap_augmentation": true
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 1.0,
+                "search_score": 1.0,
+                "train_metrics": {
+                  "accuracy": 1.0,
+                  "macro_f1": 1.0,
+                  "primary_metric": "accuracy",
+                  "score": 1.0,
+                  "rows": 32
+                },
+                "search_metrics": {
+                  "accuracy": 1.0,
+                  "macro_f1": 1.0,
+                  "primary_metric": "accuracy",
+                  "score": 1.0,
+                  "rows": 8
+                },
+                "score_gap": 0.0,
+                "train_accuracy": 1.0,
+                "search_accuracy": 1.0,
+                "generalization_gap": 0.0,
+                "class_recall": [
+                  1.0,
+                  1.0
+                ],
+                "training_seconds": 5.68147329997737,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "frozen_downstream_encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                  "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                  "usage": {
+                    "input_tokens": 2880,
+                    "feature_transform_calls": 3,
+                    "api_calls": 0,
+                    "api_rmb": 0
+                  }
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "minilm_l12_with_edit_context",
+                  "params": {
+                    "encoder": "sentence-transformers/all-MiniLM-L12-v2",
+                    "revision": "a50ef00143b4d5391434df20ae11632588ac25be",
+                    "C": 0.3,
+                    "representation": "word_char_minilm_l12_edit_residual",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "minilm_l12_with_edit_context",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 8.25,
+                "evaluation_payload_sha256": "aee5d1cc99833fc2a6516f7b98873253f4a97a373923f3521b18ce2bb0cb9838",
+                "label_sha256": "fa5667846eb4e007188b7da9ccdf03331ca185f96a87bdeda85c79a0c0d5c54d",
+                "row_ids_sha256": "e139568eea6a7e37324c0d9628fe1c685ddeeca621e7f9ca00e4362d88aa870a",
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 1.0,
+            "mean_score": 1.0,
+            "mean_accuracy": 1.0,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "minilm_l12_with_edit_context",
+        "selection_score": 1.0,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "minilm_l12_with_edit_context",
+          "incumbent": "minilm_l12_with_edit_context",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 40,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 5.354734799999278,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 16.25,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 1,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 2,
+        "completed_classifier_fits": 2,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "model_sha256": "71d0d17bbc3ba1dca1d0d2f14922f15a4db4c54e6549728c1affc619c53fdaee"
+  }
+}

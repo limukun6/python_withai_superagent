@@ -1,0 +1,44 @@
+{
+  "candidate": "single_word_C3.0",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0, but the registry flags this as contradicted because C is inverse regularization. I select the untried single_word_C3.0 candidate to diagnose and correct that open bound proposition on the primary split.",
+  "review": "Corrects the open bound assertion: for logistic C, larger C means weaker regularization, not stronger. This is a configuration relation only; no accuracy effect is claimed.",
+  "hypothesis": "If the corrected C relation matters for the word baseline, single_word_C3.0 may behave differently from trial 1's C=0.3; the direction and magnitude of macro_f1 change are not predicted.",
+  "evidence_trials": [
+    1,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "diagnose",
+  "uncertainty": "The correction is pending execution confirmation; single_word_C3.0 is untried and may not improve macro_f1. The C relation does not establish an accuracy or causal effect.",
+  "grounding": {
+    "namespace": "ef4d245d7aacdd6f7552addf38f8201c90c1283e8f95f309ab86f73a7ac3f7d3",
+    "evidence_refs": [
+      "c:single_word_C3.0.classifier",
+      "c:single_word_C3.0.C",
+      "t1.C",
+      "c:single_word_C3.0.untried",
+      "t1.search.macro_f1"
+    ],
+    "assertions": [
+      {
+        "kind": "parameter_relation",
+        "before": "t1.C",
+        "after": "c:single_word_C3.0.C",
+        "direction": "weaker_regularization"
+      },
+      {
+        "kind": "value",
+        "ref": "c:single_word_C3.0.classifier",
+        "value": "logistic"
+      }
+    ],
+    "addresses_issue_ids": [
+      "issue:85dd1f4faf238b2d9991"
+    ]
+  }
+}

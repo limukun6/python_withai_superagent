@@ -95,7 +95,10 @@ def _fit(kind,algorithm,x_train,y_train,x_search,c=1.,leaf=1):
     elif kind=='mixed_tabular':steps=[('features',MixedPreprocessor())]
     elif kind=='image':steps=[('flatten',ImageFlattener()),('scale',StandardScaler())]
     else:steps=[('imputer',SimpleImputer(strategy='median',add_indicator=True,keep_empty_features=True)),('scale',StandardScaler())]
-    if algorithm=='logistic':classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
+    if algorithm=='fourier_logistic':
+        from .numeric_kernel import NumericKernelFeatures
+        steps.append(('kernel', NumericKernelFeatures()))
+    if algorithm in ('logistic','fourier_logistic'):classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
     elif algorithm=='extra_trees':classifier=ExtraTreesClassifier(n_estimators=300,min_samples_leaf=leaf,n_jobs=-1,random_state=42)
     elif algorithm=='rbf_svm':classifier=SVC(C=c,kernel='rbf',gamma='scale')
     else:raise ValueError('Unknown generic algorithm')

@@ -1,0 +1,17 @@
+{
+  "candidate": "minilm_text_with_nonlinear_lexical_features",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Trial 2 is the strongest completed primary result (macro_f1 0.92965, score gap 0.03274) but spam recall is 0.7802, leaving headroom. Trial 1 shows word-only features are not competitive. The untried nonlinear lexical MiniLM candidate extends the best route with an RBF expansion intended to capture interactions missed by the linear word_char_minilm representation.",
+  "review": "Evidence is limited to two completed primary trials. Trial 2 is clearly better than trial 1, and its route is exhausted. The proposed candidate is the closest untried extension of the strongest route, using the same frozen encoder and logistic classifier with nonlinear lexical features. No confirmation split or formal test is available.",
+  "hypothesis": "A nonlinear RBF expansion of word/char lexical features combined with frozen MiniLM embeddings can model feature interactions that the linear word_char_minilm representation misses, potentially improving spam recall and macro_f1 on the primary split.",
+  "evidence_trials": [
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "The nonlinear kernel may overfit or fail to improve over trial 2. Only primary search evidence exists, with no confirmation split or formal test, so direction and magnitude of any change are not predicted."
+}

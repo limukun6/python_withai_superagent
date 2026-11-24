@@ -1,0 +1,212 @@
+{
+  "original_cases": 48,
+  "agreements": 45,
+  "error_confirmations": 0,
+  "expected_unknown_but_asserted": 0,
+  "confusion": {
+    "confirmed": {
+      "confirmed": 13,
+      "contradicted": 0,
+      "unknown": 1
+    },
+    "contradicted": {
+      "confirmed": 0,
+      "contradicted": 14,
+      "unknown": 2
+    },
+    "unknown": {
+      "confirmed": 0,
+      "contradicted": 0,
+      "unknown": 18
+    }
+  },
+  "discrepancies": [
+    {
+      "id": "B_current_kernel",
+      "expected": "contradicted",
+      "observed": "unknown"
+    },
+    {
+      "id": "B_denial_matches",
+      "expected": "confirmed",
+      "observed": "unknown"
+    },
+    {
+      "id": "B_denial_conflicts",
+      "expected": "contradicted",
+      "observed": "unknown"
+    }
+  ],
+  "changes_from_B_published": [],
+  "arithmetic_fixture_inconsistencies": [
+    {
+      "id": "B_gain_in_same_slice",
+      "accuracy": 0.72,
+      "rows": 20,
+      "implied_correct": 14.399999999999999,
+      "interpretation": "Abstract threshold fixture cannot be a realizable 20-row accuracy; original case retained"
+    },
+    {
+      "id": "B_small_gain_same_slice",
+      "accuracy": 0.625,
+      "rows": 20,
+      "implied_correct": 12.5,
+      "interpretation": "Abstract threshold fixture cannot be a realizable 20-row accuracy; original case retained"
+    },
+    {
+      "id": "B_moved_boundary_and_payload",
+      "accuracy": 0.84,
+      "rows": 20,
+      "implied_correct": 16.8,
+      "interpretation": "Abstract threshold fixture cannot be a realizable 20-row accuracy; original case retained"
+    },
+    {
+      "id": "B_fall_on_different_split",
+      "accuracy": 0.48,
+      "rows": 20,
+      "implied_correct": 9.6,
+      "interpretation": "Abstract threshold fixture cannot be a realizable 20-row accuracy; original case retained"
+    }
+  ],
+  "sensitivity_excluding_flagged_originals": {
+    "cases": 44,
+    "agreements": 41,
+    "posthoc": true
+  },
+  "original_labels_or_payloads_modified": false,
+  "checker_modified": false,
+  "B_review_factual_error_by_condition": {
+    "R": {
+      "no": 6,
+      "unknown": 5,
+      "yes": 1
+    },
+    "E": {
+      "unknown": 5,
+      "no": 2,
+      "yes": 5
+    }
+  },
+  "A_targeted_reviews": [
+    {
+      "review_id": "29491f1bd1d1",
+      "state_id": "bean_2",
+      "condition": "E",
+      "B_factual_error": true,
+      "A_judgement": "clear_parameter_direction_error",
+      "basis": "C=.1→1弱化正则；hypothesis明确说强度增加，与同句less constrained亦冲突。",
+      "B_label_basis": "The .9225 logistic score and the .0878 tree gap are correctly attributed. The hypothesis calls C=.1 to 1 an increase in regularization strength, although C is inverse strength; the same sentence describes a less constrained boundary. The prospective score is qualified.",
+      "selected_configuration": {
+        "id": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        },
+        "estimator": "logistic"
+      }
+    },
+    {
+      "review_id": "11ef4b2366e7",
+      "state_id": "coupon_1",
+      "condition": "E",
+      "B_factual_error": true,
+      "A_judgement": "ambiguous_parameter_terminology",
+      "basis": "low regularization setting可误读成强度弱，也可能意指低C；may be underfitting更接近低C强正则解释。保留B原错标，A不把此句算无歧义事实错。",
+      "B_label_basis": "The prior logistic really used C=.05 and scored .67221. Calling this a low regularization setting reverses the usual inverse-C interpretation; low C is strong regularization. The current choice is correctly CatBoost, and a nonlinear gain remains a hypothesis.",
+      "selected_configuration": {
+        "id": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "estimator": "catboost"
+      }
+    },
+    {
+      "review_id": "69897653704d",
+      "state_id": "bean_3",
+      "condition": "E",
+      "B_factual_error": true,
+      "A_judgement": "clear_parameter_direction_error",
+      "basis": "C=1→10弱化正则，reason正确而hypothesis称强度增加，回答内部自相矛盾。",
+      "B_label_basis": "Trial 3 accuracy .92308 and its small gap agree with the record. The reason correctly calls C=10 less regularized than C=1, but the hypothesis calls the same move increased regularization strength. The text does not assert a future score.",
+      "selected_configuration": {
+        "id": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        },
+        "estimator": "logistic"
+      }
+    },
+    {
+      "review_id": "4dae4566c926",
+      "state_id": "preference_3",
+      "condition": "E",
+      "B_factual_error": true,
+      "A_judgement": "clear_parameter_direction_error",
+      "basis": "低C的参数区域被称为low-regularization region，按正则强度含义方向相反；不是新模型实测错误。",
+      "B_label_basis": "Trials 2 and 3 tie at .66184, but describing their low C values as the low-regularization region reverses inverse C. The pack does not enumerate four remaining variants or whether a confirmation split could be used. The new statistics features are described as exploratory.",
+      "selected_configuration": {
+        "id": "word_char_stats_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char_stats",
+          "swap_augmentation": true
+        },
+        "estimator": "logistic"
+      }
+    },
+    {
+      "review_id": "a312f009229e",
+      "state_id": "preference_2",
+      "condition": "E",
+      "B_factual_error": true,
+      "A_judgement": "clear_parameter_direction_error",
+      "basis": "reason明确称C=.05→.1为higher regularization strength，实际相反。",
+      "B_label_basis": "The .66184 versus .63713 comparison is within PRIMARY and correctly attributed. Increasing C=.05 to .1 is called higher regularization strength; it weakens the penalty. There is no confirmation result here, while split availability itself is unspecified.",
+      "selected_configuration": {
+        "id": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "estimator": "logistic"
+      }
+    },
+    {
+      "review_id": "5044e26af2b5",
+      "state_id": "sms_1",
+      "condition": "R",
+      "B_factual_error": true,
+      "A_judgement": "clear_history_scope_error",
+      "basis": "review先承认一条completed primary，再称No candidate has primary-split evidence yet；实际trial1已有F1=.46694。只应说新word_char候选无证据。",
+      "B_label_basis": "The unqualified statement that no candidate has PRIMARY evidence conflicts with trial 1 (word C=.3, macro F1 .46694) and with the preceding sentence. Only the selected word_char C=3 is unmeasured; the later uncertainty uses that narrower, valid scope. Class recalls are not independently supplied.",
+      "selected_configuration": {
+        "id": "single_word_char_C3.0",
+        "params": {
+          "representation": "word_char",
+          "C": 3.0
+        },
+        "estimator": "logistic"
+      }
+    }
+  ],
+  "A_focus_judgement_counts": {
+    "clear_parameter_direction_error": 4,
+    "ambiguous_parameter_terminology": 1,
+    "clear_history_scope_error": 1
+  },
+  "runtime_parameter_document": {
+    "package": "scikit-learn",
+    "version": "1.7.2",
+    "C_documentation": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization."
+  },
+  "limitations": [
+    "A review is post-label, not blind or human validation",
+    "B one-Codex labels are not ground truth",
+    "R/E each 12 replies, repeated task prefixes correlated; do not infer population error rate",
+    "No checker revision or regenerated answers; the original 48 remain the primary denominator"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "candidate": "catboost_depth6_reg3.0",
+  "task_kind": "categorical_tabular",
+  "configuration_claim": {
+    "classifier": "catboost"
+  },
+  "reason": "Trial 2 is the best completed PRIMARY trial at accuracy 0.7552 using a CatBoost interaction representation. The catboost route is untried with native categories; this candidate keeps depth 6, l2_leaf_reg 3.0, and 600 iterations, providing a controlled representation comparison against trial 2.",
+  "review": "Only two PRIMARY trials are available. Trial 1 logistic scored 0.6652; trial 2 CatBoost scored 0.7552 with a train-search gap of 0.0717. No formal test is available, and selection data is training-derived. This candidate is not a replication of trial 2 because its representation differs.",
+  "hypothesis": "Native categorical handling at depth 6 with l2_leaf_reg 3.0 may preserve or improve the interaction model's PRIMARY accuracy by avoiding training-selected pair construction, but the direction is unknown.",
+  "evidence_trials": [
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Evidence is limited to two PRIMARY trials. Trial 2's 0.0717 gap indicates overfit risk, and native categories differ from trial 2's interaction representation, so no matched comparison exists yet. No predicted improvement is claimed."
+}

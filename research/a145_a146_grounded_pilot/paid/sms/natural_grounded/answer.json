@@ -1,0 +1,49 @@
+{
+  "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Select an untried hybrid char_wb logistic recipe at C=0.3 to broaden representation coverage after the strongest completed route was exhausted; this is coverage, not a predicted gain.",
+  "review": "Trial 3 is the best completed primary search result (macro_f1 0.9379976654020927), but its minilm nonlinear route is exhausted. This selection covers an untried hybrid char_wb recipe; no formal test is available.",
+  "hypothesis": "Hybrid char_wb features may capture subword and token-boundary spam cues that complement word-level signals; this is speculative and untested on the primary split.",
+  "evidence_trials": [
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "coverage",
+  "uncertainty": "No primary search measurement exists for this candidate; direction and magnitude are unknown. Coverage is not evidence of improvement.",
+  "grounding": {
+    "namespace": "ef4d245d7aacdd6f7552addf38f8201c90c1283e8f95f309ab86f73a7ac3f7d3",
+    "evidence_refs": [
+      "c:recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b.classifier",
+      "c:recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b.untried",
+      "t3.search.macro_f1",
+      "task.metric"
+    ],
+    "assertions": [
+      {
+        "kind": "value",
+        "ref": "c:recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b.classifier",
+        "value": "logistic"
+      },
+      {
+        "kind": "value",
+        "ref": "c:recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b.untried",
+        "value": true
+      },
+      {
+        "kind": "value",
+        "ref": "t3.search.macro_f1",
+        "value": 0.9379976654020927
+      },
+      {
+        "kind": "value",
+        "ref": "task.metric",
+        "value": "macro_f1"
+      }
+    ],
+    "addresses_issue_ids": []
+  }
+}

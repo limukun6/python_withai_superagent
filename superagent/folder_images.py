@@ -68,6 +68,7 @@ def load_folder_split(archive,manifest,split,include_labels=True):
     x,contract=load_image_rows(archive,manifest,split,names)
     from importlib.metadata import version
     spec={'manifest_schema_version':1,'modality':'image','metric':manifest.get('metric','accuracy'),
+        'goal_sources':{'primary_metric':'default_accuracy' if manifest.get('_schema_origin')=='folder_v1' or 'metric' not in manifest else 'declared_manifest'},
         'test_accessed':split=='test','schema_origin':'folder_v1','input_format':'image_folder',
         'feature_shape':list(x.shape[1:]),'image_decoder_policy':DECODER_POLICY,
         'image_decoder_version':version('Pillow'),'kind':'image',

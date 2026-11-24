@@ -1,0 +1,76 @@
+[
+  {
+    "seed": 43111,
+    "candidate": "word_char_stats_C1.0",
+    "check": {
+      "status": "supported",
+      "overall_check": {
+        "status": "supported",
+        "metric": "search_accuracy",
+        "reference_trial": 2,
+        "reference_value": 0.6368767638758231,
+        "observed_value": 0.6679209783631233,
+        "observed_delta": 0.031044214487300104,
+        "direction": "increase",
+        "required_delta": 0.001
+      },
+      "slice_check": {
+        "status": "supported",
+        "slice_id": "pair_token_overlap_high",
+        "reference_trial": 2,
+        "rows": 539,
+        "reference_accuracy": 0.5844155844155844,
+        "observed_accuracy": 0.6103896103896104,
+        "observed_delta": 0.025974025974025983,
+        "required_delta": 0.001,
+        "scope": "same internal search partition and train-fitted slice definition"
+      },
+      "combination": "all declared numerical expectations must be met"
+    },
+    "baseline_accuracy": 0.6671686746987951,
+    "accuracy": 0.6792168674698795,
+    "comparison": {
+      "n": 1328,
+      "fixed": 55,
+      "lost": 39,
+      "delta": 0.012048192771084338
+    }
+  },
+  {
+    "seed": 43117,
+    "candidate": "word_char_stats_C1.0",
+    "check": {
+      "status": "supported",
+      "overall_check": {
+        "status": "supported",
+        "metric": "search_accuracy",
+        "reference_trial": 2,
+        "reference_value": 0.6444026340545626,
+        "observed_value": 0.6613358419567262,
+        "observed_delta": 0.016933207902163683,
+        "direction": "increase",
+        "required_delta": 0.001
+      },
+      "slice_check": {
+        "status": "supported",
+        "slice_id": "text_length_high",
+        "reference_trial": 2,
+        "rows": 442,
+        "reference_accuracy": 0.6221719457013575,
+        "observed_accuracy": 0.6628959276018099,
+        "observed_delta": 0.040723981900452455,
+        "required_delta": 0.001,
+        "scope": "same internal search partition and train-fitted slice definition"
+      },
+      "combination": "all declared numerical expectations must be met"
+    },
+    "baseline_accuracy": 0.6616428033157498,
+    "accuracy": 0.6616428033157498,
+    "comparison": {
+      "n": 1327,
+      "fixed": 0,
+      "lost": 0,
+      "delta": 0.0
+    }
+  }
+]

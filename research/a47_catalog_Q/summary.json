@@ -1,0 +1,151 @@
+{
+  "tasks": {
+    "coupon": {
+      "candidate_counts": {
+        "baseline": 14,
+        "full": 15
+      },
+      "arms": {
+        "baseline": {
+          "score": 0.7389162561576355,
+          "metric": "accuracy",
+          "rows": 2030,
+          "selected": "catboost_depth4_reg3.0",
+          "classifier_fits": 10,
+          "seconds": 64.86145379999653,
+          "reload_identical": true,
+          "prediction_sha256": "a4bd0012f90905420c6b36c9162bb2635ef945a9fc5a54ac2db4c9c43c19d081"
+        },
+        "full": {
+          "score": 0.7502463054187192,
+          "metric": "accuracy",
+          "rows": 2030,
+          "selected": "supported_field_interactions",
+          "classifier_fits": 11,
+          "seconds": 81.20715349999955,
+          "reload_identical": true,
+          "prediction_sha256": "347ca76a738ecb8fc50e46385e7a55453443cb3d15409bd47ed9bcc370a72c8a"
+        }
+      },
+      "deduplicated_same_policy": false,
+      "full_minus_baseline": 0.011330049261083719,
+      "prediction_disagreements": 157,
+      "effect_estimable": true
+    },
+    "preference": {
+      "candidate_counts": {
+        "baseline": 22,
+        "full": 22
+      },
+      "arms": {
+        "shared": {
+          "score": 0.6968085106382979,
+          "metric": "accuracy",
+          "rows": 940,
+          "selected": "word_char_stats_C0.1",
+          "classifier_fits": 10,
+          "seconds": 57.03998060000595,
+          "reload_identical": true,
+          "prediction_sha256": "aa78f3348b7a9c591d664883ec5b680f7efeb32c2fb30d84458e71931290f482"
+        }
+      },
+      "deduplicated_same_policy": true,
+      "full_minus_baseline": null,
+      "prediction_disagreements": null,
+      "effect_estimable": false
+    },
+    "sms": {
+      "candidate_counts": {
+        "baseline": 6,
+        "full": 6
+      },
+      "arms": {
+        "shared": {
+          "score": 0.9459801185908616,
+          "metric": "macro_f1",
+          "rows": 826,
+          "selected": "single_word_char_C3.0",
+          "classifier_fits": 9,
+          "seconds": 28.23419209998974,
+          "reload_identical": true,
+          "prediction_sha256": "7a8e1e968a54080f95aedd30f4ba859fced201110261e8af3d08a8fe8a25aae1"
+        }
+      },
+      "deduplicated_same_policy": true,
+      "full_minus_baseline": null,
+      "prediction_disagreements": null,
+      "effect_estimable": false
+    },
+    "photo": {
+      "candidate_counts": {
+        "baseline": 7,
+        "full": 8
+      },
+      "arms": {
+        "baseline": {
+          "score": 0.975,
+          "metric": "accuracy",
+          "rows": 80,
+          "selected": "image_logistic_C0.1",
+          "classifier_fits": 10,
+          "seconds": 24.793932600005064,
+          "reload_identical": true,
+          "prediction_sha256": "f5647018dcf8b00bae592c93bc009b34591c94cae507b6f37abc28a8cfb1f41c"
+        },
+        "full": {
+          "score": 0.975,
+          "metric": "accuracy",
+          "rows": 80,
+          "selected": "image_gradient_histograms_logistic",
+          "classifier_fits": 9,
+          "seconds": 20.014764200008358,
+          "reload_identical": true,
+          "prediction_sha256": "28b0869f470832c8fcf792b40d87b64b7fff7b8b9ea52d408ee11bc0bc21b8fd"
+        }
+      },
+      "deduplicated_same_policy": false,
+      "full_minus_baseline": 0.0,
+      "prediction_disagreements": 3,
+      "effect_estimable": true
+    },
+    "bean": {
+      "candidate_counts": {
+        "baseline": 5,
+        "full": 5
+      },
+      "arms": {
+        "shared": {
+          "score": 0.9132231404958677,
+          "metric": "accuracy",
+          "rows": 2178,
+          "selected": "numeric_tabular_logistic_C1.0",
+          "classifier_fits": 8,
+          "seconds": 19.464924200001406,
+          "reload_identical": true,
+          "prediction_sha256": "9a08b4af3fe34978626778820d3ef609e25d7f180fe5e9a05ffa8c29065f7dcd"
+        }
+      },
+      "deduplicated_same_policy": true,
+      "full_minus_baseline": null,
+      "prediction_disagreements": null,
+      "effect_estimable": false
+    }
+  },
+  "completion": {
+    "status": "completed",
+    "tasks": 5,
+    "physical_paths": 7,
+    "logical_groups": 10,
+    "deduplicated_tasks": [
+      "preference",
+      "sms",
+      "bean"
+    ],
+    "actual_classifier_fits": 67,
+    "real_api_requests": 0,
+    "source_unchanged": true,
+    "formal_test_opened": false,
+    "elapsed_seconds": 328.7991905999952
+  },
+  "scope": "Known development tasks, one split; no Flash or held-out transfer claim"
+}

@@ -1,0 +1,49 @@
+{
+  "batch": "A151",
+  "title": "knowledge and execution issue layering",
+  "created_utc": "2026-11-24T05:56:43Z",
+  "budget": {
+    "classifier_fits": 0,
+    "school_api_calls": 0,
+    "cost_rmb": 0
+  },
+  "inputs": {
+    "sealed_batch": "research/a145_a146_grounded_pilot",
+    "sealed_answers": [
+      "coupon/natural_grounded",
+      "coupon/controlled_grounded",
+      "sms/natural_grounded",
+      "sms/controlled_grounded",
+      "flowers/natural_grounded",
+      "flowers/controlled_grounded"
+    ],
+    "matched_row_fixture": {
+      "trial": 4,
+      "status": "completed",
+      "metric_identity": {
+        "status": "confirmed"
+      },
+      "configuration_fact_check": {
+        "status": "confirmed"
+      }
+    }
+  },
+  "expected": {
+    "oracle_cases": 5,
+    "replay_cases": 6,
+    "all_oracle_pass": true,
+    "all_candidates_unchanged": true,
+    "knowledge_issues_closed": 3,
+    "measurement_closed_by_trial": false
+  },
+  "source_sha256": {
+    "superagent/grounding_issues.py": "60305eba3a74f10bd500e60188521ca227414d79a34f23b3e6c6374215a707d6",
+    "superagent/grounded_proposal.py": "2bc703b31bee24c46e596233475d0f5877233b438402d672b96bf82bdbaf6a55",
+    "superagent/ab_flash.py": "5ef80d6e98d06bd71a44820295d0d351ec650439891d697abc8ed6c1e20da059",
+    "superagent/ab_run.py": "ebbcc8d6d94b1708512650d096042e0da79b20cc4362aaff478b7a528c2ea943",
+    "superagent/cli.py": "ab8ff69f476d34cd684c3a39c0d59e7131e4df557e76a8dbf986979ec32f364c",
+    "tests/test_issue_layering.py": "3332e3bc337a92d1bce76ff7a448900a378119315b730b0187f3169deb9e4ac0",
+    "scripts/run_a151_issue_layering.py": "35d49f1c286436abbcd496691306503e363c5b880fbf09452d8662a723ad8f72"
+  },
+  "note": "Replay of sealed responses is a mechanism check, not a new model experiment."
+}

@@ -1,0 +1,19 @@
+{
+  "candidate": "image_extra_trees_leaf3",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "extra_trees"
+  },
+  "reason": "Trial 3 is the strongest PRIMARY result, but its frozen-feature route is exhausted and not among the available candidates. Among available pixel baselines, a regularized extra-trees model is an untried nonlinear route that can test whether pixel interactions improve over the weak linear pixel baselines from trials 1 and 2.",
+  "review": "The prior proposal in trial 3 contained an incorrect task-kind claim, but the fitted estimator and PRIMARY accuracy remain valid evidence. Available candidates are pixel-based shared baselines; leaf3 is chosen over leaf1 to reduce overfitting risk on flattened standardized pixels.",
+  "hypothesis": "Extra trees with min_samples_leaf=3 on flattened standardized pixels may capture nonlinear pixel interactions and outperform the linear pixel logistic baseline, though the frozen-feature result suggests pixel representations may remain weaker.",
+  "evidence_trials": [
+    1,
+    2,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "coverage",
+  "uncertainty": "No numerical improvement is predicted. This is exploratory coverage of an untried nonlinear pixel route; pixel representations have underperformed frozen features, so the outcome is uncertain."
+}

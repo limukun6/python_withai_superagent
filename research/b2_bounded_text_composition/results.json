@@ -1,0 +1,2499 @@
+{
+  "paths": {
+    "headlines_original": {
+      "name": "headlines_original",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "word_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "word_char_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "char_C0.1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "word_char_stats_C0.1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "word_char_stats_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "word_char_stats_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "word_char_C0.1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "word_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_C0.05",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "char_C0.1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_stats_C0.1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_stats_C0.3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7001 and 0.6949; hard predictions differ on 241/1344 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "word_char_stats_C0.3",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary accuracy 0.7001 and 0.6949; hard predictions differ on 241/1344 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_C0.1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            6
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 7,
+        "confirm": 2,
+        "stop": 1
+      },
+      "model_sha256": "e46c41a07875b4a0ac24b0c5493acea36eb75dd538b627ebaf9337ae46a1ed7a",
+      "selected": "minilm_text_with_lexical_features",
+      "seconds": 85.9171602500137,
+      "promotions": [],
+      "compositions": [],
+      "recipe_observations": [],
+      "grade": {
+        "correct": 1200,
+        "rows": 1686,
+        "scores": {
+          "accuracy": 0.7117437722419929,
+          "macro_f1": 0.7117421497372105,
+          "primary_metric": "accuracy",
+          "score": 0.7117437722419929,
+          "rows": 1686
+        },
+        "csv_sha256": "a1b64f108131a7ce8a4aca53983d02faa38e1eb8fecadab545ac8ef2d106bd1f"
+      }
+    },
+    "headlines_expanded": {
+      "name": "headlines_expanded",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "word_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "word_char_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "char_C0.1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "word_char_stats_C0.1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "word_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_C0.05",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "char_C0.1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "word_char_stats_C0.1",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            9
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 9,
+        "stop": 1
+      },
+      "model_sha256": "1a6417ef0108226324306ecb010290e22190d537d9ff290c28b8a4f996c60bba",
+      "selected": "minilm_text_with_lexical_features",
+      "seconds": 60.06681670900434,
+      "promotions": [],
+      "compositions": [],
+      "recipe_observations": [
+        {
+          "trial": 3,
+          "candidate": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6130952380952381,
+          "worker_seconds": 1.686263124924153
+        },
+        {
+          "trial": 4,
+          "candidate": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6599702380952381,
+          "worker_seconds": 1.5460947500541806
+        },
+        {
+          "trial": 5,
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6078869047619048,
+          "worker_seconds": 2.682348374975845
+        },
+        {
+          "trial": 6,
+          "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6525297619047619,
+          "worker_seconds": 2.802616292145103
+        }
+      ],
+      "grade": {
+        "correct": 1200,
+        "rows": 1686,
+        "scores": {
+          "accuracy": 0.7117437722419929,
+          "macro_f1": 0.7117421497372105,
+          "primary_metric": "accuracy",
+          "score": 0.7117437722419929,
+          "rows": 1686
+        },
+        "csv_sha256": "a1b64f108131a7ce8a4aca53983d02faa38e1eb8fecadab545ac8ef2d106bd1f"
+      }
+    },
+    "headlines_composed": {
+      "name": "headlines_composed",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "word_C0.05",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "word_C0.05",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try char_wb latent logistic features with C=0.3.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try word latent logistic features with C=0.3.",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try word latent logistic features with C=1.0.",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try word hybrid logistic features with C=0.3.",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try word hybrid logistic features with C=1.0.",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try char_wb latent logistic features with C=1.0.",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try char_wb hybrid logistic features with C=0.3.",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            2,
+            6
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 9,
+        "stop": 1
+      },
+      "model_sha256": "7fe8c540d457396a91641b5e3fd38a4d30775456e28e67f0b29f797058fcf8ae",
+      "selected": "minilm_text_with_lexical_features",
+      "seconds": 56.28330366616137,
+      "promotions": [],
+      "compositions": [
+        {
+          "step": 3,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "try the complementary analyzer",
+          "analyzer_reference_trials": {
+            "word": 1
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "target_eligible": true,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "default_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+            "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+            "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9"
+          ]
+        },
+        {
+          "step": 4,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 1,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": true,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "default_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+            "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435"
+          ]
+        },
+        {
+          "step": 5,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 1,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "default_id": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+            "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435"
+          ]
+        },
+        {
+          "step": 6,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 1,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "default_id": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "evidence_trials": [
+            2,
+            1,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435"
+          ]
+        },
+        {
+          "step": 7,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 6,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+          "default_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+            "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435"
+          ]
+        },
+        {
+          "step": 8,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 6,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+          "default_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9",
+            "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435"
+          ]
+        },
+        {
+          "step": 9,
+          "reference_trial": 2,
+          "reference_score": 0.7001488095238095,
+          "train_minus_search": 0.19645525042686396,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "word": 6,
+            "char_wb": 3
+          },
+          "target_spec": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "default_id": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "evidence_trials": [
+            2,
+            6,
+            3
+          ],
+          "feasible_recipe_ids": [
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+            "recipe_pair_text_hybrid_char_wb_logistic_4d8f6dfda3f60bd9"
+          ]
+        }
+      ],
+      "recipe_observations": [
+        {
+          "trial": 3,
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6078869047619048,
+          "worker_seconds": 2.868599042063579
+        },
+        {
+          "trial": 4,
+          "candidate": "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6130952380952381,
+          "worker_seconds": 1.5154341249726713
+        },
+        {
+          "trial": 5,
+          "candidate": "recipe_pair_text_latent_word_logistic_cd57ce5ca95aa38b",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.609375,
+          "worker_seconds": 1.5653797499835491
+        },
+        {
+          "trial": 6,
+          "candidate": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6599702380952381,
+          "worker_seconds": 1.525637999875471
+        },
+        {
+          "trial": 7,
+          "candidate": "recipe_pair_text_hybrid_word_logistic_4b85dbe0b758bd28",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6532738095238095,
+          "worker_seconds": 1.5500616249628365
+        },
+        {
+          "trial": 8,
+          "candidate": "recipe_pair_text_latent_char_wb_logistic_4979e51a2d467435",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6063988095238095,
+          "worker_seconds": 2.629837459186092
+        },
+        {
+          "trial": 9,
+          "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+          "configuration": {
+            "kind": "pair_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.6525297619047619,
+          "worker_seconds": 2.9131479158531874
+        }
+      ],
+      "grade": {
+        "correct": 1200,
+        "rows": 1686,
+        "scores": {
+          "accuracy": 0.7117437722419929,
+          "macro_f1": 0.7117421497372105,
+          "primary_metric": "accuracy",
+          "score": 0.7117437722419929,
+          "rows": 1686
+        },
+        "csv_sha256": "a1b64f108131a7ce8a4aca53983d02faa38e1eb8fecadab545ac8ef2d106bd1f"
+      }
+    },
+    "sms_composed": {
+      "name": "sms_composed",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "single_word_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "single_word_C0.3",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try char_wb hybrid logistic features with C=0.3.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            3,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap -0.0119). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap -0.0119). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "split_id": "primary",
+          "reason": "Use trial 2 and the observed analyzer results to try char_wb hybrid logistic features with C=1.0.",
+          "evidence_trials": [
+            2,
+            3,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9688; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            8,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            8,
+            2
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 4,
+        "confirm": 5,
+        "stop": 1
+      },
+      "model_sha256": "114704cf6de9e364a7fbd5521ca782b930c83f800b4bd50444904f9d13d7c4e4",
+      "selected": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+      "seconds": 41.697309291921556,
+      "promotions": [
+        {
+          "previous": "minilm_text_with_lexical_features",
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.009282864179291916,
+            0.04541188336291424
+          ],
+          "mean_gain": 0.02734737377110308,
+          "evidence_trials": [
+            2,
+            8,
+            4,
+            9
+          ]
+        }
+      ],
+      "compositions": [
+        {
+          "step": 3,
+          "reference_trial": 2,
+          "reference_score": 0.9595379974987126,
+          "train_minus_search": -0.004589952988812485,
+          "analyzer_basis": "try the complementary analyzer",
+          "analyzer_reference_trials": {
+            "word": 1
+          },
+          "target_spec": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "target_eligible": true,
+          "chosen_spec": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "default_id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "feasible_recipe_ids": [
+            "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+            "recipe_single_text_latent_word_logistic_5fd03d4294addcee",
+            "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+            "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+            "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+            "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+            "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+            "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9"
+          ]
+        },
+        {
+          "step": 8,
+          "reference_trial": 2,
+          "reference_score": 0.9595379974987126,
+          "train_minus_search": -0.004589952988812485,
+          "analyzer_basis": "highest observed primary score across both analyzers",
+          "analyzer_reference_trials": {
+            "char_wb": 3,
+            "word": 1
+          },
+          "target_spec": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "target_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "target_eligible": false,
+          "chosen_spec": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "chosen_id": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "default_id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+          "evidence_trials": [
+            2,
+            3,
+            1
+          ],
+          "feasible_recipe_ids": [
+            "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+            "recipe_single_text_latent_word_logistic_5fd03d4294addcee",
+            "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+            "recipe_single_text_hybrid_word_logistic_bf871ba9b7c18a66",
+            "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+            "recipe_single_text_latent_char_wb_logistic_db522d5bf83bf7f7",
+            "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9"
+          ]
+        }
+      ],
+      "recipe_observations": [
+        {
+          "trial": 3,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.951445596998455,
+          "worker_seconds": 1.643186624860391
+        },
+        {
+          "trial": 5,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "confirmation_1",
+          "primary": 0.9392196057400095,
+          "worker_seconds": 1.616554832784459
+        },
+        {
+          "trial": 7,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "confirmation_2",
+          "primary": 0.923482343438423,
+          "worker_seconds": 1.5922511250246316
+        },
+        {
+          "trial": 8,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.9688208616780045,
+          "worker_seconds": 1.6300008338876069
+        },
+        {
+          "trial": 9,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 1.0,
+            "dimensions": 64
+          },
+          "split": "confirmation_1",
+          "primary": 0.972718253968254,
+          "worker_seconds": 1.4708940419368446
+        }
+      ],
+      "grade": {
+        "correct": 813,
+        "rows": 825,
+        "scores": {
+          "accuracy": 0.9854545454545455,
+          "macro_f1": 0.9652612076467451,
+          "primary_metric": "macro_f1",
+          "score": 0.9652612076467451,
+          "rows": 825
+        },
+        "csv_sha256": "47e9dc94fda3a43caa938ddbcccbdf5f99adf5e0f59208e6f75d00f14a7d1ff5"
+      }
+    },
+    "sms_expanded": {
+      "name": "sms_expanded",
+      "fits": 11,
+      "workers": [
+        {
+          "candidate": "single_word_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_10.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "single_word_C0.3",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            6,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap -0.0119). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            2,
+            6,
+            7,
+            8
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "split_id": "confirmation_2",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9514; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). The first replication did not resolve the primary ordering (gap -0.0119). Complete a matched pair on confirmation_2.",
+          "evidence_trials": [
+            2,
+            6,
+            7,
+            8,
+            9
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "Search is closed; preserve the recorded final refit allowance.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 6,
+        "confirm": 4,
+        "stop": 1
+      },
+      "model_sha256": "974a50d75adfce2012d7cc93d7b37e6b4771614e1a13efc596d3226f8a9c2501",
+      "selected": "minilm_text_with_lexical_features",
+      "seconds": 49.349497666116804,
+      "promotions": [],
+      "compositions": [],
+      "recipe_observations": [
+        {
+          "trial": 3,
+          "candidate": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "word",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.9025417471863584,
+          "worker_seconds": 1.4347089580260217
+        },
+        {
+          "trial": 4,
+          "candidate": "recipe_single_text_hybrid_word_logistic_552022e9e62fde74",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "word",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.9262221780604134,
+          "worker_seconds": 1.1699965419247746
+        },
+        {
+          "trial": 5,
+          "candidate": "recipe_single_text_latent_char_wb_logistic_e5bf8d4cd9fc09b6",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "latent",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.938915660420433,
+          "worker_seconds": 1.7265225839801133
+        },
+        {
+          "trial": 6,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "primary",
+          "primary": 0.951445596998455,
+          "worker_seconds": 1.5317822499200702
+        },
+        {
+          "trial": 8,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "confirmation_1",
+          "primary": 0.9392196057400095,
+          "worker_seconds": 1.6565296249464154
+        },
+        {
+          "trial": 10,
+          "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+          "configuration": {
+            "kind": "single_text",
+            "analyzer": "char_wb",
+            "representation": "hybrid",
+            "classifier": "logistic",
+            "C": 0.3,
+            "dimensions": 64
+          },
+          "split": "confirmation_2",
+          "primary": 0.923482343438423,
+          "worker_seconds": 1.6228060421999544
+        }
+      ],
+      "grade": {
+        "correct": 810,
+        "rows": 825,
+        "scores": {
+          "accuracy": 0.9818181818181818,
+          "macro_f1": 0.9547665956334688,
+          "primary_metric": "macro_f1",
+          "score": 0.9547665956334688,
+          "rows": 825
+        },
+        "csv_sha256": "5135ab79272eed6bea1b64c630bc92c4331c6960910c8255d937d12da5b4b6f8"
+      }
+    },
+    "sms_original": {
+      "name": "sms_original",
+      "fits": 10,
+      "workers": [
+        {
+          "candidate": "single_word_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_1.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_2.joblib"
+        },
+        {
+          "candidate": "single_char_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_3.joblib"
+        },
+        {
+          "candidate": "single_word_char_C0.3",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_4.joblib"
+        },
+        {
+          "candidate": "single_word_char_C3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_5.joblib"
+        },
+        {
+          "candidate": "minilm_text_with_lexical_features",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_6.joblib"
+        },
+        {
+          "candidate": "single_word_char_C3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_7.joblib"
+        },
+        {
+          "candidate": "single_char_C3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_8.joblib"
+        },
+        {
+          "candidate": "single_char_C3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "trial_9.joblib"
+        },
+        {
+          "candidate": "single_word_char_C3.0",
+          "maximum_classifier_fits": 1,
+          "attempted_classifier_fits": 1,
+          "completed_classifier_fits": 1,
+          "status": "completed",
+          "calls": [
+            {
+              "classifier": "LogisticRegression",
+              "status": "completed"
+            }
+          ],
+          "artifact": "refit_component_0.joblib"
+        }
+      ],
+      "actions": [
+        {
+          "action": "explore",
+          "candidate_id": "single_word_C0.3",
+          "split_id": "primary",
+          "reason": "Shared first eligible candidate.",
+          "evidence_trials": [],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "single_char_C0.3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            1
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "single_word_char_C0.3",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "single_word_char_C3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            2,
+            4
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "minilm_text_with_lexical_features",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9600; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            5
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "single_word_char_C3.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9595 and 0.9600; hard predictions differ on 8/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            2,
+            5,
+            6
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "explore",
+          "candidate_id": "single_char_C3.0",
+          "split_id": "primary",
+          "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+          "evidence_trials": [
+            5,
+            2
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "confirm",
+          "candidate_id": "single_char_C3.0",
+          "split_id": "confirmation_1",
+          "reason": "Comparable primary macro_f1 0.9600 and 0.9595; hard predictions differ on 2/660 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+          "evidence_trials": [
+            5,
+            8,
+            7
+          ],
+          "estimated_classifier_fits": 1
+        },
+        {
+          "action": "stop",
+          "candidate_id": null,
+          "split_id": null,
+          "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+          "evidence_trials": [
+            5,
+            2
+          ],
+          "estimated_classifier_fits": 0
+        }
+      ],
+      "action_counts": {
+        "explore": 6,
+        "confirm": 3,
+        "stop": 1
+      },
+      "model_sha256": "d935651dab4e3ae8e344a4727f582111699b7236c05420a8782194e0b177d8fa",
+      "selected": "single_word_char_C3.0",
+      "seconds": 35.848662791075185,
+      "promotions": [
+        {
+          "previous": "minilm_text_with_lexical_features",
+          "candidate": "single_word_char_C3.0",
+          "splits": [
+            "primary",
+            "confirmation_1"
+          ],
+          "gaps": [
+            0.0005104286514084899,
+            0.03498933287062256
+          ],
+          "mean_gain": 0.017749880761015524,
+          "evidence_trials": [
+            2,
+            5,
+            6,
+            7
+          ]
+        }
+      ],
+      "compositions": [],
+      "recipe_observations": [],
+      "grade": {
+        "correct": 811,
+        "rows": 825,
+        "scores": {
+          "accuracy": 0.983030303030303,
+          "macro_f1": 0.9579779957505021,
+          "primary_metric": "macro_f1",
+          "score": 0.9579779957505021,
+          "rows": 825
+        },
+        "csv_sha256": "0c002f1e01888b6c44314b4d9370ac5b691c5c1746182a366dfb3b99dd1fcccb"
+      }
+    }
+  },
+  "paired": {
+    "headlines": {
+      "expanded_minus_original": {
+        "delta_primary_pp": 0.0,
+        "gained": 0,
+        "lost": 0
+      },
+      "composed_minus_expanded": {
+        "delta_primary_pp": 0.0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "sms": {
+      "expanded_minus_original": {
+        "delta_primary_pp": -0.32114001170333584,
+        "gained": 4,
+        "lost": 5
+      },
+      "composed_minus_expanded": {
+        "delta_primary_pp": 1.0494612013276283,
+        "gained": 8,
+        "lost": 5
+      }
+    }
+  }
+}

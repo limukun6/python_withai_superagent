@@ -1,0 +1,52 @@
+{
+  "candidate": "image_extra_trees_leaf3",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "extra_trees"
+  },
+  "reason": "Trial 3 is the best completed primary search result, but its frozen-feature route is exhausted. Among available untried candidates, image_extra_trees_leaf3 provides coverage of a non-linear tree ensemble on flattened pixels.",
+  "review": "The prior single_text claim is contradicted by the confirmed task.kind=image fact. This proposal selects an available image candidate and does not claim the experiment has already run.",
+  "hypothesis": "A tree ensemble on flattened pixels may capture non-linear interactions not represented by linear logistic baselines; this is a coverage test, not a predicted improvement.",
+  "evidence_trials": [
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "coverage",
+  "uncertainty": "No primary search measurement exists for this candidate, so its accuracy relative to trial 3 is unknown; flattened-pixel trees may overfit.",
+  "grounding": {
+    "namespace": "fd6b31f0cb469dcb62ece67813eefda606db96a2de68ff06e9df872e0a363548",
+    "evidence_refs": [
+      "task.kind",
+      "task.metric",
+      "c:image_extra_trees_leaf3.classifier",
+      "c:image_extra_trees_leaf3.untried",
+      "t3.search.accuracy"
+    ],
+    "assertions": [
+      {
+        "kind": "value",
+        "ref": "task.kind",
+        "value": "image"
+      },
+      {
+        "kind": "value",
+        "ref": "task.metric",
+        "value": "accuracy"
+      },
+      {
+        "kind": "value",
+        "ref": "c:image_extra_trees_leaf3.classifier",
+        "value": "extra_trees"
+      },
+      {
+        "kind": "value",
+        "ref": "c:image_extra_trees_leaf3.untried",
+        "value": true
+      }
+    ],
+    "addresses_issue_ids": [
+      "issue:df6be28ecf5586e70f66"
+    ]
+  }
+}

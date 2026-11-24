@@ -1,0 +1,174 @@
+{
+  "image_logistic_C0.1": {
+    "id": "image_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "route": "image_logistic",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "logistic",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_logistic_C1.0": {
+    "id": "image_logistic_C1.0",
+    "params": {
+      "C": 1.0
+    },
+    "route": "image_logistic",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "logistic",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_logistic_C10.0": {
+    "id": "image_logistic_C10.0",
+    "params": {
+      "C": 10.0
+    },
+    "route": "image_logistic",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "logistic",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_extra_trees_leaf1": {
+    "id": "image_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "route": "image_extra_trees",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "extra_trees",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_extra_trees_leaf3": {
+    "id": "image_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "route": "image_extra_trees",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "extra_trees",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_rbf_svm_C1.0": {
+    "id": "image_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "route": "image_rbf_svm",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "rbf_svm",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": false,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_rbf_svm_C10.0": {
+    "id": "image_rbf_svm_C10.0",
+    "params": {
+      "C": 10.0,
+      "kernel": "rbf"
+    },
+    "route": "image_rbf_svm",
+    "input_kind": "image",
+    "representation": "flattened standardized pixels",
+    "estimator": "rbf_svm",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": false,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "shared_baseline",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_gradient_histograms_logistic": {
+    "id": "image_gradient_histograms_logistic",
+    "params": {
+      "grid": 4,
+      "orientation_bins": 8,
+      "C": 1.0,
+      "representation": "gradient histograms and cell means"
+    },
+    "route": "gradient_histograms",
+    "input_kind": "image",
+    "representation": "gradient histograms and cell means",
+    "estimator": "logistic",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "cpu",
+    "origin": "b_port",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  },
+  "image_mobilenet_v3_small_linear": {
+    "id": "image_mobilenet_v3_small_linear",
+    "params": {
+      "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+      "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+      "C": 10.0,
+      "representation": "L2-normalized frozen 576-dimensional image features"
+    },
+    "route": "frozen_image_features",
+    "input_kind": "image",
+    "representation": "L2-normalized frozen 576-dimensional image features",
+    "estimator": "logistic",
+    "swap_label_rule": "not_applicable",
+    "supports_probabilities": true,
+    "expected_classifier_fits": 1,
+    "resource": "local_frozen_encoder_cpu",
+    "origin": "b_port",
+    "kind": "image",
+    "classifier_fits": 1,
+    "refit_classifier_fits": 1
+  }
+}

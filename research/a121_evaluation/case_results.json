@@ -1,0 +1,2054 @@
+[
+  {
+    "id": "change_logistic_0.1_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "confirmed",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_logistic_0.1_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_logistic_10.0_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "confirmed",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_logistic_10.0_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_linear_svm_0.1_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "unknown",
+    "passed": false,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_linear_svm_0.1_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "unknown",
+    "passed": false,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_linear_svm_10.0_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "unknown",
+    "passed": false,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_linear_svm_10.0_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "unknown",
+    "passed": false,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_rbf_svm_0.1_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "SVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "confirmed",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_rbf_svm_0.1_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "SVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_rbf_svm_10.0_1.0_confirmed",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "SVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "confirmed",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "change_rbf_svm_10.0_1.0_contradicted",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "SVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Decreasing regularization strength from C=10.0 to C=1.0 may change accuracy.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_rbf_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "SVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_rbf_svm_C10.0",
+          "reference_parameter_value": 10.0,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "stronger",
+          "claimed_penalty_direction": "weaker"
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_12",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing C weakens regularization.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_13",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing C strengthens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Increasing C strengthens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_14",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing C strengthens regularization.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_15",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing C weakens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Decreasing C weakens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_16",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C is inverse regularization strength.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_logistic_17",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C is directly proportional to regularization strength.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "C is directly proportional to regularization strength.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_18",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing C weakens regularization.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_19",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing C strengthens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Increasing C strengthens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_20",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing C strengthens regularization.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_21",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Decreasing C weakens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "Decreasing C weakens regularization.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_22",
+    "expected": "confirmed",
+    "observed": "confirmed",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C is inverse regularization strength.",
+          "status": "confirmed",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "definition_linear_svm_23",
+    "expected": "contradicted",
+    "observed": "contradicted",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LinearSVC",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+        "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C is directly proportional to regularization strength.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "reason",
+          "span": "C is directly proportional to regularization strength.",
+          "status": "contradicted",
+          "reason": "Definition of C within the registered estimator",
+          "candidate_id": "single_text_linear_svm_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null,
+          "definition": {
+            "estimator_class": "LinearSVC",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+            "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+            "accuracy_effect_verified": false
+          }
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_0",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The previous model had stronger regularization;",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_1",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Unlike the baseline, higher regularization strength C=1.0 might help.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_2",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 is not our hypothesis.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_3",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Whether increasing C strengthens regularization is unknown.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_4",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C=1.0 means stronger regularization than C=0.1 for a different representation.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_5",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.2 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_6",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_7",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_8",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "This low regularization setting may be underfitting.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_9",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C=0.1 matches a low-regularization region.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_10",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C=1.0 will improve accuracy.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_11",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_12",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_13",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_14",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_logistic_C0.0",
+          "parameter": "C",
+          "candidate_parameter_value": 0.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "id": "scope_15",
+    "expected": "unknown",
+    "observed": "unknown",
+    "passed": true,
+    "baseline_warning": false,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Increasing regularization strength from C=0.1 to C=1.0 may help.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  }
+]

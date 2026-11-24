@@ -1,0 +1,206 @@
+{
+  "ab_schema_version": 1,
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "numeric_tabular",
+    "metric": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "tabular"
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "numeric_tabular",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "accuracy",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            0,
+            1
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [],
+  "available_candidates": [
+    {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "route": "numeric_tabular_rbf_svm",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_rbf_svm_C10.0",
+      "params": {
+        "C": 10.0,
+        "kernel": "rbf"
+      },
+      "route": "numeric_tabular_rbf_svm",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "rbf_svm",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": false,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "prediction_evidence": [],
+  "budget": {
+    "fit_limit": 11,
+    "attempted_classifier_fits": 0,
+    "completed_classifier_fits": 0,
+    "remaining_fit_allowance": 11,
+    "reserved_final_refit": 1,
+    "unknown_failed_attempts": 0,
+    "llm_request_limit": 0,
+    "used_llm_requests": 0,
+    "time_limit_seconds": 240.0,
+    "elapsed_seconds": 0.09973959999842918
+  },
+  "registered_confirmation_splits": [
+    "confirmation_1",
+    "confirmation_2"
+  ]
+}

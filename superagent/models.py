@@ -24,11 +24,9 @@ class Candidate:
     fit_predict: Callable[[Any, np.ndarray, Any], tuple[Any, np.ndarray]]
 
 
-def _clean_categories(x: np.ndarray, *, full_marker: bool = False) -> np.ndarray:
+def _clean_categories(x: np.ndarray) -> np.ndarray:
     values = np.asarray(x, dtype=object).astype(str)
     missing = np.isin(np.char.lower(np.char.strip(values)), ["nan", "none", "null", "na", "?"])
-    if full_marker:
-        return np.where(missing, "__MISSING__", values)
     values[missing] = "__MISSING__"
     return values
 
@@ -44,7 +42,7 @@ def _logistic_tabular(
 ) -> tuple[Any, np.ndarray]:
     model = Pipeline([
         ("one_hot", OneHotEncoder(handle_unknown="ignore")),
-        ("model", _tabular_logistic(c)),
+        ("model", LogisticRegression(max_iter=2000, C=c, random_state=42)),
     ])
     model.fit(_clean_categories(x_train), y_train)
     return model, model.predict(_clean_categories(x_val))
@@ -55,23 +53,20 @@ def _extra_trees_tabular(
 ) -> tuple[Any, np.ndarray]:
     model = Pipeline([
         ("one_hot", OneHotEncoder(handle_unknown="ignore")),
-        ("model", _tabular_trees(min_samples_leaf)),
+        ("model", ExtraTreesClassifier(
+            n_estimators=400, min_samples_leaf=min_samples_leaf, max_features=0.8,
+            n_jobs=-1, random_state=42, class_weight="balanced",
+        )),
     ])
     model.fit(_clean_categories(x_train), y_train)
     return model, model.predict(_clean_categories(x_val))
 
 
-def _tabular_logistic(c):
-    return LogisticRegression(max_iter=2000, C=c, random_state=42)
-
-
-def _tabular_trees(min_samples_leaf):
-    return ExtraTreesClassifier(n_estimators=400, min_samples_leaf=min_samples_leaf, max_features=.8,
-                                n_jobs=-1, random_state=42, class_weight="balanced")
-
-
 def _tabular_catboost(y_train, depth, l2_leaf_reg):
+    # Imported lazily so a missing optional accelerator does not prevent the
+    # transparent sklearn fallback portfolio from completing.
     from catboost import CatBoostClassifier
+
     return CatBoostClassifier(
         iterations=600,
         depth=depth,
@@ -86,10 +81,7 @@ def _tabular_catboost(y_train, depth, l2_leaf_reg):
     )
 
 
-def _catboost_tabular(
-    x_train: np.ndarray, y_train: np.ndarray, x_val: np.ndarray,
-    depth: int = 7, l2_leaf_reg: float = 3.0,
-) -> tuple[Any, np.ndarray]:
+def _catboost_tabular(x_train, y_train, x_val, depth=7, l2_leaf_reg=3.0):
     x_train_clean = _clean_categories(x_train)
     x_val_clean = _clean_categories(x_val)
     model = _tabular_catboost(y_train, depth, l2_leaf_reg)
@@ -242,11 +234,7 @@ def candidates_for(kind: str) -> list[Candidate]:
 def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     """Apply an already-fitted portfolio model without accessing labels."""
     from .generated_pipeline import GeneratedModel
-    from .pretrained_choice import ContextClassifier
-    from .scratch_classifier import ScratchClassifier
-    from .category_posteriors import PosteriorCategoryClassifier
-    from .encoder_mixture import EncoderMixture
-    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier,EncoderMixture)):return np.asarray(model.predict(inputs)).reshape(-1)
+    if isinstance(model,GeneratedModel):return np.asarray(model.predict(inputs)).reshape(-1)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return np.asarray(model.predict(inputs)).reshape(-1)
@@ -255,6 +243,8 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     from .supervised_text import NBPairModel
     from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
     if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.predict(inputs)
+    if kind == 'pair_text' and isinstance(model, Pipeline):
+        return np.asarray(model.predict(inputs)).reshape(-1)
     if isinstance(model,NBPairModel):return model.predict(inputs)
     if isinstance(model, (SoftVoteModel,StylePairModel)):
         return model.predict(inputs)
@@ -283,10 +273,7 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
 def probability_with_model(kind, model, inputs):
     """Return fitted class labels with probability columns in that same order."""
     from .generated_pipeline import GeneratedModel
-    from .pretrained_choice import ContextClassifier
-    from .scratch_classifier import ScratchClassifier
-    from .category_posteriors import PosteriorCategoryClassifier
-    if isinstance(model,(GeneratedModel,ContextClassifier,ScratchClassifier,PosteriorCategoryClassifier)):return model.classes_,model.predict_proba(inputs)
+    if isinstance(model,GeneratedModel):return model.classes_,model.predict_proba(inputs)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return model.classes_, model.predict_proba(inputs)
@@ -296,14 +283,15 @@ def probability_with_model(kind, model, inputs):
     from .nonlinear_text import StyleTreePairModel,SymmetricPairModel,FixedStyleBlend
     if isinstance(model,(StyleTreePairModel,SymmetricPairModel,FixedStyleBlend)):return model.classes_,model.predict_proba(inputs)
     if isinstance(model,NBPairModel):return model.classes_,model.predict_proba(inputs)
-    from .encoder_mixture import EncoderMixture
-    if isinstance(model, (SoftVoteModel,StylePairModel,EncoderMixture)):
+    if isinstance(model, (SoftVoteModel,StylePairModel)):
         return model.classes_, model.predict_proba(inputs)
     if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):
         if not hasattr(model,'predict_proba'):raise ValueError('Selected classifier has no probability output')
         return model.classes_,model.predict_proba(inputs)
     if kind == "categorical_tabular":
         classifier, matrix = model, _clean_categories(inputs)
+    elif kind == 'pair_text' and isinstance(model, Pipeline):
+        classifier, matrix = model, inputs
     elif kind == "pair_text":
         if isinstance(model, DummyClassifier):
             classifier, matrix = model, np.zeros((len(inputs), 1))
@@ -350,6 +338,14 @@ class SoftVoteModel:
 
 def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]:
     """Common search space, deliberately larger than a benchmark trial budget."""
+    if portfolio in ('ab-v1', 'all'):
+        from .ab_methods import additions
+        prior = 'expanded' if portfolio == 'ab-v1' else 'all'
+        return _legacy_candidates(kind, prior) + additions(kind, include_legacy_methods=portfolio!='all')
+    return _legacy_candidates(kind, portfolio)
+
+
+def _legacy_candidates(kind: str, portfolio: str) -> list[Candidate]:
     if portfolio not in ("original","expanded","research","nonlinear","adaptive","semantic","learned","challenger","all"):
         raise ValueError("Unknown portfolio")
     if kind in ("numeric_tabular","mixed_tabular","text_tabular","single_text","image"):

@@ -1,0 +1,126 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Fixed allocation primary stage. Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "primary",
+    "reason": "The only completed primary trial is a strongly regularized logistic model with modest accuracy and imbalanced class recall. A native-category CatBoost model is a reasonable next primary-split experiment because it can model categorical interactions that one-hot logistic regression may miss, while depth 6 and l2_leaf_reg 3.0 are moderate settings rather than an extreme overfit-prone choice.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary trial, using CatBoost depth 6 with l2_leaf_reg 3.0 and showing a moderate train-search gap. The most direct next primary-split experiment is to keep the same depth and iterations while increasing L2 regularization to 10.0, testing whether stronger regularization reduces the observed gap without changing the model family or representation.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed primary trial with CatBoost depth 6 and l2_leaf_reg 3.0. Trial 3 increased L2 regularization to 10.0 at the same depth and slightly reduced primary search accuracy, so the next direct primary-split experiment is to test greater tree capacity by increasing depth to 8 while keeping the better-performing regularization setting.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth6_reg10.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "estimated_classifier_fits": 0,
+    "evidence_trials": [
+      4,
+      2,
+      3
+    ],
+    "reason": "Fixed primary and top-three replication allocation completed; preserve final refit."
+  }
+]

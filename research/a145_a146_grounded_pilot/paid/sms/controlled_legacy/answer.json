@@ -1,0 +1,19 @@
+{
+  "candidate": "recipe_single_text_hybrid_char_wb_logistic_001097e6390567a9",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Trial 3 is the best completed PRIMARY result, while trial 1 shows a word-only C=0.3 model can collapse spam recall. The untried hybrid char_wb logistic route with C=1.0 is a reasonable next PRIMARY probe because it combines character-level and lexical signals and uses less regularization than C=0.3.",
+  "review": "Prior evidence is limited to PRIMARY trials 1-3. Trial 1 had macro_f1 0.463 with spam recall 0.0; trials 2 and 3 improved substantially, with trial 3 best at 0.9379976654020927. The prior h3 proposal was diagnostic and had no numerical expectation, so it does not establish a causal claim.",
+  "hypothesis": "A hybrid char_wb logistic model with C=1.0 may capture subword spam cues alongside lexical context better than the word-only baseline, but the direction and magnitude of any macro_f1 change are unknown.",
+  "evidence_trials": [
+    1,
+    2,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "No PRIMARY evidence exists for this recipe or C=1.0 hybrid char_wb configuration. Any comparison must use the same PRIMARY split; expected direction and magnitude are unknown."
+}

@@ -1,0 +1,189 @@
+{
+  "executor_comparison": {
+    "reading": "improved",
+    "source": "executor",
+    "latest_trial": 2,
+    "best_prior_trial": 1,
+    "primary_metric": "accuracy",
+    "latest_search_score": 0.4,
+    "best_prior_search_score": 0.39375,
+    "latest_search_accuracy": 0.4,
+    "best_prior_search_accuracy": 0.39375,
+    "delta_vs_prior_best": 0.006250000000000033,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 2 internal accuracy score is 40.000000%; best earlier trial 1 is 39.375000%; difference +0.625000 percentage points (improved).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 2,
+    "reference_candidate": "image_gradient_histograms_logistic",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "image_mobilenet_v3_small_linear",
+    "selected_status": null,
+    "reference_route": "gradient_histograms",
+    "selected_route": "frozen_image_features",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "C",
+        "before_present": true,
+        "after_present": true,
+        "before": 1.0,
+        "after": 10.0,
+        "parameter_effect": {
+          "numeric_direction": "increased",
+          "declared_effect": "weaker_regularization",
+          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+          "effect_scope": "definition within a fixed parameterization",
+          "same_declared_route": false,
+          "accuracy_effect_verified": false,
+          "cross_route_note": "Different representations/algorithms can change scaling; numerical C values do not establish equal effective regularization"
+        }
+      },
+      {
+        "parameter": "encoder",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "grid",
+        "before_present": true,
+        "after_present": false,
+        "before": 4,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "orientation_bins",
+        "before_present": true,
+        "after_present": false,
+        "before": 8,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": true,
+        "before": "gradient histograms and cell means",
+        "after": "L2-normalized frozen 576-dimensional image features",
+        "parameter_effect": null
+      },
+      {
+        "parameter": "weight_sha256",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "image_mobilenet_v3_small_linear",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "Frozen pretrained MobileNet features may capture image structure more effectively than flattened standardized pixels or gradient histograms, allowing a linear classifier to improve PRIMARY accuracy.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Both completed PRIMARY trials are weak (accuracy 0.39375 and 0.4) and rely on raw-pixel or handcrafted gradient representations. The frozen MobileNet feature route is untried and provides a different representation that may better separate the five image classes.",
+      "review": "Trials 1 and 2 are PRIMARY measurements only; no confirmation split is available. Trial 1 shows severe overfitting with train accuracy 1.0 versus search accuracy 0.39375, while trial 2 reduces the gap but remains near 0.4. This candidate is selected for the PRIMARY search split, not as a final confirmation claim.",
+      "hypothesis": "Frozen pretrained MobileNet features may capture image structure more effectively than flattened standardized pixels or gradient histograms, allowing a linear classifier to improve PRIMARY accuracy.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 3,
+    "confirmed": 3,
+    "contradicted": 0,
+    "unverifiable": 0,
+    "informational": 0,
+    "items": [
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trials 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 1",
+        "claim": 1,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2
+        ],
+        "status": "confirmed"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 3 machine-checkable claims inspected, 0 contradicted, 0 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": true,
+    "definition": {
+      "estimator_class": "LogisticRegression",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+      "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+      "accuracy_effect_verified": false
+    },
+    "items": [],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

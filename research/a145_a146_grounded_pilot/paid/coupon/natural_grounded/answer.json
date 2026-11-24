@@ -1,0 +1,54 @@
+{
+  "candidate": "catboost_depth6_reg3.0",
+  "task_kind": "categorical_tabular",
+  "configuration_claim": {
+    "classifier": "catboost"
+  },
+  "reason": "Select catboost_depth6_reg3.0 for primary search: CatBoost was the best completed route on primary search accuracy, and this untried configuration tests a depth/regularization point near trial 2 while using native categories. No improvement is predicted.",
+  "review": "Trial 2 is the best completed primary search accuracy (0.7552) and is CatBoost; trial 3 ExtraTrees has a high train-search gap (0.2881); logistic is lower. The chosen candidate is untried and closest in CatBoost depth/regularization to trial 2, though its representation differs.",
+  "hypothesis": "A depth-6 CatBoost with l2_leaf_reg=3.0 and native categorical handling may preserve the strongest observed route's nonlinearity while avoiding the severe overfit seen in ExtraTrees leaf1; this is speculative.",
+  "evidence_trials": [
+    2,
+    3
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "Trial 2 used training-selected field interactions, while this candidate uses native categories; the CatBoost advantage may not transfer. No formal test is available, and expected change is not quantified.",
+  "grounding": {
+    "namespace": "4828cb77fd27a7adc30c4f5b8522cbcb6245340c9ee78d986b53483389e577a1",
+    "evidence_refs": [
+      "c:catboost_depth6_reg3.0.classifier",
+      "c:catboost_depth6_reg3.0.untried",
+      "t2.classifier",
+      "t2.search.accuracy",
+      "t3.search.accuracy",
+      "t1.search.accuracy"
+    ],
+    "assertions": [
+      {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.classifier",
+        "value": "catboost"
+      },
+      {
+        "kind": "value",
+        "ref": "c:catboost_depth6_reg3.0.untried",
+        "value": true
+      },
+      {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t1.search.accuracy"
+      },
+      {
+        "kind": "compare",
+        "left": "t2.search.accuracy",
+        "op": ">",
+        "right": "t3.search.accuracy"
+      }
+    ],
+    "addresses_issue_ids": []
+  }
+}

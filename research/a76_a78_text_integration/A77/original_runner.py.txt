@@ -1,0 +1,97 @@
+"""One bounded official local text-composition run and one pair recipe worker probe."""
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import time
+
+import joblib
+import numpy as np
+from scripts.a_batch_common import save
+from scripts.run_a10_real_task_pilot import read,sha
+from scripts.run_a29_choice_matrix import launch,physical
+from superagent.ab_run import sources
+from superagent.ab_text_recipes import candidates
+from superagent.metrics import MetricSpec
+from superagent.models import probability_with_model
+from tools.export_model_bundle import export
+
+ROOT=Path(__file__).resolve().parents[1]
+
+
+def main(a):
+    root=a.output.resolve();root.mkdir(parents=True,exist_ok=False);start=time.monotonic();frozen=sources()
+    save(root/'protocol.json',dict(batch='A77',runner_sha256=sha(Path(__file__)),
+        plan_sha256=sha(ROOT/'docs/batches/A77_local_text_entry_execution_plan.md'),source_files=frozen,
+        maximum_classifier_fits=12,starting_A_fits=1228,real_api_requests=0,formal_test_or_H_opened=False))
+    env={**os.environ,'A74_OFFLINE':'1','A74_SOURCE_ROOT':str(ROOT),'AB_A29_OBSERVE_FITS':'1',
+        'AB_A29_FIT_LOG':str(root/'physical_fits.jsonl'),'AB_A29_RUN_NAME':'local_text_entry',
+        'PYTHONPATH':os.pathsep.join([str(ROOT/'scripts/a74_offline_guard'),str(ROOT)]),'PYTHONIOENCODING':'utf-8',
+        'SUPERAGENT_OFFLINE':'1','SUPERAGENT_MINILM_WEIGHTS':'','SUPERAGENT_MOBILENET_V3_SMALL_WEIGHTS':'',
+        'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2'}
+    try:
+        entry=read(a.reference/'protocol.json')['entries']['sms'];src=Path(entry['training_source'])
+        if sha(src)!=entry['training_source_sha256']:raise ValueError('Training source changed')
+        shutil.copyfile(src,root/'train.zip');directory=root/'run'
+        code,seconds=launch([sys.executable,'-m','superagent','run',str(root/'train.zip'),'--run-dir',str(directory),
+            '--scheduler','ab-v1','--portfolio','ab-v1','--fit-limit','11','--seed','707','--time-limit','1200',
+            '--trial-timeout','180','--local-text-proposals','evidence','--partial-delivery','checkpoint'],root/'train.log',env,1260)
+        outcome=read(directory/'run_outcome.json')
+        if code or not outcome['requested_planner_completed']:raise RuntimeError('Official composition entry failed: '+str(outcome.get('error')))
+        fits=len(physical(root))
+        if fits>11 or fits!=outcome['classifier_fit_accounting']['attempted_classifier_fits']:raise ValueError('Fit accounting differs')
+        events=[json.loads(line) for line in (directory/'events.jsonl').read_text(encoding='utf-8').splitlines()]
+        proposals=[e for e in events if e.get('event')=='local_text_recipe_proposal']
+        # Event schema uses `event`, not prose parsing. Preserve raw evidence even if no rule fired.
+        history=read(directory/'history.json');executed={r['candidate'] for r in history}
+        for event in proposals:
+            proof=event['proposal']
+            if proof['chosen_id'] not in executed or not set(proof['evidence_trials'])<={r['trial'] for r in history}:
+                raise ValueError('Recipe proof does not reference executed observations/action')
+        query=a.delivery_reference/'sms_auc/test.zip';prediction=root/'prediction.csv'
+        code,_=launch([sys.executable,'-m','scripts.a38_predict_guard',str(query),'--run-dir',str(directory),'--output',str(prediction)],root/'predict.log',env,180)
+        if code:raise RuntimeError('Official new-process prediction failed')
+        bundle=export(directory,root/'export');fresh=root/'new_cwd';fresh.mkdir()
+        with (root/'isolated.log').open('w',encoding='utf-8') as log:
+            code=subprocess.run([sys.executable,'-I',str(bundle/'predict.py'),'--features',str(query),
+                '--output',str(root/'isolated.csv')],cwd=fresh,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=180).returncode
+        if code or prediction.read_bytes()!=(root/'isolated.csv').read_bytes():raise ValueError('Isolated prediction differs')
+        if len(physical(root))!=fits:raise ValueError('Prediction attempted fit')
+        result=dict(official_path_fits=fits,process_seconds=seconds,local_recipe_proposals=len(proposals),
+            proposal_triggered=bool(proposals),proposals=proposals,selected_candidate=read(directory/'final_selection.json')['family'],
+            CSV_byte_identical=True,primary_metric=outcome['primary_metric'],formal_test_or_H_opened=False,
+            not_performance_superiority_test=True)
+        save(root/'results.json',result)
+        folder=root/'pair_probe';folder.mkdir();pairs=[];labels=np.arange(160)%2
+        for i,label in enumerate(labels):
+            left,right=(f'good apple item{i}',f'bad river peer{i}')
+            pairs.append((left,right) if label else (right,left))
+        candidate=candidates('pair_text')[0].family
+        payload=dict(kind='pair_text',pair_semantics='preference',X_train=pairs,y_train=labels,
+            X_search=pairs[:31],y_search=labels[:31],metric_spec=MetricSpec('accuracy',(0,1)).record())
+        joblib.dump(payload,folder/'payload.joblib');save(folder/'admission.json',dict(maximum_classifier_fits=1,ledger_path=str(folder/'fits.json')))
+        code,_=launch([sys.executable,'-m','superagent.experiment_worker',str(folder/'payload.joblib'),candidate,
+            str(folder/'model.joblib'),'--fit-admission',str(folder/'admission.json')],folder/'train.log',
+            {**env,'AB_A29_RUN_NAME':'pair_recipe_probe'},180)
+        if code:raise RuntimeError('Pair recipe worker failed')
+        if len(physical(root))!=fits+1:raise ValueError('Pair recipe did not use exactly one classifier fit')
+        model=joblib.load(folder/'model.joblib')['model'];classes,p=probability_with_model('pair_text',model,pairs[:31])
+        _,reverse=probability_with_model('pair_text',model,[(b,a) for a,b in pairs[:31]])
+        positive=list(classes).index(1);error=float(np.max(np.abs(p[:,positive]+reverse[:,positive]-1)))
+        if error>1e-8:raise ValueError('Pair recipe violates declared preference probability')
+        result.update(pair_recipe=candidate,pair_probe_classifier_fits=1,pair_swap_probability_error=error);save(root/'results.json',result)
+        save(root/'completion.json',dict(status='passed' if proposals else 'completed_without_proposal_trigger',
+            actual_classifier_fits=len(physical(root)),A_cumulative_fits_after=1228+len(physical(root)),
+            real_api_requests=0,source_unchanged=sources()==frozen,elapsed_seconds=time.monotonic()-start))
+    except Exception as error:
+        save(root/'completion.json',dict(status='stopped',error=str(error),actual_classifier_fits=len(physical(root)),
+            A_cumulative_fits_after=1228+len(physical(root)),real_api_requests=0,automatic_retry=False,
+            elapsed_seconds=time.monotonic()-start));raise
+
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--reference',type=Path,required=True)
+    p.add_argument('--delivery-reference',type=Path,required=True);p.add_argument('--output',type=Path,required=True);main(p.parse_args())

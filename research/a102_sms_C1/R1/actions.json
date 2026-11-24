@@ -1,0 +1,112 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 used word-only features with C=0.3 and collapsed to majority-class prediction: class_recall was [1.0, 0.0] and macro_f1 was 0.463. A word+char representation with C=3.0 is a reasonable next primary-search candidate because it adds subword cues that may help distinguish spam while retaining word features and reducing regularization relative to the failed baseline.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 2 showed that word+char features with C=3.0 achieved the best observed PRIMARY search macro_f1 (0.9373) but had a train-search gap of about 0.0546. The available single_word_char_C0.3 candidate keeps the same representation while increasing regularization, making it a direct and informative next PRIMARY-search test of whether the strong word+char signal can be retained with less overfitting.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "minilm_text_with_lexical_features",
+    "split_id": "primary",
+    "reason": "Trial 2 is the best completed PRIMARY result so far: word+char features with C=3.0 reached macro_f1 0.9373 and recovered spam recall to 0.8022. Trial 3 kept word+char features but lowered C to 0.3 and fell to macro_f1 0.7482, suggesting stronger regularization alone underfit. The MiniLM lexical candidate adds frozen sentence-encoder features to word/char lexical features, which may provide complementary semantic signal while retaining the lexical cues that worked in trial 2. This is an exploratory PRIMARY-search choice, not a demonstrated improvement.",
+    "evidence_trials": [
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9297; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "minilm_text_with_lexical_features",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9297; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "minilm_text_with_nonlinear_lexical_features",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores. Skipped replication of minilm_text_with_lexical_features against single_word_char_C3.0. At most 1 of the registered partitions could be strict wins. Promotion requires 2.",
+    "evidence_trials": [
+      2,
+      4,
+      5,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "minilm_text_with_nonlinear_lexical_features",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary macro_f1 0.9373 and 0.9380; hard predictions differ on 14/661 aligned rows (paired local macro-F1 resampling). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      7,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "recipe_single_text_latent_word_logistic_d4e5b1567e533b3a",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      7,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      7,
+      2
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

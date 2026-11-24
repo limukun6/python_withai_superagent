@@ -1,0 +1,17 @@
+{
+  "candidate": "minilm_text_with_nonlinear_lexical_features",
+  "task_kind": "single_text",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Trial 2 is the strongest completed PRIMARY result (macro_f1 0.92965) using MiniLM plus lexical features, but its spam recall is 0.7802 and score gap is 0.0327. The nonlinear lexical candidate extends the same encoder/feature family with an RBF expansion, making it the most direct next test of whether nonlinear feature interactions improve macro_f1 on the primary split.",
+  "review": "Trial 1 word-only logistic had macro_f1 0.46304 with spam recall 0.0, so simple word features are inadequate. Trial 2 is much stronger but still leaves spam recall below ham recall. The proposed candidate is untried and uses the registered logistic classifier; no causal or guaranteed improvement is claimed.",
+  "hypothesis": "A nonlinear RBF expansion over word/char lexical features plus frozen MiniLM embeddings may capture interactions that the linear MiniLM lexical model misses, potentially improving spam recall and macro_f1 on the primary split.",
+  "evidence_trials": [
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "The direction and magnitude of change are unknown. Nonlinear expansion may overfit, increase the train-search gap, or fail to improve spam recall. Only training-derived PRIMARY evidence is available; no formal test is available to the agent."
+}

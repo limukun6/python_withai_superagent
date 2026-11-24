@@ -1,0 +1,103 @@
+[
+  {
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.6048780487804878,
+    "search_score": 0.6470588235294118,
+    "train_metrics": {
+      "accuracy": 0.6048780487804878,
+      "macro_f1": 0.6047275583803471,
+      "primary_metric": "accuracy",
+      "score": 0.6048780487804878,
+      "rows": 205
+    },
+    "search_metrics": {
+      "accuracy": 0.6470588235294118,
+      "macro_f1": 0.6436335403726708,
+      "primary_metric": "accuracy",
+      "score": 0.6470588235294118,
+      "rows": 51
+    },
+    "score_gap": -0.04218077474892401,
+    "train_accuracy": 0.6048780487804878,
+    "search_accuracy": 0.6470588235294118,
+    "generalization_gap": -0.04218077474892401,
+    "class_recall": [
+      0.56,
+      0.7307692307692307
+    ],
+    "training_seconds": 0.04735619999701157,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.6131093000003602,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

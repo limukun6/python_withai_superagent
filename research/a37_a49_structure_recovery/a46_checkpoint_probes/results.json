@@ -1,0 +1,46 @@
+[
+  {
+    "case": "valid",
+    "status": "accepted_partial",
+    "recovery": {
+      "candidate": "supported_field_interactions",
+      "source_trial": 2,
+      "delivery_status": "partial",
+      "training_rows": 6494,
+      "full_training_rows": 8117,
+      "additional_classifier_fits": 0,
+      "additional_api_requests": 0,
+      "external_validation_scored": false
+    }
+  },
+  {
+    "case": "no_completed_primary",
+    "status": "rejected",
+    "error": "No verified successful primary model is available"
+  },
+  {
+    "case": "changed_score",
+    "status": "rejected",
+    "error": "Stored score differs from the declared metric on the local rows"
+  },
+  {
+    "case": "wrong_split",
+    "status": "rejected",
+    "error": "Prediction evidence does not uniquely identify a completed trial"
+  },
+  {
+    "case": "incomplete_fit",
+    "status": "rejected",
+    "error": "Checkpoint lacks completed admitted-fit evidence"
+  },
+  {
+    "case": "changed_payload",
+    "status": "rejected",
+    "error": "Trusted primary payload changed before recovery"
+  },
+  {
+    "case": "changed_model",
+    "status": "rejected",
+    "error": "Checkpoint no longer reproduces its verified primary predictions"
+  }
+]

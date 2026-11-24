@@ -108,6 +108,20 @@ def _number(value):
 
 
 def check_expectation(proposal, result, history):
+    overall = _check_overall_expectation(proposal, result, history)
+    expectation = (proposal or {}).get('slice_expectation')
+    if expectation is None:
+        return overall
+    from .targeted_feedback import check_slice_expectation
+    target = check_slice_expectation(expectation, result, history)
+    statuses = [c['status'] for c in (overall, target) if c['status'] != 'not_stated']
+    status = ('not_supported' if 'not_supported' in statuses else
+              'not_evaluable' if 'not_evaluable' in statuses else 'supported')
+    return {'status': status, 'overall_check': overall, 'slice_check': target,
+            'combination': 'all declared numerical expectations must be met'}
+
+
+def _check_overall_expectation(proposal, result, history):
     """Check a prediction against measurements, not the model's self-assessment.
 
     supported means this measurement met the predeclared numerical expectation;
@@ -116,11 +130,17 @@ def check_expectation(proposal, result, history):
     expectation = (proposal or {}).get("expected_change")
     if expectation is None:
         return {"status": "not_stated"}
-    reference = next((row for row in history if row["trial"] == expectation["reference_trial"]), None)
+    matches = [row for row in history if row['trial'] == expectation['reference_trial']]
+    reference = matches[0] if len(matches)==1 else None
     metric = expectation["metric"]
     if (reference is None or reference.get("status") != "completed" or result.get("status") != "completed"
         or not _number(reference.get(metric)) or not _number(result.get(metric))):
         return {"status": "not_evaluable", "metric": metric, "reference_trial": expectation["reference_trial"]}
+    from .comparison_scope import comparison_scope
+    scope=comparison_scope(reference,result,primary_metric=metric in ('search_score','train_score','score_gap'))
+    if not scope['comparable']:
+        return dict(status='not_evaluable',metric=metric,reference_trial=expectation['reference_trial'],
+                    reason='incomparable_measurement_scope',comparison_scope=scope)
     delta = float(result[metric]) - float(reference[metric])
     directional_delta = delta if expectation["direction"] == "increase" else -delta
     return {
@@ -128,7 +148,7 @@ def check_expectation(proposal, result, history):
         "metric": metric, "reference_trial": reference["trial"],
         "reference_value": float(reference[metric]), "observed_value": float(result[metric]),
         "observed_delta": delta, "direction": expectation["direction"],
-        "required_delta": expectation["min_delta"],
+        "required_delta": expectation["min_delta"], 'comparison_scope':scope,
     }
 
 

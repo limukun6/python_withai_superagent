@@ -1,0 +1,113 @@
+[
+  {
+    "id": "accuracy",
+    "metric": "accuracy",
+    "labels": "binary",
+    "valid": true
+  },
+  {
+    "id": "renamed",
+    "metric": "accuracy",
+    "labels": "renamed",
+    "valid": true
+  },
+  {
+    "id": "macro",
+    "metric": "macro_f1",
+    "labels": "multi",
+    "valid": true
+  },
+  {
+    "id": "f1_pos0",
+    "metric": "binary_f1",
+    "positive": 0,
+    "valid": true
+  },
+  {
+    "id": "f1_pos1",
+    "metric": "binary_f1",
+    "positive": 1,
+    "valid": true
+  },
+  {
+    "id": "auc_pos0",
+    "metric": "roc_auc",
+    "positive": 0,
+    "valid": true
+  },
+  {
+    "id": "auc_default",
+    "metric": "roc_auc",
+    "valid": true,
+    "positive_unknown": true
+  },
+  {
+    "id": "metric_default",
+    "valid": true,
+    "metric_unknown": true
+  },
+  {
+    "id": "invalid_positive",
+    "metric": "binary_f1",
+    "positive": 9,
+    "valid": false
+  },
+  {
+    "id": "invalid_metric",
+    "metric": "precision_magic",
+    "valid": false
+  },
+  {
+    "id": "one_class",
+    "metric": "accuracy",
+    "labels": "one",
+    "valid": false
+  },
+  {
+    "id": "preference",
+    "pair": "preference",
+    "one": "left",
+    "valid": true
+  },
+  {
+    "id": "symmetric",
+    "pair": "symmetric",
+    "one": "equivalent",
+    "valid": true
+  },
+  {
+    "id": "symmetric_wrong",
+    "pair": "symmetric",
+    "one": "left",
+    "valid": false
+  },
+  {
+    "id": "preference_wrong",
+    "pair": "preference",
+    "one": "right",
+    "valid": false
+  },
+  {
+    "id": "pair_undeclared",
+    "pair": null,
+    "one": "left",
+    "valid": true,
+    "pair_unknown": true
+  },
+  {
+    "id": "pair_invalid",
+    "pair": "causal_magic",
+    "one": "left",
+    "valid": false
+  },
+  {
+    "id": "pair_renamed_columns",
+    "pair": "preference",
+    "one": "left",
+    "columns": [
+      "alpha_text",
+      "beta_text"
+    ],
+    "valid": true
+  }
+]

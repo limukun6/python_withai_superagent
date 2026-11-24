@@ -90,7 +90,8 @@ class BudgetAndVoteTests(unittest.TestCase):
                 joblib.dump({"model": self.models[row["trial"]]}, directory / f"trial_{row['trial']}.joblib")
             def train(path, candidate, output, timeout):
                 contents = joblib.load(path)
-                self.assertEqual(set(contents), {"mode", "kind", "X_train", "y_train", "X_search",'metric_spec'})
+                self.assertEqual(set(contents), {"mode", "kind", "X_train", "y_train", "X_search",'metric_spec','pair_semantics'})
+                self.assertIsNone(contents['pair_semantics'])
                 self.assertEqual(contents['metric_spec']['name'],'accuracy')
                 np.testing.assert_array_equal(contents["y_train"], self.y)
                 model = self.a if candidate.startswith("logistic") else self.b

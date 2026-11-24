@@ -1,0 +1,1066 @@
+[
+  {
+    "trial": 1,
+    "candidate": "numeric_tabular_logistic_C0.1",
+    "params": {
+      "C": 0.1
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9828178694158075,
+    "search_score": 0.9680365296803652,
+    "train_metrics": {
+      "accuracy": 0.9828178694158075,
+      "macro_f1": 0.9826163259183345,
+      "primary_metric": "accuracy",
+      "score": 0.9828178694158075,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 0.9680365296803652,
+      "macro_f1": 0.9680125195618153,
+      "primary_metric": "accuracy",
+      "score": 0.9680365296803652,
+      "rows": 219
+    },
+    "score_gap": 0.014781339735442267,
+    "train_accuracy": 0.9828178694158075,
+    "search_accuracy": 0.9680365296803652,
+    "generalization_gap": 0.014781339735442267,
+    "class_recall": [
+      0.9478260869565217,
+      0.9903846153846154
+    ],
+    "training_seconds": 0.08695139997871593,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_logistic_C0.1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.2179999999934807,
+    "evaluation_payload_sha256": "a47d5ae918255ea177e67abf9cfc8c734740864bc725db3a833278486141c06f",
+    "label_sha256": "cdfa6b3e552267440e69bc193dffc177d25a602a8988b38e6dc83dd134680596",
+    "row_ids_sha256": "76b8b52066348e837e676cd11a6ca1ec2a26a2c638f290164615c31b450b0bfa",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.30588679999345914,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.5160000000032596,
+    "evaluation_payload_sha256": "a47d5ae918255ea177e67abf9cfc8c734740864bc725db3a833278486141c06f",
+    "label_sha256": "cdfa6b3e552267440e69bc193dffc177d25a602a8988b38e6dc83dd134680596",
+    "row_ids_sha256": "76b8b52066348e837e676cd11a6ca1ec2a26a2c638f290164615c31b450b0bfa",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 3,
+    "candidate": "numeric_tabular_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9942726231386025,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 0.9942726231386025,
+      "macro_f1": 0.9941995282548752,
+      "primary_metric": "accuracy",
+      "score": 0.9942726231386025,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": -0.00572737686139746,
+    "train_accuracy": 0.9942726231386025,
+    "search_accuracy": 1.0,
+    "generalization_gap": -0.00572737686139746,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.07761850004317239,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.2189999999827705,
+    "evaluation_payload_sha256": "a47d5ae918255ea177e67abf9cfc8c734740864bc725db3a833278486141c06f",
+    "label_sha256": "cdfa6b3e552267440e69bc193dffc177d25a602a8988b38e6dc83dd134680596",
+    "row_ids_sha256": "76b8b52066348e837e676cd11a6ca1ec2a26a2c638f290164615c31b450b0bfa",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "rbf_svm",
+      "observed_class": "SVC",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 4,
+    "candidate": "numeric_tabular_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.2969234999618493,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4530000000377186,
+    "evaluation_payload_sha256": "a47d5ae918255ea177e67abf9cfc8c734740864bc725db3a833278486141c06f",
+    "label_sha256": "cdfa6b3e552267440e69bc193dffc177d25a602a8988b38e6dc83dd134680596",
+    "row_ids_sha256": "76b8b52066348e837e676cd11a6ca1ec2a26a2c638f290164615c31b450b0bfa",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 5,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.2963549999985844,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4679999999934807,
+    "evaluation_payload_sha256": "2116ea44ec73381b25817ed0246f2d01935cccd49114ecfab21fbe5c3072de0f",
+    "label_sha256": "1d9b79fb4eb052f8507502ce6a95ce1dfc6c8c57b51cd28d30da6a8e8603390b",
+    "row_ids_sha256": "e460d5214c03e68cd99934436a1f82eaa4aa71cfed7b696242fe0b4acbc090d3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "numeric_tabular_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.2954128999845125,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4679999999934807,
+    "evaluation_payload_sha256": "2116ea44ec73381b25817ed0246f2d01935cccd49114ecfab21fbe5c3072de0f",
+    "label_sha256": "1d9b79fb4eb052f8507502ce6a95ce1dfc6c8c57b51cd28d30da6a8e8603390b",
+    "row_ids_sha256": "e460d5214c03e68cd99934436a1f82eaa4aa71cfed7b696242fe0b4acbc090d3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "numeric_tabular_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 873
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 219
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.07454060000600293,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.1880000000237487,
+    "evaluation_payload_sha256": "2116ea44ec73381b25817ed0246f2d01935cccd49114ecfab21fbe5c3072de0f",
+    "label_sha256": "1d9b79fb4eb052f8507502ce6a95ce1dfc6c8c57b51cd28d30da6a8e8603390b",
+    "row_ids_sha256": "e460d5214c03e68cd99934436a1f82eaa4aa71cfed7b696242fe0b4acbc090d3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "rbf_svm",
+      "observed_class": "SVC",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 8,
+    "candidate": "numeric_tabular_extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_2",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 1.0,
+    "search_score": 1.0,
+    "train_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 867
+    },
+    "search_metrics": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "accuracy",
+      "score": 1.0,
+      "rows": 225
+    },
+    "score_gap": 0.0,
+    "train_accuracy": 1.0,
+    "search_accuracy": 1.0,
+    "generalization_gap": 0.0,
+    "class_recall": [
+      1.0,
+      1.0
+    ],
+    "training_seconds": 0.30611090001184493,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4690000000409782,
+    "evaluation_payload_sha256": "5e9157b1a81c10f257a04ebefdc68b22cf2dd22521e8e3fc57b7683a0844e313",
+    "label_sha256": "ec5a64cfcb14170bb9d261d99f942a6bf4712b0d7a6988c5c6fc0f4970a8cdad",
+    "row_ids_sha256": "d665942c137e5a7d238715a6d21162b372ff799474b95045bf54ec739590f4b3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 9,
+    "candidate": "numeric_tabular_extra_trees_leaf3",
+    "params": {
+      "min_samples_leaf": 3,
+      "n_estimators": 300
+    },
+    "split_id": "confirmation_2",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9988465974625144,
+    "search_score": 0.9777777777777777,
+    "train_metrics": {
+      "accuracy": 0.9988465974625144,
+      "macro_f1": 0.9988424334265706,
+      "primary_metric": "accuracy",
+      "score": 0.9988465974625144,
+      "rows": 867
+    },
+    "search_metrics": {
+      "accuracy": 0.9777777777777777,
+      "macro_f1": 0.9763103034386911,
+      "primary_metric": "accuracy",
+      "score": 0.9777777777777777,
+      "rows": 225
+    },
+    "score_gap": 0.021068819684736617,
+    "train_accuracy": 0.9988465974625144,
+    "search_accuracy": 0.9777777777777777,
+    "generalization_gap": 0.021068819684736617,
+    "class_recall": [
+      0.965034965034965,
+      1.0
+    ],
+    "training_seconds": 0.2809873000369407,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.4380000000237487,
+    "evaluation_payload_sha256": "5e9157b1a81c10f257a04ebefdc68b22cf2dd22521e8e3fc57b7683a0844e313",
+    "label_sha256": "ec5a64cfcb14170bb9d261d99f942a6bf4712b0d7a6988c5c6fc0f4970a8cdad",
+    "row_ids_sha256": "d665942c137e5a7d238715a6d21162b372ff799474b95045bf54ec739590f4b3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 10,
+    "candidate": "numeric_tabular_rbf_svm_C1.0",
+    "params": {
+      "C": 1.0,
+      "kernel": "rbf"
+    },
+    "split_id": "confirmation_2",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9988465974625144,
+    "search_score": 0.9777777777777777,
+    "train_metrics": {
+      "accuracy": 0.9988465974625144,
+      "macro_f1": 0.9988424334265706,
+      "primary_metric": "accuracy",
+      "score": 0.9988465974625144,
+      "rows": 867
+    },
+    "search_metrics": {
+      "accuracy": 0.9777777777777777,
+      "macro_f1": 0.9763103034386911,
+      "primary_metric": "accuracy",
+      "score": 0.9777777777777777,
+      "rows": 225
+    },
+    "score_gap": 0.021068819684736617,
+    "train_accuracy": 0.9988465974625144,
+    "search_accuracy": 0.9777777777777777,
+    "generalization_gap": 0.021068819684736617,
+    "class_recall": [
+      0.965034965034965,
+      1.0
+    ],
+    "training_seconds": 0.07539840001845732,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "rbf_svm",
+      "class": "SVC",
+      "module": "sklearn.svm._classes",
+      "parameters": {
+        "kernel": "rbf"
+      },
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "numeric_tabular_rbf_svm_C1.0",
+      "params": {
+        "C": 1.0,
+        "kernel": "rbf"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "numeric_tabular_rbf_svm_C1.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.172000000020489,
+    "evaluation_payload_sha256": "5e9157b1a81c10f257a04ebefdc68b22cf2dd22521e8e3fc57b7683a0844e313",
+    "label_sha256": "ec5a64cfcb14170bb9d261d99f942a6bf4712b0d7a6988c5c6fc0f4970a8cdad",
+    "row_ids_sha256": "d665942c137e5a7d238715a6d21162b372ff799474b95045bf54ec739590f4b3",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "rbf_svm",
+      "observed_class": "SVC",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

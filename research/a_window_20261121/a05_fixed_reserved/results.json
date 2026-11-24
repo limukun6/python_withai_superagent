@@ -1,0 +1,554 @@
+[
+  {
+    "id": "shape_1",
+    "group": "shape",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "kind": "numeric_tabular",
+      "x": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "metric": "accuracy"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "numeric_tabular",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_spec",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  },
+  {
+    "id": "shape_2",
+    "group": "shape",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        "one",
+        "two",
+        "three",
+        "four"
+      ],
+      "metric": "macro_f1"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "single_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "macro_f1",
+            "source": "declared_spec",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  },
+  {
+    "id": "positive_3",
+    "group": "positive",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "positive_label": "absent"
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "positive_label must identify one of two training classes"
+    }
+  },
+  {
+    "id": "positive_4",
+    "group": "positive",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        0,
+        1,
+        2,
+        0
+      ]
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "binary_f1 requires two classes; declare an averaging rule for multiclass"
+    }
+  },
+  {
+    "id": "metric_5",
+    "group": "metric",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "focus": "metric_source"
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "numeric_tabular",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "default_accuracy",
+            "status": "unknown",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  },
+  {
+    "id": "metric_6",
+    "group": "metric",
+    "operation": "task",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "kind": "image",
+      "x": [
+        [
+          [
+            0
+          ]
+        ],
+        [
+          [
+            1
+          ]
+        ],
+        [
+          [
+            2
+          ]
+        ],
+        [
+          [
+            3
+          ]
+        ]
+      ],
+      "focus": "metric_source"
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "image",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "image",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "default_accuracy",
+            "status": "unknown",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": null,
+            "source": "undeclared",
+            "status": "unknown"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  },
+  {
+    "id": "pair_1",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "semantics": "preference"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "task_kind": "pair_text",
+      "portfolio": "expanded",
+      "declared_semantics": "preference",
+      "swap_policy": "flips",
+      "swap_tolerance": 0.1,
+      "status": "accepted",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "ok",
+          "detail": "preference"
+        },
+        {
+          "check": "semantics_matches_package",
+          "status": "ok",
+          "detail": "preference implies pair_text, package loaded as pair_text"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "ok",
+          "detail": "label-flipping augmentation matches the declared semantics"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [],
+      "remaining_candidates": 22,
+      "candidate_swap_rules": {
+        "word_C0.05": "flips",
+        "word_C0.1": "flips",
+        "word_C0.3": "flips",
+        "word_C0.7": "flips",
+        "word_C1.5": "flips",
+        "word_C3.0": "flips",
+        "word_C10.0": "flips",
+        "word_char_C0.05": "flips",
+        "word_char_C0.1": "flips",
+        "word_char_C0.3": "flips",
+        "word_char_C0.7": "flips",
+        "word_char_C1.5": "flips",
+        "word_char_C3.0": "flips",
+        "word_char_C10.0": "flips",
+        "char_C0.1": "flips",
+        "char_C0.3": "flips",
+        "char_C1.0": "flips",
+        "char_C3.0": "flips",
+        "word_char_stats_C0.1": "flips",
+        "word_char_stats_C0.3": "flips",
+        "word_char_stats_C1.0": "flips",
+        "word_char_stats_C3.0": "flips"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "pair_2",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "reserved",
+    "expected": "confirmed",
+    "payload": {
+      "semantics": "relation",
+      "kind": "text_tabular"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "task_kind": "text_tabular",
+      "portfolio": "expanded",
+      "declared_semantics": "relation",
+      "swap_policy": "unverified",
+      "swap_tolerance": 0.1,
+      "status": "accepted",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "ok",
+          "detail": "relation"
+        },
+        {
+          "check": "semantics_matches_package",
+          "status": "ok",
+          "detail": "relation implies text_tabular, package loaded as text_tabular"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "unverified",
+          "detail": "semantics does not imply a swap policy"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [],
+      "remaining_candidates": 5,
+      "candidate_swap_rules": {
+        "text_tabular_logistic_C0.1": "unknown",
+        "text_tabular_logistic_C1.0": "unknown",
+        "text_tabular_logistic_C10.0": "unknown",
+        "text_tabular_extra_trees_leaf1": "unknown",
+        "text_tabular_extra_trees_leaf3": "unknown"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "evidence_3",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "trial": 1,
+      "split": "train",
+      "metric": "accuracy",
+      "value": 0.7
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 1,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.7
+      },
+      "observed": 0.9,
+      "evidence_id": "trial:1/train/accuracy",
+      "status": "contradicted",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "evidence_4",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "reserved",
+    "expected": "contradicted",
+    "payload": {
+      "trial": 9,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 9,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.7
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "contradicted",
+      "reason": "trial_not_recorded"
+    }
+  },
+  {
+    "id": "delivery_5",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "order": null,
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "missing_evidence_error": "ROC-AUC requires model scores and their class-column order"
+    }
+  },
+  {
+    "id": "delivery_6",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "reserved",
+    "expected": "unknown",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": null
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "missing_evidence_error": "ROC-AUC requires model scores and their class-column order"
+    }
+  }
+]

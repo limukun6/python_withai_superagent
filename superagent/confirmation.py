@@ -57,6 +57,9 @@ def confirm_candidates(task, history, seed, directory, logger, train_candidate, 
         return {"enabled": False}
     selected = shortlist(history, top_k)
     metric=MetricSpec.for_task(task)
+    for row in selected:
+        if row.get('primary_metric','accuracy')!=metric.name:raise ValueError('Confirmation history uses a different task metric')
+        metric.check_identity(row.get('metric_spec'))
     seeds = [seed + 10000*i for i in range(repeats)]
     mode = effective_grouping(task.kind, grouping)
     primary_mode = effective_grouping(task.kind, primary_grouping)
@@ -69,6 +72,7 @@ def confirm_candidates(task, history, seed, directory, logger, train_candidate, 
             for row in selected:
                 records[row["candidate"]].append({"seed": split_seed, "status": "completed",
                     'primary_metric':metric.name,'search_score':score_of(row),
+                    'metric_spec':row.get('metric_spec'),'metric_identity':metric.check_identity(row.get('metric_spec')),
                     "search_accuracy": row["search_accuracy"], "origin": "primary_search", "new_fit": False})
             continue
         try:
@@ -84,6 +88,8 @@ def confirm_candidates(task, history, seed, directory, logger, train_candidate, 
         contents={"kind": task.kind, "X_train": take(task.X_train, train), "y_train": task.y_train[train],
                      "X_search": take(task.X_train, search), "y_search": task.y_train[search], "retain_model": False,
                      'metric_spec':metric.record()}
+        from .task_semantics import declared_semantics
+        contents['pair_semantics']=declared_semantics(task)
         if feature_cache_dir:contents['feature_cache_dir']=feature_cache_dir
         joblib.dump(contents,payload)
         for row in selected:
@@ -94,6 +100,7 @@ def confirm_candidates(task, history, seed, directory, logger, train_candidate, 
                 _, metrics = train_candidate(payload, row["candidate"],
                     directory / f"confirmation_{index}_{row['trial']}.joblib", min(trial_timeout, remaining))
                 metrics["new_fit"] = True
+                metrics['metric_identity']=metric.check_identity(metrics.get('metric_spec'))
                 completed += metrics["status"] == "completed"
                 if metrics['status']=='completed':classifier_fits_completed+=metrics.get('classifier_fits',1)
                 training_seconds += metrics.get("training_seconds", 0.)

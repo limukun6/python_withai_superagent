@@ -1,0 +1,1332 @@
+[
+  {
+    "review_id": "b44f4528bc3e",
+    "focus": false,
+    "elapsed_seconds": 7.860001642256975e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Among available candidates, catboost_depth6_reg3.0 is the closest regularized native-category CatBoost configuration to that leading family and is preferable to more overfit tree or weaker linear options.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "Trial 2 is the best observed PRIMARY result but has a nontrivial train-search gap (0.0749), so regularization and representation differences matter.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "04be3c36cd75",
+    "focus": false,
+    "elapsed_seconds": 6.140000186860561e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Continue the active word route with the adjacent regularization strength to isolate the effect of C before changing representation.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Increasing C from 0.05 to 0.1 may alter the bias-variance tradeoff within the word representation, but the direction of search-score change is not established by the single completed trial.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "word_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "ab228e3c08a7",
+    "focus": false,
+    "elapsed_seconds": 8.599998545832932e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The available C3.0 variant is the natural next configuration on the active word_char route, testing whether less regularization improves the current best representation without changing estimator family.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "Evidence is limited to three completed PRIMARY trials at C=0.3.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Increasing C from 0.3 to 3.0 for the word_char logistic model may allow the combined word and character features to fit spam-indicative patterns more strongly, potentially improving macro_f1 relative to trial 3.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "03726f9a1706",
+    "focus": false,
+    "elapsed_seconds": 7.249999907799065e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "C10.0 is the natural next regularization point within the same route and representation.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Reducing regularization from C1.0 to C10.0 may allow a slightly sharper linear boundary, but it may also increase variance;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "fdc26c917cd1",
+    "focus": false,
+    "elapsed_seconds": 4.010001430287957e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "review",
+          "span": "Only one completed primary trial is available, so there is no matched evidence comparing logistic regularization strengths or tree ensembles on this split.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_extra_trees_leaf3",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A moderately regularized Extra Trees ensemble may capture nonlinear feature interactions and improve primary-split accuracy over the logistic C0.1 baseline, but the direction and magnitude are not established by existing evidence.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_extra_trees_leaf3",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "53be448c5a39",
+    "focus": false,
+    "elapsed_seconds": 2.7799978852272034e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "Selecting a regularized tree ensemble provides route coverage and tests whether nonlinear feature interactions add useful signal beyond the linear model.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_extra_trees_leaf3",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "The completed PRIMARY trial is logistic C=0.1 with accuracy 0.9225 and small train-search gap.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_extra_trees_leaf3",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A regularized extra-trees ensemble may capture nonlinear or interaction effects in the numeric tabular features that the linear logistic model does not represent, potentially complementing the strong baseline.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "numeric_tabular_extra_trees_leaf3",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "187d362783dc",
+    "focus": false,
+    "elapsed_seconds": 4.600000102072954e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Use the adjacent regularization step from the completed word-feature trial to isolate the effect of C before changing representation.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Slightly weaker regularization may alter the bias-variance tradeoff for word features, but the direction of the effect is not assumed.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "word_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "29491f1bd1d1",
+    "focus": true,
+    "elapsed_seconds": 0.00010159998782910407,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Trial 1 logistic C=0.1 achieved the best PRIMARY accuracy (0.9225) with a small train-search gap (0.0033), while trial 2 extra trees overfit more (gap 0.0878) and scored lower.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "Testing logistic C=1.0 is the most direct next step within the stronger route.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "parameter_semantics_contradiction",
+          "field": "hypothesis",
+          "span": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+          "status": "contradicted",
+          "reason": "Same-route numeric C change has inverse penalty-coefficient direction",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": 1,
+          "definition": {
+            "estimator_class": "LogisticRegression",
+            "package": "scikit-learn",
+            "version": "1.7.2",
+            "parameter": "C",
+            "relation": "inverse_regularization_strength",
+            "source": "runtime_official_class_documentation",
+            "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+            "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+            "accuracy_effect_verified": false
+          },
+          "reference_rule": "best_completed_in_selected_route",
+          "reference_candidate": "numeric_tabular_logistic_C0.1",
+          "reference_parameter_value": 0.1,
+          "reference_parameter_source": "recorded_trial_configuration",
+          "reference_estimator_source": "fitted_estimator",
+          "expected_penalty_direction": "weaker",
+          "claimed_penalty_direction": "stronger"
+        }
+      ],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "bafaded3220b",
+    "focus": false,
+    "elapsed_seconds": 3.9700011257082224e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "The only completed primary trial is a heavily regularized one-hot logistic model with modest accuracy and a small train-search gap.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "This suggests the baseline is not strongly overfitting, but it may be limited by linear one-hot representation and strong regularization.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "CatBoost with depth 6, native categorical handling, and moderate L2 regularization may capture categorical interactions that the one-hot logistic baseline cannot, potentially improving primary-split accuracy.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "da382add2148",
+    "focus": false,
+    "elapsed_seconds": 5.139998393133283e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "The native-category CatBoost route is untried, so matching the best trial's core depth/regularization is a controlled next probe before varying capacity or regularization.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "This candidate isolates the representation change from the best trial's depth and regularization rather than changing multiple factors at once.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "d70c9533830f",
+    "focus": false,
+    "elapsed_seconds": 8.250001701526344e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Trial 3 with word_char representation at C=0.3 achieved the best PRIMARY macro_f1 (0.8388) among completed trials, substantially above char (0.6451) and word (0.4669).",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "The available C=3.0 word_char candidate preserves the strongest observed representation while testing a different regularization strength.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "changing C from 0.3 to 3.0 may alter the regularization tradeoff, but the direction of macro_f1 change is not known.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "1353e54ae92a",
+    "focus": false,
+    "elapsed_seconds": 4.269997589290142e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "hypothesis",
+          "span": "Character n-gram features with C=3.0 may reduce majority-class collapse by representing spam-like character patterns and punctuation cues not captured by word tokens.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "11ef4b2366e7",
+    "focus": false,
+    "elapsed_seconds": 4.080001963302493e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "review",
+          "span": "The logistic baseline has moderate class recall imbalance, and its low regularization setting may be underfitting.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "This choice tests a different estimator family rather than another nearby logistic regularization value.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A depth-6 CatBoost model with native categorical representation and moderate L2 regularization may capture categorical interactions and nonlinear effects that the one-hot logistic baseline misses, potentially improving primary-split accuracy.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "bb68ce1a199c",
+    "focus": false,
+    "elapsed_seconds": 9.929999941959977e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "word_char at C=0.05 was the best completed primary trial (0.6618), tied with char at C=0.1 and above word at C=0.05.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "Testing word_char at the adjacent C=0.1 value is a focused next step to see whether the stronger representation retains its advantage with slightly less regularization.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "The untested word_char_C0.1 candidate combines the best-performing representation family with a regularization value already observed to be competitive in the char route.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A word+char representation with C=0.1 may preserve or improve the primary search accuracy relative to word_char_C0.05, but the observed tie and small trial count mean any gain is uncertain.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "c906698c714a",
+    "focus": false,
+    "elapsed_seconds": 6.810002378188074e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "review",
+          "span": "Logistic C=0.05 is materially weaker.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "7df6b984612b",
+    "focus": false,
+    "elapsed_seconds": 8.329999400302768e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Trial 2 shows char representation at C=0.3 substantially outperforms word-only on macro_f1, but spam recall remains low.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "The combined word_char representation at the same regularization is the most direct next test of whether word-level spam cues can complement the stronger char features without changing the estimator family.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "Word-only C=0.3 collapsed to ham-only recall, while char-only C=0.3 improved macro_f1 and recovered some spam recall.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Combining word and char features at C=0.3 may retain the char representation's robustness while adding word-level signals that improve spam recall and macro_f1 relative to char-only C=0.3.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "82217cfb6e3f",
+    "focus": false,
+    "elapsed_seconds": 7.599999662488699e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The next step should probe the same stronger representation with slightly weaker regularization before changing representation family or making a larger C jump.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "Completed evidence is limited to two low-C logistic trials.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "word_char_C0.05 has higher search accuracy but also a sizable train-search gap (0.1603), so the main uncertainty is whether a modest C increase helps or overfits.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A small increase from C=0.05 to C=0.1 within the word_char representation may reduce underfitting while retaining the representation advantage, but the direction and size of the effect are not established.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "06dda62f8166",
+    "focus": false,
+    "elapsed_seconds": 5.1099981646984816e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": false,
+      "definition": null,
+      "items": [
+        {
+          "field": "reason",
+          "span": "The closest available candidate is catboost_depth6_reg3.0 with native categories, which isolates whether the explicit interaction representation is necessary at the same core depth/regularization setting.",
+          "status": "unknown",
+          "reason": "No supported, penalized estimator configuration with positive C",
+          "candidate_id": "catboost_depth6_reg3.0",
+          "parameter": "C",
+          "candidate_parameter_value": null,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "69897653704d",
+    "focus": true,
+    "elapsed_seconds": 9.580000187270343e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The active logistic route has the best PRIMARY search accuracy so far: trial 3 (C=1.0) scored 0.9230769230769231 with a small train-search gap of 0.004592422502870175.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "Trial 1 (C=0.1) was slightly lower at 0.9225028702640643.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "The available C=10.0 candidate continues this active route and tests a less-regularized logistic setting on the same PRIMARY split.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Increasing logistic regularization strength from C=1.0 to C=10.0 may allow a sharper decision boundary and could change PRIMARY accuracy, but the direction and magnitude are not established from the completed trials.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C10.0",
+          "parameter": "C",
+          "candidate_parameter_value": 10.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "451eb0b0ea09",
+    "focus": false,
+    "elapsed_seconds": 8.120000711642206e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Trial 2 (char C=0.3) substantially outperformed Trial 1 (word C=0.3) on PRIMARY macro_f1, but spam recall remained low.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "The untried word_char route at the better-observed regularization strength is the most informative next candidate because it combines word and character signals while staying within the registered logistic baseline.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "PRIMARY evidence only: word C=0.3 scored 0.4669 macro_f1 with spam recall 0.0;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "char C=0.3 scored 0.6451 with spam recall 0.2073.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Combining word and character n-gram features at C=0.3 may retain the char route's better macro_f1 while adding word-level signal that improves spam recall, but the direction and magnitude are not established.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C0.3",
+          "parameter": "C",
+          "candidate_parameter_value": 0.3,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "4dae4566c926",
+    "focus": true,
+    "elapsed_seconds": 9.039998985826969e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The word_char_stats route is untried and C=0.1 matches the low-regularization region that has performed best so far, so it is a reasonable coverage experiment without claiming a predicted gain.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_stats_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A combined word, character, and statistics representation at C=0.1 may capture complementary lexical and structural cues beyond char-only or word_char features;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_stats_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "a312f009229e",
+    "focus": true,
+    "elapsed_seconds": 8.239998714998364e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Testing the adjacent higher regularization strength C=0.1 on the same route is a focused next step to assess sensitivity around the current best C=0.05 before branching to untried representations.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "If the word_char representation at C=0.05 is slightly underfitting, a modest increase to C=0.1 may allow better feature weighting and improve PRIMARY accuracy;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "word_char_C0.1",
+          "parameter": "C",
+          "candidate_parameter_value": 0.1,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "8c677781aac8",
+    "focus": false,
+    "elapsed_seconds": 8.279999019578099e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "The adjacent logistic C1.0 candidate stays on the better-performing linear route and tests whether slightly weaker regularization improves the primary split without the tree overfit risk.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "Evidence favors the regularized logistic family over the high-variance extra-trees configuration.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "C1.0 is a controlled regularization step from the leading C0.1 trial;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "A less strongly regularized logistic model may capture additional numeric-tabular structure relative to C0.1 while retaining the stable linear behavior seen in trial 1;",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "numeric_tabular_logistic_C1.0",
+          "parameter": "C",
+          "candidate_parameter_value": 1.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "review_id": "5044e26af2b5",
+    "focus": false,
+    "elapsed_seconds": 8.530000923201442e-05,
+    "report": {
+      "scope": "Supported explicit English C definitions and same-route bound changes only",
+      "applicable": true,
+      "definition": {
+        "estimator_class": "LogisticRegression",
+        "package": "scikit-learn",
+        "version": "1.7.2",
+        "parameter": "C",
+        "relation": "inverse_regularization_strength",
+        "source": "runtime_official_class_documentation",
+        "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+        "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+        "accuracy_effect_verified": false
+      },
+      "items": [
+        {
+          "field": "reason",
+          "span": "Trial 1 used word features with C=0.3 and collapsed to majority-class behavior: macro_f1 0.4669 with class recalls [1.0, 0.0].",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "The next primary search step should test a different representation and regularization setting rather than only increasing C on the same word representation.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "reason",
+          "span": "single_word_char_C3.0 combines word and character features and uses C=3.0, giving a broader feature view and less regularization, which is a reasonable primary-split candidate to probe whether spam signal can be recovered.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "review",
+          "span": "It shows near-zero spam recall and macro_f1 close to the majority-class baseline, so the current word/C=0.3 configuration is inadequate as evidence of useful spam classification.",
+          "status": "unknown",
+          "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        },
+        {
+          "field": "hypothesis",
+          "span": "Character n-grams may capture spam-indicative patterns that word-only features missed, and C=3.0 may reduce underfitting relative to C=0.3.",
+          "status": "unknown",
+          "reason": "Unsupported or ambiguous parameter statement",
+          "candidate_id": "single_word_char_C3.0",
+          "parameter": "C",
+          "candidate_parameter_value": 3.0,
+          "candidate_value_source": "declared_candidate_configuration",
+          "reference_trial": null
+        }
+      ],
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  }
+]

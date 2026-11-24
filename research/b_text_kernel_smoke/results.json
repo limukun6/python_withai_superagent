@@ -1,0 +1,137 @@
+{
+  "workers": {
+    "single_text": {
+      "optimization_rows": 112,
+      "model_sha256": "14142048f9e7e8b70cc980f1593c0ddb1306433610018cbd4209977ece6dbaa0",
+      "worker": {
+        "candidate": "minilm_text_with_nonlinear_lexical_features",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ]
+      },
+      "delivery": {
+        "rows": 32,
+        "classes": [
+          "ham",
+          "spam"
+        ],
+        "probability_sha256": "17512f00b24eb8be847502291bce11c7113c487adc2e3847208b05fd450fd7dc"
+      },
+      "median_squared_distance": 1.7108339055130661,
+      "gamma": 0.4051516505058249,
+      "usage": {
+        "input_tokens": 7401,
+        "feature_transform_calls": 2,
+        "api_calls": 0,
+        "api_rmb": 0,
+        "bandwidth_sample_texts": 112,
+        "bandwidth_input_tokens": 3693
+      }
+    },
+    "pair_text": {
+      "optimization_rows": 56,
+      "model_sha256": "52675023e4ca4b24550fe8975da299db992976ab07ad0b305463570dee65cc87",
+      "worker": {
+        "candidate": "minilm_text_with_nonlinear_lexical_features",
+        "maximum_classifier_fits": 1,
+        "attempted_classifier_fits": 1,
+        "completed_classifier_fits": 1,
+        "status": "completed",
+        "calls": [
+          {
+            "classifier": "LogisticRegression",
+            "status": "completed"
+          }
+        ]
+      },
+      "delivery": {
+        "rows": 16,
+        "classes": [
+          0,
+          1
+        ],
+        "probability_sha256": "9cec7acd5724d5cd6685f74ce9f6bb5550abcad9f56aba363b3294c3e3369fee",
+        "max_swap_probability_error": 1.1102230246251565e-16
+      },
+      "median_squared_distance": 1.7108339055130661,
+      "gamma": 0.4051516505058249,
+      "usage": {
+        "input_tokens": 7418,
+        "feature_transform_calls": 2,
+        "api_calls": 0,
+        "api_rmb": 0,
+        "bandwidth_sample_texts": 112,
+        "bandwidth_input_tokens": 3693
+      }
+    }
+  },
+  "menus": {
+    "single_text": {
+      "old": 7,
+      "new": 8,
+      "capability": {
+        "id": "minilm_text_with_nonlinear_lexical_features",
+        "params": {
+          "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+          "revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+          "C": 0.3,
+          "representation": "word_char_minilm_rbf",
+          "kernel_components": 512,
+          "bandwidth_sample_limit": 128,
+          "kernel_seed": 12271,
+          "swap_augmentation": false
+        },
+        "route": "minilm_nonlinear_lexical",
+        "input_kind": "single_text",
+        "representation": "word_char_minilm_rbf",
+        "estimator": "logistic",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "local_frozen_encoder_cpu",
+        "origin": "b_port",
+        "kind": "single_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      }
+    },
+    "pair_text": {
+      "old": 23,
+      "new": 24,
+      "capability": {
+        "id": "minilm_text_with_nonlinear_lexical_features",
+        "params": {
+          "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+          "revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+          "C": 0.3,
+          "representation": "word_char_minilm_rbf",
+          "kernel_components": 512,
+          "bandwidth_sample_limit": 128,
+          "kernel_seed": 12271,
+          "swap_augmentation": true
+        },
+        "route": "minilm_nonlinear_lexical",
+        "input_kind": "pair_text",
+        "representation": "word_char_minilm_rbf",
+        "estimator": "logistic",
+        "swap_label_rule": "flips",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "local_frozen_encoder_cpu",
+        "origin": "b_port",
+        "kind": "pair_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      }
+    }
+  },
+  "prior_headline_rows": 1686,
+  "prior_headline_predictions_sha256": "a1b64f108131a7ce8a4aca53983d02faa38e1eb8fecadab545ac8ef2d106bd1f"
+}

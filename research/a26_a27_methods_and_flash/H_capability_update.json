@@ -1,0 +1,257 @@
+{
+  "H1": {
+    "task_archive_sha256": "923993dfd450a67ce25760b5954b415371f255c62dbf761ab7bfcd30575cb006",
+    "rows": 2000,
+    "capabilities": {
+      "symmetric_word_C0.3": {
+        "id": "symmetric_word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "symmetric_word_absdiff_product",
+          "swap_augmentation": false,
+          "max_features_per_vectorizer": 20000
+        },
+        "route": "symmetric_word",
+        "input_kind": "pair_text",
+        "representation": "symmetric_word_absdiff_product",
+        "estimator": "logistic",
+        "swap_label_rule": "preserves",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "b_port",
+        "kind": "pair_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "symmetric_word_C3.0": {
+        "id": "symmetric_word_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "symmetric_word_absdiff_product",
+          "swap_augmentation": false,
+          "max_features_per_vectorizer": 20000
+        },
+        "route": "symmetric_word",
+        "input_kind": "pair_text",
+        "representation": "symmetric_word_absdiff_product",
+        "estimator": "logistic",
+        "swap_label_rule": "preserves",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "b_port",
+        "kind": "pair_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "symmetric_word_char_C0.3": {
+        "id": "symmetric_word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "symmetric_word_char_absdiff_product",
+          "swap_augmentation": false,
+          "max_features_per_vectorizer": 20000
+        },
+        "route": "symmetric_word_char",
+        "input_kind": "pair_text",
+        "representation": "symmetric_word_char_absdiff_product",
+        "estimator": "logistic",
+        "swap_label_rule": "preserves",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "b_port",
+        "kind": "pair_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "symmetric_word_char_C3.0": {
+        "id": "symmetric_word_char_C3.0",
+        "params": {
+          "C": 3.0,
+          "representation": "symmetric_word_char_absdiff_product",
+          "swap_augmentation": false,
+          "max_features_per_vectorizer": 20000
+        },
+        "route": "symmetric_word_char",
+        "input_kind": "pair_text",
+        "representation": "symmetric_word_char_absdiff_product",
+        "estimator": "logistic",
+        "swap_label_rule": "preserves",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "b_port",
+        "kind": "pair_text",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      }
+    },
+    "executable_candidates": 4,
+    "H_data_opened": false,
+    "model_evaluated": false,
+    "score": null
+  },
+  "H2": {
+    "task_archive_sha256": "8cd5aff6aae6990321ab746ed400fe07035789d6053943f0b46018e08a5e4fd7",
+    "rows": 120,
+    "capabilities": {
+      "image_logistic_C0.1": {
+        "id": "image_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        },
+        "route": "image_logistic",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "logistic",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_logistic_C1.0": {
+        "id": "image_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        },
+        "route": "image_logistic",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "logistic",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_logistic_C10.0": {
+        "id": "image_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        },
+        "route": "image_logistic",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "logistic",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_extra_trees_leaf1": {
+        "id": "image_extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 300
+        },
+        "route": "image_extra_trees",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "extra_trees",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_extra_trees_leaf3": {
+        "id": "image_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        },
+        "route": "image_extra_trees",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "extra_trees",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_rbf_svm_C1.0": {
+        "id": "image_rbf_svm_C1.0",
+        "params": {
+          "C": 1.0,
+          "kernel": "rbf"
+        },
+        "route": "image_rbf_svm",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "rbf_svm",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": false,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_rbf_svm_C10.0": {
+        "id": "image_rbf_svm_C10.0",
+        "params": {
+          "C": 10.0,
+          "kernel": "rbf"
+        },
+        "route": "image_rbf_svm",
+        "input_kind": "image",
+        "representation": "flattened standardized pixels",
+        "estimator": "rbf_svm",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": false,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "shared_baseline",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      },
+      "image_gradient_histograms_logistic": {
+        "id": "image_gradient_histograms_logistic",
+        "params": {
+          "grid": 4,
+          "orientation_bins": 8,
+          "C": 1.0,
+          "representation": "gradient histograms and cell means"
+        },
+        "route": "gradient_histograms",
+        "input_kind": "image",
+        "representation": "gradient histograms and cell means",
+        "estimator": "logistic",
+        "swap_label_rule": "not_applicable",
+        "supports_probabilities": true,
+        "expected_classifier_fits": 1,
+        "resource": "cpu",
+        "origin": "b_port",
+        "kind": "image",
+        "classifier_fits": 1,
+        "refit_classifier_fits": 1
+      }
+    },
+    "executable_candidates": 8,
+    "H_data_opened": false,
+    "model_evaluated": false,
+    "score": null
+  }
+}

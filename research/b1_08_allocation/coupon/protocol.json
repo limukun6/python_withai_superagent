@@ -1,0 +1,384 @@
+{
+  "batch": "B1-08-coupon",
+  "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "catboost": "1.2.10",
+      "torch": "2.13.0",
+      "transformers": "4.53.3",
+      "tokenizers": "0.21.4",
+      "safetensors": "0.6.2",
+      "threadpoolctl": "3.8.0"
+    },
+    "polars": "1.43.0",
+    "minilm_revision": "524b52f1d626e9a5a16462e141fc9dffc25d5aeb",
+    "minilm_files": {
+      "config.json": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "model.safetensors": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    }
+  },
+  "tasks": {
+    "45102_fixed": {
+      "name": "45102_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6490,
+      "outer_rows": 1627,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6490,
+        "search_rows": 1627,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "fce35ba75e4c4579eb639cb79873b846681ec7e8683e53729ca5926010cb3c91",
+          "label_sha256": "790af6b298165af65e839ed78af6dedcbc7644fc32801d0c33016b7240b42337",
+          "evaluation_payload_sha256": "558cb3b23ffed5c1cfe55d0b26b0c3d14a785915c2e950eabd69fb7fe295dc06"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "8cfb0efaf5d7f9ba6bc8daa7a96669b95d5c51988ef01caf573734674327381c",
+          "label_sha256": "591d7dc2e7d2bedadc6ede0012839302e89e82cc62d3f82cb52569116a48c188",
+          "evaluation_payload_sha256": "a0fba4f17bcc85e9ea4c438dce807840144b09180f2acb044a365b622bd85836"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "950d34bf4f1b0da4249451c0407533c103e871371b4ef7eea2463ed49403b63f",
+          "label_sha256": "6bdce0bcea4f599b6d74b3ec675ced489e157bb25533abc6b1bbacd5456fc99e",
+          "evaluation_payload_sha256": "202f5c54268bec259756a63b55a0ac3ca8fda1ce8a73d6f7961d26c9eab82245"
+        }
+      },
+      "row_ids_sha256": "27ef45446c2fb05eeb28b5f81975ad81f21fcf9b1caa0f8d1178144c2657cf2f",
+      "files": {
+        "features.zip": "735f457345cf3236929763a09b1577f92fc5af5b3e70161cfff5b590bc6cef6e",
+        "train.zip": "5d38c0eba6f1d20a423a6ba5fb76b18ae763a7fb2d03bb6fe8a666faa23d9221"
+      },
+      "holdout_sha256": "3039b41bc0eb5d6bfaa708a126b48aa593ca8c0c7f16427dc07fdd8811c78f74",
+      "catalog_sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0",
+        "supported_field_interactions"
+      ],
+      "outer_seed": 45102,
+      "allocation": "fixed"
+    },
+    "45102_adaptive": {
+      "name": "45102_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6490,
+      "outer_rows": 1627,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6490,
+        "search_rows": 1627,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "fce35ba75e4c4579eb639cb79873b846681ec7e8683e53729ca5926010cb3c91",
+          "label_sha256": "790af6b298165af65e839ed78af6dedcbc7644fc32801d0c33016b7240b42337",
+          "evaluation_payload_sha256": "558cb3b23ffed5c1cfe55d0b26b0c3d14a785915c2e950eabd69fb7fe295dc06"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "8cfb0efaf5d7f9ba6bc8daa7a96669b95d5c51988ef01caf573734674327381c",
+          "label_sha256": "591d7dc2e7d2bedadc6ede0012839302e89e82cc62d3f82cb52569116a48c188",
+          "evaluation_payload_sha256": "a0fba4f17bcc85e9ea4c438dce807840144b09180f2acb044a365b622bd85836"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "950d34bf4f1b0da4249451c0407533c103e871371b4ef7eea2463ed49403b63f",
+          "label_sha256": "6bdce0bcea4f599b6d74b3ec675ced489e157bb25533abc6b1bbacd5456fc99e",
+          "evaluation_payload_sha256": "202f5c54268bec259756a63b55a0ac3ca8fda1ce8a73d6f7961d26c9eab82245"
+        }
+      },
+      "row_ids_sha256": "27ef45446c2fb05eeb28b5f81975ad81f21fcf9b1caa0f8d1178144c2657cf2f",
+      "files": {
+        "features.zip": "735f457345cf3236929763a09b1577f92fc5af5b3e70161cfff5b590bc6cef6e",
+        "train.zip": "5d38c0eba6f1d20a423a6ba5fb76b18ae763a7fb2d03bb6fe8a666faa23d9221"
+      },
+      "holdout_sha256": "3039b41bc0eb5d6bfaa708a126b48aa593ca8c0c7f16427dc07fdd8811c78f74",
+      "catalog_sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0",
+        "supported_field_interactions"
+      ],
+      "outer_seed": 45102,
+      "allocation": "adaptive"
+    },
+    "45103_fixed": {
+      "name": "45103_fixed",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6494,
+      "outer_rows": 1623,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6494,
+        "search_rows": 1623,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "57a5640d1caa634d677d9cd35f41ad782e0e699cdca96430d4119a0e472af6d7",
+          "label_sha256": "7ae44253ed3849e65984c4fd56ff796f3ed1c7bdaf2c23a8448f5bcdeb746e09",
+          "evaluation_payload_sha256": "4dc457387a3ccc69b52a93d2d3d5724da4a1a543144d0804b464b841dc5b3907"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "3aff602a0858aef06b61e5a4ec6762008040ed7b324f25a2dcb89aacbfc90e1b",
+          "label_sha256": "65afa684a927606111d54b2d9e473bbb89e5d103cc231b807a201866962707c9",
+          "evaluation_payload_sha256": "3d3d13ef45608efdfbf3838de622cd62436a11806fe4366ef97e1620c38cae10"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "6d01eda18f1879cb5eb799759f916820c39a708836fb763b3734bfbcb3bcf7f6",
+          "label_sha256": "f5fbace7ccf71dc478ae6ffd7bab975bfb20af3f8b6e0ca9c857dca443e1dde6",
+          "evaluation_payload_sha256": "342ff0ea7b4af1bc448c7a8d864372dc76e7a629658f2231c47d06cdee0256d8"
+        }
+      },
+      "row_ids_sha256": "81e825e95e95d8505ab7b807bb7648bca347ec5ce51ae3f22e4e72060444b400",
+      "files": {
+        "features.zip": "0d38e3b99267222532ecea77da71c7a4e77a9ea7e7cc7ff64aa3aabc274cba64",
+        "train.zip": "814df822d9c27a1f1adad880fc74944cc1f1f95ab2c4df8870dfa4bdeeb0ad82"
+      },
+      "holdout_sha256": "99168bd658a23d17a39628377246db205546e64c89e0b143c83d3ead48c530f5",
+      "catalog_sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0",
+        "supported_field_interactions"
+      ],
+      "outer_seed": 45103,
+      "allocation": "fixed"
+    },
+    "45103_adaptive": {
+      "name": "45103_adaptive",
+      "semantics": "not_applicable",
+      "source": {
+        "training_members": {
+          "C_train.npy": "abd27e72fd8df1e5ddbe8843a7139d6d5190414acb1a861e886df91394c88ff7",
+          "y_train.npy": "d5979f4acf17fef499e0380d7bea415f254690bad469320e47b5d4edcf76c503"
+        },
+        "opened": [
+          "C_train.npy",
+          "y_train.npy"
+        ]
+      },
+      "source_rows": 8117,
+      "inner_input_rows": 6494,
+      "outer_rows": 1623,
+      "grouping": {
+        "folds": 5,
+        "heldout_fold": 0,
+        "total_groups": 7961,
+        "train_groups": 6369,
+        "heldout_groups": 1592,
+        "class_domain_preserved": true,
+        "selection_rule": "largest_2_to_5_grouped_fold_count_with_full_class_coverage; no model scores",
+        "small_data_reduction": false
+      },
+      "overlap": {
+        "train_rows": 6494,
+        "search_rows": 1623,
+        "search_duplicate_rows": 0
+      },
+      "splits": {
+        "primary": {
+          "id": "primary",
+          "seed": 707,
+          "row_ids_sha256": "57a5640d1caa634d677d9cd35f41ad782e0e699cdca96430d4119a0e472af6d7",
+          "label_sha256": "7ae44253ed3849e65984c4fd56ff796f3ed1c7bdaf2c23a8448f5bcdeb746e09",
+          "evaluation_payload_sha256": "4dc457387a3ccc69b52a93d2d3d5724da4a1a543144d0804b464b841dc5b3907"
+        },
+        "confirmation_1": {
+          "id": "confirmation_1",
+          "seed": 808,
+          "row_ids_sha256": "3aff602a0858aef06b61e5a4ec6762008040ed7b324f25a2dcb89aacbfc90e1b",
+          "label_sha256": "65afa684a927606111d54b2d9e473bbb89e5d103cc231b807a201866962707c9",
+          "evaluation_payload_sha256": "3d3d13ef45608efdfbf3838de622cd62436a11806fe4366ef97e1620c38cae10"
+        },
+        "confirmation_2": {
+          "id": "confirmation_2",
+          "seed": 909,
+          "row_ids_sha256": "6d01eda18f1879cb5eb799759f916820c39a708836fb763b3734bfbcb3bcf7f6",
+          "label_sha256": "f5fbace7ccf71dc478ae6ffd7bab975bfb20af3f8b6e0ca9c857dca443e1dde6",
+          "evaluation_payload_sha256": "342ff0ea7b4af1bc448c7a8d864372dc76e7a629658f2231c47d06cdee0256d8"
+        }
+      },
+      "row_ids_sha256": "81e825e95e95d8505ab7b807bb7648bca347ec5ce51ae3f22e4e72060444b400",
+      "files": {
+        "features.zip": "0d38e3b99267222532ecea77da71c7a4e77a9ea7e7cc7ff64aa3aabc274cba64",
+        "train.zip": "814df822d9c27a1f1adad880fc74944cc1f1f95ab2c4df8870dfa4bdeeb0ad82"
+      },
+      "holdout_sha256": "99168bd658a23d17a39628377246db205546e64c89e0b143c83d3ead48c530f5",
+      "catalog_sha256": "b7dcf91e185b4a817e4e0daf0a5c869a4547f83781c24f6b55435db7e04b3e29",
+      "candidate_ids": [
+        "logistic_C0.05",
+        "logistic_C0.25",
+        "logistic_C1.0",
+        "logistic_C4.0",
+        "extra_trees_leaf1",
+        "extra_trees_leaf2",
+        "extra_trees_leaf4",
+        "extra_trees_leaf8",
+        "catboost_depth4_reg3.0",
+        "catboost_depth4_reg10.0",
+        "catboost_depth6_reg3.0",
+        "catboost_depth6_reg10.0",
+        "catboost_depth8_reg3.0",
+        "catboost_depth8_reg10.0",
+        "supported_field_interactions"
+      ],
+      "outer_seed": 45103,
+      "allocation": "adaptive"
+    }
+  },
+  "execution_order": [
+    [
+      45102,
+      "fixed"
+    ],
+    [
+      45102,
+      "adaptive"
+    ],
+    [
+      45103,
+      "adaptive"
+    ],
+    [
+      45103,
+      "fixed"
+    ]
+  ],
+  "driver_sha256": "9b3350fba52e915640165990434e28cbf469bf8c7ddc2cc2e0b5824586f78709",
+  "runner_sha256": "2d48a566bd2bebffc26c765ec1300fc83b3dfb08232578aac6b75f5dc99cb3f0",
+  "helper_sha256": "e25b3b83c0a5df048be9b635d914c7a9830fbbf76a629465a33dfaf5857fe77e",
+  "entry_sha256": "f4a56a6664c78d2c3ae7c5373bbd16bf6dee81c22aba1b79a6728ccbe9de52f4",
+  "source_builder_sha256": "05ec570ae37c1430dd18f92954ac3a7267f80cd3b543e3605fc7566e6846350a",
+  "plan_sha256": "42cb67d37eac4a94ebd481b2e696b30687e6b8294af2a6a76f2f3e444f9f861a",
+  "fit_limit_per_path": 11,
+  "fit_limit_batch": 44,
+  "inner_seed": 707,
+  "wall_seconds": 1200,
+  "trial_seconds": 300,
+  "api_requests_allowed": 0
+}

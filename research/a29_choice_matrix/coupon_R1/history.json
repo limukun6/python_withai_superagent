@@ -1,0 +1,1782 @@
+[
+  {
+    "trial": 1,
+    "candidate": "logistic_C0.05",
+    "params": {
+      "C": 0.05
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.685247921157992,
+    "search_score": 0.6722119531731362,
+    "train_metrics": {
+      "accuracy": 0.685247921157992,
+      "macro_f1": 0.6722340089289242,
+      "primary_metric": "accuracy",
+      "score": 0.685247921157992,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.6722119531731362,
+      "macro_f1": 0.6581653660019763,
+      "primary_metric": "accuracy",
+      "score": 0.6722119531731362,
+      "rows": 1623
+    },
+    "score_gap": 0.013035967984855845,
+    "train_accuracy": 0.685247921157992,
+    "search_accuracy": 0.6722119531731362,
+    "generalization_gap": 0.013035967984855845,
+    "class_recall": [
+      0.5442857142857143,
+      0.7692307692307693
+    ],
+    "training_seconds": 0.4526207000017166,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "logistic_C0.05",
+      "params": {
+        "C": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "logistic_C0.05",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.7097068000002764,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "catboost_depth6_reg3.0",
+    "params": {
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "catboost_depth6_reg3.0",
+      "task_kind": "categorical_tabular",
+      "configuration_claim": {
+        "classifier": "catboost"
+      },
+      "reason": "The only completed primary trial is a strongly regularized logistic model with modest accuracy (0.6722) and a small train-search gap. A CatBoost model with native categorical handling and moderate depth is a stronger next probe for nonlinear effects and category interactions than another nearby logistic C value.",
+      "review": "Evidence is limited to one completed primary trial, so the logistic result does not rule out other families. This choice is a primary-split experiment only; confirmation scores are not available and cannot be used to claim a primary-trial improvement.",
+      "hypothesis": "CatBoost with depth 6 and l2_leaf_reg 3.0 will capture categorical interactions and nonlinear structure that the one-hot logistic baseline misses, increasing primary search accuracy by at least 0.001 over trial 1.",
+      "evidence_trials": [
+        1
+      ],
+      "expected_change": {
+        "metric": "search_score",
+        "reference_trial": 1,
+        "direction": "increase",
+        "min_delta": 0.001
+      },
+      "slice_expectation": null
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8084385586695411,
+    "search_score": 0.7443006777572396,
+    "train_metrics": {
+      "accuracy": 0.8084385586695411,
+      "macro_f1": 0.8008208064392692,
+      "primary_metric": "accuracy",
+      "score": 0.8084385586695411,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.7443006777572396,
+      "macro_f1": 0.7336875230561377,
+      "primary_metric": "accuracy",
+      "score": 0.7443006777572396,
+      "rows": 1623
+    },
+    "score_gap": 0.06413788091230144,
+    "train_accuracy": 0.8084385586695411,
+    "search_accuracy": 0.7443006777572396,
+    "generalization_gap": 0.06413788091230144,
+    "class_recall": [
+      0.6314285714285715,
+      0.8299024918743229
+    ],
+    "training_seconds": 33.347727100001066,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth6_reg3.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth6_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 34.59273409999878,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "catboost",
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "supported",
+      "metric": "search_score",
+      "reference_trial": 1,
+      "reference_value": 0.6722119531731362,
+      "observed_value": 0.7443006777572396,
+      "observed_delta": 0.07208872458410343,
+      "direction": "increase",
+      "required_delta": 0.001
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "no_comparison",
+        "source": "executor",
+        "latest_trial": 1,
+        "best_prior_trial": null,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.6722119531731362,
+        "best_prior_search_score": null,
+        "latest_search_accuracy": 0.6722119531731362,
+        "best_prior_search_accuracy": null,
+        "delta_vs_prior_best": null,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 1 internal accuracy score is 67.221195%; no earlier completed score is available.",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 1,
+        "reference_candidate": "logistic_C0.05",
+        "reference_status": "completed",
+        "reference_rule": "structured_expectation_reference",
+        "selected_candidate": "catboost_depth6_reg3.0",
+        "selected_status": null,
+        "reference_route": "logistic",
+        "selected_route": "catboost",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "C",
+            "before_present": true,
+            "after_present": false,
+            "before": 0.05,
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "depth",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 6,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "iterations",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 600,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "l2_leaf_reg",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 3.0,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "learning_rate",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 0.05,
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "catboost_depth6_reg3.0",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "CatBoost with depth 6 and l2_leaf_reg 3.0 will capture categorical interactions and nonlinear structure that the one-hot logistic baseline misses, increasing primary search accuracy by at least 0.001 over trial 1.",
+        "expected_change": {
+          "metric": "search_score",
+          "reference_trial": 1,
+          "direction": "increase",
+          "min_delta": 0.001
+        }
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "The only completed primary trial is a strongly regularized logistic model with modest accuracy (0.6722) and a small train-search gap. A CatBoost model with native categorical handling and moderate depth is a stronger next probe for nonlinear effects and category interactions than another nearby logistic C value.",
+          "review": "Evidence is limited to one completed primary trial, so the logistic result does not rule out other families. This choice is a primary-split experiment only; confirmation scores are not available and cannot be used to claim a primary-trial improvement.",
+          "hypothesis": "CatBoost with depth 6 and l2_leaf_reg 3.0 will capture categorical interactions and nonlinear structure that the one-hot logistic baseline misses, increasing primary search accuracy by at least 0.001 over trial 1.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 4,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 3,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The only completed primary trial is a strongly regularized logistic model with modest accuracy (0.6722) and a small train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "A CatBoost model with native categorical handling and moderate depth is a stronger next probe for nonlinear effects and category interactions than another nearby logistic C value.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A CatBoost model with native categorical handling and moderate depth is a stronger next probe for nonlinear effects and category interactions than another nearby logistic C value.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Evidence is limited to one completed primary trial, so the logistic result does not rule out other families.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "CatBoost with depth 6 and l2_leaf_reg 3.0 will capture categorical interactions and nonlinear structure that the one-hot logistic baseline misses, increasing primary search accuracy by at least 0.001 over trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "catboost",
+              "logistic"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "CatBoost with depth 6 and l2_leaf_reg 3.0 will capture categorical interactions and nonlinear structure that the one-hot logistic baseline misses, increasing primary search accuracy by at least 0.001 over trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "catboost",
+              "logistic"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 4 machine-checkable claims inspected, 0 contradicted, 3 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "catboost_depth6_reg10.0",
+    "params": {
+      "depth": 6,
+      "l2_leaf_reg": 10.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "catboost_depth6_reg10.0",
+      "task_kind": "categorical_tabular",
+      "configuration_claim": {
+        "classifier": "catboost"
+      },
+      "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) but shows a moderate train-search gap of about 0.064. Keeping the same CatBoost depth and iteration/learning-rate settings while increasing l2_leaf_reg from 3.0 to 10.0 is a focused regularization probe likely to reduce overfitting without abandoning the best-performing family and depth.",
+      "review": "This is a primary-split experiment only. The comparison is against completed primary trial 2; confirmation scores are not available and cannot be used to claim a primary-trial improvement. The prior CatBoost result is an observation, and the expected gain is an unverified hypothesis.",
+      "hypothesis": "CatBoost with depth 6 and stronger L2 regularization (l2_leaf_reg=10.0) will reduce the train-search gap relative to trial 2 and increase primary search accuracy by at least 0.001.",
+      "evidence_trials": [
+        2
+      ],
+      "expected_change": {
+        "metric": "search_score",
+        "reference_trial": 2,
+        "direction": "increase",
+        "min_delta": 0.001
+      },
+      "slice_expectation": null
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7995072374499538,
+    "search_score": 0.7350585335797906,
+    "train_metrics": {
+      "accuracy": 0.7995072374499538,
+      "macro_f1": 0.7912708265363113,
+      "primary_metric": "accuracy",
+      "score": 0.7995072374499538,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.7350585335797906,
+      "macro_f1": 0.7237050890617478,
+      "primary_metric": "accuracy",
+      "score": 0.7350585335797906,
+      "rows": 1623
+    },
+    "score_gap": 0.06444870387016322,
+    "train_accuracy": 0.7995072374499538,
+    "search_accuracy": 0.7350585335797906,
+    "generalization_gap": 0.06444870387016322,
+    "class_recall": [
+      0.6171428571428571,
+      0.8244853737811484
+    ],
+    "training_seconds": 33.46763790000114,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth6_reg10.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth6_reg10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 34.700232300005155,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "catboost",
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_supported",
+      "metric": "search_score",
+      "reference_trial": 2,
+      "reference_value": 0.7443006777572396,
+      "observed_value": 0.7350585335797906,
+      "observed_delta": -0.009242144177449063,
+      "direction": "increase",
+      "required_delta": 0.001
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "improved",
+        "source": "executor",
+        "latest_trial": 2,
+        "best_prior_trial": 1,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.7443006777572396,
+        "best_prior_search_score": 0.6722119531731362,
+        "latest_search_accuracy": 0.7443006777572396,
+        "best_prior_search_accuracy": 0.6722119531731362,
+        "delta_vs_prior_best": 0.07208872458410343,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 2 internal accuracy score is 74.430068%; best earlier trial 1 is 67.221195%; difference +7.208872 percentage points (improved).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 2,
+        "reference_candidate": "catboost_depth6_reg3.0",
+        "reference_status": "completed",
+        "reference_rule": "structured_expectation_reference",
+        "selected_candidate": "catboost_depth6_reg10.0",
+        "selected_status": null,
+        "reference_route": "catboost",
+        "selected_route": "catboost",
+        "same_declared_route": true,
+        "changed_parameters": [
+          {
+            "parameter": "l2_leaf_reg",
+            "before_present": true,
+            "after_present": true,
+            "before": 3.0,
+            "after": 10.0,
+            "parameter_effect": {
+              "numeric_direction": "increased",
+              "declared_effect": "stronger_l2_penalty",
+              "definition": "Direction of the declared leaf-weight penalty only",
+              "effect_scope": "definition within a fixed parameterization",
+              "same_declared_route": true,
+              "accuracy_effect_verified": false,
+              "cross_route_note": null
+            }
+          }
+        ],
+        "single_declared_parameter_change": true,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "catboost_depth6_reg10.0",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "CatBoost with depth 6 and stronger L2 regularization (l2_leaf_reg=10.0) will reduce the train-search gap relative to trial 2 and increase primary search accuracy by at least 0.001.",
+        "expected_change": {
+          "metric": "search_score",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.001
+        }
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) but shows a moderate train-search gap of about 0.064. Keeping the same CatBoost depth and iteration/learning-rate settings while increasing l2_leaf_reg from 3.0 to 10.0 is a focused regularization probe likely to reduce overfitting without abandoning the best-performing family and depth.",
+          "review": "This is a primary-split experiment only. The comparison is against completed primary trial 2; confirmation scores are not available and cannot be used to claim a primary-trial improvement. The prior CatBoost result is an observation, and the expected gain is an unverified hypothesis.",
+          "hypothesis": "CatBoost with depth 6 and stronger L2 regularization (l2_leaf_reg=10.0) will reduce the train-search gap relative to trial 2 and increase primary search accuracy by at least 0.001.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 6,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 4,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Keeping the same CatBoost depth and iteration/learning-rate settings while increasing l2_leaf_reg from 3.0 to 10.0 is a focused regularization probe likely to reduce overfitting without abandoning the best-performing family and depth.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The prior CatBoost result is an observation, and the expected gain is an unverified hypothesis.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "CatBoost with depth 6 and stronger L2 regularization (l2_leaf_reg=10.0) will reduce the train-search gap relative to trial 2 and increase primary search accuracy by at least 0.001.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 6 machine-checkable claims inspected, 0 contradicted, 4 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "supported_field_interactions",
+    "params": {
+      "pair_limit": 3,
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "representation": "training-selected categorical field interactions"
+    },
+    "split_id": "primary",
+    "proposal": {
+      "candidate": "supported_field_interactions",
+      "task_kind": "categorical_tabular",
+      "configuration_claim": {
+        "classifier": "catboost"
+      },
+      "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) with CatBoost depth 6 and l2_leaf_reg 3.0. Trial 3 shows that increasing L2 regularization to 10.0 reduced primary search accuracy. The next focused probe should preserve the best-performing CatBoost depth and regularization while testing training-selected categorical field interactions, which may capture pairwise structure not fully exploited by the native categorical handling.",
+      "review": "This is a primary-split experiment only. The comparison is against completed primary trial 2; confirmation scores are not available and cannot be used to claim a primary-trial improvement. Trial outcomes are observations, and the expected gain is an unverified hypothesis.",
+      "hypothesis": "CatBoost with depth 6, l2_leaf_reg 3.0, and up to three training-selected categorical field interactions will capture useful pairwise category structure and increase primary search accuracy by at least 0.001 over trial 2.",
+      "evidence_trials": [
+        2,
+        3
+      ],
+      "expected_change": {
+        "metric": "search_score",
+        "reference_trial": 2,
+        "direction": "increase",
+        "min_delta": 0.001
+      },
+      "slice_expectation": null
+    },
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8204496458269172,
+    "search_score": 0.7455329636475663,
+    "train_metrics": {
+      "accuracy": 0.8204496458269172,
+      "macro_f1": 0.8129058337669706,
+      "primary_metric": "accuracy",
+      "score": 0.8204496458269172,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.7455329636475663,
+      "macro_f1": 0.7341384156085534,
+      "primary_metric": "accuracy",
+      "score": 0.7455329636475663,
+      "rows": 1623
+    },
+    "score_gap": 0.07491668217935088,
+    "train_accuracy": 0.8204496458269172,
+    "search_accuracy": 0.7455329636475663,
+    "generalization_gap": 0.07491668217935088,
+    "class_recall": [
+      0.6242857142857143,
+      0.8374864572047671
+    ],
+    "training_seconds": 34.962382500001695,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": {
+      "selected_field_pairs": [
+        [
+          2,
+          12
+        ],
+        [
+          2,
+          11
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "strongest": [
+        {
+          "fields": [
+            2,
+            12
+          ],
+          "gains": [
+            0.012304117433770818,
+            0.013301089912849092
+          ],
+          "support": 0.012304117433770818
+        },
+        {
+          "fields": [
+            2,
+            11
+          ],
+          "gains": [
+            0.010382576037318847,
+            0.013545474671133905
+          ],
+          "support": 0.010382576037318847
+        },
+        {
+          "fields": [
+            1,
+            2
+          ],
+          "gains": [
+            0.0073167557833913556,
+            0.010002013132637476
+          ],
+          "support": 0.0073167557833913556
+        },
+        {
+          "fields": [
+            9,
+            10
+          ],
+          "gains": [
+            0.00571436819467467,
+            0.006350877793236255
+          ],
+          "support": 0.00571436819467467
+        },
+        {
+          "fields": [
+            1,
+            3
+          ],
+          "gains": [
+            0.007543334203921392,
+            0.005498266203589391
+          ],
+          "support": 0.005498266203589391
+        },
+        {
+          "fields": [
+            0,
+            1
+          ],
+          "gains": [
+            0.005491573961280708,
+            0.006343114483945003
+          ],
+          "support": 0.005491573961280708
+        }
+      ],
+      "selection": "minimum held-out log-probability gain in two training-group halves"
+    },
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "supported_field_interactions",
+      "params": {
+        "pair_limit": 3,
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "representation": "training-selected categorical field interactions"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "supported_field_interactions",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 36.196211200003745,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": "catboost",
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "confirmed",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "supported",
+      "metric": "search_score",
+      "reference_trial": 2,
+      "reference_value": 0.7443006777572396,
+      "observed_value": 0.7455329636475663,
+      "observed_delta": 0.0012322858903266454,
+      "direction": "increase",
+      "required_delta": 0.001
+    },
+    "explanation_audit": {
+      "executor_comparison": {
+        "reading": "lower",
+        "source": "executor",
+        "latest_trial": 3,
+        "best_prior_trial": 2,
+        "primary_metric": "accuracy",
+        "latest_search_score": 0.7350585335797906,
+        "best_prior_search_score": 0.7443006777572396,
+        "latest_search_accuracy": 0.7350585335797906,
+        "best_prior_search_accuracy": 0.7443006777572396,
+        "delta_vs_prior_best": -0.009242144177449063,
+        "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+        "text": "Trial 3 internal accuracy score is 73.505853%; best earlier trial 2 is 74.430068%; difference -0.924214 percentage points (lower).",
+        "statistical_test_performed": false,
+        "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+      },
+      "cited_measured_facts": [],
+      "configuration_change": {
+        "available": true,
+        "source": "executor",
+        "reference_trial": 2,
+        "reference_candidate": "catboost_depth6_reg3.0",
+        "reference_status": "completed",
+        "reference_rule": "structured_expectation_reference",
+        "selected_candidate": "supported_field_interactions",
+        "selected_status": null,
+        "reference_route": "catboost",
+        "selected_route": "field_interactions",
+        "same_declared_route": false,
+        "changed_parameters": [
+          {
+            "parameter": "learning_rate",
+            "before_present": true,
+            "after_present": false,
+            "before": 0.05,
+            "after": null,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "pair_limit",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": 3,
+            "parameter_effect": null
+          },
+          {
+            "parameter": "representation",
+            "before_present": false,
+            "after_present": true,
+            "before": null,
+            "after": "training-selected categorical field interactions",
+            "parameter_effect": null
+          }
+        ],
+        "single_declared_parameter_change": false,
+        "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+        "single_factor_attribution_supported": false,
+        "statistical_test_performed": false,
+        "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+      },
+      "direction_consistency": {
+        "scope": "same declared route, single changed C; narrow English phrases only",
+        "applicable": false,
+        "expected_regularization_direction": null,
+        "mentions": [],
+        "warnings": [],
+        "freeform_semantics_verified": false,
+        "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+      },
+      "selected_candidate": "supported_field_interactions",
+      "future_hypothesis": {
+        "source": "LLM, unverified future hypothesis",
+        "text": "CatBoost with depth 6, l2_leaf_reg 3.0, and up to three training-selected categorical field interactions will capture useful pairwise category structure and increase primary search accuracy by at least 0.001 over trial 2.",
+        "expected_change": {
+          "metric": "search_score",
+          "reference_trial": 2,
+          "direction": "increase",
+          "min_delta": 0.001
+        }
+      },
+      "original_prose": {
+        "source": "LLM, not certified as measured evidence",
+        "fields": {
+          "reason": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) with CatBoost depth 6 and l2_leaf_reg 3.0. Trial 3 shows that increasing L2 regularization to 10.0 reduced primary search accuracy. The next focused probe should preserve the best-performing CatBoost depth and regularization while testing training-selected categorical field interactions, which may capture pairwise structure not fully exploited by the native categorical handling.",
+          "review": "This is a primary-split experiment only. The comparison is against completed primary trial 2; confirmation scores are not available and cannot be used to claim a primary-trial improvement. Trial outcomes are observations, and the expected gain is an unverified hypothesis.",
+          "hypothesis": "CatBoost with depth 6, l2_leaf_reg 3.0, and up to three training-selected categorical field interactions will capture useful pairwise category structure and increase primary search accuracy by at least 0.001 over trial 2.",
+          "assessment.interpretation": "",
+          "assessment.uncertainty": ""
+        }
+      },
+      "prose_claims": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the strongest completed primary result (search accuracy 0.7443) with CatBoost depth 6 and l2_leaf_reg 3.0.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The next focused probe should preserve the best-performing CatBoost depth and regularization while testing training-selected categorical field interactions, which may capture pairwise structure not fully exploited by the native categorical handling.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "CatBoost with depth 6, l2_leaf_reg 3.0, and up to three training-selected categorical field interactions will capture useful pairwise category structure and increase primary search accuracy by at least 0.001 over trial 2.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "warnings": [],
+      "freeform_prose_fully_verified": false,
+      "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 6 machine-checkable claims inspected, 0 contradicted, 3 undecidable.",
+      "changes_candidate": false,
+      "triggers_api_retry": false
+    }
+  },
+  {
+    "trial": 5,
+    "candidate": "catboost_depth6_reg3.0",
+    "params": {
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8097951640227937,
+    "search_score": 0.7524630541871922,
+    "train_metrics": {
+      "accuracy": 0.8097951640227937,
+      "macro_f1": 0.8030918986161548,
+      "primary_metric": "accuracy",
+      "score": 0.8097951640227937,
+      "rows": 6493
+    },
+    "search_metrics": {
+      "accuracy": 0.7524630541871922,
+      "macro_f1": 0.7433511286530856,
+      "primary_metric": "accuracy",
+      "score": 0.7524630541871922,
+      "rows": 1624
+    },
+    "score_gap": 0.05733210983560155,
+    "train_accuracy": 0.8097951640227937,
+    "search_accuracy": 0.7524630541871922,
+    "generalization_gap": 0.05733210983560155,
+    "class_recall": [
+      0.6533523537803139,
+      0.8277356446370531
+    ],
+    "training_seconds": 34.3262121000007,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth6_reg3.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth6_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 35.65975520000211,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "supported_field_interactions",
+    "params": {
+      "pair_limit": 3,
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "representation": "training-selected categorical field interactions"
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8238102572000616,
+    "search_score": 0.7666256157635468,
+    "train_metrics": {
+      "accuracy": 0.8238102572000616,
+      "macro_f1": 0.8169498509081052,
+      "primary_metric": "accuracy",
+      "score": 0.8238102572000616,
+      "rows": 6493
+    },
+    "search_metrics": {
+      "accuracy": 0.7666256157635468,
+      "macro_f1": 0.7568892043490849,
+      "primary_metric": "accuracy",
+      "score": 0.7666256157635468,
+      "rows": 1624
+    },
+    "score_gap": 0.057184641436514805,
+    "train_accuracy": 0.8238102572000616,
+    "search_accuracy": 0.7666256157635468,
+    "generalization_gap": 0.057184641436514805,
+    "class_recall": [
+      0.6562054208273894,
+      0.8504875406283857
+    ],
+    "training_seconds": 34.3527608000004,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": {
+      "selected_field_pairs": [
+        [
+          2,
+          11
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "strongest": [
+        {
+          "fields": [
+            2,
+            11
+          ],
+          "gains": [
+            0.010886688250664791,
+            0.012538147711093255
+          ],
+          "support": 0.010886688250664791
+        },
+        {
+          "fields": [
+            2,
+            12
+          ],
+          "gains": [
+            0.010346477388159836,
+            0.01563238167518327
+          ],
+          "support": 0.010346477388159836
+        },
+        {
+          "fields": [
+            1,
+            2
+          ],
+          "gains": [
+            0.007838744083542421,
+            0.010414347036085217
+          ],
+          "support": 0.007838744083542421
+        },
+        {
+          "fields": [
+            2,
+            3
+          ],
+          "gains": [
+            0.003928115585859569,
+            0.005554632584950479
+          ],
+          "support": 0.003928115585859569
+        },
+        {
+          "fields": [
+            9,
+            10
+          ],
+          "gains": [
+            0.0054173979361714685,
+            0.003722855688511252
+          ],
+          "support": 0.003722855688511252
+        },
+        {
+          "fields": [
+            1,
+            3
+          ],
+          "gains": [
+            0.003452496952711574,
+            0.006230104912883251
+          ],
+          "support": 0.003452496952711574
+        }
+      ],
+      "selection": "minimum held-out log-probability gain in two training-group halves"
+    },
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "supported_field_interactions",
+      "params": {
+        "pair_limit": 3,
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "representation": "training-selected categorical field interactions"
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "supported_field_interactions",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 35.57957180000085,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 400
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9946104096088697,
+    "search_score": 0.7134935304990758,
+    "train_metrics": {
+      "accuracy": 0.9946104096088697,
+      "macro_f1": 0.9945157885763507,
+      "primary_metric": "accuracy",
+      "score": 0.9946104096088697,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.7134935304990758,
+      "macro_f1": 0.7052139624904058,
+      "primary_metric": "accuracy",
+      "score": 0.7134935304990758,
+      "rows": 1623
+    },
+    "score_gap": 0.2811168791097939,
+    "train_accuracy": 0.9946104096088697,
+    "search_accuracy": 0.7134935304990758,
+    "generalization_gap": 0.2811168791097939,
+    "class_recall": [
+      0.6328571428571429,
+      0.7746478873239436
+    ],
+    "training_seconds": 6.739945399996941,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 400
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 8.234972500002186,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 8,
+    "candidate": "extra_trees_leaf2",
+    "params": {
+      "min_samples_leaf": 2,
+      "n_estimators": 400
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9899907607021866,
+    "search_score": 0.7097966728280961,
+    "train_metrics": {
+      "accuracy": 0.9899907607021866,
+      "macro_f1": 0.9898224973225316,
+      "primary_metric": "accuracy",
+      "score": 0.9899907607021866,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.7097966728280961,
+      "macro_f1": 0.7033089866250293,
+      "primary_metric": "accuracy",
+      "score": 0.7097966728280961,
+      "rows": 1623
+    },
+    "score_gap": 0.2801940878740905,
+    "train_accuracy": 0.9899907607021866,
+    "search_accuracy": 0.7097966728280961,
+    "generalization_gap": 0.2801940878740905,
+    "class_recall": [
+      0.6514285714285715,
+      0.7540628385698809
+    ],
+    "training_seconds": 6.115692200000922,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "extra_trees_leaf2",
+      "params": {
+        "min_samples_leaf": 2,
+        "n_estimators": 400
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "extra_trees_leaf2",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 7.578227399993921,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 9,
+    "candidate": "logistic_C0.25",
+    "params": {
+      "C": 0.25
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.6880197105020018,
+    "search_score": 0.6691312384473198,
+    "train_metrics": {
+      "accuracy": 0.6880197105020018,
+      "macro_f1": 0.6760158993198051,
+      "primary_metric": "accuracy",
+      "score": 0.6880197105020018,
+      "rows": 6494
+    },
+    "search_metrics": {
+      "accuracy": 0.6691312384473198,
+      "macro_f1": 0.656094272400803,
+      "primary_metric": "accuracy",
+      "score": 0.6691312384473198,
+      "rows": 1623
+    },
+    "score_gap": 0.018888472054682026,
+    "train_accuracy": 0.6880197105020018,
+    "search_accuracy": 0.6691312384473198,
+    "generalization_gap": 0.018888472054682026,
+    "class_recall": [
+      0.55,
+      0.7594799566630552
+    ],
+    "training_seconds": 0.3596473000070546,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "logistic_C0.25",
+      "params": {
+        "C": 0.25
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "logistic_C0.25",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.6065008000005037,
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

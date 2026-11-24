@@ -1,0 +1,327 @@
+{
+  "records": [
+    {
+      "task": "coupon",
+      "role": "matched_full_C1",
+      "evidence": "a89_coupon_C1",
+      "arms": 6,
+      "completed": true,
+      "actual_new_fits": 53,
+      "reused_fits": 11,
+      "actual_API_requests": 12,
+      "known_incremental_estimated_rmb": 0.12358599999999999
+    },
+    {
+      "task": "flowers",
+      "role": "matched_full_C1",
+      "evidence": "a97_flower_C1",
+      "arms": 6,
+      "completed": true,
+      "actual_new_fits": 53,
+      "reused_fits": 10,
+      "actual_API_requests": 12,
+      "known_incremental_estimated_rmb": 0.097466
+    },
+    {
+      "task": "preference",
+      "role": "historical_local_fixed_dynamic",
+      "evidence": "b1_07_allocation",
+      "paths": 4,
+      "reported_fits": 42,
+      "reported_API_requests": 0,
+      "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+      "source_input_rows": {
+        "45102_fixed": 6615,
+        "45102_adaptive": 6615,
+        "45103_fixed": 6625,
+        "45103_adaptive": 6625
+      },
+      "reuse": "Keep original development comparison; not a replacement for current six-arm C1; do not add fits to A"
+    },
+    {
+      "task": "bean",
+      "role": "historical_local_fixed_dynamic",
+      "evidence": "b1_08_allocation/bean",
+      "paths": 4,
+      "reported_fits": 44,
+      "reported_API_requests": 0,
+      "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+      "source_input_rows": {
+        "45102_fixed": 8710,
+        "45102_adaptive": 8710,
+        "45103_fixed": 8710,
+        "45103_adaptive": 8710
+      },
+      "reuse": "Keep original development comparison; not a replacement for current six-arm C1; do not add fits to A"
+    },
+    {
+      "task": "coupon",
+      "role": "historical_local_fixed_dynamic",
+      "evidence": "b1_08_allocation/coupon",
+      "paths": 4,
+      "reported_fits": 42,
+      "reported_API_requests": 0,
+      "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+      "source_input_rows": {
+        "45102_fixed": 6490,
+        "45102_adaptive": 6490,
+        "45103_fixed": 6494,
+        "45103_adaptive": 6494
+      },
+      "reuse": "Keep original development comparison; not a replacement for current six-arm C1; do not add fits to A"
+    },
+    {
+      "task": "sms",
+      "role": "historical_local_fixed_dynamic",
+      "evidence": "b1_08_allocation/sms",
+      "paths": 4,
+      "reported_fits": 42,
+      "reported_API_requests": 0,
+      "source_sha256": "c8d7c7acdea3105bba2f31b6794499471c1486caa913c374373b3ea7821400ae",
+      "source_input_rows": {
+        "45102_fixed": 3303,
+        "45102_adaptive": 3303,
+        "45103_fixed": 3303,
+        "45103_adaptive": 3303
+      },
+      "reuse": "Keep original development comparison; not a replacement for current six-arm C1; do not add fits to A"
+    },
+    {
+      "role": "historical_Q_and_reload",
+      "scores": {
+        "headlines": {
+          "original": {
+            "accuracy": 0.6913875598086124,
+            "macro_f1": 0.6913659212960777,
+            "primary_metric": "accuracy",
+            "score": 0.6913875598086124,
+            "rows": 1672
+          },
+          "expanded": {
+            "accuracy": 0.7147129186602871,
+            "macro_f1": 0.7146679078673256,
+            "primary_metric": "accuracy",
+            "score": 0.7147129186602871,
+            "rows": 1672
+          }
+        },
+        "bean": {
+          "original": {
+            "accuracy": 0.9176632934682613,
+            "macro_f1": 0.9304397549931628,
+            "primary_metric": "accuracy",
+            "score": 0.9176632934682613,
+            "rows": 2174
+          },
+          "expanded": {
+            "accuracy": 0.9176632934682613,
+            "macro_f1": 0.9304397549931628,
+            "primary_metric": "accuracy",
+            "score": 0.9176632934682613,
+            "rows": 2174
+          }
+        }
+      },
+      "reuse": "Keep method availability and original score evidence; different data/menu/source from A94"
+    }
+  ],
+  "C1_contrasts": [
+    {
+      "task": "coupon",
+      "left": "L1",
+      "right": "L0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "coupon",
+      "left": "R1",
+      "right": "R0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "coupon",
+      "left": "E1",
+      "right": "E0",
+      "delta": 0.0019704433497537144,
+      "prediction_disagreements": 128,
+      "left_correct_only": 66,
+      "right_correct_only": 62
+    },
+    {
+      "task": "coupon",
+      "left": "E0",
+      "right": "R0",
+      "delta": -0.0019704433497537144,
+      "prediction_disagreements": 128,
+      "left_correct_only": 62,
+      "right_correct_only": 66
+    },
+    {
+      "task": "coupon",
+      "left": "E1",
+      "right": "R1",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "coupon",
+      "left": "R0",
+      "right": "L0",
+      "delta": 0.0019704433497537144,
+      "prediction_disagreements": 128,
+      "left_correct_only": 66,
+      "right_correct_only": 62
+    },
+    {
+      "task": "coupon",
+      "left": "R1",
+      "right": "L1",
+      "delta": 0.0019704433497537144,
+      "prediction_disagreements": 128,
+      "left_correct_only": 66,
+      "right_correct_only": 62
+    },
+    {
+      "task": "coupon",
+      "left": "E0",
+      "right": "L0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "coupon",
+      "left": "E1",
+      "right": "L1",
+      "delta": 0.0019704433497537144,
+      "prediction_disagreements": 128,
+      "left_correct_only": 66,
+      "right_correct_only": 62
+    },
+    {
+      "task": "flowers",
+      "left": "L1",
+      "right": "L0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "R1",
+      "right": "R0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "E1",
+      "right": "E0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "E0",
+      "right": "R0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "E1",
+      "right": "R1",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "R0",
+      "right": "L0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "R1",
+      "right": "L1",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "E0",
+      "right": "L0",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    },
+    {
+      "task": "flowers",
+      "left": "E1",
+      "right": "L1",
+      "delta": 0.0,
+      "prediction_disagreements": 0,
+      "left_correct_only": 0,
+      "right_correct_only": 0
+    }
+  ],
+  "evidence_sha256": {
+    "research/a89_coupon_C1/protocol.json": "d2773e221535577281ccd08c33a5e6f13676a1a9c1cd8ce9220d0bfbb0b83292",
+    "research/a89_coupon_C1/summary.json": "2f708758984bb436ca859bf2b64fb0fe6c1cdd584173bcc8f9668eb8b84709c5",
+    "research/a89_coupon_C1/completion.json": "f768d0bd9bb8d0747c59904d19c5bc83e7fc0d07860114f67bffbd26d9b7bfaf",
+    "research/a97_flower_C1/protocol.json": "e3604b8c2dd5f9817ed4ce95882ce71ec56d95425928dd3d9d5c5462659b2ef0",
+    "research/a97_flower_C1/summary.json": "6d7568629cd33fc366f63125549ba0528bf149592c41e1ae90a00fba348b0782",
+    "research/a97_flower_C1/completion.json": "a2b4a0ba0bbce0953bd55f9e9f89445456ad1a911198d58fb02c28ba1b062a96",
+    "research/b1_07_allocation/protocol.json": "8db0a678fcb069f7f196e6c6ed0037edf6408925b7becb75e7e8c46926daa11a",
+    "research/b1_07_allocation/results.json": "27e0a8a1e5468533e01e835b18a688c0f57ee6b707c53ec3c78c5b7352132b82",
+    "research/b1_07_allocation/completion.json": "f93d29f4a2b13bd473fce191e2496303febd14ed80987ee3ab48868663a24743",
+    "research/b1_08_allocation/bean/protocol.json": "162e22c73aa902314000427660f805627d3f439eed93871c53bfcc1813bfb7ff",
+    "research/b1_08_allocation/bean/results.json": "400d79e5e8eda7eead57f57aff53cd86bda377c9a1826cd9f120640d6d21552c",
+    "research/b1_08_allocation/bean/completion.json": "79691026adb72a9021e0b1c746e249faec2f0e96e50025ac71298ec82d17d747",
+    "research/b1_08_allocation/coupon/protocol.json": "be68338786176cfda5bcda509d93e97b9d85402e9d2de892521eb139969206e6",
+    "research/b1_08_allocation/coupon/results.json": "d47d2c718620bc94c95c9e9e409958314f6596187d0f8bb2a815ef9ef7baed10",
+    "research/b1_08_allocation/coupon/completion.json": "04c6bb580e73c9d79c0f879012fa9db5384a1ecae94c6b18e155d8be65a572eb",
+    "research/b1_08_allocation/sms/protocol.json": "fbce72c2fb82c9970625874d9283dcf0e209ab96242f00b12ea44d7268433e25",
+    "research/b1_08_allocation/sms/results.json": "09fe3c082e6f3d311b747c91419840997450bbae903717d40ebff0f762065440",
+    "research/b1_08_allocation/sms/completion.json": "b9d13abe5cdde6cdc8ec4668260090184f9289c00a05e1293a2759e499daa89d",
+    "research/bc1_05_scoring/results.json": "686116049c9b9366c74207f6d8ef520f5b5191ae83264b5b1f6770d7a8183099"
+  },
+  "production_changes_since_C1": [
+    "prose_claims.py"
+  ],
+  "current_gaps": {
+    "current_six_arm_tasks_not_documented": [
+      "preference",
+      "bean",
+      "sms"
+    ],
+    "independent_semantic_inputs": "48 cases and 24 annotations not received; no confirmed teammate assignment",
+    "H_performance": "sealed; no scores",
+    "final_version_C1": "current prose changes have no new end-to-end performance results"
+  },
+  "decision": "Reuse existing B local/Q evidence; current full C1 has two tasks; no automatic full rerun assignment"
+}

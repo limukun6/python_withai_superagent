@@ -1,0 +1,857 @@
+[
+  {
+    "id": "shape_3",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ],
+        [
+          "one",
+          "two"
+        ]
+      ],
+      "metric": "accuracy"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "shape_4",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "kind": "numeric_tabular",
+      "x": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "metric": "accuracy"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "shape_5",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "numeric_tabular",
+      "focus": "metric_source"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "shape_6",
+    "group": "shape",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "single_text",
+      "x": [
+        "one",
+        "two",
+        "three",
+        "four"
+      ],
+      "focus": "metric_source"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "single_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "positive_1",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "positive_label": "no"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "binary_f1",
+        "labels": [
+          "yes",
+          "no"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "positive_2",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "roc_auc",
+      "labels": [
+        3,
+        7,
+        3,
+        7
+      ],
+      "positive_label": 3
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "roc_auc",
+        "labels": [
+          7,
+          3
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "positive_5",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "metric": "binary_f1",
+      "labels": [
+        "yes",
+        "no",
+        "yes",
+        "no"
+      ],
+      "focus": "positive_label"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "binary_f1",
+        "labels": [
+          "no",
+          "yes"
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "positive_6",
+    "group": "positive",
+    "operation": "task",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "metric": "roc_auc",
+      "labels": [
+        3,
+        7,
+        3,
+        7
+      ],
+      "focus": "positive_label"
+    },
+    "observed": "confirmed",
+    "passed": false,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "roc_auc",
+        "labels": [
+          3,
+          7
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "metric_1",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "accuracy"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "metric_2",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "metric": "macro_f1"
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "numeric_tabular",
+      "metric": {
+        "name": "macro_f1",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {},
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false
+    }
+  },
+  {
+    "id": "metric_3",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "f1_unspecified"
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "Supported primary metrics are accuracy, macro_f1, weighted_f1, micro_f1, binary_f1, balanced_accuracy, roc_auc"
+    }
+  },
+  {
+    "id": "metric_4",
+    "group": "metric",
+    "operation": "task",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "metric": "loss"
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "Supported primary metrics are accuracy, macro_f1, weighted_f1, micro_f1, binary_f1, balanced_accuracy, roc_auc"
+    }
+  },
+  {
+    "id": "pair_3",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "semantics": "symmetric"
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "task_kind": "pair_text",
+      "portfolio": "expanded",
+      "declared_semantics": "symmetric",
+      "swap_policy": "preserves",
+      "swap_tolerance": 0.1,
+      "status": "rejected",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "ok",
+          "detail": "symmetric"
+        },
+        {
+          "check": "semantics_matches_package",
+          "status": "ok",
+          "detail": "symmetric implies pair_text, package loaded as pair_text"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "filtered",
+          "detail": "flipping or unknown execution rules are incompatible with preserved labels; excluded ['char_C0.1', 'char_C0.3', 'char_C1.0', 'char_C3.0', 'word_C0.05', 'word_C0.1', 'word_C0.3', 'word_C0.7', 'word_C1.5', 'word_C10.0', 'word_C3.0', 'word_char_C0.05', 'word_char_C0.1', 'word_char_C0.3', 'word_char_C0.7', 'word_char_C1.5', 'word_char_C10.0', 'word_char_C3.0', 'word_char_stats_C0.1', 'word_char_stats_C0.3', 'word_char_stats_C1.0', 'word_char_stats_C3.0']"
+        }
+      ],
+      "excluded_candidates": [
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C10.0",
+        "word_C3.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C10.0",
+        "word_char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0"
+      ],
+      "reasons": [
+        "every candidate assumes the other swap policy; nothing can be run safely"
+      ],
+      "remaining_candidates": 0,
+      "candidate_swap_rules": {
+        "word_C0.05": "flips",
+        "word_C0.1": "flips",
+        "word_C0.3": "flips",
+        "word_C0.7": "flips",
+        "word_C1.5": "flips",
+        "word_C3.0": "flips",
+        "word_C10.0": "flips",
+        "word_char_C0.05": "flips",
+        "word_char_C0.1": "flips",
+        "word_char_C0.3": "flips",
+        "word_char_C0.7": "flips",
+        "word_char_C1.5": "flips",
+        "word_char_C3.0": "flips",
+        "word_char_C10.0": "flips",
+        "char_C0.1": "flips",
+        "char_C0.3": "flips",
+        "char_C1.0": "flips",
+        "char_C3.0": "flips",
+        "word_char_stats_C0.1": "flips",
+        "word_char_stats_C0.3": "flips",
+        "word_char_stats_C1.0": "flips",
+        "word_char_stats_C3.0": "flips"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "pair_4",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "semantics": "invalid"
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "task_kind": "pair_text",
+      "portfolio": "expanded",
+      "declared_semantics": "invalid",
+      "swap_policy": "unverified",
+      "swap_tolerance": 0.1,
+      "status": "rejected",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "invalid",
+          "detail": "'invalid' is not one of ['preference', 'relation', 'symmetric']"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "unverified",
+          "detail": "semantics does not imply a swap policy"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [
+        "unknown pair semantics 'invalid'"
+      ],
+      "remaining_candidates": 22,
+      "candidate_swap_rules": {
+        "word_C0.05": "flips",
+        "word_C0.1": "flips",
+        "word_C0.3": "flips",
+        "word_C0.7": "flips",
+        "word_C1.5": "flips",
+        "word_C3.0": "flips",
+        "word_C10.0": "flips",
+        "word_char_C0.05": "flips",
+        "word_char_C0.1": "flips",
+        "word_char_C0.3": "flips",
+        "word_char_C0.7": "flips",
+        "word_char_C1.5": "flips",
+        "word_char_C3.0": "flips",
+        "word_char_C10.0": "flips",
+        "char_C0.1": "flips",
+        "char_C0.3": "flips",
+        "char_C1.0": "flips",
+        "char_C3.0": "flips",
+        "word_char_stats_C0.1": "flips",
+        "word_char_stats_C0.3": "flips",
+        "word_char_stats_C1.0": "flips",
+        "word_char_stats_C3.0": "flips"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "pair_5",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {},
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "task_kind": "pair_text",
+      "portfolio": "expanded",
+      "declared_semantics": null,
+      "swap_policy": "unverified",
+      "swap_tolerance": 0.1,
+      "status": "undeclared",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "undeclared",
+          "detail": "No pair_semantics in the package; swap behaviour is unverified"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "unverified",
+          "detail": "semantics does not imply a swap policy"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [],
+      "remaining_candidates": 22,
+      "candidate_swap_rules": {
+        "word_C0.05": "flips",
+        "word_C0.1": "flips",
+        "word_C0.3": "flips",
+        "word_C0.7": "flips",
+        "word_C1.5": "flips",
+        "word_C3.0": "flips",
+        "word_C10.0": "flips",
+        "word_char_C0.05": "flips",
+        "word_char_C0.1": "flips",
+        "word_char_C0.3": "flips",
+        "word_char_C0.7": "flips",
+        "word_char_C1.5": "flips",
+        "word_char_C3.0": "flips",
+        "word_char_C10.0": "flips",
+        "char_C0.1": "flips",
+        "char_C0.3": "flips",
+        "char_C1.0": "flips",
+        "char_C3.0": "flips",
+        "word_char_stats_C0.1": "flips",
+        "word_char_stats_C0.3": "flips",
+        "word_char_stats_C1.0": "flips",
+        "word_char_stats_C3.0": "flips"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "pair_6",
+    "group": "pair",
+    "operation": "semantics",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "kind": "text_tabular"
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "task_kind": "text_tabular",
+      "portfolio": "expanded",
+      "declared_semantics": null,
+      "swap_policy": "unverified",
+      "swap_tolerance": 0.1,
+      "status": "undeclared",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "undeclared",
+          "detail": "No pair_semantics in the package; swap behaviour is unverified"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "unverified",
+          "detail": "semantics does not imply a swap policy"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [],
+      "remaining_candidates": 5,
+      "candidate_swap_rules": {
+        "text_tabular_logistic_C0.1": "unknown",
+        "text_tabular_logistic_C1.0": "unknown",
+        "text_tabular_logistic_C10.0": "unknown",
+        "text_tabular_extra_trees_leaf1": "unknown",
+        "text_tabular_extra_trees_leaf3": "unknown"
+      },
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    }
+  },
+  {
+    "id": "evidence_1",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "trial": 1,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 1,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.7
+      },
+      "observed": 0.7,
+      "evidence_id": "trial:1/search/macro_f1",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "evidence_2",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "trial": 1,
+      "split": "train",
+      "metric": "accuracy",
+      "value": 0.9
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 1,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.9
+      },
+      "observed": 0.9,
+      "evidence_id": "trial:1/train/accuracy",
+      "status": "confirmed",
+      "reason": "bound_measurement_comparison"
+    }
+  },
+  {
+    "id": "evidence_5",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "trial": 2,
+      "split": "search",
+      "metric": "macro_f1",
+      "value": 0.7
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 2,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.7
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "trial_not_completed"
+    }
+  },
+  {
+    "id": "evidence_6",
+    "group": "evidence",
+    "operation": "measurement",
+    "subset": "development",
+    "expected": "unknown",
+    "payload": {
+      "trial": 1,
+      "split": "search",
+      "metric": "roc_auc",
+      "value": 0.7
+    },
+    "observed": "unknown",
+    "passed": true,
+    "evidence": {
+      "claim": {
+        "trial": 1,
+        "split": "search",
+        "metric": "roc_auc",
+        "value": 0.7
+      },
+      "observed": null,
+      "evidence_id": null,
+      "status": "unverifiable",
+      "reason": "named_measurement_unavailable"
+    }
+  },
+  {
+    "id": "delivery_1",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "roc_auc",
+      "score": 1.0,
+      "rows": 2
+    }
+  },
+  {
+    "id": "delivery_2",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "confirmed",
+    "payload": {
+      "order": [
+        "yes",
+        "no"
+      ],
+      "scores": [
+        [
+          0.1,
+          0.9
+        ],
+        [
+          0.9,
+          0.1
+        ]
+      ]
+    },
+    "observed": "confirmed",
+    "passed": true,
+    "evidence": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "primary_metric": "roc_auc",
+      "score": 1.0,
+      "rows": 2
+    }
+  },
+  {
+    "id": "delivery_3",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "order": [
+        "no",
+        "other"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "Invalid model probability columns for ROC-AUC"
+    }
+  },
+  {
+    "id": "delivery_4",
+    "group": "delivery",
+    "operation": "probability",
+    "subset": "development",
+    "expected": "contradicted",
+    "payload": {
+      "order": [
+        "no",
+        "yes"
+      ],
+      "scores": [
+        [
+          0.9,
+          0.9
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ]
+    },
+    "observed": "contradicted",
+    "passed": true,
+    "evidence": {
+      "error": "ROC-AUC interface requires normalized probabilities"
+    }
+  }
+]

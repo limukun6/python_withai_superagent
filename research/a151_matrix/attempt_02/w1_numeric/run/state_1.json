@@ -1,0 +1,245 @@
+{
+  "ab_schema_version": 1,
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "numeric_tabular",
+    "metric": {
+      "name": "accuracy",
+      "labels": [
+        "BARBUNYA",
+        "BOMBAY",
+        "CALI",
+        "DERMASON",
+        "HOROZ",
+        "SEKER",
+        "SIRA"
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "tabular",
+      "columns": [
+        {
+          "name": "Area",
+          "type": "numeric"
+        },
+        {
+          "name": "Perimeter",
+          "type": "numeric"
+        },
+        {
+          "name": "MajorAxisLength",
+          "type": "numeric"
+        },
+        {
+          "name": "MinorAxisLength",
+          "type": "numeric"
+        },
+        {
+          "name": "AspectRation",
+          "type": "numeric"
+        },
+        {
+          "name": "Eccentricity",
+          "type": "numeric"
+        },
+        {
+          "name": "ConvexArea",
+          "type": "numeric"
+        },
+        {
+          "name": "EquivDiameter",
+          "type": "numeric"
+        },
+        {
+          "name": "Extent",
+          "type": "numeric"
+        },
+        {
+          "name": "Solidity",
+          "type": "numeric"
+        },
+        {
+          "name": "roundness",
+          "type": "numeric"
+        },
+        {
+          "name": "Compactness",
+          "type": "numeric"
+        },
+        {
+          "name": "ShapeFactor1",
+          "type": "numeric"
+        },
+        {
+          "name": "ShapeFactor2",
+          "type": "numeric"
+        },
+        {
+          "name": "ShapeFactor3",
+          "type": "numeric"
+        },
+        {
+          "name": "ShapeFactor4",
+          "type": "numeric"
+        }
+      ],
+      "target": "Class"
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "numeric_tabular",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "accuracy",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            "BARBUNYA",
+            "BOMBAY",
+            "CALI",
+            "DERMASON",
+            "HOROZ",
+            "SEKER",
+            "SIRA"
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [],
+  "available_candidates": [
+    {
+      "id": "numeric_tabular_logistic_C0.1",
+      "params": {
+        "C": 0.1
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_logistic_C1.0",
+      "params": {
+        "C": 1.0
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_logistic_C10.0",
+      "params": {
+        "C": 10.0
+      },
+      "route": "numeric_tabular_logistic",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "numeric_tabular_extra_trees_leaf3",
+      "params": {
+        "min_samples_leaf": 3,
+        "n_estimators": 300
+      },
+      "route": "numeric_tabular_extra_trees",
+      "input_kind": "numeric_tabular",
+      "representation": "imputed scaled numeric columns",
+      "estimator": "extra_trees",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "numeric_tabular",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "prediction_evidence": [],
+  "budget": {
+    "fit_limit": 3,
+    "attempted_classifier_fits": 0,
+    "completed_classifier_fits": 0,
+    "remaining_fit_allowance": 3,
+    "reserved_final_refit": 1,
+    "unknown_failed_attempts": 0,
+    "llm_request_limit": 3,
+    "used_llm_requests": 0,
+    "time_limit_seconds": 600.0,
+    "elapsed_seconds": 4.3439999999827705
+  },
+  "registered_confirmation_splits": [
+    "confirmation_1",
+    "confirmation_2"
+  ]
+}

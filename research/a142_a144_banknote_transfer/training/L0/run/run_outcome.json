@@ -1,0 +1,219 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\a143_banknote_transfer\\L0\\run",
+  "scheduler": "ab-fixed",
+  "planner_mode": "local",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 0,
+  "known_course_cost_rmb": 0,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "numeric_tabular_extra_trees_leaf1",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "numeric_tabular_extra_trees_leaf1"
+    ],
+    "primary_candidate": "numeric_tabular_extra_trees_leaf1",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "numeric_tabular_extra_trees_leaf1",
+        "primary_accuracy": 1.0,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 2,
+            "candidate": "numeric_tabular_extra_trees_leaf1",
+            "params": {
+              "min_samples_leaf": 1,
+              "n_estimators": 300
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 1.0,
+            "search_score": 1.0,
+            "train_metrics": {
+              "accuracy": 1.0,
+              "macro_f1": 1.0,
+              "primary_metric": "accuracy",
+              "score": 1.0,
+              "rows": 873
+            },
+            "search_metrics": {
+              "accuracy": 1.0,
+              "macro_f1": 1.0,
+              "primary_metric": "accuracy",
+              "score": 1.0,
+              "rows": 219
+            },
+            "score_gap": 0.0,
+            "train_accuracy": 1.0,
+            "search_accuracy": 1.0,
+            "generalization_gap": 0.0,
+            "class_recall": [
+              1.0,
+              1.0
+            ],
+            "training_seconds": 0.30588679999345914,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "extra_trees",
+              "class": "ExtraTreesClassifier",
+              "module": "sklearn.ensemble._forest",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "numeric_tabular_extra_trees_leaf1",
+              "params": {
+                "min_samples_leaf": 1,
+                "n_estimators": 300
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "numeric_tabular_extra_trees_leaf1",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 1.5160000000032596,
+            "evaluation_payload_sha256": "a47d5ae918255ea177e67abf9cfc8c734740864bc725db3a833278486141c06f",
+            "label_sha256": "cdfa6b3e552267440e69bc193dffc177d25a602a8988b38e6dc83dd134680596",
+            "row_ids_sha256": "76b8b52066348e837e676cd11a6ca1ec2a26a2c638f290164615c31b450b0bfa",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "extra_trees",
+              "observed_class": "ExtraTreesClassifier",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 1.0,
+        "mean_score": 1.0,
+        "mean_accuracy": 1.0,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "numeric_tabular_extra_trees_leaf1",
+    "selection_score": 1.0,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "numeric_tabular_extra_trees_leaf1",
+      "incumbent": "numeric_tabular_extra_trees_leaf1",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": null,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": null,
+    "pre_refit_validation_score": null,
+    "single_model_validation_score": null,
+    "official_validation_accuracy": null,
+    "pre_refit_validation_accuracy": null,
+    "single_model_validation_accuracy": null,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 1092,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.2620065999799408,
+    "ensemble_failure": null,
+    "provided_validation_available": false
+  },
+  "elapsed_seconds": 15.561999999976251,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 4,
+    "confirm": 6,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 11,
+    "completed_classifier_fits": 11,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0,
+  "unresolved_calls": 0,
+  "task_budget_after_run": null,
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_10.joblib",
+    "trial_2.joblib",
+    "trial_3.joblib",
+    "trial_4.joblib",
+    "trial_5.joblib",
+    "trial_6.joblib",
+    "trial_7.joblib",
+    "trial_8.joblib",
+    "trial_9.joblib"
+  ],
+  "history_policy": "strict",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "no_new_llm_calls",
+  "valid_for_budgeted_final_report": null,
+  "project_usage_after_run": null,
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

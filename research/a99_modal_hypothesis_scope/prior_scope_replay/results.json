@@ -1,0 +1,2901 @@
+{
+  "development_cases": [
+    {
+      "id": "natural_A89",
+      "expected": {
+        "logistic": "informational"
+      },
+      "observed": {
+        "logistic": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "following",
+      "expected": {
+        "catboost": "confirmed",
+        "logistic": "informational"
+      },
+      "observed": {
+        "catboost": "confirmed",
+        "logistic": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "linear_reference",
+      "expected": {
+        "catboost": "confirmed",
+        "linear_svm": "informational"
+      },
+      "observed": {
+        "catboost": "confirmed",
+        "linear_svm": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "current_wrong",
+      "expected": {
+        "logistic": "informational",
+        "svm": "contradicted"
+      },
+      "observed": {
+        "logistic": "informational",
+        "svm": "contradicted"
+      },
+      "passed": true
+    },
+    {
+      "id": "current_true",
+      "expected": {
+        "svm": "informational",
+        "catboost": "confirmed"
+      },
+      "observed": {
+        "svm": "informational",
+        "catboost": "confirmed"
+      },
+      "passed": true
+    },
+    {
+      "id": "current_then_history",
+      "expected": {
+        "svm": "contradicted",
+        "logistic": "informational"
+      },
+      "observed": {
+        "svm": "contradicted",
+        "logistic": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "simple_wrong",
+      "expected": {
+        "logistic": "contradicted"
+      },
+      "observed": {
+        "logistic": "contradicted"
+      },
+      "passed": true
+    },
+    {
+      "id": "simple_true",
+      "expected": {
+        "catboost": "confirmed"
+      },
+      "observed": {
+        "catboost": "confirmed"
+      },
+      "passed": true
+    },
+    {
+      "id": "no_reference_marker",
+      "expected": {
+        "logistic": "contradicted"
+      },
+      "observed": {
+        "logistic": "contradicted"
+      },
+      "passed": true
+    },
+    {
+      "id": "uncertain",
+      "expected": {
+        "svm": "unverifiable",
+        "logistic": "informational"
+      },
+      "observed": {
+        "svm": "unverifiable",
+        "logistic": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "explicit_trial",
+      "expected": {
+        "logistic": "informational",
+        "catboost": "confirmed"
+      },
+      "observed": {
+        "logistic": "informational",
+        "catboost": "confirmed"
+      },
+      "passed": true
+    },
+    {
+      "id": "sentence_boundary",
+      "expected": {
+        "svm": "informational",
+        "catboost": "confirmed"
+      },
+      "observed": {
+        "svm": "informational",
+        "catboost": "confirmed"
+      },
+      "passed": true
+    },
+    {
+      "id": "comparison",
+      "expected": {
+        "catboost": "confirmed",
+        "logistic": "informational"
+      },
+      "observed": {
+        "catboost": "confirmed",
+        "logistic": "informational"
+      },
+      "passed": true
+    },
+    {
+      "id": "next_binding",
+      "expected": {
+        "logistic": "informational",
+        "catboost": "confirmed"
+      },
+      "observed": {
+        "logistic": "informational",
+        "catboost": "confirmed"
+      },
+      "passed": true
+    },
+    {
+      "id": "proposed_wrong",
+      "expected": {
+        "catboost": "informational",
+        "svm": "contradicted"
+      },
+      "observed": {
+        "catboost": "informational",
+        "svm": "contradicted"
+      },
+      "passed": true
+    },
+    {
+      "id": "unbound_review",
+      "expected": {
+        "logistic": "unverifiable"
+      },
+      "observed": {
+        "logistic": "unverifiable"
+      },
+      "passed": true
+    }
+  ],
+  "natural_proposal_replay": [
+    {
+      "arm": "R0",
+      "trial": 2,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 0,
+        "contradicted": 0,
+        "unverifiable": 4,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The only completed primary trial is a strongly regularized logistic model with modest accuracy and imbalanced class recall.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "A native-category CatBoost model is a reasonable next primary-split experiment because it can model categorical interactions that one-hot logistic regression may miss, while depth 6 and l2_leaf_reg 3.0 are moderate settings rather than an extreme overfit-prone choice.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A native-category CatBoost model is a reasonable next primary-split experiment because it can model categorical interactions that one-hot logistic regression may miss, while depth 6 and l2_leaf_reg 3.0 are moderate settings rather than an extreme overfit-prone choice.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": null,
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A gradient-boosted tree model using native categorical handling may capture nonlinear and interaction effects not represented by the regularized one-hot logistic baseline, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 4,
+        "confirmed": 0,
+        "contradicted": 0,
+        "unverifiable": 4,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The only completed primary trial is a strongly regularized logistic model with modest accuracy and imbalanced class recall.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "A native-category CatBoost model is a reasonable next primary-split experiment because it can model categorical interactions that one-hot logistic regression may miss, while depth 6 and l2_leaf_reg 3.0 are moderate settings rather than an extreme overfit-prone choice.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A native-category CatBoost model is a reasonable next primary-split experiment because it can model categorical interactions that one-hot logistic regression may miss, while depth 6 and l2_leaf_reg 3.0 are moderate settings rather than an extreme overfit-prone choice.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": null,
+            "status": "unverifiable"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A gradient-boosted tree model using native categorical handling may capture nonlinear and interaction effects not represented by the regularized one-hot logistic baseline, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R0",
+      "trial": 3,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary trial, using CatBoost depth 6 with l2_leaf_reg 3.0 and showing a moderate train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing L2 regularization at the same CatBoost depth may reduce the train-search gap and could improve primary-split accuracy if the depth-6 model is mildly overfitting, but the direction and magnitude of accuracy change are not asserted.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 4,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary trial, using CatBoost depth 6 with l2_leaf_reg 3.0 and showing a moderate train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing L2 regularization at the same CatBoost depth may reduce the train-search gap and could improve primary-split accuracy if the depth-6 model is mildly overfitting, but the direction and magnitude of accuracy change are not asserted.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R0",
+      "trial": 4,
+      "old": {
+        "claims_checked": 7,
+        "confirmed": 6,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary trial with CatBoost depth 6 and l2_leaf_reg 3.0.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 at l2_leaf_reg 3.0 may allow the model to capture higher-order categorical interactions that depth 6 misses, but it may also increase overfitting;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 7,
+        "confirmed": 6,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary trial with CatBoost depth 6 and l2_leaf_reg 3.0.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 at l2_leaf_reg 3.0 may allow the model to capture higher-order categorical interactions that depth 6 misses, but it may also increase overfitting;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 2,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 2,
+        "contradicted": 1,
+        "unverifiable": 1,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "CatBoost with depth 6 and l2_leaf_reg 3.0 is a moderate-capacity nonlinear model with native categorical handling.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "It is a reasonable next primary-split probe after a strongly regularized one-hot logistic baseline.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "contradicted",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Nonlinear category interactions and native categorical splits may capture structure missed by one-hot logistic regression, potentially increasing primary accuracy;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [
+          "logistic"
+        ],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 3,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "CatBoost with depth 6 and l2_leaf_reg 3.0 is a moderate-capacity nonlinear model with native categorical handling.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "It is a reasonable next primary-split probe after a strongly regularized one-hot logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Nonlinear category interactions and native categorical splits may capture structure missed by one-hot logistic regression, potentially increasing primary accuracy;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 3,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 3,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 showed CatBoost depth 6 with l2_leaf_reg 3.0 substantially outperforming the regularized logistic baseline on the primary split, but with a larger train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 showed CatBoost depth 6 with l2_leaf_reg 3.0 substantially outperforming the regularized logistic baseline on the primary split, but with a larger train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce the observed train-search gap while retaining the nonlinear categorical structure that improved over the logistic baseline;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce the observed train-search gap while retaining the nonlinear categorical structure that improved over the logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 4,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 3,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 showed CatBoost depth 6 with l2_leaf_reg 3.0 substantially outperforming the regularized logistic baseline on the primary split, but with a larger train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 showed CatBoost depth 6 with l2_leaf_reg 3.0 substantially outperforming the regularized logistic baseline on the primary split, but with a larger train-search gap.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce the observed train-search gap while retaining the nonlinear categorical structure that improved over the logistic baseline;",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce the observed train-search gap while retaining the nonlinear categorical structure that improved over the logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 8,
+      "old": {
+        "claims_checked": 5,
+        "confirmed": 4,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The best completed PRIMARY trial is CatBoost depth 6 with l2_leaf_reg 3.0 at 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 4",
+            "claim": 4,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 at l2_leaf_reg 3.0 may capture higher-order categorical interactions that depth 6 misses, but the direction and magnitude of primary accuracy change are not asserted.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 5,
+        "confirmed": 4,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The best completed PRIMARY trial is CatBoost depth 6 with l2_leaf_reg 3.0 at 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 4",
+            "claim": 4,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 at l2_leaf_reg 3.0 may capture higher-order categorical interactions that depth 6 misses, but the direction and magnitude of primary accuracy change are not asserted.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 2,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 logistic C=0.05 reached 0.6652 primary accuracy with a small train-search gap but imbalanced class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The task is categorical tabular, and CatBoost with native category handling is an untried route that can model nonlinearities and category interactions.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Only one completed primary trial exists, so there is no direct CatBoost evidence on this split.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The prior logistic result is a baseline, not proof that a tree model will improve.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A native-category gradient-boosted tree model with moderate depth may capture nonlinear and interaction effects that the strongly regularized logistic baseline misses, potentially increasing primary accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 4,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 logistic C=0.05 reached 0.6652 primary accuracy with a small train-search gap but imbalanced class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The task is categorical tabular, and CatBoost with native category handling is an untried route that can model nonlinearities and category interactions.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Only one completed primary trial exists, so there is no direct CatBoost evidence on this split.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The prior logistic result is a baseline, not proof that a tree model will improve.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A native-category gradient-boosted tree model with moderate depth may capture nonlinear and interaction effects that the strongly regularized logistic baseline misses, potentially increasing primary accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 3,
+      "old": {
+        "claims_checked": 6,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result so far: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy, versus 0.6652 for the logistic baseline in trial 1.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result so far: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy, versus 0.6652 for the logistic baseline in trial 1.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Its train-search gap was 0.0619, so the next controlled probe keeps the same CatBoost route, depth, iterations, and learning rate while increasing l2_leaf_reg from 3.0 to 10.0.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing L2 leaf regularization at the same CatBoost depth may reduce the observed train-search gap while retaining useful nonlinear and category-interaction modeling, but the effect on PRIMARY accuracy is not known in advance.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 6,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result so far: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy, versus 0.6652 for the logistic baseline in trial 1.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result so far: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy, versus 0.6652 for the logistic baseline in trial 1.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Its train-search gap was 0.0619, so the next controlled probe keeps the same CatBoost route, depth, iterations, and learning rate while increasing l2_leaf_reg from 3.0 to 10.0.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing L2 leaf regularization at the same CatBoost depth may reduce the observed train-search gap while retaining useful nonlinear and category-interaction modeling, but the effect on PRIMARY accuracy is not known in advance.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 4,
+      "old": {
+        "claims_checked": 6,
+        "confirmed": 4,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 remains the best completed PRIMARY result: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The next candidate keeps the best CatBoost depth and regularization but changes the representation to training-selected categorical field interactions, directly probing whether explicit categorical interactions are useful for this categorical tabular task.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The proposed candidate changes representation/route rather than a single CatBoost hyperparameter, so any score difference cannot be attributed to one field.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Training-selected categorical field interactions at the best observed CatBoost depth and L2 setting may capture pairwise category interactions that native category handling does not fully exploit, but the effect on PRIMARY accuracy is unknown in advance.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 6,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 remains the best completed PRIMARY result: CatBoost depth 6 with l2_leaf_reg=3.0 reached 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The next candidate keeps the best CatBoost depth and regularization but changes the representation to training-selected categorical field interactions, directly probing whether explicit categorical interactions are useful for this categorical tabular task.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The proposed candidate changes representation/route rather than a single CatBoost hyperparameter, so any score difference cannot be attributed to one field.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Training-selected categorical field interactions at the best observed CatBoost depth and L2 setting may capture pairwise category interactions that native category handling does not fully exploit, but the effect on PRIMARY accuracy is unknown in advance.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 2,
+      "old": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 established a one-hot logistic baseline at 0.6652 search accuracy with a small train-search gap and imbalanced class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "catboost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The catboost route is untried and uses native categorical handling, so a moderate-depth CatBoost configuration is a reasonable next primary-split experiment to test whether nonlinear categorical structure improves accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The catboost route is untried and uses native categorical handling, so a moderate-depth CatBoost configuration is a reasonable next primary-split experiment to test whether nonlinear categorical structure improves accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "catboost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No prior catboost evidence exists, so this choice is exploratory rather than a claimed improvement.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture categorical interactions and nonlinear effects that the one-hot logistic baseline does not, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture categorical interactions and nonlinear effects that the one-hot logistic baseline does not, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 established a one-hot logistic baseline at 0.6652 search accuracy with a small train-search gap and imbalanced class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "catboost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The catboost route is untried and uses native categorical handling, so a moderate-depth CatBoost configuration is a reasonable next primary-split experiment to test whether nonlinear categorical structure improves accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The catboost route is untried and uses native categorical handling, so a moderate-depth CatBoost configuration is a reasonable next primary-split experiment to test whether nonlinear categorical structure improves accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "catboost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No prior catboost evidence exists, so this choice is exploratory rather than a claimed improvement.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture categorical interactions and nonlinear effects that the one-hot logistic baseline does not, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 may capture categorical interactions and nonlinear effects that the one-hot logistic baseline does not, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 3,
+      "old": {
+        "claims_checked": 7,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 5,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary-split result so far: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy versus 0.6652 for the logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 is the best completed primary-split result so far: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy versus 0.6652 for the logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The next primary-split experiment should stay on the stronger CatBoost route and increase L2 regularization from 3.0 to 10.0 at the same depth, isolating a regularization change rather than changing route or multiple structural settings.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 is a weaker logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "trial 2 is the current best CatBoost configuration.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No confirmation-split evidence is available, and no prior trial has tested stronger L2 regularization on this CatBoost depth.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce overfitting and improve or preserve primary-split accuracy relative to trial 2, but the direction and magnitude are not established.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 7,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 5,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed primary-split result so far: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy versus 0.6652 for the logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 2 is the best completed primary-split result so far: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy versus 0.6652 for the logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "The next primary-split experiment should stay on the stronger CatBoost route and increase L2 regularization from 3.0 to 10.0 at the same depth, isolating a regularization change rather than changing route or multiple structural settings.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 is a weaker logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "trial 2 is the current best CatBoost configuration.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No confirmation-split evidence is available, and no prior trial has tested stronger L2 regularization on this CatBoost depth.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing l2_leaf_reg from 3.0 to 10.0 at CatBoost depth 6 may reduce overfitting and improve or preserve primary-split accuracy relative to trial 2, but the direction and magnitude are not established.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 8,
+      "old": {
+        "claims_checked": 9,
+        "confirmed": 7,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 is a weaker logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "trial 2 is the current best CatBoost PRIMARY configuration;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No prior PRIMARY trial has tested CatBoost depth 8.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 4",
+            "claim": 4,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 while keeping l2_leaf_reg at 3.0 may capture higher-order categorical interactions and improve PRIMARY search accuracy relative to trial 2, but the direction and magnitude are not established and greater depth may overfit.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 9,
+        "confirmed": 7,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Trial 2 is the best completed PRIMARY result: CatBoost depth 6 with l2_leaf_reg 3.0 reached 0.7522 search accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 is a weaker logistic baseline;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "trial 2 is the current best CatBoost PRIMARY configuration;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "No prior PRIMARY trial has tested CatBoost depth 8.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 4",
+            "claim": 4,
+            "observed": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "CatBoost",
+            "claim": "catboost",
+            "compatible_with": [
+              "catboost"
+            ],
+            "sentence": "Increasing CatBoost depth from 6 to 8 while keeping l2_leaf_reg at 3.0 may capture higher-order categorical interactions and improve PRIMARY search accuracy relative to trial 2, but the direction and magnitude are not established and greater depth may overfit.",
+            "in_comparison": false,
+            "observed": [
+              "catboost"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    }
+  ]
+}

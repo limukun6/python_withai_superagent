@@ -1,0 +1,833 @@
+{
+  "cases": [
+    {
+      "id": "accuracy",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "renamed",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            "alpha",
+            "zulu"
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                "alpha",
+                "zulu"
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "macro",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "macro_f1",
+          "labels": [
+            0,
+            1,
+            2
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "macro_f1",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1,
+                2
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "f1_pos0",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "binary_f1",
+          "labels": [
+            1,
+            0
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "binary_f1",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                1,
+                0
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": 0,
+              "source": "declared_spec",
+              "status": "confirmed"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "f1_pos1",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "binary_f1",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "binary_f1",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": 1,
+              "source": "declared_spec",
+              "status": "confirmed"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "auc_pos0",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "roc_auc",
+          "labels": [
+            1,
+            0
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "roc_auc",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                1,
+                0
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": 0,
+              "source": "declared_spec",
+              "status": "confirmed"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 5
+    },
+    {
+      "id": "auc_default",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "roc_auc",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "roc_auc",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": 1,
+              "source": "default_sorted_last",
+              "status": "unknown"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 5
+    },
+    {
+      "id": "metric_default",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "numeric_tabular",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "tabular"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "numeric_tabular",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "default_accuracy",
+              "status": "unknown",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 7
+    },
+    {
+      "id": "invalid_positive",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "positive_label must identify one of two training classes"
+    },
+    {
+      "id": "invalid_metric",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "Supported primary metrics are accuracy, macro_f1, weighted_f1, micro_f1, binary_f1, balanced_accuracy, roc_auc"
+    },
+    {
+      "id": "one_class",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "Training requires at least two classes"
+    },
+    {
+      "id": "preference",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "left",
+              "type": "text"
+            },
+            {
+              "name": "right",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "left",
+          "pair_semantics": "preference"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": "preference",
+              "source": "input_schema",
+              "status": "confirmed"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 32
+    },
+    {
+      "id": "symmetric",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "left",
+              "type": "text"
+            },
+            {
+              "name": "right",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "equivalent",
+          "pair_semantics": "symmetric"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": "symmetric",
+              "source": "input_schema",
+              "status": "confirmed"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 8
+    },
+    {
+      "id": "symmetric_wrong",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "Symmetric pair tasks require pair_label_one=equivalent, not left/right preference"
+    },
+    {
+      "id": "preference_wrong",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "Declare pair_label_one=left explicitly"
+    },
+    {
+      "id": "pair_undeclared",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "left",
+              "type": "text"
+            },
+            {
+              "name": "right",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "left"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": null,
+              "source": "undeclared",
+              "status": "unknown"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 32
+    },
+    {
+      "id": "pair_invalid",
+      "expected_accepted": false,
+      "reached_executor_before_fits": false,
+      "passed": true,
+      "error": "No registered executable method supports this task/semantics/dependencies"
+    },
+    {
+      "id": "pair_renamed_columns",
+      "expected_accepted": true,
+      "reached_executor_before_fits": true,
+      "passed": true,
+      "error": null,
+      "task_contract": {
+        "contract_version": 1,
+        "objective": "classification",
+        "kind": "pair_text",
+        "metric": {
+          "name": "accuracy",
+          "labels": [
+            0,
+            1
+          ],
+          "direction": "maximize"
+        },
+        "input_schema": {
+          "modality": "pair_text",
+          "columns": [
+            {
+              "name": "alpha_text",
+              "type": "text"
+            },
+            {
+              "name": "beta_text",
+              "type": "text"
+            }
+          ],
+          "target": "label",
+          "pair_label_one": "left",
+          "pair_semantics": "preference"
+        },
+        "selection_data": "training-derived partitions only",
+        "formal_test_available_to_agent": false,
+        "goal_resolution": {
+          "resolution_version": 1,
+          "fields": {
+            "input_kind": {
+              "value": "pair_text",
+              "source": "manifest_v1",
+              "status": "confirmed"
+            },
+            "primary_metric": {
+              "value": "accuracy",
+              "source": "declared_manifest",
+              "status": "confirmed",
+              "effective_policy": "maximize"
+            },
+            "label_domain": {
+              "value": [
+                0,
+                1
+              ],
+              "source": "training_labels",
+              "status": "confirmed"
+            },
+            "positive_label": {
+              "value": null,
+              "source": "not_applicable",
+              "status": "not_applicable"
+            },
+            "pair_semantics": {
+              "value": "preference",
+              "source": "input_schema",
+              "status": "confirmed"
+            }
+          },
+          "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+        }
+      },
+      "candidate_count": 32
+    }
+  ],
+  "passed": 18,
+  "total": 18
+}

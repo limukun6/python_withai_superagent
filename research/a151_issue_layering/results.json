@@ -1,0 +1,255 @@
+{
+  "summary": {
+    "oracle_cases": 5,
+    "oracle_passed": 5,
+    "replay_cases": 6,
+    "candidates_unchanged": 6,
+    "sealed_knowledge_issues": 3,
+    "closed_without_fit": 3,
+    "knowledge_still_open": 0
+  },
+  "oracle": [
+    {
+      "case": "wrong task kind",
+      "expected_issue_class": "knowledge",
+      "observed_issue_class": "knowledge",
+      "expected_closure": "resolved_semantic",
+      "observed_closure": "resolved_semantic",
+      "status_on_issue_creation": "open",
+      "new_fit_required": false,
+      "after_failed_trial": "resolved_semantic",
+      "after_matched_trial": "resolved_semantic",
+      "pass": true
+    },
+    {
+      "case": "reserved execution class",
+      "expected_issue_class": "execution",
+      "observed_issue_class": "execution",
+      "expected_closure": "resolved",
+      "observed_closure": "resolved",
+      "after_failed_trial": "open",
+      "new_fit_required": true,
+      "pass": true
+    },
+    {
+      "case": "reserved measurement class",
+      "expected_issue_class": "measurement",
+      "observed_issue_class": "measurement",
+      "expected_closure": "addressed_pending_check",
+      "observed_closure": "addressed_pending_check",
+      "new_fit_required": true,
+      "pass": true
+    },
+    {
+      "case": "unknown fact reference",
+      "expected_issue_class": null,
+      "observed_issue_class": null,
+      "expected_closure": null,
+      "observed_closure": null,
+      "pass": true
+    },
+    {
+      "case": "layering off keeps the old postcondition",
+      "expected_issue_class": null,
+      "observed_issue_class": null,
+      "expected_closure": "addressed_pending_check",
+      "observed_closure": null,
+      "new_fit_required": null,
+      "pass": true
+    }
+  ],
+  "replay": [
+    {
+      "task": "coupon",
+      "condition": "natural",
+      "sealed_candidate": "catboost_depth6_reg3.0",
+      "sealed_purpose": "improve",
+      "sealed_issue_statuses": [],
+      "sealed_issue_reasons": [],
+      "off": {
+        "accepted": true,
+        "candidate": "catboost_depth6_reg3.0",
+        "issues": []
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "catboost_depth6_reg3.0",
+        "issues": [],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    },
+    {
+      "task": "coupon",
+      "condition": "controlled",
+      "sealed_candidate": "catboost_depth6_reg3.0",
+      "sealed_purpose": "improve",
+      "sealed_issue_statuses": [
+        "addressed_pending_check"
+      ],
+      "sealed_issue_reasons": [
+        "exact_bound_fact"
+      ],
+      "off": {
+        "accepted": true,
+        "candidate": "catboost_depth6_reg3.0",
+        "issues": [
+          {
+            "issue_id": "issue:7b90460c0980887cbe26",
+            "status": "addressed_pending_check",
+            "issue_class": null,
+            "resolution_channel": null,
+            "new_fit_required": null,
+            "closed_by": null,
+            "reason": "exact_bound_fact"
+          }
+        ]
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "catboost_depth6_reg3.0",
+        "issues": [
+          {
+            "issue_id": "issue:7b90460c0980887cbe26",
+            "status": "resolved_semantic",
+            "issue_class": "knowledge",
+            "resolution_channel": "registry_check",
+            "new_fit_required": false,
+            "closed_by": "registry_check",
+            "reason": "exact_bound_fact"
+          }
+        ],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    },
+    {
+      "task": "sms",
+      "condition": "natural",
+      "sealed_candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+      "sealed_purpose": "coverage",
+      "sealed_issue_statuses": [],
+      "sealed_issue_reasons": [],
+      "off": {
+        "accepted": true,
+        "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "issues": []
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "recipe_single_text_hybrid_char_wb_logistic_f8d4dd215972d11b",
+        "issues": [],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    },
+    {
+      "task": "sms",
+      "condition": "controlled",
+      "sealed_candidate": "single_word_C3.0",
+      "sealed_purpose": "diagnose",
+      "sealed_issue_statuses": [
+        "addressed_pending_check"
+      ],
+      "sealed_issue_reasons": [
+        "inverse_C_between_bound_configurations"
+      ],
+      "off": {
+        "accepted": true,
+        "candidate": "single_word_C3.0",
+        "issues": [
+          {
+            "issue_id": "issue:85dd1f4faf238b2d9991",
+            "status": "addressed_pending_check",
+            "issue_class": null,
+            "resolution_channel": null,
+            "new_fit_required": null,
+            "closed_by": null,
+            "reason": "inverse_C_between_bound_configurations"
+          }
+        ]
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "single_word_C3.0",
+        "issues": [
+          {
+            "issue_id": "issue:85dd1f4faf238b2d9991",
+            "status": "resolved_semantic",
+            "issue_class": "knowledge",
+            "resolution_channel": "registry_check",
+            "new_fit_required": false,
+            "closed_by": "registry_check",
+            "reason": "inverse_C_between_bound_configurations"
+          }
+        ],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    },
+    {
+      "task": "flowers",
+      "condition": "natural",
+      "sealed_candidate": "image_rbf_svm_C1.0",
+      "sealed_purpose": "coverage",
+      "sealed_issue_statuses": [],
+      "sealed_issue_reasons": [],
+      "off": {
+        "accepted": true,
+        "candidate": "image_rbf_svm_C1.0",
+        "issues": []
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "image_rbf_svm_C1.0",
+        "issues": [],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    },
+    {
+      "task": "flowers",
+      "condition": "controlled",
+      "sealed_candidate": "image_extra_trees_leaf3",
+      "sealed_purpose": "coverage",
+      "sealed_issue_statuses": [
+        "addressed_pending_check"
+      ],
+      "sealed_issue_reasons": [
+        "exact_bound_fact"
+      ],
+      "off": {
+        "accepted": true,
+        "candidate": "image_extra_trees_leaf3",
+        "issues": [
+          {
+            "issue_id": "issue:df6be28ecf5586e70f66",
+            "status": "addressed_pending_check",
+            "issue_class": null,
+            "resolution_channel": null,
+            "new_fit_required": null,
+            "closed_by": null,
+            "reason": "exact_bound_fact"
+          }
+        ]
+      },
+      "by_class": {
+        "accepted": true,
+        "candidate": "image_extra_trees_leaf3",
+        "issues": [
+          {
+            "issue_id": "issue:df6be28ecf5586e70f66",
+            "status": "resolved_semantic",
+            "issue_class": "knowledge",
+            "resolution_channel": "registry_check",
+            "new_fit_required": false,
+            "closed_by": "registry_check",
+            "reason": "exact_bound_fact"
+          }
+        ],
+        "knowledge_issues_not_closed": 0
+      },
+      "candidate_unchanged": true
+    }
+  ]
+}

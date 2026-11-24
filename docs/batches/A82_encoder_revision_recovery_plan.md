@@ -1,0 +1,7 @@
+# A82：固定文件SHA不放松，修复公开下载revision不可达
+
+A79已成功建好独立环境及全部锁定依赖，295.071秒/0fit/API；下载MiniLM第一文件时官方固定revision524b52f1d626e9a5a16462e141fc9dffc25d5aeb返回404，原记录保留，不重试原URL。官方模型API独立查询给出的现有revision为1110a243fdf4706b3f48f1d95db1a4f5529b4d41（https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2），它是本批明确固定的下载版本，不用main浮动引用。
+
+本批复用A79已完成环境，不再安装/复制依赖；到独立a82_encoder_assets目录下载新固定revision的三文件，**仍要求B原全部字节数和完整SHA256**，再下载并验证原视觉权重。若任何字节摘要不同，立即停，不更改预期摘要去迎合新文件。只有三文件均与原指纹相同，才允许将生产metadata的公开revision改为可复建版本，并在报告保留旧revision404和内容相等证据；不伪称旧revision已核实。
+
+仅公开资源走既有本地代理，timeout60、不自动重试/换镜像；0fit/0学校API，A累计1239。资产ready后才启动先前已保存的A81，实际执行Python指向A79环境，数据/权重不进Git。预计1–5分钟，失败保留独立completion。

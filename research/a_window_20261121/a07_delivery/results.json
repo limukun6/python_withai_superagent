@@ -1,0 +1,557 @@
+[
+  {
+    "task": "bean",
+    "arm": "baseline",
+    "source_root": "D:\\codex\\python_withai\\runs\\a_baseline_0b112d8",
+    "status": "completed",
+    "returncode": 0,
+    "seconds": 16.892429700004868,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a07_delivery\\bean_baseline",
+      "task_kind": "numeric_tabular",
+      "planner_mode": "local",
+      "decision_architecture": {
+        "architecture": "single",
+        "enabled": false,
+        "review_fallback_count": 0,
+        "all_requested_decisions_valid": true
+      },
+      "review_fallback_count": 0,
+      "model_available": true,
+      "requested_planner_completed": true,
+      "selected_candidate": "numeric_tabular_logistic_C0.1",
+      "primary_metric": "accuracy",
+      "validation_score": null,
+      "validation_accuracy": null,
+      "provided_validation_available": false,
+      "evaluation_completed": true,
+      "validation_failure": null,
+      "primary_trials_attempted": 2,
+      "fallback_count": 0,
+      "primary_horizon_completed": true,
+      "confirmation_completed": true,
+      "full_refit_completed": true,
+      "runtime_budget": {
+        "mode": "shared",
+        "duration_basis": "observed worker wall time, including process startup",
+        "fit_safety_multiplier": 1.5,
+        "full_refit_multiplier": 2.0,
+        "output_margin_seconds": 0.0,
+        "hard_total_wall_clock_guarantee": false,
+        "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+        "search_stop_reason": "trial_limit_reached",
+        "requested_primary_trials": 2,
+        "actual_primary_trials": 2,
+        "confirmation_deadline_elapsed_seconds": 300.0,
+        "elapsed_exceeded_requested_limit": false
+      },
+      "feature_cache": {
+        "enabled": false,
+        "directory": null,
+        "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+      },
+      "classifier_fit_accounting": {
+        "completed_classifier_fits": 7,
+        "failed_candidate_attempts_with_unknown_component_count": 0,
+        "complete_count_known": true,
+        "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+      },
+      "prediction_evidence_audit": {
+        "comparisons_completed": 1,
+        "comparisons_unavailable": 1,
+        "invalid_comparisons": 0,
+        "integrity_valid": true
+      },
+      "refinement": {
+        "enabled": false,
+        "mode": "off",
+        "requested_mode": "off",
+        "generated_candidates": 0,
+        "reason": null
+      },
+      "resource_allocation": null,
+      "error_feedback": false,
+      "new_api_requests": 0,
+      "metered_responses": 0,
+      "known_course_cost_rmb": 0.0,
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "actual_account_debit_rmb": 0.0,
+      "source_unchanged": true,
+      "formal_test_accessed": false,
+      "task_budget_after_run": null,
+      "scope": "Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals"
+    },
+    "classifier_fit_accounting": {
+      "completed_classifier_fits": 7,
+      "failed_candidate_attempts_with_unknown_component_count": 0,
+      "complete_count_known": true,
+      "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+    },
+    "reload": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.6022406999836676
+    },
+    "verification_process": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.5319182999955956
+    },
+    "verification": {
+      "reload_identical": true,
+      "rows": 2178,
+      "primary_metric": "accuracy",
+      "score": 0.9123048668503214,
+      "accuracy": 0.9123048668503214,
+      "model_sha256": "a00e990314f6e4f1d9ab8e53a0870974e240602e7e9058ae22e7a6b1c237e991",
+      "original_row_ids_sha256": "abbf38dc4d503fb152904b8582eeedcb9627885c1d97110ed7873a93a265f67a",
+      "selected_candidate": "numeric_tabular_logistic_C0.1",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "bean",
+    "arm": "fixed",
+    "source_root": "D:\\codex\\python_withai\\runs\\integration",
+    "status": "completed",
+    "returncode": 0,
+    "seconds": 16.16899169998942,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a07_delivery\\bean_fixed",
+      "task_kind": "numeric_tabular",
+      "planner_mode": "local",
+      "decision_architecture": {
+        "architecture": "single",
+        "enabled": false,
+        "review_fallback_count": 0,
+        "all_requested_decisions_valid": true
+      },
+      "review_fallback_count": 0,
+      "model_available": true,
+      "requested_planner_completed": true,
+      "selected_candidate": "numeric_tabular_logistic_C0.1",
+      "primary_metric": "accuracy",
+      "validation_score": null,
+      "validation_accuracy": null,
+      "provided_validation_available": false,
+      "evaluation_completed": true,
+      "validation_failure": null,
+      "primary_trials_attempted": 2,
+      "fallback_count": 0,
+      "primary_horizon_completed": true,
+      "confirmation_completed": true,
+      "full_refit_completed": true,
+      "runtime_budget": {
+        "mode": "shared",
+        "duration_basis": "observed worker wall time, including process startup",
+        "fit_safety_multiplier": 1.5,
+        "full_refit_multiplier": 2.0,
+        "output_margin_seconds": 0.0,
+        "hard_total_wall_clock_guarantee": false,
+        "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+        "search_stop_reason": "trial_limit_reached",
+        "requested_primary_trials": 2,
+        "actual_primary_trials": 2,
+        "confirmation_deadline_elapsed_seconds": 300.0,
+        "elapsed_exceeded_requested_limit": false
+      },
+      "feature_cache": {
+        "enabled": false,
+        "directory": null,
+        "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+      },
+      "classifier_fit_accounting": {
+        "completed_classifier_fits": 7,
+        "failed_candidate_attempts_with_unknown_component_count": 0,
+        "complete_count_known": true,
+        "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+      },
+      "prediction_evidence_audit": {
+        "comparisons_completed": 1,
+        "comparisons_unavailable": 1,
+        "invalid_comparisons": 0,
+        "integrity_valid": true
+      },
+      "refinement": {
+        "enabled": false,
+        "mode": "off",
+        "requested_mode": "off",
+        "generated_candidates": 0,
+        "reason": null
+      },
+      "resource_allocation": null,
+      "error_feedback": false,
+      "new_api_requests": 0,
+      "metered_responses": 0,
+      "known_course_cost_rmb": 0.0,
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "actual_account_debit_rmb": 0.0,
+      "source_unchanged": true,
+      "formal_test_accessed": false,
+      "task_budget_after_run": null,
+      "scope": "Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals"
+    },
+    "classifier_fit_accounting": {
+      "completed_classifier_fits": 7,
+      "failed_candidate_attempts_with_unknown_component_count": 0,
+      "complete_count_known": true,
+      "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+    },
+    "reload": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.5971426000178326
+    },
+    "verification_process": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.4998070000146981
+    },
+    "verification": {
+      "reload_identical": true,
+      "rows": 2178,
+      "primary_metric": "accuracy",
+      "score": 0.9123048668503214,
+      "accuracy": 0.9123048668503214,
+      "model_sha256": "a00e990314f6e4f1d9ab8e53a0870974e240602e7e9058ae22e7a6b1c237e991",
+      "original_row_ids_sha256": "abbf38dc4d503fb152904b8582eeedcb9627885c1d97110ed7873a93a265f67a",
+      "selected_candidate": "numeric_tabular_logistic_C0.1",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "sms",
+    "arm": "fixed",
+    "source_root": "D:\\codex\\python_withai\\runs\\integration",
+    "status": "completed",
+    "returncode": 0,
+    "seconds": 16.528834600001574,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a07_delivery\\sms_fixed",
+      "task_kind": "single_text",
+      "planner_mode": "local",
+      "decision_architecture": {
+        "architecture": "single",
+        "enabled": false,
+        "review_fallback_count": 0,
+        "all_requested_decisions_valid": true
+      },
+      "review_fallback_count": 0,
+      "model_available": true,
+      "requested_planner_completed": true,
+      "selected_candidate": "single_char_C3.0",
+      "primary_metric": "macro_f1",
+      "validation_score": null,
+      "validation_accuracy": null,
+      "provided_validation_available": false,
+      "evaluation_completed": true,
+      "validation_failure": null,
+      "primary_trials_attempted": 2,
+      "fallback_count": 0,
+      "primary_horizon_completed": true,
+      "confirmation_completed": true,
+      "full_refit_completed": true,
+      "runtime_budget": {
+        "mode": "shared",
+        "duration_basis": "observed worker wall time, including process startup",
+        "fit_safety_multiplier": 1.5,
+        "full_refit_multiplier": 2.0,
+        "output_margin_seconds": 0.0,
+        "hard_total_wall_clock_guarantee": false,
+        "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+        "search_stop_reason": "trial_limit_reached",
+        "requested_primary_trials": 2,
+        "actual_primary_trials": 2,
+        "confirmation_deadline_elapsed_seconds": 300.0,
+        "elapsed_exceeded_requested_limit": false
+      },
+      "feature_cache": {
+        "enabled": false,
+        "directory": null,
+        "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+      },
+      "classifier_fit_accounting": {
+        "completed_classifier_fits": 7,
+        "failed_candidate_attempts_with_unknown_component_count": 0,
+        "complete_count_known": true,
+        "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+      },
+      "prediction_evidence_audit": {
+        "comparisons_completed": 1,
+        "comparisons_unavailable": 1,
+        "invalid_comparisons": 0,
+        "integrity_valid": true
+      },
+      "refinement": {
+        "enabled": false,
+        "mode": "off",
+        "requested_mode": "off",
+        "generated_candidates": 0,
+        "reason": null
+      },
+      "resource_allocation": null,
+      "error_feedback": false,
+      "new_api_requests": 0,
+      "metered_responses": 0,
+      "known_course_cost_rmb": 0.0,
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "actual_account_debit_rmb": 0.0,
+      "source_unchanged": true,
+      "formal_test_accessed": false,
+      "task_budget_after_run": null,
+      "scope": "Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals"
+    },
+    "classifier_fit_accounting": {
+      "completed_classifier_fits": 7,
+      "failed_candidate_attempts_with_unknown_component_count": 0,
+      "complete_count_known": true,
+      "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+    },
+    "reload": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.7230489999928977
+    },
+    "verification_process": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.6938559999980498
+    },
+    "verification": {
+      "reload_identical": true,
+      "rows": 826,
+      "primary_metric": "macro_f1",
+      "score": 0.9459801185908616,
+      "accuracy": 0.9782082324455206,
+      "model_sha256": "74be2bdc6a1e1c2ee05e430809b797783f0c0353725369746311af1a1169d91f",
+      "original_row_ids_sha256": "ed3b2275cdef5f1dfa9a55d56cf67188e86894476c8821c08d17d6a83bfb32b5",
+      "selected_candidate": "single_char_C3.0",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "sms",
+    "arm": "baseline",
+    "source_root": "D:\\codex\\python_withai\\runs\\a_baseline_0b112d8",
+    "status": "completed",
+    "returncode": 0,
+    "seconds": 16.91622990000178,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a07_delivery\\sms_baseline",
+      "task_kind": "single_text",
+      "planner_mode": "local",
+      "decision_architecture": {
+        "architecture": "single",
+        "enabled": false,
+        "review_fallback_count": 0,
+        "all_requested_decisions_valid": true
+      },
+      "review_fallback_count": 0,
+      "model_available": true,
+      "requested_planner_completed": true,
+      "selected_candidate": "single_char_C3.0",
+      "primary_metric": "macro_f1",
+      "validation_score": null,
+      "validation_accuracy": null,
+      "provided_validation_available": false,
+      "evaluation_completed": true,
+      "validation_failure": null,
+      "primary_trials_attempted": 2,
+      "fallback_count": 0,
+      "primary_horizon_completed": true,
+      "confirmation_completed": true,
+      "full_refit_completed": true,
+      "runtime_budget": {
+        "mode": "shared",
+        "duration_basis": "observed worker wall time, including process startup",
+        "fit_safety_multiplier": 1.5,
+        "full_refit_multiplier": 2.0,
+        "output_margin_seconds": 0.0,
+        "hard_total_wall_clock_guarantee": false,
+        "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+        "search_stop_reason": "trial_limit_reached",
+        "requested_primary_trials": 2,
+        "actual_primary_trials": 2,
+        "confirmation_deadline_elapsed_seconds": 300.0,
+        "elapsed_exceeded_requested_limit": false
+      },
+      "feature_cache": {
+        "enabled": false,
+        "directory": null,
+        "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+      },
+      "classifier_fit_accounting": {
+        "completed_classifier_fits": 7,
+        "failed_candidate_attempts_with_unknown_component_count": 0,
+        "complete_count_known": true,
+        "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+      },
+      "prediction_evidence_audit": {
+        "comparisons_completed": 1,
+        "comparisons_unavailable": 1,
+        "invalid_comparisons": 0,
+        "integrity_valid": true
+      },
+      "refinement": {
+        "enabled": false,
+        "mode": "off",
+        "requested_mode": "off",
+        "generated_candidates": 0,
+        "reason": null
+      },
+      "resource_allocation": null,
+      "error_feedback": false,
+      "new_api_requests": 0,
+      "metered_responses": 0,
+      "known_course_cost_rmb": 0.0,
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "actual_account_debit_rmb": 0.0,
+      "source_unchanged": true,
+      "formal_test_accessed": false,
+      "task_budget_after_run": null,
+      "scope": "Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals"
+    },
+    "classifier_fit_accounting": {
+      "completed_classifier_fits": 7,
+      "failed_candidate_attempts_with_unknown_component_count": 0,
+      "complete_count_known": true,
+      "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+    },
+    "reload": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.8064166000112891
+    },
+    "verification_process": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.653850800008513
+    },
+    "verification": {
+      "reload_identical": true,
+      "rows": 826,
+      "primary_metric": "macro_f1",
+      "score": 0.9459801185908616,
+      "accuracy": 0.9782082324455206,
+      "model_sha256": "74be2bdc6a1e1c2ee05e430809b797783f0c0353725369746311af1a1169d91f",
+      "original_row_ids_sha256": "ed3b2275cdef5f1dfa9a55d56cf67188e86894476c8821c08d17d6a83bfb32b5",
+      "selected_candidate": "single_char_C3.0",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "digits",
+    "arm": "fixed",
+    "source_root": "D:\\codex\\python_withai\\runs\\integration",
+    "status": "completed",
+    "returncode": 0,
+    "seconds": 14.10107419997803,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a07_delivery\\digits_fixed",
+      "task_kind": "image",
+      "planner_mode": "local",
+      "decision_architecture": {
+        "architecture": "single",
+        "enabled": false,
+        "review_fallback_count": 0,
+        "all_requested_decisions_valid": true
+      },
+      "review_fallback_count": 0,
+      "model_available": true,
+      "requested_planner_completed": true,
+      "selected_candidate": "image_extra_trees_leaf3",
+      "primary_metric": "accuracy",
+      "validation_score": null,
+      "validation_accuracy": null,
+      "provided_validation_available": false,
+      "evaluation_completed": true,
+      "validation_failure": null,
+      "primary_trials_attempted": 2,
+      "fallback_count": 0,
+      "primary_horizon_completed": true,
+      "confirmation_completed": true,
+      "full_refit_completed": true,
+      "runtime_budget": {
+        "mode": "shared",
+        "duration_basis": "observed worker wall time, including process startup",
+        "fit_safety_multiplier": 1.5,
+        "full_refit_multiplier": 2.0,
+        "output_margin_seconds": 0.0,
+        "hard_total_wall_clock_guarantee": false,
+        "limitations": "Unseen configurations and larger refits may take longer; HTTP timeout is per connect/read phase, not a hard total deadline",
+        "search_stop_reason": "trial_limit_reached",
+        "requested_primary_trials": 2,
+        "actual_primary_trials": 2,
+        "confirmation_deadline_elapsed_seconds": 300.0,
+        "elapsed_exceeded_requested_limit": false
+      },
+      "feature_cache": {
+        "enabled": false,
+        "directory": null,
+        "scope": "same run, unsupervised paired TF-IDF; all classifiers still fitted and logged separately"
+      },
+      "classifier_fit_accounting": {
+        "completed_classifier_fits": 7,
+        "failed_candidate_attempts_with_unknown_component_count": 0,
+        "complete_count_known": true,
+        "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+      },
+      "prediction_evidence_audit": {
+        "comparisons_completed": 1,
+        "comparisons_unavailable": 1,
+        "invalid_comparisons": 0,
+        "integrity_valid": true
+      },
+      "refinement": {
+        "enabled": false,
+        "mode": "off",
+        "requested_mode": "off",
+        "generated_candidates": 0,
+        "reason": null
+      },
+      "resource_allocation": null,
+      "error_feedback": false,
+      "new_api_requests": 0,
+      "metered_responses": 0,
+      "known_course_cost_rmb": 0.0,
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "actual_account_debit_rmb": 0.0,
+      "source_unchanged": true,
+      "formal_test_accessed": false,
+      "task_budget_after_run": null,
+      "scope": "Run costs shown separately from the persistent task snapshot; shared cost is counted once in project totals"
+    },
+    "classifier_fit_accounting": {
+      "completed_classifier_fits": 7,
+      "failed_candidate_attempts_with_unknown_component_count": 0,
+      "complete_count_known": true,
+      "scope": "Counts each fitted classifier in fixed blends; failed workers may have fitted partial components"
+    },
+    "reload": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.750248600001214
+    },
+    "verification_process": {
+      "status": "completed",
+      "returncode": 0,
+      "seconds": 1.649337699986063
+    },
+    "verification": {
+      "reload_identical": true,
+      "rows": 360,
+      "primary_metric": "accuracy",
+      "score": 0.9805555555555555,
+      "accuracy": 0.9805555555555555,
+      "model_sha256": "b75239f853764bc3191e35599ad69dbb24a2e93e6a5cd7906576f7cd2bfb2122",
+      "original_row_ids_sha256": "14b97cec31a8ab82dfd3f3fba0df6f5f889be610eef0f3cc3c497460e36c1d3d",
+      "selected_candidate": "image_extra_trees_leaf3",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  }
+]

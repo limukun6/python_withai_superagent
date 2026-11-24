@@ -1,0 +1,126 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C0.3",
+    "split_id": "primary",
+    "reason": "Fixed allocation primary stage. Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_C3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 on the PRIMARY split collapsed to the majority class: macro_f1 0.463 with class_recall [1.0, 0.0], so spam was never recalled. The next controlled test is the same word representation with higher C to check whether regularization strength explains the collapse before changing representation.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "primary",
+    "reason": "The single_word route is exhausted after trial 2, which is the best completed PRIMARY result. The next candidate keeps the same C=3.0 but adds character n-grams to word features, testing whether character-level cues improve spam recall while retaining the word signal.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "primary",
+    "reason": "Trial 3 is the best completed PRIMARY result, and the active single_word_char route has one remaining configuration. single_word_char_C0.3 keeps the same word_char representation and changes only C from 3.0 to 0.3, making it a controlled diagnostic of regularization strength before moving to untried routes.",
+    "evidence_trials": [
+      3,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_C3.0",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "confirmation_1",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_C3.0",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "single_word_char_C0.3",
+    "split_id": "confirmation_2",
+    "reason": "Fixed primary top-three shortlist; complete both registered replication rounds.",
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "estimated_classifier_fits": 0,
+    "evidence_trials": [
+      3,
+      2,
+      4
+    ],
+    "reason": "Fixed primary and top-three replication allocation completed; preserve final refit."
+  }
+]

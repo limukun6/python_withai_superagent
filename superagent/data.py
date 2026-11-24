@@ -54,12 +54,14 @@ def load_training_task(path: str | Path) -> TrainingTask:
             y = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"y_train.npy"))), allow_pickle=True)
             if x.ndim != 2 or len(x) != len(y):
                 raise TaskFormatError("Training feature/label dimensions do not agree")
-            return TrainingTask("categorical_tabular", x, y)
+            from .task_readme import legacy_declarations
+            return TrainingTask("categorical_tabular", x, y, legacy_declarations(archive,'categorical_tabular',{}))
         rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
         if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
             raise TaskFormatError("Unsupported training CSV schema")
+        from .task_readme import legacy_declarations
         return TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
-                            np.asarray([int(r["label_pairwise"]) for r in rows]))
+                            np.asarray([int(r["label_pairwise"]) for r in rows]),legacy_declarations(archive,'pair_text',{}))
 
 
 def _member_by_suffix(names: list[str], suffix: str) -> str:
@@ -126,6 +128,7 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
     spec = {
         "task_kind": "categorical_tabular_binary",
         "metric": "accuracy",
+        "goal_sources": {"primary_metric": "legacy_adapter_default"},
         "train_rows": int(len(y_train)),
         "validation_rows": int(len(y_val)) if y_val is not None else 0,
         'provided_validation_available':y_val is not None,
@@ -134,7 +137,9 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
         "source_metadata": info,
         "test_accessed": False,
     }
-    return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val, spec)
+    from .task_readme import legacy_declarations
+    return DevelopmentTask("categorical_tabular", str(path), x_train, y_train, x_val, y_val,
+                           legacy_declarations(archive,'categorical_tabular',spec))
 
 
 def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> DevelopmentTask:
@@ -150,6 +155,7 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
     spec = {
         "task_kind": "pair_text_binary",
         "metric": "accuracy",
+        "goal_sources": {"primary_metric": "legacy_adapter_default"},
         "train_rows": int(len(y_train)),
         "validation_rows": int(len(y_val)) if y_val is not None else 0,
         'provided_validation_available':y_val is not None,
@@ -157,7 +163,9 @@ def _load_pair_text(path: Path, archive: zipfile.ZipFile, names: list[str]) -> D
         "label_values": sorted(map(str, np.unique(y_train))),
         "test_accessed": False,
     }
-    return DevelopmentTask("pair_text", str(path), x_train, y_train, x_val, y_val, spec)
+    from .task_readme import legacy_declarations
+    return DevelopmentTask("pair_text", str(path), x_train, y_train, x_val, y_val,
+                           legacy_declarations(archive,'pair_text',spec))
 
 
 def load_development_task(path: str | Path) -> DevelopmentTask:
@@ -179,8 +187,12 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
         manifest=read_manifest(archive)
         if frozen_spec and frozen_spec.get('input_schema'):
             if manifest is None:
-                from .native_schema import prediction_manifest
-                manifest=prediction_manifest(archive,frozen_spec)
+                # A legacy two-column CSV records its fields and README semantics without input_format.
+                legacy_csv = (kind == 'pair_text' and frozen_spec.get('task_kind') == 'pair_text_binary'
+                              and frozen_spec.get('input_fields') == ['headline_A', 'headline_B'])
+                if 'input_format' in frozen_spec or not legacy_csv:
+                    from .native_schema import prediction_manifest
+                    manifest=prediction_manifest(archive,frozen_spec)
             else:
                 expected=frozen_spec['input_schema']
                 for key in ('modality','columns','pair_label_one','pair_semantics','image_preprocessing'):

@@ -1,0 +1,205 @@
+[
+  {
+    "name": "bean",
+    "kind": "numeric_tabular",
+    "metric": "accuracy",
+    "source": {
+      "package_sha256": "f0ad82b6789cb139c4811901d2fb4d1e4b81ff1083e53b128928c1bd6d6cf24c",
+      "opened_members": [
+        "manifest.json",
+        "train.csv"
+      ]
+    },
+    "catalog": [
+      {
+        "id": "numeric_tabular_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        }
+      },
+      {
+        "id": "numeric_tabular_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "numeric_tabular_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        }
+      },
+      {
+        "id": "numeric_tabular_extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "numeric_tabular_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C1.0",
+        "params": {
+          "C": 1.0,
+          "kernel": "rbf"
+        }
+      },
+      {
+        "id": "numeric_tabular_rbf_svm_C10.0",
+        "params": {
+          "C": 10.0,
+          "kernel": "rbf"
+        }
+      }
+    ],
+    "files": {
+      "features.zip": "7ce0e8007b92dcd5ebdc58c8cb49d75a1f86d95784ece90194ade0ab3c35abd4",
+      "holdout.joblib": "c1ddc6ba8b78ff419b53d97063e83a824d8735ef1198018dc8b3b0145199f0d3",
+      "partition.json": "dfed5b56fb146d67519fd29b219256ee3f2a7826c9226e0b2a5b75ce7fa4caee",
+      "train.zip": "27c56877511d41425367600be98728adc0fec6b694b57bf665dff0c2ed4a8c32"
+    },
+    "train_rows": 8710,
+    "held_rows": 2178
+  },
+  {
+    "name": "sms",
+    "kind": "single_text",
+    "metric": "macro_f1",
+    "source": {
+      "package_sha256": "da3595c66d055abe030f630cda88dd733aa7534eb1658f3e3e27888abcb2dfe3",
+      "opened_members": [
+        "manifest.json",
+        "train.csv"
+      ]
+    },
+    "catalog": [
+      {
+        "id": "single_word_C0.3",
+        "params": {
+          "representation": "word",
+          "C": 0.3
+        }
+      },
+      {
+        "id": "single_word_C3.0",
+        "params": {
+          "representation": "word",
+          "C": 3.0
+        }
+      },
+      {
+        "id": "single_char_C0.3",
+        "params": {
+          "representation": "char",
+          "C": 0.3
+        }
+      },
+      {
+        "id": "single_char_C3.0",
+        "params": {
+          "representation": "char",
+          "C": 3.0
+        }
+      },
+      {
+        "id": "single_word_char_C0.3",
+        "params": {
+          "representation": "word_char",
+          "C": 0.3
+        }
+      },
+      {
+        "id": "single_word_char_C3.0",
+        "params": {
+          "representation": "word_char",
+          "C": 3.0
+        }
+      }
+    ],
+    "files": {
+      "features.zip": "dbb6922416bf00274a84cb344b4ecb650cc54fbf48d2b2c78e21db985b6a0e2b",
+      "holdout.joblib": "ec208fa6d5bfc1932a2eba8665ef9979e6b432123f182ed1be6245ebe4d93687",
+      "partition.json": "09772b510efb6515bed9f5cbf5380cd6f576eb334969c493d8fde669df5a54fb",
+      "train.zip": "8ab481395809b2e2a5b715992316a877c6d12118ebe387075975194090e37ddb"
+    },
+    "train_rows": 3302,
+    "held_rows": 826
+  },
+  {
+    "name": "digits",
+    "kind": "image",
+    "metric": "accuracy",
+    "source": {
+      "dataset": "sklearn.datasets.load_digits",
+      "shape": [
+        1797,
+        8,
+        8
+      ],
+      "scope": "real low-resolution grayscale digits; development only",
+      "content_sha256": "faf2d98f61250c1cdc0b114323133d3c58da04f5c5d28bb78e4bde3c936a75b1"
+    },
+    "catalog": [
+      {
+        "id": "image_logistic_C0.1",
+        "params": {
+          "C": 0.1
+        }
+      },
+      {
+        "id": "image_logistic_C1.0",
+        "params": {
+          "C": 1.0
+        }
+      },
+      {
+        "id": "image_logistic_C10.0",
+        "params": {
+          "C": 10.0
+        }
+      },
+      {
+        "id": "image_extra_trees_leaf1",
+        "params": {
+          "min_samples_leaf": 1,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "image_extra_trees_leaf3",
+        "params": {
+          "min_samples_leaf": 3,
+          "n_estimators": 300
+        }
+      },
+      {
+        "id": "image_rbf_svm_C1.0",
+        "params": {
+          "C": 1.0,
+          "kernel": "rbf"
+        }
+      },
+      {
+        "id": "image_rbf_svm_C10.0",
+        "params": {
+          "C": 10.0,
+          "kernel": "rbf"
+        }
+      }
+    ],
+    "files": {
+      "features.zip": "7f43e2028ba4844d34e2d9c30cf8ba09ac83562b02ddae0a998f9392f3afd918",
+      "holdout.joblib": "f882713fd94c10c075d82e234b8e02c3d71111b036267bb70ae4f2e68fb2b2ba",
+      "partition.json": "dfa20157a1b8e03a1a71c0159808001b133cf05ee6242a8bde287189c0a25108",
+      "train.zip": "814472b0c22f1463990a47fcacffb2b4585cbe61e08a65a16ba4880228d9c3e3"
+    },
+    "train_rows": 1437,
+    "held_rows": 360
+  }
+]

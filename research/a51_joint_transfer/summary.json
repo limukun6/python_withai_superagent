@@ -1,0 +1,198 @@
+{
+  "tasks": {
+    "photo": {
+      "arms": {
+        "11": {
+          "profile": "train",
+          "contract": "calibrated-v2",
+          "score": 0.975,
+          "metric": "accuracy",
+          "rows": 80,
+          "selected": "image_gradient_histograms_logistic",
+          "classifier_fits": 9,
+          "seconds": 81.87151850000373,
+          "requests": 3,
+          "input_tokens": 11164,
+          "output_tokens": 3487,
+          "known_course_cost_rmb": 0.025112,
+          "reload_identical": true,
+          "null_expectations": 3,
+          "purposes": {
+            "improve": 3
+          },
+          "expectation_statuses": {
+            "not_stated": 3
+          },
+          "expected_directions": {
+            "unstated": 3
+          },
+          "explored_routes": [
+            "gradient_histograms",
+            "image_extra_trees",
+            "image_logistic",
+            "image_rbf_svm"
+          ],
+          "first_payload_sha256": "a219d33e92d98ff6d682a4de145f15711ca729516086ae8188fd79afc660692c",
+          "history_sha256": "fc0fa95b8a93b5f047534190974603ff47d91c77a2d4f3ca8529846eafe20c83",
+          "events_sha256": "f766b4985115fb225f678179d3e121e3b7d0e658040e483d8889218be3a6c48a",
+          "predictions_sha256": "28b0869f470832c8fcf792b40d87b64b7fff7b8b9ea52d408ee11bc0bc21b8fd"
+        },
+        "00": {
+          "profile": "off",
+          "contract": "strict-v1",
+          "score": 0.975,
+          "metric": "accuracy",
+          "rows": 80,
+          "selected": "image_gradient_histograms_logistic",
+          "classifier_fits": 9,
+          "seconds": 89.96943539999484,
+          "requests": 3,
+          "input_tokens": 9826,
+          "output_tokens": 4008,
+          "known_course_cost_rmb": 0.025858,
+          "reload_identical": true,
+          "null_expectations": 0,
+          "purposes": {
+            "strict-v1-improvement": 3
+          },
+          "expectation_statuses": {
+            "not_supported": 2,
+            "supported": 1
+          },
+          "expected_directions": {
+            "increase": 3
+          },
+          "explored_routes": [
+            "gradient_histograms",
+            "image_extra_trees",
+            "image_logistic",
+            "image_rbf_svm"
+          ],
+          "first_payload_sha256": "14fd4c5af53c39ba00b5f7849f74f730f23e5278bd457ee872bdbacc8ca8e485",
+          "history_sha256": "d5b55305c53323c7ccc90c8c76ed8ababd55b3c8c0eca97ac2b67f6e609a4150",
+          "events_sha256": "1b46672d58c9a98add4703927ca74319c7a41f9dd9b1b8bf548a9a7ca9fb856d",
+          "predictions_sha256": "28b0869f470832c8fcf792b40d87b64b7fff7b8b9ea52d408ee11bc0bc21b8fd"
+        }
+      },
+      "factor_effects": null,
+      "contrasts": {
+        "11-00": {
+          "score_delta": 0.0,
+          "prediction_disagreements": 0
+        }
+      },
+      "first_contexts_identical_after_removing_treatments": true,
+      "scope": "Single known-task development split, one LLM run per cell; no significance claim"
+    },
+    "sms": {
+      "arms": {
+        "00": {
+          "profile": "off",
+          "contract": "strict-v1",
+          "score": 0.9459801185908616,
+          "metric": "macro_f1",
+          "rows": 826,
+          "selected": "single_word_char_C3.0",
+          "classifier_fits": 7,
+          "seconds": 76.41337950000889,
+          "requests": 3,
+          "input_tokens": 6140,
+          "output_tokens": 3103,
+          "known_course_cost_rmb": 0.018552,
+          "reload_identical": true,
+          "null_expectations": 0,
+          "purposes": {
+            "strict-v1-improvement": 3
+          },
+          "expectation_statuses": {
+            "supported": 1,
+            "not_supported": 2
+          },
+          "expected_directions": {
+            "increase": 3
+          },
+          "explored_routes": [
+            "single_char",
+            "single_word",
+            "single_word_char"
+          ],
+          "first_payload_sha256": "1ab118376e4fa0d231fbf5b97c6ebe591aee9e0c82267f0118fc369aec8e5d9c",
+          "history_sha256": "2bf7ae98bb2818b6455d11178223818cb8e05c7ddaf4b897208cfaa552674aed",
+          "events_sha256": "03f5a45d84c9e8d41405989807408d7784d30cf7a9a075e3598955f83ac61d1a",
+          "predictions_sha256": "7a8e1e968a54080f95aedd30f4ba859fced201110261e8af3d08a8fe8a25aae1"
+        },
+        "11": {
+          "profile": "train",
+          "contract": "calibrated-v2",
+          "score": 0.9459801185908616,
+          "metric": "macro_f1",
+          "rows": 826,
+          "selected": "single_word_char_C3.0",
+          "classifier_fits": 7,
+          "seconds": 91.8943419999996,
+          "requests": 3,
+          "input_tokens": 6959,
+          "output_tokens": 3910,
+          "known_course_cost_rmb": 0.022599,
+          "reload_identical": true,
+          "null_expectations": 3,
+          "purposes": {
+            "improve": 2,
+            "coverage": 1
+          },
+          "expectation_statuses": {
+            "not_stated": 3
+          },
+          "expected_directions": {
+            "unstated": 3
+          },
+          "explored_routes": [
+            "single_char",
+            "single_word",
+            "single_word_char"
+          ],
+          "first_payload_sha256": "6a50e77e37a31085fb960191ab3ff4bf3cfc4860e139a6ee5454ec44d0d16e1d",
+          "history_sha256": "6ede1a86e08a270e0a7230dd99375d698ea51e637c37a16399b768561d454d3c",
+          "events_sha256": "8d01d91eb4a3a7304de6f2c13ca0010894634cb3b7a8ccf0fa5fe6e22eafa35d",
+          "predictions_sha256": "7a8e1e968a54080f95aedd30f4ba859fced201110261e8af3d08a8fe8a25aae1"
+        }
+      },
+      "factor_effects": null,
+      "contrasts": {
+        "11-00": {
+          "score_delta": 0.0,
+          "prediction_disagreements": 0
+        }
+      },
+      "first_contexts_identical_after_removing_treatments": true,
+      "scope": "Single known-task development split, one LLM run per cell; no significance claim"
+    }
+  },
+  "completion": {
+    "status": "completed",
+    "paths": 4,
+    "actual_classifier_fits": 32,
+    "real_api_requests": 12,
+    "known_new_course_cost_rmb": 0.092121,
+    "project_usage_after": {
+      "requests": 260,
+      "known_course_cost_rmb": 5.8116005,
+      "unresolved_requests": 11,
+      "pending_requests": 0,
+      "complete_course_cost_rmb": null,
+      "actual_account_debit_rmb": null
+    },
+    "source_unchanged": true,
+    "elapsed_seconds": 352.153011900009,
+    "formal_test_opened": false,
+    "course_budget_compliance": "unverified_history",
+    "valid_for_budgeted_final_report": false
+  },
+  "input_tokens": 34089,
+  "output_tokens": 14508,
+  "real_api_requests": 12,
+  "known_course_cost_rmb": 0.092121,
+  "price_scope": "Frozen course accounting, actual platform debit unknown",
+  "original_historical_unknown": 11,
+  "valid_for_budgeted_final_report": false
+}

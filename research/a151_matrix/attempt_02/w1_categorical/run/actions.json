@@ -1,0 +1,28 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth6_reg3.0",
+    "split_id": "primary",
+    "reason": "Trial 1 established a logistic one-hot baseline at primary accuracy 0.6652 with a small train-search gap. The next search fit should test a stronger nonlinear categorical model rather than only tuning the linear baseline. CatBoost with native category handling and moderate depth/regularization is a reasonable primary-split candidate for this categorical tabular task.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

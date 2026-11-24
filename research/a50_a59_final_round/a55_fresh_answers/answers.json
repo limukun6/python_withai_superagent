@@ -1,0 +1,542 @@
+[
+  {
+    "state_id": "coupon_1",
+    "task": "coupon",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\coupon\\state_1.json",
+    "state_sha256": "271b95326147c9a971ce0410233419797c20be81a272c6c24f4c87c3729f47bc",
+    "original_candidate": "catboost_depth6_reg3.0",
+    "original_request_id": "4b503bae-0110-431f-80af-d10053a5eefd",
+    "source_request_ordinal": 1,
+    "R": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Select catboost_depth6_reg3.0 as the next primary-search candidate because it is a registered categorical-tabular estimator with native category representation, moderate depth, and regularization. It tests a distinct nonlinear model class after the low-C one-hot logistic baseline.",
+        "hypothesis": "A CatBoost model with native categorical handling and moderate depth may capture nonlinear category interactions and missingness patterns that the one-hot logistic baseline cannot, but this is a hypothesis rather than a predicted gain.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Select catboost_depth6_reg3.0 as the next primary-search candidate because it is a registered categorical-tabular estimator with native category representation, moderate depth, and regularization. It tests a distinct nonlinear model class after the low-C one-hot logistic baseline.",
+          "review": "Only primary trial 1 is available: logistic C=0.05 achieved search accuracy 0.6722 and train accuracy 0.6852, with class recalls [0.5443, 0.7692]. The small train-search gap suggests the regularized linear baseline is not strongly overfitting, but it may be limited by one-hot linear modeling. No confirmation split or formal test is available.",
+          "hypothesis": "A CatBoost model with native categorical handling and moderate depth may capture nonlinear category interactions and missingness patterns that the one-hot logistic baseline cannot, but this is a hypothesis rather than a predicted gain.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "No primary evidence exists for CatBoost or tree models; the single logistic trial cannot establish whether nonlinear/native-category modeling will improve accuracy. Missing values and duplicate rows may affect behavior, and any observed change on the primary split would need controller-managed confirmation before selection."
+        }
+      }
+    },
+    "E": {
+      "candidate": "catboost_depth6_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "catboost_depth6_reg3.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 1 logistic C=0.05 reached 0.6722 primary accuracy with a small train-search gap, but the data are categorical with missing values and likely nonlinear interactions. CatBoost with native categorical handling is a stronger first tree-based probe than another linear regularization setting.",
+        "hypothesis": "A depth-6 CatBoost model with moderate L2 regularization will capture categorical interactions and missingness patterns better than the regularized linear baseline on the primary split.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 1 logistic C=0.05 reached 0.6722 primary accuracy with a small train-search gap, but the data are categorical with missing values and likely nonlinear interactions. CatBoost with native categorical handling is a stronger first tree-based probe than another linear regularization setting.",
+          "review": "Only one completed primary trial exists, so there is no matched evidence for tree routes. The logistic baseline is active but underperforming relative to majority-class fraction, and CatBoost is untried. This choice is exploratory and does not assume a guaranteed gain.",
+          "hypothesis": "A depth-6 CatBoost model with moderate L2 regularization will capture categorical interactions and missingness patterns better than the regularized linear baseline on the primary split.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Single baseline trial only; CatBoost performance on this primary split is unverified. Direction and magnitude of change are unknown, and repeated primary-split selection may introduce noise."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "coupon_2",
+    "task": "coupon",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\coupon\\state_2.json",
+    "state_sha256": "20313251a2be1f23bc247bb5b0051a7c4de1248babe6b49ea7daeab3092ad2c0",
+    "original_candidate": "catboost_depth6_reg10.0",
+    "original_request_id": "447cc7fe-6a4d-4b1a-83ef-1acd1ce1e2f0",
+    "source_request_ordinal": 2,
+    "E": {
+      "candidate": "catboost_depth6_reg10.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the best completed PRIMARY result so far (accuracy 0.7443) but has a larger train-search gap (0.0641) than the logistic baseline. A same-depth CatBoost variant with stronger L2 regularization is a controlled next diagnostic step: it changes l2_leaf_reg from 3.0 to 10.0 while holding depth, iterations, and learning rate fixed, so the result can inform whether the current gap is sensitive to regularization without changing route or representation.",
+        "hypothesis": "At the same depth and iteration budget, increasing CatBoost L2 regularization from 3.0 to 10.0 may reduce the train-search gap and may stabilize primary accuracy, but the direction and magnitude of the accuracy change are unknown.",
+        "evidence_trials": [
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg10.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the best completed PRIMARY result so far (accuracy 0.7443) but has a larger train-search gap (0.0641) than the logistic baseline. A same-depth CatBoost variant with stronger L2 regularization is a controlled next diagnostic step: it changes l2_leaf_reg from 3.0 to 10.0 while holding depth, iterations, and learning rate fixed, so the result can inform whether the current gap is sensitive to regularization without changing route or representation.",
+          "review": "Only two completed PRIMARY trials are available. Trial 1 is a regularized logistic baseline at 0.6722 accuracy; Trial 2 is CatBoost at 0.7443 accuracy with a 0.0641 train-search gap. No confirmation-split measurements are available, so no cross-split comparison is made. The comparison between trials 1 and 2 changes route and multiple parameters, so it does not support single-factor attribution.",
+          "hypothesis": "At the same depth and iteration budget, increasing CatBoost L2 regularization from 3.0 to 10.0 may reduce the train-search gap and may stabilize primary accuracy, but the direction and magnitude of the accuracy change are unknown.",
+          "evidence_trials": [
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "This is a diagnostic regularization comparison on the PRIMARY split only. Stronger L2 may reduce overfitting, leave accuracy roughly unchanged, or hurt accuracy if the model needs more capacity. No confirmation-split evidence or formal test is available, and the controller owns replication, stopping, budget, and final selection."
+        }
+      }
+    },
+    "R": {
+      "candidate": "catboost_depth6_reg10.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "catboost_depth6_reg10.0",
+        "params": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the strongest completed PRIMARY result so far (search accuracy 0.7443), but its train-search gap is 0.0641, larger than the logistic baseline gap. The next primary-search candidate should test whether stronger L2 regularization at the same depth reduces that gap while preserving CatBoost's native-category advantage. catboost_depth6_reg10.0 changes only l2_leaf_reg from 3.0 to 10.0 relative to the best completed trial, making it a focused regularization test rather than a broad architecture change.",
+        "hypothesis": "Increasing L2 regularization from 3.0 to 10.0 for the depth-6 CatBoost model may reduce overfitting indicated by the 0.0641 train-search gap and may improve or preserve primary accuracy by shrinking less reliable categorical interaction effects.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth6_reg10.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the strongest completed PRIMARY result so far (search accuracy 0.7443), but its train-search gap is 0.0641, larger than the logistic baseline gap. The next primary-search candidate should test whether stronger L2 regularization at the same depth reduces that gap while preserving CatBoost's native-category advantage. catboost_depth6_reg10.0 changes only l2_leaf_reg from 3.0 to 10.0 relative to the best completed trial, making it a focused regularization test rather than a broad architecture change.",
+          "review": "Only two completed PRIMARY trials are available: logistic_C0.05 at 0.6722 and catboost_depth6_reg3.0 at 0.7443. No confirmation-split measurements are available, so no cross-split comparison is made. Trial 2 is treated as primary-search evidence, not as proof that stronger regularization will improve accuracy.",
+          "hypothesis": "Increasing L2 regularization from 3.0 to 10.0 for the depth-6 CatBoost model may reduce overfitting indicated by the 0.0641 train-search gap and may improve or preserve primary accuracy by shrinking less reliable categorical interaction effects.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Direction and magnitude of accuracy change are unknown. Stronger regularization may reduce overfitting but could also underfit and lower primary accuracy. This is a primary-search trial only; controller-owned replication and final selection remain necessary."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "coupon_3",
+    "task": "coupon",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\coupon\\state_3.json",
+    "state_sha256": "a097aecfa713c6208a469067fc55f7bdddd83414ce76e61dd42416c63525d84b",
+    "original_candidate": "catboost_depth8_reg3.0",
+    "original_request_id": "331919f2-e349-4f18-a9a4-5a11b9015d23",
+    "source_request_ordinal": 3,
+    "R": {
+      "candidate": "catboost_depth8_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the strongest completed PRIMARY result (search accuracy 0.7443) with depth 6 and L2 3.0. Trial 3 increased L2 to 10.0 at the same depth and reduced PRIMARY accuracy to 0.7351, so stronger regularization did not help on this split. A depth-8 CatBoost with the same L2 3.0 is a controlled capacity increase from the best observed configuration, testing whether additional depth captures higher-order categorical interactions while keeping regularization fixed.",
+        "hypothesis": "Increasing CatBoost depth from 6 to 8 at L2 3.0 may capture higher-order categorical interactions that the depth-6 model misses, potentially improving PRIMARY accuracy, though the larger capacity may also increase overfitting.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth8_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the strongest completed PRIMARY result (search accuracy 0.7443) with depth 6 and L2 3.0. Trial 3 increased L2 to 10.0 at the same depth and reduced PRIMARY accuracy to 0.7351, so stronger regularization did not help on this split. A depth-8 CatBoost with the same L2 3.0 is a controlled capacity increase from the best observed configuration, testing whether additional depth captures higher-order categorical interactions while keeping regularization fixed.",
+          "review": "Only three completed PRIMARY trials are available, and no confirmation-split measurements are available. Trial 2 improved over the logistic baseline and over Trial 3, but this is primary-search evidence only, not proof of generalization. The proposed candidate changes depth from 6 to 8 relative to Trial 2 while keeping L2, iterations, and learning rate fixed for a controlled comparison.",
+          "hypothesis": "Increasing CatBoost depth from 6 to 8 at L2 3.0 may capture higher-order categorical interactions that the depth-6 model misses, potentially improving PRIMARY accuracy, though the larger capacity may also increase overfitting.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "The direction and magnitude of accuracy change are unknown. Depth 8 may improve PRIMARY accuracy by fitting more complex categorical interactions, or it may overfit and reduce accuracy relative to Trial 2. This trial is primary-search evidence only; controller-owned replication and final selection are not assumed."
+        }
+      }
+    },
+    "E": {
+      "candidate": "catboost_depth8_reg3.0",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "catboost_depth8_reg3.0",
+        "params": {
+          "depth": 8,
+          "l2_leaf_reg": 3.0,
+          "iterations": 600,
+          "learning_rate": 0.05
+        },
+        "reason": "Trial 2 is the best completed PRIMARY result so far at 0.7443 accuracy with depth 6 and L2 3.0. Trial 3 kept depth 6 but increased L2 to 10.0 and scored 0.7351, so stronger regularization did not improve primary accuracy in that comparison. A depth-8 CatBoost with L2 3.0 is a controlled depth change from the best trial, testing whether additional capacity captures useful categorical interactions.",
+        "hypothesis": "Increasing CatBoost depth from 6 to 8 while keeping L2 at 3.0 may allow the model to capture higher-order categorical interactions and potentially improve primary accuracy, but it may also overfit and reduce search accuracy.",
+        "evidence_trials": [
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "catboost_depth8_reg3.0",
+          "task_kind": "categorical_tabular",
+          "configuration_claim": {
+            "classifier": "catboost"
+          },
+          "reason": "Trial 2 is the best completed PRIMARY result so far at 0.7443 accuracy with depth 6 and L2 3.0. Trial 3 kept depth 6 but increased L2 to 10.0 and scored 0.7351, so stronger regularization did not improve primary accuracy in that comparison. A depth-8 CatBoost with L2 3.0 is a controlled depth change from the best trial, testing whether additional capacity captures useful categorical interactions.",
+          "review": "Only PRIMARY split measurements are available; no confirmation-split measurements are available, so no cross-split comparison is made. Trial 2 and Trial 3 are same-route CatBoost results, but the depth-8 candidate is a new configuration and its effect is unknown. The existing train-search gap in Trial 2 means added depth may increase overfitting rather than improve search accuracy.",
+          "hypothesis": "Increasing CatBoost depth from 6 to 8 while keeping L2 at 3.0 may allow the model to capture higher-order categorical interactions and potentially improve primary accuracy, but it may also overfit and reduce search accuracy.",
+          "evidence_trials": [
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "improve",
+          "uncertainty": "Direction and magnitude of accuracy change are unknown. Depth 8 may overfit or may not improve over the depth-6 best trial. This is primary-search evidence only; the controller owns replication, stopping, budget, and final selection."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_1",
+    "task": "preference",
+    "index": 0,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\preference\\state_1.json",
+    "state_sha256": "8e90e7f3e6f15cebf09f04568842399a1fe1c696eef26021df8b9c5cd177c0c8",
+    "original_candidate": "word_C0.1",
+    "original_request_id": "e007dbe9-3592-40ee-817a-7af917cb7880",
+    "source_request_ordinal": 1,
+    "E": {
+      "candidate": "word_char_C0.05",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "word_char_C0.05",
+        "params": {
+          "C": 0.05,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "Trial 1 on word_C0.05 scored 0.6371 search accuracy with a 0.1790 train-search gap, so the word-only route is active but shows substantial generalization gap. The word_char route is untried; testing word_char_C0.05 keeps the same regularization strength while adding character n-gram information, which is a reasonable coverage step for headline preference classification.",
+        "hypothesis": "Word plus character n-gram features may capture lexical and morphological cues that word-only features miss, potentially improving pairwise preference classification at the same regularization level.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.05",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 1 on word_C0.05 scored 0.6371 search accuracy with a 0.1790 train-search gap, so the word-only route is active but shows substantial generalization gap. The word_char route is untried; testing word_char_C0.05 keeps the same regularization strength while adding character n-gram information, which is a reasonable coverage step for headline preference classification.",
+          "review": "Only one completed PRIMARY trial is available, and no formal test is accessible. This choice is not based on a predicted improvement; it expands representation coverage while holding C and swap augmentation comparable to trial 1.",
+          "hypothesis": "Word plus character n-gram features may capture lexical and morphological cues that word-only features miss, potentially improving pairwise preference classification at the same regularization level.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "coverage",
+          "uncertainty": "Only one PRIMARY trial exists, all word_char configurations are untried, and the observed train-search gap may persist or worsen. Direction and magnitude of change are unknown."
+        }
+      }
+    },
+    "R": {
+      "candidate": "word_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 2,
+        "candidate": "word_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "reason": "Only one completed PRIMARY trial exists, word_C0.05, with search accuracy 0.6371 and a large train-search gap of 0.1790. The next controlled step is an adjacent regularization value on the same word representation, isolating the effect of C before changing representation. This is diagnostic, not a claimed improvement.",
+        "hypothesis": "A slightly weaker regularization may alter the bias-variance tradeoff; if C=0.05 is too constrained, search accuracy could change, but the large existing gap also makes increased overfitting plausible. Direction and magnitude are uncertain.",
+        "evidence_trials": [
+          1
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Only one completed PRIMARY trial exists, word_C0.05, with search accuracy 0.6371 and a large train-search gap of 0.1790. The next controlled step is an adjacent regularization value on the same word representation, isolating the effect of C before changing representation. This is diagnostic, not a claimed improvement.",
+          "review": "Evidence is limited to one primary trial; no confirmation split or formal test is available. The prior result shows balanced class recall but a substantial train-search gap, so both under-regularization and split shift are plausible. Choosing word_C0.1 keeps representation and swap augmentation fixed while varying C.",
+          "hypothesis": "A slightly weaker regularization may alter the bias-variance tradeoff; if C=0.05 is too constrained, search accuracy could change, but the large existing gap also makes increased overfitting plausible. Direction and magnitude are uncertain.",
+          "evidence_trials": [
+            1
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only one PRIMARY trial is available, and no formal test or confirmation split was accessed. The observed train-search gap could reflect overfitting, distribution shift, or split variance. This candidate is a controlled diagnostic on the word route and does not prove causal learning or predict a search-score increase."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_2",
+    "task": "preference",
+    "index": 1,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\preference\\state_2.json",
+    "state_sha256": "c77e019e861e2858f867da4e9721ff1eb5dc010d252c2996cfc1b827ed0108ce",
+    "original_candidate": "word_C0.3",
+    "original_request_id": "7166abf2-44bd-4205-9faa-8b9660eb2b61",
+    "source_request_ordinal": 2,
+    "R": {
+      "candidate": "word_C0.3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "word_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "reason": "Trials 1 and 2 are the only completed PRIMARY evidence, both on the word representation with swap augmentation. Increasing C from 0.05 to 0.1 raised search accuracy from 0.6371 to 0.6462 while train accuracy rose from 0.8162 to 0.8401 and the gap widened from 0.1790 to 0.1939. The next adjacent word-route setting, C=0.3, is the most informative single fit for mapping whether the word logistic route continues to gain search accuracy as regularization weakens or whether the widening train-search gap signals that C=0.1 is already near the useful limit.",
+        "hypothesis": "Continuing the word-route regularization sweep from C=0.1 to C=0.3 may clarify whether the small search gain at C=0.1 reflects useful additional capacity or merely a wider train-search gap. If search accuracy does not improve or the gap widens further, the next step should favor stronger regularization or a different representation rather than continuing upward on C.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_C0.3",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trials 1 and 2 are the only completed PRIMARY evidence, both on the word representation with swap augmentation. Increasing C from 0.05 to 0.1 raised search accuracy from 0.6371 to 0.6462 while train accuracy rose from 0.8162 to 0.8401 and the gap widened from 0.1790 to 0.1939. The next adjacent word-route setting, C=0.3, is the most informative single fit for mapping whether the word logistic route continues to gain search accuracy as regularization weakens or whether the widening train-search gap signals that C=0.1 is already near the useful limit.",
+          "review": "The completed trials used the same pair_text preference route and logistic estimator. Class recalls were balanced in both trials, so the low search scores are not explained by a collapsed class prediction. The train-search gap is large and widened slightly from C=0.05 to C=0.1, but with only two PRIMARY trials and no confirmation split, this is not enough to conclude overfitting or underfitting. The next fit should stay on the same word route to keep the regularization comparison matched.",
+          "hypothesis": "Continuing the word-route regularization sweep from C=0.1 to C=0.3 may clarify whether the small search gain at C=0.1 reflects useful additional capacity or merely a wider train-search gap. If search accuracy does not improve or the gap widens further, the next step should favor stronger regularization or a different representation rather than continuing upward on C.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only two PRIMARY trials are available, and no formal test or confirmation split is accessible. The observed train-search gap may reflect split difficulty, representation limits, or regularization, so the direction and magnitude of change from C=0.1 to C=0.3 are unknown. This fit is intended to gather adjacent regularization evidence, not to claim a predicted improvement."
+        }
+      }
+    },
+    "E": {
+      "candidate": "word_char_C0.1",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 3,
+        "candidate": "word_char_C0.1",
+        "params": {
+          "C": 0.1,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "Trial 2 is the best completed PRIMARY word-route result: word_C0.1 has search accuracy 0.6462, train accuracy 0.8401, and gap 0.1939. Compared with trial 1, search accuracy improved slightly but the train-search gap widened. The next informative single fit is word_char_C0.1: it keeps C=0.1 and swap augmentation but adds character n-grams, testing whether the word representation is limiting rather than continuing upward on C after the gap widened.",
+        "hypothesis": "At C=0.1, word_char may change search accuracy and the train-search gap relative to word_C0.1. If search remains near 0.646 or the gap stays large, the word route is not the only limit; if the gap narrows, character features may help generalization. Direction and magnitude are unknown.",
+        "evidence_trials": [
+          1,
+          2
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.1",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trial 2 is the best completed PRIMARY word-route result: word_C0.1 has search accuracy 0.6462, train accuracy 0.8401, and gap 0.1939. Compared with trial 1, search accuracy improved slightly but the train-search gap widened. The next informative single fit is word_char_C0.1: it keeps C=0.1 and swap augmentation but adds character n-grams, testing whether the word representation is limiting rather than continuing upward on C after the gap widened.",
+          "review": "Trials 1 and 2 are both PRIMARY word-route logistic fits with swap augmentation. Trial 2 improved search accuracy from 0.6371 to 0.6462, but train accuracy rose from 0.8162 to 0.8401 and the gap widened from 0.1790 to 0.1939; class recalls were balanced. With only two PRIMARY trials and no confirmation split, this does not establish overfitting or a causal representation effect.",
+          "hypothesis": "At C=0.1, word_char may change search accuracy and the train-search gap relative to word_C0.1. If search remains near 0.646 or the gap stays large, the word route is not the only limit; if the gap narrows, character features may help generalization. Direction and magnitude are unknown.",
+          "evidence_trials": [
+            1,
+            2
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only two completed PRIMARY trials are available; no formal test or confirmation split is accessible. The observed gap may reflect split difficulty, representation limits, regularization, or augmentation. The effect of switching to word_char at C=0.1 is unknown in direction and magnitude, so this fit is diagnostic evidence, not a predicted improvement."
+        }
+      }
+    }
+  },
+  {
+    "state_id": "preference_3",
+    "task": "preference",
+    "index": 2,
+    "state_file": "D:\\codex\\python_withai\\runs\\a55_fresh_states\\preference\\state_3.json",
+    "state_sha256": "fa2a0a643a0cfd44699438706670b12ae81ee17e9874b5972cd7b18125bae08a",
+    "original_candidate": "word_C0.7",
+    "original_request_id": "e30719e5-1053-4c4c-bbdb-4210053acb67",
+    "source_request_ordinal": 3,
+    "E": {
+      "candidate": "word_char_C0.3",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "word_char_C0.3",
+        "params": {
+          "C": 0.3,
+          "representation": "word_char",
+          "swap_augmentation": true
+        },
+        "reason": "Trials 1-3 are the completed PRIMARY evidence, all on the word route with swap augmentation. Search accuracy rose from 0.6371 at C=0.05 to 0.6462 at C=0.1 to 0.6570 at C=0.3, but the train-search gap also widened from 0.1790 to 0.1939 to 0.2432. Trial 3's hypothesis said that if the gap widened further, the next step should favor a different representation or stronger regularization rather than continuing upward on C. word_char_C0.3 changes representation from word to word_char while holding C=0.3 and swap augmentation fixed, giving a controlled representation comparison against the best word trial.",
+        "hypothesis": "Holding C=0.3 and swap augmentation fixed, switching from word to word_char may change search accuracy and the train-search gap by adding subword character cues. If word_char_C0.3 does not improve search accuracy or reduce the gap relative to word_C0.3, the next step should consider stronger regularization or another representation rather than assuming character features help.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_char_C0.3",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trials 1-3 are the completed PRIMARY evidence, all on the word route with swap augmentation. Search accuracy rose from 0.6371 at C=0.05 to 0.6462 at C=0.1 to 0.6570 at C=0.3, but the train-search gap also widened from 0.1790 to 0.1939 to 0.2432. Trial 3's hypothesis said that if the gap widened further, the next step should favor a different representation or stronger regularization rather than continuing upward on C. word_char_C0.3 changes representation from word to word_char while holding C=0.3 and swap augmentation fixed, giving a controlled representation comparison against the best word trial.",
+          "review": "The completed trials used the same pair_text preference route and logistic estimator. Trial 3 had balanced class recalls (0.6618 and 0.6523), so the low search score is not explained by a collapsed class prediction. The train-search gap is large and widened across the word-route trials, but with only three PRIMARY trials and no confirmation split, this is not enough to infer overfitting or a reliable causal trend.",
+          "hypothesis": "Holding C=0.3 and swap augmentation fixed, switching from word to word_char may change search accuracy and the train-search gap by adding subword character cues. If word_char_C0.3 does not improve search accuracy or reduce the gap relative to word_C0.3, the next step should consider stronger regularization or another representation rather than assuming character features help.",
+          "evidence_trials": [
+            1,
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only three PRIMARY trials are available, all on the word route, and no formal test or confirmation split is accessible. The observed word-route trend and widening gap may reflect split difficulty, representation limits, regularization, or other factors. The direction and magnitude of change from word_C0.3 to word_char_C0.3 are unknown; this fit is intended to gather representation evidence, not to claim a predicted improvement."
+        }
+      }
+    },
+    "R": {
+      "candidate": "word_C0.7",
+      "proposal": {
+        "contract_version": 1,
+        "trial": 4,
+        "candidate": "word_C0.7",
+        "params": {
+          "C": 0.7,
+          "representation": "word",
+          "swap_augmentation": true
+        },
+        "reason": "Trials 1-3 are the only completed PRIMARY evidence, all on the word route with swap augmentation. Search accuracy rose monotonically from 0.6371 at C=0.05 to 0.6462 at C=0.1 to 0.6570 at C=0.3, while the train-search gap widened from 0.1790 to 0.1939 to 0.2432. The next adjacent word-route setting, C=0.7, is the most informative single fit for checking whether the search gain continues as regularization weakens or whether the widening gap signals that the word route is becoming less useful.",
+        "hypothesis": "If weakening L2 regularization from C=0.3 to C=0.7 continues to improve search accuracy, the word route may benefit from less regularization. If search accuracy stalls or the train-search gap widens further, the next step should favor a different representation or stronger regularization rather than continuing upward on C.",
+        "evidence_trials": [
+          1,
+          2,
+          3
+        ],
+        "expected_change": null,
+        "route_plan": null,
+        "source": "agent",
+        "raw_proposal": {
+          "candidate": "word_C0.7",
+          "task_kind": "pair_text",
+          "configuration_claim": {
+            "classifier": "logistic"
+          },
+          "reason": "Trials 1-3 are the only completed PRIMARY evidence, all on the word route with swap augmentation. Search accuracy rose monotonically from 0.6371 at C=0.05 to 0.6462 at C=0.1 to 0.6570 at C=0.3, while the train-search gap widened from 0.1790 to 0.1939 to 0.2432. The next adjacent word-route setting, C=0.7, is the most informative single fit for checking whether the search gain continues as regularization weakens or whether the widening gap signals that the word route is becoming less useful.",
+          "review": "The completed trials used the same pair_text preference route, logistic estimator, and balanced class recalls, so the low search scores are not explained by a collapsed class prediction. Search accuracy improved slightly across C=0.05, C=0.1, and C=0.3, but the train-search gap also increased. With only three PRIMARY trials and no confirmation split, this is not enough to infer overfitting, underfitting, or a reliable trend.",
+          "hypothesis": "If weakening L2 regularization from C=0.3 to C=0.7 continues to improve search accuracy, the word route may benefit from less regularization. If search accuracy stalls or the train-search gap widens further, the next step should favor a different representation or stronger regularization rather than continuing upward on C.",
+          "evidence_trials": [
+            1,
+            2,
+            3
+          ],
+          "expected_change": null,
+          "slice_expectation": null,
+          "purpose": "diagnose",
+          "uncertainty": "Only three PRIMARY trials are available, and no formal test or confirmation split is accessible. The observed train-search gap may reflect split difficulty, representation limits, or regularization. The direction and magnitude of change from C=0.3 to C=0.7 are unknown; this fit is intended to gather adjacent regularization evidence, not to claim a predicted improvement."
+        }
+      }
+    }
+  }
+]

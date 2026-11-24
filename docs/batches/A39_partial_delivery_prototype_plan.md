@@ -1,0 +1,9 @@
+# A39：真实旧失败模型的零训练交付恢复原型
+
+课程明确给未完成任务的有效部分结果评分。当前AB失败会停API且保留trial模型，但不等于自动产出可预测的最终包。当前实验源码冻结，因此只在tools做独立恢复原型，不修改ab_run、费用账本或恢复旧请求，不宣称正式Agent自动恢复已接入。
+
+使用本机真实A23失败运行（SMS首请求DNS失败后保留的成功baseline），只读原history/worker artifact/训练内payload和原train-only包。预声明规则是选已完成primary trial中主指标最高、并以trial号打破同分的checkpoint；不使用val/test分数。验证候选参数/已完成fit记录与原模型一致，用已有finalize在refit=False/ensemble=False下导出新目录，明确delivery_status=partial、requested_planner_completed=False、训练行数为原内层训练数，不冒称完整训练。
+
+在禁止新fit/网络的保护下，对原无标签features包用新进程predict，检查行数/标签域与原模型直接预测一致，不读holdout标签、不评分。最多两次推理、0监督fit、0API；原失败状态、日志、模型不改。若数据/候选/完成状态校验失败，拒绝恢复，不拿失败/半写入artifact交付。
+
+tools/a39_partial_delivery.py。此案例只证明部分模型可零成本包装交付，下一步仍需在独立新版本把它挂到失败处理器、做受控失败端到端验收；不能把手工调用原型称为无人工介入完整实验结果。H和正式test继续封存。

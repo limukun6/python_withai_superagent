@@ -1,0 +1,83 @@
+{
+  "cases": 40,
+  "agreements": 36,
+  "false_contradictions": 0,
+  "contradictions_expected": 12,
+  "contradictions_detected": 10,
+  "original_baseline_warnings": 0,
+  "unknowns": 20,
+  "mismatches": [
+    {
+      "id": "change_linear_svm_0.1_1.0_confirmed",
+      "expected": "confirmed",
+      "observed": "unknown"
+    },
+    {
+      "id": "change_linear_svm_0.1_1.0_contradicted",
+      "expected": "contradicted",
+      "observed": "unknown"
+    },
+    {
+      "id": "change_linear_svm_10.0_1.0_confirmed",
+      "expected": "confirmed",
+      "observed": "unknown"
+    },
+    {
+      "id": "change_linear_svm_10.0_1.0_contradicted",
+      "expected": "contradicted",
+      "observed": "unknown"
+    }
+  ],
+  "old_replies": 24,
+  "focus_errors": 4,
+  "focus_detected": 1,
+  "focus_uncovered": [
+    "69897653704d",
+    "4dae4566c926",
+    "a312f009229e"
+  ],
+  "actual_prompt_tokens": null,
+  "actual_API_cost": null,
+  "real_API_requests": 0,
+  "runtime_definitions": {
+    "logistic": {
+      "estimator_class": "LogisticRegression",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+      "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+      "accuracy_effect_verified": false
+    },
+    "linear_svm": {
+      "estimator_class": "LinearSVC",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive.\n        For an intuitive visualization of the effects of scaling\n        the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+      "excerpt_sha256": "13d458ab12fb07f677bfdb844e4d3927748ca2b442218f26488f52d855b915f5",
+      "accuracy_effect_verified": false
+    },
+    "rbf_svm": {
+      "estimator_class": "SVC",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Regularization parameter. The strength of the regularization is\n        inversely proportional to C. Must be strictly positive. The penalty\n        is a squared l2 penalty. For an intuitive visualization of the effects\n        of scaling the regularization parameter C, see\n        :ref:`sphx_glr_auto_examples_svm_plot_svm_scale_c.py`.",
+      "excerpt_sha256": "22274364a3c09180a74fed1ab7eafcbe995dade3e8a33a229f52a404d5a83a57",
+      "accuracy_effect_verified": false
+    }
+  },
+  "limitations": [
+    "Developer fixtures, not blind generalization",
+    "Absolute low-C/low-regularization region is not certified without an explicit comparator",
+    "No measured accuracy benefit or actual Flash correction"
+  ],
+  "source_unchanged": true
+}

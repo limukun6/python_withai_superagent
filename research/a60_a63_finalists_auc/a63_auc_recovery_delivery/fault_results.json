@@ -1,0 +1,46 @@
+[
+  {
+    "case": "valid",
+    "status": "accepted_partial",
+    "recovery": {
+      "candidate": "single_word_C0.3",
+      "source_trial": 1,
+      "delivery_status": "partial",
+      "training_rows": 2641,
+      "full_training_rows": 3302,
+      "additional_classifier_fits": 0,
+      "additional_api_requests": 0,
+      "external_validation_scored": false
+    }
+  },
+  {
+    "case": "missing_score",
+    "status": "rejected",
+    "error": "Missing or conflicting candidate score evidence"
+  },
+  {
+    "case": "changed_scores",
+    "status": "rejected",
+    "error": "Probability matrix or class-column fingerprint differs"
+  },
+  {
+    "case": "changed_columns",
+    "status": "rejected",
+    "error": "Probability matrix or class-column fingerprint differs"
+  },
+  {
+    "case": "changed_metric",
+    "status": "rejected",
+    "error": "Worker metric identity disagrees with task metric, class order or direction"
+  },
+  {
+    "case": "changed_label",
+    "status": "rejected",
+    "error": "Score evidence identity differs: label_sha256"
+  },
+  {
+    "case": "changed_probability_model",
+    "status": "rejected",
+    "error": "Checkpoint no longer reproduces its bound primary probabilities"
+  }
+]

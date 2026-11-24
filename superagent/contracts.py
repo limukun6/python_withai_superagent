@@ -18,16 +18,20 @@ class TaskSpec:
     kind: str
     metric: MetricSpec
     input_schema: dict
+    goal_resolution: dict | None = None
 
     @classmethod
     def from_task(cls,task):
         allowed={'categorical_tabular','numeric_tabular','mixed_tabular','text_tabular','single_text','pair_text','image'}
         if task.kind not in allowed:raise ValueError('Unsupported task kind')
-        return cls(task.kind,MetricSpec.for_task(task),snapshot(task.spec.get('input_schema',{})))
+        from .task_goal import resolve_goal
+        metric=MetricSpec.for_task(task)
+        return cls(task.kind,metric,snapshot(task.spec.get('input_schema',{})),snapshot(resolve_goal(task,metric)))
 
     def record(self):return {'contract_version':VERSION,'objective':'classification','kind':self.kind,
         'metric':self.metric.record(),'input_schema':snapshot(self.input_schema),
-        'selection_data':'training-derived partitions only','formal_test_available_to_agent':False}
+        'selection_data':'training-derived partitions only','formal_test_available_to_agent':False,
+        'goal_resolution':snapshot(self.goal_resolution)}
 
 
 @dataclass(frozen=True)
@@ -59,6 +63,22 @@ class ExperimentProposal:
         if not isinstance(refs,list) or any(type(v) is not int for v in refs) or len(set(refs))!=len(refs) or not set(refs)<=prior:
             raise ValueError('Proposal references must be distinct earlier trials')
         expected=raw.get('expected_change') if raw else None
+        if raw and raw.get('slice_expectation') is not None:
+            from .targeted_feedback import validate_slice_expectation
+            validate_slice_expectation(raw['slice_expectation'], history)
+        if raw and raw.get('configuration_claim') is not None:
+            from .targeted_feedback import candidate_facts
+            kind = raw.get('task_kind')
+            facts = candidate_facts(kind, configuration) or {}
+            claim = raw['configuration_claim']
+            if (not isinstance(claim, dict) or set(claim) != {'classifier'}
+                    or not isinstance(claim['classifier'], str) or not claim['classifier'].strip()):
+                raise ValueError('Configuration claim must name exactly one classifier')
+            registered = facts.get('classifier')
+            # An unknown fact cannot contradict a claim; the fitted estimator is
+            # compared with the claim after the trial instead.
+            if registered is not None and claim['classifier'] != registered:
+                raise ValueError('Configuration claim disagrees with registered classifier')
         if expected is not None:
             from .hypothesis_agent import METRICS
             if not isinstance(expected,dict) or set(expected)!={'metric','reference_trial','direction','min_delta'}:
@@ -98,11 +118,13 @@ class ExperimentResult:
         if row['status']=='completed' and score is None:raise ValueError('Completed result needs a finite primary score')
         if metric_spec is not None and row.get('primary_metric','accuracy')!=metric_spec.name:
             raise ValueError('Worker result uses a different task metric')
+        identity=metric_spec.check_identity(row.get('metric_spec')) if metric_spec is not None else {'status':'unknown','reason':'task_metric_unavailable'}
         selected={key:row[key] for key in ('primary_metric','search_score','train_score','search_accuracy','train_accuracy',
-            'score_gap','generalization_gap','training_seconds','classifier_fits','error','hypothesis_check') if key in row}
+            'score_gap','generalization_gap','training_seconds','classifier_fits','error','hypothesis_check',
+            'estimator','configuration_fact_check','metric_spec') if key in row}
         return cls(snapshot({'contract_version':VERSION,'trial':row['trial'],'candidate':row['candidate'],
             'params':row['params'],'status':row['status'],'measurements':selected,
-            'score_available':score is not None,'selection_score':score}))
+            'score_available':score is not None,'selection_score':score,'metric_identity':identity}))
 
     def record(self):return snapshot(self.payload)
 
@@ -123,7 +145,8 @@ class DecisionState:
         public_profile['primary_metric']=name
         allowed=('trial','candidate','params','status','primary_metric','train_score','search_score','train_accuracy',
             'search_accuracy','score_gap','generalization_gap','training_seconds','class_recall','hypothesis_check',
-            'paired_error_comparison','explanation_audit','proposal','selected_iterations','classifier_fits','error_slices')
+            'paired_error_comparison','explanation_audit','proposal','selected_iterations','classifier_fits','error_slices',
+            'estimator','configuration_fact_check','metric_spec','metric_identity')
         clean=[{k:snapshot(r[k]) for k in allowed if k in r} for r in history]
         if not feedback_visible:
             clean=[{k:r[k] for k in ('trial','candidate','params','proposal') if k in r} for r in clean]

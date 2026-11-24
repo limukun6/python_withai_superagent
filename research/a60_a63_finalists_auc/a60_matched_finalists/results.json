@@ -1,0 +1,3507 @@
+[
+  {
+    "task": "coupon",
+    "scheduler": "ab-v1",
+    "actual_classifier_fits": 6,
+    "seconds": 44.783235399998375,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a60_matched_finalists\\coupon_ab-v1",
+      "scheduler": "ab-v1",
+      "planner_mode": "local",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "supported_field_interactions",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "supported_field_interactions"
+        ],
+        "primary_candidate": "supported_field_interactions",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "supported_field_interactions",
+            "primary_accuracy": 0.7455329636475663,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.8204496458269172,
+                "search_score": 0.7455329636475663,
+                "train_metrics": {
+                  "accuracy": 0.8204496458269172,
+                  "macro_f1": 0.8129058337669706,
+                  "primary_metric": "accuracy",
+                  "score": 0.8204496458269172,
+                  "rows": 6494
+                },
+                "search_metrics": {
+                  "accuracy": 0.7455329636475663,
+                  "macro_f1": 0.7341384156085534,
+                  "primary_metric": "accuracy",
+                  "score": 0.7455329636475663,
+                  "rows": 1623
+                },
+                "score_gap": 0.07491668217935088,
+                "train_accuracy": 0.8204496458269172,
+                "search_accuracy": 0.7455329636475663,
+                "generalization_gap": 0.07491668217935088,
+                "class_recall": [
+                  0.6242857142857143,
+                  0.8374864572047671
+                ],
+                "training_seconds": 7.103773099996033,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "selected_field_pairs": [
+                    [
+                      2,
+                      12
+                    ],
+                    [
+                      2,
+                      11
+                    ],
+                    [
+                      1,
+                      2
+                    ]
+                  ],
+                  "strongest": [
+                    {
+                      "fields": [
+                        2,
+                        12
+                      ],
+                      "gains": [
+                        0.012304117433770818,
+                        0.013301089912849092
+                      ],
+                      "support": 0.012304117433770818
+                    },
+                    {
+                      "fields": [
+                        2,
+                        11
+                      ],
+                      "gains": [
+                        0.010382576037318847,
+                        0.013545474671133905
+                      ],
+                      "support": 0.010382576037318847
+                    },
+                    {
+                      "fields": [
+                        1,
+                        2
+                      ],
+                      "gains": [
+                        0.0073167557833913556,
+                        0.010002013132637476
+                      ],
+                      "support": 0.0073167557833913556
+                    },
+                    {
+                      "fields": [
+                        9,
+                        10
+                      ],
+                      "gains": [
+                        0.00571436819467467,
+                        0.006350877793236255
+                      ],
+                      "support": 0.00571436819467467
+                    },
+                    {
+                      "fields": [
+                        1,
+                        3
+                      ],
+                      "gains": [
+                        0.007543334203921392,
+                        0.005498266203589391
+                      ],
+                      "support": 0.005498266203589391
+                    },
+                    {
+                      "fields": [
+                        0,
+                        1
+                      ],
+                      "gains": [
+                        0.005491573961280708,
+                        0.006343114483945003
+                      ],
+                      "support": 0.005491573961280708
+                    }
+                  ],
+                  "selection": "minimum held-out log-probability gain in two training-group halves"
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "catboost",
+                  "class": "CatBoostClassifier",
+                  "module": "catboost.core",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "supported_field_interactions",
+                  "params": {
+                    "pair_limit": 3,
+                    "depth": 6,
+                    "l2_leaf_reg": 3.0,
+                    "iterations": 600,
+                    "representation": "training-selected categorical field interactions"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "supported_field_interactions",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 8.848633700006758,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "catboost",
+                  "observed_class": "CatBoostClassifier",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.7455329636475663,
+            "mean_score": 0.7455329636475663,
+            "mean_accuracy": 0.7455329636475663,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "supported_field_interactions",
+        "selection_score": 0.7455329636475663,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "supported_field_interactions",
+          "incumbent": "supported_field_interactions",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 8117,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 7.391647500000545,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 42.94333959999494,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 5,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 6,
+        "completed_classifier_fits": 6,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "supported_field_interactions",
+      "single_candidate": "supported_field_interactions",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.7455329636475663,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 8117,
+      "model_sha256": "1b12f1abf5d8ef5c7dd03e5832bcf85c21fab8d71bdeb889d0bbda3b55dcfbcc",
+      "task_spec_sha256": "9723dcc5432c40b63e75eaddff8d3fa3d5863f596f18df941030816021366c9a"
+    },
+    "confirmation": {
+      "primary_metric": "accuracy",
+      "enabled": true,
+      "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+      "seeds": [
+        707
+      ],
+      "shortlist": [
+        "supported_field_interactions"
+      ],
+      "primary_candidate": "supported_field_interactions",
+      "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+      "candidates": [
+        {
+          "candidate": "supported_field_interactions",
+          "primary_accuracy": 0.7455329636475663,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 2,
+              "candidate": "supported_field_interactions",
+              "params": {
+                "pair_limit": 3,
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "representation": "training-selected categorical field interactions"
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.8204496458269172,
+              "search_score": 0.7455329636475663,
+              "train_metrics": {
+                "accuracy": 0.8204496458269172,
+                "macro_f1": 0.8129058337669706,
+                "primary_metric": "accuracy",
+                "score": 0.8204496458269172,
+                "rows": 6494
+              },
+              "search_metrics": {
+                "accuracy": 0.7455329636475663,
+                "macro_f1": 0.7341384156085534,
+                "primary_metric": "accuracy",
+                "score": 0.7455329636475663,
+                "rows": 1623
+              },
+              "score_gap": 0.07491668217935088,
+              "train_accuracy": 0.8204496458269172,
+              "search_accuracy": 0.7455329636475663,
+              "generalization_gap": 0.07491668217935088,
+              "class_recall": [
+                0.6242857142857143,
+                0.8374864572047671
+              ],
+              "training_seconds": 7.103773099996033,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": {
+                "selected_field_pairs": [
+                  [
+                    2,
+                    12
+                  ],
+                  [
+                    2,
+                    11
+                  ],
+                  [
+                    1,
+                    2
+                  ]
+                ],
+                "strongest": [
+                  {
+                    "fields": [
+                      2,
+                      12
+                    ],
+                    "gains": [
+                      0.012304117433770818,
+                      0.013301089912849092
+                    ],
+                    "support": 0.012304117433770818
+                  },
+                  {
+                    "fields": [
+                      2,
+                      11
+                    ],
+                    "gains": [
+                      0.010382576037318847,
+                      0.013545474671133905
+                    ],
+                    "support": 0.010382576037318847
+                  },
+                  {
+                    "fields": [
+                      1,
+                      2
+                    ],
+                    "gains": [
+                      0.0073167557833913556,
+                      0.010002013132637476
+                    ],
+                    "support": 0.0073167557833913556
+                  },
+                  {
+                    "fields": [
+                      9,
+                      10
+                    ],
+                    "gains": [
+                      0.00571436819467467,
+                      0.006350877793236255
+                    ],
+                    "support": 0.00571436819467467
+                  },
+                  {
+                    "fields": [
+                      1,
+                      3
+                    ],
+                    "gains": [
+                      0.007543334203921392,
+                      0.005498266203589391
+                    ],
+                    "support": 0.005498266203589391
+                  },
+                  {
+                    "fields": [
+                      0,
+                      1
+                    ],
+                    "gains": [
+                      0.005491573961280708,
+                      0.006343114483945003
+                    ],
+                    "support": 0.005491573961280708
+                  }
+                ],
+                "selection": "minimum held-out log-probability gain in two training-group halves"
+              },
+              "selected_iterations": null,
+              "estimator": {
+                "family": "catboost",
+                "class": "CatBoostClassifier",
+                "module": "catboost.core",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "supported_field_interactions",
+                  "swap_label_rule": "unknown"
+                }
+              },
+              "worker_wall_seconds": 8.848633700006758,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "catboost",
+                "observed_class": "CatBoostClassifier",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.7455329636475663,
+          "mean_score": 0.7455329636475663,
+          "mean_accuracy": 0.7455329636475663,
+          "sample_sd": null
+        }
+      ],
+      "valid_confirmation": true,
+      "selected_candidate": "supported_field_interactions",
+      "selection_score": 0.7455329636475663,
+      "changed": false,
+      "b_scheduler_review": {
+        "initial": "supported_field_interactions",
+        "incumbent": "supported_field_interactions",
+        "promotions": [],
+        "basis": [
+          "primary"
+        ],
+        "primary_metric": "accuracy"
+      },
+      "independent_confirmation_observed": false
+    },
+    "primary_candidates": [
+      "logistic_C0.05",
+      "supported_field_interactions",
+      "extra_trees_leaf1",
+      "catboost_depth4_reg3.0",
+      "catboost_depth4_reg10.0"
+    ],
+    "confirmation_fits": 0,
+    "evaluation": {
+      "reload_identical": true,
+      "rows": 2030,
+      "primary_metric": "accuracy",
+      "score": 0.7502463054187192,
+      "accuracy": 0.7502463054187192,
+      "heldout_scored": true,
+      "model_sha256": "1b12f1abf5d8ef5c7dd03e5832bcf85c21fab8d71bdeb889d0bbda3b55dcfbcc",
+      "original_row_ids_sha256": "f0433be8c461ed521978faee570f5d777550a73cd9a9ea5fe560192f5e9b7b08",
+      "selected_candidate": "supported_field_interactions",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "coupon",
+    "scheduler": "ab-finalists",
+    "actual_classifier_fits": 7,
+    "seconds": 54.93680670000322,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a60_matched_finalists\\coupon_ab-finalists",
+      "scheduler": "ab-finalists",
+      "planner_mode": "local",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "supported_field_interactions",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707,
+          808
+        ],
+        "shortlist": [
+          "supported_field_interactions",
+          "catboost_depth4_reg3.0"
+        ],
+        "primary_candidate": "supported_field_interactions",
+        "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id",
+        "candidates": [
+          {
+            "candidate": "supported_field_interactions",
+            "primary_accuracy": 0.7455329636475663,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 2,
+                "candidate": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.8204496458269172,
+                "search_score": 0.7455329636475663,
+                "train_metrics": {
+                  "accuracy": 0.8204496458269172,
+                  "macro_f1": 0.8129058337669706,
+                  "primary_metric": "accuracy",
+                  "score": 0.8204496458269172,
+                  "rows": 6494
+                },
+                "search_metrics": {
+                  "accuracy": 0.7455329636475663,
+                  "macro_f1": 0.7341384156085534,
+                  "primary_metric": "accuracy",
+                  "score": 0.7455329636475663,
+                  "rows": 1623
+                },
+                "score_gap": 0.07491668217935088,
+                "train_accuracy": 0.8204496458269172,
+                "search_accuracy": 0.7455329636475663,
+                "generalization_gap": 0.07491668217935088,
+                "class_recall": [
+                  0.6242857142857143,
+                  0.8374864572047671
+                ],
+                "training_seconds": 7.875515400010045,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "selected_field_pairs": [
+                    [
+                      2,
+                      12
+                    ],
+                    [
+                      2,
+                      11
+                    ],
+                    [
+                      1,
+                      2
+                    ]
+                  ],
+                  "strongest": [
+                    {
+                      "fields": [
+                        2,
+                        12
+                      ],
+                      "gains": [
+                        0.012304117433770818,
+                        0.013301089912849092
+                      ],
+                      "support": 0.012304117433770818
+                    },
+                    {
+                      "fields": [
+                        2,
+                        11
+                      ],
+                      "gains": [
+                        0.010382576037318847,
+                        0.013545474671133905
+                      ],
+                      "support": 0.010382576037318847
+                    },
+                    {
+                      "fields": [
+                        1,
+                        2
+                      ],
+                      "gains": [
+                        0.0073167557833913556,
+                        0.010002013132637476
+                      ],
+                      "support": 0.0073167557833913556
+                    },
+                    {
+                      "fields": [
+                        9,
+                        10
+                      ],
+                      "gains": [
+                        0.00571436819467467,
+                        0.006350877793236255
+                      ],
+                      "support": 0.00571436819467467
+                    },
+                    {
+                      "fields": [
+                        1,
+                        3
+                      ],
+                      "gains": [
+                        0.007543334203921392,
+                        0.005498266203589391
+                      ],
+                      "support": 0.005498266203589391
+                    },
+                    {
+                      "fields": [
+                        0,
+                        1
+                      ],
+                      "gains": [
+                        0.005491573961280708,
+                        0.006343114483945003
+                      ],
+                      "support": 0.005491573961280708
+                    }
+                  ],
+                  "selection": "minimum held-out log-probability gain in two training-group halves"
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "catboost",
+                  "class": "CatBoostClassifier",
+                  "module": "catboost.core",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "supported_field_interactions",
+                  "params": {
+                    "pair_limit": 3,
+                    "depth": 6,
+                    "l2_leaf_reg": 3.0,
+                    "iterations": 600,
+                    "representation": "training-selected categorical field interactions"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "supported_field_interactions",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 9.61339689999295,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "catboost",
+                  "observed_class": "CatBoostClassifier",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              },
+              {
+                "seed": 808,
+                "trial": 5,
+                "candidate": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "split_id": "confirmation_1",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.8238102572000616,
+                "search_score": 0.7666256157635468,
+                "train_metrics": {
+                  "accuracy": 0.8238102572000616,
+                  "macro_f1": 0.8169498509081052,
+                  "primary_metric": "accuracy",
+                  "score": 0.8238102572000616,
+                  "rows": 6493
+                },
+                "search_metrics": {
+                  "accuracy": 0.7666256157635468,
+                  "macro_f1": 0.7568892043490849,
+                  "primary_metric": "accuracy",
+                  "score": 0.7666256157635468,
+                  "rows": 1624
+                },
+                "score_gap": 0.057184641436514805,
+                "train_accuracy": 0.8238102572000616,
+                "search_accuracy": 0.7666256157635468,
+                "generalization_gap": 0.057184641436514805,
+                "class_recall": [
+                  0.6562054208273894,
+                  0.8504875406283857
+                ],
+                "training_seconds": 7.036196000000928,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": {
+                  "selected_field_pairs": [
+                    [
+                      2,
+                      11
+                    ],
+                    [
+                      2,
+                      12
+                    ],
+                    [
+                      1,
+                      2
+                    ]
+                  ],
+                  "strongest": [
+                    {
+                      "fields": [
+                        2,
+                        11
+                      ],
+                      "gains": [
+                        0.010886688250664791,
+                        0.012538147711093255
+                      ],
+                      "support": 0.010886688250664791
+                    },
+                    {
+                      "fields": [
+                        2,
+                        12
+                      ],
+                      "gains": [
+                        0.010346477388159836,
+                        0.01563238167518327
+                      ],
+                      "support": 0.010346477388159836
+                    },
+                    {
+                      "fields": [
+                        1,
+                        2
+                      ],
+                      "gains": [
+                        0.007838744083542421,
+                        0.010414347036085217
+                      ],
+                      "support": 0.007838744083542421
+                    },
+                    {
+                      "fields": [
+                        2,
+                        3
+                      ],
+                      "gains": [
+                        0.003928115585859569,
+                        0.005554632584950479
+                      ],
+                      "support": 0.003928115585859569
+                    },
+                    {
+                      "fields": [
+                        9,
+                        10
+                      ],
+                      "gains": [
+                        0.0054173979361714685,
+                        0.003722855688511252
+                      ],
+                      "support": 0.003722855688511252
+                    },
+                    {
+                      "fields": [
+                        1,
+                        3
+                      ],
+                      "gains": [
+                        0.003452496952711574,
+                        0.006230104912883251
+                      ],
+                      "support": 0.003452496952711574
+                    }
+                  ],
+                  "selection": "minimum held-out log-probability gain in two training-group halves"
+                },
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "catboost",
+                  "class": "CatBoostClassifier",
+                  "module": "catboost.core",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "supported_field_interactions",
+                  "params": {
+                    "pair_limit": 3,
+                    "depth": 6,
+                    "l2_leaf_reg": 3.0,
+                    "iterations": 600,
+                    "representation": "training-selected categorical field interactions"
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "supported_field_interactions",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 8.76237029999902,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "catboost",
+                  "observed_class": "CatBoostClassifier",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.7455329636475663,
+            "mean_score": 0.7560792897055566,
+            "mean_accuracy": 0.7560792897055566,
+            "sample_sd": 0.014914757344418626
+          },
+          {
+            "candidate": "catboost_depth4_reg3.0",
+            "primary_accuracy": 0.7301293900184843,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 4,
+                "candidate": "catboost_depth4_reg3.0",
+                "params": {
+                  "depth": 4,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "learning_rate": 0.05
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.7777948875885433,
+                "search_score": 0.7301293900184843,
+                "train_metrics": {
+                  "accuracy": 0.7777948875885433,
+                  "macro_f1": 0.7675866012445773,
+                  "primary_metric": "accuracy",
+                  "score": 0.7777948875885433,
+                  "rows": 6494
+                },
+                "search_metrics": {
+                  "accuracy": 0.7301293900184843,
+                  "macro_f1": 0.7167290956039403,
+                  "primary_metric": "accuracy",
+                  "score": 0.7301293900184843,
+                  "rows": 1623
+                },
+                "score_gap": 0.047665497570059,
+                "train_accuracy": 0.7777948875885433,
+                "search_accuracy": 0.7301293900184843,
+                "generalization_gap": 0.047665497570059,
+                "class_recall": [
+                  0.5942857142857143,
+                  0.8331527627302275
+                ],
+                "training_seconds": 3.9010029999917606,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "catboost",
+                  "class": "CatBoostClassifier",
+                  "module": "catboost.core",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "catboost_depth4_reg3.0",
+                  "params": {
+                    "depth": 4,
+                    "l2_leaf_reg": 3.0,
+                    "iterations": 600,
+                    "learning_rate": 0.05
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "catboost_depth4_reg3.0",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 5.624102699992363,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "catboost",
+                  "observed_class": "CatBoostClassifier",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              },
+              {
+                "seed": 808,
+                "trial": 6,
+                "candidate": "catboost_depth4_reg3.0",
+                "params": {
+                  "depth": 4,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "learning_rate": 0.05
+                },
+                "split_id": "confirmation_1",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.7822270137070692,
+                "search_score": 0.7432266009852216,
+                "train_metrics": {
+                  "accuracy": 0.7822270137070692,
+                  "macro_f1": 0.773234454346065,
+                  "primary_metric": "accuracy",
+                  "score": 0.7822270137070692,
+                  "rows": 6493
+                },
+                "search_metrics": {
+                  "accuracy": 0.7432266009852216,
+                  "macro_f1": 0.7327867073611025,
+                  "primary_metric": "accuracy",
+                  "score": 0.7432266009852216,
+                  "rows": 1624
+                },
+                "score_gap": 0.03900041272184751,
+                "train_accuracy": 0.7822270137070692,
+                "search_accuracy": 0.7432266009852216,
+                "generalization_gap": 0.03900041272184751,
+                "class_recall": [
+                  0.6319543509272468,
+                  0.8277356446370531
+                ],
+                "training_seconds": 4.879396400006954,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "catboost",
+                  "class": "CatBoostClassifier",
+                  "module": "catboost.core",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "catboost_depth4_reg3.0",
+                  "params": {
+                    "depth": 4,
+                    "l2_leaf_reg": 3.0,
+                    "iterations": 600,
+                    "learning_rate": 0.05
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "catboost_depth4_reg3.0",
+                    "swap_label_rule": "unknown"
+                  }
+                },
+                "worker_wall_seconds": 6.586000399998738,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "catboost",
+                  "observed_class": "CatBoostClassifier",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.7301293900184843,
+            "mean_score": 0.736677995501853,
+            "mean_accuracy": 0.736677995501853,
+            "sample_sd": 0.009261126689210782
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "supported_field_interactions",
+        "selection_score": 0.7560792897055566,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "supported_field_interactions",
+          "incumbent": "supported_field_interactions",
+          "promotions": [],
+          "basis": [
+            "primary",
+            "confirmation_1"
+          ],
+          "finalists": [
+            "supported_field_interactions",
+            "catboost_depth4_reg3.0"
+          ],
+          "mean_scores": {
+            "supported_field_interactions": 0.7560792897055566,
+            "catboost_depth4_reg3.0": 0.736677995501853
+          },
+          "primary_metric": "accuracy",
+          "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id"
+        },
+        "independent_confirmation_observed": true
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 8117,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 7.520127099996898,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 53.18518159999803,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 4,
+        "confirm": 2,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 7,
+        "completed_classifier_fits": 7,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "selection": {
+      "selected_experiment": "trial_2",
+      "family": "supported_field_interactions",
+      "single_candidate": "supported_field_interactions",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.7560792897055566,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 8117,
+      "model_sha256": "2f715e27339132ded53b95f5be25944583d102bfe3cc30027b70a60b94fe9f9c",
+      "task_spec_sha256": "9723dcc5432c40b63e75eaddff8d3fa3d5863f596f18df941030816021366c9a"
+    },
+    "confirmation": {
+      "primary_metric": "accuracy",
+      "enabled": true,
+      "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+      "seeds": [
+        707,
+        808
+      ],
+      "shortlist": [
+        "supported_field_interactions",
+        "catboost_depth4_reg3.0"
+      ],
+      "primary_candidate": "supported_field_interactions",
+      "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id",
+      "candidates": [
+        {
+          "candidate": "supported_field_interactions",
+          "primary_accuracy": 0.7455329636475663,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 2,
+              "candidate": "supported_field_interactions",
+              "params": {
+                "pair_limit": 3,
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "representation": "training-selected categorical field interactions"
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.8204496458269172,
+              "search_score": 0.7455329636475663,
+              "train_metrics": {
+                "accuracy": 0.8204496458269172,
+                "macro_f1": 0.8129058337669706,
+                "primary_metric": "accuracy",
+                "score": 0.8204496458269172,
+                "rows": 6494
+              },
+              "search_metrics": {
+                "accuracy": 0.7455329636475663,
+                "macro_f1": 0.7341384156085534,
+                "primary_metric": "accuracy",
+                "score": 0.7455329636475663,
+                "rows": 1623
+              },
+              "score_gap": 0.07491668217935088,
+              "train_accuracy": 0.8204496458269172,
+              "search_accuracy": 0.7455329636475663,
+              "generalization_gap": 0.07491668217935088,
+              "class_recall": [
+                0.6242857142857143,
+                0.8374864572047671
+              ],
+              "training_seconds": 7.875515400010045,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": {
+                "selected_field_pairs": [
+                  [
+                    2,
+                    12
+                  ],
+                  [
+                    2,
+                    11
+                  ],
+                  [
+                    1,
+                    2
+                  ]
+                ],
+                "strongest": [
+                  {
+                    "fields": [
+                      2,
+                      12
+                    ],
+                    "gains": [
+                      0.012304117433770818,
+                      0.013301089912849092
+                    ],
+                    "support": 0.012304117433770818
+                  },
+                  {
+                    "fields": [
+                      2,
+                      11
+                    ],
+                    "gains": [
+                      0.010382576037318847,
+                      0.013545474671133905
+                    ],
+                    "support": 0.010382576037318847
+                  },
+                  {
+                    "fields": [
+                      1,
+                      2
+                    ],
+                    "gains": [
+                      0.0073167557833913556,
+                      0.010002013132637476
+                    ],
+                    "support": 0.0073167557833913556
+                  },
+                  {
+                    "fields": [
+                      9,
+                      10
+                    ],
+                    "gains": [
+                      0.00571436819467467,
+                      0.006350877793236255
+                    ],
+                    "support": 0.00571436819467467
+                  },
+                  {
+                    "fields": [
+                      1,
+                      3
+                    ],
+                    "gains": [
+                      0.007543334203921392,
+                      0.005498266203589391
+                    ],
+                    "support": 0.005498266203589391
+                  },
+                  {
+                    "fields": [
+                      0,
+                      1
+                    ],
+                    "gains": [
+                      0.005491573961280708,
+                      0.006343114483945003
+                    ],
+                    "support": 0.005491573961280708
+                  }
+                ],
+                "selection": "minimum held-out log-probability gain in two training-group halves"
+              },
+              "selected_iterations": null,
+              "estimator": {
+                "family": "catboost",
+                "class": "CatBoostClassifier",
+                "module": "catboost.core",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "supported_field_interactions",
+                  "swap_label_rule": "unknown"
+                }
+              },
+              "worker_wall_seconds": 9.61339689999295,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "catboost",
+                "observed_class": "CatBoostClassifier",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            },
+            {
+              "seed": 808,
+              "trial": 5,
+              "candidate": "supported_field_interactions",
+              "params": {
+                "pair_limit": 3,
+                "depth": 6,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "representation": "training-selected categorical field interactions"
+              },
+              "split_id": "confirmation_1",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.8238102572000616,
+              "search_score": 0.7666256157635468,
+              "train_metrics": {
+                "accuracy": 0.8238102572000616,
+                "macro_f1": 0.8169498509081052,
+                "primary_metric": "accuracy",
+                "score": 0.8238102572000616,
+                "rows": 6493
+              },
+              "search_metrics": {
+                "accuracy": 0.7666256157635468,
+                "macro_f1": 0.7568892043490849,
+                "primary_metric": "accuracy",
+                "score": 0.7666256157635468,
+                "rows": 1624
+              },
+              "score_gap": 0.057184641436514805,
+              "train_accuracy": 0.8238102572000616,
+              "search_accuracy": 0.7666256157635468,
+              "generalization_gap": 0.057184641436514805,
+              "class_recall": [
+                0.6562054208273894,
+                0.8504875406283857
+              ],
+              "training_seconds": 7.036196000000928,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": {
+                "selected_field_pairs": [
+                  [
+                    2,
+                    11
+                  ],
+                  [
+                    2,
+                    12
+                  ],
+                  [
+                    1,
+                    2
+                  ]
+                ],
+                "strongest": [
+                  {
+                    "fields": [
+                      2,
+                      11
+                    ],
+                    "gains": [
+                      0.010886688250664791,
+                      0.012538147711093255
+                    ],
+                    "support": 0.010886688250664791
+                  },
+                  {
+                    "fields": [
+                      2,
+                      12
+                    ],
+                    "gains": [
+                      0.010346477388159836,
+                      0.01563238167518327
+                    ],
+                    "support": 0.010346477388159836
+                  },
+                  {
+                    "fields": [
+                      1,
+                      2
+                    ],
+                    "gains": [
+                      0.007838744083542421,
+                      0.010414347036085217
+                    ],
+                    "support": 0.007838744083542421
+                  },
+                  {
+                    "fields": [
+                      2,
+                      3
+                    ],
+                    "gains": [
+                      0.003928115585859569,
+                      0.005554632584950479
+                    ],
+                    "support": 0.003928115585859569
+                  },
+                  {
+                    "fields": [
+                      9,
+                      10
+                    ],
+                    "gains": [
+                      0.0054173979361714685,
+                      0.003722855688511252
+                    ],
+                    "support": 0.003722855688511252
+                  },
+                  {
+                    "fields": [
+                      1,
+                      3
+                    ],
+                    "gains": [
+                      0.003452496952711574,
+                      0.006230104912883251
+                    ],
+                    "support": 0.003452496952711574
+                  }
+                ],
+                "selection": "minimum held-out log-probability gain in two training-group halves"
+              },
+              "selected_iterations": null,
+              "estimator": {
+                "family": "catboost",
+                "class": "CatBoostClassifier",
+                "module": "catboost.core",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "supported_field_interactions",
+                "params": {
+                  "pair_limit": 3,
+                  "depth": 6,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "representation": "training-selected categorical field interactions"
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "supported_field_interactions",
+                  "swap_label_rule": "unknown"
+                }
+              },
+              "worker_wall_seconds": 8.76237029999902,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "catboost",
+                "observed_class": "CatBoostClassifier",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.7455329636475663,
+          "mean_score": 0.7560792897055566,
+          "mean_accuracy": 0.7560792897055566,
+          "sample_sd": 0.014914757344418626
+        },
+        {
+          "candidate": "catboost_depth4_reg3.0",
+          "primary_accuracy": 0.7301293900184843,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 4,
+              "candidate": "catboost_depth4_reg3.0",
+              "params": {
+                "depth": 4,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.7777948875885433,
+              "search_score": 0.7301293900184843,
+              "train_metrics": {
+                "accuracy": 0.7777948875885433,
+                "macro_f1": 0.7675866012445773,
+                "primary_metric": "accuracy",
+                "score": 0.7777948875885433,
+                "rows": 6494
+              },
+              "search_metrics": {
+                "accuracy": 0.7301293900184843,
+                "macro_f1": 0.7167290956039403,
+                "primary_metric": "accuracy",
+                "score": 0.7301293900184843,
+                "rows": 1623
+              },
+              "score_gap": 0.047665497570059,
+              "train_accuracy": 0.7777948875885433,
+              "search_accuracy": 0.7301293900184843,
+              "generalization_gap": 0.047665497570059,
+              "class_recall": [
+                0.5942857142857143,
+                0.8331527627302275
+              ],
+              "training_seconds": 3.9010029999917606,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "catboost",
+                "class": "CatBoostClassifier",
+                "module": "catboost.core",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "catboost_depth4_reg3.0",
+                "params": {
+                  "depth": 4,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "learning_rate": 0.05
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "catboost_depth4_reg3.0",
+                  "swap_label_rule": "unknown"
+                }
+              },
+              "worker_wall_seconds": 5.624102699992363,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "catboost",
+                "observed_class": "CatBoostClassifier",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            },
+            {
+              "seed": 808,
+              "trial": 6,
+              "candidate": "catboost_depth4_reg3.0",
+              "params": {
+                "depth": 4,
+                "l2_leaf_reg": 3.0,
+                "iterations": 600,
+                "learning_rate": 0.05
+              },
+              "split_id": "confirmation_1",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.7822270137070692,
+              "search_score": 0.7432266009852216,
+              "train_metrics": {
+                "accuracy": 0.7822270137070692,
+                "macro_f1": 0.773234454346065,
+                "primary_metric": "accuracy",
+                "score": 0.7822270137070692,
+                "rows": 6493
+              },
+              "search_metrics": {
+                "accuracy": 0.7432266009852216,
+                "macro_f1": 0.7327867073611025,
+                "primary_metric": "accuracy",
+                "score": 0.7432266009852216,
+                "rows": 1624
+              },
+              "score_gap": 0.03900041272184751,
+              "train_accuracy": 0.7822270137070692,
+              "search_accuracy": 0.7432266009852216,
+              "generalization_gap": 0.03900041272184751,
+              "class_recall": [
+                0.6319543509272468,
+                0.8277356446370531
+              ],
+              "training_seconds": 4.879396400006954,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "catboost",
+                "class": "CatBoostClassifier",
+                "module": "catboost.core",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "catboost_depth4_reg3.0",
+                "params": {
+                  "depth": 4,
+                  "l2_leaf_reg": 3.0,
+                  "iterations": 600,
+                  "learning_rate": 0.05
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "catboost_depth4_reg3.0",
+                  "swap_label_rule": "unknown"
+                }
+              },
+              "worker_wall_seconds": 6.586000399998738,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "catboost",
+                "observed_class": "CatBoostClassifier",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.7301293900184843,
+          "mean_score": 0.736677995501853,
+          "mean_accuracy": 0.736677995501853,
+          "sample_sd": 0.009261126689210782
+        }
+      ],
+      "valid_confirmation": true,
+      "selected_candidate": "supported_field_interactions",
+      "selection_score": 0.7560792897055566,
+      "changed": false,
+      "b_scheduler_review": {
+        "initial": "supported_field_interactions",
+        "incumbent": "supported_field_interactions",
+        "promotions": [],
+        "basis": [
+          "primary",
+          "confirmation_1"
+        ],
+        "finalists": [
+          "supported_field_interactions",
+          "catboost_depth4_reg3.0"
+        ],
+        "mean_scores": {
+          "supported_field_interactions": 0.7560792897055566,
+          "catboost_depth4_reg3.0": 0.736677995501853
+        },
+        "primary_metric": "accuracy",
+        "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id"
+      },
+      "independent_confirmation_observed": true
+    },
+    "primary_candidates": [
+      "logistic_C0.05",
+      "supported_field_interactions",
+      "extra_trees_leaf1",
+      "catboost_depth4_reg3.0"
+    ],
+    "confirmation_fits": 2,
+    "evaluation": {
+      "reload_identical": true,
+      "rows": 2030,
+      "primary_metric": "accuracy",
+      "score": 0.7502463054187192,
+      "accuracy": 0.7502463054187192,
+      "heldout_scored": true,
+      "model_sha256": "2f715e27339132ded53b95f5be25944583d102bfe3cc30027b70a60b94fe9f9c",
+      "original_row_ids_sha256": "f0433be8c461ed521978faee570f5d777550a73cd9a9ea5fe560192f5e9b7b08",
+      "selected_candidate": "supported_field_interactions",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "preference",
+    "scheduler": "ab-finalists",
+    "actual_classifier_fits": 7,
+    "seconds": 40.8378526000015,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a60_matched_finalists\\preference_ab-finalists",
+      "scheduler": "ab-finalists",
+      "planner_mode": "local",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "word_char_stats_C0.1",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707,
+          808
+        ],
+        "shortlist": [
+          "word_char_stats_C0.1",
+          "char_C0.1"
+        ],
+        "primary_candidate": "word_char_stats_C0.1",
+        "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id",
+        "candidates": [
+          {
+            "candidate": "word_char_stats_C0.1",
+            "primary_accuracy": 0.6678722121760097,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 4,
+                "candidate": "word_char_stats_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "word_char_stats",
+                  "swap_augmentation": true
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.8255043661547726,
+                "search_score": 0.6678722121760097,
+                "train_metrics": {
+                  "accuracy": 0.8255043661547726,
+                  "macro_f1": 0.8254940776377551,
+                  "primary_metric": "accuracy",
+                  "score": 0.8255043661547726,
+                  "rows": 6642
+                },
+                "search_metrics": {
+                  "accuracy": 0.6678722121760097,
+                  "macro_f1": 0.6678717294807173,
+                  "primary_metric": "accuracy",
+                  "score": 0.6678722121760097,
+                  "rows": 1659
+                },
+                "score_gap": 0.15763215397876296,
+                "train_accuracy": 0.8255043661547726,
+                "search_accuracy": 0.6678722121760097,
+                "generalization_gap": 0.15763215397876296,
+                "class_recall": [
+                  0.6727272727272727,
+                  0.6630695443645084
+                ],
+                "training_seconds": 4.177255699993111,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "word_char_stats_C0.1",
+                  "params": {
+                    "C": 0.1,
+                    "representation": "word_char_stats",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "word_char_stats_C0.1",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 6.590239299999666,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              },
+              {
+                "seed": 808,
+                "trial": 5,
+                "candidate": "word_char_stats_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "word_char_stats",
+                  "swap_augmentation": true
+                },
+                "split_id": "confirmation_1",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.8228915662650602,
+                "search_score": 0.6941601444912703,
+                "train_metrics": {
+                  "accuracy": 0.8228915662650602,
+                  "macro_f1": 0.8228857655103561,
+                  "primary_metric": "accuracy",
+                  "score": 0.8228915662650602,
+                  "rows": 6640
+                },
+                "search_metrics": {
+                  "accuracy": 0.6941601444912703,
+                  "macro_f1": 0.6940908444923968,
+                  "primary_metric": "accuracy",
+                  "score": 0.6941601444912703,
+                  "rows": 1661
+                },
+                "score_gap": 0.12873142177378993,
+                "train_accuracy": 0.8228915662650602,
+                "search_accuracy": 0.6941601444912703,
+                "generalization_gap": 0.12873142177378993,
+                "class_recall": [
+                  0.6828087167070218,
+                  0.7053892215568862
+                ],
+                "training_seconds": 3.985699200013187,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "word_char_stats_C0.1",
+                  "params": {
+                    "C": 0.1,
+                    "representation": "word_char_stats",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "word_char_stats_C0.1",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 6.475323799997568,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.6678722121760097,
+            "mean_score": 0.6810161783336399,
+            "mean_accuracy": 0.6810161783336399,
+            "sample_sd": 0.018588375203493754
+          },
+          {
+            "candidate": "char_C0.1",
+            "primary_accuracy": 0.6618444846292948,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 3,
+                "candidate": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.7825956037338151,
+                "search_score": 0.6618444846292948,
+                "train_metrics": {
+                  "accuracy": 0.7825956037338151,
+                  "macro_f1": 0.7825911684445548,
+                  "primary_metric": "accuracy",
+                  "score": 0.7825956037338151,
+                  "rows": 6642
+                },
+                "search_metrics": {
+                  "accuracy": 0.6618444846292948,
+                  "macro_f1": 0.6618204016227697,
+                  "primary_metric": "accuracy",
+                  "score": 0.6618444846292948,
+                  "rows": 1659
+                },
+                "score_gap": 0.1207511191045203,
+                "train_accuracy": 0.7825956037338151,
+                "search_accuracy": 0.6618444846292948,
+                "generalization_gap": 0.1207511191045203,
+                "class_recall": [
+                  0.673939393939394,
+                  0.6498800959232613
+                ],
+                "training_seconds": 2.3870785999897635,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "char_C0.1",
+                  "params": {
+                    "C": 0.1,
+                    "representation": "char",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "char_C0.1",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 4.511121999996249,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              },
+              {
+                "seed": 808,
+                "trial": 6,
+                "candidate": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "split_id": "confirmation_1",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.776355421686747,
+                "search_score": 0.6646598434677905,
+                "train_metrics": {
+                  "accuracy": 0.776355421686747,
+                  "macro_f1": 0.776346042237446,
+                  "primary_metric": "accuracy",
+                  "score": 0.776355421686747,
+                  "rows": 6640
+                },
+                "search_metrics": {
+                  "accuracy": 0.6646598434677905,
+                  "macro_f1": 0.6645898174448809,
+                  "primary_metric": "accuracy",
+                  "score": 0.6646598434677905,
+                  "rows": 1661
+                },
+                "score_gap": 0.11169557821895648,
+                "train_accuracy": 0.776355421686747,
+                "search_accuracy": 0.6646598434677905,
+                "generalization_gap": 0.11169557821895648,
+                "class_recall": [
+                  0.6537530266343826,
+                  0.6754491017964072
+                ],
+                "training_seconds": 2.3792256000015186,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "char_C0.1",
+                  "params": {
+                    "C": 0.1,
+                    "representation": "char",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "char_C0.1",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 4.507370400009677,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.6618444846292948,
+            "mean_score": 0.6632521640485427,
+            "mean_accuracy": 0.6632521640485427,
+            "sample_sd": 0.0019907593261737967
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "word_char_stats_C0.1",
+        "selection_score": 0.6810161783336399,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "word_char_stats_C0.1",
+          "incumbent": "word_char_stats_C0.1",
+          "promotions": [],
+          "basis": [
+            "primary",
+            "confirmation_1"
+          ],
+          "finalists": [
+            "word_char_stats_C0.1",
+            "char_C0.1"
+          ],
+          "mean_scores": {
+            "word_char_stats_C0.1": 0.6810161783336399,
+            "char_C0.1": 0.6632521640485427
+          },
+          "primary_metric": "accuracy",
+          "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id"
+        },
+        "independent_confirmation_observed": true
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 8301,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 2.9381622999935644,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 39.106118399999104,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 4,
+        "confirm": 2,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 7,
+        "completed_classifier_fits": 7,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib",
+        "trial_6.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "selection": {
+      "selected_experiment": "trial_4",
+      "family": "word_char_stats_C0.1",
+      "single_candidate": "word_char_stats_C0.1",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.6810161783336399,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 8301,
+      "model_sha256": "0741feb6db9e83f3988f6e9010ccd123d47582457494fd27cda031e8d10ba936",
+      "task_spec_sha256": "ef2b0995cbf3f4be613b56b9a0d67cb8d5de0dbf1524b461ed3e7c6f38c4d18c"
+    },
+    "confirmation": {
+      "primary_metric": "accuracy",
+      "enabled": true,
+      "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+      "seeds": [
+        707,
+        808
+      ],
+      "shortlist": [
+        "word_char_stats_C0.1",
+        "char_C0.1"
+      ],
+      "primary_candidate": "word_char_stats_C0.1",
+      "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id",
+      "candidates": [
+        {
+          "candidate": "word_char_stats_C0.1",
+          "primary_accuracy": 0.6678722121760097,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 4,
+              "candidate": "word_char_stats_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "word_char_stats",
+                "swap_augmentation": true
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.8255043661547726,
+              "search_score": 0.6678722121760097,
+              "train_metrics": {
+                "accuracy": 0.8255043661547726,
+                "macro_f1": 0.8254940776377551,
+                "primary_metric": "accuracy",
+                "score": 0.8255043661547726,
+                "rows": 6642
+              },
+              "search_metrics": {
+                "accuracy": 0.6678722121760097,
+                "macro_f1": 0.6678717294807173,
+                "primary_metric": "accuracy",
+                "score": 0.6678722121760097,
+                "rows": 1659
+              },
+              "score_gap": 0.15763215397876296,
+              "train_accuracy": 0.8255043661547726,
+              "search_accuracy": 0.6678722121760097,
+              "generalization_gap": 0.15763215397876296,
+              "class_recall": [
+                0.6727272727272727,
+                0.6630695443645084
+              ],
+              "training_seconds": 4.177255699993111,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "logistic",
+                "class": "LogisticRegression",
+                "module": "sklearn.linear_model._logistic",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "word_char_stats_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "word_char_stats",
+                  "swap_augmentation": true
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "word_char_stats_C0.1",
+                  "swap_label_rule": "flips"
+                }
+              },
+              "worker_wall_seconds": 6.590239299999666,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "logistic",
+                "observed_class": "LogisticRegression",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            },
+            {
+              "seed": 808,
+              "trial": 5,
+              "candidate": "word_char_stats_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "word_char_stats",
+                "swap_augmentation": true
+              },
+              "split_id": "confirmation_1",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.8228915662650602,
+              "search_score": 0.6941601444912703,
+              "train_metrics": {
+                "accuracy": 0.8228915662650602,
+                "macro_f1": 0.8228857655103561,
+                "primary_metric": "accuracy",
+                "score": 0.8228915662650602,
+                "rows": 6640
+              },
+              "search_metrics": {
+                "accuracy": 0.6941601444912703,
+                "macro_f1": 0.6940908444923968,
+                "primary_metric": "accuracy",
+                "score": 0.6941601444912703,
+                "rows": 1661
+              },
+              "score_gap": 0.12873142177378993,
+              "train_accuracy": 0.8228915662650602,
+              "search_accuracy": 0.6941601444912703,
+              "generalization_gap": 0.12873142177378993,
+              "class_recall": [
+                0.6828087167070218,
+                0.7053892215568862
+              ],
+              "training_seconds": 3.985699200013187,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "logistic",
+                "class": "LogisticRegression",
+                "module": "sklearn.linear_model._logistic",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "word_char_stats_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "word_char_stats",
+                  "swap_augmentation": true
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "word_char_stats_C0.1",
+                  "swap_label_rule": "flips"
+                }
+              },
+              "worker_wall_seconds": 6.475323799997568,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "logistic",
+                "observed_class": "LogisticRegression",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.6678722121760097,
+          "mean_score": 0.6810161783336399,
+          "mean_accuracy": 0.6810161783336399,
+          "sample_sd": 0.018588375203493754
+        },
+        {
+          "candidate": "char_C0.1",
+          "primary_accuracy": 0.6618444846292948,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 3,
+              "candidate": "char_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.7825956037338151,
+              "search_score": 0.6618444846292948,
+              "train_metrics": {
+                "accuracy": 0.7825956037338151,
+                "macro_f1": 0.7825911684445548,
+                "primary_metric": "accuracy",
+                "score": 0.7825956037338151,
+                "rows": 6642
+              },
+              "search_metrics": {
+                "accuracy": 0.6618444846292948,
+                "macro_f1": 0.6618204016227697,
+                "primary_metric": "accuracy",
+                "score": 0.6618444846292948,
+                "rows": 1659
+              },
+              "score_gap": 0.1207511191045203,
+              "train_accuracy": 0.7825956037338151,
+              "search_accuracy": 0.6618444846292948,
+              "generalization_gap": 0.1207511191045203,
+              "class_recall": [
+                0.673939393939394,
+                0.6498800959232613
+              ],
+              "training_seconds": 2.3870785999897635,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "logistic",
+                "class": "LogisticRegression",
+                "module": "sklearn.linear_model._logistic",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "char_C0.1",
+                  "swap_label_rule": "flips"
+                }
+              },
+              "worker_wall_seconds": 4.511121999996249,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "logistic",
+                "observed_class": "LogisticRegression",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            },
+            {
+              "seed": 808,
+              "trial": 6,
+              "candidate": "char_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "split_id": "confirmation_1",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.776355421686747,
+              "search_score": 0.6646598434677905,
+              "train_metrics": {
+                "accuracy": 0.776355421686747,
+                "macro_f1": 0.776346042237446,
+                "primary_metric": "accuracy",
+                "score": 0.776355421686747,
+                "rows": 6640
+              },
+              "search_metrics": {
+                "accuracy": 0.6646598434677905,
+                "macro_f1": 0.6645898174448809,
+                "primary_metric": "accuracy",
+                "score": 0.6646598434677905,
+                "rows": 1661
+              },
+              "score_gap": 0.11169557821895648,
+              "train_accuracy": 0.776355421686747,
+              "search_accuracy": 0.6646598434677905,
+              "generalization_gap": 0.11169557821895648,
+              "class_recall": [
+                0.6537530266343826,
+                0.6754491017964072
+              ],
+              "training_seconds": 2.3792256000015186,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "logistic",
+                "class": "LogisticRegression",
+                "module": "sklearn.linear_model._logistic",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "char_C0.1",
+                  "swap_label_rule": "flips"
+                }
+              },
+              "worker_wall_seconds": 4.507370400009677,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "logistic",
+                "observed_class": "LogisticRegression",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.6618444846292948,
+          "mean_score": 0.6632521640485427,
+          "mean_accuracy": 0.6632521640485427,
+          "sample_sd": 0.0019907593261737967
+        }
+      ],
+      "valid_confirmation": true,
+      "selected_candidate": "word_char_stats_C0.1",
+      "selection_score": 0.6810161783336399,
+      "changed": false,
+      "b_scheduler_review": {
+        "initial": "word_char_stats_C0.1",
+        "incumbent": "word_char_stats_C0.1",
+        "promotions": [],
+        "basis": [
+          "primary",
+          "confirmation_1"
+        ],
+        "finalists": [
+          "word_char_stats_C0.1",
+          "char_C0.1"
+        ],
+        "mean_scores": {
+          "word_char_stats_C0.1": 0.6810161783336399,
+          "char_C0.1": 0.6632521640485427
+        },
+        "primary_metric": "accuracy",
+        "selection_rule": "Primary top two, equal primary/confirmation mean; ties by candidate id"
+      },
+      "independent_confirmation_observed": true
+    },
+    "primary_candidates": [
+      "word_C0.05",
+      "word_char_C0.05",
+      "char_C0.1",
+      "word_char_stats_C0.1"
+    ],
+    "confirmation_fits": 2,
+    "evaluation": {
+      "reload_identical": true,
+      "rows": 940,
+      "primary_metric": "accuracy",
+      "score": 0.6968085106382979,
+      "accuracy": 0.6968085106382979,
+      "heldout_scored": true,
+      "model_sha256": "0741feb6db9e83f3988f6e9010ccd123d47582457494fd27cda031e8d10ba936",
+      "original_row_ids_sha256": "e6d31518e46196417422e33086dbc96e9163f2264457fe6be3e8e2ca5dd51c62",
+      "selected_candidate": "word_char_stats_C0.1",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  },
+  {
+    "task": "preference",
+    "scheduler": "ab-v1",
+    "actual_classifier_fits": 6,
+    "seconds": 31.62710560001142,
+    "outcome": {
+      "run_dir": "D:\\codex\\python_withai\\runs\\a60_matched_finalists\\preference_ab-v1",
+      "scheduler": "ab-v1",
+      "planner_mode": "local",
+      "requested_planner_completed": true,
+      "model_available": true,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "automatic_retries": false,
+      "selected_candidate": "char_C0.1",
+      "primary_metric": "accuracy",
+      "full_refit_completed": true,
+      "confirmation": {
+        "primary_metric": "accuracy",
+        "enabled": true,
+        "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+        "seeds": [
+          707
+        ],
+        "shortlist": [
+          "char_C0.1"
+        ],
+        "primary_candidate": "char_C0.1",
+        "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+        "candidates": [
+          {
+            "candidate": "char_C0.1",
+            "primary_accuracy": 0.6618444846292948,
+            "measurements": [
+              {
+                "seed": 707,
+                "trial": 3,
+                "candidate": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "split_id": "primary",
+                "proposal": null,
+                "status": "completed",
+                "error_slices": null,
+                "primary_metric": "accuracy",
+                "metric_spec": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "train_score": 0.7825956037338151,
+                "search_score": 0.6618444846292948,
+                "train_metrics": {
+                  "accuracy": 0.7825956037338151,
+                  "macro_f1": 0.7825911684445548,
+                  "primary_metric": "accuracy",
+                  "score": 0.7825956037338151,
+                  "rows": 6642
+                },
+                "search_metrics": {
+                  "accuracy": 0.6618444846292948,
+                  "macro_f1": 0.6618204016227697,
+                  "primary_metric": "accuracy",
+                  "score": 0.6618444846292948,
+                  "rows": 1659
+                },
+                "score_gap": 0.1207511191045203,
+                "train_accuracy": 0.7825956037338151,
+                "search_accuracy": 0.6618444846292948,
+                "generalization_gap": 0.1207511191045203,
+                "class_recall": [
+                  0.673939393939394,
+                  0.6498800959232613
+                ],
+                "training_seconds": 2.3377794999978505,
+                "feature_cache": {
+                  "enabled": false
+                },
+                "classifier_fits": 1,
+                "training_metadata": null,
+                "selected_iterations": null,
+                "estimator": {
+                  "family": "logistic",
+                  "class": "LogisticRegression",
+                  "module": "sklearn.linear_model._logistic",
+                  "parameters": {},
+                  "source": "fitted_estimator"
+                },
+                "resolved_configuration": {
+                  "id": "char_C0.1",
+                  "params": {
+                    "C": 0.1,
+                    "representation": "char",
+                    "swap_augmentation": true
+                  },
+                  "origin": "static",
+                  "registry_sha256": null,
+                  "semantic_check": {
+                    "candidate": "char_C0.1",
+                    "swap_label_rule": "flips"
+                  }
+                },
+                "worker_wall_seconds": 4.422213800004101,
+                "metric_identity": {
+                  "status": "confirmed",
+                  "expected": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  },
+                  "observed": {
+                    "name": "accuracy",
+                    "labels": [
+                      0,
+                      1
+                    ],
+                    "direction": "maximize"
+                  }
+                },
+                "configuration_fact_check": {
+                  "declared": null,
+                  "observed": "logistic",
+                  "observed_class": "LogisticRegression",
+                  "status": "not_declared",
+                  "scope": "Declared classifier versus the fitted estimator of this trial"
+                },
+                "hypothesis_check": {
+                  "status": "not_stated"
+                },
+                "explanation_audit": null
+              }
+            ],
+            "complete": true,
+            "primary_score": 0.6618444846292948,
+            "mean_score": 0.6618444846292948,
+            "mean_accuracy": 0.6618444846292948,
+            "sample_sd": null
+          }
+        ],
+        "valid_confirmation": true,
+        "selected_candidate": "char_C0.1",
+        "selection_score": 0.6618444846292948,
+        "changed": false,
+        "b_scheduler_review": {
+          "initial": "char_C0.1",
+          "incumbent": "char_C0.1",
+          "promotions": [],
+          "basis": [
+            "primary"
+          ],
+          "primary_metric": "accuracy"
+        },
+        "independent_confirmation_observed": false
+      },
+      "validation_score": null,
+      "finalization": {
+        "primary_metric": "accuracy",
+        "official_validation_score": null,
+        "pre_refit_validation_score": null,
+        "single_model_validation_score": null,
+        "official_validation_accuracy": null,
+        "pre_refit_validation_accuracy": null,
+        "single_model_validation_accuracy": null,
+        "refit_requested": true,
+        "refit_succeeded": true,
+        "refit_failure": null,
+        "final_training_rows": 8301,
+        "ensemble_selected": false,
+        "ensemble_evaluations": 0,
+        "full_refits_attempted": 1,
+        "full_refits_completed": 1,
+        "refit_classifier_fits_completed": 1,
+        "refit_training_seconds": 1.9015717000002041,
+        "ensemble_failure": null,
+        "provided_validation_available": false
+      },
+      "elapsed_seconds": 29.89726020001399,
+      "source_unchanged": true,
+      "action_counts": {
+        "explore": 3,
+        "confirm": 2,
+        "stop": 1
+      },
+      "classifier_fit_accounting": {
+        "attempted_classifier_fits": 6,
+        "completed_classifier_fits": 6,
+        "unknown_failed_attempts": 0
+      },
+      "complete_course_cost_rmb": 0,
+      "unresolved_calls": 0,
+      "task_budget_after_run": null,
+      "partial_trial_models": [
+        "trial_1.joblib",
+        "trial_2.joblib",
+        "trial_3.joblib",
+        "trial_4.joblib",
+        "trial_5.joblib"
+      ],
+      "history_policy": "strict",
+      "candidate_coverage": "off",
+      "course_budget_compliance": "no_new_llm_calls",
+      "valid_for_budgeted_final_report": null,
+      "project_usage_after_run": null,
+      "complete_project_course_cost_rmb": null,
+      "status": "completed",
+      "delivery_status": "complete"
+    },
+    "selection": {
+      "selected_experiment": "trial_3",
+      "family": "char_C0.1",
+      "single_candidate": "char_C0.1",
+      "single_model_file": "selected_model.joblib",
+      "primary_metric": "accuracy",
+      "selection_metric": "confirmation_mean_accuracy",
+      "selection_score": 0.6618444846292948,
+      "model_file": "selected_model.joblib",
+      "model_format": "candidate_bundle_v1",
+      "ensemble_components": [],
+      "test_accessed": false,
+      "refit": true,
+      "refit_requested": true,
+      "training_rows": 8301,
+      "model_sha256": "8678f579a9f39eb95f57d924bdba84a7dfad495230aae49afe44b6f2b951bb16",
+      "task_spec_sha256": "ef2b0995cbf3f4be613b56b9a0d67cb8d5de0dbf1524b461ed3e7c6f38c4d18c"
+    },
+    "confirmation": {
+      "primary_metric": "accuracy",
+      "enabled": true,
+      "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+      "seeds": [
+        707
+      ],
+      "shortlist": [
+        "char_C0.1"
+      ],
+      "primary_candidate": "char_C0.1",
+      "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+      "candidates": [
+        {
+          "candidate": "char_C0.1",
+          "primary_accuracy": 0.6618444846292948,
+          "measurements": [
+            {
+              "seed": 707,
+              "trial": 3,
+              "candidate": "char_C0.1",
+              "params": {
+                "C": 0.1,
+                "representation": "char",
+                "swap_augmentation": true
+              },
+              "split_id": "primary",
+              "proposal": null,
+              "status": "completed",
+              "error_slices": null,
+              "primary_metric": "accuracy",
+              "metric_spec": {
+                "name": "accuracy",
+                "labels": [
+                  0,
+                  1
+                ],
+                "direction": "maximize"
+              },
+              "train_score": 0.7825956037338151,
+              "search_score": 0.6618444846292948,
+              "train_metrics": {
+                "accuracy": 0.7825956037338151,
+                "macro_f1": 0.7825911684445548,
+                "primary_metric": "accuracy",
+                "score": 0.7825956037338151,
+                "rows": 6642
+              },
+              "search_metrics": {
+                "accuracy": 0.6618444846292948,
+                "macro_f1": 0.6618204016227697,
+                "primary_metric": "accuracy",
+                "score": 0.6618444846292948,
+                "rows": 1659
+              },
+              "score_gap": 0.1207511191045203,
+              "train_accuracy": 0.7825956037338151,
+              "search_accuracy": 0.6618444846292948,
+              "generalization_gap": 0.1207511191045203,
+              "class_recall": [
+                0.673939393939394,
+                0.6498800959232613
+              ],
+              "training_seconds": 2.3377794999978505,
+              "feature_cache": {
+                "enabled": false
+              },
+              "classifier_fits": 1,
+              "training_metadata": null,
+              "selected_iterations": null,
+              "estimator": {
+                "family": "logistic",
+                "class": "LogisticRegression",
+                "module": "sklearn.linear_model._logistic",
+                "parameters": {},
+                "source": "fitted_estimator"
+              },
+              "resolved_configuration": {
+                "id": "char_C0.1",
+                "params": {
+                  "C": 0.1,
+                  "representation": "char",
+                  "swap_augmentation": true
+                },
+                "origin": "static",
+                "registry_sha256": null,
+                "semantic_check": {
+                  "candidate": "char_C0.1",
+                  "swap_label_rule": "flips"
+                }
+              },
+              "worker_wall_seconds": 4.422213800004101,
+              "metric_identity": {
+                "status": "confirmed",
+                "expected": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                },
+                "observed": {
+                  "name": "accuracy",
+                  "labels": [
+                    0,
+                    1
+                  ],
+                  "direction": "maximize"
+                }
+              },
+              "configuration_fact_check": {
+                "declared": null,
+                "observed": "logistic",
+                "observed_class": "LogisticRegression",
+                "status": "not_declared",
+                "scope": "Declared classifier versus the fitted estimator of this trial"
+              },
+              "hypothesis_check": {
+                "status": "not_stated"
+              },
+              "explanation_audit": null
+            }
+          ],
+          "complete": true,
+          "primary_score": 0.6618444846292948,
+          "mean_score": 0.6618444846292948,
+          "mean_accuracy": 0.6618444846292948,
+          "sample_sd": null
+        }
+      ],
+      "valid_confirmation": true,
+      "selected_candidate": "char_C0.1",
+      "selection_score": 0.6618444846292948,
+      "changed": false,
+      "b_scheduler_review": {
+        "initial": "char_C0.1",
+        "incumbent": "char_C0.1",
+        "promotions": [],
+        "basis": [
+          "primary"
+        ],
+        "primary_metric": "accuracy"
+      },
+      "independent_confirmation_observed": false
+    },
+    "primary_candidates": [
+      "word_C0.05",
+      "word_char_C0.05",
+      "char_C0.1"
+    ],
+    "confirmation_fits": 2,
+    "evaluation": {
+      "reload_identical": true,
+      "rows": 940,
+      "primary_metric": "accuracy",
+      "score": 0.6957446808510638,
+      "accuracy": 0.6957446808510638,
+      "heldout_scored": true,
+      "model_sha256": "8678f579a9f39eb95f57d924bdba84a7dfad495230aae49afe44b6f2b951bb16",
+      "original_row_ids_sha256": "e6d31518e46196417422e33086dbc96e9163f2264457fe6be3e8e2ca5dd51c62",
+      "selected_candidate": "char_C0.1",
+      "scope": "Outer development holdout after model freeze; not official test"
+    }
+  }
+]

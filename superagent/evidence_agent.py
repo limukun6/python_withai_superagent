@@ -21,7 +21,7 @@ PARAMETERS = {
     "min_samples_leaf": "Larger minimum leaf size constrains tree complexity more strongly.",
     "depth": "Larger tree depth permits more complexity; a measured gain is not guaranteed.",
     "l2_leaf_reg": "Larger values strengthen the leaf-weight L2 penalty.",
-    "representation": "word uses word TF-IDF; char uses character TF-IDF; word_char combines both; word_char_stats adds generic shape/count features. Pair-text routes use left-minus-right differences; single-text routes classify one document. Features are fitted only on the training partition.",
+    "representation": "word uses word TF-IDF; char uses character TF-IDF; word_char combines both; word_char_stats adds generic shape/count features. Preference routes use left-minus-right differences; symmetric_*_absdiff_product uses absolute differences and elementwise products, preserving pair order invariance; single-text routes classify one document. Features are fitted only on the training partition.",
     'supervised_feature_weighting':'nb_word fits smoothed preferred/nonpreferred word log-count ratios using training labels only; ratios are frozen for evaluation.',
     'classifier':'logistic optimizes log loss; linear_svm uses a squared hinge objective and has no probability output. Research candidates are unproven alternatives, not preferred solutions.',
     'style_weight':'Fixed probability weight on the statistic-tree component; the linear component gets 1-weight. More tree weight does not guarantee improvement.',
@@ -35,18 +35,13 @@ PARAMETERS = {
 
 
 def route_of(candidate):
-    if candidate in ('minilm_text_with_lexical_features','minilm_text_dense_only','minilm_l12_text_with_lexical_features','minilm_text_feedback_regularization'):return 'frozen_sentence_features'
-    if candidate in ('minilm_opponent_interactions','minilm_single_item_interactions'):return 'sentence_interactions'
-    if candidate in ('cross_fitted_category_pair_effects','cross_fitted_category_single_effects'):return 'grouped_category_effects'
-    if candidate in ('native_histogram_categories','feedback_histogram_categories'):return 'histogram_categories'
-    if candidate in ('feedback_boosting_iterations','boosting_smaller_steps'):return 'boosting_training_curve'
-    if candidate in ('category_conditional_distributions','permuted_category_distributions','category_distributions_with_direct_splits'):return 'category_distributions'
-    if candidate=='category_marginal_frequency':return 'category_frequency'
-    if candidate in ('typed_category_features','typed_features_with_direct_splits'):return 'typed_category_features'
-    if candidate in ('direct_category_splits','direct_splits_with_category_context'):return 'direct_category_splits'
-    if candidate in ('scratch_neural_classifier','training_category_cooccurrence','minilm_category_levels'):return candidate
-    if candidate in ('pretrained_qwen3_levels','ablation_permuted_qwen3_levels'):return 'pretrained_category_levels'
-    if candidate == "pretrained_qwen3_context_C0.3":return "pretrained_qwen3_context"
+    from .ab_methods import ROUTES
+    if candidate in ROUTES:
+        return ROUTES[candidate]
+    if candidate.startswith('open_'):
+        route, _, signature=candidate.rpartition('_')
+        if route[5:].isidentifier() and len(signature)==20 and all(ch in '0123456789abcdef' for ch in signature):
+            return route
     if candidate.startswith('generated_'):return candidate.rsplit('_',1)[0]
     if candidate.startswith("recipe_"):return candidate.rsplit("_",1)[0]
     for name in ('edit_pair','category_cross','style_tree','style_blend','symmetric_stats','adaptive_catboost','neural_pair','learned_stack'):

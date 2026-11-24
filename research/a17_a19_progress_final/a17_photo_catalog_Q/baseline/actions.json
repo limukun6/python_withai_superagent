@@ -1,0 +1,111 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_rbf_svm_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_logistic_C0.1",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_extra_trees_leaf1",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      1,
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_logistic_C1.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.9692 and 0.9538; hard predictions differ on 1/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      1,
+      6,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      1,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.9692 and 0.9385; hard predictions differ on 4/65 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      1,
+      8,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      1,
+      6
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

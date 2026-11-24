@@ -101,11 +101,13 @@ class Policy:
         return answer["candidate"], answer["reason"]
 
 
-def train_candidate(payload_path, candidate, destination, timeout):
+def train_candidate(payload_path, candidate, destination, timeout, *, fit_admission_path=None):
     started = time.monotonic()
     command = [sys.executable, "-m", "superagent.experiment_worker", str(payload_path), candidate, str(destination)]
     registry=Path(destination).parent/'candidate_registry.json'
     if registry.is_file():command.append(str(registry))
+    if fit_admission_path is not None:
+        command.extend(['--fit-admission', str(fit_admission_path)])
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=timeout,
                                 cwd=Path(__file__).resolve().parents[1])
@@ -123,7 +125,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             anchor_first=False, refit_full_train=False, ensemble_selection=False,
             confirmation_repeats=1, confirmation_top_k=3, confirmation_grouping="exact_rows", search_grouping="exact_rows",
             portfolio="original",run_metadata=None,time_policy='shared',feature_cache=False,refinement='off',decision_policy=None,
-            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog',pretrained_config=None,method_choice=None):
+            decision_architecture='single',error_feedback=False,catalog_ids=None,research_searcher=None,anchor_policy='catalog'):
     from .decision_architecture import ArchitecturePolicy,calls_per_decision
     calls_per_decision(decision_architecture)
     if strategy == 'scalar_feedback' and (client is None or not anchor_first or max_trials < 2
@@ -146,10 +148,15 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     if confirmation_repeats > 1 and ensemble_selection:
         raise ValueError("Confirmation and single-split ensemble selection cannot be combined")
     task_contract=TaskSpec.from_task(task);metric=task_contract.metric
+    from .task_semantics import validate_task_semantics
+    semantics=validate_task_semantics(task,portfolio)
+    if semantics['status']=='rejected':
+        raise ValueError('Task semantics contract rejected: '+'; '.join(semantics['reasons']))
     directory.mkdir(parents=True, exist_ok=False)
     logger = RunLogger(directory)
     logger.initialize_usage_ledger()
     logger.write_json('task_contract.json',task_contract.record())
+    logger.write_json('task_semantics.json',semantics)
     if run_metadata is not None:
         logger.write_json('run_manifest.json',run_metadata)
         logger.event('run_manifest_frozen',source_sha256=run_metadata['source_sha256'])
@@ -175,7 +182,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                                     "evaluation_protocol":evaluation_protocol})
     payload = {"kind": task.kind, "X_train": take(task.X_train, train_idx), "y_train": task.y_train[train_idx],
                "X_search": take(task.X_train, search_idx), "y_search": task.y_train[search_idx],
-               'metric_spec':metric.record()}
+               'metric_spec':metric.record(),'pair_semantics':semantics['declared_semantics']}
     if error_feedback:payload["error_feedback"]=True
     payload_path = directory / "inner_data.joblib"
     cache_directory=str(directory/'feature_cache') if feature_cache else None
@@ -187,14 +194,21 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
     data_profile = profile(inner)
     data_profile["evaluation_protocol"]=evaluation_protocol
     available = [{"id": c.family, "params": c.params} for c in search_candidates(task.kind,portfolio)]
+    if semantics['excluded_candidates']:
+        excluded=set(semantics['excluded_candidates'])
+        available=[row for row in available if row['id'] not in excluded]
+        logger.event('swap_augmentation_filtered',candidates=sorted(excluded),policy=semantics['swap_policy'])
     from .recipe_registry import RecipeRegistry
     from .research_registry import ResearchRegistry
     if catalog_ids is not None:
         if not catalog_ids or len(set(catalog_ids))!=len(catalog_ids) or not set(catalog_ids)<={c['id'] for c in available}:
             raise ValueError('Resource candidate pool must be a distinct static subset')
         available=[next(c for c in available if c['id']==name) for name in catalog_ids]
-    protected_count=min(5,len(available))
     anchor_id=available[0]['id']
+    from .targeted_feedback import candidate_facts
+    data_profile['evaluation_protocol']['candidate_facts'] = {
+        row['id']: facts for row in available
+        if (facts := candidate_facts(task.kind, row)) is not None}
     if anchor_policy=='schema':
         target={'pair_text':'word_char_stats_C0.3','categorical_tabular':'catboost_depth8_reg10.0'}.get(task.kind)
         if target is not None and target not in {row['id'] for row in available}:
@@ -217,34 +231,13 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
              ArchitecturePolicy(client,logger,decision_architecture) if strategy=='budget_routes' else
              ExistingPolicyAdapter(policy))
     feedback_visible=strategy not in ('random','oneshot','evidence_blind','reflective_no_feedback','local_random','local_balanced_blind')
-    from .method_choice import DEPTH_POLICIES, MIXTURE_POLICIES, MODES
-    if method_choice is not None:
-        if (method_choice not in MODES or strategy!='local_interleaved_routes' or max_trials!=7
-                or confirmation_top_k!=3 or confirmation_repeats!=3 or not anchor_first or anchor_policy!='catalog'
-                or refinement!='off' or decision_policy is not None):
-            raise ValueError('Method choice needs seven interleaved trials and three confirmed finalists')
-        pretrained_config={'minilm_weights':str((directory.parent/'.superagent-weights'/'all-MiniLM-L6-v2').resolve()), **(pretrained_config or {})}
-        if method_choice in DEPTH_POLICIES:
-            pretrained_config.setdefault('deep_minilm_weights',str((directory.parent/'.superagent-weights'/'all-MiniLM-L12-v2').resolve()))
-        logger.write_json('method_policy.json',dict(mode=method_choice, protected_initial_trials=protected_count, optional_slots=2))
-    if pretrained_config is not None:
-        from .pretrained_choice import CANDIDATE, PARAMS, consider
-        if method_choice is None and (strategy != 'local_interleaved_routes' or refinement != 'off' or decision_policy is not None or max_trials != 5 or confirmation_top_k != 2 or not anchor_first or anchor_policy != 'catalog'):
-            raise ValueError('Pretrained choice uses the interleaved local policy and four protected original trials, one optional trial, and two finalists')
-        pretrained_config = dict(pretrained_config, run=str(directory.resolve()))
-        if method_choice in DEPTH_POLICIES:
-            pretrained_config['trial_timeout_seconds']=trial_timeout
-        logger.write_json('pretrained_runtime.json', pretrained_config)
     states=[];proposals=[];result_records=[]
     history, best_model, best_id, best_score = [], None, None, -1.0
     fallbacks, blocked_llm = 0, False
     stop_reason='trial_limit_reached'
     random_fallback = random.Random(seed)
     for index in range(max_trials):
-        if method_choice and index>=protected_count+2:
-            stop_reason='method_budget_exhausted'
-            break
-        if not available and not (method_choice and index>=protected_count):
+        if not available:
             stop_reason='candidate_catalog_exhausted';break
         needs_planner=client is not None and not blocked_llm and not (anchor_first and index==0)
         window=runtime.search_window(history,needs_planner)
@@ -262,39 +255,11 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             data_profile['evaluation_protocol']['runtime_budget']={**runtime.description(),**window}
         proposal = None
         declared=None
-        use_pretrained = False
-        if method_choice and index>=protected_count:
-            from .method_choice import plan, SEMANTIC, CANDIDATE
-            decision=plan(task.kind,history,directory,payload,pretrained_config,method_choice,protected_count)
-            logger.write_json(f'method_decision_{index+1}.json',decision)
-            use_pretrained=decision['decision']=='try'
-            if use_pretrained:
-                pretrained_id=decision['candidate']
-                available.append({'id':pretrained_id,'params':decision['params']})
-                logger.write_json(f'method_{pretrained_id}.json',decision)
-                if pretrained_id in (SEMANTIC,CANDIDATE):
-                    logger.write_json('pretrained_decision.json',decision['transfer'] | {'protected_incumbent':decision['protected_incumbent']})
-            elif not available:
-                stop_reason='method_candidates_exhausted'
-                break
-        elif pretrained_config is not None and index == 4 and not method_choice:
-            decision = consider(task.kind, history, directory, payload['y_search'], pretrained_config,
-                                train_features=payload['X_train'], search_features=payload['X_search'])
-            from .confirmation import shortlist
-            leader = shortlist(history, 1)
-            decision['protected_incumbent'] = leader[0]['candidate'] if leader else None
-            logger.write_json('pretrained_decision.json', decision)
-            use_pretrained = decision['decision'] == 'try'
-            if use_pretrained:
-                pretrained_id = decision.get('candidate', CANDIDATE)
-                available.append({'id': pretrained_id, 'params': decision.get('params', PARAMS)})
         state=DecisionState.build(data_profile,history,available,max_trials,feedback_visible,task_contract)
         states.append(state.record());logger.write_json('decision_states.json',states)
         planning_start=time.monotonic()
         try:
-            if use_pretrained:
-                chosen, reason = pretrained_id, decision['reason']
-            elif anchor_first and index == 0:
+            if anchor_first and index == 0:
                 chosen, reason = anchor_id, f"{anchor_policy} first configuration; counts toward the trial limit."
             else:
                 if blocked_llm:
@@ -308,6 +273,9 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
             stop_reason='planning_window_expired_without_request'
             logger.event('search_stopped_for_time',reason=stop_reason,trials_attempted=len(history));break
         except Exception as error:
+            if decision_policy is not None and getattr(decision_policy, 'stop_on_error', False):
+                logger.event('decision_policy_stopped', error=str(error), trial=index+1)
+                raise
             if strategy == 'scalar_feedback':
                 logger.event('scalar_feedback_stopped', error=str(error), trial=index+1)
                 raise
@@ -329,7 +297,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         logger.event('experiment_proposal_frozen',**declared.record())
         available = [item for item in available if item["id"] != chosen]
         explanation_audit=None
-        if proposal is not None and 'assessment' in proposal:
+        if proposal is not None:
             from .explanation_audit import audit_explanation
             explanation_audit=audit_explanation(proposal,history,configuration)
             logger.event('decision_evidence_report',trial=index+1,**explanation_audit)
@@ -339,11 +307,17 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
                                          min(trial_timeout, remaining_seconds))
         row = {'primary_metric':metric.name,"trial": index + 1, "candidate": chosen, "params": configuration["params"],
                "proposal": proposal, "explanation_audit":explanation_audit, **metrics}
+        # Validate objective identity before a result can replace the incumbent.
+        row['metric_identity']=metric.check_identity(row.get('metric_spec'))
+        if row.get('primary_metric')!=metric.name:raise ValueError('Worker result uses a different task metric')
         from .prediction_evidence import comparison_for_trial
         row['paired_error_comparison']=comparison_for_trial(row,history,directory,payload['y_search'],payload_sha256,metric)
         logger.event('paired_prediction_evidence',trial=index+1,comparison=row['paired_error_comparison'])
         row["hypothesis_check"] = check_expectation(proposal, row, history)
         logger.event("hypothesis_checked", trial=index + 1, **row["hypothesis_check"])
+        from .estimator_facts import verify_configuration_claim
+        row['configuration_fact_check']=verify_configuration_claim(proposal, metrics.get('estimator'))
+        logger.event('configuration_fact_checked',trial=index+1,**row['configuration_fact_check'])
         if model is not None and (score_of(row) > best_score or
             (score_of(row) == best_score and chosen < best_id)):
             best_score, best_id, best_model = score_of(row), chosen, model
@@ -384,26 +358,29 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         if confirmed["candidate"] != best_id:
             best_model = joblib.load(directory / f"trial_{confirmed['trial']}.joblib")["model"]
         best_id, best_score = confirmed["candidate"], score_of(confirmed)
+    from .task_semantics import expectations_for,probe_model_swap,declaration_consistency
+    swap_probe=None
+    if task.kind=='pair_text' and best_model is not None:
+        try: swap_probe=probe_model_swap(task.kind,best_model,payload['X_search'])
+        except Exception as error: swap_probe={'applicable':False,'reason':f'{type(error).__name__}: {error}'}
+        swap_probe.update(expectations_for(semantics['declared_semantics']))
+        selected=next((r for r in history if r['candidate']==best_id),None)
+        swap_probe['selected_candidate_assumes_flipping']=bool(
+            (selected or {}).get('params',{}).get('swap_augmentation'))
+        if swap_probe.get('selected_candidate_assumes_flipping'):
+            swap_probe['interpretation_note']=('This candidate trains on negated features with flipped '
+                'labels, so antisymmetry follows from the construction; a flips result is not evidence '
+                'that the task itself is a preference task')
+        swap_probe['consistent_with_declaration']=declaration_consistency(swap_probe)
     finalized = finalize(task, history, best_model, best_id, best_score, payload, directory,
                          logger, train_candidate, start, time_limit-runtime.margin, trial_timeout,
-                         refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory,
-                         encoder_mixture=method_choice in MIXTURE_POLICIES)
+                         refit_full_train, ensemble_selection, confirmation,feature_cache_dir=cache_directory)
     usage = [json.loads(line) for line in logger.usage_path.read_text(encoding="utf-8").splitlines()]
-    local_outstanding = 0
-    if pretrained_config is not None and pretrained_config.get('ledger'):
-        from .task_budget import TaskBudgetLedger
-        local_ledger = TaskBudgetLedger(pretrained_config['ledger'])
-        with local_ledger._db() as db:
-            local_outstanding = db.execute("SELECT COUNT(*) FROM requests WHERE scope=? AND json_extract(payload,'$.run_id')=? AND status != 'known'",
-                    (pretrained_config['scope'],pretrained_config['run'])).fetchone()[0]
-    usage_complete = not local_outstanding and not any(u.get("usage_known") is False for u in usage)
+    usage_complete = not any(u.get("usage_known") is False for u in usage)
     course_cost = sum(u.get("course_cost_rmb", u.get("cost_rmb")) or 0 for u in usage) if usage_complete else None
     actual_cost = (sum(u["actual_cost_rmb"] for u in usage)
                    if all(u.get("actual_cost_rmb") is not None for u in usage) else None)
-    feature_log=directory/'downstream_usage.jsonl'
-    feature_usage=[json.loads(line) for line in feature_log.read_text().splitlines()] if feature_log.exists() else []
-    summary = {'downstream_feature_forwards':len(feature_usage),'downstream_feature_input_tokens':sum(r['input_tokens'] for r in feature_usage),
-        "strategy": strategy, "seed": seed, "task_kind": task.kind,
+    summary = {"strategy": strategy, "seed": seed, "task_kind": task.kind,
         "selected_candidate": best_id, "primary_best_candidate": primary_best_id,
         "confirmation": confirmation, "portfolio":portfolio,"evaluation_protocol":evaluation_protocol,
         'primary_metric':metric.name,'search_score':best_score if best_model is not None else None,
@@ -413,8 +390,7 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         "fallback_count": fallbacks, "trials_attempted": len(history),
         "failed_trials": sum(r["status"] != "completed" for r in history),
         "elapsed_seconds": time.monotonic() - start,
-        "llm_calls": sum(u["event"] not in ("ledger_initialized","local_forward") for u in usage),
-        "local_model_forwards":sum(u["event"] == "local_forward" for u in usage),
+        "llm_calls": sum(u["event"] != "ledger_initialized" for u in usage),
         "tokens": sum(u.get("input_tokens", 0) + u.get("output_tokens", 0) for u in usage),
         "course_cost_rmb": course_cost,
         "actual_cost_rmb": actual_cost,
@@ -425,6 +401,15 @@ def run_one(task, strategy, seed, directory, client, max_trials=3, time_limit=60
         "expectations_met": sum(row["hypothesis_check"]["status"] == "supported" for row in history),
         "test_accessed": False, "run_directory": str(directory)}
     summary.update(finalized)
+    summary['task_semantics']=semantics
+    summary['swap_behavior']=swap_probe
+    fact_checks=[row.get('configuration_fact_check') or {} for row in history]
+    summary['configuration_facts']={
+        'declared_and_confirmed':sum(c.get('status')=='confirmed' for c in fact_checks),
+        'declared_and_contradicted':sum(c.get('status')=='contradicted' for c in fact_checks),
+        'declared_but_unverifiable':sum(c.get('status')=='unverified' for c in fact_checks),
+        'no_claim_made':sum(c.get('status')=='not_declared' for c in fact_checks),
+        'scope':'Declared classifier compared with the estimator actually fitted by the worker'}
     architecture=(decider.summary() if isinstance(decider,ArchitecturePolicy) else
                   {'architecture':'custom' if decision_policy is not None else 'single','enabled':False,
                    'review_fallback_count':0,'all_requested_decisions_valid':True})

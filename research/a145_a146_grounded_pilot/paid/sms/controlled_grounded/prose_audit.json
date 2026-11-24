@@ -1,0 +1,219 @@
+{
+  "executor_comparison": {
+    "reading": "improved",
+    "source": "executor",
+    "latest_trial": 3,
+    "best_prior_trial": 2,
+    "primary_metric": "macro_f1",
+    "latest_search_score": 0.9379976654020927,
+    "best_prior_search_score": 0.9296509152830992,
+    "latest_search_accuracy": 0.972768532526475,
+    "best_prior_search_accuracy": 0.9697428139183056,
+    "delta_vs_prior_best": 0.008346750118993551,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 3 internal macro_f1 score is 93.799767%; best earlier trial 2 is 92.965092%; difference +0.834675 percentage points (improved).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 1,
+    "reference_candidate": "single_word_C0.3",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_in_selected_route",
+    "selected_candidate": "single_word_C3.0",
+    "selected_status": null,
+    "reference_route": "single_word",
+    "selected_route": "single_word",
+    "same_declared_route": true,
+    "changed_parameters": [
+      {
+        "parameter": "C",
+        "before_present": true,
+        "after_present": true,
+        "before": 0.3,
+        "after": 3.0,
+        "parameter_effect": {
+          "numeric_direction": "increased",
+          "declared_effect": "weaker_regularization",
+          "definition": "C is inverse regularization strength; this does not predict accuracy or gap changes",
+          "effect_scope": "definition within a fixed parameterization",
+          "same_declared_route": true,
+          "accuracy_effect_verified": false,
+          "cross_route_note": null
+        }
+      }
+    ],
+    "single_declared_parameter_change": true,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Parameter direction is known; whether accuracy or generalization improves requires measurement"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": true,
+    "expected_regularization_direction": "weaker",
+    "mentions": [
+      {
+        "field": "reason",
+        "matched_text": "stronger regularization",
+        "clause": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0,",
+        "mentioned_direction": "stronger",
+        "context_excluded_by_heuristic": null
+      }
+    ],
+    "warnings": [
+      {
+        "code": "possible_regularization_direction_rationale_mismatch",
+        "field": "reason",
+        "matched_text": "stronger regularization",
+        "clause": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0,",
+        "mentioned_direction": "stronger",
+        "context_excluded_by_heuristic": null,
+        "expected_direction": "weaker",
+        "reference_trial": 1,
+        "selected_candidate": "single_word_C3.0",
+        "review_note": "The selected C change has the opposite direction to this rationale. Explain any intended counterhypothesis or repair the prose; this heuristic does not prove the candidate is wrong."
+      }
+    ],
+    "freeform_semantics_verified": false
+  },
+  "selected_candidate": "single_word_C3.0",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "If the corrected C relation matters for the word baseline, single_word_C3.0 may behave differently from trial 1's C=0.3; the direction and magnitude of macro_f1 change are not predicted.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0, but the registry flags this as contradicted because C is inverse regularization. I select the untried single_word_C3.0 candidate to diagnose and correct that open bound proposition on the primary split.",
+      "review": "Corrects the open bound assertion: for logistic C, larger C means weaker regularization, not stronger. This is a configuration relation only; no accuracy effect is claimed.",
+      "hypothesis": "If the corrected C relation matters for the word baseline, single_word_C3.0 may behave differently from trial 1's C=0.3; the direction and magnitude of macro_f1 change are not predicted.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 3,
+    "confirmed": 1,
+    "contradicted": 0,
+    "unverifiable": 2,
+    "informational": 0,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "Trial 3",
+        "claim": 3,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "Corrects the open bound assertion: for logistic C, larger C means weaker regularization, not stronger.",
+        "in_comparison": false,
+        "observed": [
+          "logistic"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "unbound_review_subject"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "trial_reference",
+        "span": "trial 1",
+        "claim": 1,
+        "observed": null,
+        "status": "unverifiable"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [
+    {
+      "code": "possible_regularization_direction_rationale_mismatch",
+      "field": "reason",
+      "matched_text": "stronger regularization",
+      "clause": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0,",
+      "mentioned_direction": "stronger",
+      "context_excluded_by_heuristic": null,
+      "expected_direction": "weaker",
+      "reference_trial": 1,
+      "selected_candidate": "single_word_C3.0",
+      "review_note": "The selected C change has the opposite direction to this rationale. Explain any intended counterhypothesis or repair the prose; this heuristic does not prove the candidate is wrong."
+    }
+  ],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 3 machine-checkable claims inspected, 0 contradicted, 2 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": true,
+    "definition": {
+      "estimator_class": "LogisticRegression",
+      "package": "scikit-learn",
+      "version": "1.7.2",
+      "parameter": "C",
+      "relation": "inverse_regularization_strength",
+      "source": "runtime_official_class_documentation",
+      "excerpt": "C : float, default=1.0\n        Inverse of regularization strength; must be a positive float.\n        Like in support vector machines, smaller values specify stronger\n        regularization.",
+      "excerpt_sha256": "b8328ce8185c6e3d705da864e5e3b819bddbe0579d857fe4b1d2decc153af13e",
+      "accuracy_effect_verified": false
+    },
+    "items": [
+      {
+        "field": "reason",
+        "span": "Trial 3's proposal asserted stronger regularization when moving from t1.C=0.3 to single_word_C3.0.C=3.0, but the registry flags this as contradicted because C is inverse regularization.",
+        "status": "unknown",
+        "reason": "Unsupported or ambiguous parameter statement",
+        "candidate_id": "single_word_C3.0",
+        "parameter": "C",
+        "candidate_parameter_value": 3.0,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      },
+      {
+        "field": "review",
+        "span": "Corrects the open bound assertion: for logistic C, larger C means weaker regularization, not stronger.",
+        "status": "unknown",
+        "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+        "candidate_id": "single_word_C3.0",
+        "parameter": "C",
+        "candidate_parameter_value": 3.0,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      },
+      {
+        "field": "hypothesis",
+        "span": "If the corrected C relation matters for the word baseline, single_word_C3.0 may behave differently from trial 1's C=0.3;",
+        "status": "unknown",
+        "reason": "Historical, alternative or negated scope is outside the narrow grammar",
+        "candidate_id": "single_word_C3.0",
+        "parameter": "C",
+        "candidate_parameter_value": 3.0,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      }
+    ],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

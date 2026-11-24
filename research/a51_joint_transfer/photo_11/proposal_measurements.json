@@ -1,0 +1,32 @@
+[
+  {
+    "trial": 2,
+    "candidate": "image_gradient_histograms_logistic",
+    "purpose": "improve",
+    "uncertainty": "The primary search split is small and only one trial is available, so the observed high accuracy may be unstable. The gradient-histogram route is untested here, and any improvement over trial 1 is uncertain; this is an exploratory representation change, not a guaranteed gain.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "image_rbf_svm_C1.0",
+    "purpose": "improve",
+    "uncertainty": "The primary search split is small, and the two completed trials both have train_accuracy 1.0, so gains may be unstable. RBF SVM behavior on 4096 flattened pixel features with only 320 samples is uncertain, and C=1.0 is a conservative choice rather than a verified optimum.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "image_logistic_C1.0",
+    "purpose": "improve",
+    "uncertainty": "The primary search split is small, and all completed trials have train_accuracy 1.0, so additional capacity may not help and could overfit. Class 8 recall is 0.0 across completed trials, and the available C=1.0 logistic candidate is untested here; any improvement over trial 1 is not guaranteed.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  }
+]

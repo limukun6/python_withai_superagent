@@ -1,0 +1,291 @@
+{
+  "executor_comparison": {
+    "reading": "lower",
+    "source": "executor",
+    "latest_trial": 3,
+    "best_prior_trial": 2,
+    "primary_metric": "accuracy",
+    "latest_search_score": 0.7065351418002466,
+    "best_prior_search_score": 0.7552404438964242,
+    "latest_search_accuracy": 0.7065351418002466,
+    "best_prior_search_accuracy": 0.7552404438964242,
+    "delta_vs_prior_best": -0.04870530209617763,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 3 internal accuracy score is 70.653514%; best earlier trial 2 is 75.524044%; difference -4.870530 percentage points (lower).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 2,
+    "reference_candidate": "supported_field_interactions",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "catboost_depth6_reg3.0",
+    "selected_status": null,
+    "reference_route": "field_interactions",
+    "selected_route": "catboost",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "learning_rate",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 0.05,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "pair_limit",
+        "before_present": true,
+        "after_present": false,
+        "before": 3,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": false,
+        "before": "training-selected categorical field interactions",
+        "after": null,
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "catboost_depth6_reg3.0",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "A depth-6 CatBoost with l2_leaf_reg=3.0 and native categorical handling may preserve the strongest observed route's nonlinearity while avoiding the severe overfit seen in ExtraTrees leaf1; this is speculative.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Select catboost_depth6_reg3.0 for primary search: CatBoost was the best completed route on primary search accuracy, and this untried configuration tests a depth/regularization point near trial 2 while using native categories. No improvement is predicted.",
+      "review": "Trial 2 is the best completed primary search accuracy (0.7552) and is CatBoost; trial 3 ExtraTrees has a high train-search gap (0.2881); logistic is lower. The chosen candidate is untried and closest in CatBoost depth/regularization to trial 2, though its representation differs.",
+      "hypothesis": "A depth-6 CatBoost with l2_leaf_reg=3.0 and native categorical handling may preserve the strongest observed route's nonlinearity while avoiding the severe overfit seen in ExtraTrees leaf1; this is speculative.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 9,
+    "confirmed": 6,
+    "contradicted": 0,
+    "unverifiable": 3,
+    "informational": 2,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "Select catboost_depth6_reg3.0 for primary search: CatBoost was the best completed route on primary search accuracy, and this untried configuration tests a depth/regularization point near trial 2 while using native categories.",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "confirmed",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "Trial 2 is the best completed primary search accuracy (0.7552) and is CatBoost;",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "ExtraTrees",
+        "claim": "extra_trees",
+        "compatible_with": [
+          "extra_trees"
+        ],
+        "sentence": "trial 3 ExtraTrees has a high train-search gap (0.2881);",
+        "in_comparison": true,
+        "observed": null,
+        "status": "informational"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "logistic is lower.",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "unbound_review_subject"
+      },
+      {
+        "field": "review",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "The chosen candidate is untried and closest in CatBoost depth/regularization to trial 2, though its representation differs.",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "confirmed",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "Trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "trial 3",
+        "claim": 3,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "review",
+        "kind": "trial_reference",
+        "span": "trial 2",
+        "claim": 2,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "CatBoost",
+        "claim": "catboost",
+        "compatible_with": [
+          "catboost"
+        ],
+        "sentence": "A depth-6 CatBoost with l2_leaf_reg=3.0 and native categorical handling may preserve the strongest observed route's nonlinearity while avoiding the severe overfit seen in ExtraTrees leaf1;",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "ExtraTrees",
+        "claim": "extra_trees",
+        "compatible_with": [
+          "extra_trees"
+        ],
+        "sentence": "A depth-6 CatBoost with l2_leaf_reg=3.0 and native categorical handling may preserve the strongest observed route's nonlinearity while avoiding the severe overfit seen in ExtraTrees leaf1;",
+        "in_comparison": false,
+        "observed": [
+          "catboost"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 9 machine-checkable claims inspected, 0 contradicted, 3 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": false,
+    "definition": null,
+    "items": [
+      {
+        "field": "reason",
+        "span": "Select catboost_depth6_reg3.0 for primary search: CatBoost was the best completed route on primary search accuracy, and this untried configuration tests a depth/regularization point near trial 2 while using native categories.",
+        "status": "unknown",
+        "reason": "No supported, penalized estimator configuration with positive C",
+        "candidate_id": "catboost_depth6_reg3.0",
+        "parameter": "C",
+        "candidate_parameter_value": null,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      },
+      {
+        "field": "review",
+        "span": "The chosen candidate is untried and closest in CatBoost depth/regularization to trial 2, though its representation differs.",
+        "status": "unknown",
+        "reason": "No supported, penalized estimator configuration with positive C",
+        "candidate_id": "catboost_depth6_reg3.0",
+        "parameter": "C",
+        "candidate_parameter_value": null,
+        "candidate_value_source": "declared_candidate_configuration",
+        "reference_trial": null
+      }
+    ],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

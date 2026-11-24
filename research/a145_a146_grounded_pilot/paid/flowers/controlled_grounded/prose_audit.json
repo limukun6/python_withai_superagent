@@ -1,0 +1,166 @@
+{
+  "executor_comparison": {
+    "reading": "improved",
+    "source": "executor",
+    "latest_trial": 3,
+    "best_prior_trial": 2,
+    "primary_metric": "accuracy",
+    "latest_search_score": 0.8375,
+    "best_prior_search_score": 0.4,
+    "latest_search_accuracy": 0.8375,
+    "best_prior_search_accuracy": 0.4,
+    "delta_vs_prior_best": 0.4375,
+    "comparison_rule": "latest completed result versus best earlier completed result; not significance",
+    "text": "Trial 3 internal accuracy score is 83.750000%; best earlier trial 2 is 40.000000%; difference +43.750000 percentage points (improved).",
+    "statistical_test_performed": false,
+    "uncertainty": "These exact score comparisons do not establish statistical significance or a causal explanation."
+  },
+  "cited_measured_facts": [],
+  "configuration_change": {
+    "available": true,
+    "source": "executor",
+    "reference_trial": 3,
+    "reference_candidate": "image_mobilenet_v3_small_linear",
+    "reference_status": "completed",
+    "reference_rule": "best_completed_overall",
+    "selected_candidate": "image_extra_trees_leaf3",
+    "selected_status": null,
+    "reference_route": "frozen_image_features",
+    "selected_route": "image_extra_trees",
+    "same_declared_route": false,
+    "changed_parameters": [
+      {
+        "parameter": "C",
+        "before_present": true,
+        "after_present": false,
+        "before": 10.0,
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "encoder",
+        "before_present": true,
+        "after_present": false,
+        "before": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "min_samples_leaf",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 3,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "n_estimators",
+        "before_present": false,
+        "after_present": true,
+        "before": null,
+        "after": 300,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "representation",
+        "before_present": true,
+        "after_present": false,
+        "before": "L2-normalized frozen 576-dimensional image features",
+        "after": null,
+        "parameter_effect": null
+      },
+      {
+        "parameter": "weight_sha256",
+        "before_present": true,
+        "after_present": false,
+        "before": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "after": null,
+        "parameter_effect": null
+      }
+    ],
+    "single_declared_parameter_change": false,
+    "comparison_scope": "configuration metadata only; split/training controls are separate evidence",
+    "single_factor_attribution_supported": false,
+    "statistical_test_performed": false,
+    "notice": "Route or multiple fields changed; do not attribute a score difference to just one field"
+  },
+  "direction_consistency": {
+    "scope": "same declared route, single changed C; narrow English phrases only",
+    "applicable": false,
+    "expected_regularization_direction": null,
+    "mentions": [],
+    "warnings": [],
+    "freeform_semantics_verified": false,
+    "reason_not_checked": "No unambiguous single-C comparison within one declared route"
+  },
+  "selected_candidate": "image_extra_trees_leaf3",
+  "future_hypothesis": {
+    "source": "LLM, unverified future hypothesis",
+    "text": "A tree ensemble on flattened pixels may capture non-linear interactions not represented by linear logistic baselines; this is a coverage test, not a predicted improvement.",
+    "expected_change": null
+  },
+  "original_prose": {
+    "source": "LLM, not certified as measured evidence",
+    "fields": {
+      "reason": "Trial 3 is the best completed primary search result, but its frozen-feature route is exhausted. Among available untried candidates, image_extra_trees_leaf3 provides coverage of a non-linear tree ensemble on flattened pixels.",
+      "review": "The prior single_text claim is contradicted by the confirmed task.kind=image fact. This proposal selects an available image candidate and does not claim the experiment has already run.",
+      "hypothesis": "A tree ensemble on flattened pixels may capture non-linear interactions not represented by linear logistic baselines; this is a coverage test, not a predicted improvement.",
+      "assessment.interpretation": "",
+      "assessment.uncertainty": ""
+    }
+  },
+  "prose_claims": {
+    "claims_checked": 2,
+    "confirmed": 1,
+    "contradicted": 0,
+    "unverifiable": 1,
+    "informational": 0,
+    "items": [
+      {
+        "field": "reason",
+        "kind": "trial_reference",
+        "span": "Trial 3",
+        "claim": 3,
+        "observed": [
+          1,
+          2,
+          3
+        ],
+        "status": "confirmed"
+      },
+      {
+        "field": "hypothesis",
+        "kind": "classifier",
+        "span": "logistic",
+        "claim": "logistic",
+        "compatible_with": [
+          "logistic"
+        ],
+        "sentence": "A tree ensemble on flattened pixels may capture non-linear interactions not represented by linear logistic baselines;",
+        "in_comparison": false,
+        "observed": [
+          "extra_trees"
+        ],
+        "status": "unverifiable",
+        "reference_resolution": "current_or_locally_scoped"
+      }
+    ],
+    "unique_contradictions": [],
+    "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+  },
+  "warnings": [],
+  "freeform_prose_fully_verified": false,
+  "check_scope": "Narrow English phrase checks only; warnings may need review and absence of warnings does not certify prose. 2 machine-checkable claims inspected, 0 contradicted, 1 undecidable.",
+  "changes_candidate": false,
+  "triggers_api_retry": false,
+  "parameter_semantics": {
+    "scope": "Supported explicit English C definitions and same-route bound changes only",
+    "applicable": false,
+    "definition": null,
+    "items": [],
+    "warnings": [],
+    "freeform_prose_fully_verified": false,
+    "changes_candidate": false,
+    "triggers_api_retry": false
+  }
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "case": "recipe_pair_text_latent_word_logistic_64391ca9e528025a",
+    "observed": {
+      "captured": {
+        "rows": 8,
+        "flipped_second_half": true
+      },
+      "excluded": false
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "recipe_pair_text_latent_word_logistic_45802a91960ed900",
+    "observed": {
+      "captured": {
+        "rows": 8,
+        "flipped_second_half": true
+      },
+      "excluded": false
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "recipe_pair_text_hybrid_word_logistic_f312f23892637b72",
+    "observed": {
+      "captured": {
+        "rows": 8,
+        "flipped_second_half": true
+      },
+      "excluded": false
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "recipe_pair_text_hybrid_word_logistic_3c6d7a3735ba4fe1",
+    "observed": {
+      "captured": {
+        "rows": 8,
+        "flipped_second_half": true
+      },
+      "excluded": false
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "symmetric_catalog",
+    "observed": {
+      "task_kind": "pair_text",
+      "portfolio": "semantic",
+      "declared_semantics": "symmetric",
+      "swap_policy": "preserves",
+      "swap_tolerance": 0.1,
+      "status": "accepted",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "ok",
+          "detail": "symmetric"
+        },
+        {
+          "check": "semantics_matches_package",
+          "status": "ok",
+          "detail": "symmetric implies pair_text, package loaded as pair_text"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "filtered",
+          "detail": "label-flipping augmentation is invalid when swapping preserves the label; excluded ['char_C0.1', 'char_C0.3', 'char_C1.0', 'char_C3.0', 'word_C0.05', 'word_C0.1', 'word_C0.3', 'word_C0.7', 'word_C1.5', 'word_C10.0', 'word_C3.0', 'word_char_C0.05', 'word_char_C0.1', 'word_char_C0.3', 'word_char_C0.7', 'word_char_C1.5', 'word_char_C10.0', 'word_char_C3.0', 'word_char_stats_C0.1', 'word_char_stats_C0.3', 'word_char_stats_C1.0', 'word_char_stats_C3.0']"
+        }
+      ],
+      "excluded_candidates": [
+        "char_C0.1",
+        "char_C0.3",
+        "char_C1.0",
+        "char_C3.0",
+        "word_C0.05",
+        "word_C0.1",
+        "word_C0.3",
+        "word_C0.7",
+        "word_C1.5",
+        "word_C10.0",
+        "word_C3.0",
+        "word_char_C0.05",
+        "word_char_C0.1",
+        "word_char_C0.3",
+        "word_char_C0.7",
+        "word_char_C1.5",
+        "word_char_C10.0",
+        "word_char_C3.0",
+        "word_char_stats_C0.1",
+        "word_char_stats_C0.3",
+        "word_char_stats_C1.0",
+        "word_char_stats_C3.0"
+      ],
+      "reasons": [],
+      "remaining_candidates": 4,
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "preference_compatible",
+    "observed": {
+      "task_kind": "pair_text",
+      "portfolio": "semantic",
+      "declared_semantics": "preference",
+      "swap_policy": "flips",
+      "swap_tolerance": 0.1,
+      "status": "accepted",
+      "checks": [
+        {
+          "check": "semantics_declared",
+          "status": "ok",
+          "detail": "preference"
+        },
+        {
+          "check": "semantics_matches_package",
+          "status": "ok",
+          "detail": "preference implies pair_text, package loaded as pair_text"
+        },
+        {
+          "check": "swap_augmentation",
+          "status": "ok",
+          "detail": "label-flipping augmentation matches the declared semantics"
+        }
+      ],
+      "excluded_candidates": [],
+      "reasons": [],
+      "remaining_candidates": 26,
+      "scope": "Declaration and static portfolio checks only; swap_behavior measures the fitted pipeline separately"
+    },
+    "passes_fixed_requirement": true
+  },
+  {
+    "case": "ambiguous_0.5",
+    "observed": {
+      "rows": 2,
+      "pattern": "flips",
+      "tolerance": 0.1,
+      "mean_complementarity_error": 0.0,
+      "mean_symmetry_error": 0.0
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "ambiguous_0.52",
+    "observed": {
+      "rows": 2,
+      "pattern": "flips",
+      "tolerance": 0.1,
+      "mean_complementarity_error": 0.040000000000000036,
+      "mean_symmetry_error": 0.0
+    },
+    "passes_fixed_requirement": false
+  },
+  {
+    "case": "invalid_probability",
+    "observed": {
+      "rejected": false
+    },
+    "passes_fixed_requirement": false
+  }
+]

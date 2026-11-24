@@ -1,0 +1,870 @@
+[
+  {
+    "id": "task_semantics_1",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Preference allows signed differences and flipped augmentation.",
+    "payload": {
+      "meaning": "preference",
+      "candidate": "word_C0.05"
+    }
+  },
+  {
+    "id": "task_semantics_2",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Symmetric classifier preserves pair order.",
+    "payload": {
+      "meaning": "symmetric",
+      "candidate": "symmetric_word_C0.3"
+    }
+  },
+  {
+    "id": "task_semantics_3",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "A flipping method contradicts preserved labels.",
+    "payload": {
+      "meaning": "symmetric",
+      "candidate": "word_C0.05"
+    }
+  },
+  {
+    "id": "task_semantics_4",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Preserved-label method contradicts directional preference.",
+    "payload": {
+      "meaning": "preference",
+      "candidate": "symmetric_word_C0.3"
+    }
+  },
+  {
+    "id": "task_semantics_5",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No task declaration cannot establish intended pair semantics.",
+    "payload": {
+      "meaning": null,
+      "candidate": "word_C0.05"
+    }
+  },
+  {
+    "id": "task_semantics_6",
+    "category": "task_semantics",
+    "operation": "semantics",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "A method property cannot establish unknown task intent.",
+    "payload": {
+      "meaning": null,
+      "candidate": "symmetric_word_C0.3"
+    }
+  },
+  {
+    "id": "configuration_1",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Declared family equals supplied controlled artifact fact.",
+    "payload": {
+      "claim": "ridge",
+      "observed": "ridge"
+    }
+  },
+  {
+    "id": "configuration_2",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Kernel-specific family agrees.",
+    "payload": {
+      "claim": "poly_svm",
+      "observed": "poly_svm"
+    }
+  },
+  {
+    "id": "configuration_3",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Log loss classifier is not a hinge-loss SVM.",
+    "payload": {
+      "claim": "linear_svm",
+      "observed": "logistic"
+    }
+  },
+  {
+    "id": "configuration_4",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Different estimator family cannot be borrowed.",
+    "payload": {
+      "claim": "catboost",
+      "observed": "extra_trees"
+    }
+  },
+  {
+    "id": "configuration_5",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Missing observed family provides no confirmation.",
+    "payload": {
+      "claim": "ridge",
+      "observed": null
+    }
+  },
+  {
+    "id": "configuration_6",
+    "category": "configuration",
+    "operation": "configuration",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No explicit family claim was stated.",
+    "payload": {
+      "claim": null,
+      "observed": "logistic"
+    }
+  },
+  {
+    "id": "trial_identity_1",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Trial 7 actual search accuracy is .81.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      }
+    }
+  },
+  {
+    "id": "trial_identity_2",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Trial 7 actual primary F1 is .73.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.73
+      }
+    }
+  },
+  {
+    "id": "trial_identity_3",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Trial 3 never ran; cannot borrow trial 7.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 3,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      }
+    }
+  },
+  {
+    "id": "trial_identity_4",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Trial 17 never ran.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 17,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.94
+      }
+    }
+  },
+  {
+    "id": "trial_identity_5",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Failed trial residual .99 is not a valid measurement.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 11,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.99
+      }
+    }
+  },
+  {
+    "id": "trial_identity_6",
+    "category": "trial_identity",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Duplicate identity is ambiguous.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        },
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.81
+      }
+    }
+  },
+  {
+    "id": "metric_partition_1",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Training accuracy is .94.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "train",
+        "metric": "accuracy",
+        "value": 0.94
+      }
+    }
+  },
+  {
+    "id": "metric_partition_2",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Primary F1 differs from diagnostic accuracy.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.73
+      }
+    }
+  },
+  {
+    "id": "metric_partition_3",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Search cannot borrow train accuracy.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "accuracy",
+        "value": 0.94
+      }
+    }
+  },
+  {
+    "id": "metric_partition_4",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Macro F1 cannot borrow accuracy.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "macro_f1",
+        "value": 0.81
+      }
+    }
+  },
+  {
+    "id": "metric_partition_5",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No probability-based AUC measurement supplied.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "search",
+        "metric": "roc_auc",
+        "value": 0.73
+      }
+    }
+  },
+  {
+    "id": "metric_partition_6",
+    "category": "metric_partition",
+    "operation": "measurement",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No training F1 supplied.",
+    "payload": {
+      "history": [
+        {
+          "trial": 7,
+          "status": "completed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.73,
+          "search_accuracy": 0.81,
+          "train_accuracy": 0.94
+        },
+        {
+          "trial": 11,
+          "status": "failed",
+          "primary_metric": "macro_f1",
+          "search_score": 0.99
+        }
+      ],
+      "claim": {
+        "trial": 7,
+        "split": "train",
+        "metric": "macro_f1",
+        "value": 0.94
+      }
+    }
+  },
+  {
+    "id": "negation_future_1",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Positive present family statement matches the supplied fact.",
+    "payload": {
+      "text": "This is logistic regression.",
+      "fact": "logistic"
+    }
+  },
+  {
+    "id": "negation_future_2",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Explicit matching present statement.",
+    "payload": {
+      "text": "The classifier is a linear SVM.",
+      "fact": "linear_svm"
+    }
+  },
+  {
+    "id": "negation_future_3",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "A definite conflicting family claim.",
+    "payload": {
+      "text": "This is an SVM.",
+      "fact": "logistic"
+    }
+  },
+  {
+    "id": "negation_future_4",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Definite family mismatch.",
+    "payload": {
+      "text": "The classifier is CatBoost.",
+      "fact": "ridge"
+    }
+  },
+  {
+    "id": "negation_future_5",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Negation must not certify the positive classifier mention.",
+    "payload": {
+      "text": "This is not logistic regression.",
+      "fact": "logistic"
+    }
+  },
+  {
+    "id": "negation_future_6",
+    "category": "negation_future",
+    "operation": "prose",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Future possibility is not an executed classifier fact.",
+    "payload": {
+      "text": "We might use logistic regression.",
+      "fact": "logistic"
+    }
+  },
+  {
+    "id": "slice_scope_1",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Same slice improves by .12, exceeds required .05.",
+    "payload": {
+      "after": 0.72
+    }
+  },
+  {
+    "id": "slice_scope_2",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Same slice improves only .01, not required .05.",
+    "payload": {
+      "after": 0.61
+    }
+  },
+  {
+    "id": "slice_scope_3",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Different threshold means another slice.",
+    "payload": {
+      "after": 0.9,
+      "changed_threshold": true
+    }
+  },
+  {
+    "id": "slice_scope_4",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No target slice measurement exists.",
+    "payload": {
+      "after": 0.9,
+      "missing_slice": true
+    }
+  },
+  {
+    "id": "slice_scope_5",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Different evaluation split cannot establish matched slice improvement.",
+    "payload": {
+      "after": 0.9,
+      "changed_split": true
+    }
+  },
+  {
+    "id": "slice_scope_6",
+    "category": "slice_scope",
+    "operation": "slice",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Different evaluation payload cannot establish matched slice improvement.",
+    "payload": {
+      "after": 0.9,
+      "changed_payload": true
+    }
+  },
+  {
+    "id": "memory_state_1",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Recorded numerical support is retained as measurement support.",
+    "payload": {
+      "check": "supported",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "memory_state_2",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Refuted numerical prediction stays refuted.",
+    "payload": {
+      "check": "not_supported",
+      "claim": "measurement_not_supported"
+    }
+  },
+  {
+    "id": "memory_state_3",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "A failed prediction cannot become support in memory.",
+    "payload": {
+      "check": "not_supported",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "memory_state_4",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Numerical support is never causal verification.",
+    "payload": {
+      "check": "supported",
+      "claim": "causally_verified"
+    }
+  },
+  {
+    "id": "memory_state_5",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No evaluable numerical test exists.",
+    "payload": {
+      "check": "not_evaluable",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "memory_state_6",
+    "category": "memory_state",
+    "operation": "memory",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "No numerical prediction was made.",
+    "payload": {
+      "check": "not_stated",
+      "claim": "measurement_supported"
+    }
+  },
+  {
+    "id": "failure_comparison_1",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "confirmed",
+    "expectation_basis": "Comparable completed primary score rises from .6 by at least .1.",
+    "payload": {
+      "after": 0.8
+    }
+  },
+  {
+    "id": "failure_comparison_2",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "contradicted",
+    "expectation_basis": "Comparable change .02 falls short of .1.",
+    "payload": {
+      "after": 0.62
+    }
+  },
+  {
+    "id": "failure_comparison_3",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Failed execution has no valid score despite residual .99.",
+    "payload": {
+      "after": 0.99,
+      "failed_result": true
+    }
+  },
+  {
+    "id": "failure_comparison_4",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Failed reference cannot anchor a comparison.",
+    "payload": {
+      "after": 0.99,
+      "failed_reference": true
+    }
+  },
+  {
+    "id": "failure_comparison_5",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Primary metrics differ; subtraction cannot test expected primary gain.",
+    "payload": {
+      "after": 0.99,
+      "changed_metric": true
+    }
+  },
+  {
+    "id": "failure_comparison_6",
+    "category": "failure_comparison",
+    "operation": "overall",
+    "subset": "A_development",
+    "author": "A",
+    "expected": "unknown",
+    "expectation_basis": "Scores on different partitions do not verify a paired expected improvement.",
+    "payload": {
+      "after": 0.99,
+      "changed_split": true
+    }
+  }
+]

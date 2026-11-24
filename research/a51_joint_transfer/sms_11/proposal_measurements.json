@@ -1,0 +1,32 @@
+[
+  {
+    "trial": 2,
+    "candidate": "single_word_char_C3.0",
+    "purpose": "improve",
+    "uncertainty": "The prior evidence is a single primary trial, and the observed failure may be due to class imbalance, regularization, representation, or optimization. A richer representation with weaker regularization could still overfit or remain majority-biased; macro_f1 improvement is plausible but not assured.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 3,
+    "candidate": "single_word_char_C0.3",
+    "purpose": "improve",
+    "uncertainty": "The direction of macro_f1 change is unknown: stronger regularization may reduce overfitting, but it could also underfit and lower spam recall. Trial 2 is a single primary measurement, and the observed train-search gap may not be caused by insufficient regularization.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  },
+  {
+    "trial": 4,
+    "candidate": "single_char_C3.0",
+    "purpose": "coverage",
+    "uncertainty": "The direction of macro_f1 change is unknown. Char-only features may underperform the word_char model, and C=3.0 may overfit or may not transfer from the combined representation. Evidence is limited to three primary trials, and no formal test data is available.",
+    "expected_change": null,
+    "hypothesis_check": {
+      "status": "not_stated"
+    }
+  }
+]

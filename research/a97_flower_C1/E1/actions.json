@@ -1,0 +1,109 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_mobilenet_v3_small_linear",
+    "split_id": "primary",
+    "reason": "Trial 1 on flattened standardized pixels overfit severely (train accuracy 1.0 vs search accuracy 0.39375), so the next primary-split trial should test a stronger image representation rather than only tuning regularization on the same pixel space. Frozen MobileNetV3-Small features are a registered image candidate and may capture spatial structure that flattened pixels miss.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_gradient_histograms_logistic",
+    "split_id": "primary",
+    "reason": "Trial 2 with frozen MobileNetV3-Small features reached primary search accuracy 0.8375, but that route is exhausted and no frozen-feature candidate remains available. Trial 1 on flattened pixels overfit severely (train 1.0 vs search 0.39375). Among available candidates, gradient-histogram logistic regression is an untried image representation that may reduce reliance on raw pixel coordinates while remaining a registered CPU candidate.",
+    "evidence_trials": [
+      2,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf3",
+    "split_id": "primary",
+    "reason": "Trial 1 on flattened standardized pixels overfit severely (train 1.0 vs primary search 0.39375), and the best observed primary route, frozen MobileNetV3-Small features at 0.8375, is exhausted and unavailable. Among remaining available candidates, image_extra_trees_leaf3 is an untried pixel-based nonlinear route with a regularized leaf size, so it is a reasonable coverage test for the primary search split.",
+    "evidence_trials": [
+      2,
+      3,
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_rbf_svm_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_rbf_svm_C10.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C1.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "image_logistic_C10.0",
+    "split_id": "primary",
+    "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      2,
+      4
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

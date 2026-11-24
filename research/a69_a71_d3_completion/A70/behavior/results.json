@@ -1,0 +1,2619 @@
+[
+  {
+    "state_id": "coupon_1",
+    "task": "coupon",
+    "modes": {
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 2,
+          "contradicted": 0,
+          "unverifiable": 2,
+          "informational": 1,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The only completed primary trial is a heavily regularized one-hot logistic model with modest accuracy and a small train-search gap.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "A native-category CatBoost candidate is a reasonable next primary-split experiment to test whether nonlinear categorical interactions improve accuracy over the linear baseline.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "CatBoost with depth 6, native categorical handling, and moderate L2 regularization may capture categorical interactions that the one-hot logistic baseline cannot, potentially improving primary-split accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "CatBoost with depth 6, native categorical handling, and moderate L2 regularization may capture categorical interactions that the one-hot logistic baseline cannot, potentially improving primary-split accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 5,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 4,
+          "informational": 2,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 established a one-hot logistic baseline on the primary split at accuracy 0.6722 with a small train-search gap.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The task is categorical tabular, and CatBoost with native categorical handling is a registered candidate that can model nonlinearities and category interactions not captured by the linear baseline.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The logistic baseline has moderate class recall imbalance, and its low regularization setting may be underfitting.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "This choice tests a different estimator family rather than another nearby logistic regularization value.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "A depth-6 CatBoost model with native categorical representation and moderate L2 regularization may capture categorical interactions and nonlinear effects that the one-hot logistic baseline misses, potentially improving primary-split accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "A depth-6 CatBoost model with native categorical representation and moderate L2 regularization may capture categorical interactions and nonlinear effects that the one-hot logistic baseline misses, potentially improving primary-split accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "coupon_1",
+      "task": "coupon",
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "supported_field_interactions",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "coupon_2",
+    "task": "coupon",
+    "modes": {
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 7,
+          "confirmed": 4,
+          "contradicted": 0,
+          "unverifiable": 3,
+          "informational": 2,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Trial 2 is the strongest completed PRIMARY result (search_accuracy 0.7455) using CatBoost depth 6, l2_leaf_reg 3.0, and training-selected categorical field interactions.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 logistic C0.05 underperformed at 0.6722.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 may retain much of Trial 2's gain;",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": null,
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 7,
+          "confirmed": 5,
+          "contradicted": 0,
+          "unverifiable": 2,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected categorical field interactions.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The native-category CatBoost route is untried, so matching the best trial's core depth/regularization is a controlled next probe before varying capacity or regularization.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 logistic C0.05 scored 0.6722;",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "trial 2 CatBoost interactions scored 0.7455 with a 0.0749 train-search gap.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The field_interactions route is exhausted, while native-category CatBoost remains available.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Native categorical CatBoost at depth 6 and l2_leaf_reg 3.0 will be competitive with trial 2 and will help determine whether the interaction representation contributed materially to the observed PRIMARY accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "coupon_2",
+      "task": "coupon",
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "extra_trees_leaf1",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "coupon_3",
+    "task": "coupon",
+    "modes": {
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 8,
+          "confirmed": 5,
+          "contradicted": 0,
+          "unverifiable": 3,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The strongest completed PRIMARY trial was the CatBoost interaction model (trial 2, search_accuracy 0.7455), while logistic regression underfit and ExtraTrees leaf1 showed severe overfitting.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic regression",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The strongest completed PRIMARY trial was the CatBoost interaction model (trial 2, search_accuracy 0.7455), while logistic regression underfit and ExtraTrees leaf1 showed severe overfitting.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "ExtraTrees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "The strongest completed PRIMARY trial was the CatBoost interaction model (trial 2, search_accuracy 0.7455), while logistic regression underfit and ExtraTrees leaf1 showed severe overfitting.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Among available candidates, catboost_depth6_reg3.0 is the closest regularized native-category CatBoost configuration to that leading family and is preferable to more overfit tree or weaker linear options.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "This candidate tests whether native categorical CatBoost at depth 6 with l2_leaf_reg 3.0 can preserve useful nonlinear structure without relying on the prior interaction representation.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "A native-category CatBoost with depth 6 and l2_leaf_reg 3.0 may retain the nonlinear categorical signal that helped trial 2 while reducing representation-specific overfitting.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 11,
+          "confirmed": 8,
+          "contradicted": 1,
+          "unverifiable": 2,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Trial 2 is the best completed PRIMARY result (accuracy 0.7455) and used CatBoost with depth 6 and l2_leaf_reg 3.0 plus training-selected field interactions.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The available catboost_depth6_reg3.0 candidate tests the same core CatBoost configuration with native categorical handling, making it the most relevant next PRIMARY comparison.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "Trial 3 shows severe overfitting (train 0.9946 vs search 0.7135), and trial 1 underfits relative to CatBoost.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "extra-trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 3 has a much larger 0.2811 gap, so extra-trees leaf1 is not a good immediate follow-up.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Logistic C=0.05 is materially weaker.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "contradicted"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "The next test should stay in the stronger CatBoost family and compare native categorical representation against the interaction-based trial 2.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "CatBoost",
+              "claim": "catboost",
+              "compatible_with": [
+                "catboost"
+              ],
+              "sentence": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 using native categorical handling may preserve the useful signal seen in trial 2 while changing the representation and potentially reducing interaction-driven overfitting.",
+              "in_comparison": false,
+              "observed": [
+                "catboost"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [
+            "Logistic"
+          ],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "coupon_3",
+      "task": "coupon",
+      "R": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E": {
+        "candidate": "catboost_depth6_reg3.0",
+        "scores": [
+          0.7332101047443007,
+          0.7487684729064039
+        ],
+        "mean": 0.7409892888253523
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "catboost_depth4_reg3.0",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "preference_1",
+    "task": "preference",
+    "modes": {
+      "R": {
+        "candidate": "word_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 1,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "word_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 1,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "preference_1",
+      "task": "preference",
+      "R": {
+        "candidate": "word_C0.1",
+        "scores": [
+          0.6279349789283564,
+          0.6309452137266707
+        ],
+        "mean": 0.6294400963275135
+      },
+      "E": {
+        "candidate": "word_C0.1",
+        "scores": [
+          0.6279349789283564,
+          0.6309452137266707
+        ],
+        "mean": 0.6294400963275135
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "word_char_C0.05",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "preference_2",
+    "task": "preference",
+    "modes": {
+      "R": {
+        "candidate": "word_char_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 2,
+          "confirmed": 2,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Completed evidence is limited to two low-C logistic trials.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "word_char_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 4,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "preference_2",
+      "task": "preference",
+      "R": {
+        "candidate": "word_char_C0.1",
+        "scores": [
+          0.6718844069837447,
+          0.6742925948223961
+        ],
+        "mean": 0.6730885009030705
+      },
+      "E": {
+        "candidate": "word_char_C0.1",
+        "scores": [
+          0.6718844069837447,
+          0.6742925948223961
+        ],
+        "mean": 0.6730885009030705
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "char_C0.1",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "preference_3",
+    "task": "preference",
+    "modes": {
+      "R": {
+        "candidate": "word_char_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 0,
+          "confirmed": 0,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "word_char_stats_C0.1",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 4,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 1,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trials 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic regression",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "All three completed trials used logistic regression with swap augmentation and reported confirmed accuracy on the primary split.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "preference_3",
+      "task": "preference",
+      "R": {
+        "candidate": "word_char_C0.1",
+        "scores": [
+          0.6718844069837447,
+          0.6742925948223961
+        ],
+        "mean": 0.6730885009030705
+      },
+      "E": {
+        "candidate": "word_char_stats_C0.1",
+        "scores": [
+          0.6754966887417219,
+          0.658639373871162
+        ],
+        "mean": 0.6670680313064419
+      },
+      "E_minus_R": -0.006020469596628608,
+      "local_next_candidate": "word_char_stats_C0.1",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": true
+  },
+  {
+    "state_id": "sms_1",
+    "task": "sms",
+    "modes": {
+      "R": {
+        "candidate": "single_word_char_C3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 1,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "single_char_C3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 1,
+          "confirmed": 0,
+          "contradicted": 0,
+          "unverifiable": 1,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "sms_1",
+      "task": "sms",
+      "R": {
+        "candidate": "single_word_char_C3.0",
+        "scores": [
+          0.9632516456146594,
+          0.9598031898720182
+        ],
+        "mean": 0.9615274177433388
+      },
+      "E": {
+        "candidate": "single_char_C3.0",
+        "scores": [
+          0.9514028311116892,
+          0.9473606370875995
+        ],
+        "mean": 0.9493817340996444
+      },
+      "E_minus_R": -0.012145683643694394,
+      "local_next_candidate": "single_char_C0.3",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": true
+  },
+  {
+    "state_id": "sms_2",
+    "task": "sms",
+    "modes": {
+      "R": {
+        "candidate": "single_word_char_C0.3",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 1,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "single_word_char_C0.3",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 3,
+          "confirmed": 3,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The untried word_char route at the better-observed regularization strength is the most informative next candidate because it combines word and character signals while staying within the registered logistic baseline.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "sms_2",
+      "task": "sms",
+      "R": {
+        "candidate": "single_word_char_C0.3",
+        "scores": [
+          0.8044123010438959,
+          0.8162357520155685
+        ],
+        "mean": 0.8103240265297322
+      },
+      "E": {
+        "candidate": "single_word_char_C0.3",
+        "scores": [
+          0.8044123010438959,
+          0.8162357520155685
+        ],
+        "mean": 0.8103240265297322
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "single_word_char_C0.3",
+      "differs_from_local_next": false
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "sms_3",
+    "task": "sms",
+    "modes": {
+      "R": {
+        "candidate": "single_word_char_C3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 2,
+          "confirmed": 2,
+          "contradicted": 0,
+          "unverifiable": 0,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "single_word_char_C3.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 2,
+          "contradicted": 0,
+          "unverifiable": 2,
+          "informational": 0,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Increasing C from 0.3 to 3.0 for the word_char logistic model may allow the combined word and character features to fit spam-indicative patterns more strongly, potentially improving macro_f1 relative to trial 3.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "trial 3",
+              "claim": 3,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "sms_3",
+      "task": "sms",
+      "R": {
+        "candidate": "single_word_char_C3.0",
+        "scores": [
+          0.9632516456146594,
+          0.9598031898720182
+        ],
+        "mean": 0.9615274177433388
+      },
+      "E": {
+        "candidate": "single_word_char_C3.0",
+        "scores": [
+          0.9632516456146594,
+          0.9598031898720182
+        ],
+        "mean": 0.9615274177433388
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "single_word_char_C3.0",
+      "differs_from_local_next": false
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "bean_1",
+    "task": "bean",
+    "modes": {
+      "R": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 5,
+          "confirmed": 2,
+          "contradicted": 0,
+          "unverifiable": 3,
+          "informational": 2,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic regression",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The next useful primary-split experiment is a different model family to test whether nonlinear tree ensembles can capture structure not represented by logistic regression, while using leaf size 3 to reduce overfitting relative to leaf 1.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Only one completed primary trial is available, so there is no matched evidence comparing logistic regularization strengths or tree ensembles on this split.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The logistic C0.1 result is strong but does not establish that nonlinear models are unnecessary.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Extra Trees with min_samples_leaf=3 is a reasonable coverage/improvement probe within budget.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "A moderately regularized Extra Trees ensemble may capture nonlinear feature interactions and improve primary-split accuracy over the logistic C0.1 baseline, but the direction and magnitude are not established by existing evidence.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "A moderately regularized Extra Trees ensemble may capture nonlinear feature interactions and improve primary-split accuracy over the logistic C0.1 baseline, but the direction and magnitude are not established by existing evidence.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 1,
+          "contradicted": 0,
+          "unverifiable": 3,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 shows a strong logistic baseline on the PRIMARY split, but the extra-trees route is untried.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "extra-trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 1 shows a strong logistic baseline on the PRIMARY split, but the extra-trees route is untried.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The completed PRIMARY trial is logistic C=0.1 with accuracy 0.9225 and small train-search gap.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "extra-trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "No extra-trees configuration has been evaluated yet, so this choice is exploratory rather than a claimed improvement.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "extra-trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "A regularized extra-trees ensemble may capture nonlinear or interaction effects in the numeric tabular features that the linear logistic model does not represent, potentially complementing the strong baseline.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "A regularized extra-trees ensemble may capture nonlinear or interaction effects in the numeric tabular features that the linear logistic model does not represent, potentially complementing the strong baseline.",
+              "in_comparison": false,
+              "observed": [
+                "extra_trees"
+              ],
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "bean_1",
+      "task": "bean",
+      "R": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "scores": [
+          0.9138920780711826,
+          0.9156142365097589
+        ],
+        "mean": 0.9147531572904708
+      },
+      "E": {
+        "candidate": "numeric_tabular_extra_trees_leaf3",
+        "scores": [
+          0.9138920780711826,
+          0.9156142365097589
+        ],
+        "mean": 0.9147531572904708
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "numeric_tabular_extra_trees_leaf1",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "bean_2",
+    "task": "bean",
+    "modes": {
+      "R": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 6,
+          "confirmed": 3,
+          "contradicted": 0,
+          "unverifiable": 3,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 logistic C0.1 is the strongest completed PRIMARY result (search_accuracy 0.9225) with a small train-search gap.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "extra trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 2 extra trees leaf1 overfits (train_accuracy 1.0, score_gap 0.0878) and scores lower.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The adjacent logistic C1.0 candidate stays on the better-performing linear route and tests whether slightly weaker regularization improves the primary split without the tree overfit risk.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Evidence favors the regularized logistic family over the high-variance extra-trees configuration.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "extra-trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Evidence favors the regularized logistic family over the high-variance extra-trees configuration.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "A less strongly regularized logistic model may capture additional numeric-tabular structure relative to C0.1 while retaining the stable linear behavior seen in trial 1;",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "trial_reference",
+              "span": "trial 1",
+              "claim": 1,
+              "observed": null,
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 8,
+          "confirmed": 4,
+          "contradicted": 1,
+          "unverifiable": 3,
+          "informational": 2,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trial 1 logistic C=0.1 achieved the best PRIMARY accuracy (0.9225) with a small train-search gap (0.0033), while trial 2 extra trees overfit more (gap 0.0878) and scored lower.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "extra trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 1 logistic C=0.1 achieved the best PRIMARY accuracy (0.9225) with a small train-search gap (0.0033), while trial 2 extra trees overfit more (gap 0.0878) and scored lower.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Testing logistic C=1.0 is the most direct next step within the stronger route.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Logistic is currently best and stable;",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "extra trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "extra trees leaf1 showed high train accuracy but lower search accuracy.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "contradicted"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The available extra_trees leaf3 may reduce overfitting, but the logistic route has stronger observed PRIMARY performance.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "extra trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Increasing logistic regularization strength from C=0.1 to C=1.0 may preserve or slightly improve PRIMARY accuracy by allowing a less constrained linear decision boundary without the overfitting seen in extra trees.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [
+            "extra trees"
+          ],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "bean_2",
+      "task": "bean",
+      "R": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "scores": [
+          0.917910447761194,
+          0.931113662456946
+        ],
+        "mean": 0.92451205510907
+      },
+      "E": {
+        "candidate": "numeric_tabular_logistic_C1.0",
+        "scores": [
+          0.917910447761194,
+          0.931113662456946
+        ],
+        "mean": 0.92451205510907
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "numeric_tabular_logistic_C1.0",
+      "differs_from_local_next": false
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  },
+  {
+    "state_id": "bean_3",
+    "task": "bean",
+    "modes": {
+      "R": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 4,
+          "confirmed": 3,
+          "contradicted": 0,
+          "unverifiable": 1,
+          "informational": 2,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "Logistic regression",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Logistic regression is the strongest completed family on the primary split, with C1.0 at 0.92308 accuracy and a small train-search gap.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trials 1 and 3 show stable logistic performance;",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "trial 2 shows Extra Trees overfitting with train 1.0 and lower search accuracy.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "The available Extra Trees leaf3 candidate may reduce overfitting but has no primary evidence yet.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trials 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      },
+      "E": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "checks": {
+          "eligible": true,
+          "configuration": true,
+          "classifier": true,
+          "completed_trial_references": true
+        },
+        "numeric_expectation_is_null": true,
+        "prose_machine_flags": {
+          "claims_checked": 8,
+          "confirmed": 6,
+          "contradicted": 0,
+          "unverifiable": 2,
+          "informational": 3,
+          "items": [
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The active logistic route has the best PRIMARY search accuracy so far: trial 3 (C=1.0) scored 0.9230769230769231 with a small train-search gap of 0.004592422502870175.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "The available C=10.0 candidate continues this active route and tests a less-regularized logistic setting on the same PRIMARY split.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "trial 3",
+              "claim": 3,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "reason",
+              "kind": "trial_reference",
+              "span": "Trial 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "logistic regression",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Trials 1 and 3 show logistic regression performing strongly and consistently on PRIMARY accuracy with low train-search gaps.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 2, Extra Trees with min_samples_leaf=1, had a much larger gap (0.08783008036739381) and lower PRIMARY accuracy (0.9121699196326062), so the paused Extra Trees route is less attractive at this point.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "Trial 2, Extra Trees with min_samples_leaf=1, had a much larger gap (0.08783008036739381) and lower PRIMARY accuracy (0.9121699196326062), so the paused Extra Trees route is less attractive at this point.",
+              "in_comparison": true,
+              "observed": null,
+              "status": "informational"
+            },
+            {
+              "field": "review",
+              "kind": "classifier",
+              "span": "Extra Trees",
+              "claim": "extra_trees",
+              "compatible_with": [
+                "extra_trees"
+              ],
+              "sentence": "The available Extra Trees leaf=3 candidate could reduce overfitting, but it is not yet supported by a better PRIMARY result.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trials 1",
+              "claim": 1,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "review",
+              "kind": "trial_reference",
+              "span": "Trial 2",
+              "claim": 2,
+              "observed": [
+                1,
+                2,
+                3
+              ],
+              "status": "confirmed"
+            },
+            {
+              "field": "hypothesis",
+              "kind": "classifier",
+              "span": "logistic",
+              "claim": "logistic",
+              "compatible_with": [
+                "logistic"
+              ],
+              "sentence": "Increasing logistic regularization strength from C=1.0 to C=10.0 may allow a sharper decision boundary and could change PRIMARY accuracy, but the direction and magnitude are not established from the completed trials.",
+              "in_comparison": false,
+              "observed": [
+                "logistic"
+              ],
+              "status": "unverifiable"
+            }
+          ],
+          "unique_contradictions": [],
+          "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+        },
+        "free_text_semantic_correctness": "not independently labeled"
+      }
+    },
+    "quality": {
+      "state_id": "bean_3",
+      "task": "bean",
+      "R": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "scores": [
+          0.9196326061997704,
+          0.931113662456946
+        ],
+        "mean": 0.9253731343283582
+      },
+      "E": {
+        "candidate": "numeric_tabular_logistic_C10.0",
+        "scores": [
+          0.9196326061997704,
+          0.931113662456946
+        ],
+        "mean": 0.9253731343283582
+      },
+      "E_minus_R": 0.0,
+      "local_next_candidate": "numeric_tabular_extra_trees_leaf3",
+      "differs_from_local_next": true
+    },
+    "recorded_opportunities": {
+      "failed_trials": [],
+      "configuration_contradictions": [],
+      "unsupported_hypotheses": []
+    },
+    "changed_candidate": false
+  }
+]

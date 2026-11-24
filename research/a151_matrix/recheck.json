@@ -1,0 +1,132 @@
+{
+  "summary": {
+    "paths": 5,
+    "passed": 5,
+    "fits": 17,
+    "calls": 6
+  },
+  "paths": [
+    {
+      "name": "w1_categorical",
+      "task": "released_task1.zip",
+      "scheduler": "ab-v1",
+      "contract": "calibrated-v2",
+      "fit_limit": 3,
+      "candidate": "catboost_depth6_reg3.0",
+      "fits": 3,
+      "calls": 1,
+      "actions": {
+        "explore": 2,
+        "stop": 1
+      },
+      "basis": [
+        "primary"
+      ],
+      "independent_confirmation_observed": false,
+      "validation_score": 0.7482758620689656,
+      "delivery_channel": "cli",
+      "delivery_rows": 2537,
+      "delivery_identical": true,
+      "problems": [],
+      "pass": true
+    },
+    {
+      "name": "w1_numeric",
+      "task": "dry_bean_numeric_tabular.zip",
+      "scheduler": "ab-v1",
+      "contract": "calibrated-v2",
+      "fit_limit": 3,
+      "candidate": "numeric_tabular_logistic_C0.1",
+      "fits": 3,
+      "calls": 1,
+      "actions": {
+        "explore": 2,
+        "stop": 1
+      },
+      "basis": [
+        "primary"
+      ],
+      "independent_confirmation_observed": false,
+      "validation_score": 0.9225119353654058,
+      "delivery_channel": "reload_validation",
+      "delivery_rows": 2723,
+      "delivery_identical": true,
+      "problems": [],
+      "pass": true
+    },
+    {
+      "name": "w1_single_text",
+      "task": "sms_spam_single_text.zip",
+      "scheduler": "ab-v1",
+      "contract": "calibrated-v2",
+      "fit_limit": 3,
+      "candidate": "single_word_char_C3.0",
+      "fits": 3,
+      "calls": 1,
+      "actions": {
+        "explore": 2,
+        "stop": 1
+      },
+      "basis": [
+        "primary"
+      ],
+      "independent_confirmation_observed": false,
+      "validation_score": 0.947372325038015,
+      "delivery_channel": "reload_validation",
+      "delivery_rows": 1032,
+      "delivery_identical": true,
+      "problems": [],
+      "pass": true
+    },
+    {
+      "name": "w1_single_text_grounded",
+      "task": "sms_spam_single_text.zip",
+      "scheduler": "ab-v1",
+      "contract": "grounded-v1",
+      "fit_limit": 3,
+      "candidate": "single_word_C3.0",
+      "fits": 3,
+      "calls": 2,
+      "actions": {
+        "explore": 2,
+        "stop": 1
+      },
+      "basis": [
+        "primary"
+      ],
+      "independent_confirmation_observed": false,
+      "validation_score": 0.934687065629373,
+      "delivery_channel": "reload_validation",
+      "delivery_rows": 1032,
+      "delivery_identical": true,
+      "problems": [],
+      "pass": true
+    },
+    {
+      "name": "w2_confirm",
+      "task": "released_task2.zip",
+      "scheduler": "ab-finalists",
+      "contract": "calibrated-v2",
+      "fit_limit": 5,
+      "candidate": "word_char_C0.05",
+      "fits": 5,
+      "calls": 1,
+      "actions": {
+        "explore": 2,
+        "confirm": 2,
+        "stop": 1
+      },
+      "basis": [
+        "primary",
+        "confirmation_1"
+      ],
+      "independent_confirmation_observed": true,
+      "validation_score": 0.701063829787234,
+      "delivery_channel": "cli",
+      "delivery_rows": 3232,
+      "delivery_identical": true,
+      "problems": [],
+      "pass": true
+    }
+  ]
+}

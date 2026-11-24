@@ -1,0 +1,252 @@
+{
+  "45101": {
+    "name": "45101",
+    "files": {
+      "train.zip": "ce6bf469f3662055a80d35b198b644812f4a5353b73313fcc010246cfcc80fda"
+    },
+    "inner_sha256": "ce2469140082275af908e9241717890d2cdd5d4a72fbcf71b4132d497f561468",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "3c428c9a9f77dc771f1acc5b40aecccc88fd0c075492831afde974f0d0d4a753",
+        "label_sha256": "65f41ae91dabb43c41d0276763c2574d1e848ff67ad9ca7278fa1b73af10ffbf",
+        "evaluation_payload_sha256": "cb9e1796609dab2241895827e97391a9da3079bd38df2bd97fe4afc548aed13c"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "37a1fd6b60a524822930cf5165ddff5b979a1a7007b1de8f6092e7063d31a6b9",
+        "label_sha256": "67d7e0011010d89684f356ef47f29d1b7de5b36804153346590386f9ab599759",
+        "evaluation_payload_sha256": "e44cb7ce198ea09ccadc9d73025ad67f6a5d28bd10f67d9b82802de75675f5e0"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "29a3ef505665e15fcd8799b32e28395cc9063f2b13fe440c4b14b62ea475240e",
+        "label_sha256": "4f99c96ae72fdbc2083d3f7131fa0e2d99a9a10e2aeabf2556dec2023ec12b8d",
+        "evaluation_payload_sha256": "17f8d9b790077c3ecbb563113be682ba86241aa7d37b5ed7bcbde86e500345a5"
+      }
+    },
+    "candidate_ids": [
+      "word_C0.05",
+      "word_C0.1",
+      "word_C0.3",
+      "word_C0.7",
+      "word_C1.5",
+      "word_C3.0",
+      "word_C10.0",
+      "word_char_C0.05",
+      "word_char_C0.1",
+      "word_char_C0.3",
+      "word_char_C0.7",
+      "word_char_C1.5",
+      "word_char_C3.0",
+      "word_char_C10.0",
+      "char_C0.1",
+      "char_C0.3",
+      "char_C1.0",
+      "char_C3.0",
+      "word_char_stats_C0.1",
+      "word_char_stats_C0.3",
+      "word_char_stats_C1.0",
+      "word_char_stats_C3.0",
+      "minilm_text_with_lexical_features",
+      "minilm_text_with_nonlinear_lexical_features"
+    ],
+    "catalog_sha256": "deaee28d476cc55b98a94fdbd1596a6d46a023817c54ec56b47728ca336086b3",
+    "features_sha256": "0419952fafabe3e66b46a781561367e1b2551fc68ff0c73b917b6a10d4f4b5d9",
+    "rows": 1672,
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "pair_text",
+        "pair_semantics": "preference",
+        "pair_label_one": "left",
+        "columns": [
+          {
+            "name": "headline_A",
+            "type": "text"
+          },
+          {
+            "name": "headline_B",
+            "type": "text"
+          }
+        ],
+        "target": "label_pairwise"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "pair_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": "preference",
+            "source": "input_schema",
+            "status": "confirmed"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  },
+  "45102": {
+    "name": "45102",
+    "files": {
+      "train.zip": "2b350a85117c0753e9d3a8fcae86a805ac932ae08e2e885de916706c446ce402"
+    },
+    "inner_sha256": "625412851826d589966826714489c96eac08ff31509e97b5fd15a2009b2c445d",
+    "splits": {
+      "primary": {
+        "id": "primary",
+        "seed": 707,
+        "row_ids_sha256": "4983f09112af09de275cde63a049e5746a75551c123a517a61b398ebb2467e7d",
+        "label_sha256": "ee9b79afcd6caa25941bef5177bab4f46bb532ae3dd2b4b1c48e596b04f76185",
+        "evaluation_payload_sha256": "fbc443aca45e41e8969c65def199592fb48d54687a19a03355166e0bbff9037b"
+      },
+      "confirmation_1": {
+        "id": "confirmation_1",
+        "seed": 808,
+        "row_ids_sha256": "a57f869df5184f168a81b2311ef6df6f9d4ce0b1be7fbe1b7b842cc4b65e88ab",
+        "label_sha256": "ac271ce3e174cd92294194c18d9ecce2da8c969d9c97079ca9ec14a759884262",
+        "evaluation_payload_sha256": "5139d09accc6dacaccd8c2c5d6e620ca9ee769205f64cab6e48a2fad4e137a95"
+      },
+      "confirmation_2": {
+        "id": "confirmation_2",
+        "seed": 909,
+        "row_ids_sha256": "5a2ef9833503c6fb51370a4d670dc05362e5375d8c1b916b6afdaa7174435e11",
+        "label_sha256": "7c7fb476b6b3b9416aa0af71937f3715ea6c30dadb4cfdcd6d7962db364455f0",
+        "evaluation_payload_sha256": "b9abd0cbb0cd4c5899e28a5bcd5a93d63e94a3f8fafd557195d1da4992936b71"
+      }
+    },
+    "candidate_ids": [
+      "word_C0.05",
+      "word_C0.1",
+      "word_C0.3",
+      "word_C0.7",
+      "word_C1.5",
+      "word_C3.0",
+      "word_C10.0",
+      "word_char_C0.05",
+      "word_char_C0.1",
+      "word_char_C0.3",
+      "word_char_C0.7",
+      "word_char_C1.5",
+      "word_char_C3.0",
+      "word_char_C10.0",
+      "char_C0.1",
+      "char_C0.3",
+      "char_C1.0",
+      "char_C3.0",
+      "word_char_stats_C0.1",
+      "word_char_stats_C0.3",
+      "word_char_stats_C1.0",
+      "word_char_stats_C3.0",
+      "minilm_text_with_lexical_features",
+      "minilm_text_with_nonlinear_lexical_features"
+    ],
+    "catalog_sha256": "deaee28d476cc55b98a94fdbd1596a6d46a023817c54ec56b47728ca336086b3",
+    "features_sha256": "468b4af6783d03c1ce62b26dc4c77f89b7ab35e37a4d10a304fa2e330994a141",
+    "rows": 1686,
+    "contract": {
+      "contract_version": 1,
+      "objective": "classification",
+      "kind": "pair_text",
+      "metric": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "input_schema": {
+        "modality": "pair_text",
+        "pair_semantics": "preference",
+        "pair_label_one": "left",
+        "columns": [
+          {
+            "name": "headline_A",
+            "type": "text"
+          },
+          {
+            "name": "headline_B",
+            "type": "text"
+          }
+        ],
+        "target": "label_pairwise"
+      },
+      "selection_data": "training-derived partitions only",
+      "formal_test_available_to_agent": false,
+      "goal_resolution": {
+        "resolution_version": 1,
+        "fields": {
+          "input_kind": {
+            "value": "pair_text",
+            "source": "task_adapter",
+            "status": "confirmed"
+          },
+          "primary_metric": {
+            "value": "accuracy",
+            "source": "declared_task_readme",
+            "status": "confirmed",
+            "effective_policy": "maximize"
+          },
+          "label_domain": {
+            "value": [
+              0,
+              1
+            ],
+            "source": "training_labels",
+            "status": "confirmed"
+          },
+          "positive_label": {
+            "value": null,
+            "source": "not_applicable",
+            "status": "not_applicable"
+          },
+          "pair_semantics": {
+            "value": "preference",
+            "source": "input_schema",
+            "status": "confirmed"
+          }
+        },
+        "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+      }
+    }
+  }
+}

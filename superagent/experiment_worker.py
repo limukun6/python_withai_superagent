@@ -17,66 +17,79 @@ from .error_slices import ErrorSlices
 
 
 def main() -> None:
-    if len(sys.argv) not in (4,5):raise ValueError('Expected payload, candidate, output, and optional owned registry')
-    payload_path, candidate_id, output_path = sys.argv[1:4]
+    arguments = sys.argv[1:]
+    fit_admission = None
+    if len(arguments) >= 2 and arguments[-2] == '--fit-admission':
+        fit_admission = json.loads(Path(arguments[-1]).read_text(encoding='utf-8'))
+        arguments = arguments[:-2]
+    if len(arguments) not in (3,4):raise ValueError('Expected payload, candidate, output, and optional owned registry')
+    payload_path, candidate_id, output_path = arguments[:3]
     payload_bytes=Path(payload_path).read_bytes()
     payload = joblib.load(io.BytesIO(payload_bytes))
     payload_sha256=hashlib.sha256(payload_bytes).hexdigest()
     metric=MetricSpec.from_payload(payload)
     registry_sha256=None;origin='static'
-    from .pretrained_choice import CANDIDATE, candidate as contextual_candidate
-    from .tabular_encoder import SEMANTIC, PERMUTED, candidate as level_candidate
-    from .method_choice import CROSSES, candidate as method_candidate
-    folder = Path(output_path).parent
-    if candidate_id in (SEMANTIC, PERMUTED):
-        candidate = level_candidate(payload["kind"], candidate_id, Path(output_path).parent / 'pretrained_runtime.json')
-        origin = 'verified_pretrained'
-    elif candidate_id == CANDIDATE:
-        candidate = contextual_candidate(payload["kind"], Path(output_path).parent / 'pretrained_runtime.json')
-        origin = 'verified_pretrained'
-    elif (candidate_id != CROSSES and Path(candidate_id).name == candidate_id
-          and (folder / f'method_{candidate_id}.json').is_file()):
-        candidate = method_candidate(payload['kind'], candidate_id, folder)
-        origin = 'frozen_downstream_encoder' if candidate_id.startswith('minilm_') else 'training_only_method'
-    elif len(sys.argv)==5:
+    if len(arguments)==4:
         from .candidate_refinement import resolve_registered
-        registry_bytes=Path(sys.argv[4]).read_bytes();document=json.loads(registry_bytes)
+        registry_bytes=Path(arguments[3]).read_bytes();document=json.loads(registry_bytes)
         candidate=resolve_registered(payload['kind'],candidate_id,document)
         registry_sha256=hashlib.sha256(registry_bytes).hexdigest()
         if candidate_id in document['entries']:origin='registry'
     else:candidate = next(c for c in search_candidates(payload["kind"], "all") if c.family == candidate_id)
-    configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256}
+    from .task_semantics import validate_candidate_semantics
+    semantic_check=validate_candidate_semantics(payload['kind'],payload.get('pair_semantics'),candidate)
+    configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256,
+                   'semantic_check':semantic_check}
     start = time.perf_counter()
-    with using_feature_cache(payload.get('feature_cache_dir')) as cache:
+    from .fit_guard import admitted_fits
+    runtime_estimator=None
+    if candidate.params.get('runtime_composed') and origin=='registry':
+        from .runtime_inventory import runtime_classifiers
+        runtime_estimator=runtime_classifiers()[candidate.params['class']]
+    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
         if payload.get("mode") != "refit":
             training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
         cache_report=cache.report() if cache else {'enabled':False}
+    classifier_fits = fit_counts['completed_classifier_fits'] if fit_counts is not None else int(getattr(model,'classifier_fits',1))
+    if fit_counts is not None and int(getattr(model,'classifier_fits',classifier_fits)) != classifier_fits:
+        raise ValueError('Model fit declaration differs from actual supervised calls')
     training_metadata=getattr(model,'training_metadata',None)
     selected_iterations=training_metadata.get('selected_iterations') if training_metadata else None
+    from .estimator_facts import observed_classifier
+    observed=observed_classifier(model)
+    if runtime_estimator is not None:
+        if (observed['class'],observed['module'])!=(runtime_estimator.__name__,runtime_estimator.__module__):
+            raise ValueError('The fitted estimator differs from the generated pipeline')
+        observed['family']=observed['family'] or observed['class']
     if payload.get("mode") == "refit":
         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
-                     'classifier_fits':int(getattr(model,'classifier_fits',1)),
+                     'classifier_fits':classifier_fits,
                      'training_metadata':training_metadata,'selected_iterations':selected_iterations,
-                     'resolved_configuration':configuration}}, output_path)
+                     'estimator':observed,'resolved_configuration':configuration,'metric_spec':metric.record()}}, output_path)
         return
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
     search_metrics=metric.evaluate_model(payload['kind'],model,payload['X_search'],payload['y_search'],predictions)
     score_evidence={}
-    from .method_choice import MIXTURE_POLICIES, TEXT_DEEP, TEXT_MINILM
-    record_encoder=(candidate_id in (TEXT_DEEP,TEXT_MINILM) and (folder/'method_policy.json').is_file()
-                    and json.loads((folder/'method_policy.json').read_text()).get('mode') in MIXTURE_POLICIES)
-    if metric.requires_scores or record_encoder:
+    if payload.get('preference_vote_probabilities'):
+        from .ab_complement import canonical_probabilities
+        classes,scores=canonical_probabilities(model,payload['X_search'])
+        score_evidence={'search_scores':scores,'score_classes':classes}
+    elif metric.requires_scores:
         classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
         score_evidence={'search_scores':scores,'score_classes':classes}
+    prediction_record=make_prediction_record(predictions,payload['y_search'],payload_sha256)
+    if score_evidence:
+        from .score_evidence import make_score_record
+        prediction_record['score_record']=make_score_record(prediction_record,scores,classes,metric,candidate_id)
     train_accuracy=train_metrics["accuracy"];search_accuracy=search_metrics["accuracy"]
     slices = ErrorSlices(payload["kind"], payload["X_train"]).describe(payload["X_search"], payload["y_search"], predictions) if payload.get("error_feedback") else None
     joblib.dump({"model": model if payload.get("retain_model", True) else None,
                 **score_evidence,
                 "search_predictions": predictions,
-                'prediction_record':make_prediction_record(predictions,payload['y_search'],payload_sha256), "metrics": {
-        "error_slices":slices, "primary_metric":metric.name,"train_score":train_metrics["score"],"search_score":search_metrics["score"],
+                'prediction_record':prediction_record, "metrics": {
+        "error_slices":slices, "primary_metric":metric.name,'metric_spec':metric.record(),"train_score":train_metrics["score"],"search_score":search_metrics["score"],
         "train_metrics":train_metrics,"search_metrics":search_metrics,"score_gap":train_metrics["score"]-search_metrics["score"],
         "train_accuracy": train_accuracy,
         "search_accuracy": search_accuracy,
@@ -84,9 +97,9 @@ def main() -> None:
         "class_recall": recall_score(payload["y_search"], predictions, average=None, zero_division=0).tolist(),
         "training_seconds": time.perf_counter() - start,
         'feature_cache':cache_report,
-        'classifier_fits':int(getattr(model,'classifier_fits',1)),
+        'classifier_fits':classifier_fits,
         'training_metadata':training_metadata,'selected_iterations':selected_iterations,
-        'resolved_configuration':configuration,
+        'estimator':observed,'resolved_configuration':configuration,
     }}, output_path)
 
 

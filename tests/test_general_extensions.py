@@ -173,7 +173,7 @@ class GeneralExtensionTests(unittest.TestCase):
         output=self.root/'predictions.csv';create_predictions(package,directory,output)
         with output.open() as stream:header=next(csv.reader(stream))
         self.assertEqual(header,['row_id','prediction','score_0','score_1'])
-        manifest=json.loads((self.root/'prediction_manifest.json').read_text())
+        manifest=json.loads((self.root/'prediction_manifest.json').read_text(encoding='utf-8'))
         self.assertEqual(manifest['score_class_order'],[0,1]);self.assertFalse(manifest['test_labels_read'])
 
     def test_undefined_external_auc_is_partial_result_with_frozen_model(self):

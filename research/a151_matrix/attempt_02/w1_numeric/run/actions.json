@@ -1,0 +1,28 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_logistic_C0.1",
+    "split_id": "primary",
+    "reason": "Shared first eligible candidate.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "numeric_tabular_extra_trees_leaf1",
+    "split_id": "primary",
+    "reason": "Trial 1 shows a strong linear logistic baseline at 0.92318 accuracy on the primary split. The extra_trees route is untried, and a 300-tree ensemble with min_samples_leaf=1 is a reasonable first nonlinear probe for tabular shape features that may contain interactions not captured by logistic regression.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "Search is closed; preserve the recorded final refit allowance.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 0
+  }
+]

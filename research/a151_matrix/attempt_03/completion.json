@@ -1,0 +1,52 @@
+{
+  "status": "stopped",
+  "error": "RuntimeError: w2_confirm failed: independent confirmation was not observed",
+  "rows": [
+    {
+      "name": "w1_single_text",
+      "task": "sms_spam_single_text.zip",
+      "scheduler": "ab-v1",
+      "contract": "calibrated-v2",
+      "candidate": "single_word_char_C3.0",
+      "fits": 3,
+      "calls": 1,
+      "independent_confirmation_observed": null,
+      "prediction_rows": 1032,
+      "prediction_channel": "reload",
+      "prediction_ok": true,
+      "problems": []
+    },
+    {
+      "name": "w1_single_text_grounded",
+      "task": "sms_spam_single_text.zip",
+      "scheduler": "ab-v1",
+      "contract": "grounded-v1",
+      "candidate": "single_word_C3.0",
+      "fits": 3,
+      "calls": 2,
+      "independent_confirmation_observed": null,
+      "prediction_rows": 1032,
+      "prediction_channel": "reload",
+      "prediction_ok": true,
+      "problems": []
+    },
+    {
+      "name": "w2_confirm",
+      "task": "released_task2.zip",
+      "scheduler": "ab-finalists",
+      "contract": "calibrated-v2",
+      "candidate": "word_char_C0.05",
+      "fits": 5,
+      "calls": 1,
+      "independent_confirmation_observed": null,
+      "prediction_rows": 3232,
+      "prediction_channel": "cli",
+      "prediction_ok": true,
+      "problems": [
+        "independent confirmation was not observed"
+      ]
+    }
+  ],
+  "elapsed_seconds": 289.688,
+  "automatic_retries": false
+}

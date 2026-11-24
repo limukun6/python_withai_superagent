@@ -1,0 +1,2526 @@
+{
+  "development_cases": [
+    {
+      "id": "natural_A97",
+      "expected": {
+        "unverifiable": 2,
+        "informational": 2
+      },
+      "observed": {
+        "contradicted": 2,
+        "informational": 2
+      },
+      "passed": false
+    },
+    {
+      "id": "unlikely_intervention",
+      "expected": {
+        "unverifiable": 1
+      },
+      "observed": {
+        "contradicted": 1
+      },
+      "passed": false
+    },
+    {
+      "id": "likely_intervention",
+      "expected": {
+        "unverifiable": 1
+      },
+      "observed": {
+        "contradicted": 1
+      },
+      "passed": false
+    },
+    {
+      "id": "future_trial",
+      "expected": {
+        "unverifiable": 1
+      },
+      "observed": {
+        "contradicted": 1
+      },
+      "passed": false
+    },
+    {
+      "id": "current_wrong",
+      "expected": {
+        "contradicted": 1
+      },
+      "observed": {
+        "contradicted": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "current_true",
+      "expected": {
+        "confirmed": 1
+      },
+      "observed": {
+        "confirmed": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "measured_true",
+      "expected": {
+        "confirmed": 2
+      },
+      "observed": {
+        "confirmed": 2
+      },
+      "passed": true
+    },
+    {
+      "id": "measured_false",
+      "expected": {
+        "confirmed": 1,
+        "contradicted": 1
+      },
+      "observed": {
+        "confirmed": 1,
+        "contradicted": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "distinct_sentences",
+      "expected": {
+        "confirmed": 1,
+        "unverifiable": 1
+      },
+      "observed": {
+        "confirmed": 1,
+        "contradicted": 1
+      },
+      "passed": false
+    },
+    {
+      "id": "bare_likely",
+      "expected": {
+        "contradicted": 1
+      },
+      "observed": {
+        "contradicted": 1
+      },
+      "passed": true
+    }
+  ],
+  "natural_proposal_replay": [
+    {
+      "arm": "R0",
+      "trial": 2,
+      "old": {
+        "claims_checked": 3,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows flattened-pixel logistic regression overfits severely (train 1.0 vs search 0.39375).",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained MobileNetV3-Small feature representation with logistic regression is the strongest available candidate for improving image classification accuracy without training an encoder.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The proposed candidate changes representation to L2-normalized frozen 576-dimensional ImageNet features while keeping a registered logistic classifier.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 3,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 1,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows flattened-pixel logistic regression overfits severely (train 1.0 vs search 0.39375).",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained MobileNetV3-Small feature representation with logistic regression is the strongest available candidate for improving image classification accuracy without training an encoder.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The proposed candidate changes representation to L2-normalized frozen 576-dimensional ImageNet features while keeping a registered logistic classifier.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R0",
+      "trial": 3,
+      "old": {
+        "claims_checked": 6,
+        "confirmed": 4,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows flattened-pixel logistic regression overfits severely, while trial 2 shows a stronger frozen pretrained representation reaches much higher PRIMARY accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The MobileNet candidate is not in the available candidate list, so the best available representation-change candidate is gradient histograms with logistic regression, which may capture local shape/texture cues better than raw flattened pixels while staying within the registered CPU candidates.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Only two completed PRIMARY trials are available: trial 1 pixel logistic C=0.1 scored 0.39375 with a large train-search gap, and trial 2 frozen MobileNet features plus logistic regression scored 0.8375.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Only two completed PRIMARY trials are available: trial 1 pixel logistic C=0.1 scored 0.39375 with a large train-search gap, and trial 2 frozen MobileNet features plus logistic regression scored 0.8375.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, image_gradient_histograms_logistic is a registered logistic classifier over a different handcrafted representation rather than another raw-pixel hyperparameter variant.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms and cell means may provide more transferable local structure information than flattened standardized pixels, reducing overfitting relative to the raw-pixel logistic baseline and potentially improving PRIMARY search accuracy, though it is not expected to be proven better than the prior frozen-encoder result without measurement.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 6,
+        "confirmed": 4,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows flattened-pixel logistic regression overfits severely, while trial 2 shows a stronger frozen pretrained representation reaches much higher PRIMARY accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The MobileNet candidate is not in the available candidate list, so the best available representation-change candidate is gradient histograms with logistic regression, which may capture local shape/texture cues better than raw flattened pixels while staying within the registered CPU candidates.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Only two completed PRIMARY trials are available: trial 1 pixel logistic C=0.1 scored 0.39375 with a large train-search gap, and trial 2 frozen MobileNet features plus logistic regression scored 0.8375.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Only two completed PRIMARY trials are available: trial 1 pixel logistic C=0.1 scored 0.39375 with a large train-search gap, and trial 2 frozen MobileNet features plus logistic regression scored 0.8375.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, image_gradient_histograms_logistic is a registered logistic classifier over a different handcrafted representation rather than another raw-pixel hyperparameter variant.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "unbound_review_subject"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms and cell means may provide more transferable local structure information than flattened standardized pixels, reducing overfitting relative to the raw-pixel logistic baseline and potentially improving PRIMARY search accuracy, though it is not expected to be proven better than the prior frozen-encoder result without measurement.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R0",
+      "trial": 4,
+      "old": {
+        "claims_checked": 5,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 4,
+        "informational": 3,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "Among the currently available candidates, image_rbf_svm_C1.0 is the most plausible registered alternative to the weak linear pixel baselines: it keeps the same image input but uses a nonlinear RBF kernel with moderate regularization, which may capture pixel interactions that linear logistic regression misses.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, image_rbf_svm_C1.0 is the most plausible registered alternative to the weak linear pixel baselines: it keeps the same image input but uses a nonlinear RBF kernel with moderate regularization, which may capture pixel interactions that linear logistic regression misses.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Completed PRIMARY trials show flattened-pixel logistic regression at C=0.1 scoring 0.39375 with severe overfitting, and gradient-histogram logistic regression scoring 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Completed PRIMARY trials show flattened-pixel logistic regression at C=0.1 scoring 0.39375 with severe overfitting, and gradient-histogram logistic regression scoring 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "SVM",
+            "claim": "svm",
+            "compatible_with": [
+              "linear_svm",
+              "rbf_svm"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 5,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 4,
+        "informational": 3,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "Among the currently available candidates, image_rbf_svm_C1.0 is the most plausible registered alternative to the weak linear pixel baselines: it keeps the same image input but uses a nonlinear RBF kernel with moderate regularization, which may capture pixel interactions that linear logistic regression misses.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, image_rbf_svm_C1.0 is the most plausible registered alternative to the weak linear pixel baselines: it keeps the same image input but uses a nonlinear RBF kernel with moderate regularization, which may capture pixel interactions that linear logistic regression misses.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Completed PRIMARY trials show flattened-pixel logistic regression at C=0.1 scoring 0.39375 with severe overfitting, and gradient-histogram logistic regression scoring 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Completed PRIMARY trials show flattened-pixel logistic regression at C=0.1 scoring 0.39375 with severe overfitting, and gradient-histogram logistic regression scoring 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "SVM",
+            "claim": "svm",
+            "compatible_with": [
+              "linear_svm",
+              "rbf_svm"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": false,
+            "observed": [
+              "rbf_svm"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A moderately regularized RBF SVM on standardized flattened pixels may improve over the linear pixel logistic baseline by learning nonlinear decision boundaries, though it may still underperform the unavailable frozen-encoder representation.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 2,
+      "old": {
+        "claims_checked": 1,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 1,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 0,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 shows raw-pixel logistic regression overfits strongly (train_accuracy 1.0 vs search_accuracy 0.39375) with low class recalls.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Frozen MobileNetV3-Small features will capture image structure that raw flattened pixels do not, allowing a regularized linear classifier to improve search accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 3,
+      "old": {
+        "claims_checked": 4,
+        "confirmed": 2,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 4,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 4,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly and has low search accuracy, while Trial 2 showed a frozen pretrained encoder with a linear classifier reaches much higher primary-split accuracy.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the currently available candidates, gradient histograms with a logistic classifier offers a different handcrafted image representation rather than only tuning C on flattened pixels, making it the strongest next PRIMARY experiment.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Two completed PRIMARY trials are available: raw-pixel logistic C=0.1 and frozen MobileNetV3-Small features with linear logistic regression.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient-histogram and cell-mean features will capture local edge and spatial structure that flattened raw pixels do not, allowing a regularized logistic classifier to improve primary-split accuracy over the raw-pixel logistic baseline.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "R1",
+      "trial": 4,
+      "old": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 1,
+        "unverifiable": 2,
+        "informational": 6,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "contradicted",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "extra trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "SVM",
+            "claim": "svm",
+            "compatible_with": [
+              "linear_svm",
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "extra-trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [
+          "logistic"
+        ],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 6,
+        "confirmed": 3,
+        "contradicted": 1,
+        "unverifiable": 2,
+        "informational": 6,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 1 showed raw-pixel logistic regression overfits strongly (train 1.0 vs search 0.39375), and Trial 2 showed a frozen pretrained encoder is much stronger, but that representation is not among the available candidates.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "contradicted",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "extra trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "RBF",
+            "claim": "rbf_svm",
+            "compatible_with": [
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "SVM",
+            "claim": "svm",
+            "compatible_with": [
+              "linear_svm",
+              "rbf_svm"
+            ],
+            "sentence": "Among the available raw-pixel candidates, increasing logistic C is unlikely to help given the observed overfitting, while extra trees with min_samples_leaf=3 offers a nonlinear model with some regularization and is a stronger next PRIMARY experiment than unregularized leaf1 or raw-pixel RBF SVM.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Three completed PRIMARY trials are available: raw-pixel logistic C=0.1, frozen MobileNetV3-Small linear, and gradient-histogram logistic.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "extra-trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A regularized extra-trees ensemble on flattened standardized pixels may capture nonlinear pixel interactions and reduce the severe overfitting seen with raw-pixel logistic regression, potentially improving over the raw-pixel logistic baseline, though it is unlikely to match the frozen pretrained encoder result.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [
+          "logistic"
+        ],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 2,
+      "old": {
+        "claims_checked": 2,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 2,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained image encoder followed by logistic regression may provide a more informative and less overfit representation than flattened standardized pixels, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 3,
+      "old": {
+        "claims_checked": 5,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The next untried registered image representation is gradient histograms and cell means with logistic regression, which may capture local edge/texture structure without relying on flattened pixels or a pretrained encoder.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms and cell means followed by logistic regression may provide a more spatially informative and less overfit representation than flattened standardized pixels, and may offer complementary information to frozen pretrained features;",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 5,
+        "confirmed": 3,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "The next untried registered image representation is gradient histograms and cell means with logistic regression, which may capture local edge/texture structure without relying on flattened pixels or a pretrained encoder.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms and cell means followed by logistic regression may provide a more spatially informative and less overfit representation than flattened standardized pixels, and may offer complementary information to frozen pretrained features;",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E0",
+      "trial": 4,
+      "old": {
+        "claims_checked": 9,
+        "confirmed": 7,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among remaining available candidates, the flattened-pixel logistic route already showed severe overfitting in trial 1, and gradient histograms in trial 3 reached only 0.4.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "ExtraTrees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "A regularized ExtraTrees model on flattened standardized pixels is an untried route that can test nonlinear pixel interactions while using min_samples_leaf=3 to reduce overfitting relative to leaf1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 3 with gradient histograms and logistic regression reached 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "ExtraTrees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "ExtraTrees with min_samples_leaf=3 on flattened standardized pixels may capture nonlinear pixel interactions and reduce overfitting relative to logistic regression on the same representation;",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "ExtraTrees with min_samples_leaf=3 on flattened standardized pixels may capture nonlinear pixel interactions and reduce overfitting relative to logistic regression on the same representation;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 9,
+        "confirmed": 7,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 2,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among remaining available candidates, the flattened-pixel logistic route already showed severe overfitting in trial 1, and gradient histograms in trial 3 reached only 0.4.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "ExtraTrees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "A regularized ExtraTrees model on flattened standardized pixels is an untried route that can test nonlinear pixel interactions while using min_samples_leaf=3 to reduce overfitting relative to leaf1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "confirmed",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Trial 3 with gradient histograms and logistic regression reached 0.4.",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "ExtraTrees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "ExtraTrees with min_samples_leaf=3 on flattened standardized pixels may capture nonlinear pixel interactions and reduce overfitting relative to logistic regression on the same representation;",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "ExtraTrees with min_samples_leaf=3 on flattened standardized pixels may capture nonlinear pixel interactions and reduce overfitting relative to logistic regression on the same representation;",
+            "in_comparison": true,
+            "observed": null,
+            "status": "informational"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 2,
+      "old": {
+        "claims_checked": 2,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 2,
+        "confirmed": 1,
+        "contradicted": 0,
+        "unverifiable": 1,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "A frozen pretrained image encoder followed by logistic regression may provide more discriminative and less overfit-prone features than flattened standardized pixels, potentially improving primary-split accuracy.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 3,
+      "old": {
+        "claims_checked": 7,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among available candidates, gradient-histogram logistic regression is an untried image representation that may reduce reliance on raw pixel coordinates while remaining a registered CPU candidate.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms with logistic regression may capture local edge and cell-structure information better than flattened standardized pixels, potentially reducing pixel overfitting, but it may also underperform the frozen-feature representation.",
+            "in_comparison": false,
+            "observed": null,
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 7,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 2,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Among available candidates, gradient-histogram logistic regression is an untried image representation that may reduce reliance on raw pixel coordinates while remaining a registered CPU candidate.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Gradient histograms with logistic regression may capture local edge and cell-structure information better than flattened standardized pixels, potentially reducing pixel overfitting, but it may also underperform the frozen-feature representation.",
+            "in_comparison": false,
+            "observed": [
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    },
+    {
+      "arm": "E1",
+      "trial": 4,
+      "old": {
+        "claims_checked": 8,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "Extra trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "Extra trees with min_samples_leaf=3 may capture nonlinear pixel interactions that linear logistic regression on flattened pixels misses, while the leaf-size regularization may reduce the severe overfitting seen in trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Extra trees with min_samples_leaf=3 may capture nonlinear pixel interactions that linear logistic regression on flattened pixels misses, while the leaf-size regularization may reduce the severe overfitting seen in trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      },
+      "audited": {
+        "claims_checked": 8,
+        "confirmed": 5,
+        "contradicted": 0,
+        "unverifiable": 3,
+        "informational": 0,
+        "items": [
+          {
+            "field": "reason",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "trials 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 2",
+            "claim": 2,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 3",
+            "claim": 3,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "review",
+            "kind": "trial_reference",
+            "span": "Trial 1",
+            "claim": 1,
+            "observed": [
+              1,
+              2,
+              3
+            ],
+            "status": "confirmed"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "Extra trees",
+            "claim": "extra_trees",
+            "compatible_with": [
+              "extra_trees"
+            ],
+            "sentence": "Extra trees with min_samples_leaf=3 may capture nonlinear pixel interactions that linear logistic regression on flattened pixels misses, while the leaf-size regularization may reduce the severe overfitting seen in trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "classifier",
+            "span": "logistic regression",
+            "claim": "logistic",
+            "compatible_with": [
+              "logistic"
+            ],
+            "sentence": "Extra trees with min_samples_leaf=3 may capture nonlinear pixel interactions that linear logistic regression on flattened pixels misses, while the leaf-size regularization may reduce the severe overfitting seen in trial 1.",
+            "in_comparison": false,
+            "observed": [
+              "extra_trees",
+              "logistic"
+            ],
+            "status": "unverifiable",
+            "reference_resolution": "current_or_locally_scoped"
+          },
+          {
+            "field": "hypothesis",
+            "kind": "trial_reference",
+            "span": "trial 1",
+            "claim": 1,
+            "observed": null,
+            "status": "unverifiable"
+          }
+        ],
+        "unique_contradictions": [],
+        "scope": "Classifier keywords, existence of trial identities and narrowly bound measurements only; unbound percentages are not confirmed. classifier words in a comparison clause describe another experiment and are counted as informational, not scored"
+      }
+    }
+  ]
+}

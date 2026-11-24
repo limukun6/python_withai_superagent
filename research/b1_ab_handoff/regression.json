@@ -1,0 +1,26 @@
+{
+  "scope": "Repository regression on synthetic, controlled or mocked fixtures. Fixture fits are separate from the metered B1 runs and were not counted.",
+  "final_test_command": "python -m unittest discover -s tests -q",
+  "final_status": "passed",
+  "total_tests": 372,
+  "test_runner_seconds": 133.892,
+  "real_api_requests": 0,
+  "network": "disabled",
+  "prior_observations": {
+    "whole_suite_before_three_expectation_updates": {
+      "ran": 372,
+      "failures": 3,
+      "reason": "The baseline worker includes pair_semantics; three strict fixture payload assertions omitted this field."
+    },
+    "exact_a_base": "0b112d823a1991686281fdc88602e758e29a4202",
+    "same_three_failures_on_unchanged_base": true,
+    "fixture_correction": "Allow only the additional v1 pair_semantics field and explicitly check that it is null for these tabular fixtures."
+  },
+  "independent_action_replay": {
+    "matching_states_and_actions": 10,
+    "local_score_recomputed": true,
+    "paired_promotions_replayed": true,
+    "source_hash_verified_at": "26bb10137e4c5164d4466be5bcd962abf01420b9",
+    "additional_classifier_fits": 0
+  }
+}

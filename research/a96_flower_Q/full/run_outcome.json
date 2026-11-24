@@ -1,0 +1,243 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\a96_flower_Q\\full",
+  "scheduler": "ab-v1",
+  "planner_mode": "local",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 0,
+  "known_course_cost_rmb": 0,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "image_mobilenet_v3_small_linear",
+  "primary_metric": "accuracy",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "accuracy",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "image_mobilenet_v3_small_linear"
+    ],
+    "primary_candidate": "image_mobilenet_v3_small_linear",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "image_mobilenet_v3_small_linear",
+        "primary_accuracy": 0.8375,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 3,
+            "candidate": "image_mobilenet_v3_small_linear",
+            "params": {
+              "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+              "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+              "C": 10.0,
+              "representation": "L2-normalized frozen 576-dimensional image features"
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "accuracy",
+            "metric_spec": {
+              "name": "accuracy",
+              "labels": [
+                "c0",
+                "c1",
+                "c2",
+                "c3",
+                "c4"
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.975,
+            "search_score": 0.8375,
+            "train_metrics": {
+              "accuracy": 0.975,
+              "macro_f1": 0.9751161231805219,
+              "primary_metric": "accuracy",
+              "score": 0.975,
+              "rows": 640
+            },
+            "search_metrics": {
+              "accuracy": 0.8375,
+              "macro_f1": 0.8331292903180249,
+              "primary_metric": "accuracy",
+              "score": 0.8375,
+              "rows": 160
+            },
+            "score_gap": 0.13749999999999996,
+            "train_accuracy": 0.975,
+            "search_accuracy": 0.8375,
+            "generalization_gap": 0.13749999999999996,
+            "class_recall": [
+              0.8857142857142857,
+              0.9310344827586207,
+              0.782608695652174,
+              0.8205128205128205,
+              0.7647058823529411
+            ],
+            "training_seconds": 7.466688099986641,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": {
+              "frozen_downstream_encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+              "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+              "backend": "cpu",
+              "versions": {
+                "torch": "2.13.0+cu126",
+                "torchvision": "0.28.0+cu126"
+              },
+              "trainable_encoder_parameters": 0,
+              "embedding_dimensions": 576
+            },
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "image_mobilenet_v3_small_linear",
+              "params": {
+                "encoder": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+                "weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+                "C": 10.0,
+                "representation": "L2-normalized frozen 576-dimensional image features"
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "image_mobilenet_v3_small_linear",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 9.28200000000652,
+            "evaluation_payload_sha256": "d71613ae2a617c51e7b0cf7710f603d8d12e2ecd07c01909dbbcb7182a641809",
+            "label_sha256": "95befb3ef3f218c37c72f00469de6f635838109b6af84078e9cdb454963907c5",
+            "row_ids_sha256": "8227340af1e60c8db02685fe793ed6a3dd417ef4c264db087da3a71924e3e8ab",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "accuracy",
+                "labels": [
+                  "c0",
+                  "c1",
+                  "c2",
+                  "c3",
+                  "c4"
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "accuracy",
+                "labels": [
+                  "c0",
+                  "c1",
+                  "c2",
+                  "c3",
+                  "c4"
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.8375,
+        "mean_score": 0.8375,
+        "mean_accuracy": 0.8375,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "image_mobilenet_v3_small_linear",
+    "selection_score": 0.8375,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "image_mobilenet_v3_small_linear",
+      "incumbent": "image_mobilenet_v3_small_linear",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "accuracy"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": null,
+  "finalization": {
+    "primary_metric": "accuracy",
+    "official_validation_score": null,
+    "pre_refit_validation_score": null,
+    "single_model_validation_score": null,
+    "official_validation_accuracy": null,
+    "pre_refit_validation_accuracy": null,
+    "single_model_validation_accuracy": null,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 800,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 4.254916799982311,
+    "ensemble_failure": null,
+    "provided_validation_available": false
+  },
+  "elapsed_seconds": 64.17199999999139,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 9,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 10,
+    "completed_classifier_fits": 10,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0,
+  "unresolved_calls": 0,
+  "task_budget_after_run": null,
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib",
+    "trial_3.joblib",
+    "trial_4.joblib",
+    "trial_5.joblib",
+    "trial_6.joblib",
+    "trial_7.joblib",
+    "trial_8.joblib",
+    "trial_9.joblib"
+  ],
+  "history_policy": "strict",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "no_new_llm_calls",
+  "valid_for_budgeted_final_report": null,
+  "project_usage_after_run": null,
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

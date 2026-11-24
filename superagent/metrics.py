@@ -47,6 +47,15 @@ class MetricSpec:
 
     def record(self):return {'name':self.name,'labels':list(self.labels),'direction':'maximize'}
 
+    def check_identity(self, observed):
+        """An old result can lack identity; an explicit contradiction is never usable."""
+        if observed is None:
+            return {'status':'unknown','expected':self.record(),'observed':None,
+                    'reason':'worker_metric_identity_unavailable'}
+        if observed!=self.record():
+            raise ValueError('Worker metric identity disagrees with task metric, class order or direction')
+        return {'status':'confirmed','expected':self.record(),'observed':observed}
+
     @property
     def requires_scores(self):return self.name=='roc_auc'
 

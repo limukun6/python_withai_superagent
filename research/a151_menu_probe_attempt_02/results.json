@@ -1,0 +1,25 @@
+{
+  "error": null,
+  "answer": {
+    "candidate": "word_char_C0.1",
+    "task_kind": "pair_text",
+    "configuration_claim": {
+      "classifier": "logistic"
+    },
+    "reason": "Trial 1 is the only primary evidence: word-only C=0.05 scored 0.6228 search accuracy with a 0.1918 train-search gap and balanced class recalls. The word_char route is untried, and C=0.1 is a moderate regularization setting that can test whether subword features add useful preference signal without relying on an unverified improvement claim.",
+    "review": "Trial 1 completed on the primary split with logistic regression, search accuracy 0.6228, train accuracy 0.8146, and class recalls [0.6281, 0.6172]. The configuration was not declared in advance, but the fitted estimator was logistic. No causal conclusion follows from this single trial.",
+    "hypothesis": "A word+character representation at C=0.1 may capture both lexical and subword preference cues better than the word-only C=0.05 baseline, but the direction and magnitude are unknown.",
+    "evidence_trials": [
+      1
+    ],
+    "expected_change": null,
+    "slice_expectation": null,
+    "purpose": "improve",
+    "uncertainty": "There is no primary evidence for word_char or for C=0.1 in this task. A single completed trial cannot separate representation effects from regularization effects, and the expected change is not predicted."
+  },
+  "capabilities_resolved": 30,
+  "accepted": true,
+  "candidate": "word_char_C0.1",
+  "candidate_in_original_menu": true,
+  "params_match_catalogue": true
+}

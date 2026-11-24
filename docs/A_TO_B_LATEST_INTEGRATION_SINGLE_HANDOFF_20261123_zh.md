@@ -1,5 +1,7 @@
 # 给B：采用最新交付，接入和剩余交接一次说明
 
+**A140最新（2026-11-24）：** A目标稳健性18案例/四条3fit完整链路通过，累计1614。可选--feedback-view compact已接，默认full；三真实任务固定前缀×三视图9Flash全部成功，下一候选均相同，compact比full少809输入token（6.15%），总折算少.004153含输出差，非稳定提分/纠错结论。实际唯一ledger现372/known6.8218955/unknown12/pending0，A持有空闲，原363行未改。最新owner research/a140_flash_projection/paid/current_ledger_owner.json；B以后写账须接回最新372实际文件，不能继续写旧363/357副本。原12未知继续授权有效，不再等官网对账。H2/Task2仍B，不要求重复已有材料。报告batches/A139_A140_compact_feedback_results_20261124_zh.md。
+
 **2026-11-24 A137接续：** 5bd6b14七项研究已零训练复算通过；数值核已适配A当前入口、--numeric-kernel默认off，七类默认菜单不变，46项定向检查/匿名3fit自主选择及三种交付通过。弱标签未过线不接。A累计1602，ledger仍363/known6.7532615/unknown12/pending0、A持有空闲；无新增API。Task1候选仍6b6ace8的92源，当前扩展为93源，不把旧分数重标。B无需重复Bean或已交材料，按原分工接续H2/Released2。报告batches/A137_numeric_adapter_results_20261124_zh.md，代码合并后提交号见共享分支；这次整合不要求你停开发。
 
 **2026-11-24更新（A135后）：** 924e88a置信路由已按原“下一轮”约定接入，--confidence-cascade默认off，不改变共同主用配置；两原凭据验证通过、41定向检查通过，不重复B训练/940评价。A当前92源Task1候选已自主训练11fit，8117行/15候选/seed707，val1523/2030，三种交付一致，原test未读；不是最终提交冻结。A累计1599，实际363账本未改、A持有且空闲，已知6.7532615/12未知/0待处理，用户继续授权有效。报告batches/A133_A135_routing_and_task1_results_20261123_zh.md。B5bd6b14已登记，数值核/弱标签尚未接A，下一批单审。B继续H2/Released2即可，48/24、旧C1和原账本已收不再催；双方仍可并行开发。

@@ -1,0 +1,18 @@
+{
+  "candidate": "image_mobilenet_v3_small_linear",
+  "task_kind": "image",
+  "configuration_claim": {
+    "classifier": "logistic"
+  },
+  "reason": "Both completed PRIMARY trials are weak: flattened-pixel logistic C=0.1 overfits severely (train 1.0, search 0.39375), while gradient-histogram logistic improves search only to 0.4 with a smaller but still large gap. A frozen pretrained encoder with a linear classifier is the most promising available route to test richer image representations without training a deep model.",
+  "review": "Trial 1 shows high-capacity pixel logistic overfitting; trial 2 reduces overfit but remains near 0.4 accuracy. The available MobileNet candidate changes representation rather than only regularization, so it is a reasonable next PRIMARY search candidate. This is not proof of improvement, and the 64x64 stretched input may not match the encoder's expected preprocessing.",
+  "hypothesis": "L2-normalized frozen MobileNet-V3-Small features may capture more discriminative image structure than flattened pixels or hand-built gradient histograms, allowing a regularized linear classifier to improve PRIMARY search accuracy and reduce reliance on pixel-level overfitting.",
+  "evidence_trials": [
+    1,
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "The pretrained encoder may be mismatched to 64x64 stretched RGB inputs and the task domain, so feature quality is uncertain. The candidate has not been evaluated on the PRIMARY split, and any accuracy change could be positive, neutral, or negative; no magnitude is predicted."
+}

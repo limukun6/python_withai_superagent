@@ -2,13 +2,25 @@ from copy import deepcopy
 import json
 import unittest
 
-from superagent.compact_feedback import compact_context,expand_context,REF
+from superagent.compact_feedback import compact_context,expand_context,REF,TABLE
 from superagent.ab_flash import context_for,FlashPicker
 from superagent.cli import build_parser,_run
 from tests.test_ab_flash import fixture_state,answer_for
 
 
 class CompactFeedbackTests(unittest.TestCase):
+    def test_homogeneous_records_round_trip_as_a_table(self):
+        rows=[{'trial':i,'unverified_explanation_text':'not known','measurement_supported':False,
+               'primary_metric_identifier':'roc_auc','measured_search_score':i/100} for i in range(6)]
+        full={'history':[],'checks':rows,'memory':{'source_rows':rows,'failed_status':'unknown'}}
+        compact=compact_context(full)
+        self.assertIn(TABLE,json.dumps(compact))
+        self.assertEqual(expand_context(compact),full)
+        self.assertLess(len(json.dumps(compact)),len(json.dumps(full)))
+        for table in ({'columns':['a','a'],'rows':[[1,2]]},{'columns':['a'],'rows':[[1,2]]}):
+            broken={'history':[],'checks':{TABLE:table},'memory':{},'evidence_projection':{'format':'lossless_references'}}
+            with self.assertRaises(ValueError):expand_context(broken)
+
     def test_full_default_common_fields_and_exact_round_trip(self):
         state,caps,ids=fixture_state()
         before=deepcopy(state);full=context_for(state,caps,ids,True)

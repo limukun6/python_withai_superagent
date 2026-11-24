@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-24：A139–A140紧凑反馈与9次真实Flash完成
+
+第一版仅引用少3.268%附加字节、未过20%门，0付费负结果保留f61cfc3；另登记无损表格化，40检查/三上下文还原通过，附加字节减23.9898%/整请求约5.75%，同3已见工程状态不算独立验证。显式compact只checked，默认full不改。真实3任务×raw/full/compact轮换共9请求，9动作合法，三任务各候选均相同；输入10157/13157/12348，compact少809/6.149%输入token；总费.019945/.026421/.022268，compact比full少.004153含输出长度差，不宣称稳定15.7%或质量/纠错改善，仍比raw贵。自动prose矛盾0但unknown6/3/7，非人工真值。
+
+9成功Flash、0fit，35662输入8243输出，¥.068634，238.359秒。A1614，实际ledger372/known6.8218955/unknown12/pending0，原363及旧transitions未变，A持有空闲。新owner research/a140_flash_projection/paid/current_ledger_owner.json；旧账本副本不用。报告batches/A139_A140_compact_feedback_results_20261124_zh.md、证据a139_feedback_v1/a139B_feedback_v2/a140_flash_projection。接续中断恢复零训练，B仍H2/Task2。
+
 ## 2026-11-24：A138目标稳健性完成，累计1614
 
 先冻结18案例和四条3fit计划。正式CLI预训练截停18/18通过；四完整匿名路径在共同注册行号上检查accuracy/标签反向改名/binaryF1正类0/AUC正类0，每条自主线性→树→refit，各3fit，整体54.454秒，四独立包预测一致、标签映回32行一致、正类和概率列序区分正确。0API，无生产修复；同数据变换不是新真实任务或新质量增益。新增12fit/累计1614，ledger363未调用；接续A139紧凑反馈。证据research/a138_goal_robustness、报告batches/A138_goal_robustness_results_20261124_zh.md。

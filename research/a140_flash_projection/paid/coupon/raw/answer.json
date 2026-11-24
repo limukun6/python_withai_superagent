@@ -1,0 +1,17 @@
+{
+  "candidate": "catboost_depth6_reg3.0",
+  "task_kind": "categorical_tabular",
+  "configuration_claim": {
+    "classifier": "catboost"
+  },
+  "reason": "Trial 2 is the strongest completed PRIMARY result (accuracy 0.7552) and used CatBoost with depth 6 and l2_leaf_reg 3.0. The closest available candidate is catboost_depth6_reg3.0, which keeps the same core tree complexity and regularization while using native categorical representation. This is the most evidence-aligned next PRIMARY fit.",
+  "review": "Trial 1 logistic C0.05 scored 0.6652, while trial 2 CatBoost scored 0.7552 with a train-search gap of 0.0717. The available CatBoost grid varies depth and regularization; depth6/reg3.0 is directly supported by the best prior trial, though the representation differs from trial 2's training-selected interactions. No formal test is available, and the controller owns stopping and final selection.",
+  "hypothesis": "A CatBoost model with depth 6 and l2_leaf_reg 3.0 using native categorical handling may preserve the useful signal seen in trial 2 while changing the representation from explicit training-selected interactions to native categories. This is a plausible next test, not a guaranteed improvement.",
+  "evidence_trials": [
+    2
+  ],
+  "expected_change": null,
+  "slice_expectation": null,
+  "purpose": "improve",
+  "uncertainty": "The candidate is not identical to trial 2 because it uses native categories rather than training-selected categorical field interactions, so its PRIMARY score may differ in either direction. Accuracy variance and overfitting risk are unknown; the observed gap in trial 2 suggests some generalization concern. No predicted improvement is asserted."
+}

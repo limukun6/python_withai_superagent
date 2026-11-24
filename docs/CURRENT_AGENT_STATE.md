@@ -1,4 +1,14 @@
-# 当前接续状态：2026-11-24，A138完成，1614fit
+# 当前接续状态：2026-11-24，A140完成，1614fit／372请求
+
+## A139–A140最新：无损紧凑反馈已接，9真实Flash完成，默认full不变
+
+显式--feedback-view compact仅checked-history/共享AB允许，保留原默认full和共同task/history/menu/budget；checks/memory以引用+表格去重可完整反解，unknown/失败/未验证解释不删、不加额外参数知识。第一版f61cfc3只少3.268%附加字节没过20%门，0付费负结果保留；第二版40项no-fit检查、同三工程前缀roundtrip通过，少23.9898%附加字节/整请求约5.75%，才开真实试验。
+
+三任务真实local state_3（各前2实验）raw/full/compact各一次、轮换顺序，9契约全部合法；三种视图每任务下一候选都相同，没训练下一动作、不称分类质量无损。输入token raw/full/compact＝10157/13157/12348，compact相对full少809/6.149%；输入费用部分少.000809，总费少.004153含回复短836token，不能承诺稳定省15.7%。完整费用.019945/.026421/.022268，compact仍比raw贵.002323。受限prose自动矛盾都0，unknown6/3/7、缺人工金标准和重复，不声称纠错改善，保持默认full。
+
+新9API/0fit，总输入35662输出8243、折算.068634、队列238.359秒。累计A1614；唯一实际ledger仍runs/a129_B_ledger_return/private/ledger.sqlite，已追加372/known6.8218955/unknown12/pending0，owner A/exclusive_idle，原363 requests/旧transitions逐项未改，原12未知继续授权有效。不要用旧363或357副本写账，不再要求官网对账。当前owner在research/a140_flash_projection/paid/current_ledger_owner.json，SHA2d4913677e760823b8fbc033f18221015e3d6f177d9a7e67b3936789161e3f7b。
+
+生产94源与A139B/A140固定一致；A138四模型仍93源、Task1候选92源，均保留原包与身份，不重标。报告batches/A139_A140_compact_feedback_results_20261124_zh.md，证据research/a139_feedback_v1/a139B_feedback_v2/a140_flash_projection。下一步A141用已有模型补中断后成果恢复，0训练/API；H2/Task2仍B。下面363账本/93源均旧阶段快照，以本段为准。
 
 ## A138最新：目标稳健性18/18、四完整路径通过，无生产修改
 

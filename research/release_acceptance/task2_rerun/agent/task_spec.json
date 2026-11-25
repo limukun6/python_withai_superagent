@@ -1,0 +1,87 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "pair_text",
+  "metric": "accuracy",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "pair_text",
+    "columns": [
+      {
+        "name": "headline_A",
+        "type": "text"
+      },
+      {
+        "name": "headline_B",
+        "type": "text"
+      }
+    ],
+    "target": "label_pairwise",
+    "pair_label_one": "left",
+    "pair_semantics": "preference"
+  },
+  "input_columns": [
+    {
+      "name": "headline_A",
+      "type": "text"
+    },
+    {
+      "name": "headline_B",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "pair_text",
+  "train_rows": 6608,
+  "validation_rows": 0,
+  "provided_validation_available": false,
+  "metric_spec": {
+    "name": "accuracy",
+    "labels": [
+      0,
+      1
+    ],
+    "direction": "maximize"
+  },
+  "task_kind": "pair_text_binary",
+  "model_kind": "pair_text",
+  "class_count": 2,
+  "goal_resolution": {
+    "resolution_version": 1,
+    "fields": {
+      "input_kind": {
+        "value": "pair_text",
+        "source": "manifest_v1",
+        "status": "confirmed"
+      },
+      "primary_metric": {
+        "value": "accuracy",
+        "source": "declared_manifest",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "label_domain": {
+        "value": [
+          0,
+          1
+        ],
+        "source": "training_labels",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": null,
+        "source": "not_applicable",
+        "status": "not_applicable"
+      },
+      "pair_semantics": {
+        "value": "preference",
+        "source": "input_schema",
+        "status": "confirmed"
+      }
+    },
+    "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+  }
+}

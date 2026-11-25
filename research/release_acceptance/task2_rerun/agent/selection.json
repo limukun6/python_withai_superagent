@@ -1,0 +1,139 @@
+{
+  "primary_metric": "accuracy",
+  "search_score": 0.6671814671814672,
+  "candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+  "search_accuracy": 0.6671814671814672,
+  "selection_rule": "max inner accuracy; ties by candidate id",
+  "selection_metric": "inner_search_accuracy",
+  "selection_score": 0.6671814671814672,
+  "refit_requested": true,
+  "ensemble": {
+    "enabled": false,
+    "evaluations": 0,
+    "adopted_on_inner": false,
+    "minimum_gain": 0.002,
+    "components": [],
+    "rule": "Best per visited route; max 3 routes; equal probability weights; inner gain >= .002"
+  },
+  "confirmation": {
+    "enabled": true,
+    "valid_confirmation": false,
+    "independent_confirmation_observed": false,
+    "primary_metric": "accuracy",
+    "selected_candidate": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+    "selection_score": 0.6671814671814672,
+    "selection_rule": "Uncertainty-based opening with matched pair and single controls",
+    "b_scheduler_review": {
+      "anchor": "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+      "members": [
+        "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75"
+      ],
+      "partner": null,
+      "primary_rows": 1295,
+      "opening_correct": {
+        "word_C0.05": 836,
+        "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1": 801,
+        "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88": 848,
+        "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8": 820,
+        "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75": 864
+      },
+      "opening_combinations": [
+        {
+          "members": [
+            "word_C0.05",
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1"
+          ],
+          "correct": 810
+        },
+        {
+          "members": [
+            "word_C0.05",
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88"
+          ],
+          "correct": 848
+        },
+        {
+          "members": [
+            "word_C0.05",
+            "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8"
+          ],
+          "correct": 827
+        },
+        {
+          "members": [
+            "word_C0.05",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75"
+          ],
+          "correct": 864
+        },
+        {
+          "members": [
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88"
+          ],
+          "correct": 823
+        },
+        {
+          "members": [
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+            "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8"
+          ],
+          "correct": 809
+        },
+        {
+          "members": [
+            "recipe_pair_text_latent_word_logistic_b85cb8499a92f2b1",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75"
+          ],
+          "correct": 850
+        },
+        {
+          "members": [
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8"
+          ],
+          "correct": 832
+        },
+        {
+          "members": [
+            "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75"
+          ],
+          "correct": 856
+        },
+        {
+          "members": [
+            "recipe_pair_text_latent_char_wb_logistic_ab8ac78cede42ca8",
+            "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75"
+          ],
+          "correct": 854
+        }
+      ],
+      "primary_single_accuracy": 0.6671814671814672,
+      "portfolio_score": 0.6671814671814672,
+      "proposed_pair": [
+        "recipe_pair_text_hybrid_char_wb_logistic_c7bdfa1a01c3ea75",
+        "word_C0.05"
+      ],
+      "comparison_members": [],
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "opening_uncertainty": {
+        "leader": "recipe_pair_text_hybrid_word_logistic_afae0c6fa9461d88",
+        "runner_up": "word_C0.05",
+        "gap": 0.009266409266409266,
+        "cluster_standard_error": 0.008037219196048754,
+        "groups": 965,
+        "disagreements": 112,
+        "ambiguous": true
+      },
+      "confirmation_rows": 0,
+      "promoted": false
+    }
+  }
+}

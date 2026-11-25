@@ -1,0 +1,197 @@
+{
+  "ab_schema_version": 1,
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "single_text",
+    "metric": {
+      "name": "binary_f1",
+      "labels": [
+        "yes",
+        "no"
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "text",
+      "columns": [
+        {
+          "name": "text",
+          "type": "text"
+        }
+      ],
+      "target": "label"
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "single_text",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "binary_f1",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            "yes",
+            "no"
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": "no",
+          "source": "declared_spec",
+          "status": "confirmed"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [],
+  "available_candidates": [
+    {
+      "id": "single_word_C0.3",
+      "params": {
+        "representation": "word",
+        "C": 0.3
+      },
+      "route": "single_word",
+      "input_kind": "single_text",
+      "representation": "word",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_word_C3.0",
+      "params": {
+        "representation": "word",
+        "C": 3.0
+      },
+      "route": "single_word",
+      "input_kind": "single_text",
+      "representation": "word",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_char_C0.3",
+      "params": {
+        "representation": "char",
+        "C": 0.3
+      },
+      "route": "single_char",
+      "input_kind": "single_text",
+      "representation": "char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_char_C3.0",
+      "params": {
+        "representation": "char",
+        "C": 3.0
+      },
+      "route": "single_char",
+      "input_kind": "single_text",
+      "representation": "char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_word_char_C0.3",
+      "params": {
+        "representation": "word_char",
+        "C": 0.3
+      },
+      "route": "single_word_char",
+      "input_kind": "single_text",
+      "representation": "word_char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_word_char_C3.0",
+      "params": {
+        "representation": "word_char",
+        "C": 3.0
+      },
+      "route": "single_word_char",
+      "input_kind": "single_text",
+      "representation": "word_char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "prediction_evidence": [],
+  "budget": {
+    "fit_limit": 3,
+    "attempted_classifier_fits": 0,
+    "completed_classifier_fits": 0,
+    "remaining_fit_allowance": 3,
+    "reserved_final_refit": 1,
+    "unknown_failed_attempts": 0,
+    "llm_request_limit": 0,
+    "used_llm_requests": 0,
+    "time_limit_seconds": 1800.0,
+    "elapsed_seconds": 0.06299999996554106
+  },
+  "registered_confirmation_splits": [
+    "confirmation_1",
+    "confirmation_2"
+  ]
+}

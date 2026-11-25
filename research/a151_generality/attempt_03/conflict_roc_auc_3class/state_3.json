@@ -1,0 +1,1285 @@
+{
+  "ab_schema_version": 1,
+  "task": {
+    "contract_version": 1,
+    "objective": "classification",
+    "kind": "single_text",
+    "metric": {
+      "name": "roc_auc",
+      "labels": [
+        "high",
+        "low",
+        "mid"
+      ],
+      "direction": "maximize"
+    },
+    "input_schema": {
+      "modality": "text",
+      "columns": [
+        {
+          "name": "text",
+          "type": "text"
+        }
+      ],
+      "target": "label"
+    },
+    "selection_data": "training-derived partitions only",
+    "formal_test_available_to_agent": false,
+    "goal_resolution": {
+      "resolution_version": 1,
+      "fields": {
+        "input_kind": {
+          "value": "single_text",
+          "source": "manifest_v1",
+          "status": "confirmed"
+        },
+        "primary_metric": {
+          "value": "roc_auc",
+          "source": "declared_manifest",
+          "status": "confirmed",
+          "effective_policy": "maximize"
+        },
+        "label_domain": {
+          "value": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "source": "training_labels",
+          "status": "confirmed"
+        },
+        "positive_label": {
+          "value": null,
+          "source": "not_applicable",
+          "status": "not_applicable"
+        },
+        "pair_semantics": {
+          "value": null,
+          "source": "undeclared",
+          "status": "unknown"
+        }
+      },
+      "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+    }
+  },
+  "history": [
+    {
+      "trial": 1,
+      "candidate": "single_word_C0.3",
+      "params": {
+        "representation": "word",
+        "C": 0.3
+      },
+      "split_id": "primary",
+      "proposal": null,
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "roc_auc",
+      "metric_spec": {
+        "name": "roc_auc",
+        "labels": [
+          "high",
+          "low",
+          "mid"
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.57644360847045,
+      "search_score": 0.4812767212148017,
+      "train_metrics": {
+        "accuracy": 0.37344398340248963,
+        "macro_f1": 0.3304946872779582,
+        "primary_metric": "roc_auc",
+        "score": 0.57644360847045,
+        "rows": 241
+      },
+      "search_metrics": {
+        "accuracy": 0.288135593220339,
+        "macro_f1": 0.24711538461538463,
+        "primary_metric": "roc_auc",
+        "score": 0.4812767212148017,
+        "rows": 59
+      },
+      "score_gap": 0.09516688725564826,
+      "train_accuracy": 0.37344398340248963,
+      "search_accuracy": 0.288135593220339,
+      "generalization_gap": 0.08530839018215064,
+      "class_recall": [
+        0.14285714285714285,
+        0.7058823529411765,
+        0.09523809523809523
+      ],
+      "training_seconds": 0.0946249999688007,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "single_word_C0.3",
+        "params": {
+          "representation": "word",
+          "C": 0.3
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "single_word_C0.3",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 1.375,
+      "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af",
+      "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+      "row_ids_sha256": "fbcf9b0b14b25ee90e6c3fef2466bbe74ad55feb9e1458dad6501063c3fc07c9",
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": null
+    },
+    {
+      "trial": 2,
+      "candidate": "single_char_C0.3",
+      "params": {
+        "representation": "char",
+        "C": 0.3
+      },
+      "split_id": "primary",
+      "proposal": null,
+      "status": "completed",
+      "error_slices": null,
+      "primary_metric": "roc_auc",
+      "metric_spec": {
+        "name": "roc_auc",
+        "labels": [
+          "high",
+          "low",
+          "mid"
+        ],
+        "direction": "maximize"
+      },
+      "train_score": 0.5327106205726171,
+      "search_score": 0.4794093075826822,
+      "train_metrics": {
+        "accuracy": 0.36099585062240663,
+        "macro_f1": 0.3394776924423959,
+        "primary_metric": "roc_auc",
+        "score": 0.5327106205726171,
+        "rows": 241
+      },
+      "search_metrics": {
+        "accuracy": 0.288135593220339,
+        "macro_f1": 0.24711538461538463,
+        "primary_metric": "roc_auc",
+        "score": 0.4794093075826822,
+        "rows": 59
+      },
+      "score_gap": 0.0533013129899349,
+      "train_accuracy": 0.36099585062240663,
+      "search_accuracy": 0.288135593220339,
+      "generalization_gap": 0.07286025740206764,
+      "class_recall": [
+        0.14285714285714285,
+        0.7058823529411765,
+        0.09523809523809523
+      ],
+      "training_seconds": 0.11040750000393018,
+      "feature_cache": {
+        "enabled": false
+      },
+      "classifier_fits": 1,
+      "training_metadata": null,
+      "selected_iterations": null,
+      "estimator": {
+        "family": "logistic",
+        "class": "LogisticRegression",
+        "module": "sklearn.linear_model._logistic",
+        "parameters": {},
+        "source": "fitted_estimator"
+      },
+      "resolved_configuration": {
+        "id": "single_char_C0.3",
+        "params": {
+          "representation": "char",
+          "C": 0.3
+        },
+        "origin": "static",
+        "registry_sha256": null,
+        "semantic_check": {
+          "candidate": "single_char_C0.3",
+          "swap_label_rule": "unknown"
+        }
+      },
+      "worker_wall_seconds": 1.3429999999934807,
+      "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af",
+      "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+      "row_ids_sha256": "fbcf9b0b14b25ee90e6c3fef2466bbe74ad55feb9e1458dad6501063c3fc07c9",
+      "metric_identity": {
+        "status": "confirmed",
+        "expected": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        },
+        "observed": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        }
+      },
+      "configuration_fact_check": {
+        "declared": null,
+        "observed": "logistic",
+        "observed_class": "LogisticRegression",
+        "status": "not_declared",
+        "scope": "Declared classifier versus the fitted estimator of this trial"
+      },
+      "hypothesis_check": {
+        "status": "not_stated"
+      },
+      "explanation_audit": null
+    }
+  ],
+  "available_candidates": [
+    {
+      "id": "single_word_C3.0",
+      "params": {
+        "representation": "word",
+        "C": 3.0
+      },
+      "route": "single_word",
+      "input_kind": "single_text",
+      "representation": "word",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_char_C3.0",
+      "params": {
+        "representation": "char",
+        "C": 3.0
+      },
+      "route": "single_char",
+      "input_kind": "single_text",
+      "representation": "char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_word_char_C0.3",
+      "params": {
+        "representation": "word_char",
+        "C": 0.3
+      },
+      "route": "single_word_char",
+      "input_kind": "single_text",
+      "representation": "word_char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    },
+    {
+      "id": "single_word_char_C3.0",
+      "params": {
+        "representation": "word_char",
+        "C": 3.0
+      },
+      "route": "single_word_char",
+      "input_kind": "single_text",
+      "representation": "word_char",
+      "estimator": "logistic",
+      "swap_label_rule": "not_applicable",
+      "supports_probabilities": true,
+      "expected_classifier_fits": 1,
+      "resource": "cpu",
+      "origin": "shared_baseline",
+      "kind": "single_text",
+      "classifier_fits": 1,
+      "refit_classifier_fits": 1
+    }
+  ],
+  "prediction_evidence": [
+    {
+      "trial": 1,
+      "candidate_id": "single_word_C0.3",
+      "split_id": "primary",
+      "row_id_scope": "positions within this run training input",
+      "row_ids": [
+        3,
+        5,
+        14,
+        17,
+        28,
+        29,
+        32,
+        35,
+        38,
+        41,
+        45,
+        59,
+        61,
+        70,
+        73,
+        84,
+        85,
+        88,
+        91,
+        94,
+        97,
+        101,
+        115,
+        117,
+        126,
+        129,
+        140,
+        141,
+        144,
+        147,
+        150,
+        153,
+        157,
+        171,
+        173,
+        182,
+        185,
+        196,
+        197,
+        200,
+        203,
+        206,
+        209,
+        213,
+        227,
+        229,
+        238,
+        241,
+        252,
+        253,
+        256,
+        259,
+        262,
+        265,
+        269,
+        283,
+        285,
+        294,
+        297
+      ],
+      "predictions": [
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low"
+      ],
+      "prediction_sha256": "ae2eba9a79a65d606385952ba31c966c518fbcd49a22f2bc2aefb0c2b22d5a46",
+      "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+      "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af",
+      "score_record": {
+        "schema_version": 1,
+        "candidate_id": "single_word_C0.3",
+        "metric_spec": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        },
+        "scores": [
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ],
+          [
+            0.34210716541255987,
+            0.33089417394382364,
+            0.3269986606436164
+          ],
+          [
+            0.32459351682307186,
+            0.3304557220385119,
+            0.34495076113841616
+          ],
+          [
+            0.32728894934881986,
+            0.3578212312438772,
+            0.3148898194073029
+          ],
+          [
+            0.32507421474396986,
+            0.3776269170307592,
+            0.29729886822527096
+          ],
+          [
+            0.3034055939382394,
+            0.3770874588398736,
+            0.31950694722188694
+          ],
+          [
+            0.30627502643633936,
+            0.3710939146152942,
+            0.32263105894836636
+          ],
+          [
+            0.3138234438452408,
+            0.34833217954275025,
+            0.3378443766120089
+          ],
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ],
+          [
+            0.34210716541255987,
+            0.33089417394382364,
+            0.3269986606436164
+          ],
+          [
+            0.32459351682307186,
+            0.3304557220385119,
+            0.34495076113841616
+          ],
+          [
+            0.32728894934881986,
+            0.3578212312438772,
+            0.3148898194073029
+          ],
+          [
+            0.32507421474396986,
+            0.3776269170307592,
+            0.29729886822527096
+          ],
+          [
+            0.3034055939382394,
+            0.3770874588398736,
+            0.31950694722188694
+          ],
+          [
+            0.30627502643633936,
+            0.3710939146152942,
+            0.32263105894836636
+          ],
+          [
+            0.3138234438452408,
+            0.34833217954275025,
+            0.3378443766120089
+          ],
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ],
+          [
+            0.34210716541255987,
+            0.33089417394382364,
+            0.3269986606436164
+          ],
+          [
+            0.32459351682307186,
+            0.3304557220385119,
+            0.34495076113841616
+          ],
+          [
+            0.32728894934881986,
+            0.3578212312438772,
+            0.3148898194073029
+          ],
+          [
+            0.32507421474396986,
+            0.3776269170307592,
+            0.29729886822527096
+          ],
+          [
+            0.3034055939382394,
+            0.3770874588398736,
+            0.31950694722188694
+          ],
+          [
+            0.30627502643633936,
+            0.3710939146152942,
+            0.32263105894836636
+          ],
+          [
+            0.3138234438452408,
+            0.34833217954275025,
+            0.3378443766120089
+          ],
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ],
+          [
+            0.34210716541255987,
+            0.33089417394382364,
+            0.3269986606436164
+          ],
+          [
+            0.32459351682307186,
+            0.3304557220385119,
+            0.34495076113841616
+          ],
+          [
+            0.32728894934881986,
+            0.3578212312438772,
+            0.3148898194073029
+          ],
+          [
+            0.32507421474396986,
+            0.3776269170307592,
+            0.29729886822527096
+          ],
+          [
+            0.3034055939382394,
+            0.3770874588398736,
+            0.31950694722188694
+          ],
+          [
+            0.30627502643633936,
+            0.3710939146152942,
+            0.32263105894836636
+          ],
+          [
+            0.3138234438452408,
+            0.34833217954275025,
+            0.3378443766120089
+          ],
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ],
+          [
+            0.34210716541255987,
+            0.33089417394382364,
+            0.3269986606436164
+          ],
+          [
+            0.32459351682307186,
+            0.3304557220385119,
+            0.34495076113841616
+          ],
+          [
+            0.32728894934881986,
+            0.3578212312438772,
+            0.3148898194073029
+          ],
+          [
+            0.32507421474396986,
+            0.3776269170307592,
+            0.29729886822527096
+          ],
+          [
+            0.3034055939382394,
+            0.3770874588398736,
+            0.31950694722188694
+          ],
+          [
+            0.30627502643633936,
+            0.3710939146152942,
+            0.32263105894836636
+          ],
+          [
+            0.3138234438452408,
+            0.34833217954275025,
+            0.3378443766120089
+          ],
+          [
+            0.30741576691910666,
+            0.3821049721368336,
+            0.31047926094405964
+          ],
+          [
+            0.3404318197917887,
+            0.323183966939557,
+            0.3363842132686542
+          ],
+          [
+            0.3212895116520358,
+            0.37267483091706827,
+            0.30603565743089595
+          ],
+          [
+            0.2944007314107144,
+            0.3814063309709475,
+            0.32419293761833806
+          ]
+        ],
+        "class_order": [
+          "high",
+          "low",
+          "mid"
+        ],
+        "scores_sha256": "f2100b72341a342390184c3ad5e5ab420baa08e23ad5a78c8ab71562b5192c6a",
+        "class_order_sha256": "65f20bb7a16fb6a7f944c2604e719ae7d5c5d3afcdf39869f124a79867f8e259",
+        "prediction_sha256": "ae2eba9a79a65d606385952ba31c966c518fbcd49a22f2bc2aefb0c2b22d5a46",
+        "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+        "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af"
+      }
+    },
+    {
+      "trial": 2,
+      "candidate_id": "single_char_C0.3",
+      "split_id": "primary",
+      "row_id_scope": "positions within this run training input",
+      "row_ids": [
+        3,
+        5,
+        14,
+        17,
+        28,
+        29,
+        32,
+        35,
+        38,
+        41,
+        45,
+        59,
+        61,
+        70,
+        73,
+        84,
+        85,
+        88,
+        91,
+        94,
+        97,
+        101,
+        115,
+        117,
+        126,
+        129,
+        140,
+        141,
+        144,
+        147,
+        150,
+        153,
+        157,
+        171,
+        173,
+        182,
+        185,
+        196,
+        197,
+        200,
+        203,
+        206,
+        209,
+        213,
+        227,
+        229,
+        238,
+        241,
+        252,
+        253,
+        256,
+        259,
+        262,
+        265,
+        269,
+        283,
+        285,
+        294,
+        297
+      ],
+      "predictions": [
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low",
+        "high",
+        "mid",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "low",
+        "high",
+        "low",
+        "low"
+      ],
+      "prediction_sha256": "ae2eba9a79a65d606385952ba31c966c518fbcd49a22f2bc2aefb0c2b22d5a46",
+      "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+      "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af",
+      "score_record": {
+        "schema_version": 1,
+        "candidate_id": "single_char_C0.3",
+        "metric_spec": {
+          "name": "roc_auc",
+          "labels": [
+            "high",
+            "low",
+            "mid"
+          ],
+          "direction": "maximize"
+        },
+        "scores": [
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.3430119824627444,
+            0.3290666513232907,
+            0.3279213662139649
+          ],
+          [
+            0.31921037123200285,
+            0.32367957895335975,
+            0.35711004981463745
+          ],
+          [
+            0.32757218436077284,
+            0.35737829221822537,
+            0.3150495234210018
+          ],
+          [
+            0.31934886257220985,
+            0.38077426100781414,
+            0.29987687641997607
+          ],
+          [
+            0.3091172418630272,
+            0.3608790115092591,
+            0.3300037466277137
+          ],
+          [
+            0.30897287937895884,
+            0.37648599306891883,
+            0.3145411275521223
+          ],
+          [
+            0.31042625453824874,
+            0.34539791674148657,
+            0.34417582872026475
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.3430119824627444,
+            0.3290666513232907,
+            0.3279213662139649
+          ],
+          [
+            0.31921037123200285,
+            0.32367957895335975,
+            0.35711004981463745
+          ],
+          [
+            0.32757218436077284,
+            0.35737829221822537,
+            0.3150495234210018
+          ],
+          [
+            0.31934886257220985,
+            0.38077426100781414,
+            0.29987687641997607
+          ],
+          [
+            0.3091172418630272,
+            0.3608790115092591,
+            0.3300037466277137
+          ],
+          [
+            0.30897287937895884,
+            0.37648599306891883,
+            0.3145411275521223
+          ],
+          [
+            0.31042625453824874,
+            0.34539791674148657,
+            0.34417582872026475
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.3430119824627444,
+            0.3290666513232907,
+            0.3279213662139649
+          ],
+          [
+            0.31921037123200285,
+            0.32367957895335975,
+            0.35711004981463745
+          ],
+          [
+            0.32757218436077284,
+            0.35737829221822537,
+            0.3150495234210018
+          ],
+          [
+            0.31934886257220985,
+            0.38077426100781414,
+            0.29987687641997607
+          ],
+          [
+            0.3091172418630272,
+            0.3608790115092591,
+            0.3300037466277137
+          ],
+          [
+            0.30897287937895884,
+            0.37648599306891883,
+            0.3145411275521223
+          ],
+          [
+            0.31042625453824874,
+            0.34539791674148657,
+            0.34417582872026475
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.3430119824627444,
+            0.3290666513232907,
+            0.3279213662139649
+          ],
+          [
+            0.31921037123200285,
+            0.32367957895335975,
+            0.35711004981463745
+          ],
+          [
+            0.32757218436077284,
+            0.35737829221822537,
+            0.3150495234210018
+          ],
+          [
+            0.31934886257220985,
+            0.38077426100781414,
+            0.29987687641997607
+          ],
+          [
+            0.3091172418630272,
+            0.3608790115092591,
+            0.3300037466277137
+          ],
+          [
+            0.30897287937895884,
+            0.37648599306891883,
+            0.3145411275521223
+          ],
+          [
+            0.31042625453824874,
+            0.34539791674148657,
+            0.34417582872026475
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.3430119824627444,
+            0.3290666513232907,
+            0.3279213662139649
+          ],
+          [
+            0.31921037123200285,
+            0.32367957895335975,
+            0.35711004981463745
+          ],
+          [
+            0.32757218436077284,
+            0.35737829221822537,
+            0.3150495234210018
+          ],
+          [
+            0.31934886257220985,
+            0.38077426100781414,
+            0.29987687641997607
+          ],
+          [
+            0.3091172418630272,
+            0.3608790115092591,
+            0.3300037466277137
+          ],
+          [
+            0.30897287937895884,
+            0.37648599306891883,
+            0.3145411275521223
+          ],
+          [
+            0.31042625453824874,
+            0.34539791674148657,
+            0.34417582872026475
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ],
+          [
+            0.34672533529262334,
+            0.314417055182662,
+            0.3388576095247146
+          ],
+          [
+            0.3317513084418597,
+            0.3594103833640959,
+            0.3088383081940444
+          ],
+          [
+            0.2993800884702253,
+            0.381631458152141,
+            0.31898845337763365
+          ]
+        ],
+        "class_order": [
+          "high",
+          "low",
+          "mid"
+        ],
+        "scores_sha256": "744cfcf1df9a61583edd7772908b9662a43035aa0ac9514140aeec0faf1f3af1",
+        "class_order_sha256": "65f20bb7a16fb6a7f944c2604e719ae7d5c5d3afcdf39869f124a79867f8e259",
+        "prediction_sha256": "ae2eba9a79a65d606385952ba31c966c518fbcd49a22f2bc2aefb0c2b22d5a46",
+        "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+        "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af"
+      }
+    }
+  ],
+  "budget": {
+    "fit_limit": 3,
+    "attempted_classifier_fits": 2,
+    "completed_classifier_fits": 2,
+    "remaining_fit_allowance": 1,
+    "reserved_final_refit": 1,
+    "unknown_failed_attempts": 0,
+    "llm_request_limit": 0,
+    "used_llm_requests": 0,
+    "time_limit_seconds": 1800.0,
+    "elapsed_seconds": 2.7969999999622814
+  },
+  "registered_confirmation_splits": [
+    "confirmation_1",
+    "confirmation_2"
+  ]
+}

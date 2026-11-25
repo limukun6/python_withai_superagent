@@ -1,0 +1,147 @@
+{
+  "primary_metric": "binary_f1",
+  "enabled": true,
+  "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+  "seeds": [
+    707
+  ],
+  "shortlist": [
+    "single_char_C0.3"
+  ],
+  "primary_candidate": "single_char_C0.3",
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "candidates": [
+    {
+      "candidate": "single_char_C0.3",
+      "primary_accuracy": 1.0,
+      "measurements": [
+        {
+          "seed": 707,
+          "trial": 2,
+          "candidate": "single_char_C0.3",
+          "params": {
+            "representation": "char",
+            "C": 0.3
+          },
+          "split_id": "primary",
+          "proposal": null,
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "binary_f1",
+          "metric_spec": {
+            "name": "binary_f1",
+            "labels": [
+              "no",
+              "yes"
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 1.0,
+          "search_score": 1.0,
+          "train_metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "primary_metric": "binary_f1",
+            "score": 1.0,
+            "rows": 236
+          },
+          "search_metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "primary_metric": "binary_f1",
+            "score": 1.0,
+            "rows": 64
+          },
+          "score_gap": 0.0,
+          "train_accuracy": 1.0,
+          "search_accuracy": 1.0,
+          "generalization_gap": 0.0,
+          "class_recall": [
+            1.0,
+            1.0
+          ],
+          "training_seconds": 0.07495879998896271,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": null,
+          "selected_iterations": null,
+          "estimator": {
+            "family": "logistic",
+            "class": "LogisticRegression",
+            "module": "sklearn.linear_model._logistic",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "single_char_C0.3",
+            "params": {
+              "representation": "char",
+              "C": 0.3
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "single_char_C0.3",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 1.3280000000377186,
+          "evaluation_payload_sha256": "2bca9a0645a51b6ce26ea9337c5ab725091d637799af62cf5ccf8f1e9c174ac8",
+          "label_sha256": "dd42f711b7a51986d57c4a1fa88d03f731d2fa7a79ba173281852a3208bc0cc3",
+          "row_ids_sha256": "c0a313785d2099e0c3d96f7dba01590b31f6694c1e537b5bab825ff2e44d88db",
+          "metric_identity": {
+            "status": "confirmed",
+            "expected": {
+              "name": "binary_f1",
+              "labels": [
+                "no",
+                "yes"
+              ],
+              "direction": "maximize"
+            },
+            "observed": {
+              "name": "binary_f1",
+              "labels": [
+                "no",
+                "yes"
+              ],
+              "direction": "maximize"
+            }
+          },
+          "configuration_fact_check": {
+            "declared": null,
+            "observed": "logistic",
+            "observed_class": "LogisticRegression",
+            "status": "not_declared",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          },
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "explanation_audit": null
+        }
+      ],
+      "complete": true,
+      "primary_score": 1.0,
+      "mean_score": 1.0,
+      "mean_accuracy": 1.0,
+      "sample_sd": null
+    }
+  ],
+  "valid_confirmation": true,
+  "selected_candidate": "single_char_C0.3",
+  "selection_score": 1.0,
+  "changed": false,
+  "b_scheduler_review": {
+    "initial": "single_char_C0.3",
+    "incumbent": "single_char_C0.3",
+    "promotions": [],
+    "basis": [
+      "primary"
+    ],
+    "primary_metric": "binary_f1"
+  },
+  "independent_confirmation_observed": false
+}

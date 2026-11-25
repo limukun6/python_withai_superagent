@@ -1,0 +1,43 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "text",
+  "metric": "binary_f1",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "text",
+    "columns": [
+      {
+        "name": "text",
+        "type": "text"
+      }
+    ],
+    "target": "label"
+  },
+  "positive_label": "yes",
+  "input_columns": [
+    {
+      "name": "text",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "single_text",
+  "train_rows": 300,
+  "validation_rows": 300,
+  "provided_validation_available": true,
+  "class_count": 2,
+  "task_kind": "single_text_classification",
+  "model_kind": "single_text",
+  "metric_spec": {
+    "name": "binary_f1",
+    "labels": [
+      "no",
+      "yes"
+    ],
+    "direction": "maximize"
+  }
+}

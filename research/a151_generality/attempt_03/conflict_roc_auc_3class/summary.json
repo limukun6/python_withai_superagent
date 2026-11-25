@@ -1,0 +1,220 @@
+{
+  "run_dir": "D:\\codex\\python_withai\\runs\\integration_merge\\research\\a151_generality\\attempt_03\\conflict_roc_auc_3class",
+  "scheduler": "ab-v1",
+  "planner_mode": "local",
+  "local_text_proposals": "off",
+  "requested_planner_completed": true,
+  "model_available": true,
+  "new_api_requests": 0,
+  "known_course_cost_rmb": 0,
+  "formal_test_accessed": false,
+  "automatic_retries": false,
+  "selected_candidate": "single_word_C0.3",
+  "primary_metric": "roc_auc",
+  "full_refit_completed": true,
+  "confirmation": {
+    "primary_metric": "roc_auc",
+    "enabled": true,
+    "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+    "seeds": [
+      707
+    ],
+    "shortlist": [
+      "single_word_C0.3"
+    ],
+    "primary_candidate": "single_word_C0.3",
+    "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+    "candidates": [
+      {
+        "candidate": "single_word_C0.3",
+        "primary_accuracy": 0.288135593220339,
+        "measurements": [
+          {
+            "seed": 707,
+            "trial": 1,
+            "candidate": "single_word_C0.3",
+            "params": {
+              "representation": "word",
+              "C": 0.3
+            },
+            "split_id": "primary",
+            "proposal": null,
+            "status": "completed",
+            "error_slices": null,
+            "primary_metric": "roc_auc",
+            "metric_spec": {
+              "name": "roc_auc",
+              "labels": [
+                "high",
+                "low",
+                "mid"
+              ],
+              "direction": "maximize"
+            },
+            "train_score": 0.57644360847045,
+            "search_score": 0.4812767212148017,
+            "train_metrics": {
+              "accuracy": 0.37344398340248963,
+              "macro_f1": 0.3304946872779582,
+              "primary_metric": "roc_auc",
+              "score": 0.57644360847045,
+              "rows": 241
+            },
+            "search_metrics": {
+              "accuracy": 0.288135593220339,
+              "macro_f1": 0.24711538461538463,
+              "primary_metric": "roc_auc",
+              "score": 0.4812767212148017,
+              "rows": 59
+            },
+            "score_gap": 0.09516688725564826,
+            "train_accuracy": 0.37344398340248963,
+            "search_accuracy": 0.288135593220339,
+            "generalization_gap": 0.08530839018215064,
+            "class_recall": [
+              0.14285714285714285,
+              0.7058823529411765,
+              0.09523809523809523
+            ],
+            "training_seconds": 0.0946249999688007,
+            "feature_cache": {
+              "enabled": false
+            },
+            "classifier_fits": 1,
+            "training_metadata": null,
+            "selected_iterations": null,
+            "estimator": {
+              "family": "logistic",
+              "class": "LogisticRegression",
+              "module": "sklearn.linear_model._logistic",
+              "parameters": {},
+              "source": "fitted_estimator"
+            },
+            "resolved_configuration": {
+              "id": "single_word_C0.3",
+              "params": {
+                "representation": "word",
+                "C": 0.3
+              },
+              "origin": "static",
+              "registry_sha256": null,
+              "semantic_check": {
+                "candidate": "single_word_C0.3",
+                "swap_label_rule": "unknown"
+              }
+            },
+            "worker_wall_seconds": 1.375,
+            "evaluation_payload_sha256": "ffeb761db75ac258c5a81b0f75416c308753e4038d4266f5384e1629b17ff0af",
+            "label_sha256": "57bd25b8865a2773845126e8308f560992ff6f5b47d8adefbf2633241a0d354b",
+            "row_ids_sha256": "fbcf9b0b14b25ee90e6c3fef2466bbe74ad55feb9e1458dad6501063c3fc07c9",
+            "metric_identity": {
+              "status": "confirmed",
+              "expected": {
+                "name": "roc_auc",
+                "labels": [
+                  "high",
+                  "low",
+                  "mid"
+                ],
+                "direction": "maximize"
+              },
+              "observed": {
+                "name": "roc_auc",
+                "labels": [
+                  "high",
+                  "low",
+                  "mid"
+                ],
+                "direction": "maximize"
+              }
+            },
+            "configuration_fact_check": {
+              "declared": null,
+              "observed": "logistic",
+              "observed_class": "LogisticRegression",
+              "status": "not_declared",
+              "scope": "Declared classifier versus the fitted estimator of this trial"
+            },
+            "hypothesis_check": {
+              "status": "not_stated"
+            },
+            "explanation_audit": null
+          }
+        ],
+        "complete": true,
+        "primary_score": 0.4812767212148017,
+        "mean_score": 0.4812767212148017,
+        "mean_accuracy": 0.288135593220339,
+        "sample_sd": null
+      }
+    ],
+    "valid_confirmation": true,
+    "selected_candidate": "single_word_C0.3",
+    "selection_score": 0.4812767212148017,
+    "changed": false,
+    "b_scheduler_review": {
+      "initial": "single_word_C0.3",
+      "incumbent": "single_word_C0.3",
+      "promotions": [],
+      "basis": [
+        "primary"
+      ],
+      "primary_metric": "roc_auc"
+    },
+    "independent_confirmation_observed": false
+  },
+  "validation_score": 0.5809666666666667,
+  "finalization": {
+    "primary_metric": "roc_auc",
+    "official_validation_score": 0.5809666666666667,
+    "pre_refit_validation_score": 0.5516333333333333,
+    "single_model_validation_score": 0.5809666666666667,
+    "official_validation_accuracy": 0.37333333333333335,
+    "pre_refit_validation_accuracy": 0.3566666666666667,
+    "single_model_validation_accuracy": 0.37333333333333335,
+    "refit_requested": true,
+    "refit_succeeded": true,
+    "refit_failure": null,
+    "final_training_rows": 300,
+    "ensemble_selected": false,
+    "ensemble_evaluations": 0,
+    "full_refits_attempted": 1,
+    "full_refits_completed": 1,
+    "refit_classifier_fits_completed": 1,
+    "refit_training_seconds": 0.07481600000755861,
+    "ensemble_failure": null,
+    "official_validation_metrics": {
+      "accuracy": 0.37333333333333335,
+      "macro_f1": 0.37291793499738324,
+      "primary_metric": "roc_auc",
+      "score": 0.5809666666666667,
+      "rows": 300
+    }
+  },
+  "elapsed_seconds": 4.280999999959022,
+  "source_unchanged": true,
+  "action_counts": {
+    "explore": 2,
+    "stop": 1
+  },
+  "classifier_fit_accounting": {
+    "attempted_classifier_fits": 3,
+    "completed_classifier_fits": 3,
+    "unknown_failed_attempts": 0
+  },
+  "complete_course_cost_rmb": 0,
+  "unresolved_calls": 0,
+  "task_budget_after_run": null,
+  "partial_trial_models": [
+    "trial_1.joblib",
+    "trial_2.joblib"
+  ],
+  "history_policy": "strict",
+  "candidate_coverage": "off",
+  "course_budget_compliance": "no_new_llm_calls",
+  "valid_for_budgeted_final_report": null,
+  "project_usage_after_run": null,
+  "complete_project_course_cost_rmb": null,
+  "status": "completed",
+  "delivery_status": "complete"
+}

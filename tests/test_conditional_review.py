@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 
-from superagent.conditional_review import PASS, FAIL, feasible_probes, review_delivery, validate
+from superagent.conditional_review import PASS, FAIL, feasible_probes, group_observation, review_delivery, validate
 from superagent.events import RunLogger
 from superagent.metrics import MetricSpec
 from superagent.task_budget import TaskBudgetLedger
@@ -92,7 +92,7 @@ class ConditionalReviewTests(unittest.TestCase):
                 self.assertEqual(receipt['delivered_sha256'],final['model_sha256'])
                 self.assertEqual(executor.worker.called,status in ('adopted','measured'))
 
-    def test_no_conflict_no_call_and_missing_ensemble_members_cost_real_fits(self):
+    def test_no_conflict_no_call_and_missing_reference_costs_a_real_fit(self):
         hist,folds,caps,metric=setup()
         del hist['confirmation_2']['a']
         self.assertFalse(feasible_probes(['a'],hist,folds,caps,metric,2)[0])
@@ -106,6 +106,25 @@ class ConditionalReviewTests(unittest.TestCase):
                             20,hist,{},folds,client,{})
             client.ask.assert_not_called()
             executor.worker.assert_not_called()
+
+    def test_shared_ensemble_member_is_measured_once_and_auc_uses_scores(self):
+        hist,folds,caps,metric=setup()
+        caps['c']=caps['a'].copy()
+        for bank in hist.values():
+            bank['c']=dict(bank['a'])
+            for row in bank.values():
+                row['probabilities']=np.eye(2)[row['predictions']]
+        del hist['confirmation_2']['c']
+        options,_=feasible_probes(['a','c'],hist,folds,caps,metric,3)
+        self.assertEqual([o['challenger'] for o in options],['b'])
+        self.assertEqual(options[0]['missing'],['c','b'])
+        self.assertEqual(options[0]['measurement_fits'],2)
+        labels=np.array([0,0,1,1])
+        probability=np.array([[.4,.6],[.3,.7],[.2,.8],[.1,.9]])
+        row=dict(labels=labels,predictions=np.ones(4),probabilities=probability,row_key='paired-rows')
+        combined=group_observation({'one':row,'two':row},['one','two'],MetricSpec('roc_auc',(0,1)))
+        self.assertEqual(combined['score'],1.)
+        self.assertEqual(np.mean(combined['predictions']==labels),.5)
 
     def test_paired_calls_share_one_scope_and_cannot_be_replayed(self):
         with TemporaryDirectory() as temp:

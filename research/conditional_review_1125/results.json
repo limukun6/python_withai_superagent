@@ -1,0 +1,505 @@
+{
+  "protocol_sha256": "78ac33657766380348ae9c87cd182628be70d3a06bf5ec4fdc9990f5502be8e6",
+  "source": {
+    "runtime": "34cacebeb6e56a938b906ce170d78aa9180567075b0a72603ed07047fb2c4c69",
+    "files": {
+      "protocol.json": "4624d81c4346fc821b7606b4a7469f17b8c91905fa3be2ad20df51476c82d288",
+      "promoted_rule.json": "b3abf1d438c02fb009b6933af694ac6f0ec87e273dc8ef5b1014439cc798c0f8",
+      "run_conditional_review_study.py": "64a06811312933cb4022074ff5b54e27bdbc455844b97a7335a444bb82b09f3c",
+      "audit_interrupted_reflection.py": "7409d4c42a7f7b51f4087187c7f7f278c1ce9ef5cb00fe85518fe125cabf3cb8",
+      "reflection_study_observer": "2c172c02e9898a72db6487404a09d9bb69db6a0ef4f3d46c82a316d855bef50a",
+      "ab_acceptance_guard": "bdc4548b74915d1ba76f35aad10a4c4e895f0e1fc08b3fafce601bebeaf2cbb2"
+    }
+  },
+  "cases": {
+    "s51": {
+      "metric": "balanced_accuracy",
+      "rows": 250,
+      "arms": {
+        "control": {
+          "fits": 12,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "mode": "control",
+            "input_digest": "58d67b731d93ad2f43fe41660a93cf63c020b67ee8d96dc7d6f1c09c727d498a",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Unmodified control action.",
+              "refute_if": "",
+              "supporting_trials": [],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.6761990768613285,
+            "final": 0.697973108569135
+          },
+          "early_sha": "753c898374c0ea9fe7768a4c7ed190ac0d10925c8f089dbdbe7909ca660ce006",
+          "final_sha": "dfafbf1faf486a91b604353962095615cd65e4ebd86828c802a6ee86c00ebaaa"
+        },
+        "flash": {
+          "fits": 12,
+          "examined_trials": 4,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3080,
+              "output_tokens": 3072,
+              "course_cost_rmb": 0.015368
+            }
+          ],
+          "review": {
+            "mode": "flash",
+            "input_digest": "58d67b731d93ad2f43fe41660a93cf63c020b67ee8d96dc7d6f1c09c727d498a",
+            "status": "fallback",
+            "decision": {
+              "verdict": "insufficient",
+              "option": 0,
+              "supporting_trials": [],
+              "contrary_trials": [],
+              "reason": "ValueError: Output token limit reached; response is incomplete; no automatic retry",
+              "refute_if": "",
+              "minimum_score": null
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.6761990768613285,
+            "final": 0.697973108569135
+          },
+          "early_sha": "753c898374c0ea9fe7768a4c7ed190ac0d10925c8f089dbdbe7909ca660ce006",
+          "final_sha": "dfafbf1faf486a91b604353962095615cd65e4ebd86828c802a6ee86c00ebaaa"
+        },
+        "conditional-flash": {
+          "fits": 12,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "incumbent": [
+              "numeric_tabular_fourier_logistic"
+            ],
+            "incumbent_sha256": "bbb7b8c92567e2ca06805fce24636ee2615e1bb1aeef40df617261ed2ed4c93a",
+            "remaining_fits": 4,
+            "executed": "deliver_incumbent",
+            "status": "skipped",
+            "reason": "no_rank_reversal",
+            "feasible_probes": 0,
+            "delivered_sha256": "bbb7b8c92567e2ca06805fce24636ee2615e1bb1aeef40df617261ed2ed4c93a"
+          },
+          "scores": {
+            "fourth": 0.6761990768613285,
+            "final": 0.697973108569135
+          },
+          "early_sha": "753c898374c0ea9fe7768a4c7ed190ac0d10925c8f089dbdbe7909ca660ce006",
+          "final_sha": "dfafbf1faf486a91b604353962095615cd65e4ebd86828c802a6ee86c00ebaaa"
+        }
+      },
+      "conditional_vs": {
+        "control": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        },
+        "flash": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    },
+    "s52": {
+      "metric": "macro_f1",
+      "rows": 250,
+      "arms": {
+        "control": {
+          "fits": 13,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "mode": "control",
+            "input_digest": "a77bc0b91f06a9669ea1e39f7a4352cbb4b18a89a33b789e01b01346141b24e6",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Unmodified control action.",
+              "refute_if": "",
+              "supporting_trials": [],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.984,
+            "final": 0.9799996799948799
+          },
+          "early_sha": "8ec64f4fcf77d73225fab88b17185228cbc6cac3cbad77502574c65f4eeffc23",
+          "final_sha": "7b7dd93855905c42a43fccc1928a7c17b040bef5f4cb6d4bdef8314893a45deb"
+        },
+        "flash": {
+          "fits": 13,
+          "examined_trials": 4,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3609,
+              "output_tokens": 3072,
+              "course_cost_rmb": 0.015897
+            }
+          ],
+          "review": {
+            "mode": "flash",
+            "input_digest": "a77bc0b91f06a9669ea1e39f7a4352cbb4b18a89a33b789e01b01346141b24e6",
+            "status": "fallback",
+            "decision": {
+              "verdict": "insufficient",
+              "option": 0,
+              "supporting_trials": [],
+              "contrary_trials": [],
+              "reason": "ValueError: Output token limit reached; response is incomplete; no automatic retry",
+              "refute_if": "",
+              "minimum_score": null
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.984,
+            "final": 0.9799996799948799
+          },
+          "early_sha": "8ec64f4fcf77d73225fab88b17185228cbc6cac3cbad77502574c65f4eeffc23",
+          "final_sha": "7b7dd93855905c42a43fccc1928a7c17b040bef5f4cb6d4bdef8314893a45deb"
+        },
+        "conditional-flash": {
+          "fits": 13,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "incumbent": [
+              "bge_small_text_with_lexical_features",
+              "e5_small_text_with_lexical_features"
+            ],
+            "incumbent_sha256": "71822a8e37adff0ebc198d7bd6d067fea23dab7550a4b3a173f998b08327e38a",
+            "remaining_fits": 3,
+            "executed": "deliver_incumbent",
+            "status": "skipped",
+            "reason": "no_rank_reversal",
+            "feasible_probes": 0,
+            "delivered_sha256": "71822a8e37adff0ebc198d7bd6d067fea23dab7550a4b3a173f998b08327e38a"
+          },
+          "scores": {
+            "fourth": 0.984,
+            "final": 0.9799996799948799
+          },
+          "early_sha": "8ec64f4fcf77d73225fab88b17185228cbc6cac3cbad77502574c65f4eeffc23",
+          "final_sha": "7b7dd93855905c42a43fccc1928a7c17b040bef5f4cb6d4bdef8314893a45deb"
+        }
+      },
+      "conditional_vs": {
+        "control": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        },
+        "flash": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    },
+    "s53": {
+      "metric": "macro_f1",
+      "rows": 262,
+      "arms": {
+        "control": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "mode": "control",
+            "input_digest": "99c597fcc00d6853e74a719fb73362a387c5bc6e6f3673c9b50db1302701295d",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Unmodified control action.",
+              "refute_if": "",
+              "supporting_trials": [],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.7859064640377472,
+            "final": 0.8055401622529187
+          },
+          "early_sha": "503ad6e20c90c87b50310b2b9fba2d0aef8a89a1c44ebc6945e019adae21a9d0",
+          "final_sha": "be88bf242b4da6a69dd66f8bc77ac7616dab4c42d6ff05b56875bc5d4241a54e"
+        },
+        "flash": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3455,
+              "output_tokens": 787,
+              "course_cost_rmb": 0.006603
+            }
+          ],
+          "review": {
+            "mode": "flash",
+            "input_digest": "99c597fcc00d6853e74a719fb73362a387c5bc6e6f3673c9b50db1302701295d",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Trial 3 (method 36) is the best primary result at 0.7515, improving over trial 1 by 0.0710 with favorable paired errors (16 newly correct vs 5 newly wrong). Confirming it on confirmation_1 is the appropriate next step before exploring lower-priority alternatives.",
+              "refute_if": "confirmation_1 macro_f1 <= 0.6804569528961011, i.e. method 36 fails to beat the trial-1 baseline on the confirmation fold.",
+              "supporting_trials": [
+                3
+              ],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.7859064640377472,
+            "final": 0.8055401622529187
+          },
+          "early_sha": "503ad6e20c90c87b50310b2b9fba2d0aef8a89a1c44ebc6945e019adae21a9d0",
+          "final_sha": "be88bf242b4da6a69dd66f8bc77ac7616dab4c42d6ff05b56875bc5d4241a54e"
+        },
+        "conditional-flash": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "incumbent": [
+              "supported_field_interactions"
+            ],
+            "incumbent_sha256": "f3fc957765bd64354ad069cb95c775ecdc11b6d6fbed3f3185c7692dc72f9d1d",
+            "remaining_fits": 8,
+            "executed": "deliver_incumbent",
+            "status": "skipped",
+            "reason": "no_rank_reversal",
+            "feasible_probes": 0,
+            "delivered_sha256": "f3fc957765bd64354ad069cb95c775ecdc11b6d6fbed3f3185c7692dc72f9d1d"
+          },
+          "scores": {
+            "fourth": 0.7859064640377472,
+            "final": 0.8055401622529187
+          },
+          "early_sha": "503ad6e20c90c87b50310b2b9fba2d0aef8a89a1c44ebc6945e019adae21a9d0",
+          "final_sha": "be88bf242b4da6a69dd66f8bc77ac7616dab4c42d6ff05b56875bc5d4241a54e"
+        }
+      },
+      "conditional_vs": {
+        "control": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        },
+        "flash": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    },
+    "s54": {
+      "metric": "accuracy",
+      "rows": 180,
+      "arms": {
+        "control": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "mode": "control",
+            "input_digest": "3031bb62014f45decc8febbda8139b4c308727486242068b83055d844eb62002",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Unmodified control action.",
+              "refute_if": "",
+              "supporting_trials": [],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.9111111111111111,
+            "final": 0.95
+          },
+          "early_sha": "7d42939506c3dabd1da5267d3a85e6258cba25cee72cf66a82f639c738301c1f",
+          "final_sha": "12bda43b782d785d78010c4a20874f39a08fe9f00a7ec1694ae8e464df92103e"
+        },
+        "flash": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 2897,
+              "output_tokens": 563,
+              "course_cost_rmb": 0.005149
+            }
+          ],
+          "review": {
+            "mode": "flash",
+            "input_digest": "3031bb62014f45decc8febbda8139b4c308727486242068b83055d844eb62002",
+            "status": "valid",
+            "decision": {
+              "contrary_trials": [],
+              "minimum_score": null,
+              "option": 0,
+              "reason": "Trial 2 shows method 13 is the clear best primary result (0.8889) with strong paired-error gains; archive evidence also shows most near/different explorations were worse, so confirming it is the strongest next action.",
+              "refute_if": "The confirmation_1 score for method 13 falls below 0.8888888888888888, or materially below its primary score.",
+              "supporting_trials": [
+                2
+              ],
+              "verdict": "keep"
+            },
+            "step": 4
+          },
+          "scores": {
+            "fourth": 0.9111111111111111,
+            "final": 0.95
+          },
+          "early_sha": "7d42939506c3dabd1da5267d3a85e6258cba25cee72cf66a82f639c738301c1f",
+          "final_sha": "12bda43b782d785d78010c4a20874f39a08fe9f00a7ec1694ae8e464df92103e"
+        },
+        "conditional-flash": {
+          "fits": 8,
+          "examined_trials": 4,
+          "usage": [],
+          "review": {
+            "incumbent": [
+              "open_GradientBoostingClassifier_a41ebb1e14712aade571"
+            ],
+            "incumbent_sha256": "cac2aa0d1e44402a7e8f8c7130e16d0099699f38e1c0a7ac5cdfabafba3944f1",
+            "remaining_fits": 8,
+            "executed": "deliver_incumbent",
+            "status": "skipped",
+            "reason": "no_rank_reversal",
+            "feasible_probes": 0,
+            "delivered_sha256": "cac2aa0d1e44402a7e8f8c7130e16d0099699f38e1c0a7ac5cdfabafba3944f1"
+          },
+          "scores": {
+            "fourth": 0.9111111111111111,
+            "final": 0.95
+          },
+          "early_sha": "7d42939506c3dabd1da5267d3a85e6258cba25cee72cf66a82f639c738301c1f",
+          "final_sha": "12bda43b782d785d78010c4a20874f39a08fe9f00a7ec1694ae8e464df92103e"
+        }
+      },
+      "conditional_vs": {
+        "control": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        },
+        "flash": {
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    }
+  },
+  "totals": {
+    "fits": 123,
+    "calls": 4,
+    "input": 13041,
+    "output": 7494,
+    "unknown": 0,
+    "course_rmb": 0.043017
+  },
+  "matched_complete": false,
+  "meets_preregistered_criterion": false,
+  "formal_test_accessed": false,
+  "team_ledger_merge": "pending"
+}

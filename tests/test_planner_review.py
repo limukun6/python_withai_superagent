@@ -56,3 +56,51 @@ class PlannerReviewTests(unittest.TestCase):
         review.observed(5,.9)
         self.assertEqual(len(review.observations),4)
         self.assertEqual(PlannerReview().record()['generation'],0)
+
+    def test_active_credit_leaves_room_for_another_exploration_confirmation_and_refit(self):
+        review = PlannerReview()
+        for trial in (1, 2):
+            self.observe(review, trial, .8)
+        menu = []
+        for kind, name, value in [('confirm', 'leader', .515), ('explore', 'first', .50),
+                                  ('explore', 'second', .49), ('stop', 'leader', .48)]:
+            row = option(kind, value)
+            row['members'] = [name]
+            row['evidence']['reserved_refits'] = 2
+            menu.append(row)
+        caps = {name: {'classifier_fits': 1} for name in ('leader', 'first', 'second')}
+        self.assertEqual(review.seek_evidence(menu, 4, caps)[0]['action'], 'confirm')
+        active = review.seek_evidence(menu, 5, caps)
+        self.assertEqual(active[0]['members'], ['first'])
+        info = active[0]['evidence']['information_value']
+        self.assertEqual(info['required_fits_including_followup_and_refit'], 5)
+        self.assertEqual(info['followup_action'], 'confirm')
+        self.assertGreater(info['credit'], 0)
+        self.assertNotIn('information_value', menu[1]['evidence'])
+        self.assertEqual(len(active), len(menu))
+        caps['first']['classifier_fits'] = 3
+        self.assertEqual(review.seek_evidence(menu, 5, caps)[0]['action'], 'confirm')
+
+    def test_no_information_credit_without_disagreement_or_a_distinct_followup(self):
+        review = PlannerReview()
+        for trial in (1, 2):
+            self.observe(review, trial, .5)
+        rows = [option('stop', .51)]
+        for name in ('one', 'two', 'three'):
+            row = option()
+            row['members'] = [name]
+            row['evidence']['reserved_refits'] = 1
+            rows.append(row)
+        caps = {r['members'][0]: {'classifier_fits': 1} for r in rows}
+        ranked = review.seek_evidence(rows, 16, caps)
+        self.assertEqual(ranked[0]['action'], 'stop')
+        self.assertEqual(ranked[1]['evidence']['information_value']['credit'], 0)
+        self.assertEqual(review.seek_evidence(rows[:2], 16, caps), rows[:2])
+
+    def test_passive_and_active_modes_round_trip_both_command_parsers(self):
+        from superagent.cli import build_parser
+        from superagent.planner_review import review_flags
+        for flag, expected in [(None, False), ('--self-review', True), ('--active-self-review', 'active')]:
+            args = build_parser().parse_args(['unified', 'input.zip', '--run-dir', 'fresh', *([flag] if flag else [])])
+            self.assertEqual(args.self_review, expected)
+            self.assertEqual(review_flags(expected), [flag] if flag else [])

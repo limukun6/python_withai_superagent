@@ -12,6 +12,7 @@ import numpy as np
 from superagent.cli import build_parser
 from superagent.data import load_training_task
 from superagent.metrics import MetricSpec
+from superagent.planner_review import add_review_arguments, review_flags
 from superagent.predict import create_predictions
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import grouped_partition, sample_groups
@@ -128,8 +129,7 @@ def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=N
 def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False):
     run_dir.mkdir(parents=True,exist_ok=False)
     flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
-    if self_review:
-        flags.append('--self-review')
+    flags.extend(review_flags(self_review))
     if fit_limit is not None:
         flags.extend(['--fit-limit',str(fit_limit)])
     if time_limit is not None:
@@ -155,7 +155,7 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_re
     arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review)
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
                               '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
-                              *(['--self-review'] if self_review else [])],
+                              *review_flags(self_review)],
                              cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
     try:
         code = child.wait(timeout=arguments.time_limit+30)
@@ -189,7 +189,7 @@ def main():
         if action in ('train','solve'):
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
-            command.add_argument('--self-review',action='store_true',help='Prospectively test updates to the exploration policy')
+            add_review_arguments(command)
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":

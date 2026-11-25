@@ -1,0 +1,1913 @@
+{
+  "runtime": "f37a707369eaf3acaf904e335ffc44d87bd4b4ff85dda359b8b197c08e3415d5",
+  "study": "99017a36100a79499e259976f687eb80cd443f2ae89dad629ff1a77b6615855b",
+  "training_harness": "78c688cf8144986a63ce9070b3fc6b6e7f58e20707571096c9ef2e5211549c90",
+  "score_program": "20cb9adbc0ad2995e17ee3d222fa15368ffa00e230682ebccf8bf2f4e540e1c7",
+  "independent_case": "n83",
+  "cases": {
+    "n17": {
+      "metric": "balanced_accuracy",
+      "rows": 143,
+      "cells": {
+        "passive9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 3,
+            "confirm": 4,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 1,
+          "ruled": 0,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "open_ExtraTreeClassifier_e29ace5e02244e614033",
+            "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+          ],
+          "prediction": "d4adcbd45a5498be26c2a5852e30beb9b14227851d1e43bf5912bf77ea874df3",
+          "model": "b2d8e167631b215041a4d211fb4d2a569e760be18aa73ef595cb0e6f846122e0",
+          "seconds": 19.115,
+          "score": 0.8984276729559748,
+          "correct": 131
+        },
+        "active9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 3,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 2,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 5,
+              "before": [
+                "confirm",
+                [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033"
+                ],
+                "confirmation_2"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_RandomForestClassifier_6ff84f86758480af0905"
+                ],
+                "primary"
+              ],
+              "remaining": 5,
+              "credit": 0.03932211472634767,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 86,
+                "members": [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                  "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+                ],
+                "incumbent_score": 0.9392014519056261,
+                "explored_score": 0.9392014519056261,
+                "delta": 0.0,
+                "different_predictions": 2,
+                "gained": 1,
+                "lost": 1
+              },
+              "previous_option_taken_later": false,
+              "previous_option_later_step": null
+            },
+            {
+              "step": 6,
+              "before": [
+                "confirm",
+                [
+                  "open_RandomForestClassifier_6ff84f86758480af0905"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_DecisionTreeClassifier_d932dd8fe4eef2fd022f"
+                ],
+                "primary"
+              ],
+              "remaining": 4,
+              "credit": 0.07238328228769864,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 86,
+                "members": [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                  "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+                ],
+                "incumbent_score": 0.9392014519056261,
+                "explored_score": 0.9216575922565033,
+                "delta": -0.01754385964912275,
+                "different_predictions": 2,
+                "gained": 0,
+                "lost": 2
+              },
+              "previous_option_taken_later": false,
+              "previous_option_later_step": null
+            }
+          ],
+          "winner": [
+            "open_ExtraTreeClassifier_e29ace5e02244e614033",
+            "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+          ],
+          "prediction": "d4adcbd45a5498be26c2a5852e30beb9b14227851d1e43bf5912bf77ea874df3",
+          "model": "926552f15723f255aa86e80305740ed5dcde2a472c2db7702701d1a6a3899e3d",
+          "seconds": 17.522,
+          "score": 0.8984276729559748,
+          "correct": 131
+        },
+        "passive16": {
+          "stopping": {
+            "unspent_after_refit": 6,
+            "available_at_stop": {
+              "explore": {
+                "count": 29,
+                "members": [
+                  "open_DecisionTreeClassifier_d932dd8fe4eef2fd022f"
+                ],
+                "stop_advantage": 0.0031223271131848307
+              }
+            }
+          },
+          "fits": 10,
+          "allocation": {
+            "explore": 3,
+            "confirm": 6,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 1,
+          "ruled": 0,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "open_RandomForestClassifier_6ff84f86758480af0905"
+          ],
+          "prediction": "bdb508b4caf154a2a23385e52c517105a1cc636013ad4cc36a36b7c5a1fdd502",
+          "model": "2473cd9a94879b296bff4ce48b884a8abdc6c1414b44272f78a6dcb88ff301b4",
+          "seconds": 19.408,
+          "score": 0.9472746331236898,
+          "correct": 137
+        },
+        "active16": {
+          "stopping": {
+            "unspent_after_refit": 4,
+            "available_at_stop": {
+              "explore": {
+                "count": 28,
+                "members": [
+                  "open_ExtraTreesClassifier_c7883ec067c929ad0442"
+                ],
+                "stop_advantage": 0.0013216801144628754
+              },
+              "confirm": {
+                "count": 1,
+                "members": [
+                  "open_DecisionTreeClassifier_d932dd8fe4eef2fd022f"
+                ],
+                "stop_advantage": 0.0027661149319270217
+              }
+            }
+          },
+          "fits": 12,
+          "allocation": {
+            "explore": 4,
+            "confirm": 7,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 2,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 5,
+              "before": [
+                "confirm",
+                [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033"
+                ],
+                "confirmation_2"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_RandomForestClassifier_6ff84f86758480af0905"
+                ],
+                "primary"
+              ],
+              "remaining": 12,
+              "credit": 0.03932211472634767,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 86,
+                "members": [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                  "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+                ],
+                "incumbent_score": 0.9392014519056261,
+                "explored_score": 0.9392014519056261,
+                "delta": 0.0,
+                "different_predictions": 2,
+                "gained": 1,
+                "lost": 1
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 9
+            },
+            {
+              "step": 6,
+              "before": [
+                "confirm",
+                [
+                  "open_RandomForestClassifier_6ff84f86758480af0905"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_DecisionTreeClassifier_d932dd8fe4eef2fd022f"
+                ],
+                "primary"
+              ],
+              "remaining": 11,
+              "credit": 0.07238328228769864,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 86,
+                "members": [
+                  "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                  "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+                ],
+                "incumbent_score": 0.9392014519056261,
+                "explored_score": 0.9216575922565033,
+                "delta": -0.01754385964912275,
+                "different_predictions": 2,
+                "gained": 0,
+                "lost": 2
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 8
+            }
+          ],
+          "winner": [
+            "open_RandomForestClassifier_6ff84f86758480af0905"
+          ],
+          "prediction": "bdb508b4caf154a2a23385e52c517105a1cc636013ad4cc36a36b7c5a1fdd502",
+          "model": "6300a647741b73f0bf80996d8836888143fe7a0aa9dab37a4a1e08dd3c7e8cbc",
+          "seconds": 25.748,
+          "score": 0.9472746331236898,
+          "correct": 137
+        }
+      },
+      "comparisons": {
+        "more_budget_passive": {
+          "different_predictions": 6,
+          "gained": 6,
+          "lost": 0,
+          "delta": 0.04884696016771495,
+          "first_divergence": {
+            "step": 8,
+            "before": [
+              "stop",
+              [
+                "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+              ],
+              null
+            ],
+            "after": [
+              "confirm",
+              [
+                "open_RandomForestClassifier_6ff84f86758480af0905"
+              ],
+              "confirmation_1"
+            ]
+          }
+        },
+        "active_at_nine": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 5,
+            "before": [
+              "confirm",
+              [
+                "open_ExtraTreeClassifier_e29ace5e02244e614033"
+              ],
+              "confirmation_2"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_RandomForestClassifier_6ff84f86758480af0905"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "active_at_sixteen": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 5,
+            "before": [
+              "confirm",
+              [
+                "open_ExtraTreeClassifier_e29ace5e02244e614033"
+              ],
+              "confirmation_2"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_RandomForestClassifier_6ff84f86758480af0905"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "more_budget_active": {
+          "different_predictions": 6,
+          "gained": 6,
+          "lost": 0,
+          "delta": 0.04884696016771495,
+          "first_divergence": {
+            "step": 8,
+            "before": [
+              "stop",
+              [
+                "open_ExtraTreeClassifier_e29ace5e02244e614033",
+                "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+              ],
+              null
+            ],
+            "after": [
+              "confirm",
+              [
+                "open_RandomForestClassifier_6ff84f86758480af0905"
+              ],
+              "confirmation_1"
+            ]
+          }
+        },
+        "combined": {
+          "different_predictions": 6,
+          "gained": 6,
+          "lost": 0,
+          "delta": 0.04884696016771495,
+          "first_divergence": {
+            "step": 5,
+            "before": [
+              "confirm",
+              [
+                "open_ExtraTreeClassifier_e29ace5e02244e614033"
+              ],
+              "confirmation_2"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_RandomForestClassifier_6ff84f86758480af0905"
+              ],
+              "primary"
+            ]
+          }
+        }
+      },
+      "stop_challenge": {
+        "incumbent": [
+          "open_RandomForestClassifier_6ff84f86758480af0905"
+        ],
+        "candidate": "open_ExtraTreesClassifier_c7883ec067c929ad0442",
+        "status": "retained",
+        "comparisons": [
+          {
+            "fold": "primary",
+            "rows": 86,
+            "incumbent": 0.9392014519056261,
+            "challenger": 0.9392014519056261,
+            "delta": 0.0,
+            "gained": 0,
+            "lost": 0
+          },
+          {
+            "fold": "confirmation_1",
+            "rows": 85,
+            "incumbent": 0.9473684210526316,
+            "challenger": 0.9473684210526316,
+            "delta": 0.0,
+            "gained": 0,
+            "lost": 0
+          }
+        ],
+        "parent_fits": 12,
+        "new_fits": 2,
+        "combined_fits": 14,
+        "parent_model": "6300a647741b73f0bf80996d8836888143fe7a0aa9dab37a4a1e08dd3c7e8cbc",
+        "delivered_model": "6300a647741b73f0bf80996d8836888143fe7a0aa9dab37a4a1e08dd3c7e8cbc",
+        "prediction": "bdb508b4caf154a2a23385e52c517105a1cc636013ad4cc36a36b7c5a1fdd502",
+        "model_api_calls": 0,
+        "external_truth_opened": false,
+        "score": 0.9472746331236898,
+        "score_gain": 0.0,
+        "different_predictions": 0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "n29": {
+      "metric": "macro_f1",
+      "rows": 250,
+      "cells": {
+        "passive9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "prediction": "3d7627440fdcf88588336c20f3f73bd744eb7267588c46d319d63a601e939573",
+          "model": "bc6b66aa2c15585a9ac50c69a2aac7cae0ed0e3a9a68b871fda70a7cd67005bd",
+          "seconds": 80.283,
+          "score": 0.8529345219240689,
+          "correct": 237
+        },
+        "active9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 5,
+            "confirm": 3,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 2,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "minilm_text_with_lexical_features"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_ExtraTreeClassifier_1a8b7e7575bdb6ebe897"
+                ],
+                "primary"
+              ],
+              "remaining": 6,
+              "credit": 0.058989245230812615,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 150,
+                "members": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "incumbent_score": 0.789444132509826,
+                "explored_score": 0.46236559139784944,
+                "delta": -0.3270785411119766,
+                "different_predictions": 11,
+                "gained": 0,
+                "lost": 11
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 5
+            },
+            {
+              "step": 6,
+              "before": [
+                "confirm",
+                [
+                  "minilm_text_with_lexical_features"
+                ],
+                "confirmation_2"
+              ],
+              "after": [
+                "explore",
+                [
+                  "minilm_text_with_nonlinear_lexical_features"
+                ],
+                "primary"
+              ],
+              "remaining": 4,
+              "credit": 0.004232465766766169,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 150,
+                "members": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "incumbent_score": 0.789444132509826,
+                "explored_score": 0.842436974789916,
+                "delta": 0.052992842280089936,
+                "different_predictions": 2,
+                "gained": 2,
+                "lost": 0
+              },
+              "previous_option_taken_later": false,
+              "previous_option_later_step": null
+            }
+          ],
+          "winner": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "prediction": "3d7627440fdcf88588336c20f3f73bd744eb7267588c46d319d63a601e939573",
+          "model": "dc7fa53d96541f5da21190bc39c21d49c0c0f50b419eb97f69e5d415e0610b3c",
+          "seconds": 63.29,
+          "score": 0.8529345219240689,
+          "correct": 237
+        },
+        "passive16": {
+          "stopping": {
+            "unspent_after_refit": 7,
+            "available_at_stop": {
+              "explore": {
+                "count": 35,
+                "members": [
+                  "open_HistGradientBoostingClassifier_746a14ecfaee2a17d657"
+                ],
+                "stop_advantage": 0.04278958299475688
+              }
+            }
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "prediction": "3d7627440fdcf88588336c20f3f73bd744eb7267588c46d319d63a601e939573",
+          "model": "e9ab95b21b59f777e3a1effbc62f7e06edc0f54a3f29ff609d1b4745cbf1332f",
+          "seconds": 66.772,
+          "score": 0.8529345219240689,
+          "correct": 237
+        },
+        "active16": {
+          "stopping": {
+            "unspent_after_refit": 7,
+            "available_at_stop": {
+              "explore": {
+                "count": 35,
+                "members": [
+                  "single_char_C3.0"
+                ],
+                "stop_advantage": 0.037429393571478786
+              }
+            }
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 5,
+            "confirm": 3,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 2,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "minilm_text_with_lexical_features"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_ExtraTreeClassifier_1a8b7e7575bdb6ebe897"
+                ],
+                "primary"
+              ],
+              "remaining": 13,
+              "credit": 0.058989245230812615,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 150,
+                "members": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "incumbent_score": 0.789444132509826,
+                "explored_score": 0.46236559139784944,
+                "delta": -0.3270785411119766,
+                "different_predictions": 11,
+                "gained": 0,
+                "lost": 11
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 5
+            },
+            {
+              "step": 6,
+              "before": [
+                "confirm",
+                [
+                  "minilm_text_with_lexical_features"
+                ],
+                "confirmation_2"
+              ],
+              "after": [
+                "explore",
+                [
+                  "minilm_text_with_nonlinear_lexical_features"
+                ],
+                "primary"
+              ],
+              "remaining": 11,
+              "credit": 0.004232465766766169,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 150,
+                "members": [
+                  "minilm_text_with_lexical_features"
+                ],
+                "incumbent_score": 0.789444132509826,
+                "explored_score": 0.842436974789916,
+                "delta": 0.052992842280089936,
+                "different_predictions": 2,
+                "gained": 2,
+                "lost": 0
+              },
+              "previous_option_taken_later": false,
+              "previous_option_later_step": null
+            }
+          ],
+          "winner": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "prediction": "3d7627440fdcf88588336c20f3f73bd744eb7267588c46d319d63a601e939573",
+          "model": "691dbac12490b163acbf81c06525e3640f422f02058b1760123cab331788b30e",
+          "seconds": 60.024,
+          "score": 0.8529345219240689,
+          "correct": 237
+        }
+      },
+      "comparisons": {
+        "more_budget_passive": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": null
+        },
+        "active_at_nine": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "minilm_text_with_lexical_features"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_ExtraTreeClassifier_1a8b7e7575bdb6ebe897"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "active_at_sixteen": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "minilm_text_with_lexical_features"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_ExtraTreeClassifier_1a8b7e7575bdb6ebe897"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "more_budget_active": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": null
+        },
+        "combined": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "minilm_text_with_lexical_features"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "open_ExtraTreeClassifier_1a8b7e7575bdb6ebe897"
+              ],
+              "primary"
+            ]
+          }
+        }
+      },
+      "stop_challenge": {
+        "incumbent": [
+          "minilm_text_with_nonlinear_lexical_features"
+        ],
+        "candidate": "single_char_C3.0",
+        "status": "retained",
+        "comparisons": [
+          {
+            "fold": "primary",
+            "rows": 150,
+            "incumbent": 0.842436974789916,
+            "challenger": 0.8663952156762946,
+            "delta": 0.023958240886378657,
+            "gained": 2,
+            "lost": 1
+          },
+          {
+            "fold": "confirmation_1",
+            "rows": 150,
+            "incumbent": 0.8084291187739463,
+            "challenger": 0.7250673854447439,
+            "delta": -0.08336173332920238,
+            "gained": 0,
+            "lost": 4
+          }
+        ],
+        "parent_fits": 9,
+        "new_fits": 2,
+        "combined_fits": 11,
+        "parent_model": "691dbac12490b163acbf81c06525e3640f422f02058b1760123cab331788b30e",
+        "delivered_model": "691dbac12490b163acbf81c06525e3640f422f02058b1760123cab331788b30e",
+        "prediction": "3d7627440fdcf88588336c20f3f73bd744eb7267588c46d319d63a601e939573",
+        "model_api_calls": 0,
+        "external_truth_opened": false,
+        "score": 0.8529345219240689,
+        "score_gain": 0.0,
+        "different_predictions": 0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "n43": {
+      "metric": "accuracy",
+      "rows": 450,
+      "cells": {
+        "passive9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 5,
+            "confirm": 2,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "image_gradient_histograms_logistic",
+            "image_logistic_C10.0"
+          ],
+          "prediction": "04aa4537d3523e71dc788394b8cc37f8c46001c53d3dc7d0b427f9ee4ba8a8fc",
+          "model": "03047c79e6f2b5fea443c809892ce97617b7a7e26a45d78949acd0f05330888a",
+          "seconds": 13.458,
+          "score": 0.9777777777777777,
+          "correct": 440
+        },
+        "active9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 5,
+            "confirm": 2,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 2,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "image_gradient_histograms_logistic"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "image_extra_trees_leaf3"
+                ],
+                "primary"
+              ],
+              "remaining": 6,
+              "credit": 0.07337531826007182,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 270,
+                "members": [
+                  "image_gradient_histograms_logistic"
+                ],
+                "incumbent_score": 0.9444444444444444,
+                "explored_score": 0.9518518518518518,
+                "delta": 0.007407407407407418,
+                "different_predictions": 19,
+                "gained": 9,
+                "lost": 7
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 6
+            },
+            {
+              "step": 5,
+              "before": [
+                "confirm",
+                [
+                  "image_gradient_histograms_logistic"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "image_rbf_svm_C1.0"
+                ],
+                "primary"
+              ],
+              "remaining": 5,
+              "credit": 0.017918627275712473,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 270,
+                "members": [
+                  "image_extra_trees_leaf3"
+                ],
+                "incumbent_score": 0.9518518518518518,
+                "explored_score": 0.9555555555555556,
+                "delta": 0.0037037037037037646,
+                "different_predictions": 11,
+                "gained": 5,
+                "lost": 4
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 6
+            }
+          ],
+          "winner": [
+            "image_gradient_histograms_logistic",
+            "image_logistic_C10.0"
+          ],
+          "prediction": "04aa4537d3523e71dc788394b8cc37f8c46001c53d3dc7d0b427f9ee4ba8a8fc",
+          "model": "03047c79e6f2b5fea443c809892ce97617b7a7e26a45d78949acd0f05330888a",
+          "seconds": 12.574,
+          "score": 0.9777777777777777,
+          "correct": 440
+        },
+        "passive16": {
+          "stopping": {
+            "unspent_after_refit": 5,
+            "available_at_stop": {
+              "explore": {
+                "count": 25,
+                "members": [
+                  "open_LogisticRegression_62842032c6e14d53f800"
+                ],
+                "stop_advantage": 0.012824678290998537
+              },
+              "confirm": {
+                "count": 1,
+                "members": [
+                  "image_rbf_svm_C10.0"
+                ],
+                "stop_advantage": 0.0031821628364731014
+              }
+            }
+          },
+          "fits": 11,
+          "allocation": {
+            "explore": 5,
+            "confirm": 4,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "image_gradient_histograms_logistic",
+            "image_logistic_C10.0"
+          ],
+          "prediction": "04aa4537d3523e71dc788394b8cc37f8c46001c53d3dc7d0b427f9ee4ba8a8fc",
+          "model": "03047c79e6f2b5fea443c809892ce97617b7a7e26a45d78949acd0f05330888a",
+          "seconds": 14.406,
+          "score": 0.9777777777777777,
+          "correct": 440
+        },
+        "active16": {
+          "stopping": {
+            "unspent_after_refit": 2,
+            "available_at_stop": {
+              "explore": {
+                "count": 24,
+                "members": [
+                  "image_rbf_svm_C10.0"
+                ],
+                "stop_advantage": 0.019521178718630794
+              }
+            }
+          },
+          "fits": 14,
+          "allocation": {
+            "explore": 6,
+            "confirm": 6,
+            "refit": 2
+          },
+          "measured_both": true,
+          "proposed": 3,
+          "ruled": 2,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 3,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "image_gradient_histograms_logistic"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "image_extra_trees_leaf3"
+                ],
+                "primary"
+              ],
+              "remaining": 13,
+              "credit": 0.07337531826007182,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 270,
+                "members": [
+                  "image_gradient_histograms_logistic"
+                ],
+                "incumbent_score": 0.9444444444444444,
+                "explored_score": 0.9518518518518518,
+                "delta": 0.007407407407407418,
+                "different_predictions": 19,
+                "gained": 9,
+                "lost": 7
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 6
+            },
+            {
+              "step": 5,
+              "before": [
+                "confirm",
+                [
+                  "image_gradient_histograms_logistic"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "image_rbf_svm_C1.0"
+                ],
+                "primary"
+              ],
+              "remaining": 12,
+              "credit": 0.017918627275712473,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 270,
+                "members": [
+                  "image_extra_trees_leaf3"
+                ],
+                "incumbent_score": 0.9518518518518518,
+                "explored_score": 0.9555555555555556,
+                "delta": 0.0037037037037037646,
+                "different_predictions": 11,
+                "gained": 5,
+                "lost": 4
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 6
+            },
+            {
+              "step": 8,
+              "before": [
+                "confirm",
+                [
+                  "image_gradient_histograms_logistic"
+                ],
+                "confirmation_2"
+              ],
+              "after": [
+                "explore",
+                [
+                  "open_LogisticRegression_a9b29a4930fcb4adbd0b"
+                ],
+                "primary"
+              ],
+              "remaining": 9,
+              "credit": 0.034682371368881415,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 270,
+                "members": [
+                  "image_gradient_histograms_logistic",
+                  "image_logistic_C10.0"
+                ],
+                "incumbent_score": 0.9592592592592593,
+                "explored_score": 0.9333333333333333,
+                "delta": -0.025925925925925908,
+                "different_predictions": 11,
+                "gained": 1,
+                "lost": 8
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 10
+            }
+          ],
+          "winner": [
+            "image_gradient_histograms_logistic",
+            "open_LogisticRegression_a9b29a4930fcb4adbd0b"
+          ],
+          "prediction": "2befa322fc03b5c7e63286af1027aab6f1daa4ba657ee075a880549dbde81609",
+          "model": "5bbb635d55d9d5012fc391e93ac204614e29c224635c4e2fc5e02dcc717c64c1",
+          "seconds": 24.711,
+          "score": 0.9755555555555555,
+          "correct": 439
+        }
+      },
+      "comparisons": {
+        "more_budget_passive": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 8,
+            "before": [
+              "stop",
+              [
+                "image_gradient_histograms_logistic",
+                "image_logistic_C10.0"
+              ],
+              null
+            ],
+            "after": [
+              "confirm",
+              [
+                "image_gradient_histograms_logistic"
+              ],
+              "confirmation_2"
+            ]
+          }
+        },
+        "active_at_nine": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "image_gradient_histograms_logistic"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "image_extra_trees_leaf3"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "active_at_sixteen": {
+          "different_predictions": 7,
+          "gained": 3,
+          "lost": 4,
+          "delta": -0.0022222222222222365,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "image_gradient_histograms_logistic"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "image_extra_trees_leaf3"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "more_budget_active": {
+          "different_predictions": 7,
+          "gained": 3,
+          "lost": 4,
+          "delta": -0.0022222222222222365,
+          "first_divergence": {
+            "step": 8,
+            "before": [
+              "stop",
+              [
+                "image_gradient_histograms_logistic",
+                "image_logistic_C10.0"
+              ],
+              null
+            ],
+            "after": [
+              "explore",
+              [
+                "open_LogisticRegression_a9b29a4930fcb4adbd0b"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "combined": {
+          "different_predictions": 7,
+          "gained": 3,
+          "lost": 4,
+          "delta": -0.0022222222222222365,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "image_gradient_histograms_logistic"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "image_extra_trees_leaf3"
+              ],
+              "primary"
+            ]
+          }
+        }
+      },
+      "stop_challenge": {
+        "incumbent": [
+          "image_gradient_histograms_logistic",
+          "open_LogisticRegression_a9b29a4930fcb4adbd0b"
+        ],
+        "candidate": null,
+        "status": "insufficient_room_or_evidence",
+        "comparisons": [],
+        "parent_fits": 14,
+        "new_fits": 0,
+        "combined_fits": 14,
+        "parent_model": "5bbb635d55d9d5012fc391e93ac204614e29c224635c4e2fc5e02dcc717c64c1",
+        "delivered_model": "5bbb635d55d9d5012fc391e93ac204614e29c224635c4e2fc5e02dcc717c64c1",
+        "prediction": "2befa322fc03b5c7e63286af1027aab6f1daa4ba657ee075a880549dbde81609",
+        "model_api_calls": 0,
+        "external_truth_opened": false,
+        "score": 0.9755555555555555,
+        "score_gain": 0.0,
+        "different_predictions": 0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "n61": {
+      "metric": "macro_f1",
+      "rows": 320,
+      "cells": {
+        "passive9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "supported_field_interactions"
+          ],
+          "prediction": "304a60bb17dba691c7c3281d65f3f06134a4f5161abf308584c7c361a4f9cf81",
+          "model": "f987d15d48ed62817a36e7006da7bdb47f707e0a5e92d335f6583a7ab67b8b65",
+          "seconds": 51.427,
+          "score": 0.765509903132641,
+          "correct": 245
+        },
+        "active9": {
+          "stopping": {
+            "unspent_after_refit": 0,
+            "available_at_stop": {}
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 1,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "supported_field_interactions"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "catboost_depth4_reg10.0"
+                ],
+                "primary"
+              ],
+              "remaining": 6,
+              "credit": 0.006137656253843993,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 192,
+                "members": [
+                  "supported_field_interactions"
+                ],
+                "incumbent_score": 0.6913298214989715,
+                "explored_score": 0.6555064668971698,
+                "delta": -0.03582335460180164,
+                "different_predictions": 12,
+                "gained": 3,
+                "lost": 9
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 5
+            }
+          ],
+          "winner": [
+            "supported_field_interactions"
+          ],
+          "prediction": "304a60bb17dba691c7c3281d65f3f06134a4f5161abf308584c7c361a4f9cf81",
+          "model": "28aa206a017fd63c1264a1c04956e2e73ce95b4e5f88c56ca284a31b08787175",
+          "seconds": 37.745,
+          "score": 0.765509903132641,
+          "correct": 245
+        },
+        "passive16": {
+          "stopping": {
+            "unspent_after_refit": 7,
+            "available_at_stop": {
+              "explore": {
+                "count": 33,
+                "members": [
+                  "catboost_depth8_reg10.0"
+                ],
+                "stop_advantage": 0.019922688165185498
+              },
+              "confirm": {
+                "count": 2,
+                "members": [
+                  "catboost_depth4_reg10.0"
+                ],
+                "stop_advantage": 0.005881064620432808
+              }
+            }
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "supported_field_interactions"
+          ],
+          "prediction": "304a60bb17dba691c7c3281d65f3f06134a4f5161abf308584c7c361a4f9cf81",
+          "model": "f06b3dd2c946ba3a366f94f628b6ee0157c93bfb7fc423fb2dbbfc80b631f878",
+          "seconds": 46.716,
+          "score": 0.765509903132641,
+          "correct": 245
+        },
+        "active16": {
+          "stopping": {
+            "unspent_after_refit": 7,
+            "available_at_stop": {
+              "explore": {
+                "count": 33,
+                "members": [
+                  "catboost_depth8_reg10.0"
+                ],
+                "stop_advantage": 0.018686419601683824
+              },
+              "confirm": {
+                "count": 2,
+                "members": [
+                  "catboost_depth4_reg10.0"
+                ],
+                "stop_advantage": 0.005881064620432808
+              }
+            }
+          },
+          "fits": 9,
+          "allocation": {
+            "explore": 4,
+            "confirm": 4,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 2,
+          "ruled": 1,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 1,
+          "changes_after_adopting_rule": 0,
+          "information": [
+            {
+              "step": 4,
+              "before": [
+                "confirm",
+                [
+                  "supported_field_interactions"
+                ],
+                "confirmation_1"
+              ],
+              "after": [
+                "explore",
+                [
+                  "catboost_depth4_reg10.0"
+                ],
+                "primary"
+              ],
+              "remaining": 13,
+              "credit": 0.006137656253843993,
+              "followup": "confirm",
+              "same_rows_vs_incumbent": {
+                "scope": "same primary training holdout",
+                "rows": 192,
+                "members": [
+                  "supported_field_interactions"
+                ],
+                "incumbent_score": 0.6913298214989715,
+                "explored_score": 0.6555064668971698,
+                "delta": -0.03582335460180164,
+                "different_predictions": 12,
+                "gained": 3,
+                "lost": 9
+              },
+              "previous_option_taken_later": true,
+              "previous_option_later_step": 5
+            }
+          ],
+          "winner": [
+            "supported_field_interactions"
+          ],
+          "prediction": "304a60bb17dba691c7c3281d65f3f06134a4f5161abf308584c7c361a4f9cf81",
+          "model": "3444f2935b69993cd104d533773e04dc9efa0e64777b3fad944dfc6509135e40",
+          "seconds": 47.735,
+          "score": 0.765509903132641,
+          "correct": 245
+        }
+      },
+      "comparisons": {
+        "more_budget_passive": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": null
+        },
+        "active_at_nine": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "supported_field_interactions"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "catboost_depth4_reg10.0"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "active_at_sixteen": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "supported_field_interactions"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "catboost_depth4_reg10.0"
+              ],
+              "primary"
+            ]
+          }
+        },
+        "more_budget_active": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": null
+        },
+        "combined": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": {
+            "step": 4,
+            "before": [
+              "confirm",
+              [
+                "supported_field_interactions"
+              ],
+              "confirmation_1"
+            ],
+            "after": [
+              "explore",
+              [
+                "catboost_depth4_reg10.0"
+              ],
+              "primary"
+            ]
+          }
+        }
+      },
+      "stop_challenge": {
+        "incumbent": [
+          "supported_field_interactions"
+        ],
+        "candidate": "catboost_depth8_reg10.0",
+        "status": "retained",
+        "comparisons": [
+          {
+            "fold": "primary",
+            "rows": 192,
+            "incumbent": 0.6913298214989715,
+            "challenger": 0.6735513024986709,
+            "delta": -0.017778519000300586,
+            "gained": 4,
+            "lost": 7
+          },
+          {
+            "fold": "confirmation_1",
+            "rows": 192,
+            "incumbent": 0.6993273698079191,
+            "challenger": 0.6376856284578479,
+            "delta": -0.061641741350071166,
+            "gained": 9,
+            "lost": 21
+          }
+        ],
+        "parent_fits": 9,
+        "new_fits": 2,
+        "combined_fits": 11,
+        "parent_model": "3444f2935b69993cd104d533773e04dc9efa0e64777b3fad944dfc6509135e40",
+        "delivered_model": "3444f2935b69993cd104d533773e04dc9efa0e64777b3fad944dfc6509135e40",
+        "prediction": "304a60bb17dba691c7c3281d65f3f06134a4f5161abf308584c7c361a4f9cf81",
+        "model_api_calls": 0,
+        "external_truth_opened": false,
+        "score": 0.765509903132641,
+        "score_gain": 0.0,
+        "different_predictions": 0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "n83": {
+      "metric": "balanced_accuracy",
+      "rows": 250,
+      "cells": {
+        "passive16": {
+          "stopping": {
+            "unspent_after_refit": 10,
+            "available_at_stop": {
+              "explore": {
+                "count": 27,
+                "members": [
+                  "numeric_tabular_rbf_svm_C10.0"
+                ],
+                "stop_advantage": 0.05021458770558318
+              }
+            }
+          },
+          "fits": 6,
+          "allocation": {
+            "explore": 3,
+            "confirm": 2,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 1,
+          "ruled": 0,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "open_ExtraTreeClassifier_5b59707af785f61079e5"
+          ],
+          "prediction": "f961916dd0cf5427d24d0d30d6f4db1ed01f58960cb82e0b60bde0359d847d11",
+          "model": "1b712dba8ca2194cb506d654dd798a262efc72be2232b95a06d200f9d31ba6e9",
+          "seconds": 17.328,
+          "score": 0.5815964706124889,
+          "correct": 171
+        },
+        "active16": {
+          "stopping": {
+            "unspent_after_refit": 10,
+            "available_at_stop": {
+              "explore": {
+                "count": 27,
+                "members": [
+                  "numeric_tabular_rbf_svm_C10.0"
+                ],
+                "stop_advantage": 0.04524474805814138
+              }
+            }
+          },
+          "fits": 6,
+          "allocation": {
+            "explore": 3,
+            "confirm": 2,
+            "refit": 1
+          },
+          "measured_both": true,
+          "proposed": 1,
+          "ruled": 0,
+          "accepted": 0,
+          "pending": 1,
+          "active_moves": 0,
+          "changes_after_adopting_rule": 0,
+          "information": [],
+          "winner": [
+            "open_ExtraTreeClassifier_5b59707af785f61079e5"
+          ],
+          "prediction": "f961916dd0cf5427d24d0d30d6f4db1ed01f58960cb82e0b60bde0359d847d11",
+          "model": "fa2b32675a8ad03d59c1fff4bfe2ed1dc7da25753e6e7ce2a8657d201bc75cf4",
+          "seconds": 11.827,
+          "score": 0.5815964706124889,
+          "correct": 171
+        }
+      },
+      "comparisons": {
+        "active_at_sixteen": {
+          "different_predictions": 0,
+          "gained": 0,
+          "lost": 0,
+          "delta": 0.0,
+          "first_divergence": null
+        }
+      },
+      "stop_challenge": {
+        "incumbent": [
+          "open_ExtraTreeClassifier_5b59707af785f61079e5"
+        ],
+        "candidate": "numeric_tabular_rbf_svm_C10.0",
+        "status": "accepted",
+        "comparisons": [
+          {
+            "fold": "primary",
+            "rows": 150,
+            "incumbent": 0.6965385562946538,
+            "challenger": 0.8206146834195615,
+            "delta": 0.12407612712490768,
+            "gained": 25,
+            "lost": 6
+          },
+          {
+            "fold": "confirmation_1",
+            "rows": 150,
+            "incumbent": 0.64594668335821,
+            "challenger": 0.8095839953777265,
+            "delta": 0.16363731201951648,
+            "gained": 29,
+            "lost": 6
+          }
+        ],
+        "parent_fits": 6,
+        "new_fits": 3,
+        "combined_fits": 9,
+        "parent_model": "fa2b32675a8ad03d59c1fff4bfe2ed1dc7da25753e6e7ce2a8657d201bc75cf4",
+        "delivered_model": "eb595be4b102709b2bf62ca5b281a97996b87383cabd215ea97dd22925c4ff45",
+        "prediction": "bc6fb8256a12c4d6603b33cc3adb27d6fb50c9abeab9a407e9fc9f5046f83377",
+        "model_api_calls": 0,
+        "external_truth_opened": false,
+        "score": 0.7448409507906075,
+        "score_gain": 0.16324448017811866,
+        "different_predictions": 69,
+        "gained": 46,
+        "lost": 15
+      }
+    }
+  },
+  "four_task_summaries": {
+    "passive9": {
+      "fits": 36,
+      "allocation": {
+        "explore": 16,
+        "confirm": 14,
+        "refit": 6
+      },
+      "proposals": 7,
+      "completed_verdicts": 3,
+      "accepted": 0,
+      "pending": 4,
+      "information_changed_choices": 0,
+      "changed_from_confirm": 0,
+      "exact_confirmation_later": 0,
+      "distinct_tasks_with_exploration_and_confirmation": 4
+    },
+    "active9": {
+      "fits": 36,
+      "allocation": {
+        "explore": 18,
+        "confirm": 12,
+        "refit": 6
+      },
+      "proposals": 8,
+      "completed_verdicts": 4,
+      "accepted": 0,
+      "pending": 4,
+      "information_changed_choices": 7,
+      "changed_from_confirm": 7,
+      "exact_confirmation_later": 4,
+      "distinct_tasks_with_exploration_and_confirmation": 4
+    },
+    "passive16": {
+      "fits": 39,
+      "allocation": {
+        "explore": 16,
+        "confirm": 18,
+        "refit": 5
+      },
+      "proposals": 7,
+      "completed_verdicts": 3,
+      "accepted": 0,
+      "pending": 4,
+      "information_changed_choices": 0,
+      "changed_from_confirm": 0,
+      "exact_confirmation_later": 0,
+      "distinct_tasks_with_exploration_and_confirmation": 4
+    },
+    "active16": {
+      "fits": 44,
+      "allocation": {
+        "explore": 19,
+        "confirm": 20,
+        "refit": 5
+      },
+      "proposals": 9,
+      "completed_verdicts": 5,
+      "accepted": 0,
+      "pending": 4,
+      "information_changed_choices": 8,
+      "changed_from_confirm": 8,
+      "exact_confirmation_later": 7,
+      "distinct_tasks_with_exploration_and_confirmation": 4
+    }
+  },
+  "four_task_effects": {
+    "more_budget_passive": {
+      "mean_delta": 0.012211740041928737,
+      "improved": 1,
+      "declined": 0,
+      "tied": 3,
+      "gained_rows": 6,
+      "lost_rows": 0
+    },
+    "active_at_nine": {
+      "mean_delta": 0.0,
+      "improved": 0,
+      "declined": 0,
+      "tied": 4,
+      "gained_rows": 0,
+      "lost_rows": 0
+    },
+    "active_at_sixteen": {
+      "mean_delta": -0.0005555555555555591,
+      "improved": 0,
+      "declined": 1,
+      "tied": 3,
+      "gained_rows": 3,
+      "lost_rows": 4
+    },
+    "more_budget_active": {
+      "mean_delta": 0.011656184486373178,
+      "improved": 1,
+      "declined": 1,
+      "tied": 2,
+      "gained_rows": 9,
+      "lost_rows": 4
+    },
+    "combined": {
+      "mean_delta": 0.011656184486373178,
+      "improved": 1,
+      "declined": 1,
+      "tied": 2,
+      "gained_rows": 9,
+      "lost_rows": 4
+    }
+  },
+  "new_classifier_fits": 140,
+  "reused_classifier_fits": 36,
+  "sentinel_reproduced": true,
+  "sealed_new_deliveries": 15,
+  "model_api_calls": 0,
+  "model_api_cost_rmb": 0,
+  "formal_test_accessed": false,
+  "continuation_fits": 9,
+  "total_including_continuation": 149,
+  "continuation_program": "5da3b02427190c80896d41cfecc3f000becd5894a2781a8c496689da0212faba",
+  "continuation_plan": "e7c6d2bb7bfed4113dfad9e5fea879e40185ce134398a3cfd238190c6db35147"
+}

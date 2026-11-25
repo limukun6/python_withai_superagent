@@ -9,6 +9,24 @@ def forecast(weights, expected, novelty):
     return float(np.clip(expected + correction, 0., 1.))
 
 
+def add_review_arguments(parser):
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--self-review', action='store_true',
+                       help='Test proposed rules on later exploration outcomes')
+    modes.add_argument('--active-self-review', dest='self_review', action='store_const', const='active',
+                       help='Also value experiments that can distinguish two proposed rules')
+
+
+def review_flags(mode):
+    if mode == 'active':
+        return ['--active-self-review']
+    if mode is True:
+        return ['--self-review']
+    if mode is False:
+        return []
+    raise ValueError('Unknown planner self-review mode')
+
+
 class PlannerReview:
     """Each task starts at the original policy. A successor is tested before it can act."""
 
@@ -36,6 +54,50 @@ class PlannerReview:
                                evidence=dict(evidence, policy_generation=self.generation,
                                              original_utility=action['utility'], forecast_adjustment=adjustment)))
         return sorted(ranked, key=lambda row: -row['utility'])
+
+    def seek_evidence(self, ranked, remaining, capabilities):
+        """Value a useful observation only if the agent can still test, corroborate and deliver."""
+        if self.pending is None:
+            return ranked
+        missing = 2 - len(self.pending['evaluation'])
+        calibration_error = float(np.mean([abs(o['score'] - o['parent_forecast']) for o in self.observations]))
+
+        def fit_cost(action):
+            return capabilities[action['members'][0]]['classifier_fits']
+
+        def with_refit(action):
+            return fit_cost(action) + action['evidence']['reserved_refits']
+
+        experiments = sorted((a for a in ranked if a['action'] == 'explore'), key=with_refit)
+        confirmation = min((a for a in ranked if a['action'] == 'confirm'), key=with_refit, default=None)
+        updated = []
+        for action in ranked:
+            if action['action'] != 'explore':
+                updated.append(action)
+                continue
+            # Each prospective comparison needs a distinct experiment. Preserve a real follow-up
+            # after the verdict, and the most expensive refit reserved along this potential path.
+            extra_count = missing - 1 + int(confirmation is None)
+            others = [a for a in experiments if a['members'] != action['members']][:extra_count]
+            if len(others) < extra_count:
+                updated.append(action)
+                continue
+            path = [action, *others]
+            if confirmation is not None:
+                path.append(confirmation)
+            required = sum(fit_cost(a) for a in path) + max(a['evidence']['reserved_refits'] for a in path)
+            evidence = action['evidence']
+            parent = forecast(self.weights, evidence['expected'], evidence['novelty'])
+            child = forecast(self.pending['weights'], evidence['expected'], evidence['novelty'])
+            value = min(abs(child - parent), calibration_error) / (missing * fit_cost(action))
+            credit = value if required <= remaining else 0.
+            information = dict(proposal=self.pending['version'], missing_observations=missing,
+                               parent_forecast=parent, child_forecast=child, calibration_error=calibration_error,
+                               required_fits_including_followup_and_refit=required,
+                               followup_action=path[-1]['action'], remaining_fits=remaining, credit=credit)
+            updated.append(dict(action, utility=action['utility'] + credit,
+                                evidence=dict(evidence, information_value=information)))
+        return sorted(updated, key=lambda row: -row['utility'])
 
     def before_fit(self, trial, action):
         self.ticket = None

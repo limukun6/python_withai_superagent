@@ -153,8 +153,8 @@ def train(package, directory, **options):
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
           flash_setup_issue=None, self_review=False):
-    if type(fit_limit) is not int or not 2<=fit_limit<=11 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
-        raise ValueError('Need 2–11 physical fits including refits and positive finite deadlines')
+    if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
+        raise ValueError('Need 2–16 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     directory.mkdir(parents=True,exist_ok=False)
     log = RunLogger(directory)
@@ -226,6 +226,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 initial_first = menu[0]
                 if review is not None:
                     menu=review.menu(menu)
+                    rule_first = menu[0]
+                    if self_review == 'active':
+                        menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
                 if flash_available and flash.request_count<flash.max_requests and len(menu)>1:
                     try:
@@ -242,6 +245,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     decisions[-1].update(policy_generation=review.generation,
                         initial_policy_first={k:initial_first[k] for k in keys},
                         review_changed_first=any(initial_first[k]!=menu[0][k] for k in keys))
+                    if self_review == 'active':
+                        decisions[-1].update(first_before_information={k:rule_first[k] for k in keys},
+                            information_changed_first=any(rule_first[k]!=menu[0][k] for k in keys))
                 log.write_json('decisions.json',decisions)
                 if choice['action']=='stop':
                     break

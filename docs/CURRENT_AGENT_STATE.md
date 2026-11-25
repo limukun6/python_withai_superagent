@@ -4,6 +4,8 @@
 
 已fetch B统一bcea278、生命周期审计801b1a4及个人699572d，仅阅读未合并。B统一历史Task1 1532/2030=75.47%、Task2 689/940=73.30%均归原源码，A135的75.02%不再作团队最好。报告路径/代码边界见新计划；本轮0新增fit/API，不冻结整个项目，不重跑已完成grounded/compact/广度矩阵。下列段落和1790/453为先前阶段快照。
 
+**第一批已完成（2026-11-25）**：B统一入口与生命周期修复已适配到独立分支`a151-b-merge`，生产SHA **`2618517`**（基线A `5920c23` + B `bcea278`，327文件，3处冲突按"合并两侧不覆盖"解决）；唯一代码修复是`scripts/unified_released_study.py`读取显式UTF-8（本机默认cp936导致B的JSON读失败），修复后165项测试全过。核对结论：① 44个运行的confirmation与primary评价行**重合约18.2%–35.6%（均值23.9%）**，`independent`只能读作"不同划分"；② 两个Released任务的指标均来自`declared_task_readme`且confirmed；③ Task1目录15个候选包含`catboost_depth8_reg3.0`（1 fit），B最优方法可触达；④ **fit累计**：运行级日志1107（155条）、批次声明1433（246件），此前1790无日志支撑，**不写新总数**；A149/A150的"0fit"更正为19次物理fit（0 API≠0训练）。报告`docs/batches/A151_b_merge_batch1_20261125_zh.md`。**未做**：训练读取白名单负向测试、逐trial指标贯穿核对、`unified_agent`端到端冷启动。
+
 ## A149接入：计划片段可替代一次规划调用（默认关闭）
 
 `--plan-fragment advisory`已接进决策循环：片段步骤成立且候选在本次可选列表内→直接采用、不调模型；调度给`confirm`/`stop`时一律作废（`superseded_by_scheduler`）。新增`deferred`状态——只有`reference_trial`未满足时继续等待，其余条件不成立才`invalidated`（原实现把"还没轮到"误判为永久失效，实测中发现并修正）。

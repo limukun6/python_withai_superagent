@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from scripts.unified_released_study import ROOT, read, require, save, sha
+from superagent.exploration_rule import features, forecast
 
 
 PROTOCOL = ROOT / 'research/rsi_planner_1125/archive_protocol.json'
@@ -33,15 +34,6 @@ def episode(run):
             observations.append((prior, choice['evidence'], row['search_score'], row['trial']))
         prior += 1
     return {'observations': observations, 'menus': menus}
-
-
-def features(prior, evidence):
-    return np.array([1.0, evidence['novelty'] - 0.5, 1 / np.sqrt(prior)])
-
-
-def forecast(weights, prior, evidence):
-    correction = np.clip(weights @ features(prior, evidence), -0.10, 0.10)
-    return float(np.clip(evidence['expected'] + correction, 0, 1))
 
 
 def propose(parent, memory, step):

@@ -1,0 +1,123 @@
+{
+  "config": "7ef894b54480bb4ed670650d3e7ef0a1e5ab61253a4c5a2a21c511feabfa0469",
+  "proposal": {
+    "roles": {
+      "parent": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+      "child": "7de6132b19d1d3e8284a58c76759909c8689d5b813213d79c8f789c9d42a23f5"
+    },
+    "parent_weights": [
+      -0.0027341383952659117,
+      -0.009285642951385027,
+      -0.005554723470857865
+    ],
+    "child_weights": [
+      -0.0024658284141325522,
+      -0.017275689496930667,
+      -0.013644264534902327
+    ],
+    "step": 0.1875,
+    "fit_traces": {
+      "table": "263b2efa5faaed2534d97ee2fd71579167964967c1b342782976655526d8e700",
+      "titles": "dceb6b6cf33dc400be1b410bcd3498820d0292989385a198bc5854ebcd832999",
+      "n17": "b1595bc00f65c4c7a840a26e5cb4dca59e0dc8ec142903d5d866dfdd89be5004",
+      "n29": "8e23cfdc0fa4adead3e7f1315e84f06988e7a2094ba3f234f07ffdfc28f31f57",
+      "n43": "9afdc90032e76aa3126a687c2d31069067638bdf632465af8f0c759f683d3723",
+      "n61": "be8291a79b35ecd95058b357c15132bc85bd54b007887e546006f5c07f2c4dbe",
+      "u11": "d8365ccada7d8a9b9257701b0af6dbf3b193b2b1afc8f847a9d59585e06c0aea",
+      "u12": "d0511810a2eefec49c06d65d8254c4bb99bc54bf46d6ecee77465c39c0f20ab1",
+      "u21": "eea4abe7ec29879f8f40eb9aa28ab98ccd04b62d7b3580b9bb520de636a431a3",
+      "u22": "39aca04225d6594b0173b7c0b1ac8f4695a581931c07f47cc17c707d6eb3f2f1",
+      "u31": "d2f54d64532b58ad53939752a331f6b0aaca9237d34e1b0dac718b8982fc6ca3",
+      "u32": "387666f77a006197892744e63fed2de5e3eb854c67a0add971691a6e8168f283"
+    },
+    "feedback_from_promoted_run": [
+      "u31",
+      "u32"
+    ],
+    "parent_admission": "d4671b771637350e0dee285bc6914b4a4ee6e5b05a20d7935ea0001cf4b5df3d"
+  },
+  "challenge": {
+    "x11": {
+      "parent": {
+        "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+        "score": 0.9638460917964023,
+        "fits": 13,
+        "correct": 240,
+        "rows": 249,
+        "metric": "macro_f1",
+        "prediction": "dfdc1958863b6b646982d79f458fab49602dc2e531842dcaa0f82d3c997aa52f",
+        "winner": [
+          "bge_small_text_with_lexical_features",
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 1,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "child": {
+        "rule": "7de6132b19d1d3e8284a58c76759909c8689d5b813213d79c8f789c9d42a23f5",
+        "score": 0.9638460917964023,
+        "fits": 13,
+        "correct": 240,
+        "rows": 249,
+        "metric": "macro_f1",
+        "prediction": "dfdc1958863b6b646982d79f458fab49602dc2e531842dcaa0f82d3c997aa52f",
+        "winner": [
+          "bge_small_text_with_lexical_features",
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 4,
+        "changed_predictions": 0,
+        "changed_path": true
+      }
+    },
+    "x12": {
+      "parent": {
+        "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+        "score": 0.700679117147708,
+        "fits": 16,
+        "correct": 185,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "3ffe5cc3448985db9161ec11236eea9bb7214a910e93eb6d6d42e44832e55ba0",
+        "winner": [
+          "numeric_tabular_logistic_C10.0"
+        ],
+        "inherited_top_changes": 2,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "child": {
+        "rule": "7de6132b19d1d3e8284a58c76759909c8689d5b813213d79c8f789c9d42a23f5",
+        "score": 0.6945670628183362,
+        "fits": 16,
+        "correct": 185,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "d3d19fabab28c28efb3774c7a94dd48af697c7f19ffdb1eb9bd30c901854f2cf",
+        "winner": [
+          "open_MLPClassifier_757b96f0df4937ccd9b0",
+          "open_RandomForestClassifier_923b7b6d093ae052b0ee"
+        ],
+        "inherited_top_changes": 4,
+        "changed_predictions": 36,
+        "changed_path": true
+      }
+    }
+  },
+  "verdict": {
+    "promote": false,
+    "quality_gate": false,
+    "cost_gate": false,
+    "changed_path": true,
+    "mean_delta": -0.0030560271646858927,
+    "worst_delta": -0.0061120543293717855,
+    "parent_fits": 29,
+    "child_fits": 29
+  },
+  "transfer": {},
+  "fits": 58,
+  "runs": 4,
+  "api_calls": 0,
+  "course_test_accessed": false
+}

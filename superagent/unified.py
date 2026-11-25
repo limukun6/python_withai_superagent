@@ -73,7 +73,7 @@ def configured_flash(directory):
 def command(args):
     from .autonomous_run import train
     if getattr(args,'policy','autonomous')=='legacy':
-        if getattr(args,'self_review',False):
+        if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
         return legacy_command(args)
     issue = None
@@ -83,4 +83,4 @@ def command(args):
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
                  wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
-                 self_review=getattr(args,'self_review',False))
+                 self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None))

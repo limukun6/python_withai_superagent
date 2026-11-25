@@ -16,6 +16,7 @@ from .contracts import TaskSpec
 from .data import TrainingTask, load_training_task
 from .events import RunLogger
 from .experiment_policy import actions, identity
+from .exploration_rule import apply_rule, load_rule
 from .metrics import MetricSpec
 from .models import SoftVoteModel
 from .open_methods import MethodSpace
@@ -155,10 +156,11 @@ def train(package, directory, **options):
 
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
-          flash_setup_issue=None, self_review=False):
+          flash_setup_issue=None, self_review=False, exploration_rule=None):
     if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–16 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
+    rule = load_rule(exploration_rule) if exploration_rule is not None else None
     directory.mkdir(parents=True,exist_ok=False)
     log = RunLogger(directory)
     log.initialize_usage_ledger()
@@ -170,6 +172,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     manifest = dict(policy='anonymous-sequential-v1',self_review=self_review,fit_limit=fit_limit,seed=seed,wall_seconds=wall,
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
                     training_only=True,source_files=sources())
+    if rule is not None:
+        log.write_json('exploration_rule.json',rule)
+        manifest['exploration_rule_digest'] = identity(rule)
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
@@ -226,6 +231,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
                     raise ValueError('No admissible action with known fit cost or deployable observation')
+                base_first = menu[0]
+                if rule is not None:
+                    menu = apply_rule(menu, rule['weights'], len(observed['primary']))
                 initial_first = menu[0]
                 if review is not None:
                     menu=review.menu(menu)
@@ -243,6 +251,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 decisions.append(dict(step=len(decisions)+1,source=source,choice=choice,remaining_fits=remaining,
                      observed_trials=[r['trial'] for r in history],registry=generation['file'],
                      registry_sha256=generation['sha256'],alternatives=menu))
+                if rule is not None:
+                    decisions[-1]['inherited_rule'] = dict(digest=manifest['exploration_rule_digest'],
+                        prior_primary=len(observed['primary']), changed_first=any(
+                            base_first[k] != initial_first[k] for k in ('action','members','split')))
                 if review is not None:
                     keys = ('action','members','split')
                     decisions[-1].update(policy_generation=review.generation,

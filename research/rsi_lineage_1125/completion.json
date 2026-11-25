@@ -1,0 +1,508 @@
+{
+  "source": {
+    "plan": "d653faf97aaf92aebf984d681c4d6d1e39f23c99e87c2f4c2713ee0473a10ff0",
+    "runtime": "22af48e7b63e651a005c3b91858addf39ceadac3ac3e53c56a1b2e4bb4936b0b",
+    "drivers": {
+      "verify_planner_lineage.py": "3015f576f08c095d3c91c4d8b4e35a3e13bac97be14d3b112616dc8931660db6",
+      "planner_lineage_data.py": "f92334f3a21fbdbd30674d0f85fc6328f244db6417c85f7ac8519a0f12576dae",
+      "replay_planner_review_archive.py": "135ffe3fb089afcf3fc4f9406e904e862e6cb1b55d06f1952a092120cb1a2ac4",
+      "run_planner_self_review.py": "967f37790ebc952704f2dfd72484145a2ab676992f328df414da6eecf0ebd760",
+      "run_review_budget_study.py": "78c688cf8144986a63ce9070b3fc6b6e7f58e20707571096c9ef2e5211549c90",
+      "unified_released_study.py": "fa541479eec91945e4f25204dee5d5c9f0b0f7cee3d6a6eeaf7a0a9322263ec9",
+      "sitecustomize.py": "bdc4548b74915d1ba76f35aad10a4c4e895f0e1fc08b3fafce601bebeaf2cbb2"
+    }
+  },
+  "protocol": "8754c5f36f26bb1035cffb6f855bd69644ab09fbcec3ade730a1b3b363c42402",
+  "waves": [
+    {
+      "roles": {
+        "parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "child": "80cbc9b863ba7ed3c48211d059d5abe4b21c604b96895dc2bed8d5ba9fbef0e3"
+      },
+      "cases": {
+        "u11": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 1.0,
+            "fits": 11,
+            "correct": 45,
+            "rows": 45,
+            "metric": "macro_f1",
+            "prediction": "ed7c9d249ecb90574098fb7bbcf974edb6be43ba07084f681e93a0ce19c28a74",
+            "winner": [
+              "open_RandomForestClassifier_8b1ca7c857585d53a9d0"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "80cbc9b863ba7ed3c48211d059d5abe4b21c604b96895dc2bed8d5ba9fbef0e3",
+            "score": 1.0,
+            "fits": 9,
+            "correct": 45,
+            "rows": 45,
+            "metric": "macro_f1",
+            "prediction": "ed7c9d249ecb90574098fb7bbcf974edb6be43ba07084f681e93a0ce19c28a74",
+            "winner": [
+              "open_ExtraTreesClassifier_92c02d68e5493e3b3169"
+            ],
+            "inherited_top_changes": 1,
+            "changed_predictions": 0,
+            "changed_path": true
+          }
+        },
+        "u12": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 0.905,
+            "fits": 9,
+            "correct": 181,
+            "rows": 200,
+            "metric": "balanced_accuracy",
+            "prediction": "ff22678f0e7872cd0164d10b47af50ec1ee2bbb764da8160dd9596095f99a300",
+            "winner": [
+              "numeric_tabular_rbf_svm_C10.0"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "80cbc9b863ba7ed3c48211d059d5abe4b21c604b96895dc2bed8d5ba9fbef0e3",
+            "score": 0.75,
+            "fits": 7,
+            "correct": 150,
+            "rows": 200,
+            "metric": "balanced_accuracy",
+            "prediction": "12db2f325c9f07bc2da72abba17d922ef3fe6314bbbbe29e517b5512de49f616",
+            "winner": [
+              "open_ExtraTreeClassifier_5b59707af785f61079e5"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 55,
+            "changed_path": true
+          }
+        }
+      },
+      "verdict": {
+        "promote": false,
+        "quality_gate": false,
+        "cost_gate": false,
+        "changed_path": true,
+        "mean_delta": -0.07750000000000001,
+        "worst_delta": -0.15500000000000003,
+        "parent_fits": 20,
+        "child_fits": 16
+      },
+      "next_parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+      "parent_trace_mae": {
+        "u11": {
+          "observations": 3,
+          "parent_mae": 0.11002792862402762,
+          "child_mae": 0.11522560291082014
+        },
+        "u12": {
+          "observations": 2,
+          "parent_mae": 0.18829587393530006,
+          "child_mae": 0.17509611189351126
+        }
+      }
+    },
+    {
+      "roles": {
+        "parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "child": "493452cf0ccbee0b9c86b0b3e7a8fd46b4556d8e437c0bb1828651dbb7417302"
+      },
+      "cases": {
+        "u21": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 0.85,
+            "fits": 16,
+            "correct": 214,
+            "rows": 250,
+            "metric": "macro_f1",
+            "prediction": "4bf62d4e0b3c636344911490804cd790fe3fb23ba5371aa5b682ce2a4cc550a9",
+            "winner": [
+              "supported_field_interactions"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "493452cf0ccbee0b9c86b0b3e7a8fd46b4556d8e437c0bb1828651dbb7417302",
+            "score": 0.85,
+            "fits": 16,
+            "correct": 214,
+            "rows": 250,
+            "metric": "macro_f1",
+            "prediction": "4bf62d4e0b3c636344911490804cd790fe3fb23ba5371aa5b682ce2a4cc550a9",
+            "winner": [
+              "supported_field_interactions"
+            ],
+            "inherited_top_changes": 2,
+            "changed_predictions": 0,
+            "changed_path": true
+          }
+        },
+        "u22": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 0.8064179882361701,
+            "fits": 11,
+            "correct": 187,
+            "rows": 200,
+            "metric": "macro_f1",
+            "prediction": "edbb579e6b2d2b7f5830acda2276ae9c6d90f57054c677b4055efe025ccee114",
+            "winner": [
+              "minilm_text_with_nonlinear_lexical_features"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "493452cf0ccbee0b9c86b0b3e7a8fd46b4556d8e437c0bb1828651dbb7417302",
+            "score": 0.8064179882361701,
+            "fits": 11,
+            "correct": 187,
+            "rows": 200,
+            "metric": "macro_f1",
+            "prediction": "edbb579e6b2d2b7f5830acda2276ae9c6d90f57054c677b4055efe025ccee114",
+            "winner": [
+              "minilm_text_with_nonlinear_lexical_features"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": true
+          }
+        }
+      },
+      "verdict": {
+        "promote": false,
+        "quality_gate": false,
+        "cost_gate": false,
+        "changed_path": true,
+        "mean_delta": 0.0,
+        "worst_delta": 0.0,
+        "parent_fits": 27,
+        "child_fits": 27
+      },
+      "next_parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+      "parent_trace_mae": {
+        "u21": {
+          "observations": 6,
+          "parent_mae": 0.06638692237078447,
+          "child_mae": 0.06693562687573988
+        },
+        "u22": {
+          "observations": 3,
+          "parent_mae": 0.12542188361219986,
+          "child_mae": 0.1159317994854376
+        }
+      }
+    },
+    {
+      "roles": {
+        "parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "child": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2"
+      },
+      "cases": {
+        "u31": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 0.875,
+            "fits": 16,
+            "correct": 175,
+            "rows": 200,
+            "metric": "accuracy",
+            "prediction": "8fa3782acd8fa8874d2115db88f66c1900ef287e9988ddab3f45c5a79deb1ad2",
+            "winner": [
+              "image_rbf_svm_C1.0"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+            "score": 0.875,
+            "fits": 16,
+            "correct": 175,
+            "rows": 200,
+            "metric": "accuracy",
+            "prediction": "8fa3782acd8fa8874d2115db88f66c1900ef287e9988ddab3f45c5a79deb1ad2",
+            "winner": [
+              "image_rbf_svm_C1.0"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": true
+          }
+        },
+        "u32": {
+          "parent": {
+            "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+            "score": 0.7182692307692308,
+            "fits": 16,
+            "correct": 186,
+            "rows": 225,
+            "metric": "balanced_accuracy",
+            "prediction": "1b84eed4206b1aa113e322874a79f4201f7236dd5922cc2ad62beda0a5eee44f",
+            "winner": [
+              "numeric_tabular_extra_trees_leaf3",
+              "numeric_tabular_logistic_C0.1"
+            ],
+            "inherited_top_changes": 0,
+            "changed_predictions": 0,
+            "changed_path": false
+          },
+          "child": {
+            "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+            "score": 0.7350961538461538,
+            "fits": 16,
+            "correct": 187,
+            "rows": 225,
+            "metric": "balanced_accuracy",
+            "prediction": "3a2cb9e373a0e0b99c7b0af51289f47818a29fc85cd0b09c6df82e8698902a4d",
+            "winner": [
+              "numeric_tabular_logistic_C0.1"
+            ],
+            "inherited_top_changes": 1,
+            "changed_predictions": 7,
+            "changed_path": true
+          }
+        }
+      },
+      "verdict": {
+        "promote": true,
+        "quality_gate": true,
+        "cost_gate": false,
+        "changed_path": true,
+        "mean_delta": 0.008413461538461509,
+        "worst_delta": 0.0,
+        "parent_fits": 32,
+        "child_fits": 32
+      },
+      "next_parent": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+      "parent_trace_mae": {
+        "u31": {
+          "observations": 7,
+          "parent_mae": 0.06697690930224397,
+          "child_mae": 0.06788860355608094
+        },
+        "u32": {
+          "observations": 5,
+          "parent_mae": 0.06377253875917492,
+          "child_mae": 0.0658029083122044
+        }
+      }
+    }
+  ],
+  "final": {
+    "v11": {
+      "root": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.7403353814644137,
+        "fits": 16,
+        "correct": 185,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "4bc55a2c2ffe8a652e58a3425af9abe566fcb3ed5f201ca38d4a19a6081ba498",
+        "winner": [
+          "image_rbf_svm_C10.0"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "selected": {
+        "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+        "score": 0.7403353814644137,
+        "fits": 16,
+        "correct": 185,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "4bc55a2c2ffe8a652e58a3425af9abe566fcb3ed5f201ca38d4a19a6081ba498",
+        "winner": [
+          "image_rbf_svm_C10.0"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "immediate_parent": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.7403353814644137,
+        "fits": 16,
+        "correct": 185,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "4bc55a2c2ffe8a652e58a3425af9abe566fcb3ed5f201ca38d4a19a6081ba498",
+        "winner": [
+          "image_rbf_svm_C10.0"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "one_shot": {
+        "rule": "5d3aac0b408876320291e91d696200721b4148254eb28eabd3ddb94ea5085824",
+        "score": 0.6843958013312852,
+        "fits": 14,
+        "correct": 171,
+        "rows": 250,
+        "metric": "balanced_accuracy",
+        "prediction": "2075aa72a34924d49043cda7801b1324f8231da28f4a5db95f4579394bc9da02",
+        "winner": [
+          "image_gradient_histograms_logistic",
+          "image_logistic_C10.0"
+        ],
+        "inherited_top_changes": 3,
+        "changed_predictions": 55,
+        "changed_path": true
+      }
+    },
+    "v12": {
+      "root": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.7849946248656217,
+        "fits": 13,
+        "correct": 157,
+        "rows": 200,
+        "metric": "macro_f1",
+        "prediction": "a22038930ba125738b157e3524ad0b36265ab3287a0182a4676455237c52f02d",
+        "winner": [
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "selected": {
+        "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+        "score": 0.7849946248656217,
+        "fits": 12,
+        "correct": 157,
+        "rows": 200,
+        "metric": "macro_f1",
+        "prediction": "a22038930ba125738b157e3524ad0b36265ab3287a0182a4676455237c52f02d",
+        "winner": [
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 1,
+        "changed_predictions": 0,
+        "changed_path": true
+      },
+      "immediate_parent": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.7849946248656217,
+        "fits": 13,
+        "correct": 157,
+        "rows": 200,
+        "metric": "macro_f1",
+        "prediction": "a22038930ba125738b157e3524ad0b36265ab3287a0182a4676455237c52f02d",
+        "winner": [
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "one_shot": {
+        "rule": "5d3aac0b408876320291e91d696200721b4148254eb28eabd3ddb94ea5085824",
+        "score": 0.7849946248656217,
+        "fits": 12,
+        "correct": 157,
+        "rows": 200,
+        "metric": "macro_f1",
+        "prediction": "a22038930ba125738b157e3524ad0b36265ab3287a0182a4676455237c52f02d",
+        "winner": [
+          "e5_small_text_with_lexical_features"
+        ],
+        "inherited_top_changes": 3,
+        "changed_predictions": 0,
+        "changed_path": true
+      }
+    },
+    "v13": {
+      "root": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.94,
+        "fits": 10,
+        "correct": 235,
+        "rows": 250,
+        "metric": "accuracy",
+        "prediction": "cc48a713518e1bd04c2245d4d36f1b50695655e95e788973a6725c6fdf1fd686",
+        "winner": [
+          "open_SVC_d15ca3954a37d583d3dd"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "selected": {
+        "rule": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+        "score": 0.94,
+        "fits": 10,
+        "correct": 235,
+        "rows": 250,
+        "metric": "accuracy",
+        "prediction": "061f04046cb713b34ada6225b0026c7038e6c23aa68f9c3aa8245d9b0642608a",
+        "winner": [
+          "numeric_tabular_rbf_svm_C1.0"
+        ],
+        "inherited_top_changes": 1,
+        "changed_predictions": 2,
+        "changed_path": true
+      },
+      "immediate_parent": {
+        "rule": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+        "score": 0.94,
+        "fits": 10,
+        "correct": 235,
+        "rows": 250,
+        "metric": "accuracy",
+        "prediction": "cc48a713518e1bd04c2245d4d36f1b50695655e95e788973a6725c6fdf1fd686",
+        "winner": [
+          "open_SVC_d15ca3954a37d583d3dd"
+        ],
+        "inherited_top_changes": 0,
+        "changed_predictions": 0,
+        "changed_path": false
+      },
+      "one_shot": {
+        "rule": "5d3aac0b408876320291e91d696200721b4148254eb28eabd3ddb94ea5085824",
+        "score": 0.94,
+        "fits": 11,
+        "correct": 235,
+        "rows": 250,
+        "metric": "accuracy",
+        "prediction": "061f04046cb713b34ada6225b0026c7038e6c23aa68f9c3aa8245d9b0642608a",
+        "winner": [
+          "numeric_tabular_rbf_svm_C1.0"
+        ],
+        "inherited_top_changes": 2,
+        "changed_predictions": 2,
+        "changed_path": true
+      }
+    }
+  },
+  "final_roles": {
+    "root": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+    "selected": "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2",
+    "immediate_parent": "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+    "one_shot": "5d3aac0b408876320291e91d696200721b4148254eb28eabd3ddb94ea5085824"
+  },
+  "accepted_line": [
+    "5e0b90f20bab36606c2ee62176b3b7628f04df68fd845da1ce05810531ac1fb4",
+    "cf8df9730bcd75429c77247d280f49bb929789ac0a3081f1e391cc90ae34d9c2"
+  ],
+  "promotions": 1,
+  "runs": 21,
+  "fits": 268,
+  "api_calls": 0,
+  "course_test_accessed": false
+}

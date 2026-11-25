@@ -11,6 +11,8 @@ import numpy as np
 
 from superagent.cli import build_parser
 from superagent.data import load_training_task
+from superagent.experiment_policy import identity
+from superagent.exploration_rule import load_rule
 from superagent.metrics import MetricSpec
 from superagent.planner_review import add_review_arguments, review_flags
 from superagent.predict import create_predictions
@@ -117,18 +119,26 @@ def train_legacy(package, run_dir):
     return 0
 
 
-def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None, self_review=False):
+def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None, self_review=False,
+          exploration_rule=None):
     if policy == 'legacy':
-        if fit_limit is not None or time_limit is not None or self_review:
+        if fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None:
             raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule)
     return arguments.handler(arguments)
 
 
-def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False):
+def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False,exploration_rule=None):
+    rule = load_rule(exploration_rule) if exploration_rule is not None else None
     run_dir.mkdir(parents=True,exist_ok=False)
     flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
+    extra = {}
+    if rule is not None:
+        frozen = run_dir.resolve()/'exploration_rule.json'
+        save(frozen, rule)
+        flags.extend(['--exploration-rule', str(frozen)])
+        extra['exploration_rule_digest'] = identity(rule)
     flags.extend(review_flags(self_review))
     if fit_limit is not None:
         flags.extend(['--fit-limit',str(fit_limit)])
@@ -138,11 +148,11 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=
     save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
          entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
-         fit_limit=arguments.fit_limit,self_review=self_review))
+         fit_limit=arguments.fit_limit,self_review=self_review,**extra))
     return arguments
 
 
-def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False):
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False,exploration_rule=None):
     """Keep prediction delivery in a separate process from training and its network client."""
     import os
     import signal
@@ -152,10 +162,11 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_re
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
     package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule)
+    inherited = ['--exploration-rule', arguments.exploration_rule] if arguments.exploration_rule else []
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
                               '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
-                              *review_flags(self_review)],
+                              *review_flags(self_review), *inherited],
                              cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
     try:
         code = child.wait(timeout=arguments.time_limit+30)
@@ -200,10 +211,11 @@ def main():
     args = parser.parse_args()
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
-                     self_review=args.self_review)
+                     self_review=args.self_review,exploration_rule=args.exploration_rule)
     source=args.task_package
     if args.action=='solve':
-        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,self_review=args.self_review)
+        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,
+                            self_review=args.self_review,exploration_rule=args.exploration_rule)
         if code:
             return code
         source=args.prediction_input

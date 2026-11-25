@@ -10,6 +10,8 @@ def forecast(weights, expected, novelty):
 
 
 def add_review_arguments(parser):
+    parser.add_argument('--exploration-rule', metavar='JSON',
+                        help='Frozen cross-task calibration for primary exploration forecasts')
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--self-review', action='store_true',
                        help='Test proposed rules on later exploration outcomes')

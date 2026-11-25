@@ -120,20 +120,33 @@ def train_legacy(package, run_dir):
 
 
 def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None, self_review=False,
-          exploration_rule=None):
+          exploration_rule=None, feedback_reflection=None, reflection_history=None):
     if policy == 'legacy':
-        if fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None:
+        if fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None or feedback_reflection or reflection_history:
             raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history)
     return arguments.handler(arguments)
 
 
-def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False,exploration_rule=None):
+def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False,exploration_rule=None,
+                     feedback_reflection=None,reflection_history=None):
+    from superagent.feedback_reflection import load_memory
+    if reflection_history and not feedback_reflection:
+        raise ValueError('A reflection history needs an enabled reviewer')
+    prior = load_memory(reflection_history)
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     run_dir.mkdir(parents=True,exist_ok=False)
     flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
     extra = {}
+    if feedback_reflection:
+        flags.extend(['--feedback-reflection', feedback_reflection])
+        extra['feedback_reflection'] = feedback_reflection
+    if prior:
+        history_path = run_dir.resolve()/'reflection_history.json'
+        save(history_path,prior)
+        flags.extend(['--reflection-history', str(history_path)])
+        extra['reflection_history_digest'] = identity(prior)
     if rule is not None:
         frozen = run_dir.resolve()/'exploration_rule.json'
         save(frozen, rule)
@@ -152,7 +165,8 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=
     return arguments
 
 
-def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False,exploration_rule=None):
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False,exploration_rule=None,
+                   feedback_reflection=None,reflection_history=None):
     """Keep prediction delivery in a separate process from training and its network client."""
     import os
     import signal
@@ -162,8 +176,12 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_re
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
     package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history)
     inherited = ['--exploration-rule', arguments.exploration_rule] if arguments.exploration_rule else []
+    if feedback_reflection:
+        inherited.extend(['--feedback-reflection',feedback_reflection])
+    if arguments.reflection_history:
+        inherited.extend(['--reflection-history',arguments.reflection_history])
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
                               '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
                               *review_flags(self_review), *inherited],
@@ -211,11 +229,13 @@ def main():
     args = parser.parse_args()
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
-                     self_review=args.self_review,exploration_rule=args.exploration_rule)
+                     self_review=args.self_review,exploration_rule=args.exploration_rule,
+                     feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history)
     source=args.task_package
     if args.action=='solve':
         code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,
-                            self_review=args.self_review,exploration_rule=args.exploration_rule)
+                            self_review=args.self_review,exploration_rule=args.exploration_rule,
+                            feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history)
         if code:
             return code
         source=args.prediction_input

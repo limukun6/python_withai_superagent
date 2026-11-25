@@ -10,6 +10,9 @@ def forecast(weights, expected, novelty):
 
 
 def add_review_arguments(parser):
+    parser.add_argument('--feedback-reflection', choices=('control','local','flash'),
+                        help='Review one live decision after three completed trials')
+    parser.add_argument('--reflection-history', help='Verified anonymous prior outcome counts')
     parser.add_argument('--exploration-rule', metavar='JSON',
                         help='Frozen cross-task calibration for primary exploration forecasts')
     modes = parser.add_mutually_exclusive_group()

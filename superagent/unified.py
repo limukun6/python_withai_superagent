@@ -70,17 +70,50 @@ def configured_flash(directory):
                          streaming=True)
 
 
+def reflection_client(directory):
+    import os
+    import sqlite3
+    from contextlib import closing
+    from .ab_flash import ENDPOINT, MODEL
+    from .experiment_llm import ExperimentLLM
+    from .task_budget import TaskBudgetAccount, TaskBudgetLedger
+    path = os.getenv('SUPERAGENT_RESEARCH_REFLECTION_OUTBOX')
+    if not path:
+        return configured_flash(directory)
+    if os.getenv('SUPERAGENT_OFFLINE') == '1' or os.getenv('SUPERAGENT_PLANNER_LEDGER'):
+        raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
+    ledger = TaskBudgetLedger(path)
+    scope = os.environ.get('SUPERAGENT_TASK_BUDGET_ID','')
+    with closing(sqlite3.connect(ledger.path)) as db:
+        metadata = dict(db.execute('SELECT key,value FROM metadata'))
+        if (metadata.get('ledger_kind') != 'provisional_local_outbox' or metadata.get('team_merge_state') != 'pending_team_handoff'
+                or db.execute('SELECT COUNT(*) FROM requests').fetchone()[0] == 0
+                or db.execute("SELECT COUNT(*) FROM requests WHERE status != 'known' OR scope = ?",(scope,)).fetchone()[0]):
+            raise ValueError('Unsettled, repeated, empty or incorrectly marked research outbox')
+    ledger.preflight(scope,.12)
+    key = os.getenv('SUPERAGENT_PLANNER_KEY_FILE')
+    if not key:
+        raise ValueError('A campus key file is required')
+    return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
+                         account=TaskBudgetAccount(ledger,scope,str(directory)),streaming=True)
+
+
 def command(args):
     from .autonomous_run import train
+    reflection=getattr(args,'feedback_reflection',None)
     if getattr(args,'policy','autonomous')=='legacy':
-        if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None):
+        if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
         return legacy_command(args)
     issue = None
     try:
-        flash = configured_flash(args.run_dir)
+        if reflection == 'flash':
+            flash = reflection_client(args.run_dir)
+        else:
+            flash = None if reflection else configured_flash(args.run_dir)
     except (OSError, ValueError, RuntimeError) as error:
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
                  wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
-                 self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None))
+                 self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None),
+                 feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None))

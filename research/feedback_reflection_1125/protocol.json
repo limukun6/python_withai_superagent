@@ -1,0 +1,17 @@
+{
+  "question": "At the same live decision with the same past evidence, does a one-time grounded reflection improve the delivered classifier over the unchanged action or over local reflection?",
+  "base": "bf4be2d, protected self-review with the frozen promoted exploration calibration. The previously verified course submission d501807 is published independently.",
+  "arms": ["control", "local", "flash"],
+  "trigger": "First decision after at least three completed training trials, one feasible primary exploration alternative and at least two legal actions. Once per task, never solicit a flaw at every step. A missed trigger remains in the denominator.",
+  "evidence": "All arms export the identical hashed, compact packet at their shared checkpoint. It includes ordered feasible actions, fit cost and refit reserve, task metric and anonymous statistics, previous class recalls and paired errors, method families and representations, and a frozen aggregate of successes and failures from the six historical training traces only. Keep or insufficient retains the baseline action. A changed action must be one indexed feasible experiment or confirmation with a cited training observation, a hypothesis, a falsifier and an explicit score threshold to check.",
+  "tasks": [
+    {"id":"r41","source":"1000 synthetic numeric rows with two interacting coordinates and independent nuisance variables, seed 112541","metric":"balanced_accuracy"},
+    {"id":"r42","source":"all distinct UCI 331 Amazon product-review sentences","metric":"macro_f1"},
+    {"id":"r43","source":"1000 noisy synthetic categorical records with a conditional equality and threshold, seed 112543","metric":"macro_f1"},
+    {"id":"r44","source":"800 synthetic images of noisy displaced oriented patches at two scales, seed 112544","metric":"accuracy"}
+  ],
+  "evaluation": "Stratified 25 percent outer split, seed 112546. Fresh training-only packet and disjoint features for each task. Same seed/candidates/frozen prior, 16 actual fits including refits and 600 seconds per arm. Freeze all available predictions for all tasks before grading. Verify common prefix and checkpoint input hash, physical fits, a fresh-process replay and row order. Relative to control and local, count strictly improved, harmed and tied tasks. Report both rows corrected and rows spoiled vs control, even at equal metric. A claim of superiority over local requires at least two strict wins and zero losses on fully matched tasks, all four complete, never retune on this panel.",
+  "model": "Only the existing campus DeepSeek-V4.1-Flash, one request per eligible flash run, four in total, maximum incremental allowance RMB 0.12 per run, 0.48 total. Keep actual input/output tokens and native settlement, price input 1/output 4 RMB per million; provider debit unknown. Use the explicitly authorized nonempty personal outbox until team reconciliation. No automatic retries on failures. A known-invalid or unavailable answer keeps the control action and is identified. Halt remaining new paid calls on a new unresolved usage. Continue independent local tasks. Do not pass outer scores or raw rows to the model.",
+  "maximum_new_classifier_fits": 192,
+  "course_test_accessed": false
+}

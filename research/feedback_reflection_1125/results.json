@@ -1,0 +1,700 @@
+{
+  "protocol_sha256": "e65c1a20a0504306f392474060043e65476f892e8fe4b5a011f6c8a9eab269b2",
+  "source": {
+    "runtime": "ce0bb910866b9e73d2afce3c6cc7f23911c3e4762979ce52478d2d03aea5d5a9",
+    "plan": "e025ced36e1f5aefcea9ab44e4d01ca60f59db5e908f96b7f3321e9ff83d420c",
+    "runner": "c0467e6e69413bbb1926084a3aa7ce44dab4c9ac3b621f328b7f79e336b8111f",
+    "rule": "b3abf1d438c02fb009b6933af694ac6f0ec87e273dc8ef5b1014439cc798c0f8",
+    "observer": "2c172c02e9898a72db6487404a09d9bb69db6a0ef4f3d46c82a316d855bef50a",
+    "fit_observer": "bdc4548b74915d1ba76f35aad10a4c4e895f0e1fc08b3fafce601bebeaf2cbb2"
+  },
+  "base_submission": "d501807e61b5df1ac431d8fdf300c4bf4aaa4c2f",
+  "complete": true,
+  "valid_flash_replies": 4,
+  "flash_superiority_verified": false,
+  "merge_state": "pending_team_handoff",
+  "team_total_verified": false,
+  "cases": {
+    "r41": {
+      "metric": "balanced_accuracy",
+      "train_rows": 750,
+      "arms": {
+        "control": {
+          "score": 0.620020964360587,
+          "correct": 161,
+          "n": 250,
+          "fits": 13,
+          "final_members": [
+            "open_GradientBoostingClassifier_4d5dcbbaeba649c1dd46",
+            "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d1d626efcd1a72e790ebf07a6ac82ef7bb2d1803e0f60100e1c88dca3390b4a7",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+              ],
+              "fold": "primary"
+            },
+            "cited": [],
+            "contrary": [],
+            "reason": "Unmodified control action.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null
+          },
+          "prediction_sha256": "b30791eb66feef823cbbdb631ba40ad26fbbd71e7bff2531eed53d6ccf83a7b7",
+          "split_sha256": "a392adbdf755b6d9cb13438a18a96a93256300b2747ddf9c73b1bfb05709fbf0",
+          "prefix_sha256": "006dc544c24f65549760472c5aef43964440dc89048dbb036efd2c7e3da46a62",
+          "usage": []
+        },
+        "local": {
+          "score": 0.620020964360587,
+          "correct": 161,
+          "n": 250,
+          "fits": 13,
+          "final_members": [
+            "open_GradientBoostingClassifier_4d5dcbbaeba649c1dd46",
+            "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d1d626efcd1a72e790ebf07a6ac82ef7bb2d1803e0f60100e1c88dca3390b4a7",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+              ],
+              "fold": "primary"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [],
+            "reason": "The default already tests a competitive unmeasured estimator.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null,
+            "same_action_without_archive": true
+          },
+          "prediction_sha256": "b30791eb66feef823cbbdb631ba40ad26fbbd71e7bff2531eed53d6ccf83a7b7",
+          "split_sha256": "a392adbdf755b6d9cb13438a18a96a93256300b2747ddf9c73b1bfb05709fbf0",
+          "prefix_sha256": "006dc544c24f65549760472c5aef43964440dc89048dbb036efd2c7e3da46a62",
+          "usage": []
+        },
+        "flash": {
+          "score": 0.620020964360587,
+          "correct": 161,
+          "n": 250,
+          "fits": 13,
+          "final_members": [
+            "open_GradientBoostingClassifier_4d5dcbbaeba649c1dd46",
+            "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d1d626efcd1a72e790ebf07a6ac82ef7bb2d1803e0f60100e1c88dca3390b4a7",
+            "verdict": "experiment",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_RandomForestClassifier_297b0a70fa7a1b8edaaf"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "confirm",
+              "methods": [
+                "open_GradientBoostingClassifier_4d5dcbbaeba649c1dd46"
+              ],
+              "fold": "confirmation_1"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [],
+            "reason": "Default index 0 explores untested RandomForest (method 27), but trial 2 is the best observed primary result (0.653) using method 13. Confirming method 13 on confirmation_1 resolves whether that best result generalizes before spending another fit on an untested model whose expected score (0.611) is below trial 2.",
+            "falsifier": "Method 13 scores below 0.6530425219941349 on confirmation_1.",
+            "threshold": 0.6530425219941349,
+            "internal_check": {
+              "trial": 4,
+              "fold": "confirmation_1",
+              "score": 0.678743961352657,
+              "minimum_score": 0.6530425219941349,
+              "passed": true
+            },
+            "original_action_later_at_step": 5
+          },
+          "prediction_sha256": "b30791eb66feef823cbbdb631ba40ad26fbbd71e7bff2531eed53d6ccf83a7b7",
+          "split_sha256": "a392adbdf755b6d9cb13438a18a96a93256300b2747ddf9c73b1bfb05709fbf0",
+          "prefix_sha256": "006dc544c24f65549760472c5aef43964440dc89048dbb036efd2c7e3da46a62",
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3140,
+              "output_tokens": 2795,
+              "course_cost_rmb": 0.01432,
+              "actual_cost_rmb": null
+            }
+          ]
+        }
+      },
+      "comparisons": {
+        "flash_vs_local": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "flash_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "local_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        }
+      }
+    },
+    "r42": {
+      "metric": "macro_f1",
+      "train_rows": 740,
+      "arms": {
+        "control": {
+          "score": 0.9675980585071494,
+          "correct": 239,
+          "n": 247,
+          "fits": 10,
+          "final_members": [
+            "bge_small_text_with_lexical_features"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "682d9668e945f0fee56a5b515c2111876f62d8ea3122ed4cba438c341e385e82",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_eb43dbed78540ea66437"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_eb43dbed78540ea66437"
+              ],
+              "fold": "primary"
+            },
+            "cited": [],
+            "contrary": [],
+            "reason": "Unmodified control action.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null
+          },
+          "prediction_sha256": "f69666ad7fffa0f6c12502069e99ad1c32679249c906528af400884febaf11c2",
+          "split_sha256": "0eb34083cd19caceba577b23eb1427f3e80a547acdb57ac72f627347d2269c90",
+          "prefix_sha256": "7b3b6b102404463d4550f3fc367656567203e4ca7adb837b06c22d6e9b5cef7f",
+          "usage": []
+        },
+        "local": {
+          "score": 0.9675980585071494,
+          "correct": 239,
+          "n": 247,
+          "fits": 10,
+          "final_members": [
+            "bge_small_text_with_lexical_features"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "682d9668e945f0fee56a5b515c2111876f62d8ea3122ed4cba438c341e385e82",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_eb43dbed78540ea66437"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_eb43dbed78540ea66437"
+              ],
+              "fold": "primary"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [],
+            "reason": "The default already tests a competitive unmeasured estimator.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null,
+            "same_action_without_archive": true
+          },
+          "prediction_sha256": "f69666ad7fffa0f6c12502069e99ad1c32679249c906528af400884febaf11c2",
+          "split_sha256": "0eb34083cd19caceba577b23eb1427f3e80a547acdb57ac72f627347d2269c90",
+          "prefix_sha256": "7b3b6b102404463d4550f3fc367656567203e4ca7adb837b06c22d6e9b5cef7f",
+          "usage": []
+        },
+        "flash": {
+          "score": 0.9675980585071494,
+          "correct": 239,
+          "n": 247,
+          "fits": 10,
+          "final_members": [
+            "bge_small_text_with_lexical_features"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "682d9668e945f0fee56a5b515c2111876f62d8ea3122ed4cba438c341e385e82",
+            "verdict": "experiment",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_eb43dbed78540ea66437"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "confirm",
+              "methods": [
+                "bge_small_text_with_lexical_features"
+              ],
+              "fold": "confirmation_1"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [],
+            "reason": "Default index 0 explores a decision tree with expected 0.930, below the current best 0.959 from trial 2; archive novelty shows mostly worse outcomes. Confirming method 0 on confirmation_1 is a more targeted way to resolve whether the best primary result generalizes before spending another high-novelty exploration.",
+            "falsifier": "Method 0 scores below 0.95 on confirmation_1 or fails to remain the best confirmation candidate.",
+            "threshold": 0.95,
+            "internal_check": {
+              "trial": 4,
+              "fold": "confirmation_1",
+              "score": 0.9797288042733872,
+              "minimum_score": 0.95,
+              "passed": true
+            },
+            "original_action_later_at_step": 5
+          },
+          "prediction_sha256": "f69666ad7fffa0f6c12502069e99ad1c32679249c906528af400884febaf11c2",
+          "split_sha256": "0eb34083cd19caceba577b23eb1427f3e80a547acdb57ac72f627347d2269c90",
+          "prefix_sha256": "7b3b6b102404463d4550f3fc367656567203e4ca7adb837b06c22d6e9b5cef7f",
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3580,
+              "output_tokens": 1814,
+              "course_cost_rmb": 0.010836,
+              "actual_cost_rmb": null
+            }
+          ]
+        }
+      },
+      "comparisons": {
+        "flash_vs_local": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "flash_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "local_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        }
+      }
+    },
+    "r43": {
+      "metric": "macro_f1",
+      "train_rows": 750,
+      "arms": {
+        "control": {
+          "score": 0.8032219132077452,
+          "correct": 205,
+          "n": 250,
+          "fits": 11,
+          "final_members": [
+            "supported_field_interactions"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d5f1ab60cf765bb4f4951ade0b9fd71b38eeac8647079535cc431467856c29e8",
+            "verdict": "keep",
+            "default": {
+              "action": "confirm",
+              "methods": [
+                "supported_field_interactions"
+              ],
+              "fold": "confirmation_1"
+            },
+            "chosen": {
+              "action": "confirm",
+              "methods": [
+                "supported_field_interactions"
+              ],
+              "fold": "confirmation_1"
+            },
+            "cited": [],
+            "contrary": [],
+            "reason": "Unmodified control action.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null
+          },
+          "prediction_sha256": "c5867e4a6eddddd438418cdb7ac1287907ba45b893232dd34a339bd39714dbee",
+          "split_sha256": "e85e1d105d83653f830e4ba3582303b484eed3e0c0f65f7da7f01db0bb29a9f3",
+          "prefix_sha256": "3fecded2fe97542ff7cf8fc6e54026f401e309958a4887c72c9101549cb33432",
+          "usage": []
+        },
+        "local": {
+          "score": 0.8032219132077452,
+          "correct": 205,
+          "n": 250,
+          "fits": 10,
+          "final_members": [
+            "supported_field_interactions"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d5f1ab60cf765bb4f4951ade0b9fd71b38eeac8647079535cc431467856c29e8",
+            "verdict": "experiment",
+            "default": {
+              "action": "confirm",
+              "methods": [
+                "supported_field_interactions"
+              ],
+              "fold": "confirmation_1"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "logistic_C4.0"
+              ],
+              "fold": "primary"
+            },
+            "cited": [
+              3
+            ],
+            "contrary": [
+              1,
+              2
+            ],
+            "reason": "An unmeasured estimator has a priority within the observed uncertainty of the default.",
+            "falsifier": "Its measured primary score falls below the best previous primary score.",
+            "threshold": 0.7811709784088698,
+            "internal_check": {
+              "trial": 4,
+              "fold": "primary",
+              "score": 0.6586121737446129,
+              "minimum_score": 0.7811709784088698,
+              "passed": false
+            },
+            "original_action_later_at_step": 5,
+            "same_action_without_archive": true
+          },
+          "prediction_sha256": "c5867e4a6eddddd438418cdb7ac1287907ba45b893232dd34a339bd39714dbee",
+          "split_sha256": "e85e1d105d83653f830e4ba3582303b484eed3e0c0f65f7da7f01db0bb29a9f3",
+          "prefix_sha256": "3fecded2fe97542ff7cf8fc6e54026f401e309958a4887c72c9101549cb33432",
+          "usage": []
+        },
+        "flash": {
+          "score": 0.8032219132077452,
+          "correct": 205,
+          "n": 250,
+          "fits": 11,
+          "final_members": [
+            "supported_field_interactions"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "d5f1ab60cf765bb4f4951ade0b9fd71b38eeac8647079535cc431467856c29e8",
+            "verdict": "keep",
+            "default": {
+              "action": "confirm",
+              "methods": [
+                "supported_field_interactions"
+              ],
+              "fold": "confirmation_1"
+            },
+            "chosen": {
+              "action": "confirm",
+              "methods": [
+                "supported_field_interactions"
+              ],
+              "fold": "confirmation_1"
+            },
+            "cited": [
+              3
+            ],
+            "contrary": [],
+            "reason": "Trial 3 is the best primary result (0.7812) with positive paired errors (9 newly correct vs 3 newly wrong), and index 0 is a confirmation of that same method. The main uncertainty is lack of confirmation-fold evidence, which the default action directly addresses.",
+            "falsifier": "confirmation_1 macro_f1 for method 36 is <= 0.7272, the best non-36 primary score.",
+            "threshold": null,
+            "internal_check": null
+          },
+          "prediction_sha256": "c5867e4a6eddddd438418cdb7ac1287907ba45b893232dd34a339bd39714dbee",
+          "split_sha256": "e85e1d105d83653f830e4ba3582303b484eed3e0c0f65f7da7f01db0bb29a9f3",
+          "prefix_sha256": "3fecded2fe97542ff7cf8fc6e54026f401e309958a4887c72c9101549cb33432",
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3442,
+              "output_tokens": 1124,
+              "course_cost_rmb": 0.007938,
+              "actual_cost_rmb": null
+            }
+          ]
+        }
+      },
+      "comparisons": {
+        "flash_vs_local": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "flash_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "local_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        }
+      }
+    },
+    "r44": {
+      "metric": "accuracy",
+      "train_rows": 600,
+      "arms": {
+        "control": {
+          "score": 0.755,
+          "correct": 151,
+          "n": 200,
+          "fits": 11,
+          "final_members": [
+            "open_HistGradientBoostingClassifier_87e541312efa2c4c76be"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "12dcbb23bae9eef938678f8b19d2624aa3ef193ccf0ec7139ac8d743ca7083b8",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_58d5c96af8c697ddc00d"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_58d5c96af8c697ddc00d"
+              ],
+              "fold": "primary"
+            },
+            "cited": [],
+            "contrary": [],
+            "reason": "Unmodified control action.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null
+          },
+          "prediction_sha256": "64a046d5309a2a40795a20f98897e2824418ec19861bb21038e8c32b28ce9b8e",
+          "split_sha256": "e32f23bac06b6a43431f230441f9186826dd1777a269c6bb515d2784507676b8",
+          "prefix_sha256": "a7417d8436073efd9cd6f30aebefb2d08238ee90487fe3c991c3d99ae03f1aa7",
+          "usage": []
+        },
+        "local": {
+          "score": 0.755,
+          "correct": 151,
+          "n": 200,
+          "fits": 11,
+          "final_members": [
+            "open_HistGradientBoostingClassifier_87e541312efa2c4c76be"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "12dcbb23bae9eef938678f8b19d2624aa3ef193ccf0ec7139ac8d743ca7083b8",
+            "verdict": "keep",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_58d5c96af8c697ddc00d"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_58d5c96af8c697ddc00d"
+              ],
+              "fold": "primary"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [],
+            "reason": "The default already tests a competitive unmeasured estimator.",
+            "falsifier": "",
+            "threshold": null,
+            "internal_check": null,
+            "same_action_without_archive": true
+          },
+          "prediction_sha256": "64a046d5309a2a40795a20f98897e2824418ec19861bb21038e8c32b28ce9b8e",
+          "split_sha256": "e32f23bac06b6a43431f230441f9186826dd1777a269c6bb515d2784507676b8",
+          "prefix_sha256": "a7417d8436073efd9cd6f30aebefb2d08238ee90487fe3c991c3d99ae03f1aa7",
+          "usage": []
+        },
+        "flash": {
+          "score": 0.755,
+          "correct": 151,
+          "n": 200,
+          "fits": 11,
+          "final_members": [
+            "open_HistGradientBoostingClassifier_87e541312efa2c4c76be"
+          ],
+          "decision": {
+            "step": 4,
+            "state": "valid",
+            "input_hash": "12dcbb23bae9eef938678f8b19d2624aa3ef193ccf0ec7139ac8d743ca7083b8",
+            "verdict": "experiment",
+            "default": {
+              "action": "explore",
+              "methods": [
+                "open_DecisionTreeClassifier_58d5c96af8c697ddc00d"
+              ],
+              "fold": "primary"
+            },
+            "chosen": {
+              "action": "confirm",
+              "methods": [
+                "open_HistGradientBoostingClassifier_87e541312efa2c4c76be"
+              ],
+              "fold": "confirmation_1"
+            },
+            "cited": [
+              2
+            ],
+            "contrary": [
+              3
+            ],
+            "reason": "Trial 2 gives the best primary score (0.6917) with a latent_image model, while the default decision_tree exploration has expected 0.6636 below that best and trial 3 shows another latent_image tree ensemble underperforming at 0.6417. Confirming method 14 is the most direct way to resolve whether the best result is stable before spending more fits on the default.",
+            "falsifier": "Method 14 scores below 0.6917 on confirmation_1.",
+            "threshold": 0.6917,
+            "internal_check": {
+              "trial": 4,
+              "fold": "confirmation_1",
+              "score": 0.6666666666666666,
+              "minimum_score": 0.6917,
+              "passed": false
+            },
+            "original_action_later_at_step": 5
+          },
+          "prediction_sha256": "64a046d5309a2a40795a20f98897e2824418ec19861bb21038e8c32b28ce9b8e",
+          "split_sha256": "e32f23bac06b6a43431f230441f9186826dd1777a269c6bb515d2784507676b8",
+          "prefix_sha256": "a7417d8436073efd9cd6f30aebefb2d08238ee90487fe3c991c3d99ae03f1aa7",
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 3044,
+              "output_tokens": 1859,
+              "course_cost_rmb": 0.01048,
+              "actual_cost_rmb": null
+            }
+          ]
+        }
+      },
+      "comparisons": {
+        "flash_vs_local": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "flash_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        },
+        "local_vs_control": {
+          "delta": 0.0,
+          "corrected": 0,
+          "spoiled": 0
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "flash_vs_local": {
+      "tie": 4
+    },
+    "flash_vs_control": {
+      "tie": 4
+    },
+    "local_vs_control": {
+      "tie": 4
+    }
+  },
+  "completed_runs": 12,
+  "fits": 134,
+  "api_calls": 4,
+  "unknown_calls": 0,
+  "known_rmb": 0.043574,
+  "known_input": 13206,
+  "known_output": 7592,
+  "prior": {
+    "near": {
+      "improved": 2,
+      "tied": 0,
+      "worse": 5,
+      "tasks": 4
+    },
+    "different": {
+      "improved": 4,
+      "tied": 0,
+      "worse": 15,
+      "tasks": 6
+    }
+  },
+  "formal_test_accessed": false
+}

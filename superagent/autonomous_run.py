@@ -156,7 +156,9 @@ def train(package, directory, **options):
 
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
-          flash_setup_issue=None, self_review=False, exploration_rule=None):
+          flash_setup_issue=None, self_review=False, exploration_rule=None,feedback_reflection=None,reflection_history=None):
+    from . import feedback_reflection as feedback
+    prior_feedback = feedback.load_memory(reflection_history)
     if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–16 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
@@ -175,6 +177,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     if rule is not None:
         log.write_json('exploration_rule.json',rule)
         manifest['exploration_rule_digest'] = identity(rule)
+    if feedback_reflection:
+        manifest.update(feedback_reflection=feedback_reflection,reflection_history_digest=identity(prior_feedback))
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
@@ -218,7 +222,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log)
         history,decisions,blocked=[],[],set()
         observed={f:{} for f in folds}
-        flash_available=flash is not None
+        flash_available=flash is not None and not feedback_reflection
+        reflection = None
         from .planner_review import PlannerReview
         review = PlannerReview() if self_review else None
         if review is not None:
@@ -241,6 +246,14 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if feedback_reflection and reflection is None and feedback.eligible(history,menu):
+                    packet=feedback.evidence_packet(menu,caps,profile,history,metric.name,remaining,prior_feedback)
+                    reflection=feedback.decide(feedback_reflection,packet,flash,log)
+                    advice=reflection['decision']
+                    choice=menu[advice['option']]
+                    source=feedback_reflection+' feedback reflection'
+                    reflection['step']=len(decisions)+1
+                    log.write_json('reflection.json',reflection)
                 if flash_available and flash.request_count<flash.max_requests and len(menu)>1:
                     try:
                         choice=choose_with_flash(flash,log,menu,caps,profile,metric,history,remaining)
@@ -293,6 +306,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 if review is not None:
                     review.observed(monitor['trial'],observation['score'])
                     log.write_json('policy_review.json',review.record())
+                if reflection and reflection['step']==monitor['trial'] and reflection['decision']['verdict']=='experiment':
+                    threshold=reflection['decision']['minimum_score']
+                    reflection['observed_check']=dict(trial=monitor['trial'], fold=fold, score=observation['score'],
+                                                      minimum_score=threshold, passed=observation['score']>=threshold)
+                    log.write_json('reflection.json',reflection)
                 if fold == 'primary':
                     try:
                         checkpoint = promote(task,metric,checkpoint,monitor['trial'],name,destination,payload,observation,log)

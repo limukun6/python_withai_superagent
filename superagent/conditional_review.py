@@ -50,11 +50,13 @@ def compare(fold, base, other):
                 delta=other['score']-base['score'],gained=int(sum(after & ~before)),lost=int(sum(before & ~after)))
 
 
-def feasible_probes(incumbent, observed, folds, caps, metric, remaining):
+def feasible_probes(incumbent, observed, folds, caps, metric, remaining, *, scheduled=None):
     names = ['primary', *sorted(f for f in folds if f.startswith('confirmation_'))]
     if len(names)<3 or any(f not in observed for f in names[:3]):
         return [], 'third_training_fold_unavailable'
     first, second, third = names[:3]
+    if scheduled is not None and (scheduled['action']!='confirm' or scheduled['split']!=third):
+        return [], 'next_experiment_is_not_a_third_fold_confirmation'
     held = [set(map(int,folds[f][1])) for f in names[:3]]
     if any(not ids for ids in held) or any(held[i]&held[j] for i,j in ((0,1),(0,2),(1,2))):
         return [], 'evaluation_rows_not_disjoint'
@@ -73,8 +75,10 @@ def feasible_probes(incumbent, observed, folds, caps, metric, remaining):
         missing = [n for n in dict.fromkeys([*incumbent,name]) if n not in observed[third]]
         if not missing or any(n not in caps for n in missing):
             continue
+        if scheduled is not None and missing!=scheduled['members']:
+            continue
         measurement = sum(caps[n]['classifier_fits'] for n in missing)
-        refit = caps[name]['refit_classifier_fits']
+        refit = caps[name]['refit_classifier_fits'] if scheduled is None else scheduled['evidence']['reserved_refits']
         if measurement+refit>remaining:
             continue
         n = len(held[2])
@@ -85,10 +89,13 @@ def feasible_probes(incumbent, observed, folds, caps, metric, remaining):
         options.append(dict(challenger=name,estimator=caps[name]['estimator'],representation=caps[name]['representation'],
             comparisons=prior,third_fold=third,third_rows=n,missing=missing,measurement_fits=measurement,
             refit_fits=refit,required_delta=required,maximum_possible_delta=maximum))
+        if scheduled is not None:
+            options[-1].update(incumbent_known_third_score=base[2]['score'] if base[2] is not None else None,
+                               challenger_known_third_score=observed[third].get(name,{}).get('score'))
     return options, ('eligible' if options else 'no_affordable_new_decisive_measurement' if conflict else 'no_rank_reversal')
 
 
-def validate(answer, packet):
+def validate(answer, packet, *, pass_action=PASS, fail_action=FAIL):
     if not isinstance(answer,dict) or not isinstance(answer.get('reason'),str) or not answer['reason'].strip():
         raise ValueError('A review requires a reason')
     if answer.get('decision')=='keep':
@@ -97,7 +104,7 @@ def validate(answer, packet):
     if answer.get('decision')!='measure' or type(i) is not int or not 0<=i<len(packet['options']):
         raise ValueError('The selected probe is not available')
     option=packet['options'][i]
-    if (answer.get('if_pass'),answer.get('if_fail'))!=(PASS,FAIL):
+    if (answer.get('if_pass'),answer.get('if_fail'))!=(pass_action,fail_action):
         raise ValueError('The two outcomes must lead to distinct admissible decisions')
     refs=answer.get('cited_folds')
     if not isinstance(refs,list) or sorted(refs)!=sorted(r['fold'] for r in option['comparisons']):
@@ -109,8 +116,15 @@ def validate(answer, packet):
     if threshold is not None and (type(threshold) not in (float,int) or not math.isfinite(threshold)
             or not 0<=threshold<=option['maximum_possible_delta']+1e-12):
         raise ValueError('Unattainable or invalid decision threshold')
-    return dict(decision='measure',option=i,cited_folds=refs,if_pass=PASS,if_fail=FAIL,
+    return dict(decision='measure',option=i,cited_folds=refs,if_pass=pass_action,if_fail=fail_action,
                 minimum_delta=max(option['required_delta'],threshold or 0.),reason=answer['reason'],opportunity_cost=cost)
+
+
+def evaluate_probe(probe, latest, minimum_delta):
+    comparisons=[*probe['comparisons'],latest]
+    weighted=float(np.average([r['delta'] for r in comparisons],weights=[r['rows'] for r in comparisons]))
+    passed=latest['delta']>0 and latest['delta']+1e-12>=minimum_delta and weighted+1e-12>=MEAN_GAIN
+    return weighted, bool(passed)
 
 
 def review_delivery(task,spec,metric,selection,choice,executor,directory,log,timeout,observed,payloads,folds,flash,memory):
@@ -148,8 +162,7 @@ def review_delivery(task,spec,metric,selection,choice,executor,directory,log,tim
                     raise ValueError('The saved ensemble cannot be evaluated on this fold')
                 latest=compare(fold,reference,bank[name])
                 comparisons=[*probe['comparisons'],latest]
-                weighted=float(np.average([r['delta'] for r in comparisons],weights=[r['rows'] for r in comparisons]))
-                passed=latest['delta']>0 and latest['delta']+1e-12>=plan['minimum_delta'] and weighted+1e-12>=MEAN_GAIN
+                weighted,passed=evaluate_probe(probe,latest,plan['minimum_delta'])
                 record.update(third=latest,weighted_delta=weighted,passed=passed,status='measured')
                 log.write_json('conditional_review.json',record)
                 if passed:

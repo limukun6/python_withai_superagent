@@ -39,8 +39,8 @@ def standby(task, spec, metric, directory, log):
     return selection
 
 
-def promote(task, metric, prior, trial, candidate, model_path, payload_record, observation, log):
-    if prior.get('selection_score',float('-inf')) >= observation['score']:
+def promote(task, metric, prior, trial, candidate, model_path, payload_record, observation, log, *, review_evidence=None):
+    if review_evidence is None and prior.get('selection_score',float('-inf')) >= observation['score']:
         return prior
     bundle = joblib.load(model_path)
     payload = joblib.load(payload_record['path'])
@@ -63,6 +63,10 @@ def promote(task, metric, prior, trial, candidate, model_path, payload_record, o
         training_rows=len(payload['y_train']),full_training_rows=len(task.y_train),refit=False,test_accessed=False,
         delivery_status='partial',requested_planner_completed=False,contract_unresolved=False,
         partial_reason='Search or final refit has not completed')
+    if review_evidence is not None:
+        selection.update(selection_metric='row-weighted gain across three training folds',
+                         selection_score=review_evidence['weighted_delta'],selection_evidence='scheduled_review.json',
+                         primary_score=observation['score'],previous_model_sha256=prior['model_sha256'])
     log.write_json('verified_selection.json',selection)
     log.write_json('final_selection.json',selection)
     return selection

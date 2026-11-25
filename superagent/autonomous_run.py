@@ -224,6 +224,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         observed={f:{} for f in folds}
         flash_available=flash is not None and not feedback_reflection
         reflection = None
+        scheduled = None
+        if feedback_reflection=='scheduled-flash':
+            from .scheduled_review import ScheduledReview
+            scheduled=ScheduledReview(log,flash,start+wall)
         from .planner_review import PlannerReview
         review = PlannerReview() if self_review else None
         if review is not None:
@@ -285,6 +289,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 destination=directory/f'trial_{len(history)+1}.joblib'
                 monitor=dict(trial=len(history)+1,candidate=name,split_id=fold)
                 payload=payloads[fold]
+                if scheduled is not None:
+                    scheduled.before(choice,monitor['trial'],checkpoint,observed,folds,caps,metric,remaining)
                 if review is not None:
                     review.before_fit(monitor['trial'],choice)
                     log.write_json('policy_review.json',review.record())
@@ -300,6 +306,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                         log.write_json('policy_review.json',review.record())
                     history.append(dict(monitor,status='failed',error=str(error)[-800:]))
                     log.write_json('history.json',history)
+                    if scheduled is not None:
+                        scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory,failed=True)
                     continue
                 bundle=joblib.load(destination)
                 observation=planner_observation(bundle,facts,payload,metric)
@@ -330,6 +338,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     class_recall=facts['class_recall'],paired_errors=paired,training_seconds=facts['training_seconds'],
                     resolved_configuration=facts['resolved_configuration']))
                 log.write_json('history.json',history)
+                if scheduled is not None:
+                    scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory)
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
             if self_review == 'protected':
                 from .protected_stop import review_stop
@@ -339,6 +349,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .conditional_review import review_delivery
                 selection, choice = review_delivery(task, spec, metric, selection, choice, executor, directory,
                     log, timeout, observed, payloads, folds, flash, prior_feedback)
+            if scheduled is not None:
+                scheduled.finish(selection)
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
         except Exception as error:

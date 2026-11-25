@@ -83,6 +83,8 @@ def reflection_client(directory,mode='flash'):
     ledger = TaskBudgetLedger(path)
     scope = os.environ.get('SUPERAGENT_TASK_BUDGET_ID','')
     arm = mode if os.getenv('SUPERAGENT_RESEARCH_PAIRED_REFLECTION') == '1' else None
+    if arm == 'scheduled-flash':
+        arm = 'conditional-flash'  # Both conditional timing policies share one paid slot per task.
     ledger.preflight(scope,.12,fresh_outbox_scope=True,paired_arm=arm)
     key = os.getenv('SUPERAGENT_PLANNER_KEY_FILE')
     if not key:
@@ -100,7 +102,7 @@ def command(args):
         return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if reflection else configured_flash(args.run_dir)

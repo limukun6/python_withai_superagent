@@ -128,6 +128,14 @@ def run_one(args,case,mode):
         require(not (agent/'reflection.json').exists() and evidence['delivered_sha256']==final['model_sha256'],'Unverified conditional execution')
         if evidence.get('input_digest'):
             require(evidence['input_digest']==identity(read(agent/'conditional_review_input.json')),'Changed reviewer input')
+    if mode=='scheduled-flash':
+        evidence=read(agent/'scheduled_review.json')
+        require(evidence['delivered_sha256']==final['model_sha256'],'Incorrect delivery after scheduled review')
+        if 'trial' in evidence:
+            packet=read(agent/'scheduled_review_input.json')
+            require(evidence['input_digest']==identity(packet) and packet['incremental_training_fits']==0
+                    and decisions[evidence['trial']-1]['choice']['members']==[packet['scheduled_method']]
+                    and decisions[evidence['trial']-1]['choice']['split']==packet['scheduled_fold'],'Incorrect scheduled evidence')
     receipt=dict(fits=fits,model=final['model_sha256'],prediction=sha(output),review=evidence,calls=calls,scope='conditional-review-'+case,
                  unknown=outcome['unresolved_api_requests'],split=sha(agent/'primary_split.json'),pre_review_search=identity(trace),
                  first_three=identity(trace[:3]),completed_trials=sum(r['status']=='completed' for r in history))

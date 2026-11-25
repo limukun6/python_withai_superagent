@@ -1,0 +1,106 @@
+"""Conventional split/class/image ZIP layouts, without test-label reads."""
+from pathlib import PurePosixPath
+
+import numpy as np
+
+from .image_files import BITMAP_FORMATS, load_image_rows, DECODER_POLICY
+
+
+EXTENSIONS=set(BITMAP_FORMATS)
+DEFAULT_CONTRACT={'width':64,'height':64,'mode':'RGB','resize':'stretch_bilinear'}
+SPLIT_ALIASES={'train':{'train','training'},'validation':{'validation','valid','val'},'test':{'test','testing','predict','prediction'}}
+
+
+def _images(archive):
+    names=[]
+    for name in archive.namelist():
+        path=PurePosixPath(name)
+        if name.startswith('__MACOSX/') or path.suffix.casefold() not in getattr(archive, 'image_extensions', EXTENSIONS):continue
+        if path.is_absolute() or '..' in path.parts or '\\' in name:
+            raise ValueError('Image archive path must remain inside its package')
+        names.append(name)
+    if len(set(names))!=len(names):raise ValueError('Ambiguous duplicate image paths')
+    return sorted(names)
+
+
+def _prefix(archive,split,required=False):
+    aliases=SPLIT_ALIASES[split]
+    candidates=set()
+    for name in _images(archive):
+        parts=PurePosixPath(name).parts
+        for i,part in enumerate(parts[:-1]):
+            if part.casefold() in aliases and (split=='test' or len(parts)-i>=3):
+                candidates.add('/'.join(parts[:i+1])+'/')
+    if len(candidates)>1:raise ValueError('Ambiguous image split roots; declare a manifest')
+    if not candidates:
+        if required:raise ValueError('Missing image folder split: '+split)
+        return None
+    return next(iter(candidates))
+
+
+def class_first_rows(archive,split):
+    matches=[]
+    for name in _images(archive):
+        path=PurePosixPath(name)
+        if len(path.parts)>=3 and path.parts[-2].casefold() in SPLIT_ALIASES[split]:
+            matches.append((name,path.parts[-3],str(path.parents[2])))
+    if len({root for _,_,root in matches})>1:
+        raise ValueError('Multiple independent class-folder roots')
+    return [(name,label) for name,label,_ in matches]
+
+
+def infer_folder_manifest(archive):
+    conventional={'train.csv','train.tsv','train.parquet','train.npz','X_train.npy','C_train.npy'}
+    if any(PurePosixPath(n).name in conventional for n in archive.namelist()):return None
+    train=_prefix(archive,'train')
+    if train is None:
+        if not class_first_rows(archive,'train'):
+            return None
+        return {'schema_version':1,'objective':'classification','metric':'accuracy','modality':'image',
+                '_manifest_parent':'.','_schema_origin':'folder_v1','image_preprocessing':dict(DEFAULT_CONTRACT),
+                'splits':{'train':{'format':'image_folder','layout':'class_then_split'}}}
+    manifest={'schema_version':1,'objective':'classification','metric':'accuracy','modality':'image',
+        '_manifest_parent':'.','_schema_origin':'folder_v1','image_preprocessing':dict(DEFAULT_CONTRACT),
+        'splits':{'train':{'format':'image_folder','prefix':train}}}
+    validation=_prefix(archive,'validation')
+    if validation:manifest['splits']['validation']={'format':'image_folder','prefix':validation}
+    return manifest
+
+
+def load_folder_split(archive,manifest,split,include_labels=True):
+    descriptor=manifest.get('splits',{}).get(split,{})
+    prefix=descriptor.get('prefix')
+    class_first=descriptor.get('layout')=='class_then_split'
+    if not class_first and (not isinstance(prefix,str) or not prefix.endswith('/') or '..' in PurePosixPath(prefix).parts or prefix.startswith('/')):
+        raise ValueError('Invalid image-folder prefix')
+    if not class_first and split!='test' and any(p.casefold()=='test' for p in PurePosixPath(prefix).parts):
+        raise ValueError('Development images cannot come from a test folder')
+    by_class=class_first_rows(archive,split) if class_first else []
+    names=[n for n,_ in by_class] if class_first else [n for n in _images(archive) if n.startswith(prefix)]
+    if not names:raise ValueError('Empty image split')
+    labels=[label for _,label in by_class] if include_labels else []
+    if include_labels and not class_first:
+        for name in names:
+            remaining=PurePosixPath(name[len(prefix):]).parts
+            if len(remaining)<2:raise ValueError('Training image folder requires one class directory per image')
+            labels.append(remaining[0])
+    x,contract=load_image_rows(archive,manifest,split,names)
+    from importlib.metadata import version
+    spec={'manifest_schema_version':1,'modality':'image','metric':manifest.get('metric','accuracy'),
+        'goal_sources':{'primary_metric':'default_accuracy' if manifest.get('_schema_origin')=='folder_v1' or 'metric' not in manifest else 'declared_manifest'},
+        'test_accessed':split=='test','schema_origin':'folder_v1','input_format':'image_folder',
+        'feature_shape':list(x.shape[1:]),'image_decoder_policy':DECODER_POLICY,
+        'image_decoder_version':version('Pillow'),'kind':'image',
+        'input_schema':{'modality':'image','image_preprocessing':contract}}
+    if manifest.get('_metric_source'):
+        spec['goal_sources']['primary_metric']=manifest['_metric_source']
+    return 'image',x,np.asarray(labels) if include_labels else None,spec
+
+
+def prediction_folder_manifest(archive,frozen_spec):
+    by_class=class_first_rows(archive,'test')
+    split=({'format':'image_folder','layout':'class_then_split'} if by_class else
+           {'format':'image_folder','prefix':_prefix(archive,'test',required=True)})
+    return {'schema_version':1,'modality':'image','metric':frozen_spec['metric'],
+        '_manifest_parent':'.','image_preprocessing':frozen_spec['input_schema']['image_preprocessing'],
+        'splits':{'test':split}}

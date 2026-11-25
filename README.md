@@ -1,6 +1,10 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
-## 当前统一入口
+## 当前可交付的全自主版本
+
+两份 Released Task 在同一份源码上从头自主运行，指定验证分别为 1533/2030（75.52%）和 684/940（72.77%）。在个人分支先进入 `releases/autonomous-submission-2026-11-25`，再运行 `python -m unified_agent solve`。可运行源码、依赖、权重准备命令和验收凭据都在这个目录。[个人分支交付目录](releases/autonomous-submission-2026-11-25/) · [同版完整源码](https://github.com/limukun6/python_withai_superagent/tree/d501807e61b5df1ac431d8fdf300c4bf4aaa4c2f)
+
+## 11 月 24 日历史整合入口
 
 在仓库根目录执行 `python -m unified_agent train TASK.zip --run-dir runs/my-task`。同一命令接收原始任务包，自动处理训练划分、方法搜索、反馈和重训。两个 Released Tasks 的复现环境、成绩与逐行证据见[统一 Agent 说明](docs/UNIFIED_AGENT_20261124_zh.md)。
 

@@ -1,0 +1,408 @@
+{
+  "protocol": "98d34f16db462a403eab3049c4c3ac057fdcea9dcbe768279b1119e4394c2140",
+  "source": {
+    "runtime": "aad23006d1687041241512430fe2af2d487e5e95c88c6cec04688bea46545c21",
+    "audit": {
+      "research/proposal_value_1126/delivered_protocol.json": "98d34f16db462a403eab3049c4c3ac057fdcea9dcbe768279b1119e4394c2140",
+      "scripts/run_proposal_value_study.py": "f6ee30f7e51bbedf88f342567c7168d677345c6c99c1e751e4b12f0b63d326fe",
+      "scripts/reflection_study_observer/sitecustomize.py": "ceccbbb16c262a439e0d36d6d1aeb386bfc388487535871dc66c844df1d69873",
+      "scripts/ab_acceptance_guard/sitecustomize.py": "bdc4548b74915d1ba76f35aad10a4c4e895f0e1fc08b3fafce601bebeaf2cbb2",
+      "scripts/run_planner_self_review.py": "967f37790ebc952704f2dfd72484145a2ab676992f328df414da6eecf0ebd760",
+      "scripts/verify_conditional_study_receipts.py": "ba300eeaf1dfe3070569cecfb2fb76c9991becc2c7626451739d7e6f50257ffa"
+    }
+  },
+  "cases": {
+    "p85": {
+      "metric": "balanced_accuracy",
+      "outer": 140,
+      "train": 420,
+      "arms": {
+        "delivered-local": {
+          "scores": {
+            "final": 0.6875901875901875,
+            "fourth": 0.6154401154401155,
+            "seconds30": 0.6875901875901875,
+            "protected": 0.6464646464646464
+          },
+          "fits": 9,
+          "status": "completed",
+          "error": null,
+          "usage": [],
+          "wall": 15.937745416071266,
+          "model_published_seconds": 15.937009582994506,
+          "review": {
+            "mode": "delivered-local",
+            "triggered": true,
+            "reply_status": "not_requested",
+            "seal_opened": false,
+            "trigger_after_trials": 2,
+            "input_digest": "7ee4a8e61a7f51411f4f62761357c1ef9a1586bc319c1d0b9c247982c4f68d1a",
+            "shared_errors": 6,
+            "options": 33,
+            "new_configurations": 9,
+            "brief_digest": "705abfb10ea88a955a3decc579d753ef7717e9dbe523b81502ce1df226a6e5ae",
+            "protected_model": "b5ee4ecb869a9dd845c6a84e67d577450339e5ee407d7e82f52d0853ee0ceb8e",
+            "protected_rows": 336,
+            "protected_seconds": 12.174322916194797,
+            "local_alternative": "numeric_tabular_rbf_svm_C10.0",
+            "tested_candidate": "numeric_tabular_rbf_svm_C10.0",
+            "proposal_used": false,
+            "decision_time_status": "not_requested",
+            "core_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "backup": "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231",
+            "remaining_at_tail": 10,
+            "decision_seconds": 12.179990916047245,
+            "screen": [
+              {
+                "fold": "primary",
+                "challenger": 0.7308035714285714,
+                "core": 0.7308035714285714,
+                "delta": 0.0
+              },
+              {
+                "fold": "confirmation_1",
+                "challenger": 0.5780038759689923,
+                "core": 0.6589147286821706,
+                "delta": -0.08091085271317833
+              }
+            ],
+            "pre_guard_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "final_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "closed_seconds": 15.937401875155047
+          }
+        },
+        "delivered-flash": {
+          "scores": {
+            "final": 0.6875901875901875,
+            "fourth": 0.6154401154401155,
+            "seconds30": 0.6875901875901875,
+            "protected": 0.6464646464646464
+          },
+          "fits": 9,
+          "status": "completed",
+          "error": null,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 1626,
+              "output_tokens": 498,
+              "course_cost_rmb": 0.003618,
+              "latency_seconds": 15.027,
+              "finish_reason": "stop"
+            }
+          ],
+          "wall": 22.844850457971916,
+          "model_published_seconds": 22.844084666110575,
+          "review": {
+            "mode": "delivered-flash",
+            "triggered": true,
+            "reply_status": "valid",
+            "seal_opened": false,
+            "trigger_after_trials": 2,
+            "input_digest": "7ee4a8e61a7f51411f4f62761357c1ef9a1586bc319c1d0b9c247982c4f68d1a",
+            "shared_errors": 6,
+            "options": 33,
+            "new_configurations": 9,
+            "brief_digest": "705abfb10ea88a955a3decc579d753ef7717e9dbe523b81502ce1df226a6e5ae",
+            "protected_model": "b5ee4ecb869a9dd845c6a84e67d577450339e5ee407d7e82f52d0853ee0ceb8e",
+            "protected_rows": 336,
+            "protected_seconds": 10.971545499982312,
+            "plan": {
+              "decision": "experiment",
+              "candidate": "numeric_tabular_rbf_svm_C10.0",
+              "option": 2,
+              "cited_trials": [
+                1,
+                2
+              ],
+              "min_rescues": 1,
+              "min_gain": 0.0,
+              "hypothesis": "The six shared errors are all label 0; an RBF SVM on imputed scaled numeric columns may separate these hard label-0 cases better than the latent numeric representation used by trials 1 and 2.",
+              "refute_if": "The RBF SVM corrects zero shared label-0 errors or its balanced accuracy does not exceed the reference leader's 0.7308035714285714."
+            },
+            "local_alternative": "numeric_tabular_rbf_svm_C10.0",
+            "tested_candidate": "numeric_tabular_rbf_svm_C10.0",
+            "proposal_used": true,
+            "decision_time_status": "valid",
+            "core_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "backup": "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231",
+            "remaining_at_tail": 10,
+            "decision_seconds": 19.32812291593291,
+            "rescued": 3,
+            "measured_primary_gain": 0.0,
+            "hypothesis_passed": true,
+            "screen": [
+              {
+                "fold": "primary",
+                "challenger": 0.7308035714285714,
+                "core": 0.7308035714285714,
+                "delta": 0.0
+              },
+              {
+                "fold": "confirmation_1",
+                "challenger": 0.5780038759689923,
+                "core": 0.6589147286821706,
+                "delta": -0.08091085271317833
+              }
+            ],
+            "pre_guard_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "final_members": [
+              "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231"
+            ],
+            "closed_seconds": 22.844535707961768
+          }
+        }
+      },
+      "comparisons": {
+        "Flash-local": {
+          "seconds30": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "protected": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    },
+    "p86": {
+      "metric": "accuracy",
+      "outer": 120,
+      "train": 360,
+      "arms": {
+        "delivered-local": {
+          "scores": {
+            "final": 0.7833333333333333,
+            "fourth": 0.43333333333333335,
+            "seconds30": 0.7833333333333333,
+            "protected": 0.7666666666666667
+          },
+          "fits": 14,
+          "status": "completed",
+          "error": null,
+          "usage": [],
+          "wall": 19.39877187483944,
+          "model_published_seconds": 19.3980544579681,
+          "review": {
+            "mode": "delivered-local",
+            "triggered": true,
+            "reply_status": "not_requested",
+            "seal_opened": false,
+            "trigger_after_trials": 2,
+            "input_digest": "5940dfd8b5116ab92948540fc683e7931a84d62118cb1d589832d884895f9741",
+            "shared_errors": 19,
+            "options": 29,
+            "new_configurations": 5,
+            "brief_digest": "e03c00805958e540b9a9e4b3fc7f5cad3b21d330e6b5e441f6ad01062e3efcaa",
+            "protected_model": "ca230e4050db70ead266d7641e487a0419b295b9988f48cd117a678a05a5c9ca",
+            "protected_rows": 288,
+            "protected_seconds": 16.65345274982974,
+            "local_alternative": "image_rbf_svm_C1.0",
+            "tested_candidate": "image_rbf_svm_C1.0",
+            "proposal_used": false,
+            "decision_time_status": "not_requested",
+            "core_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "backup": "image_rbf_svm_C10.0",
+            "remaining_at_tail": 5,
+            "decision_seconds": 16.65973954088986,
+            "screen": [
+              {
+                "fold": "primary",
+                "challenger": 0.8275862068965517,
+                "core": 0.7931034482758621,
+                "delta": 0.03448275862068961
+              },
+              {
+                "fold": "confirmation_1",
+                "challenger": 0.7017543859649122,
+                "core": 0.7192982456140351,
+                "delta": -0.01754385964912286
+              }
+            ],
+            "pre_guard_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "final_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "closed_seconds": 19.39849166595377
+          }
+        },
+        "delivered-flash": {
+          "scores": {
+            "final": 0.7833333333333333,
+            "fourth": 0.43333333333333335,
+            "seconds30": 0.7666666666666667,
+            "protected": 0.7666666666666667
+          },
+          "fits": 14,
+          "status": "completed",
+          "error": null,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 1428,
+              "output_tokens": 894,
+              "course_cost_rmb": 0.005004,
+              "latency_seconds": 33.408,
+              "finish_reason": "stop"
+            }
+          ],
+          "wall": 39.5433450830169,
+          "model_published_seconds": 39.54246050002985,
+          "review": {
+            "mode": "delivered-flash",
+            "triggered": true,
+            "reply_status": "valid",
+            "seal_opened": false,
+            "trigger_after_trials": 2,
+            "input_digest": "5940dfd8b5116ab92948540fc683e7931a84d62118cb1d589832d884895f9741",
+            "shared_errors": 19,
+            "options": 29,
+            "new_configurations": 5,
+            "brief_digest": "e03c00805958e540b9a9e4b3fc7f5cad3b21d330e6b5e441f6ad01062e3efcaa",
+            "protected_model": "ca230e4050db70ead266d7641e487a0419b295b9988f48cd117a678a05a5c9ca",
+            "protected_rows": 288,
+            "protected_seconds": 14.74568820814602,
+            "plan": {
+              "decision": "experiment",
+              "candidate": "image_rbf_svm_C10.0",
+              "option": 19,
+              "cited_trials": [
+                2,
+                1
+              ],
+              "min_rescues": 1,
+              "min_gain": 0.0,
+              "hypothesis": "Shared errors concentrate on labels 0 and 1 (9 each), where trial 2 recall is 0.389/0.0 and trial 1 recall is 0.167/0.357; Fourier features may discard localized spatial cues, so an RBF SVM on flattened standardized pixels should correct at least one shared error.",
+              "refute_if": "The RBF SVM on flattened standardized pixels corrects zero shared errors or fails to exceed the reference leader's accuracy by at least 0.0."
+            },
+            "local_alternative": "image_rbf_svm_C1.0",
+            "tested_candidate": "image_rbf_svm_C1.0",
+            "proposal_used": false,
+            "decision_time_status": "valid",
+            "core_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "backup": "image_rbf_svm_C10.0",
+            "remaining_at_tail": 5,
+            "decision_seconds": 36.72208312503062,
+            "screen": [
+              {
+                "fold": "primary",
+                "challenger": 0.8275862068965517,
+                "core": 0.7931034482758621,
+                "delta": 0.03448275862068961
+              },
+              {
+                "fold": "confirmation_1",
+                "challenger": 0.7017543859649122,
+                "core": 0.7192982456140351,
+                "delta": -0.01754385964912286
+              }
+            ],
+            "pre_guard_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "final_members": [
+              "image_rbf_svm_C10.0"
+            ],
+            "closed_seconds": 39.5430110830348
+          }
+        }
+      },
+      "comparisons": {
+        "Flash-local": {
+          "seconds30": {
+            "delta": -0.016666666666666607,
+            "changed": 14,
+            "corrected": 4,
+            "spoiled": 6
+          },
+          "protected": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "fourth": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          },
+          "final": {
+            "delta": 0.0,
+            "changed": 0,
+            "corrected": 0,
+            "spoiled": 0
+          }
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "Flash-local": {
+      "seconds30": {
+        "mean": -0.008333333333333304,
+        "worst": -0.016666666666666607,
+        "tasks": 2
+      },
+      "protected": {
+        "mean": 0.0,
+        "worst": 0.0,
+        "tasks": 2
+      },
+      "fourth": {
+        "mean": 0.0,
+        "worst": 0.0,
+        "tasks": 2
+      },
+      "final": {
+        "mean": 0.0,
+        "worst": 0.0,
+        "tasks": 2
+      }
+    }
+  },
+  "actual_fits": 46,
+  "requests": 2,
+  "input_tokens": 3054,
+  "output_tokens": 1392,
+  "known_course_rmb": 0.008622,
+  "unknown": 0,
+  "executed_proposals": 1,
+  "distinct_executed_proposals": 0,
+  "meets_criterion": false,
+  "formal_test_accessed": false,
+  "engineering_criterion": true
+}

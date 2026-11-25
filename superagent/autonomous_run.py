@@ -101,30 +101,33 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
     return dict(menu[index],reason=proposal['reason'][:1000],cited_trials=refs)
 
 
-def freeze_model(task, spec, metric, choice, executor, directory, log, timeout):
+def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False):
     members = choice['members']
-    log.write_json('selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
+    prefix = 'challenger_' if challenger else ''
+    log.write_json(prefix + 'selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
     refit = directory/'refit_data.joblib'
-    joblib.dump(dict(kind=task.kind,mode='refit',X_train=task.X_train,y_train=task.y_train,
-                     X_search=take(task.X_train,[0]),metric_spec=metric.record(),
-                     pair_semantics=declared_semantics(task)),refit)
+    if not challenger:
+        joblib.dump(dict(kind=task.kind,mode='refit',X_train=task.X_train,y_train=task.y_train,
+                         X_search=take(task.X_train,[0]),metric_spec=metric.record(),
+                         pair_semantics=declared_semantics(task)),refit)
     models = []
     for i,name in enumerate(members):
         reserve = sum(executor.caps[m]['refit_classifier_fits'] for m in members[i+1:])
-        model,_ = executor.worker(refit,name,directory/f'refit_component_{i}.joblib',timeout,reserve=reserve)
+        model,_ = executor.worker(refit,name,directory/f'{prefix}refit_component_{i}.joblib',timeout,reserve=reserve)
         models.append(model)
     family = members[0] if len(members)==1 else 'equal_soft_vote'
     model = models[0] if len(models)==1 else SoftVoteModel(task.kind,models,np.asarray(metric.labels))
-    destination = directory/'selected_model.joblib'
+    destination = directory/(prefix + 'selected_model.joblib')
     joblib.dump(dict(kind=task.kind,candidate=family,model=model),destination)
-    log.write_json('task_spec.json',frozen_spec(task,spec,metric))
+    if not challenger:
+        log.write_json('task_spec.json',frozen_spec(task,spec,metric))
     selection = dict(selected_experiment='stop_'+identity(members)[:12],family=family,
                      ensemble_components=members if len(members)>1 else [],single_candidate=members[0],
                      primary_metric=metric.name,selection_metric='training folds',selection_score=choice['utility'],
                      fold_scores=choice['evidence']['scores'],test_accessed=False,refit=True,training_rows=len(task.y_train),
                      model_format='candidate_bundle_v1',model_file=destination.name,model_sha256=sha(destination),
                      task_spec_sha256=sha(directory/'task_spec.json'))
-    log.write_json('final_selection.json',selection)
+    log.write_json(prefix + 'final_selection.json',selection)
     return selection
 
 
@@ -227,7 +230,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 if review is not None:
                     menu=review.menu(menu)
                     rule_first = menu[0]
-                    if self_review == 'active':
+                    if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
                 if flash_available and flash.request_count<flash.max_requests and len(menu)>1:
@@ -245,9 +248,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     decisions[-1].update(policy_generation=review.generation,
                         initial_policy_first={k:initial_first[k] for k in keys},
                         review_changed_first=any(initial_first[k]!=menu[0][k] for k in keys))
-                    if self_review == 'active':
+                    if self_review in ('active', 'protected'):
                         decisions[-1].update(first_before_information={k:rule_first[k] for k in keys},
                             information_changed_first=any(rule_first[k]!=menu[0][k] for k in keys))
+                if self_review == 'protected' and choice['action'] == 'stop':
+                    decisions[-1]['after_refit'] = 'stop_review.json'
                 log.write_json('decisions.json',decisions)
                 if choice['action']=='stop':
                     break
@@ -296,6 +301,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     resolved_configuration=facts['resolved_configuration']))
                 log.write_json('history.json',history)
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
+            if self_review == 'protected':
+                from .protected_stop import review_stop
+                selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,
+                                                directory, log, timeout, observed, payloads)
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
         except Exception as error:

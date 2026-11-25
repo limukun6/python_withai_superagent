@@ -100,7 +100,8 @@ class PlannerReviewTests(unittest.TestCase):
     def test_passive_and_active_modes_round_trip_both_command_parsers(self):
         from superagent.cli import build_parser
         from superagent.planner_review import review_flags
-        for flag, expected in [(None, False), ('--self-review', True), ('--active-self-review', 'active')]:
+        for flag, expected in [(None, False), ('--self-review', True), ('--active-self-review', 'active'),
+                               ('--protected-self-review', 'protected')]:
             args = build_parser().parse_args(['unified', 'input.zip', '--run-dir', 'fresh', *([flag] if flag else [])])
             self.assertEqual(args.self_review, expected)
             self.assertEqual(review_flags(expected), [flag] if flag else [])

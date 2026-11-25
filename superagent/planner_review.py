@@ -15,9 +15,13 @@ def add_review_arguments(parser):
                        help='Test proposed rules on later exploration outcomes')
     modes.add_argument('--active-self-review', dest='self_review', action='store_const', const='active',
                        help='Also value experiments that can distinguish two proposed rules')
+    modes.add_argument('--protected-self-review', dest='self_review', action='store_const', const='protected',
+                       help='Preserve the selected model and use spare fits for a matched challenger when affordable')
 
 
 def review_flags(mode):
+    if mode == 'protected':
+        return ['--protected-self-review']
     if mode == 'active':
         return ['--active-self-review']
     if mode is True:

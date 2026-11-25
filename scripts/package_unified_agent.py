@@ -31,6 +31,29 @@ python -m unified_agent train TASK.zip --run-dir runs/new-task
 """
 
 
+
+def selected_artifact(agent, manifest):
+    name = manifest.get("model_file", "selected_model.joblib")
+    require(isinstance(name, str) and name not in ("", ".", "..") and
+            Path(name).name == name and "/" not in name and chr(92) not in name, "Invalid frozen model filename")
+    path = agent / name
+    require(path.is_file() and (not manifest.get("model_sha256") or sha(path) == manifest["model_sha256"]),
+            "Frozen selection and model file disagree")
+    return path
+
+
+def model_files(run):
+    agent = run / "agent"
+    files = [agent / "task_spec.json", run / "training_protocol.json"]
+    for name in ("final_selection.json", "incumbent_selection.json"):
+        manifest = agent / name
+        if name == "final_selection.json" or manifest.is_file():
+            files.extend([manifest, selected_artifact(agent, read(manifest))])
+    if (agent / "stop_review.json").is_file():
+        files.append(agent / "stop_review.json")
+    return files
+
+
 def packed_source(raw, weights):
     files = {p.relative_to(ROOT).as_posix(): p for p in (ROOT / "superagent").rglob("*.py")}
     for name in ("unified_agent.py", "requirements-tested.txt", "requirements-ab-encoder-tested.txt"):
@@ -49,8 +72,8 @@ def packed_source(raw, weights):
             files[f"weights/{folder}/{name}"] = path
     for tag in ("table", "titles"):
         run = raw / tag / "run"
-        for name in ("agent/selected_model.joblib", "agent/final_selection.json", "agent/task_spec.json", "training_protocol.json"):
-            files[f"models/{tag}/{name}"] = run / name
+        for artifact in model_files(run):
+            files[f"models/{tag}/{artifact.relative_to(run).as_posix()}"] = artifact
         if (run / "audit.json").is_file():
             files[f"models/{tag}/audit.json"] = run / "audit.json"
     files["designated-results.json"] = raw / "results.json"
@@ -90,7 +113,8 @@ def verify(raw, output):
             subprocess.run([sys.executable, "-I", "-B", "-c", bootstrap, str(root), "predict", str(raw / "designated" / (tag + ".zip")),
                             "--run-dir", str(root / "models" / tag), "--output", str(dest)], cwd=root, env=ep, check=True, timeout=300,
                            stdout=subprocess.DEVNULL)
-            model = sha(root / f"models/{tag}/agent/selected_model.joblib")
+            agent = root / f"models/{tag}/agent"
+            model = sha(selected_artifact(agent, read(agent / "final_selection.json")))
             require(sha(dest) == results[tag]["prediction"] and model == results[tag]["model"], "Portable model changed predictions")
             checked[tag] = {"model": model, "prediction": sha(dest), "rows": results[tag]["rows"]}
     save(raw / "portable.json", {"archive_sha256": sha(output), "bytes": output.stat().st_size,

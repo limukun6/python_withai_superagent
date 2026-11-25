@@ -1,0 +1,104 @@
+[
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth4_reg3.0",
+    "split_id": "primary",
+    "reason": "Choose a representative initial configuration using the training profile and eligible method attributes.",
+    "evidence_trials": [],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "primary",
+    "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+    "evidence_trials": [
+      1
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "logistic_C0.05",
+    "split_id": "primary",
+    "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+    "evidence_trials": [
+      1,
+      2
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "open_SVC_31dc89c424cf73021415",
+    "split_id": "primary",
+    "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+    "evidence_trials": [
+      1,
+      2,
+      3
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "open_HistGradientBoostingClassifier_dbe192942a1b919a3f31",
+    "split_id": "primary",
+    "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+    "evidence_trials": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "explore",
+    "candidate_id": "supported_field_interactions",
+    "split_id": "primary",
+    "reason": "Explore the highest ranked feasible configuration using paired observations and method novelty.",
+    "evidence_trials": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "catboost_depth8_reg3.0",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7599 and 0.7543; hard predictions differ on 109/1620 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      6
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "confirm",
+    "candidate_id": "supported_field_interactions",
+    "split_id": "confirmation_1",
+    "reason": "Comparable primary accuracy 0.7599 and 0.7543; hard predictions differ on 109/1620 aligned rows (paired hard-label disagreement). Complete a matched pair on confirmation_1.",
+    "evidence_trials": [
+      2,
+      6,
+      7
+    ],
+    "estimated_classifier_fits": 1
+  },
+  {
+    "action": "stop",
+    "candidate_id": null,
+    "split_id": null,
+    "reason": "No eligible new fit or complete matched replication fits the shared budget.",
+    "evidence_trials": [
+      2,
+      6
+    ],
+    "estimated_classifier_fits": 0
+  }
+]

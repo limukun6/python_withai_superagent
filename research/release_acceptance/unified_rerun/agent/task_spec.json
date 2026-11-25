@@ -1,0 +1,68 @@
+{
+  "metric": "accuracy",
+  "goal_sources": {
+    "primary_metric": "declared_task_readme"
+  },
+  "task_description_source": {
+    "member": "in_vehicle_coupon_recommendation/Readme.md",
+    "sha256": "289f7684d1d8170dccbb7e64e6b196c6881b1c6b982a939c1e0475f8486c6493",
+    "parser_version": "legacy-explicit-declarations-v1",
+    "recognized": {
+      "primary_metric": {
+        "value": "accuracy",
+        "excerpt": "Use the test set only for final evaluation and report test accuracy."
+      }
+    },
+    "scope": "A limited declaration grammar; unrecognized prose remains unknown, never executed"
+  },
+  "train_rows": 8117,
+  "validation_rows": 0,
+  "provided_validation_available": false,
+  "test_accessed": false,
+  "metric_spec": {
+    "name": "accuracy",
+    "labels": [
+      0,
+      1
+    ],
+    "direction": "maximize"
+  },
+  "task_kind": "categorical_tabular_binary",
+  "model_kind": "categorical_tabular",
+  "class_count": 2,
+  "goal_resolution": {
+    "resolution_version": 1,
+    "fields": {
+      "input_kind": {
+        "value": "categorical_tabular",
+        "source": "task_adapter",
+        "status": "confirmed"
+      },
+      "primary_metric": {
+        "value": "accuracy",
+        "source": "declared_task_readme",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "label_domain": {
+        "value": [
+          0,
+          1
+        ],
+        "source": "training_labels",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": null,
+        "source": "not_applicable",
+        "status": "not_applicable"
+      },
+      "pair_semantics": {
+        "value": null,
+        "source": "undeclared",
+        "status": "unknown"
+      }
+    },
+    "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "submission_floor": "d501807e61b5df1ac431d8fdf300c4bf4aaa4c2f",
+  "floor_check": "Default controller, no stdin, both original released packages from empty directories, ten fits per task including refit, no live API. Recompute decisions from prior training observations, permute menu order and exchange measured feedback. Freeze both models before scoring the designated validation features.",
+  "research_question": "Can the planner improve its own estimates of the value of exploring a method, then use the revised rule to make better future decisions?",
+  "intervention": "Opt-in local policy review. Start each task at generation zero. After two observed primary explorations, the active policy proposes a bounded correction for its successor using score forecast residuals and novelty. Compare parent and child forecasts prospectively on the next two distinct new primary trials. Promote only for a mean absolute-error reduction of at least 0.003 with no individual loss over 0.03. On acceptance increase the successor proposal step by 25%; on rejection halve it. Changes affect exploration utility only. Freeze metric, executor, admissible menu, fit accounting and scorer.",
+  "paired_runs": {
+    "case_ids": ["n17", "n29", "n43", "n61"],
+    "cases_in_order": ["public Wisconsin diagnostic numeric, balanced accuracy", "public SMS Spam Collection, macro F1, 1000 deduplicated messages", "public handwritten digits, multiclass accuracy", "fresh generated categorical interaction, multiclass macro F1"],
+    "outer_split": "Stratified 25% development holdout, seed 602911. Deduplicate input records and exclude conflicting duplicate labels before splitting. Outer truth is used once only after all eight models and predictions are frozen.",
+    "categorical_seed": 134037,
+    "sample_seed": 70931,
+    "training_seed": 18643,
+    "arms": ["pinned submission floor", "same controller with prospective self-review enabled"],
+    "fit_limit_each_including_refit": 9,
+    "wall_seconds_each": 900,
+    "maximum_total_fits": 72,
+    "live_model_api_requests": 0,
+    "shared_environment": "Identical local Python, CPU thread limits, installed classification tools and encoder assets; no interactive input. No human or task ID selects methods. All paths start empty.",
+    "measurements": ["declared objective on the independent holdout", "physical fits", "actual model/API usage", "proposals and promotions by generation", "prospective prediction error", "actions and winners versus the control"],
+    "promotion_decision": "Keep the pinned floor by default. Mark the experimental planner a candidate for independent replication only if all eight deliveries complete, the equally weighted mean primary score improves by at least 0.01, at least two modality families improve, no individual case loses over 0.02, and at least one real decision changes under an accepted update. Do not use released validation scores to tune or promote the policy."
+  },
+  "scope": "Development panels only; the official unseen task and both released formal test splits remain sealed. The four tasks are not independent estimates of all future classification problems."
+}

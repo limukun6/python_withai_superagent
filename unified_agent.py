@@ -116,18 +116,20 @@ def train_legacy(package, run_dir):
     return 0
 
 
-def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None):
+def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None, self_review=False):
     if policy == 'legacy':
-        if fit_limit is not None or time_limit is not None:
+        if fit_limit is not None or time_limit is not None or self_review:
             raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review)
     return arguments.handler(arguments)
 
 
-def prepare_training(package,run_dir,fit_limit=None,time_limit=None):
+def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False):
     run_dir.mkdir(parents=True,exist_ok=False)
     flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
+    if self_review:
+        flags.append('--self-review')
     if fit_limit is not None:
         flags.extend(['--fit-limit',str(fit_limit)])
     if time_limit is not None:
@@ -136,11 +138,11 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None):
     save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
          entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
-         fit_limit=arguments.fit_limit))
+         fit_limit=arguments.fit_limit,self_review=self_review))
     return arguments
 
 
-def solve_training(package, run_dir, *, fit_limit=None, time_limit=None):
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False):
     """Keep prediction delivery in a separate process from training and its network client."""
     import os
     import signal
@@ -150,9 +152,10 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None):
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
     package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review)
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
-                              '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit)],
+                              '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
+                              *(['--self-review'] if self_review else [])],
                              cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
     try:
         code = child.wait(timeout=arguments.time_limit+30)
@@ -186,6 +189,7 @@ def main():
         if action in ('train','solve'):
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
+            command.add_argument('--self-review',action='store_true',help='Prospectively test updates to the exploration policy')
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":
@@ -195,10 +199,11 @@ def main():
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
     if args.action == "train":
-        return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit)
+        return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
+                     self_review=args.self_review)
     source=args.task_package
     if args.action=='solve':
-        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit)
+        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,self_review=args.self_review)
         if code:
             return code
         source=args.prediction_input

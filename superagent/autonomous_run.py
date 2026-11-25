@@ -152,7 +152,7 @@ def train(package, directory, **options):
 
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
-          flash_setup_issue=None):
+          flash_setup_issue=None, self_review=False):
     if type(fit_limit) is not int or not 2<=fit_limit<=11 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–11 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
@@ -164,7 +164,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     start = time.monotonic()
     if flash is not None:
         flash.set_deadline(start+wall)
-    manifest = dict(policy='anonymous-sequential-v1',fit_limit=fit_limit,seed=seed,wall_seconds=wall,
+    manifest = dict(policy='anonymous-sequential-v1',self_review=self_review,fit_limit=fit_limit,seed=seed,wall_seconds=wall,
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
                     training_only=True,source_files=sources())
     log.write_json('run_manifest.json',manifest)
@@ -211,6 +211,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         history,decisions,blocked=[],[],set()
         observed={f:{} for f in folds}
         flash_available=flash is not None
+        from .planner_review import PlannerReview
+        review = PlannerReview() if self_review else None
+        if review is not None:
+            log.write_json('policy_review.json',review.record())
         try:
             while True:
                 caps, generation=generator.refresh(history,static)
@@ -219,6 +223,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
                     raise ValueError('No admissible action with known fit cost or deployable observation')
+                initial_first = menu[0]
+                if review is not None:
+                    menu=review.menu(menu)
                 choice,source=menu[0],'local evidence policy'
                 if flash_available and flash.request_count<flash.max_requests and len(menu)>1:
                     try:
@@ -230,6 +237,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 decisions.append(dict(step=len(decisions)+1,source=source,choice=choice,remaining_fits=remaining,
                      observed_trials=[r['trial'] for r in history],registry=generation['file'],
                      registry_sha256=generation['sha256'],alternatives=menu))
+                if review is not None:
+                    keys = ('action','members','split')
+                    decisions[-1].update(policy_generation=review.generation,
+                        initial_policy_first={k:initial_first[k] for k in keys},
+                        review_changed_first=any(initial_first[k]!=menu[0][k] for k in keys))
                 log.write_json('decisions.json',decisions)
                 if choice['action']=='stop':
                     break
@@ -237,6 +249,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 destination=directory/f'trial_{len(history)+1}.joblib'
                 monitor=dict(trial=len(history)+1,candidate=name,split_id=fold)
                 payload=payloads[fold]
+                if review is not None:
+                    review.before_fit(monitor['trial'],choice)
+                    log.write_json('policy_review.json',review.record())
                 try:
                     _,facts=executor.worker(payload['path'],name,destination,timeout,
                                             reserve=choice['evidence']['reserved_refits'])
@@ -244,11 +259,17 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if executor.accounting()['unknown_failed_attempts']:
                         raise
                     blocked.add(name)
+                    if review is not None:
+                        review.ticket=None
+                        log.write_json('policy_review.json',review.record())
                     history.append(dict(monitor,status='failed',error=str(error)[-800:]))
                     log.write_json('history.json',history)
                     continue
                 bundle=joblib.load(destination)
                 observation=planner_observation(bundle,facts,payload,metric)
+                if review is not None:
+                    review.observed(monitor['trial'],observation['score'])
+                    log.write_json('policy_review.json',review.record())
                 if fold == 'primary':
                     try:
                         checkpoint = promote(task,metric,checkpoint,monitor['trial'],name,destination,payload,observation,log)

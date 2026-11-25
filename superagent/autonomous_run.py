@@ -198,8 +198,23 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     except DECODE_ERRORS as error:
         return record_input_failure(package,directory,log,error,phase,
                                     api_usage=api_accounting(flash,log), resolved_task=task)
-    checkpoint = standby(task,spec,metric,directory,log)
-    folds = partitions(task,seed)
+    from .proposal_value import MODES as proposal_modes, ProposalStudy, split_search
+    pilot=None
+    core_limit=fit_limit
+    if feedback_reflection in proposal_modes:
+        pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
+        core_limit=fit_limit-min(5,fit_limit//3)
+        try:
+            inner,folds,sealed,split_record=split_search(task,seed,partitions)
+        except ValueError:
+            standby(task,spec,metric,directory,log)
+            raise
+        log.write_json('proposal_partition.json',split_record)
+        checkpoint=standby(inner,spec,metric,directory,log)
+        pilot.snapshot(checkpoint,0)
+    else:
+        checkpoint = standby(task,spec,metric,directory,log)
+        folds = partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -236,7 +251,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             while True:
                 caps, generation=generator.refresh(history,static)
                 executor.caps=caps
-                remaining=fit_limit-executor.accounting()['attempted_classifier_fits']
+                remaining=core_limit-executor.accounting()['attempted_classifier_fits']
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
                     raise ValueError('No admissible action with known fit cost or deployable observation')
@@ -250,6 +265,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if pilot is not None:
+                    pilot.launch(choice,menu,generator,caps,observed,history,profile,metric,
+                                 remaining+fit_limit-core_limit)
                 if feedback_reflection in ('control','local','flash') and reflection is None and feedback.eligible(history,menu):
                     packet=feedback.evidence_packet(menu,caps,profile,history,metric.name,remaining,prior_feedback)
                     reflection=feedback.decide(feedback_reflection,packet,flash,log)
@@ -280,7 +298,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         decisions[-1].update(first_before_information={k:rule_first[k] for k in keys},
                             information_changed_first=any(rule_first[k]!=menu[0][k] for k in keys))
-                if self_review == 'protected' and choice['action'] == 'stop':
+                if self_review == 'protected' and pilot is None and choice['action'] == 'stop':
                     decisions[-1]['after_refit'] = 'stop_review.json'
                 log.write_json('decisions.json',decisions)
                 if choice['action']=='stop':
@@ -340,8 +358,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 log.write_json('history.json',history)
                 if scheduled is not None:
                     scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory)
+                if pilot is not None:
+                    pilot.snapshot(checkpoint,sum(r['status']=='completed' for r in history))
+            if pilot is not None:
+                choice=pilot.tail(task,spec,metric,choice,checkpoint,history,observed,payloads,sealed,generator,
+                                  executor,profile,timeout,blocked)
+                log.write_json('pre_refit_proposal_selection.json',choice)
+                if sum(executor.caps[n]['refit_classifier_fits'] for n in choice['members'])>fit_limit-executor.accounting()['attempted_classifier_fits']:
+                    raise ValueError('Retain the published checkpoint; selected refit exceeds remaining fits')
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
-            if self_review == 'protected':
+            if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,
                                                 directory, log, timeout, observed, payloads)
@@ -351,12 +377,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     log, timeout, observed, payloads, folds, flash, prior_feedback)
             if scheduled is not None:
                 scheduled.finish(selection)
+            if pilot is not None:
+                pilot.snapshot(selection,sum(r['status']=='completed' for r in history)+pilot.tail_completed,final=True)
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
         except Exception as error:
             outcome=dict(status='failed',model_available=False,error=type(error).__name__+': '+str(error))
             raise
         finally:
+            if pilot is not None:
+                pilot.finish()
             if 'outcome' in locals():
                 log.write_json('run_outcome.json',dict(outcome,**executor.accounting(),wall_seconds=time.monotonic()-start,
                                **api_accounting(flash,log),formal_test_accessed=False))

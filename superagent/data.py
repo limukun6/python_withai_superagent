@@ -39,7 +39,7 @@ class TrainingTask:
 
 def load_training_task(path: str | Path, *, read_declarations=False) -> TrainingTask:
     """Train-only capability for selection studies; never opens val or test."""
-    with open_package(path,'train') as archive:
+    with open_package(path,'train',shared=read_declarations) as archive:
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if manifest is None:
@@ -47,6 +47,8 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
             manifest=infer_manifest(archive,read_declarations=read_declarations)
         if manifest is not None:
             kind,x,y,spec=load_manifest_split(archive,manifest,'train')
+            if getattr(archive,'shared_table',None):
+                spec['shared_table']=archive.shared_table
             if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')
             return TrainingTask(kind,x,y,spec)
         names = [n for n in archive.namelist() if not n.startswith("__MACOSX/")]
@@ -189,7 +191,7 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
     the declared input columns.  It deliberately has no evaluation function.
     """
     archive_path = Path(path).expanduser().resolve()
-    with open_package(archive_path,'test') as archive:
+    with open_package(archive_path,'test',contract=(frozen_spec or {}).get('shared_table')) as archive:
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if frozen_spec and frozen_spec.get('input_schema'):

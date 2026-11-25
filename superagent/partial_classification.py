@@ -28,7 +28,7 @@ def training_member(archive,manifest,field='path'):
 
 
 def prior_evidence(package):
-    with open_package(package,'train') as archive:
+    with open_package(package,'train',shared=True) as archive:
         manifest=read_manifest(archive)
         expected_prediction=None
         if manifest:
@@ -39,8 +39,8 @@ def prior_evidence(package):
             prose=description(archive)
             primary=declared_metric(prose) or 'accuracy'
             formats=[fmt for fmt in TABLE_FORMATS if find_member(archive,['train.'+fmt])]
-            named=named_table(prose,'train')
-            expected_prediction=named_table(prose,'test')
+            named=None if getattr(archive,'shared_table',None) else named_table(prose,'train')
+            expected_prediction=None if getattr(archive,'shared_table',None) else named_table(prose,'test')
             if named and named==expected_prediction:
                 raise ValueError('Training and prediction files have the same declaration')
             if named:
@@ -89,7 +89,8 @@ def prior_evidence(package):
             values,counts=values[order],counts[order]
         return dict(labels=values.tolist(),counts=counts.tolist(),prior=(counts/counts.sum()).tolist(),
                     majority=values[int(np.argmax(counts))].item(),format=fmt,target=target,metric=primary,
-                    training_rows=len(labels),training_label_member=path,prediction_member=expected_prediction)
+                    training_rows=len(labels),training_label_member=path,prediction_member=expected_prediction,
+                    shared_table=getattr(archive,'shared_table',None))
 
 
 def record_input_failure(package,directory,logger,error,phase):
@@ -119,7 +120,7 @@ def record_input_failure(package,directory,logger,error,phase):
 
 def input_count(package,prior):
     fmt=prior['format']
-    with open_package(package,'test') as archive:
+    with open_package(package,'test',contract=prior.get('shared_table')) as archive:
         manifest=read_manifest(archive)
         if manifest is None:
             if fmt=='npy':

@@ -59,6 +59,9 @@ def fixtures():
     np.savez(queries,X=np.arange(6).reshape(3,2))
     pairs=[(f'Here is the first item number {i}',f'An alternate item with number {i}') for i in range(80)]
     pair_text='first_text,second_text,choice\n'+''.join(f'{l},{r},{i%2}\n' for i,(l,r) in enumerate(pairs))
+    combined={'README.md':'Target column is verdict. Split column is part. Primary metric is macro F1.',
+              'all.csv':'x,part,verdict\n'+''.join(f'{i},train,{label}\n' for i,label in enumerate(labels))+
+                        'never_numeric,validation,WITHHELD\n5,test,WITHHELD\n6,test,WITHHELD\n8,test,WITHHELD\n'}
     return {
         'plain_csv':(table,split,'numeric_tabular','macro_f1'),
         'manifest_csv':({'manifest.json':json.dumps(standard),'learn.csv':table['train.csv']},
@@ -73,12 +76,55 @@ def fixtures():
         'declared_paths':({'README.md':readme+' Training file is learn.csv. Prediction file is query.csv.',
                            'contest/learn.csv':table['train.csv']},{'query.csv':split['test.csv']},'numeric_tabular','macro_f1'),
         'array':({'train.npz':arrays.getvalue()},{'test.npz':queries.getvalue()},'numeric_tabular','accuracy'),
+        'shared_table':(combined,combined,'numeric_tabular','macro_f1'),
         'paired':({'train.csv':pair_text,'README.md':'Target column is choice. Label 1 means first wins and 0 means second wins.'},
                   {'test.csv':'first_text,second_text\n'+''.join(f'{l},{r}\n' for l,r in pairs[:3])},'pair_text','accuracy'),
     }
 
 
 class FormatDeliveryTests(unittest.TestCase):
+    def test_shared_file_selects_rows_before_learning_schema_or_prior(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for fmt in ('csv','parquet'):
+                import pyarrow as pa
+                import pyarrow.parquet as pq
+                def entries(held,values):
+                    phases=['train']*4+['validation','test','test']
+                    targets=['A','A','B','A',held,held,held]
+                    if fmt=='csv':
+                        stream=io.StringIO(); writer=csv.writer(stream)
+                        writer.writerow(['z','phase','answer'])
+                        writer.writerows(zip(values,phases,targets))
+                        data=stream.getvalue()
+                    else:
+                        stream=io.BytesIO()
+                        pq.write_table(pa.table(dict(z=values,phase=phases,answer=targets)),stream)
+                        data=stream.getvalue()
+                    return {'records.'+fmt:data,'README.md':'Split column is phase. Target column is answer.'}
+                path=zipped(root/(fmt+'.zip'),entries('NEVER_TRAIN',['1','2','3','4','not numeric','6','7']))
+                task=load_training_task(path,read_declarations=True)
+                self.assertEqual(task.y_train.tolist(),['A','A','B','A'])
+                self.assertEqual(task.kind,'numeric_tabular')
+                self.assertEqual(task.X_train[:,0].tolist(),[1,2,3,4])
+                self.assertEqual(load_prediction_features(path,task.kind,task.spec)[:,0].tolist(),[6,7])
+                broken=zipped(root/(fmt+'broken.zip'),entries('HOLDOUT_MAJORITY',['','','','','99','6','7']))
+                output=root/(fmt+'out')
+                self.assertEqual(train(broken,output),0)
+                prior=json.loads((output/'agent/partial_model.json').read_text())
+                self.assertEqual((prior['labels'],prior['counts']),(['A','B'],[3,1]))
+                result=create_predictions(broken,output/'agent',output/'inference/predictions.csv')
+                with result.open() as f:
+                    self.assertEqual([row['prediction'] for row in csv.DictReader(f)],['A','A'])
+
+    def test_reused_manifest_file_requires_resolved_membership(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            manifest=dict(schema_version=1,modality='tabular',target='answer',metric='accuracy',
+                columns=[dict(name='z',type='numeric')],splits={s:dict(format='csv',path='shared.csv') for s in ('train','test')})
+            path=zipped(root/'bad.zip',{'manifest.json':json.dumps(manifest),'shared.csv':'z,answer\n1,A\n2,B\n'})
+            self.assertNotEqual(train(path,root/'run'),0)
+            self.assertEqual(json.loads((root/'run/agent/run_outcome.json').read_text())['delivery_status'],'unavailable')
     def test_discovery_no_task_id_and_frozen_prediction(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)

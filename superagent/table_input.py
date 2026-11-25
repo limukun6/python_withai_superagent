@@ -12,7 +12,7 @@ def heading(archive,path,fmt):
     return next(rows,[])
 
 
-def table(archive,path,fmt,columns=None):
+def table(archive,path,fmt,columns=None,*,row_mask=None):
     if fmt=='parquet':
         import pyarrow.parquet as pq
         parquet=pq.ParquetFile(io.BytesIO(archive.read(path)))
@@ -21,6 +21,11 @@ def table(archive,path,fmt,columns=None):
         if len(set(names))!=len(names) or not set(use)<=set(names):
             raise ValueError('Missing or duplicate Parquet columns')
         data=parquet.read(columns=use)
+        if row_mask is not None:
+            import pyarrow as pa
+            if len(row_mask)!=data.num_rows:
+                raise ValueError('Row mask differs from the declared table')
+            data=data.filter(pa.array(row_mask,type=pa.bool_()))
         def scalar(value):
             if value is None:
                 return ''
@@ -37,10 +42,18 @@ def table(archive,path,fmt,columns=None):
         raise ValueError('A declared column is missing from the table')
     indexes=[names.index(n) for n in use]
     def rows():
-        for row in reader:
+        total=0
+        for total,row in enumerate(reader,start=1):
+            if row_mask is not None:
+                if total>len(row_mask):
+                    raise ValueError('Row mask is shorter than the declared table')
+                if not row_mask[total-1]:
+                    continue
             if len(row)!=len(names):
                 raise ValueError('Table row width differs from header')
             yield [row[i] for i in indexes]
+        if row_mask is not None and total!=len(row_mask):
+            raise ValueError('Row mask is longer than the declared table')
     return use,rows()
 
 

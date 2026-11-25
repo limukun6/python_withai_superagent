@@ -126,8 +126,9 @@ def infer_manifest(archive, *, read_declarations=False):
     # This exact legacy categorical array convention keeps its existing adapter.
     if find_member(archive,['C_train.npy']) is not None:return None
     prose = description(archive) if read_declarations else ''
-    named_train=named_table(prose,'train')
-    named_test=named_table(prose,'test')
+    resolved=getattr(archive,'shared_table',None)
+    named_train=None if resolved else named_table(prose,'train')
+    named_test=None if resolved else named_table(prose,'test')
     if named_train and named_train==named_test:
         raise ValueError('One file cannot serve as both training and prediction input')
     choices={fmt:find_member(archive,[name]) for fmt,name in

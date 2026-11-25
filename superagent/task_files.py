@@ -45,10 +45,14 @@ class LocalMembers:
 
 
 @contextmanager
-def open_package(value,split):
+def open_package(value,split,*,shared=False,contract=None):
+    from contextlib import nullcontext
+    from .shared_table import stage
     path=Path(value).expanduser().resolve()
     if path.is_dir() or path.is_file() and path.suffix.lower().lstrip('.') in TABLE_FORMATS:
-        yield LocalMembers(path,split)
+        source=nullcontext(LocalMembers(path,split))
     else:
-        with zipfile.ZipFile(path) as archive:
-            yield archive
+        source=zipfile.ZipFile(path)
+    with source as archive:
+        with (stage(archive,split,contract) if shared or contract else nullcontext(archive)) as selected:
+            yield selected

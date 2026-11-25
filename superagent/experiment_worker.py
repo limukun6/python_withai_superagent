@@ -76,9 +76,14 @@ def main() -> None:
         from .ab_complement import canonical_probabilities
         classes,scores=canonical_probabilities(model,payload['X_search'])
         score_evidence={'search_scores':scores,'score_classes':classes}
-    elif metric.requires_scores:
-        classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
-        score_evidence={'search_scores':scores,'score_classes':classes}
+    elif metric.requires_scores or payload.get('capture_probabilities'):
+        try:
+            classes,scores=probability_with_model(payload['kind'],model,payload['X_search'])
+            score_evidence={'search_scores':scores,'score_classes':classes}
+        except (AttributeError, NotImplementedError, ValueError) as error:
+            if metric.requires_scores:
+                raise
+            configuration['probability_unavailable'] = type(error).__name__
     prediction_record=make_prediction_record(predictions,payload['y_search'],payload_sha256)
     if score_evidence:
         from .score_evidence import make_score_record

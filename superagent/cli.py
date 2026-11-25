@@ -320,6 +320,7 @@ def build_parser():
     common.add_argument('--run-dir',required=True)
     common.add_argument('--seed',type=int,default=18643)
     common.add_argument('--fit-limit',type=int,default=10)
+    common.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     common.add_argument('--trial-timeout',type=float,default=300)
     common.add_argument('--time-limit',type=float,default=1200)
     common.set_defaults(handler=unified.command)

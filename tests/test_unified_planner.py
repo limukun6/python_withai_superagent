@@ -13,15 +13,14 @@ from superagent.unified import categorical_opening, training_input
 
 class UnifiedPlannerTests(unittest.TestCase):
     def test_same_command_configuration_for_anonymous_inputs(self):
-        parsed=[]
-        with patch('superagent.ab_run.command', side_effect=lambda args: parsed.append(vars(args))):
+        with patch('superagent.unified.configured_flash', return_value=None), patch('superagent.autonomous_run.train') as runner:
             for label in ('a.zip','xyz.zip'):
                 args=build_parser().parse_args(['unified',label,'--run-dir','x'])
                 args.handler(args)
-        exclude={'task_package','handler'}
-        self.assertEqual([{k:v for k,v in obj.items() if k not in exclude} for obj in parsed][0],
-                         {k:v for k,v in parsed[1].items() if k not in exclude})
-        self.assertEqual(parsed[0]['fit_limit'],10)
+        self.assertEqual([call.args[0] for call in runner.call_args_list],['a.zip','xyz.zip'])
+        first,second=runner.call_args_list
+        self.assertEqual(first.kwargs,second.kwargs)
+        self.assertEqual(first.kwargs['fit_limit'],10)
 
     def test_raw_archive_only_opens_training_members(self):
         with TemporaryDirectory() as tmp:

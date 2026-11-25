@@ -6,6 +6,7 @@ an explicit manifest. All inferred feature decisions use training contents.
 import csv
 import io
 from pathlib import PurePosixPath
+import re
 import statistics
 
 import numpy as np
@@ -52,7 +53,43 @@ def _column_type(values):
     return 'categorical'
 
 
-def infer_manifest(archive):
+def description(archive):
+    member = find_member(archive, ['readme.md', 'readme.txt'])
+    if member is None or archive.getinfo(member).file_size > 256 * 1024:
+        return ''
+    return archive.read(member).decode('utf-8-sig', errors='replace').replace(chr(96), '').replace('*', '')
+
+
+def declared_preference(text, target, names):
+    """Return canonical column order only with an explicit, uncontradicted 0/1 direction."""
+    if len(names) != 2:
+        return None
+    aliases = []
+    for i, name in enumerate(names):
+        words = re.split(r'[_\W]+', name.lower())
+        sides = ({'a', 'first', 'left'}, {'b', 'second', 'right'})[i]
+        # Letter aliases require a matching header. Positional words denote CSV order.
+        aliases.append({name.lower(), *({'first','left'} if i == 0 else {'second','right'}), *(sides & set(words))})
+    aliases = [sorted(a - (aliases[1-i] & a), key=lambda s: (-len(s), s)) for i, a in enumerate(aliases)]
+    votes = set()
+    for sentence in re.split(r'[.!?\n]+', text.lower()):
+        if not re.search(r'\b(?:win(?:s|ner)?|won|prefer(?:red|ence)?|higher|better|chosen|selected|outperform\w*)\b', sentence):
+            continue
+        if re.search(r'\b(?:not|never|hypothetical|example|unless|could|might|ignore)\b', sentence):
+            continue
+        if not re.search(r'\b'+re.escape(target.lower())+r'\b|\blabel\b|\btarget\b|\b(?:0|1)\s+(?:if|means|when|indicates)\b', sentence):
+            continue
+        for i, group in enumerate(aliases):
+            side = r'\b(?:'+'|'.join(map(re.escape,group))+r')\b'
+            for match in re.finditer(r'\b([01])\b\s*(?:=|:|if|when|means|denotes|indicates|for)\s*(?:that\s+)?(?:the\s+)?'+side, sentence):
+                votes.add(i if match[1]=='1' else 1-i)
+    if len(votes) != 1:
+        return None
+    first = votes.pop()
+    return [names[first], names[1-first]]
+
+
+def infer_manifest(archive, *, read_declarations=False):
     from .folder_images import infer_folder_manifest
     folder=infer_folder_manifest(archive)
     if folder is not None:return folder
@@ -73,8 +110,14 @@ def infer_manifest(archive):
         reader=csv.reader(io.StringIO(archive.read(path).decode('utf-8-sig')))
         header=next(reader,None)
         if not header or len(set(header))!=len(header):raise ValueError('CSV needs unique headers')
-        if {'headline_A','headline_B','label_pairwise'}<=set(header):return None
+        if not read_declarations and {'headline_A','headline_B','label_pairwise'}<=set(header):return None
         targets=[name for name in header if name.strip().casefold() in TARGET_NAMES]
+        prose = description(archive) if read_declarations else ''
+        if read_declarations:
+            declared = [name for name in header if re.search(
+                r'\b(?:target|label)(?:\s+column)?(?:\s+is|\s*[:=])?\s+'+re.escape(name)+r'(?!\w)', prose,re.I)]
+            if declared:
+                targets = list(dict.fromkeys([*declared, *targets]))
         if len(targets)!=1:raise ValueError('Target column is absent or ambiguous; declare target in manifest.json')
         rows=list(reader)
         if not rows or any(len(row)!=len(header) for row in rows):raise ValueError('Empty or malformed training CSV')
@@ -85,6 +128,19 @@ def infer_manifest(archive):
         if not columns:raise ValueError('Training CSV has no input columns')
         text_columns=[c for c in columns if c['type']=='text']
         manifest.update(modality='text' if len(text_columns)==len(columns) else 'tabular',columns=columns,target=target)
+        if len(columns)==len(text_columns)==2 and {row[header.index(target)] for row in rows}=={'0','1'}:
+            order = declared_preference(prose, target, [col['name'] for col in columns])
+            if order:
+                manifest.update(modality='pair_text', pair_semantics='preference', pair_label_one='left',
+                                columns=[dict(name=n,type='text') for n in order])
+        if read_declarations:
+            from .metrics import SUPPORTED
+            named = {m for m in SUPPORTED if re.search(r'\b(?:report|primary metric\s*(?:is|:)?)\s+(?:test\s+)?'
+                        + re.escape(m).replace('_',r'[_ -]') + r'\b',prose,re.I)}
+            if len(named)>1:
+                raise ValueError('Conflicting declared primary metrics')
+            if named:
+                manifest['metric']=named.pop()
     else:
         if fmt=='npz':
             with np.load(io.BytesIO(archive.read(path)),allow_pickle=False) as arrays:

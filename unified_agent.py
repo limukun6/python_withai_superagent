@@ -71,7 +71,7 @@ def save(path, value):
         output.write("\n")
 
 
-def train(package, run_dir):
+def train_legacy(package, run_dir):
     task = load_training_task(package)
     partition, reason = audit_partition(task)
     run_dir.mkdir(parents=True, exist_ok=False)
@@ -92,7 +92,8 @@ def train(package, run_dir):
                       partition=info)
     del task
     save(run_dir / "training_protocol.json", record)
-    native = build_parser().parse_args(["unified", str(training_path), "--run-dir", str(run_dir / "agent")])
+    native = build_parser().parse_args(["unified", str(training_path), "--run-dir", str(run_dir / "agent"),
+                                        "--policy", "legacy", "--fit-limit", "10"])
     code = native.handler(native)
     if code or partition is None:
         return code
@@ -115,6 +116,17 @@ def train(package, run_dir):
     return 0
 
 
+def train(package, run_dir, policy='autonomous'):
+    if policy == 'legacy':
+        return train_legacy(package, run_dir)
+    run_dir.mkdir(parents=True,exist_ok=False)
+    arguments=build_parser().parse_args(['unified',str(package),'--run-dir',str(run_dir/'agent')])
+    save(run_dir / 'training_protocol.json',dict(policy='anonymous-sequential-v1',
+         entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+         selection_data='training-only groups',final_refit='all supplied training rows'))
+    return arguments.handler(arguments)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="action", required=True)
@@ -124,9 +136,11 @@ def main():
         command.add_argument("--run-dir", required=True, type=Path)
         if action == "predict":
             command.add_argument("--output", required=True, type=Path)
+        else:
+            command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
     if args.action == "train":
-        return train(args.task_package, args.run_dir)
+        return train(args.task_package, args.run_dir, args.policy)
     path = create_predictions(str(args.task_package), args.run_dir / "agent", args.output)
     print(path)
     return 0

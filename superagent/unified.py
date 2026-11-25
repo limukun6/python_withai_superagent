@@ -38,7 +38,7 @@ def categorical_opening(state, caps, eligible, verified):
                 matched_penalty=penalty, selected_depth=depth, unrestricted_rank_chosen=choice['chosen'])
 
 
-def command(args):
+def legacy_command(args):
     from .cli import build_parser
     native = build_parser().parse_args([
         'run', args.task_package, '--run-dir', args.run_dir, '--planner', 'local',
@@ -48,3 +48,31 @@ def command(args):
         '--trial-timeout', str(args.trial_timeout), '--time-limit', str(args.time_limit)])
     native.unified = True
     return native.handler(native)
+
+
+def configured_flash(directory):
+    """Optional deployment configuration. Billing identifiers never enter decision states."""
+    import os
+    from types import SimpleNamespace
+    from .ab_flash import preflight
+    from .experiment_llm import ExperimentLLM
+    from .task_budget import TaskBudgetAccount
+    settings = [os.getenv(k) for k in ('SUPERAGENT_PLANNER_KEY_FILE','SUPERAGENT_PLANNER_LEDGER','SUPERAGENT_TASK_BUDGET_ID')]
+    if not any(settings):
+        return None
+    if not all(settings):
+        raise ValueError('Configure all three Flash billing settings or leave them all unset')
+    args=SimpleNamespace(api_url=None,model=None,api_key_file=settings[0],budget_ledger=settings[1],
+                         task_budget_id=settings[2],llm_budget_rmb=None,history_policy='strict')
+    ledger,allowance,_=preflight(args)
+    return ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
+                         allowed_served_models={args.model},account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory)),
+                         streaming=True)
+
+
+def command(args):
+    from .autonomous_run import train
+    if getattr(args,'policy','autonomous')=='legacy':
+        return legacy_command(args)
+    return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
+                 wall=args.time_limit,timeout=args.trial_timeout,flash=configured_flash(args.run_dir))

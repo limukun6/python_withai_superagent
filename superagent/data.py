@@ -36,14 +36,14 @@ class TrainingTask:
     spec: dict[str, Any] = field(default_factory=dict)
 
 
-def load_training_task(path: str | Path) -> TrainingTask:
+def load_training_task(path: str | Path, *, read_declarations=False) -> TrainingTask:
     """Train-only capability for selection studies; never opens val or test."""
     with zipfile.ZipFile(Path(path).expanduser().resolve()) as archive:
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if manifest is None:
             from .native_schema import infer_manifest
-            manifest=infer_manifest(archive)
+            manifest=infer_manifest(archive,read_declarations=read_declarations)
         if manifest is not None:
             kind,x,y,spec=load_manifest_split(archive,manifest,'train')
             if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')

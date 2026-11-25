@@ -131,21 +131,22 @@ def additions(kind, *, include_legacy_methods=True):
             extra.append(Candidate(TEXT,dict(encoder=MODEL,revision=REVISION,C=.3,representation='word_char_minilm',
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
-        if kind=='pair_text' and catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS) and verified_directory(deep=True) is not None:
+        all_installed = catalog == 'all-installed'
+        if kind=='pair_text' and (all_installed or catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS)) and verified_directory(deep=True) is not None:
             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,
                         representation='word_char_minilm_l12',swap_augmentation=True)
             extra.append(Candidate(TEXT_DEEP,params,partial(fit_sentence,kind=kind,deep=True)))
-            if catalog=='deep-edit':
+            if catalog=='deep-edit' or all_installed:
                 extra.append(Candidate(TEXT_EDIT,dict(params,representation='word_char_minilm_l12_edit_residual'),
                                        partial(fit_sentence,kind=kind,deep=True,edit_context=True)))
-            if catalog in ('deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG):
+            if all_installed or catalog in ('deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG):
                 extra.append(Candidate(TEXT_FAMILIARITY,dict(params,representation='word_char_minilm_l12_training_surprisal'),
                                        partial(fit_sentence,kind=kind,familiarity=True)))
         transfer_catalog = 'deep-e5' if kind == 'pair_text' and catalog in (JOINT_PREFERENCE,ab_varied_preferences.CATALOG) else catalog
-        if transfer_catalog in TRANSFER_METHODS:
+        alternatives = TRANSFER_METHODS.values() if all_installed else [TRANSFER_METHODS[transfer_catalog]] if transfer_catalog in TRANSFER_METHODS else []
+        for variant,name in alternatives:
             from .ab_sentence import ALTERNATIVES,verified_files
-            variant,name=TRANSFER_METHODS[transfer_catalog]
             spec=ALTERNATIVES[variant]
             if verified_files(spec['env'],spec['files']) is not None:
                 params=dict(encoder=spec['model'],revision=spec['revision'],C=.3,representation='word_char_'+variant,
@@ -157,7 +158,7 @@ def additions(kind, *, include_legacy_methods=True):
                                    kernel_seed=KERNEL_SEED,swap_augmentation=kind=='pair_text'),
                                    partial(fit_sentence,kind=kind,nonlinear=True)))
         extra.extend(ab_text_recipes.candidates(kind))
-        if kind == 'pair_text' and catalog == ab_varied_preferences.CATALOG:
+        if kind == 'pair_text' and (all_installed or catalog == ab_varied_preferences.CATALOG):
             extra.extend(ab_varied_preferences.additions(verified_directory(deep=True) is not None, include_legacy_methods))
         return extra
     return []

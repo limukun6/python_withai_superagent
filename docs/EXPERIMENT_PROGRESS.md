@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-25：接续核对B新分支并制定Task1受限提分计划，0新增实验
+
+fetch确认B统一分支bcea278、生命周期审计分支801b1a4、个人可运行分支699572d；仅阅读，未合入。统一入口历史指定验证Task1为1532/2030=75.47%、Task2为689/940=73.30%，不能继续以A135旧75.02%作团队最好。优先短整合指标/复核重叠/资产隔离，再限定Task1方法余量与自主选型实验；计划docs/NEXT_STAGE_TASK1_AND_INTEGRATION_20261125_zh.md。条件上限研究筛查9fit＋完整路径22fit、0API，尚未执行，后续先写runner。
+
+当前实读ledger457/known7.925792/unknown16/pending0，CURRENT顶部453为旧快照。A149两次探测新增8fit；A149/A150本地训练被标0fit的口径待物理日志去重，暂不猜新的全局fit累计。compact保持编码可逆但决策不等价，grounded/片段保持可选；不追加同类大矩阵。本轮新增fit/API均0。
+
 ## 2026-11-24：A149 片段探测，模型两次都没有返回 `plan`
 
 按预登记执行单次探测（sms，fit 上限 4、调用上限 3、`--plan-fragment advisory`）：**模型两次提案都没有返回 `plan` 字段**，`plan_fragment_offered` 与 `plan_fragment_rejected` 均为 0。已核对片段指令确实进了 payload。

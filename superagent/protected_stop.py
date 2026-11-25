@@ -48,6 +48,7 @@ def review_stop(task, spec, metric, menu, stop, incumbent, executor, directory, 
                 probabilities = np.mean([row['probabilities'] for row in earlier], axis=0)
                 prediction = np.asarray(metric.labels)[probabilities.argmax(axis=1)]
             base_score = stop['evidence']['scores'][fold]
+            observed[fold][challenger] = measured
             before, after = prediction == data['labels'], measured['predictions'] == data['labels']
             scores[fold] = measured['score']
             decision['comparisons'].append(dict(fold=fold, rows=len(before), incumbent=base_score,

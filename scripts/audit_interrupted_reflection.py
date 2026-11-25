@@ -20,7 +20,7 @@ from superagent.metrics import MetricSpec
 from superagent.predict import create_predictions
 
 
-def freeze(root, out):
+def freeze(root, out, checkpoints=(3,4,5), *, completed_only=False):
     outputs = {}
     for case, modes in read(root/'all_predictions_frozen.json').items():
         task = load_training_task(root/case/'train.zip',read_declarations=True)
@@ -28,13 +28,15 @@ def freeze(root, out):
         for mode in modes:
             agent = root/case/mode/'run/agent'
             hist = read(agent/'history.json')
+            if completed_only:
+                hist = [r for r in hist if r['status']=='completed']
             primary = agent/'primary.joblib'
             digest = read(agent/'primary_split.json')['payload_sha256']
             require(sha(primary)==digest,'Stored training split changed')
             payload = dict(path=primary,sha256=digest,labels=joblib.load(primary)['y_search'])
             events = [json.loads(line) for line in (agent/'events.jsonl').read_text().splitlines()]
             require(not any(e.get('kind')=='checkpoint_not_promoted' for e in events),'Incomplete historical publication')
-            for cut in (3,4,5):
+            for cut in checkpoints:
                 observed = [r for r in hist[:cut] if r['split_id']=='primary' and r['status']=='completed']
                 best = max(observed,key=lambda r:r['search_score'])
                 trial = best['trial']

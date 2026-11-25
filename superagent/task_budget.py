@@ -149,28 +149,36 @@ CREATE TABLE transitions(seq INTEGER PRIMARY KEY AUTOINCREMENT,request_id TEXT N
             raise BudgetStateError('Cumulative task course allowance is insufficient')
         return units
 
-    def _require_fresh_outbox_scope(self,db,scope):
+    def _require_fresh_outbox_scope(self,db,scope,paired_arm=None):
         metadata = dict(db.execute('SELECT key,value FROM metadata'))
         prior = db.execute('SELECT 1 FROM requests LIMIT 1').fetchone()
-        conflict = db.execute("SELECT 1 FROM requests WHERE status != 'known' OR scope = ? LIMIT 1",(scope,)).fetchone()
+        conflict = db.execute("SELECT 1 FROM requests WHERE status != 'known' LIMIT 1").fetchone()
+        existing = [json.loads(row[0]).get('paired_reflection_arm') for row in
+                    db.execute('SELECT payload FROM requests WHERE scope=?',(scope,))]
+        arms = {'flash','conditional-flash'}
+        if paired_arm is not None and paired_arm not in arms:
+            raise BudgetStateError('Unknown paired reflection arm')
+        permitted = not existing or (paired_arm in arms and len(existing)==1 and existing[0] in arms-{paired_arm})
         if (metadata.get('ledger_kind') != 'provisional_local_outbox'
-                or metadata.get('team_merge_state') != 'pending_team_handoff' or prior is None or conflict):
+                or metadata.get('team_merge_state') != 'pending_team_handoff' or prior is None or conflict or not permitted):
             raise BudgetStateError('Unsettled, repeated, empty or incorrectly marked research outbox')
 
-    def preflight(self,scope,run_allowance,*,fresh_outbox_scope=False):
+    def preflight(self,scope,run_allowance,*,fresh_outbox_scope=False,paired_arm=None):
         with self._db() as db:
             state = self._snapshot(db,scope)
             self._check(state,run_allowance)
-            if fresh_outbox_scope:
-                self._require_fresh_outbox_scope(db,scope)
+            if fresh_outbox_scope or paired_arm is not None:
+                self._require_fresh_outbox_scope(db,scope,paired_arm)
             return state
 
-    def reserve(self,scope,amount,run_id,model,*,fresh_outbox_scope=False):
+    def reserve(self,scope,amount,run_id,model,*,fresh_outbox_scope=False,paired_arm=None):
         with self._db() as db:
             db.execute('BEGIN IMMEDIATE');units=self._check(self._snapshot(db,scope),amount)
-            if fresh_outbox_scope:
-                self._require_fresh_outbox_scope(db,scope)
+            if fresh_outbox_scope or paired_arm is not None:
+                self._require_fresh_outbox_scope(db,scope,paired_arm)
             key=str(uuid.uuid4());payload={'run_id':str(run_id),'requested_model':model,'reserved_at':now(),'estimate_is_not_a_hard_token_bound':True}
+            if paired_arm is not None:
+                payload['paired_reflection_arm']=paired_arm
             value=encoded(payload)
             db.execute('INSERT INTO requests VALUES (?,?,?,?,?,?)',(key,scope,'reserved',units,None,value))
             db.execute('INSERT INTO transitions(request_id,event,time_utc,payload) VALUES (?,?,?,?)',(key,'reserved',now(),value));db.commit()
@@ -203,13 +211,14 @@ CREATE TABLE transitions(seq INTEGER PRIMARY KEY AUTOINCREMENT,request_id TEXT N
 
 
 class TaskBudgetAccount:
-    def __init__(self,ledger,scope,run_id,*,fresh_outbox_scope=False):
+    def __init__(self,ledger,scope,run_id,*,fresh_outbox_scope=False,paired_arm=None):
         self.ledger,self.scope,self.run_id=ledger,scope,run_id
         self.fresh_outbox_scope=fresh_outbox_scope
+        self.paired_arm=paired_arm
 
     def reserve(self,amount,model):
-        if self.fresh_outbox_scope:
-            return self.ledger.reserve(self.scope,amount,self.run_id,model,fresh_outbox_scope=True)
+        if self.fresh_outbox_scope or self.paired_arm is not None:
+            return self.ledger.reserve(self.scope,amount,self.run_id,model,fresh_outbox_scope=True,paired_arm=self.paired_arm)
         return self.ledger.reserve(self.scope,amount,self.run_id,model)
     def settle(self,key,model,inp,out):return self.ledger.settle(key,model,inp,out)
     def unknown(self,key,reason,**details):return self.ledger.mark_unknown(key,reason,**details)

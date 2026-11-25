@@ -102,9 +102,9 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
     return dict(menu[index],reason=proposal['reason'][:1000],cited_trials=refs)
 
 
-def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False):
+def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False, challenger_prefix='challenger_'):
     members = choice['members']
-    prefix = 'challenger_' if challenger else ''
+    prefix = challenger_prefix if challenger else ''
     log.write_json(prefix + 'selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
     refit = directory/'refit_data.joblib'
     if not challenger:
@@ -246,7 +246,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
-                if feedback_reflection and reflection is None and feedback.eligible(history,menu):
+                if feedback_reflection in ('control','local','flash') and reflection is None and feedback.eligible(history,menu):
                     packet=feedback.evidence_packet(menu,caps,profile,history,metric.name,remaining,prior_feedback)
                     reflection=feedback.decide(feedback_reflection,packet,flash,log)
                     advice=reflection['decision']
@@ -335,6 +335,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,
                                                 directory, log, timeout, observed, payloads)
+            if feedback_reflection == 'conditional-flash':
+                from .conditional_review import review_delivery
+                selection, choice = review_delivery(task, spec, metric, selection, choice, executor, directory,
+                    log, timeout, observed, payloads, folds, flash, prior_feedback)
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
         except Exception as error:

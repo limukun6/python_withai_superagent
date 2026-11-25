@@ -70,7 +70,7 @@ def configured_flash(directory):
                          streaming=True)
 
 
-def reflection_client(directory):
+def reflection_client(directory,mode='flash'):
     import os
     from .ab_flash import ENDPOINT, MODEL
     from .experiment_llm import ExperimentLLM
@@ -82,12 +82,13 @@ def reflection_client(directory):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)
     scope = os.environ.get('SUPERAGENT_TASK_BUDGET_ID','')
-    ledger.preflight(scope,.12,fresh_outbox_scope=True)
+    arm = mode if os.getenv('SUPERAGENT_RESEARCH_PAIRED_REFLECTION') == '1' else None
+    ledger.preflight(scope,.12,fresh_outbox_scope=True,paired_arm=arm)
     key = os.getenv('SUPERAGENT_PLANNER_KEY_FILE')
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True),streaming=True)
+                         account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
 def command(args):
@@ -99,8 +100,8 @@ def command(args):
         return legacy_command(args)
     issue = None
     try:
-        if reflection == 'flash':
-            flash = reflection_client(args.run_dir)
+        if reflection in ('flash','conditional-flash'):
+            flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if reflection else configured_flash(args.run_dir)
     except (OSError, ValueError, RuntimeError) as error:

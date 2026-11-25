@@ -1,0 +1,35 @@
+{
+  "batch": "task1-migration",
+  "task_sha256": "5bf15e062257a16b32936794333e2fe280b66723eca5fec7f16918541f44813c",
+  "task_rows": 1382,
+  "kind": "text_tabular",
+  "metric": {
+    "name": "accuracy",
+    "labels": [
+      "acc",
+      "good",
+      "unacc",
+      "vgood"
+    ],
+    "direction": "maximize"
+  },
+  "seeds": [
+    707,
+    811,
+    823
+  ],
+  "candidates": [
+    {
+      "role": "baseline",
+      "id": "catboost_depth8_reg3.0"
+    },
+    {
+      "role": "interactions",
+      "id": "supported_field_interactions"
+    }
+  ],
+  "planned_fits": 6,
+  "delivery_fits": 2,
+  "api": 0,
+  "validation_used_for_selection": false
+}

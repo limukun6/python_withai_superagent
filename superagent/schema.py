@@ -57,9 +57,10 @@ def _member(archive,manifest,split,field='path'):
     if not isinstance(raw,str) or not raw:raise ValueError('Split path must be a nonempty string')
     relative=PurePosixPath(raw.replace('\\','/'))
     if relative.is_absolute() or PureWindowsPath(raw).drive or '..' in relative.parts:raise ValueError('Split path must stay inside its archive')
-    if split!='test' and any('test' in part.lower() for part in relative.parts):raise ValueError('Development split cannot point at a test member')
+    from .task_files import evaluation_path
+    if split!='test' and evaluation_path(relative,split):raise ValueError('Development split cannot point at an evaluation member')
     path=(PurePosixPath(manifest['_manifest_parent'])/relative).as_posix()
-    if split!='test' and any('test' in part.lower() for part in PurePosixPath(path).parts):
+    if split!='test' and evaluation_path(path,split):
         raise ValueError('Development split cannot point inside a test path')
     if archive.namelist().count(path)!=1:raise ValueError('Missing or ambiguous split archive member')
     return descriptor,path
@@ -84,6 +85,7 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
           'schema_origin':manifest.get('_schema_origin','manifest_v1'),'input_format':fmt,
           'input_schema':{key:manifest[key] for key in ('modality','columns','target','pair_label_one','pair_semantics','image_preprocessing') if key in manifest}}
     if 'positive_label' in manifest:spec['positive_label']=manifest['positive_label']
+    if '_prediction_member' in manifest:spec['prediction_member']=manifest['_prediction_member']
     if 'evaluation_protocol' in manifest:spec['evaluation_protocol']=manifest['evaluation_protocol']
     if fmt in ('npz','npy'):
         if modality not in ('tabular','image'):raise ValueError('NPZ adapter is for numeric tables or images')
@@ -100,25 +102,21 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
         if modality=='image' and not np.isfinite(x).all():raise ValueError('Images must have finite pixel values')
         kind='numeric_tabular' if modality=='tabular' else 'image'
         spec['feature_shape']=list(x.shape[1:])
-    elif fmt=='csv':
-        content=archive.read(path).decode('utf-8-sig')
-        reader=csv.reader(io.StringIO(content));header=next(reader,None)
-        if not header or len(set(header))!=len(header):raise ValueError('Expected unique CSV headers')
+    elif fmt in ('csv','tsv','parquet'):
+        from .table_input import table
         columns=manifest.get('columns')
         if not isinstance(columns,list) or not columns or any(not isinstance(c,dict) for c in columns):
             raise ValueError('Declare input columns and their types')
         names=[c.get('name') for c in columns];types=[c.get('type') for c in columns]
         target=manifest.get('target')
-        if len(set(names))!=len(names) or target in names or any(name not in header for name in names):
+        if len(set(names))!=len(names) or target in names:
             raise ValueError('Input columns must be unique, present, and exclude target')
-        if include_labels and target not in header:raise ValueError('Missing target column')
-        indices=[header.index(name) for name in names]
-        label_index=header.index(target) if include_labels else None
+        requested=names+[target] if include_labels else names
+        _,reader=table(archive,path,fmt,requested)
         feature_rows=[];labels=[]
         for row in reader:
-            if len(row)!=len(header):raise ValueError('CSV row width does not match headers')
-            feature_rows.append([row[index] for index in indices])
-            if include_labels:labels.append(row[label_index])
+            feature_rows.append(row[:len(names)])
+            if include_labels:labels.append(row[-1])
         if not feature_rows:raise ValueError('Empty split')
         if modality=='image':
             if len(names)!=1 or types!=['image_path']:raise ValueError('Image CSV requires exactly one image_path input column')
@@ -169,5 +167,7 @@ def load_manifest_split(archive,manifest,split,include_labels=True):
     if len(x)==0:raise ValueError('Empty split')
     spec['goal_sources']={'primary_metric':('default_accuracy' if manifest.get('_schema_origin')=='native_v1' or 'metric' not in manifest
                                            else 'declared_manifest')}
+    if manifest.get('_metric_source'):
+        spec['goal_sources']['primary_metric']=manifest['_metric_source']
     spec['kind']=kind
     return kind,x,y,spec

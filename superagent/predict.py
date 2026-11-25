@@ -51,6 +51,9 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         raise ValueError('Task schema no longer matches the frozen selection hash')
     if selection.get("test_accessed"):
         raise RuntimeError("This run directory is already marked as having accessed test data.")
+    if selection.get('model_format')=='class_prior_v1':
+        from .partial_classification import predict
+        return predict(task_package,run_path,output_path,selection)
     kind = specification["task_kind"]
     kind_to_loader = {
         "categorical_tabular_binary": "categorical_tabular",

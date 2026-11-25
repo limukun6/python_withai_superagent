@@ -143,9 +143,15 @@ def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=3
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
                     training_only=True,source_files=sources())
     log.write_json('run_manifest.json',manifest)
-    task=load_training_task(package,read_declarations=True)
-    spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
-    folds = partitions(task,seed)
+    from .partial_classification import INPUT_ERRORS, record_input_failure
+    phase='training schema'
+    try:
+        task=load_training_task(package,read_declarations=True)
+        spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
+        phase='training partitions'
+        folds = partitions(task,seed)
+    except INPUT_ERRORS as error:
+        return record_input_failure(package,directory,log,error,phase)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')

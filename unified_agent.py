@@ -130,18 +130,27 @@ def train(package, run_dir, policy='autonomous'):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="action", required=True)
-    for action in ("train", "predict"):
+    for action in ("train", "predict", "solve"):
         command = commands.add_parser(action)
         command.add_argument("task_package", type=Path)
         command.add_argument("--run-dir", required=True, type=Path)
-        if action == "predict":
+        if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
-        else:
+        if action == "solve":
+            command.add_argument("--prediction-input", required=True, type=Path,
+                                 help="Prediction features, used only after the model is frozen")
+        if action == "train":
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy)
-    path = create_predictions(str(args.task_package), args.run_dir / "agent", args.output)
+    source=args.task_package
+    if args.action=='solve':
+        code=train(source,args.run_dir)
+        if code:
+            return code
+        source=args.prediction_input
+    path = create_predictions(str(source), args.run_dir / "agent", args.output)
     print(path)
     return 0
 

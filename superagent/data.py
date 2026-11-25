@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from .task_files import open_package
 
 
 class TaskFormatError(ValueError):
@@ -38,7 +39,7 @@ class TrainingTask:
 
 def load_training_task(path: str | Path, *, read_declarations=False) -> TrainingTask:
     """Train-only capability for selection studies; never opens val or test."""
-    with zipfile.ZipFile(Path(path).expanduser().resolve()) as archive:
+    with open_package(path,'train') as archive:
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if manifest is None:
@@ -55,7 +56,15 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
             if x.ndim != 2 or len(x) != len(y):
                 raise TaskFormatError("Training feature/label dimensions do not agree")
             from .task_readme import legacy_declarations
-            return TrainingTask("categorical_tabular", x, y, legacy_declarations(archive,'categorical_tabular',{}))
+            spec=legacy_declarations(archive,'categorical_tabular',{})
+            if read_declarations:
+                from .native_schema import description
+                from .table_input import declared_metric
+                metric=declared_metric(description(archive))
+                if metric:
+                    spec['metric']=metric
+                    spec.setdefault('goal_sources',{})['primary_metric']='declared_task_readme'
+            return TrainingTask("categorical_tabular", x, y, spec)
         rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
         if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
             raise TaskFormatError("Unsupported training CSV schema")
@@ -180,9 +189,7 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
     the declared input columns.  It deliberately has no evaluation function.
     """
     archive_path = Path(path).expanduser().resolve()
-    if not zipfile.is_zipfile(archive_path):
-        raise TaskFormatError(f"Only zip task packages are supported for now: {archive_path}")
-    with zipfile.ZipFile(archive_path) as archive:
+    with open_package(archive_path,'test') as archive:
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if frozen_spec and frozen_spec.get('input_schema'):

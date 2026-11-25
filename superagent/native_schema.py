@@ -3,7 +3,6 @@
 The task/dataset name is never used. Ambiguous layouts or label semantics need
 an explicit manifest. All inferred feature decisions use training contents.
 """
-import csv
 import io
 from pathlib import PurePosixPath
 import re
@@ -12,9 +11,8 @@ import statistics
 import numpy as np
 
 from .schema import MISSING
-
-TARGET_NAMES={'target','label','y','class'}
-
+from .task_files import TABLE_FORMATS, evaluation_path
+from .table_input import table, target_column, declared_metric
 
 def find_member(archive,basenames,required=False):
     accepted={s.casefold() for s in basenames}
@@ -32,7 +30,7 @@ def find_member(archive,basenames,required=False):
 
 def descriptor(archive,fmt,split):
     aliases={'train':['train'],'validation':['validation','val','valid'],'test':['test']}[split]
-    if fmt in ('csv','npz'):
+    if fmt in (*TABLE_FORMATS,'npz'):
         return {'format':fmt,'path':find_member(archive,[s+'.'+fmt for s in aliases],required=True)}
     return {'format':'npy','path':find_member(archive,['X_'+s+'.npy' for s in aliases],required=True),
             **({'target_path':find_member(archive,['y_'+s+'.npy' for s in aliases],required=True)} if split!='test' else {})}
@@ -60,6 +58,31 @@ def description(archive):
     return archive.read(member).decode('utf-8-sig', errors='replace').replace(chr(96), '').replace('*', '')
 
 
+def named_table(text,split):
+    words={'train':r'(?:training|train|训练)','test':r'(?:prediction|testing|test|预测|测试)'}[split]
+    field=r'(?:\s*(?:data\s*)?(?:file|table)|(?:文件|数据文件))'
+    found=set(re.findall(words+field+r'\s*(?:is\s+|为|是|[:：=]\s*)?[\"\']?([\w./-]+\.(?:csv|tsv|parquet))\b',text,re.I))
+    if len(found)>1:
+        raise ValueError('Conflicting file declarations for '+split)
+    if not found:
+        return None
+    path=PurePosixPath(found.pop())
+    if path.is_absolute() or '..' in path.parts or (split=='train' and evaluation_path(path,split)):
+        raise ValueError('Training and prediction input files must be distinct safe members')
+    return path.as_posix()
+
+
+def declared_member(archive,path):
+    single=getattr(archive,'standalone',None)
+    if single and PurePosixPath(path).name==single[0]:
+        return single[1]
+    matches=[n for n in archive.namelist() if '__MACOSX' not in PurePosixPath(n).parts and
+             (n==path or n.endswith('/'+path))]
+    if len(matches)!=1:
+        raise ValueError('Declared table member is absent or ambiguous: '+path)
+    return matches[0]
+
+
 def declared_preference(text, target, names):
     """Return canonical column order only with an explicit, uncontradicted 0/1 direction."""
     if len(names) != 2:
@@ -67,9 +90,11 @@ def declared_preference(text, target, names):
     aliases = []
     for i, name in enumerate(names):
         words = re.split(r'[_\W]+', name.lower())
-        sides = ({'a', 'first', 'left'}, {'b', 'second', 'right'})[i]
-        # Letter aliases require a matching header. Positional words denote CSV order.
-        aliases.append({name.lower(), *({'first','left'} if i == 0 else {'second','right'}), *(sides & set(words))})
+        sides = {'a','b','left','right'} & set(words)
+        aliases.append({name.lower(), ('first','second')[i], *sides})
+    for i,side in enumerate(('left','right')):
+        if not any(side in group for group in aliases):
+            aliases[i].add(side)
     aliases = [sorted(a - (aliases[1-i] & a), key=lambda s: (-len(s), s)) for i, a in enumerate(aliases)]
     votes = set()
     for sentence in re.split(r'[.!?\n]+', text.lower()):
@@ -92,36 +117,42 @@ def declared_preference(text, target, names):
 def infer_manifest(archive, *, read_declarations=False):
     from .folder_images import infer_folder_manifest
     folder=infer_folder_manifest(archive)
-    if folder is not None:return folder
+    if folder is not None:
+        if read_declarations:
+            metric=declared_metric(description(archive))
+            if metric:
+                folder.update(metric=metric,_metric_source='declared_task_readme')
+        return folder
     # This exact legacy categorical array convention keeps its existing adapter.
     if find_member(archive,['C_train.npy']) is not None:return None
+    prose = description(archive) if read_declarations else ''
+    named_train=named_table(prose,'train')
+    named_test=named_table(prose,'test')
+    if named_train and named_train==named_test:
+        raise ValueError('One file cannot serve as both training and prediction input')
     choices={fmt:find_member(archive,[name]) for fmt,name in
-             [('csv','train.csv'),('npz','train.npz'),('npy','X_train.npy')]}
+             [*((fmt,'train.'+fmt) for fmt in TABLE_FORMATS),('npz','train.npz'),('npy','X_train.npy')]}
     choices={fmt:path for fmt,path in choices.items() if path is not None}
+    if named_train:
+        choices={PurePosixPath(named_train).suffix[1:].lower():declared_member(archive,named_train)}
     if not choices:return None
     if len(choices)!=1:raise ValueError('Multiple possible training layouts; supply an explicit manifest')
     fmt,path=next(iter(choices.items()))
     manifest={'schema_version':1,'objective':'classification','metric':'accuracy',
               '_manifest_parent':'.','_schema_origin':'native_v1','_native_format':fmt,
-              'splits':{'train':descriptor(archive,fmt,'train')}}
-    if any('test' in part.casefold() for part in PurePosixPath(path).parts):
+              'splits':{'train':{'format':fmt,'path':path} if fmt in TABLE_FORMATS else descriptor(archive,fmt,'train')}}
+    if named_test:
+        manifest['_prediction_member']=named_test
+    if evaluation_path(path,'train'):
         raise ValueError('Native training file cannot reside in a test path')
-    if fmt=='csv':
-        reader=csv.reader(io.StringIO(archive.read(path).decode('utf-8-sig')))
-        header=next(reader,None)
+    if fmt in TABLE_FORMATS:
+        header, reader=table(archive,path,fmt)
         if not header or len(set(header))!=len(header):raise ValueError('CSV needs unique headers')
         if not read_declarations and {'headline_A','headline_B','label_pairwise'}<=set(header):return None
-        targets=[name for name in header if name.strip().casefold() in TARGET_NAMES]
-        prose = description(archive) if read_declarations else ''
-        if read_declarations:
-            declared = [name for name in header if re.search(
-                r'\b(?:target|label)(?:\s+column)?(?:\s+is|\s*[:=])?\s+'+re.escape(name)+r'(?!\w)', prose,re.I)]
-            if declared:
-                targets = list(dict.fromkeys([*declared, *targets]))
-        if len(targets)!=1:raise ValueError('Target column is absent or ambiguous; declare target in manifest.json')
+        target=target_column(prose,header)
         rows=list(reader)
         if not rows or any(len(row)!=len(header) for row in rows):raise ValueError('Empty or malformed training CSV')
-        target=targets[0];columns=[]
+        columns=[]
         for i,name in enumerate(header):
             if name==target:continue
             columns.append({'name':name,'type':_column_type([row[i] for row in rows])})
@@ -133,14 +164,6 @@ def infer_manifest(archive, *, read_declarations=False):
             if order:
                 manifest.update(modality='pair_text', pair_semantics='preference', pair_label_one='left',
                                 columns=[dict(name=n,type='text') for n in order])
-        if read_declarations:
-            from .metrics import SUPPORTED
-            named = {m for m in SUPPORTED if re.search(r'\b(?:report|primary metric\s*(?:is|:)?)\s+(?:test\s+)?'
-                        + re.escape(m).replace('_',r'[_ -]') + r'\b',prose,re.I)}
-            if len(named)>1:
-                raise ValueError('Conflicting declared primary metrics')
-            if named:
-                manifest['metric']=named.pop()
     else:
         if fmt=='npz':
             with np.load(io.BytesIO(archive.read(path)),allow_pickle=False) as arrays:
@@ -150,6 +173,9 @@ def infer_manifest(archive, *, read_declarations=False):
         if x.dtype.kind not in 'biuf' or x.ndim not in (2,3,4):
             raise ValueError('Native arrays require numeric N,D or N,H,W[,C]; otherwise declare a supported manifest')
         manifest['modality']='tabular' if x.ndim==2 else 'image'
+    metric=declared_metric(prose)
+    if metric:
+        manifest.update(metric=metric,_metric_source='declared_task_readme')
     return manifest
 
 
@@ -157,7 +183,7 @@ def add_native_split(archive,manifest,split):
     if manifest.get('_schema_origin')=='native_v1' and split not in manifest['splits']:
         aliases={'validation':['validation','val','valid'],'test':['test']}[split]
         fmt=manifest['_native_format']
-        existing=find_member(archive,[s+'.'+fmt for s in aliases] if fmt in ('csv','npz') else ['X_'+s+'.npy' for s in aliases])
+        existing=find_member(archive,[s+'.'+fmt for s in aliases] if fmt in (*TABLE_FORMATS,'npz') else ['X_'+s+'.npy' for s in aliases])
         if existing is not None:manifest['splits'][split]=descriptor(archive,fmt,split)
     return manifest
 
@@ -169,5 +195,9 @@ def prediction_manifest(archive,frozen_spec):
     if fmt=='image_folder':
         from .folder_images import prediction_folder_manifest
         return prediction_folder_manifest(archive,frozen_spec)
+    if frozen_spec.get('prediction_member'):
+        member=declared_member(archive,frozen_spec['prediction_member'])
+        return {'schema_version':1,**inputs,'_manifest_parent':'.',
+                'splits':{'test':{'format':PurePosixPath(member).suffix[1:].lower(),'path':member}}}
     return {'schema_version':1,'metric':'accuracy',**inputs,'_manifest_parent':'.',
             'splits':{'test':descriptor(archive,fmt,'test')}}

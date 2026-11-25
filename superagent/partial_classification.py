@@ -73,35 +73,50 @@ def prior_evidence(package):
                 labels=np.array(bundle[desc.get('target_key','y')])
         else:
             raise ValueError('No independently readable label vector in this format')
-        labels=_validate_labels(labels,len(labels))
-        if not len(labels):
-            raise ValueError('Training label evidence is empty')
-        values,counts=np.unique(labels,return_counts=True)
-        if len(values)<2 and primary=='roc_auc':
-            raise ValueError('A single observed class cannot define ROC-AUC probability columns')
-        positive=manifest.get('positive_label')
-        if positive is not None and labels.dtype.kind in 'US':
-            positive=str(positive)
-        if positive is not None and (len(values)!=2 or positive not in values.tolist()):
-            raise ValueError('Declared positive class conflicts with observed training labels')
-        if positive is not None:
-            order=[i for i,c in enumerate(values) if c!=positive]+[values.tolist().index(positive)]
-            values,counts=values[order],counts[order]
-        return dict(labels=values.tolist(),counts=counts.tolist(),prior=(counts/counts.sum()).tolist(),
-                    majority=values[int(np.argmax(counts))].item(),format=fmt,target=target,metric=primary,
-                    training_rows=len(labels),training_label_member=path,prediction_member=expected_prediction,
-                    shared_table=getattr(archive,'shared_table',None))
+        stats = class_prior(labels, primary, manifest.get('positive_label'))
+        return dict(stats, format=fmt, target=target, training_label_member=path,
+                    prediction_member=expected_prediction, shared_table=getattr(archive,'shared_table',None))
 
 
-def record_input_failure(package,directory,logger,error,phase):
+def class_prior(labels, primary, positive=None):
+    labels=_validate_labels(labels,len(labels))
+    if not len(labels):
+        raise ValueError('Training label evidence is empty')
+    values,counts=np.unique(labels,return_counts=True)
+    if len(values)<2 and primary=='roc_auc':
+        raise ValueError('A single observed class cannot define ROC-AUC probability columns')
+    if positive is not None and labels.dtype.kind in 'US':
+        positive=str(positive)
+    if positive is not None and (len(values)!=2 or positive not in values.tolist()):
+        raise ValueError('Declared positive class conflicts with observed training labels')
+    if positive is not None:
+        order=[i for i,c in enumerate(values) if c!=positive]+[values.tolist().index(positive)]
+        values,counts=values[order],counts[order]
+    if primary=='binary_f1' and len(values)!=2:
+        raise ValueError('Binary F1 needs two observed classes')
+    return dict(labels=values.tolist(), counts=counts.tolist(), prior=(counts/counts.sum()).tolist(),
+                majority=values[int(np.argmax(counts))].item(), metric=primary, training_rows=len(labels))
+
+
+def record_input_failure(package,directory,logger,error,phase,*,api_usage=None,resolved_task=None):
+    from .format_intake import DECODE_ERRORS
     reason=type(error).__name__+': '+str(error)
     outcome=dict(requested_planner_completed=False,contract_unresolved=True,phase=phase,reason=reason,
                  attempted_classifier_fits=0,completed_classifier_fits=0,unknown_failed_attempts=0,
                  new_api_requests=0,known_course_cost_rmb=0,formal_test_accessed=False,
                  external_score=None)
+    if api_usage:
+        outcome.update(api_usage)
     try:
-        evidence=prior_evidence(package)
-    except INPUT_ERRORS as second:
+        if getattr(error,'verified_prior',None) is not None:
+            evidence = error.verified_prior
+        elif resolved_task is not None and resolved_task.spec.get('input_recipe'):
+            spec = resolved_task.spec
+            stats = class_prior(resolved_task.y_train, spec['metric'], spec.get('positive_label'))
+            evidence = dict(stats, format='adaptive_records', target=spec['input_recipe']['target'], frozen_spec=spec)
+        else:
+            evidence=prior_evidence(package)
+    except DECODE_ERRORS as second:
         logger.write_json('run_outcome.json',dict(outcome,status='failed',delivery_status='unavailable',
             model_available=False,partial_reason=str(second)))
         return 2
@@ -120,6 +135,13 @@ def record_input_failure(package,directory,logger,error,phase):
 
 def input_count(package,prior):
     fmt=prior['format']
+    if fmt == 'adaptive_records':
+        from .format_intake import prediction_rows
+        records = prediction_rows(package, prior['frozen_spec'])
+        features = {c['name'] for c in prior['frozen_spec']['input_schema']['columns']}
+        if not features or any(not features.intersection(row) for row in records):
+            raise ValueError('Prediction rows have no verified input field in common with training')
+        return len(records)
     with open_package(package,'test',contract=prior.get('shared_table')) as archive:
         manifest=read_manifest(archive)
         if manifest is None:

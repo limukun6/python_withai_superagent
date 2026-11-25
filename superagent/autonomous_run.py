@@ -129,13 +129,25 @@ def freeze_model(task, spec, metric, choice, executor, directory, log, timeout):
     return selection
 
 
-def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None):
+def api_accounting(flash, log):
+    import json
+    entries = [json.loads(s) for s in log.usage_path.read_text(encoding='utf-8').splitlines()]
+    unknown = sum(e.get('usage_known') is False for e in entries)
+    known = flash.spent if flash else 0
+    return dict(new_api_requests=flash.request_count if flash else 0, known_course_cost_rmb=known,
+                unresolved_api_requests=unknown, complete_run_course_cost_rmb=None if unknown else known)
+
+
+def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
+          flash_setup_issue=None):
     if type(fit_limit) is not int or not 2<=fit_limit<=11 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–11 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     directory.mkdir(parents=True,exist_ok=False)
     log = RunLogger(directory)
     log.initialize_usage_ledger()
+    if flash_setup_issue:
+        log.event('planner_preflight_unavailable', reason=flash_setup_issue)
     start = time.monotonic()
     if flash is not None:
         flash.set_deadline(start+wall)
@@ -143,15 +155,25 @@ def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=3
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
                     training_only=True,source_files=sources())
     log.write_json('run_manifest.json',manifest)
-    from .partial_classification import INPUT_ERRORS, record_input_failure
+    from .partial_classification import record_input_failure
+    from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
     phase='training schema'
+    task = None
     try:
-        task=load_training_task(package,read_declarations=True)
+        try:
+            task=load_training_task(package,read_declarations=True)
+        except DECODE_ERRORS as native_error:
+            log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
+            try:
+                task=adapt_training(package, flash, log)
+            except NativeContract:
+                raise native_error
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
         phase='training partitions'
         folds = partitions(task,seed)
-    except INPUT_ERRORS as error:
-        return record_input_failure(package,directory,log,error,phase)
+    except DECODE_ERRORS as error:
+        return record_input_failure(package,directory,log,error,phase,
+                                    api_usage=api_accounting(flash,log), resolved_task=task)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -236,6 +258,5 @@ def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=3
         finally:
             if 'outcome' in locals():
                 log.write_json('run_outcome.json',dict(outcome,**executor.accounting(),wall_seconds=time.monotonic()-start,
-                               new_api_requests=flash.request_count if flash else 0,
-                               known_course_cost_rmb=flash.spent if flash else 0,formal_test_accessed=False))
+                               **api_accounting(flash,log),formal_test_accessed=False))
     return 0

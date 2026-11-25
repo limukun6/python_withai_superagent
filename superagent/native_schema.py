@@ -114,6 +114,23 @@ def declared_preference(text, target, names):
     return [names[first], names[1-first]]
 
 
+def record_schema(header, rows, target, prose):
+    if not rows or any(len(row) != len(header) for row in rows):
+        raise ValueError('Empty or malformed training table')
+    columns = [{'name': name, 'type': _column_type([row[i] for row in rows])}
+               for i, name in enumerate(header) if name != target]
+    if not columns:
+        raise ValueError('Training table has no input columns')
+    text = all(col['type'] == 'text' for col in columns)
+    result = dict(modality='text' if text else 'tabular', columns=columns, target=target)
+    if text and len(columns) == 2 and {r[header.index(target)] for r in rows} == {'0', '1'}:
+        order = declared_preference(prose, target, [col['name'] for col in columns])
+        if order:
+            result.update(modality='pair_text', pair_semantics='preference', pair_label_one='left',
+                          columns=[dict(name=n, type='text') for n in order])
+    return result
+
+
 def infer_manifest(archive, *, read_declarations=False):
     from .folder_images import infer_folder_manifest
     folder=infer_folder_manifest(archive)
@@ -151,20 +168,7 @@ def infer_manifest(archive, *, read_declarations=False):
         if not header or len(set(header))!=len(header):raise ValueError('CSV needs unique headers')
         if not read_declarations and {'headline_A','headline_B','label_pairwise'}<=set(header):return None
         target=target_column(prose,header)
-        rows=list(reader)
-        if not rows or any(len(row)!=len(header) for row in rows):raise ValueError('Empty or malformed training CSV')
-        columns=[]
-        for i,name in enumerate(header):
-            if name==target:continue
-            columns.append({'name':name,'type':_column_type([row[i] for row in rows])})
-        if not columns:raise ValueError('Training CSV has no input columns')
-        text_columns=[c for c in columns if c['type']=='text']
-        manifest.update(modality='text' if len(text_columns)==len(columns) else 'tabular',columns=columns,target=target)
-        if len(columns)==len(text_columns)==2 and {row[header.index(target)] for row in rows}=={'0','1'}:
-            order = declared_preference(prose, target, [col['name'] for col in columns])
-            if order:
-                manifest.update(modality='pair_text', pair_semantics='preference', pair_label_one='left',
-                                columns=[dict(name=n,type='text') for n in order])
+        manifest.update(record_schema(header, list(reader), target, prose))
     else:
         if fmt=='npz':
             with np.load(io.BytesIO(archive.read(path)),allow_pickle=False) as arrays:

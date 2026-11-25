@@ -64,6 +64,9 @@ def target_column(text,header):
         token=r'(?<![\w])'+re.escape(name)+r'(?![\w])'
         if re.search(intro+r'[\"\'‘“]?'+token,text,re.I) or re.search(token+r'[\"\'’”]?\s+is\s+the\s+(?:target|label)\s+(?:column|field)',text,re.I):
             explicit.add(name)
+        if re.search(r'(?:^|[.!?。]\s*|\n)\s*(?:predict|forecast|submit)\s+(?:the\s+)?[\"\x27]?'
+                     +token+r'[\"\x27]?\s*(?:[.!?。]|$)',text,re.I):
+            explicit.add(name)
     if len(explicit)>1:
         raise ValueError('Conflicting target declarations')
     # A declaration that names an absent field must not silently activate a conventional label feature.

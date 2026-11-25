@@ -40,6 +40,8 @@ def read_manifest(archive):
     if not names:return None
     if len(names)!=1:raise ValueError('Expected one task manifest')
     value=json.loads(archive.read(names[0]).decode('utf-8'))
+    if not isinstance(value,dict) or not isinstance(value.get('splits',{}),dict):
+        raise ValueError('A task manifest and its split declarations must be JSON objects')
     if value.get('schema_version')!=1:raise ValueError('Unsupported manifest schema version')
     if value.get('objective','classification')!='classification':raise ValueError('Only classification is supported')
     from .metrics import validate_metric

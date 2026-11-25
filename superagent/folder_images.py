@@ -3,10 +3,10 @@ from pathlib import PurePosixPath
 
 import numpy as np
 
-from .image_files import load_image_rows, DECODER_POLICY
+from .image_files import BITMAP_FORMATS, load_image_rows, DECODER_POLICY
 
 
-EXTENSIONS={'.png','.jpg','.jpeg'}
+EXTENSIONS=set(BITMAP_FORMATS)
 DEFAULT_CONTRACT={'width':64,'height':64,'mode':'RGB','resize':'stretch_bilinear'}
 SPLIT_ALIASES={'train':{'train','training'},'validation':{'validation','valid','val'},'test':{'test','testing','predict','prediction'}}
 
@@ -15,7 +15,7 @@ def _images(archive):
     names=[]
     for name in archive.namelist():
         path=PurePosixPath(name)
-        if name.startswith('__MACOSX/') or path.suffix.casefold() not in EXTENSIONS:continue
+        if name.startswith('__MACOSX/') or path.suffix.casefold() not in getattr(archive, 'image_extensions', EXTENSIONS):continue
         if path.is_absolute() or '..' in path.parts or '\\' in name:
             raise ValueError('Image archive path must remain inside its package')
         names.append(name)

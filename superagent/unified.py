@@ -74,5 +74,10 @@ def command(args):
     from .autonomous_run import train
     if getattr(args,'policy','autonomous')=='legacy':
         return legacy_command(args)
+    issue = None
+    try:
+        flash = configured_flash(args.run_dir)
+    except (OSError, ValueError, RuntimeError) as error:
+        flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
-                 wall=args.time_limit,timeout=args.trial_timeout,flash=configured_flash(args.run_dir))
+                 wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue)

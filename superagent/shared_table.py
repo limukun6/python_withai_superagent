@@ -78,7 +78,7 @@ def stage(archive,split,contract=None):
     prose=description(archive)
     grouping=grouping_column(header,prose,(contract or manifest or {}).get('split_column'))
     if not grouping:
-        if required:
+        if required or re.search(r'(?:split|partition)\s+(?:column|field)\s*(?:is|[:=])|(?:划分列|分组列)[：为是]',prose,re.I):
             raise ValueError('A table reused for train and evaluation needs a declared split column')
         yield archive
         return
@@ -99,10 +99,7 @@ def stage(archive,split,contract=None):
     markers=[r[0].strip().lower() for r in markers]
     seen=set(markers)
     if not required and not seen.intersection(buckets):
-        if re.search(r'(?:split|partition)\s+(?:column|field)|划分列|分区列',prose,re.I):
-            raise ValueError('Declared split values were not recognized')
-        yield archive
-        return
+        raise ValueError('Split values were not recognized; row membership cannot be established')
     if not seen<=buckets.keys() or split not in {buckets[v] for v in seen}:
         raise ValueError('Missing or ambiguous row membership for '+split)
     target=(contract or manifest or {}).get('target') or target_column(prose,header)

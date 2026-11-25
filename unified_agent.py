@@ -150,7 +150,20 @@ def main():
         if code:
             return code
         source=args.prediction_input
-    path = create_predictions(str(source), args.run_dir / "agent", args.output)
+    from superagent.format_intake import DECODE_ERRORS
+    attempt = args.output.parent / 'prediction_attempt.json'
+    try:
+        path = create_predictions(str(source), args.run_dir / "agent", args.output)
+    except DECODE_ERRORS + (RuntimeError,) as error:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        attempt.write_text(json.dumps(dict(delivery_status='unavailable', generated_by_this_attempt=False,
+            reason=str(error)[:500], error_type=type(error).__name__, prediction_count=None),
+            ensure_ascii=False,indent=2),encoding='utf-8')
+        print(attempt)
+        return 2
+    receipt = json.loads((args.output.parent/'prediction_manifest.json').read_text(encoding='utf-8'))
+    attempt.write_text(json.dumps(dict(delivery_status=receipt.get('delivery_status','completed'),
+        generated_by_this_attempt=True,prediction_count=receipt['prediction_count']),indent=2),encoding='utf-8')
     print(path)
     return 0
 

@@ -1,10 +1,13 @@
-"""Explicit same-archive PNG/JPEG inputs with a frozen deterministic decoder."""
+"""Decode single-frame bitmap inputs using a versioned, deterministic pixel contract."""
 import io
 from pathlib import PurePosixPath
 
 import numpy as np
 
-DECODER_POLICY='png_jpeg_exif_white_background_bilinear_v1'
+LEGACY_POLICY='png_jpeg_exif_white_background_bilinear_v1'
+DECODER_POLICY='single_frame_bitmap_exif_white_background_bilinear_v2'
+LEGACY_FORMATS={'.png':'PNG','.jpg':'JPEG','.jpeg':'JPEG'}
+BITMAP_FORMATS={**LEGACY_FORMATS,'.bmp':'BMP','.tif':'TIFF','.tiff':'TIFF','.webp':'WEBP','.gif':'GIF'}
 MAX_SOURCE_PIXELS=16_777_216
 MAX_FILE_BYTES=64*1024*1024
 MAX_OUTPUT_BYTES=256*1024*1024
@@ -29,14 +32,15 @@ def load_image_rows(archive,manifest,split,paths):
         raise ValueError('Decoded image split exceeds the 256 MiB in-memory input limit')
     if not paths:raise ValueError('Empty image split')
     values=[]
+    formats = LEGACY_FORMATS if manifest.get('_image_decoder_policy') == LEGACY_POLICY else BITMAP_FORMATS
     for raw in paths:
         descriptor={**manifest,'splits':{split:{'path':raw}}}
         _,member=_member(archive,descriptor,split)
         suffix=PurePosixPath(member).suffix.casefold()
-        expected='PNG' if suffix=='.png' else 'JPEG' if suffix in ('.jpg','.jpeg') else None
-        if expected is None:raise ValueError('Image path must identify a PNG or JPEG member')
+        expected=formats.get(suffix)
+        if expected is None:raise ValueError('Image path has an unsupported bitmap extension')
         if archive.getinfo(member).file_size>MAX_FILE_BYTES:raise ValueError('Encoded image exceeds the 64 MiB per-file limit')
-        with Image.open(io.BytesIO(archive.read(member)),formats=['PNG','JPEG']) as source:
+        with Image.open(io.BytesIO(archive.read(member)),formats=list(dict.fromkeys(formats.values()))) as source:
             if source.format!=expected:raise ValueError('Image content format does not match its extension')
             if source.width*source.height>MAX_SOURCE_PIXELS:raise ValueError('Source image exceeds the 16-megapixel decoder limit')
             if getattr(source,'n_frames',1)!=1:raise ValueError('Animated or multiframe images are not supported')

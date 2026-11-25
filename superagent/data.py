@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 from .task_files import open_package
+from .legacy_array import load_array
 
 
 class TaskFormatError(ValueError):
@@ -53,8 +54,8 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
             return TrainingTask(kind,x,y,spec)
         names = [n for n in archive.namelist() if not n.startswith("__MACOSX/")]
         if any(n.endswith("C_train.npy") for n in names):
-            x = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"C_train.npy"))), allow_pickle=True)
-            y = np.load(io.BytesIO(archive.read(_member_by_suffix(names,"y_train.npy"))), allow_pickle=True)
+            x = load_array(archive.read(_member_by_suffix(names,"C_train.npy")))
+            y = load_array(archive.read(_member_by_suffix(names,"y_train.npy")))
             if x.ndim != 2 or len(x) != len(y):
                 raise TaskFormatError("Training feature/label dimensions do not agree")
             from .task_readme import legacy_declarations
@@ -127,7 +128,7 @@ def _load_categorical_tabular(path: Path, archive: zipfile.ZipFile, names: list[
     if all(present):required.update({'C_val.npy','y_val.npy'})
     members = {suffix: _member_by_suffix(names, suffix) for suffix in required}
     arrays = {
-        suffix: np.load(io.BytesIO(archive.read(member)), allow_pickle=True)
+        suffix: load_array(archive.read(member))
         for suffix, member in members.items()
     }
     info_members = [name for name in names if name.endswith("info.json")]
@@ -191,7 +192,13 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
     the declared input columns.  It deliberately has no evaluation function.
     """
     archive_path = Path(path).expanduser().resolve()
+    if (frozen_spec or {}).get('input_recipe'):
+        from .format_intake import predict_records
+        return predict_records(archive_path, kind, frozen_spec)
     with open_package(archive_path,'test',contract=(frozen_spec or {}).get('shared_table')) as archive:
+        from .image_files import LEGACY_FORMATS, LEGACY_POLICY, DECODER_POLICY
+        if (frozen_spec or {}).get('image_decoder_policy') == LEGACY_POLICY:
+            archive.image_extensions = set(LEGACY_FORMATS)
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive)
         if frozen_spec and frozen_spec.get('input_schema'):
@@ -207,10 +214,10 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
                 for key in ('modality','columns','pair_label_one','pair_semantics','image_preprocessing'):
                     if manifest.get(key)!=expected.get(key):raise TaskFormatError('Prediction schema differs from frozen training schema')
             if frozen_spec.get('image_decoder_policy'):
-                from .image_files import DECODER_POLICY
                 from importlib.metadata import version
-                if frozen_spec['image_decoder_policy']!=DECODER_POLICY:
+                if frozen_spec['image_decoder_policy'] not in (DECODER_POLICY, LEGACY_POLICY):
                     raise TaskFormatError('Image decoder differs from the frozen training contract')
+                manifest['_image_decoder_policy'] = frozen_spec['image_decoder_policy']
                 if frozen_spec.get('image_decoder_version')!=version('Pillow'):
                     raise TaskFormatError('Pillow version differs from the frozen image decoder')
                 if manifest.get('splits',{}).get('test',{}).get('format') not in ('csv','image_folder'):
@@ -224,7 +231,7 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
         names = [name for name in archive.namelist() if not name.startswith("__MACOSX/")]
         if kind == "categorical_tabular":
             member = _member_by_suffix(names, "C_test.npy")
-            return np.load(io.BytesIO(archive.read(member)), allow_pickle=True)
+            return load_array(archive.read(member))
         if kind == "pair_text":
             member = _member_by_suffix(names, "test.csv")
             content = archive.read(member).decode("utf-8-sig")

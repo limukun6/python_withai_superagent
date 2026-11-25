@@ -133,7 +133,7 @@ class FormatDeliveryTests(unittest.TestCase):
                     package=zipped(root/(name+'.zip'),{**training,'validation/dont-read':b'x','test/labels.secret':b'x'})
                     guard=zipfile.ZipFile.read
                     def read(z,member,*args,**kwargs):
-                        if str(member) not in training:
+                        if z.filename==str(package) and str(member) not in training:
                             raise AssertionError('Opened nontraining member: '+str(member))
                         return guard(z,member,*args,**kwargs)
                     with patch.object(zipfile.ZipFile,'read',read):

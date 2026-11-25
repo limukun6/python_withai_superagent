@@ -2,7 +2,19 @@
 
 ## 当前统一入口
 
-在仓库根目录执行 `python -m unified_agent train TASK.zip --run-dir runs/my-task`。同一命令接收原始任务包，自动处理训练划分、方法搜索、反馈和重训。两个 Released Tasks 的复现环境、成绩与逐行证据见[统一 Agent 说明](docs/UNIFIED_AGENT_20261124_zh.md)。
+从仓库根目录运行。给定训练任务和待预测输入，Agent 会读取任务声明、在训练集内选择或组合方法、重训并生成预测。下列命令也适用于已解压的任务目录。
+
+```sh
+python -m unified_agent solve TASK.zip --prediction-input FEATURES.zip --run-dir runs/new-task --output runs/new-task/predictions.csv
+```
+
+也可以先运行 `python -m unified_agent train TASK.zip --run-dir runs/new-task`，待模型封存后运行 `python -m unified_agent predict FEATURES.zip --run-dir runs/new-task --output predictions.csv`。运行目录须为新目录。默认由本地规划器依据训练反馈选动作，每次任务最多 10 次实际分类器拟合，包含最终重训。机器上已登记的编码器和已安装的分类器向所有兼容任务开放。每轮候选、实际动作及其依据写入 `agent/decisions.json`。
+
+原始表格可用 CSV、TSV 或 Parquet。任务说明可用 `Target column is verdict. Primary metric is macro F1.` 声明标签和指标。共用一张表时，可用 `Split column is phase.` 声明行划分，训练只接收标记为训练的行。图片可以按 `train/类别/图片` 或 `类别/training/图片` 摆放。运行支持压缩包、已解压的目录及单个表格文件。任务包有明确清单时优先读取清单。
+
+若特征无法解析，程序会核对是否仍有可信训练标签。根据这些标签生成的多数类预测在运行记录和预测凭据中均标为 `partial`。类别依据缺失时写入 `unavailable` 及原因。默认预测文件包含顺序行号和分类结果，ROC-AUC 任务另含各类概率。详见[自主决策、格式与交付验收](docs/AUTONOMY_AND_UNSEEN_INPUT_20261125_zh.md)。
+
+输入和结果的可核验边界见[自主决策与陌生任务格式验收](docs/ANONYMOUS_PLANNER_AND_INPUT_VERIFICATION_20261125_zh.md)。旧方案可使用 `train --policy legacy` 复现。[旧版环境与成绩](docs/UNIFIED_AGENT_20261124_zh.md)
 
 ## 历史四次搜索对照
 

@@ -21,7 +21,12 @@ class CalibratedTests(unittest.TestCase):
             metric='search_score',reference_trial=1,direction='decrease',min_delta=.01))
         validate_proposal(answer,state,caps,ids,'calibrated-v2')
         previous=state['history'][0]['search_score']
-        check=check_expectation(answer,dict(status='completed',search_score=previous-.02),state['history'])
+        reference=state['history'][0]
+        outcome=dict(status='completed',search_score=previous-.02)
+        self.assertEqual(check_expectation(answer,outcome,state['history'])['status'],'not_evaluable')
+        scope={k:reference[k] for k in ('split_id','evaluation_payload_sha256','label_sha256','row_ids_sha256',
+                                       'primary_metric','metric_spec') if k in reference}
+        check=check_expectation(answer,{**outcome,**scope},state['history'])
         self.assertEqual(check['status'],'supported');self.assertLess(check['observed_delta'],0)
 
     def test_v2_does_not_relax_identity_or_measurement_boundaries(self):

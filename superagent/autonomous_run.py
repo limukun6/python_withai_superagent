@@ -190,7 +190,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         except DECODE_ERRORS as native_error:
             log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
             try:
-                task=adapt_training(package, flash, log)
+                task=adapt_training(package, None if feedback_reflection else flash, log)
             except NativeContract:
                 raise native_error
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)

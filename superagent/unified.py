@@ -72,8 +72,6 @@ def configured_flash(directory):
 
 def reflection_client(directory):
     import os
-    import sqlite3
-    from contextlib import closing
     from .ab_flash import ENDPOINT, MODEL
     from .experiment_llm import ExperimentLLM
     from .task_budget import TaskBudgetAccount, TaskBudgetLedger
@@ -84,18 +82,12 @@ def reflection_client(directory):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)
     scope = os.environ.get('SUPERAGENT_TASK_BUDGET_ID','')
-    with closing(sqlite3.connect(ledger.path)) as db:
-        metadata = dict(db.execute('SELECT key,value FROM metadata'))
-        if (metadata.get('ledger_kind') != 'provisional_local_outbox' or metadata.get('team_merge_state') != 'pending_team_handoff'
-                or db.execute('SELECT COUNT(*) FROM requests').fetchone()[0] == 0
-                or db.execute("SELECT COUNT(*) FROM requests WHERE status != 'known' OR scope = ?",(scope,)).fetchone()[0]):
-            raise ValueError('Unsettled, repeated, empty or incorrectly marked research outbox')
-    ledger.preflight(scope,.12)
+    ledger.preflight(scope,.12,fresh_outbox_scope=True)
     key = os.getenv('SUPERAGENT_PLANNER_KEY_FILE')
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         account=TaskBudgetAccount(ledger,scope,str(directory)),streaming=True)
+                         account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True),streaming=True)
 
 
 def command(args):

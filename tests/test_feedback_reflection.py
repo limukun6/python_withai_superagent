@@ -1,8 +1,10 @@
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import sqlite3
 from tempfile import TemporaryDirectory
+from threading import Barrier
 import unittest
 from unittest.mock import Mock, patch
 
@@ -88,6 +90,17 @@ class FeedbackReflectionTests(unittest.TestCase):
             standard.assert_not_called()
             live.assert_called_once()
 
+    def test_format_intake_cannot_spend_the_request_reserved_for_reflection(self):
+        from superagent.autonomous_run import _train
+        with TemporaryDirectory() as directory:
+            for mode in (None,'flash'):
+                flash = Mock()
+                with patch('superagent.autonomous_run.load_training_task',side_effect=ValueError('unknown schema')), \
+                        patch('superagent.format_intake.adapt_training',side_effect=ValueError('unknown target')) as adapt, \
+                        patch('superagent.partial_classification.record_input_failure',return_value=1):
+                    _train('input.zip', Path(directory)/str(mode), flash=flash, feedback_reflection=mode)
+                self.assertIs(adapt.call_args.args[1], None if mode else flash)
+
     def test_research_client_requires_marked_settled_history_and_unused_scope(self):
         with TemporaryDirectory() as directory:
             path = Path(directory)/'outbox.sqlite'
@@ -112,3 +125,19 @@ class FeedbackReflectionTests(unittest.TestCase):
                 for extra in [dict(SUPERAGENT_TASK_BUDGET_ID='past'),dict(SUPERAGENT_OFFLINE='1')]:
                     with patch.dict(os.environ, extra), self.assertRaises(ValueError):
                         reflection_client(directory)
+                # Both callers have already passed preflight, as can happen in separate research runs.
+                other = reflection_client(directory)
+                barrier = Barrier(2)
+                def reserve(account):
+                    barrier.wait(timeout=5)
+                    try:
+                        return account.reserve(.01,'DeepSeek-V4.1-Flash')
+                    except ValueError:
+                        return None
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    tickets = list(pool.map(reserve,[client.account,other.account]))
+                successful = [t for t in tickets if t]
+                self.assertEqual(len(successful),1)
+                ledger.settle(successful[0],'DeepSeek-V4.1-Flash',10,10)
+                with self.assertRaises(ValueError):
+                    other.account.reserve(.01,'DeepSeek-V4.1-Flash')

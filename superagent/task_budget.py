@@ -149,12 +149,27 @@ CREATE TABLE transitions(seq INTEGER PRIMARY KEY AUTOINCREMENT,request_id TEXT N
             raise BudgetStateError('Cumulative task course allowance is insufficient')
         return units
 
-    def preflight(self,scope,run_allowance):
-        state=self.snapshot(scope);self._check(state,run_allowance);return state
+    def _require_fresh_outbox_scope(self,db,scope):
+        metadata = dict(db.execute('SELECT key,value FROM metadata'))
+        prior = db.execute('SELECT 1 FROM requests LIMIT 1').fetchone()
+        conflict = db.execute("SELECT 1 FROM requests WHERE status != 'known' OR scope = ? LIMIT 1",(scope,)).fetchone()
+        if (metadata.get('ledger_kind') != 'provisional_local_outbox'
+                or metadata.get('team_merge_state') != 'pending_team_handoff' or prior is None or conflict):
+            raise BudgetStateError('Unsettled, repeated, empty or incorrectly marked research outbox')
 
-    def reserve(self,scope,amount,run_id,model):
+    def preflight(self,scope,run_allowance,*,fresh_outbox_scope=False):
+        with self._db() as db:
+            state = self._snapshot(db,scope)
+            self._check(state,run_allowance)
+            if fresh_outbox_scope:
+                self._require_fresh_outbox_scope(db,scope)
+            return state
+
+    def reserve(self,scope,amount,run_id,model,*,fresh_outbox_scope=False):
         with self._db() as db:
             db.execute('BEGIN IMMEDIATE');units=self._check(self._snapshot(db,scope),amount)
+            if fresh_outbox_scope:
+                self._require_fresh_outbox_scope(db,scope)
             key=str(uuid.uuid4());payload={'run_id':str(run_id),'requested_model':model,'reserved_at':now(),'estimate_is_not_a_hard_token_bound':True}
             value=encoded(payload)
             db.execute('INSERT INTO requests VALUES (?,?,?,?,?,?)',(key,scope,'reserved',units,None,value))
@@ -188,8 +203,14 @@ CREATE TABLE transitions(seq INTEGER PRIMARY KEY AUTOINCREMENT,request_id TEXT N
 
 
 class TaskBudgetAccount:
-    def __init__(self,ledger,scope,run_id):self.ledger,self.scope,self.run_id=ledger,scope,run_id
-    def reserve(self,amount,model):return self.ledger.reserve(self.scope,amount,self.run_id,model)
+    def __init__(self,ledger,scope,run_id,*,fresh_outbox_scope=False):
+        self.ledger,self.scope,self.run_id=ledger,scope,run_id
+        self.fresh_outbox_scope=fresh_outbox_scope
+
+    def reserve(self,amount,model):
+        if self.fresh_outbox_scope:
+            return self.ledger.reserve(self.scope,amount,self.run_id,model,fresh_outbox_scope=True)
+        return self.ledger.reserve(self.scope,amount,self.run_id,model)
     def settle(self,key,model,inp,out):return self.ledger.settle(key,model,inp,out)
     def unknown(self,key,reason,**details):return self.ledger.mark_unknown(key,reason,**details)
     def snapshot(self):return self.ledger.snapshot(self.scope)

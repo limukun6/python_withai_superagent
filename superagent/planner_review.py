@@ -11,7 +11,7 @@ def forecast(weights, expected, novelty):
 
 def add_review_arguments(parser):
     parser.add_argument('--feedback-reflection', choices=('control','local','flash','conditional-flash','scheduled-flash',
-                        'evidence-control','evidence-local','proposal-flash'),
+                        'evidence-control','evidence-local','proposal-flash','delivered-local','delivered-flash'),
                         help='Review an early action or a measured disagreement that could change the delivered model')
     parser.add_argument('--reflection-history', help='Verified anonymous prior outcome counts')
     parser.add_argument('--exploration-rule', metavar='JSON',

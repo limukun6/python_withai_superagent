@@ -107,7 +107,8 @@ class ExperimentLLM:
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
-        max_tokens = 1536 if role=='experiment_proposal' else 3072 if role=='feedback_reflection' else (16384 if self.streaming else 2048)
+        limits={'experiment_proposal':1536,'protected_experiment_proposal':4096,'feedback_reflection':3072}
+        max_tokens=limits.get(role,16384 if self.streaming else 2048)
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
                    * self.price.input_rmb_per_million + max_tokens * self.price.output_rmb_per_million) / 1e6
         effective_ceiling = min(self.budget, cost_ceiling) if cost_ceiling is not None else self.budget

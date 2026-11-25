@@ -12,10 +12,46 @@ from superagent.autonomous_run import partitions
 from superagent.data import TrainingTask
 from superagent.events import RunLogger
 from superagent.metrics import MetricSpec
-from superagent.proposal_value import ProposalStudy, checked_reply, fragile, split_search
+from superagent.proposal_value import ProposalStudy, checked_reply, fragile, proposal_brief, split_search
 
 
 class ProposalValueTests(unittest.TestCase):
+    def test_wire_indices_preserve_the_original_options_and_next_move(self):
+        options=[dict(name=n,estimator=n,representation='dense',settings={'C':i+1},fit_cost=1) for i,n in enumerate(('a','b'))]
+        pkt=dict(metric='accuracy',kind='numeric_tabular',rows=20,shared_errors=4,shared_errors_by_label={'1':4},
+                 reference_trials=[1,2],reference_score=.6,measured=[],minority_fraction=.4,remaining_fits=14,
+                 options=options,ordinary_next=dict(action='explore',members=['b'],split='primary'),local_exploration=['b'])
+        brief=proposal_brief(pkt)
+        self.assertEqual([r[1:] for r in brief['options']],[[r['estimator'],r['representation'],r['settings'],r['fit_cost']] for r in options])
+        self.assertEqual(brief['ordinary_next']['methods'],[dict(option=1,estimator='b')])
+        for row in brief['options']:
+            reply=dict(decision='experiment',option=row[0],cited_trials=[1,2],min_rescues=1,min_gain=0,
+                       hypothesis='Groups overlap.',refute_if='No rescue.')
+            self.assertEqual(checked_reply(reply,pkt)['candidate'],row[1])
+
+    def test_protected_pointer_survives_interruption_during_final_refit(self):
+        from superagent.autonomous_checkpoint import interrupted, read
+        from superagent.autonomous_run import freeze_model
+        with TemporaryDirectory() as tmp:
+            directory=Path(tmp)
+            x=np.arange(30).reshape(-1,1)
+            y=x[:,0]%2
+            task=TrainingTask('numeric_tabular',x,y,{})
+            metric=MetricSpec('accuracy',(0,1))
+            executor=Mock(caps={'m':{'refit_classifier_fits':1}})
+            executor.worker.return_value=(DummyClassifier(strategy='most_frequent').fit(x,y),{})
+            log=RunLogger(directory)
+            choice=dict(members=['m'],utility=.5,evidence=dict(scores={'primary':.5}))
+            ready=freeze_model(task,{'goal_resolution':{}},metric,choice,executor,directory,log,30,provisional_total=40)
+            self.assertEqual((ready['refit'],ready['training_rows'],ready['full_training_rows']),(False,30,40))
+            executor.worker.side_effect=RuntimeError('interruption')
+            with self.assertRaises(RuntimeError):
+                freeze_model(task,{'goal_resolution':{}},metric,choice,executor,directory,log,30)
+            self.assertTrue(interrupted(directory,'interruption'))
+            selected=read(directory/'final_selection.json')
+            self.assertEqual(selected['model_sha256'],ready['model_sha256'])
+            self.assertEqual((selected['model_file'],selected['delivery_status']),('core_ready_selected_model.joblib','partial'))
+
     def test_fallback_and_nested_partitions_keep_groups_out_of_every_fit(self):
         x=np.repeat(np.arange(120),2).reshape(-1,1)
         task=TrainingTask('numeric_tabular',x,(x[:,0]%2).astype(int),{})

@@ -18,7 +18,7 @@ from .events import RunLogger
 from .experiment_policy import actions, identity
 from .exploration_rule import apply_rule, load_rule
 from .metrics import MetricSpec
-from .models import SoftVoteModel
+from .models import SoftVoteModel, predict_with_model, probability_with_model
 from .open_methods import MethodSpace
 from .prediction_evidence import fingerprint, _checked_predictions
 from .splits import sample_groups, take
@@ -102,11 +102,11 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
     return dict(menu[index],reason=proposal['reason'][:1000],cited_trials=refs)
 
 
-def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False, challenger_prefix='challenger_'):
+def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False, challenger_prefix='challenger_', provisional_total=None):
     members = choice['members']
-    prefix = challenger_prefix if challenger else ''
+    prefix = 'core_ready_' if provisional_total is not None else challenger_prefix if challenger else ''
     log.write_json(prefix + 'selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
-    refit = directory/'refit_data.joblib'
+    refit = directory/('core_ready_refit_data.joblib' if provisional_total is not None else 'refit_data.joblib')
     if not challenger:
         joblib.dump(dict(kind=task.kind,mode='refit',X_train=task.X_train,y_train=task.y_train,
                          X_search=take(task.X_train,[0]),metric_spec=metric.record(),
@@ -128,7 +128,20 @@ def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, 
                      fold_scores=choice['evidence']['scores'],test_accessed=False,refit=True,training_rows=len(task.y_train),
                      model_format='candidate_bundle_v1',model_file=destination.name,model_sha256=sha(destination),
                      task_spec_sha256=sha(directory/'task_spec.json'))
+    if provisional_total is not None:
+        probe=take(task.X_train,np.linspace(0,len(task.y_train)-1,min(8,len(task.y_train)),dtype=int))
+        restored=joblib.load(destination)['model']
+        np.testing.assert_array_equal(predict_with_model(task.kind,model,probe),predict_with_model(task.kind,restored,probe))
+        if metric.requires_scores:
+            before,after=[probability_with_model(task.kind,m,probe) for m in (model,restored)]
+            np.testing.assert_array_equal(before[0],after[0])
+            np.testing.assert_allclose(before[1],after[1])
+        selection.update(refit=False,refit_scope='all search rows',delivery_status='partial',contract_unresolved=False,
+                         requested_planner_completed=False,partial_reason='Optional experiment and final training pending',
+                         full_training_rows=provisional_total,model_replay_rows=len(probe))
     log.write_json(prefix + 'final_selection.json',selection)
+    if provisional_total is not None:
+        log.write_json('final_selection.json',selection)
     return selection
 
 
@@ -198,10 +211,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     except DECODE_ERRORS as error:
         return record_input_failure(package,directory,log,error,phase,
                                     api_usage=api_accounting(flash,log), resolved_task=task)
-    from .proposal_value import MODES as proposal_modes, ProposalStudy, split_search
+    from .proposal_value import MODES as proposal_modes, DELIVERED_MODES, ProposalStudy, split_search
     pilot=None
     core_limit=fit_limit
-    if feedback_reflection in proposal_modes:
+    if feedback_reflection in proposal_modes+DELIVERED_MODES:
         pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
         core_limit=fit_limit-min(5,fit_limit//3)
         try:
@@ -361,6 +374,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 if pilot is not None:
                     pilot.snapshot(checkpoint,sum(r['status']=='completed' for r in history))
             if pilot is not None:
+                if feedback_reflection in DELIVERED_MODES:
+                    cost=sum(executor.caps[n]['refit_classifier_fits'] for n in choice['members'])
+                    remaining=fit_limit-executor.accounting()['attempted_classifier_fits']
+                    if remaining>=2*cost:
+                        ready=freeze_model(inner,spec,metric,choice,executor,directory,log,timeout,provisional_total=len(task.y_train))
+                        pilot.protected_selection=ready
+                        pilot.snapshot(ready,sum(r['status']=='completed' for r in history))
+                        pilot.record.update(protected_model=ready['model_sha256'],protected_rows=ready['training_rows'],
+                                            protected_seconds=pilot.snapshots[-1]['elapsed'])
+                        pilot.save()
                 choice=pilot.tail(task,spec,metric,choice,checkpoint,history,observed,payloads,sealed,generator,
                                   executor,profile,timeout,blocked)
                 log.write_json('pre_refit_proposal_selection.json',choice)

@@ -18,16 +18,18 @@ from scripts.unified_released_study import ROOT, env, read, require, save, sha
 from scripts.verify_conditional_study_receipts import score_from_counts
 from superagent.experiment_policy import identity
 from superagent.predict import create_predictions
-from superagent.proposal_value import MODES
+from superagent.proposal_value import MODES, DELIVERED_MODES, PAID_MODES
 
 
 PLAN=ROOT/'research/proposal_value_1126/protocol.json'
+DELIVERED_PLAN=PLAN.with_name('delivered_protocol.json')
 CASES=('p81','p82','p83','p84')
+DELIVERED_CASES=('p85','p86')
 ARCHIVE='985e501fbe891f050e2134be6d4cdb79e955435e240ea8f238b3fdb92ed839aa'
 
 
-def source():
-    files=[PLAN,Path(__file__),ROOT/'scripts/reflection_study_observer/sitecustomize.py',
+def source(delivered=False):
+    files=[DELIVERED_PLAN if delivered else PLAN,Path(__file__),ROOT/'scripts/reflection_study_observer/sitecustomize.py',
            ROOT/'scripts/ab_acceptance_guard/sitecustomize.py',ROOT/'scripts/run_planner_self_review.py',
            ROOT/'scripts/verify_conditional_study_receipts.py']
     return dict(runtime=source_identity(ROOT),audit={str(p.relative_to(ROOT)):sha(p) for p in files})
@@ -69,6 +71,25 @@ def datasets(archive):
     yield 'p84','text','macro_f1',x[subset],y[subset]
 
 
+def delivered_datasets():
+    r=np.random.default_rng(261185)
+    x=r.normal(size=(560,11))
+    radius=x[:,0]**2+.8*x[:,1]**2
+    signal=np.where(x[:,2]>-.2,1.5-radius,.8*x[:,3]-.65*x[:,4]+.45*x[:,1])
+    y=(signal+r.normal(0,.64,len(x))>0)^(r.random(len(x))<.08)
+    yield 'p85','tabular','balanced_accuracy',x,y.astype(int)
+    r=np.random.default_rng(261186)
+    y=r.integers(0,3,480)
+    iy,ix=np.indices((16,16))
+    cy,cx=r.uniform(5,10,size=(2,len(y),1,1))
+    angle=np.asarray([0.,np.pi/3,2*np.pi/3])[y,None,None]+r.normal(0,.19,(len(y),1,1))
+    length=r.uniform(1.8,3.3,(len(y),1,1))
+    dy,dx=length*np.sin(angle),length*np.cos(angle)
+    spots=sum(np.exp(-((iy-cy-s*dy)**2+(ix-cx-s*dx)**2)/3.3) for s in (-1,1))
+    image=r.normal(95,28,(len(y),16,16))+r.uniform(56,96,(len(y),1,1))*spots
+    yield 'p86','image','accuracy',np.clip(image,0,255).astype('uint8'),y
+
+
 def prepare(a,smoke=False):
     a.root.mkdir(parents=True,exist_ok=False)
     (a.root/'evaluation').mkdir()
@@ -78,7 +99,7 @@ def prepare(a,smoke=False):
         x=rng.normal(size=(130,6))
         cases=[('smoke','tabular','accuracy',x,(x[:,1]+rng.normal(size=len(x))>0).astype(int))]
     else:
-        cases=datasets(a.archive)
+        cases=delivered_datasets() if a.delivered else datasets(a.archive)
     for case,kind,metric,x,y in cases:
         folder=a.root/case
         folder.mkdir()
@@ -90,7 +111,7 @@ def prepare(a,smoke=False):
         np.save(truth,y[outer],allow_pickle=False)
         inputs[case]=dict(train=len(train),outer=len(outer),metric=metric,train_sha=sha(folder/'train.zip'),
                           input_sha=sha(folder/'input.zip'),truth_sha=sha(truth))
-    save(a.root/'protocol.json',dict(source=source(),inputs=inputs,smoke=smoke))
+    save(a.root/'protocol.json',dict(source=source(a.delivered),inputs=inputs,smoke=smoke))
 
 
 def settings(a,work,folder,mode):
@@ -100,7 +121,7 @@ def settings(a,work,folder,mode):
         s.pop(key,None)
     s.update(PYTHONPATH=os.pathsep.join(map(str,(ROOT/'scripts/reflection_study_observer',ROOT))),
              PROPOSAL_STUDY_OUTER_LABELS=str(a.root/'evaluation'),PROPOSAL_STUDY_OUTER_FEATURES=str(folder/'input.zip'))
-    if mode=='proposal-flash':
+    if mode in PAID_MODES:
         s.update(REFLECTION_STUDY_LIVE='1',SUPERAGENT_RESEARCH_REFLECTION_OUTBOX=str(a.ledger),
                  SUPERAGENT_TASK_BUDGET_ID='proposal-value-'+folder.name,SUPERAGENT_PLANNER_KEY_FILE=str(a.key_file),
                  NO_PROXY='aigc-api.hkust-gz.edu.cn',no_proxy='aigc-api.hkust-gz.edu.cn')
@@ -112,7 +133,7 @@ def run_one(a,case,mode):
     spec=protocol['inputs'][case]
     folder=a.root/case
     work=folder/mode
-    require(protocol['source']==source() and spec['train_sha']==sha(folder/'train.zip') and spec['input_sha']==sha(folder/'input.zip'),
+    require(protocol['source']==source(a.delivered) and spec['train_sha']==sha(folder/'train.zip') and spec['input_sha']==sha(folder/'input.zip'),
             'Source or task packets changed')
     if (work/'sealed.json').exists():
         return read(work/'sealed.json')
@@ -149,10 +170,12 @@ def run_one(a,case,mode):
     require(all(d['observed_trials']==[r['trial'] for r in history[:i]] for i,d in enumerate(decisions)),'Future trial used')
     events=[json.loads(s) for s in (agent/'llm_usage.jsonl').read_text().splitlines()]
     calls=[e for e in events if e.get('budget_request_id')]
-    require(len(calls)==outcome['new_api_requests']<=int(mode=='proposal-flash'),'Unmatched model requests')
+    require(len(calls)==outcome['new_api_requests']<=int(mode in PAID_MODES),'Unmatched model requests')
     if records['triggered']:
         req=read(agent/'experiment_proposal_input.json')
         require(records['input_digest']==identity(req) and max(req['reference_trials'])<=records['trigger_after_trials'],'Future proposal evidence')
+        if mode in DELIVERED_MODES:
+            require(records['brief_digest']==identity(read(agent/'proposal_brief.json')),'Changed proposal brief')
     if records['seal_opened']:
         require((agent/'guard_choice_before_labels.json').is_file() and mode!='evidence-control','Ungrounded confirmation')
     receipt=dict(status=outcome['status'],error=outcome.get('error'),model=final['model_sha256'],prediction=sha(delivered),
@@ -185,9 +208,9 @@ def reload_at(a,case,mode,key,snapshot):
 
 def freeze(a):
     frozen={}
-    for case in CASES:
+    for case in a.cases:
         arms={}
-        for mode in MODES:
+        for mode in a.modes:
             work=a.root/case/mode
             r=read(work/'sealed.json')
             trace=read(work/'run/agent/proposal_checkpoints.json')
@@ -197,6 +220,15 @@ def freeze(a):
             row=dict(final=dict(path=str((work/'delivery/predictions.csv').relative_to(a.root)),sha=r['prediction']),
                      fourth=reload_at(a,case,mode,'fourth',four),
                      seconds30=reload_at(a,case,mode,'seconds30',timed) if timed is not None else None)
+            if a.delivered:
+                protected=next((s for s in trace if s['selection']['model_file']=='core_ready_selected_model.joblib'),None)
+                if protected is not None:
+                    ready=protected['selection']
+                    require(ready==read(work/'run/agent/core_ready_final_selection.json') and
+                            ready['delivery_status']=='partial' and ready['model_sha256']==r['review']['protected_model'] and
+                            ready['training_rows']==len(read(work/'run/agent/proposal_partition.json')['pool']) and
+                            protected['elapsed']<=r['review']['decision_seconds'],'Unverified protected delivery')
+                    row['protected']=reload_at(a,case,mode,'protected',protected)
             arms[mode]=row
         frozen[case]=arms
     save(a.root/'frozen_predictions.json',frozen)
@@ -214,11 +246,13 @@ def score(a):
         y=np.load(truth,allow_pickle=False)
         measures={}
         rows={}
-        receipts=[read(a.root/case/m/'sealed.json') for m in MODES]
+        receipts=[read(a.root/case/m/'sealed.json') for m in a.modes]
         for key in ('primary_split','core_trace','reserve'):
             require(len({r[key] for r in receipts})==1,'Original route or data differed between arms')
         require(len({r['review'].get('input_digest') for r in receipts})==1,'Unequal proposal inputs')
-        for mode,receipt in zip(MODES,receipts):
+        if a.delivered:
+            require(len({r['review'].get('brief_digest') for r in receipts})==1,'Unequal proposal brief')
+        for mode,receipt in zip(a.modes,receipts):
             pred={key:get_predictions(a.root/info['path'],y,info['sha']) for key,info in arms[mode].items() if info}
             measures[mode]=pred
             calls=[]
@@ -232,7 +266,9 @@ def score(a):
                             wall=receipt['wall'],model_published_seconds=receipt['published_seconds'],review=receipt['review'])
             fits+=receipt['fits']
         comparisons={}
-        for key,first,second in [('B-A',MODES[1],MODES[0]),('C-B',MODES[2],MODES[1]),('C-A',MODES[2],MODES[0])]:
+        contrasts=[('Flash-local',DELIVERED_MODES[1],DELIVERED_MODES[0])] if a.delivered else [
+            ('B-A',MODES[1],MODES[0]),('C-B',MODES[2],MODES[1]),('C-A',MODES[2],MODES[0])]
+        for key,first,second in contrasts:
             comp={}
             for cut in measures[first].keys() & measures[second].keys():
                 new,old=measures[first][cut],measures[second][cut]
@@ -243,13 +279,14 @@ def score(a):
         report[case]=dict(metric=spec['metric'],outer=len(y),train=spec['train'],arms=rows,comparisons=comparisons)
     with sqlite3.connect(a.ledger.as_uri()+'?mode=ro',uri=True) as db:
         db.row_factory=sqlite3.Row
-        req=[dict(row) for row in db.execute('SELECT * FROM requests') if row['scope'] in {'proposal-value-'+c for c in CASES}]
+        req=[dict(row) for row in db.execute('SELECT * FROM requests') if row['scope'] in {'proposal-value-'+c for c in a.cases}]
         require({r['id'] for r in req}==request_ids.keys(),'A request is missing from the batch')
         transitions=[dict(r) for r in db.execute('SELECT * FROM transitions ORDER BY seq') if r['request_id'] in request_ids]
     inputs=outputs=unknown=0
     for r in req:
         case,e=request_ids[r['id']]
-        require(r['scope']=='proposal-value-'+case and e['role']=='experiment_proposal','Unexpected model scope or role')
+        role='protected_experiment_proposal' if a.delivered else 'experiment_proposal'
+        require(r['scope']=='proposal-value-'+case and e['role']==role,'Unexpected model scope or role')
         if r['status']=='known':
             require(e['served_model'].casefold()=='deepseek-v4.1-flash' and r['course_units']==1000*(e['input_tokens']+4*e['output_tokens']),
                     'Model identity or course token accounting mismatch')
@@ -260,15 +297,27 @@ def score(a):
         else:
             unknown+=1
     save(a.root/'pending_merge.json',dict(team_merge_state='pending_team_handoff',requests=req,transitions=transitions))
-    require(fits==sum(len(p.read_text().splitlines()) for p in a.root.glob('*/*/fits.jsonl'))<=192 and len(req)<=4,'Batch ceiling')
+    require(fits==sum(len(p.read_text().splitlines()) for p in a.root.glob('*/*/fits.jsonl'))<=16*len(a.cases)*len(a.modes)
+            and len(req)<=len(a.cases),'Batch ceiling')
     stats={k:{cut:dict(mean=float(np.mean(values)),worst=min(values),tasks=len(values)) for cut,values in by.items()} for k,by in paired.items()}
-    tested=sum(bool(v['arms'][MODES[2]]['review'].get('proposal_used')) for v in report.values())
-    distinct_tested=sum(bool((r:=v['arms'][MODES[2]]['review']).get('proposal_used') and r['tested_candidate']!=r['local_alternative']) for v in report.values())
-    success=bool(not unknown and distinct_tested and all(r['status']=='completed' for v in report.values() for r in v['arms'].values())
-                 and all(stats[k]['final']['mean']>0 and min(stats[k]['final']['worst'],stats[k]['fourth']['worst'])>=-.01 for k in ('C-B','C-A')))
-    result=dict(protocol=sha(PLAN),source=protocol['source'],cases=report,comparisons=stats,actual_fits=fits,requests=len(req),
+    reviews=[v['arms'][a.modes[-1]]['review'] for v in report.values()]
+    tested=sum(bool(r.get('proposal_used') and r.get('screen')) for r in reviews)
+    distinct_tested=sum(bool(r.get('proposal_used') and r.get('screen') and r['tested_candidate']!=r['local_alternative']) for r in reviews)
+    complete=all(r['status']=='completed' for v in report.values() for r in v['arms'].values())
+    if a.delivered:
+        comparison=stats['Flash-local']['final']
+        engineering=bool(len(req)==len(a.cases) and not unknown and complete and
+                         all(r.get('decision_time_status')=='valid' for r in reviews) and
+                         all(v['comparisons']['Flash-local'].get('protected',{}).get('changed')==0 for v in report.values()))
+        success=engineering and distinct_tested>0 and comparison['mean']>0 and comparison['worst']>=-.01
+    else:
+        success=bool(not unknown and distinct_tested and complete and all(stats[k]['final']['mean']>0 and
+                     min(stats[k]['final']['worst'],stats[k]['fourth']['worst'])>=-.01 for k in ('C-B','C-A')))
+    result=dict(protocol=sha(DELIVERED_PLAN if a.delivered else PLAN),source=protocol['source'],cases=report,comparisons=stats,actual_fits=fits,requests=len(req),
                 input_tokens=inputs,output_tokens=outputs,known_course_rmb=(inputs+4*outputs)/1e6,unknown=unknown,
                 executed_proposals=tested,distinct_executed_proposals=distinct_tested,meets_criterion=success,formal_test_accessed=False)
+    if a.delivered:
+        result['engineering_criterion']=engineering
     save(a.root/'completion.json',result)
     save(a.output,result)
 
@@ -277,9 +326,11 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('stage',choices=('prepare','smoke','local','paid','freeze','score'))
     p.add_argument('root',type=lambda x:Path(x).resolve())
+    p.add_argument('--delivered',action='store_true',help='Run the separately registered protected-delivery follow-up')
     for key in ('weights','archive','ledger','key-file','output'):
         p.add_argument('--'+key,type=lambda x:Path(x).resolve())
     a=p.parse_args()
+    a.cases,a.modes=(DELIVERED_CASES,DELIVERED_MODES) if a.delivered else (CASES,MODES)
     if a.stage=='prepare':
         prepare(a)
     elif a.stage=='smoke':
@@ -287,12 +338,12 @@ if __name__=='__main__':
         require(run_one(a,'smoke','evidence-local')['status']=='completed','Anonymous CLI smoke failed')
     elif a.stage=='local':
         with ThreadPoolExecutor(max_workers=2) as pool:
-            list(pool.map(lambda pair:run_one(a,*pair),[(c,m) for c in CASES for m in MODES[:2]]))
+            list(pool.map(lambda pair:run_one(a,*pair),[(c,m) for c in a.cases for m in a.modes[:-1]]))
     elif a.stage=='paid':
-        for case in CASES:
+        for case in a.cases:
             with sqlite3.connect(a.ledger.as_uri()+'?mode=ro',uri=True) as db:
                 require(not db.execute("SELECT 1 FROM requests WHERE status!='known'").fetchone(),'New paid dispatch halted on unresolved usage')
-            require(not run_one(a,case,MODES[2])['unknown'],'Unresolved request; stop paid dispatch')
+            require(not run_one(a,case,a.modes[-1])['unknown'],'Unresolved request; stop paid dispatch')
     elif a.stage=='score':
         score(a)
     elif os.environ.get('AB_B1_OFFLINE')=='1':

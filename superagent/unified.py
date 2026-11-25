@@ -90,7 +90,7 @@ def reflection_client(directory,mode='flash'):
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         thinking_mode='disabled' if mode=='proposal-flash' else None,
+                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash') else None,
                          account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
@@ -103,7 +103,7 @@ def command(args):
         return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if reflection else configured_flash(args.run_dir)

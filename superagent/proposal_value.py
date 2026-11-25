@@ -16,6 +16,8 @@ from .splits import grouped_partition, take
 
 
 MODES=('evidence-control','evidence-local','proposal-flash')
+DELIVERED_MODES=('delivered-local','delivered-flash')
+PAID_MODES=('proposal-flash','delivered-flash')
 PROMPT=(
     'Propose one cheap experiment to explain shared errors from actual, numbered training trials. The ordinary '
     'search continues independently. All listed alternatives are executable. Return concise JSON; do not invent '
@@ -27,6 +29,24 @@ PROMPT=(
     'Cite measured evidence and link the proposed representation or estimator to the hypothesis. The normal '
     'two-fold confirmation and final independent comparison still apply. You can decline. No external scores.'
 )
+
+def proposal_brief(packet):
+    """Retain every executable option in index order and label the ordinary next move."""
+    options=packet['options']
+    def describe(name):
+        for index,row in enumerate(options):
+            if row['name']==name:
+                return dict(option=index,estimator=row['estimator'])
+        return name
+    ordinary=packet['ordinary_next']
+    return dict(metric=packet['metric'],kind=packet['kind'],rows=packet['rows'],
+        shared_errors=packet['shared_errors'],shared_errors_by_label=packet['shared_errors_by_label'],
+        reference_trials=packet['reference_trials'],reference_score=packet['reference_score'],
+        measured=packet['measured'],minority_fraction=packet['minority_fraction'],remaining_fits=packet['remaining_fits'],
+        ordinary_next=dict(action=ordinary['action'],methods=[describe(n) for n in ordinary['members']],split=ordinary['split']),
+        current_local_exploration=[describe(n) for n in packet['local_exploration']],
+        option_columns=['index','estimator','representation','settings','fits'],
+        options=[[i,row['estimator'],row['representation'],row['settings'],row['fit_cost']] for i,row in enumerate(options)])
 
 
 def split_search(task,seed,partition):
@@ -103,6 +123,7 @@ class ProposalStudy:
         self.extra={}
         self.snapshot_caps={}
         self.tail_completed=0
+        self.protected_selection=None
 
     def save(self):
         self.log.write_json('experiment_proposal.json',self.record)
@@ -160,13 +181,24 @@ class ProposalStudy:
         self.log.write_json('experiment_proposal_input.json',self.packet)
         self.record.update(triggered=True,trigger_after_trials=len(history),input_digest=identity(self.packet),
                            shared_errors=count,options=len(options),new_configurations=len(self.extra))
-        if self.mode=='proposal-flash' and self.flash is not None:
-            self.flash.set_deadline(min(self.deadline-5,time.monotonic()+90))
+        delivered=self.mode in DELIVERED_MODES
+        evidence=proposal_brief(self.packet) if delivered else self.packet
+        if delivered:
+            self.log.write_json('proposal_brief.json',evidence)
+            self.record['brief_digest']=identity(evidence)
+        if self.mode in PAID_MODES and self.flash is not None:
+            self.flash.set_deadline(min(self.deadline-5,time.monotonic()+(150 if delivered else 90)))
             self.threads=ThreadPoolExecutor(max_workers=1)
-            self.future=self.threads.submit(self.flash.ask,dict(instruction=PROMPT,evidence=self.packet),
-                                           self.log,'experiment_proposal',cost_ceiling=.12)
+            instruction=PROMPT
+            role='experiment_proposal'
+            if delivered:
+                role='protected_experiment_proposal'
+                instruction+=(' The ordinary move listed will proceed. Suggest a materially different test only if the '
+                              'observations justify it. A local choice can evolve as results arrive. Write short JSON.')
+            self.future=self.threads.submit(self.flash.ask,dict(instruction=instruction,evidence=evidence),
+                                           self.log,role,cost_ceiling=.12)
             self.record['reply_status']='pending'
-        elif self.mode=='proposal-flash':
+        elif self.mode in PAID_MODES:
             self.record['reply_status']='unavailable'
         self.save()
 
@@ -221,7 +253,11 @@ class ProposalStudy:
             missing=sum(name not in observed[f] for f in folds)
             return missing*cap['classifier_fits']+max(reserve,cap['refit_classifier_fits'])<=remaining
         local=next((a['members'][0] for a in ranked if a['action']=='explore' and affordable(a['members'][0])),None)
-        plan=self.collect(min(12.,max(0.,(self.deadline-time.monotonic())/5))) if local and len(folds)==2 else self.collect(0.)
+        wait=12.
+        if self.mode in DELIVERED_MODES:
+            wait=90. if self.protected_selection is not None else 0.
+        wait=min(wait,max(0.,(self.deadline-time.monotonic())/5)) if local and len(folds)==2 else 0.
+        plan=self.collect(wait)
         name=local
         use=bool(plan and plan['decision']=='experiment' and len(folds)==2 and plan['candidate'] in caps
                  and plan['candidate'] not in blocked and plan['candidate'] not in core_members and affordable(plan['candidate']))
@@ -229,7 +265,8 @@ class ProposalStudy:
             name=plan['candidate']
         self.record.update(local_alternative=local,tested_candidate=name if len(folds)==2 else None,
                            proposal_used=use,decision_time_status=self.record['reply_status'],
-                           core_members=core_members,backup=backup,remaining_at_tail=remaining)
+                           core_members=core_members,backup=backup,remaining_at_tail=remaining,
+                           decision_seconds=time.monotonic()-self.start)
         self.log.write_json('tail_choice.json',dict(candidate=name,local=local,proposal_used=use,plan=plan,folds=folds,
                             ordinary=core_members,reserved_refits=reserve,remaining=remaining))
         self.save()
@@ -247,7 +284,7 @@ class ProposalStudy:
                                       reserve=max(reserve,cap['refit_classifier_fits'])+later)
                         observed[fold][name]=planner_observation(joblib.load(path),facts,payloads[fold],metric)
                         self.tail_completed+=1
-                        self.snapshot(checkpoint,sum(r['status']=='completed' for r in history)+self.tail_completed)
+                        self.snapshot(self.protected_selection or checkpoint,sum(r['status']=='completed' for r in history)+self.tail_completed)
                         if fold=='primary':
                             files[name]=path
                     row=observed[fold][name]

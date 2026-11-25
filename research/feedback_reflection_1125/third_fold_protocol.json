@@ -1,0 +1,7 @@
+{
+  "question": "On the four existing control traces, what would a third within-training measurement resolve after opposite signed challenger results?",
+  "status": "Follow-up after the development scores and incumbent records were seen. The challenger has never been evaluated on the selected third fold. Prospective only for that new measurement.",
+  "eligibility": "Use complete protected stops with two strictly opposite signed score deltas. The additional fold must have disjoint evaluation rows, a previously measured single incumbent, and an as-yet unmeasured challenger. Consider all four original control runs.",
+  "rule": "Keep the delivered model unless the challenger wins on the new fold, wins at least two of three folds, and the row-count-weighted mean increase over the three folds is at least 0.003 on the task metric. Measure row changes on the additional fold. Seal the selected model before evaluating its outer predictions.",
+  "budget": "Reuse the incumbent and two completed comparisons. At most one new evaluation fit and, only upon adoption, one final refit across the panel. Each eligible task still stays within its original 16-fit limit. Zero model API calls."
+}

@@ -38,6 +38,10 @@ def route_of(candidate):
     from .ab_methods import ROUTES
     if candidate in ROUTES:
         return ROUTES[candidate]
+    if candidate.startswith('open_'):
+        route, _, signature=candidate.rpartition('_')
+        if route[5:].isidentifier() and len(signature)==20 and all(ch in '0123456789abcdef' for ch in signature):
+            return route
     if candidate.startswith('generated_'):return candidate.rsplit('_',1)[0]
     if candidate.startswith("recipe_"):return candidate.rsplit("_",1)[0]
     for name in ('edit_pair','category_cross','style_tree','style_blend','symmetric_stats','adaptive_catboost','neural_pair','learned_stack'):

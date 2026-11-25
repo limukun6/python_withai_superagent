@@ -1,0 +1,173 @@
+{
+  "model": "5188dc6b7372f09e72e1bbea07f02c11f3d8232cc11f78e0efc8a7fe84a39a29",
+  "training_rows": 6608,
+  "winner": "equal_soft_vote",
+  "members": [
+    "minilm_l12_with_corpus_familiarity",
+    "e5_small_text_with_lexical_features"
+  ],
+  "fits": 10,
+  "actions": [
+    {
+      "action": "explore",
+      "candidate_id": "word_C0.05",
+      "split_id": "primary",
+      "reason": "Shared first eligible candidate.",
+      "evidence_trials": [],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        1
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "primary",
+      "reason": "Explore a feasible route using prior route coverage and observed primary scores.",
+      "evidence_trials": [
+        2,
+        3
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "explore",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "primary",
+      "reason": "An eligible frozen encoder has no observed trial; the remaining budget covers exploration and matched comparison.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_l12_with_corpus_familiarity",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "e5_small_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "confirm",
+      "candidate_id": "minilm_text_with_lexical_features",
+      "split_id": "confirmation_1",
+      "reason": "Check the proposed pair and the strongest single on the same confirmation rows.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "estimated_classifier_fits": 1
+    },
+    {
+      "action": "stop",
+      "candidate_id": null,
+      "split_id": null,
+      "reason": "Finish the paired comparison and deliver the selected model or pair.",
+      "evidence_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "estimated_classifier_fits": 0
+    }
+  ],
+  "invoked_as": "superagent unified",
+  "policy": "matched_preference",
+  "fit_records": [
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "word_C0.05"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_text_with_lexical_features"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "minilm_l12_with_corpus_familiarity"
+    },
+    {
+      "classifier": "LogisticRegression",
+      "candidate": "e5_small_text_with_lexical_features"
+    }
+  ],
+  "new_api_calls": 0,
+  "source_digest": "5eae2121e4413ecee464a2c7ea9984c5a7f223d335403c64d4075ff9fb0a1eaa"
+}

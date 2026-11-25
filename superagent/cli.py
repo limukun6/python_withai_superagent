@@ -90,6 +90,13 @@ def _validate(args):
 
 def _run(args):
     catalog = getattr(args, 'preference_catalog', 'standard')
+    if getattr(args,'method_space','existing')=='runtime' and (
+            args.scheduler!='ab-v1' or args.planner not in ('local','raw-history','checked-history') or
+            getattr(args,'local_text_proposals','off')!='off'):
+        raise ValueError('Runtime method space requires the adaptive A/B entry and its method selector')
+    if getattr(args,'local_method_search','off') in ('evidence','open') and (
+            args.scheduler!='ab-v1' or args.planner!='local' or getattr(args,'local_text_proposals','off')!='off'):
+        raise ValueError('Local method search requires the local adaptive A/B scheduler')
     if getattr(args,'proposal_contract','strict-v1')=='grounded-v1' and args.planner!='checked-history':
         raise ValueError('Grounded proposals require checked-history planning')
     if getattr(args,'issue_layering','off')!='off' and getattr(args,'proposal_contract','strict-v1')!='grounded-v1':
@@ -307,6 +314,15 @@ def _resume_status(args):
 def build_parser():
     parser=argparse.ArgumentParser(description='Schema-driven classification SuperAgent')
     commands=parser.add_subparsers(dest='command',required=True)
+    from . import unified
+    common=commands.add_parser('unified',help='Train with the common budgeted, training-only classification planner')
+    common.add_argument('task_package')
+    common.add_argument('--run-dir',required=True)
+    common.add_argument('--seed',type=int,default=18643)
+    common.add_argument('--fit-limit',type=int,default=10)
+    common.add_argument('--trial-timeout',type=float,default=300)
+    common.add_argument('--time-limit',type=float,default=1200)
+    common.set_defaults(handler=unified.command)
     from .adaptive_local import command
     adaptive=commands.add_parser('adaptive-local',help='Offline accuracy prototype: explore, replicate, or stop')
     adaptive.add_argument('task_package')
@@ -332,7 +348,7 @@ def build_parser():
     run.add_argument('--plan-fragment',choices=['off','advisory'],default='off',
                      help='AB: let a validated plan step replace the planner call while it still holds')
     run.add_argument('--plan-fragment-file',help='AB: JSON file holding the plan fragment (test hook, default none)')
-    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity'], default='standard',
+    run.add_argument('--preference-catalog', choices=['standard','deep','deep-edit','deep-e5','deep-bge','deep-familiarity','deep-e5-familiarity','varied'], default='standard',
                      help='Optional verified native twelve-layer preference candidates in the shared A/B executor')
     run.add_argument('--cover-untried-encoder', action='store_true',
                      help='Permit one affordable additional exploration of an unobserved frozen encoder in adaptive complement mode')
@@ -348,6 +364,10 @@ def build_parser():
     run.add_argument('--history-policy',choices=['strict','incremental-research'],default='strict',help='Research mode retains imported unknown historical charges; full course budget remains unverified')
     run.add_argument('--candidate-coverage',choices=['off','routes'],default='off',help='AB Flash: prefer unseen feasible method routes in early exploration, without extra calls')
     run.add_argument('--local-text-proposals',choices=['off','evidence'],default='off',help='Local AB-v1 only: propose bounded text recipes from verified observations')
+    run.add_argument('--method-space',choices=['existing','runtime'],default='existing',
+                     help='Discover and compose the same compatible methods for local or history planning')
+    run.add_argument('--local-method-search',choices=['off','evidence','open'],default='off',
+                     help='Rank all feasible model configurations by training profile, observed results and unexplored representations')
     run.add_argument('--task-profile',choices=['off','train'],default='off',help='AB: share bounded training-only facts with both planners')
     run.add_argument('--proposal-contract',choices=['strict-v1','calibrated-v2','grounded-v1'],default='strict-v1',help='AB Flash: optional calibrated or evidence-bound proposal contract')
     run.add_argument('--menu-view',choices=['full','compact'],default='full',

@@ -43,6 +43,10 @@ def candidate_swap_rule(candidate):
     function = candidate.fit_predict
     while isinstance(function, partial):
         function = function.func
+    if candidate.params.get('runtime_composed'):
+        from .open_methods import fit_pipeline
+        if function is fit_pipeline and candidate.params.get('kind')=='pair_text':
+            return {'symmetric':'preserves','preference':'flips'}[candidate.params['semantics']]
     if function is fit_hashed_pair or function is fit_tfidf_pair:
         return 'preserves'
     if function is fit_recipe and candidate.params.get('kind') == 'pair_text':

@@ -9,11 +9,12 @@ from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
 from . import numeric_kernel
+from . import ab_varied_preferences
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
 ADAPTER_VERSION = '1.5'
-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,*(name for _,name in TRANSFER_METHODS.values())}
+FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):
@@ -55,7 +56,11 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
                 continue
             validate_candidate_semantics(kind, pair, candidate)
         route = route_of(name)
-        if name == FIELDS or 'catboost' in route:
+        if name in ab_varied_preferences.ESTIMATORS:
+            estimator=ab_varied_preferences.ESTIMATORS[name]
+            if (estimator=='catboost' and find_spec('catboost') is None) or (estimator=='linear_svm' and metric.requires_scores):
+                continue
+        elif name == FIELDS or 'catboost' in route:
             estimator = 'catboost'
             if find_spec('catboost') is None:
                 continue
@@ -77,9 +82,9 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
         menu.append(dict(id=name, params=dict(params), route=route, input_kind=kind,
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
-                         supports_probabilities=estimator != 'rbf_svm', expected_classifier_fits=1,
+                         supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
                          resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
-                         origin='b_port' if name in ROUTES else 'shared_baseline'))
+                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
     return menu
 
 

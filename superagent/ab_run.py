@@ -248,7 +248,12 @@ def command(args):
         from .ab_flash import preflight
         ledger, allowance, accounting = preflight(args)  # Before data, credentials, or a request.
     task_path = Path(args.task_package).expanduser().resolve()
-    task = load_development_task(task_path)
+    unified_mode = getattr(args,'unified',False)
+    if unified_mode:
+        from .unified import training_input
+        task = training_input(task_path)
+    else:
+        task = load_development_task(task_path)
     spec = TaskSpec.from_task(task).record()
     metric = MetricSpec.for_task(task)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S_%fZ')
@@ -282,7 +287,10 @@ def command(args):
         resume_record = adopt(parent, directory, ledger_path=(args.budget_ledger if history_mode else None),
                               sources_now=frozen, task_archive_sha256=sha(task_path))
     training_profile_value=None
-    if getattr(args,'task_profile','off')=='train':
+    search_mode=getattr(args,'local_method_search','off')
+    shared_space=getattr(args,'method_space','existing')=='runtime'
+    method_search=unified_mode or shared_space or search_mode in ('evidence','open')
+    if getattr(args,'task_profile','off')=='train' or method_search:
         from .task_profile import training_facts
         training_profile_value=training_facts(task)
         logger.write_json('training_profile.json',training_profile_value)
@@ -332,8 +340,12 @@ def command(args):
                 if getattr(args,'resolve_single_conflict',False):
                     from . import ab_single_conflict as complement_policy
         logger.write_json('run_manifest.json', dict(entrypoint='superagent run', adapter_version=ADAPTER_VERSION,
+            **({'invoked_as':'superagent unified','training_only':True,
+                'unified_policy':'matched_preference' if complement else 'open_search'} if unified_mode else {}),
             scheduler=args.scheduler, catalog_scope=args.catalog_scope,
             preference_catalog=getattr(args,'preference_catalog','standard'),
+            **({'local_method_search':search_mode} if search_mode!='off' else {}),
+            **({'method_space':'runtime'} if shared_space else {}),
             **({'feedback_view':'compact'} if getattr(args,'feedback_view','full')=='compact' else {}),
             **({'thinking_mode':args.thinking_mode} if getattr(args,'thinking_mode',None) else {}),
             **({'reasoning_effort':args.reasoning_effort_level} if getattr(args,'reasoning_effort_level',None) else {}),
@@ -363,6 +375,12 @@ def command(args):
             python=platform.python_version(), dependencies={k:importlib.metadata.version(k)
             for k in ('numpy','scipy','scikit-learn','joblib')},
             provided_validation_role='score only after final model freeze'))
+        baseline_caps=caps
+        method_space=None
+        if shared_space or search_mode=='open' or (unified_mode and not complement):
+            from .open_methods import MethodSpace
+            method_space=MethodSpace(spec,training_profile_value,directory)
+            caps,_=method_space.refresh([],baseline_caps)
         if not caps:
             raise ValueError('No registered executable method supports this task/semantics/dependencies')
         trusted, allowed = freeze_partitions(task, directory, args.seed, metric, preference_vote=complement)
@@ -378,6 +396,10 @@ def command(args):
                       time_limit_seconds=args.time_limit)
         while True:
             budget['elapsed_seconds'] = time.monotonic() - began
+            if method_space is not None:
+                caps,generation=method_space.refresh(history,baseline_caps)
+                executor.caps=caps
+                logger.write_json(f'method_space_{len(history)+1}.json',generation)
             state = dict(ab_schema_version=1, task=spec, history=history,
                          available_candidates=untried_candidates(caps, history), prediction_evidence=evidence,
                          budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
@@ -425,6 +447,19 @@ def command(args):
                     budget['used_llm_requests'] = client.request_count
 
             local_recipe_proposals=[]
+            local_method_choices=[]
+            def select_method(eligible, verified):
+                from .ab_method_search import choose_with_history
+                if unified_mode:
+                    from .unified import categorical_opening
+                    choice=categorical_opening(state,caps,eligible,verified)
+                else:
+                    choice=choose_with_history(state,caps,eligible,verified,choose if picker else None)
+                if 'candidates' not in choice:
+                    return choice
+                local_method_choices.append(choice)
+                logger.write_json(f'method_choice_{number}.json',choice)
+                return choice
             def compose(eligible, verified, capabilities):
                 from .ab_text_recipes import propose
                 proof=propose(eligible,verified,capabilities)
@@ -445,9 +480,10 @@ def command(args):
                 action = fixed_action(state, capabilities=caps, trusted_partitions=trusted,
                                       on_explore=choose if picker else None)
             else:
-                optional_local=({'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
+                optional_local=({'on_local_method':select_method} if method_search else
+                                {'on_local_recipe':compose} if getattr(args,'local_text_proposals','off')=='evidence' else {})
                 action = next_action(state, capabilities=caps, trusted_partitions=trusted,
-                                     on_explore=choose if picker else None,**optional_local)
+                                     on_explore=choose if picker and not method_search else None,**optional_local)
             if action['action'] == 'explore' and fragment_state is not None:
                 planned_candidate, planned_report = planned(
                     [cap_id for cap_id in (candidate['id'] for candidate in state['available_candidates'])
@@ -472,7 +508,7 @@ def command(args):
                 if getattr(args,'proposal_contract','strict-v1')=='grounded-v1':action['reason']=picker.last_proposal.reason
                 action['evidence_trials'] = list(dict.fromkeys([*action['evidence_trials'],*proposal['evidence_trials']]))
             logger.event('planner_routing', trial=number, action=action['action'],
-                source='local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
+                source='local_model_evidence' if local_method_choices else 'local_text_evidence' if local_recipe_proposals else 'flash' if proposal else 'local_after_request_cap' if picker and client.request_count>=3
                     and action['action']=='explore' else 'shared_local_rule',
                 used_llm_requests=client.request_count if client else 0)
             actions.append(action)

@@ -1,0 +1,1082 @@
+[
+  {
+    "trial": 1,
+    "candidate": "logistic_C0.05",
+    "params": {
+      "C": 0.05
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.6788298691301001,
+    "search_score": 0.6652281134401973,
+    "train_metrics": {
+      "accuracy": 0.6788298691301001,
+      "macro_f1": 0.665618861422372,
+      "primary_metric": "accuracy",
+      "score": 0.6788298691301001,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.6652281134401973,
+      "macro_f1": 0.6506810115165729,
+      "primary_metric": "accuracy",
+      "score": 0.6652281134401973,
+      "rows": 1622
+    },
+    "score_gap": 0.01360175568990285,
+    "train_accuracy": 0.6788298691301001,
+    "search_accuracy": 0.6652281134401973,
+    "generalization_gap": 0.01360175568990285,
+    "class_recall": [
+      0.5436046511627907,
+      0.7548179871520343
+    ],
+    "training_seconds": 0.48051299998769537,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "logistic_C0.05",
+      "params": {
+        "C": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "logistic_C0.05",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.687000000034459,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 2,
+    "candidate": "extra_trees_leaf1",
+    "params": {
+      "min_samples_leaf": 1,
+      "n_estimators": 400
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9946112394149346,
+    "search_score": 0.7065351418002466,
+    "train_metrics": {
+      "accuracy": 0.9946112394149346,
+      "macro_f1": 0.9945217776358636,
+      "primary_metric": "accuracy",
+      "score": 0.9946112394149346,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.7065351418002466,
+      "macro_f1": 0.6975213164901328,
+      "primary_metric": "accuracy",
+      "score": 0.7065351418002466,
+      "rows": 1622
+    },
+    "score_gap": 0.288076097614688,
+    "train_accuracy": 0.9946112394149346,
+    "search_accuracy": 0.7065351418002466,
+    "generalization_gap": 0.288076097614688,
+    "class_recall": [
+      0.6293604651162791,
+      0.7633832976445396
+    ],
+    "training_seconds": 15.056138000043575,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "extra_trees_leaf1",
+      "params": {
+        "min_samples_leaf": 1,
+        "n_estimators": 400
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "extra_trees_leaf1",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 17.04700000002049,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 3,
+    "candidate": "catboost_depth4_reg3.0",
+    "params": {
+      "depth": 4,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7787528868360277,
+    "search_score": 0.7435265104808878,
+    "train_metrics": {
+      "accuracy": 0.7787528868360277,
+      "macro_f1": 0.7707707920121291,
+      "primary_metric": "accuracy",
+      "score": 0.7787528868360277,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.7435265104808878,
+      "macro_f1": 0.7314471206122231,
+      "primary_metric": "accuracy",
+      "score": 0.7435265104808878,
+      "rows": 1622
+    },
+    "score_gap": 0.03522637635513992,
+    "train_accuracy": 0.7787528868360277,
+    "search_accuracy": 0.7435265104808878,
+    "generalization_gap": 0.03522637635513992,
+    "class_recall": [
+      0.626453488372093,
+      0.8297644539614561
+    ],
+    "training_seconds": 47.72279150004033,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth4_reg3.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth4_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 49.18799999996554,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 4,
+    "candidate": "catboost_depth4_reg10.0",
+    "params": {
+      "depth": 4,
+      "l2_leaf_reg": 10.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7815242494226328,
+    "search_score": 0.7472256473489519,
+    "train_metrics": {
+      "accuracy": 0.7815242494226328,
+      "macro_f1": 0.773506741822622,
+      "primary_metric": "accuracy",
+      "score": 0.7815242494226328,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.7472256473489519,
+      "macro_f1": 0.735175026123302,
+      "primary_metric": "accuracy",
+      "score": 0.7472256473489519,
+      "rows": 1622
+    },
+    "score_gap": 0.03429860207368085,
+    "train_accuracy": 0.7815242494226328,
+    "search_accuracy": 0.7472256473489519,
+    "generalization_gap": 0.03429860207368085,
+    "class_recall": [
+      0.6293604651162791,
+      0.8340471092077087
+    ],
+    "training_seconds": 48.74151119997259,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth4_reg10.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth4_reg10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 50.15600000001723,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 5,
+    "candidate": "catboost_depth4_reg3.0",
+    "params": {
+      "depth": 4,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.7730846308000616,
+    "search_score": 0.7441717791411043,
+    "train_metrics": {
+      "accuracy": 0.7730846308000616,
+      "macro_f1": 0.7645221079628122,
+      "primary_metric": "accuracy",
+      "score": 0.7730846308000616,
+      "rows": 6487
+    },
+    "search_metrics": {
+      "accuracy": 0.7441717791411043,
+      "macro_f1": 0.7317321433998276,
+      "primary_metric": "accuracy",
+      "score": 0.7441717791411043,
+      "rows": 1630
+    },
+    "score_gap": 0.028912851658957295,
+    "train_accuracy": 0.7730846308000616,
+    "search_accuracy": 0.7441717791411043,
+    "generalization_gap": 0.028912851658957295,
+    "class_recall": [
+      0.6471471471471472,
+      0.8112033195020747
+    ],
+    "training_seconds": 49.6088903999771,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth4_reg3.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth4_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 50.96899999998277,
+    "evaluation_payload_sha256": "e47caf97946477f98c12bb345802bae01992293258f86a2eb398b35f6855ebf1",
+    "label_sha256": "b7dff5eb9d06feb689b3587bab6171cc4e5d66e20142582721b36bdfce18ebb9",
+    "row_ids_sha256": "bb1757e393b2cdcb635a540927e4d116a2d78db16fd6a3dda28225d77570fc6a",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 6,
+    "candidate": "catboost_depth4_reg10.0",
+    "params": {
+      "depth": 4,
+      "l2_leaf_reg": 10.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.778480036997071,
+    "search_score": 0.7460122699386503,
+    "train_metrics": {
+      "accuracy": 0.778480036997071,
+      "macro_f1": 0.7699943543645529,
+      "primary_metric": "accuracy",
+      "score": 0.778480036997071,
+      "rows": 6487
+    },
+    "search_metrics": {
+      "accuracy": 0.7460122699386503,
+      "macro_f1": 0.7331394024524506,
+      "primary_metric": "accuracy",
+      "score": 0.7460122699386503,
+      "rows": 1630
+    },
+    "score_gap": 0.03246776705842069,
+    "train_accuracy": 0.778480036997071,
+    "search_accuracy": 0.7460122699386503,
+    "generalization_gap": 0.03246776705842069,
+    "class_recall": [
+      0.6441441441441441,
+      0.8163900414937759
+    ],
+    "training_seconds": 48.86875790002523,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth4_reg10.0",
+      "params": {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth4_reg10.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 50.31199999997625,
+    "evaluation_payload_sha256": "e47caf97946477f98c12bb345802bae01992293258f86a2eb398b35f6855ebf1",
+    "label_sha256": "b7dff5eb9d06feb689b3587bab6171cc4e5d66e20142582721b36bdfce18ebb9",
+    "row_ids_sha256": "bb1757e393b2cdcb635a540927e4d116a2d78db16fd6a3dda28225d77570fc6a",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 7,
+    "candidate": "extra_trees_leaf2",
+    "params": {
+      "min_samples_leaf": 2,
+      "n_estimators": 400
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.9903002309468822,
+    "search_score": 0.7022194821208385,
+    "train_metrics": {
+      "accuracy": 0.9903002309468822,
+      "macro_f1": 0.9901477556152207,
+      "primary_metric": "accuracy",
+      "score": 0.9903002309468822,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.7022194821208385,
+      "macro_f1": 0.6937975542920662,
+      "primary_metric": "accuracy",
+      "score": 0.7022194821208385,
+      "rows": 1622
+    },
+    "score_gap": 0.28808074882604373,
+    "train_accuracy": 0.9903002309468822,
+    "search_accuracy": 0.7022194821208385,
+    "generalization_gap": 0.28808074882604373,
+    "class_recall": [
+      0.6322674418604651,
+      0.7537473233404711
+    ],
+    "training_seconds": 13.729111999971792,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "extra_trees",
+      "class": "ExtraTreesClassifier",
+      "module": "sklearn.ensemble._forest",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "extra_trees_leaf2",
+      "params": {
+        "min_samples_leaf": 2,
+        "n_estimators": 400
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "extra_trees_leaf2",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 15.84299999999348,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "extra_trees",
+      "observed_class": "ExtraTreesClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 8,
+    "candidate": "logistic_C0.25",
+    "params": {
+      "C": 0.25
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.6789838337182448,
+    "search_score": 0.6627620221948212,
+    "train_metrics": {
+      "accuracy": 0.6789838337182448,
+      "macro_f1": 0.6663887491596021,
+      "primary_metric": "accuracy",
+      "score": 0.6789838337182448,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.6627620221948212,
+      "macro_f1": 0.6490153858447696,
+      "primary_metric": "accuracy",
+      "score": 0.6627620221948212,
+      "rows": 1622
+    },
+    "score_gap": 0.016221811523423613,
+    "train_accuracy": 0.6789838337182448,
+    "search_accuracy": 0.6627620221948212,
+    "generalization_gap": 0.016221811523423613,
+    "class_recall": [
+      0.5479651162790697,
+      0.7473233404710921
+    ],
+    "training_seconds": 0.4088192000053823,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "logistic",
+      "class": "LogisticRegression",
+      "module": "sklearn.linear_model._logistic",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "logistic_C0.25",
+      "params": {
+        "C": 0.25
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "logistic_C0.25",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 1.6570000000065193,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "logistic",
+      "observed_class": "LogisticRegression",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 9,
+    "candidate": "catboost_depth6_reg3.0",
+    "params": {
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "primary",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8140107775211701,
+    "search_score": 0.752157829839704,
+    "train_metrics": {
+      "accuracy": 0.8140107775211701,
+      "macro_f1": 0.8076511591099288,
+      "primary_metric": "accuracy",
+      "score": 0.8140107775211701,
+      "rows": 6495
+    },
+    "search_metrics": {
+      "accuracy": 0.752157829839704,
+      "macro_f1": 0.7407672453687137,
+      "primary_metric": "accuracy",
+      "score": 0.752157829839704,
+      "rows": 1622
+    },
+    "score_gap": 0.0618529476814661,
+    "train_accuracy": 0.8140107775211701,
+    "search_accuracy": 0.752157829839704,
+    "generalization_gap": 0.0618529476814661,
+    "class_recall": [
+      0.6395348837209303,
+      0.8351177730192719
+    ],
+    "training_seconds": 73.52015359996585,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth6_reg3.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth6_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 74.82799999997951,
+    "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+    "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+    "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  },
+  {
+    "trial": 10,
+    "candidate": "catboost_depth6_reg3.0",
+    "params": {
+      "depth": 6,
+      "l2_leaf_reg": 3.0,
+      "iterations": 600,
+      "learning_rate": 0.05
+    },
+    "split_id": "confirmation_1",
+    "proposal": null,
+    "status": "completed",
+    "error_slices": null,
+    "primary_metric": "accuracy",
+    "metric_spec": {
+      "name": "accuracy",
+      "labels": [
+        0,
+        1
+      ],
+      "direction": "maximize"
+    },
+    "train_score": 0.8042238322799445,
+    "search_score": 0.7552147239263803,
+    "train_metrics": {
+      "accuracy": 0.8042238322799445,
+      "macro_f1": 0.797154711275597,
+      "primary_metric": "accuracy",
+      "score": 0.8042238322799445,
+      "rows": 6487
+    },
+    "search_metrics": {
+      "accuracy": 0.7552147239263803,
+      "macro_f1": 0.7427353196316958,
+      "primary_metric": "accuracy",
+      "score": 0.7552147239263803,
+      "rows": 1630
+    },
+    "score_gap": 0.0490091083535642,
+    "train_accuracy": 0.8042238322799445,
+    "search_accuracy": 0.7552147239263803,
+    "generalization_gap": 0.0490091083535642,
+    "class_recall": [
+      0.6546546546546547,
+      0.8246887966804979
+    ],
+    "training_seconds": 72.11290339997504,
+    "feature_cache": {
+      "enabled": false
+    },
+    "classifier_fits": 1,
+    "training_metadata": null,
+    "selected_iterations": null,
+    "estimator": {
+      "family": "catboost",
+      "class": "CatBoostClassifier",
+      "module": "catboost.core",
+      "parameters": {},
+      "source": "fitted_estimator"
+    },
+    "resolved_configuration": {
+      "id": "catboost_depth6_reg3.0",
+      "params": {
+        "depth": 6,
+        "l2_leaf_reg": 3.0,
+        "iterations": 600,
+        "learning_rate": 0.05
+      },
+      "origin": "static",
+      "registry_sha256": null,
+      "semantic_check": {
+        "candidate": "catboost_depth6_reg3.0",
+        "swap_label_rule": "unknown"
+      }
+    },
+    "worker_wall_seconds": 73.53099999995902,
+    "evaluation_payload_sha256": "e47caf97946477f98c12bb345802bae01992293258f86a2eb398b35f6855ebf1",
+    "label_sha256": "b7dff5eb9d06feb689b3587bab6171cc4e5d66e20142582721b36bdfce18ebb9",
+    "row_ids_sha256": "bb1757e393b2cdcb635a540927e4d116a2d78db16fd6a3dda28225d77570fc6a",
+    "metric_identity": {
+      "status": "confirmed",
+      "expected": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      },
+      "observed": {
+        "name": "accuracy",
+        "labels": [
+          0,
+          1
+        ],
+        "direction": "maximize"
+      }
+    },
+    "configuration_fact_check": {
+      "declared": null,
+      "observed": "catboost",
+      "observed_class": "CatBoostClassifier",
+      "status": "not_declared",
+      "scope": "Declared classifier versus the fitted estimator of this trial"
+    },
+    "hypothesis_check": {
+      "status": "not_stated"
+    },
+    "explanation_audit": null
+  }
+]

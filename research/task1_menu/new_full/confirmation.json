@@ -1,0 +1,237 @@
+{
+  "primary_metric": "accuracy",
+  "enabled": true,
+  "grouping": "shared_text_for_pairs_exact_rows_otherwise",
+  "seeds": [
+    707
+  ],
+  "shortlist": [
+    "supported_field_interactions"
+  ],
+  "primary_candidate": "supported_field_interactions",
+  "selection_rule": "Best of initial three; replace on two paired wins and mean gain >= 0.002",
+  "candidates": [
+    {
+      "candidate": "supported_field_interactions",
+      "primary_accuracy": 0.7552404438964242,
+      "measurements": [
+        {
+          "seed": 707,
+          "trial": 2,
+          "candidate": "supported_field_interactions",
+          "params": {
+            "pair_limit": 3,
+            "depth": 6,
+            "l2_leaf_reg": 3.0,
+            "iterations": 600,
+            "representation": "training-selected categorical field interactions"
+          },
+          "split_id": "primary",
+          "proposal": null,
+          "status": "completed",
+          "error_slices": null,
+          "primary_metric": "accuracy",
+          "metric_spec": {
+            "name": "accuracy",
+            "labels": [
+              0,
+              1
+            ],
+            "direction": "maximize"
+          },
+          "train_score": 0.8269438029253272,
+          "search_score": 0.7552404438964242,
+          "train_metrics": {
+            "accuracy": 0.8269438029253272,
+            "macro_f1": 0.8208593122886864,
+            "primary_metric": "accuracy",
+            "score": 0.8269438029253272,
+            "rows": 6495
+          },
+          "search_metrics": {
+            "accuracy": 0.7552404438964242,
+            "macro_f1": 0.7457735454999477,
+            "primary_metric": "accuracy",
+            "score": 0.7552404438964242,
+            "rows": 1622
+          },
+          "score_gap": 0.07170335902890301,
+          "train_accuracy": 0.8269438029253272,
+          "search_accuracy": 0.7552404438964242,
+          "generalization_gap": 0.07170335902890301,
+          "class_recall": [
+            0.6627906976744186,
+            0.8233404710920771
+          ],
+          "training_seconds": 49.288971700007096,
+          "feature_cache": {
+            "enabled": false
+          },
+          "classifier_fits": 1,
+          "training_metadata": {
+            "selected_field_pairs": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                11
+              ],
+              [
+                2,
+                12
+              ]
+            ],
+            "strongest": [
+              {
+                "fields": [
+                  1,
+                  2
+                ],
+                "gains": [
+                  0.010080544668500658,
+                  0.014613367054469096
+                ],
+                "support": 0.010080544668500658
+              },
+              {
+                "fields": [
+                  2,
+                  11
+                ],
+                "gains": [
+                  0.009724708356255943,
+                  0.009875346478408036
+                ],
+                "support": 0.009724708356255943
+              },
+              {
+                "fields": [
+                  2,
+                  12
+                ],
+                "gains": [
+                  0.009237183015859986,
+                  0.010956435330529823
+                ],
+                "support": 0.009237183015859986
+              },
+              {
+                "fields": [
+                  1,
+                  3
+                ],
+                "gains": [
+                  0.0067386800067058055,
+                  0.006397611707751464
+                ],
+                "support": 0.006397611707751464
+              },
+              {
+                "fields": [
+                  2,
+                  3
+                ],
+                "gains": [
+                  0.005654276606883336,
+                  0.0052265079246693845
+                ],
+                "support": 0.0052265079246693845
+              },
+              {
+                "fields": [
+                  2,
+                  18
+                ],
+                "gains": [
+                  0.0047082378349823815,
+                  0.006790735753198887
+                ],
+                "support": 0.0047082378349823815
+              }
+            ],
+            "selection": "minimum held-out log-probability gain in two training-group halves"
+          },
+          "selected_iterations": null,
+          "estimator": {
+            "family": "catboost",
+            "class": "CatBoostClassifier",
+            "module": "catboost.core",
+            "parameters": {},
+            "source": "fitted_estimator"
+          },
+          "resolved_configuration": {
+            "id": "supported_field_interactions",
+            "params": {
+              "pair_limit": 3,
+              "depth": 6,
+              "l2_leaf_reg": 3.0,
+              "iterations": 600,
+              "representation": "training-selected categorical field interactions"
+            },
+            "origin": "static",
+            "registry_sha256": null,
+            "semantic_check": {
+              "candidate": "supported_field_interactions",
+              "swap_label_rule": "unknown"
+            }
+          },
+          "worker_wall_seconds": 50.56199999997625,
+          "evaluation_payload_sha256": "4b171278336b2bc4be2a52407742eed288230632bd92b95801b7f2a2c1f6fa9e",
+          "label_sha256": "9e065b01fdcf1179dd6217e8c65e36931ae8f5b6b98e1fd108f8a84169dfbc27",
+          "row_ids_sha256": "20db7f6bfc61a808302ee62c439b6daab07e2cea2a368052cb1392d4e9ed08bb",
+          "metric_identity": {
+            "status": "confirmed",
+            "expected": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            },
+            "observed": {
+              "name": "accuracy",
+              "labels": [
+                0,
+                1
+              ],
+              "direction": "maximize"
+            }
+          },
+          "configuration_fact_check": {
+            "declared": null,
+            "observed": "catboost",
+            "observed_class": "CatBoostClassifier",
+            "status": "not_declared",
+            "scope": "Declared classifier versus the fitted estimator of this trial"
+          },
+          "hypothesis_check": {
+            "status": "not_stated"
+          },
+          "explanation_audit": null
+        }
+      ],
+      "complete": true,
+      "primary_score": 0.7552404438964242,
+      "mean_score": 0.7552404438964242,
+      "mean_accuracy": 0.7552404438964242,
+      "sample_sd": null
+    }
+  ],
+  "valid_confirmation": true,
+  "selected_candidate": "supported_field_interactions",
+  "selection_score": 0.7552404438964242,
+  "changed": false,
+  "b_scheduler_review": {
+    "initial": "supported_field_interactions",
+    "incumbent": "supported_field_interactions",
+    "promotions": [],
+    "basis": [
+      "primary"
+    ],
+    "primary_metric": "accuracy"
+  },
+  "independent_confirmation_observed": false
+}

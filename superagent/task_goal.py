@@ -30,6 +30,16 @@ def resolve_goal(task, metric):
     metric_declared=metric_source in ('declared_manifest','declared_spec','declared_task_readme')
     positive=spec.get('positive_label')
     applies=len(metric.labels)==2 and metric.name in ('binary_f1','roc_auc')
+    # A declared positive class that the primary metric never reads must not be
+    # reported as confirmed: that would let a reader believe it shaped scoring.
+    if positive is not None and not applies:
+        positive_field={'value':positive,'source':'declared_spec','status':'not_applicable',
+                        'reason':'the declared positive label is unused because the primary metric '
+                                 f'{metric.name} does not score a single positive class'}
+    else:
+        positive_field={'value':positive if positive is not None else (metric.labels[-1] if applies else None),
+            'source':'declared_spec' if positive is not None else ('default_sorted_last' if applies else 'not_applicable'),
+            'status':'confirmed' if positive is not None else ('unknown' if applies else 'not_applicable')}
     pair=schema.get('pair_semantics')
     return {'resolution_version':1,'fields':{
         'input_kind':{'value':task.kind,'source':spec.get('schema_origin','task_adapter'),'status':shape_status},
@@ -37,9 +47,7 @@ def resolve_goal(task, metric):
                           'status':'confirmed' if metric_declared else 'unknown',
                           'effective_policy':'maximize'},
         'label_domain':{'value':list(metric.labels),'source':'training_labels','status':'confirmed'},
-        'positive_label':{'value':positive if positive is not None else (metric.labels[-1] if applies else None),
-            'source':'declared_spec' if positive is not None else ('default_sorted_last' if applies else 'not_applicable'),
-            'status':'confirmed' if positive is not None else ('unknown' if applies else 'not_applicable')},
+        'positive_label':positive_field,
         'pair_semantics':{'value':pair,'source':'input_schema' if pair is not None else 'undeclared',
                           'status':'confirmed' if pair is not None else 'unknown'}},
         'scope':'Effective defaults remain executable; unknown intent is not a verified task declaration'}

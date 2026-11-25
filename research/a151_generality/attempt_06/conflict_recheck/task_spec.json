@@ -1,0 +1,79 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "text",
+  "metric": "accuracy",
+  "test_accessed": false,
+  "schema_origin": "manifest_v1",
+  "input_format": "csv",
+  "input_schema": {
+    "modality": "text",
+    "columns": [
+      {
+        "name": "text",
+        "type": "text"
+      }
+    ],
+    "target": "label"
+  },
+  "positive_label": "yes",
+  "input_columns": [
+    {
+      "name": "text",
+      "type": "text"
+    }
+  ],
+  "goal_sources": {
+    "primary_metric": "declared_manifest"
+  },
+  "kind": "single_text",
+  "train_rows": 300,
+  "validation_rows": 300,
+  "provided_validation_available": true,
+  "class_count": 2,
+  "task_kind": "single_text_classification",
+  "model_kind": "single_text",
+  "metric_spec": {
+    "name": "accuracy",
+    "labels": [
+      "no",
+      "yes"
+    ],
+    "direction": "maximize"
+  },
+  "goal_resolution": {
+    "resolution_version": 1,
+    "fields": {
+      "input_kind": {
+        "value": "single_text",
+        "source": "manifest_v1",
+        "status": "confirmed"
+      },
+      "primary_metric": {
+        "value": "accuracy",
+        "source": "declared_manifest",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "label_domain": {
+        "value": [
+          "no",
+          "yes"
+        ],
+        "source": "training_labels",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": "yes",
+        "source": "declared_spec",
+        "status": "not_applicable",
+        "reason": "the declared positive label is unused because the primary metric accuracy does not score a single positive class"
+      },
+      "pair_semantics": {
+        "value": null,
+        "source": "undeclared",
+        "status": "unknown"
+      }
+    },
+    "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+  }
+}

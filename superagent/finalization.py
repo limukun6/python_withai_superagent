@@ -162,8 +162,13 @@ def finalize(task, history, best_model, best_id, best_score, payload, directory,
     kinds = {"categorical_tabular": "categorical_tabular_binary", "pair_text": "pair_text_binary"}
     task_kind=kinds.get(task.kind,task.kind+'_classification')
     if task.kind=='categorical_tabular' and len(np.unique(task.y_train))>2:task_kind='categorical_tabular_multiclass'
+    effective_goal = task.spec.get('goal_resolution')
+    if effective_goal is None:
+        from .contracts import TaskSpec
+        effective_goal = TaskSpec.from_task(task).goal_resolution
     logger.write_json("task_spec.json", {**task.spec,'metric':metric.name,'metric_spec':metric.record(), "task_kind": task_kind,"model_kind":task.kind,
-                                       "class_count":int(len(np.unique(task.y_train)))})
+                                       "class_count":int(len(np.unique(task.y_train))),
+                                       'goal_resolution': effective_goal})
     logger.write_json("final_selection.json", {
         "selected_experiment": "ensemble" if vote is not None else f"trial_{next(r['trial'] for r in history if r['candidate'] == best_id)}",
         "family": family, "single_candidate": best_id, "single_model_file": single_file,

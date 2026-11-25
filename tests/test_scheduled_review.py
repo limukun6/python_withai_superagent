@@ -16,6 +16,26 @@ def action(member='b',fold='confirmation_2'):
 
 
 class ScheduledReviewTests(unittest.TestCase):
+    def test_unmatched_evidence_preserves_planned_fit_and_allows_a_later_verified_review(self):
+        with TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            banks,folds,caps,metric=setup()
+            banks['primary']['b']['row_key']='different-rows'
+            client=Mock()
+            def advise(*args,**kwargs):
+                self.assertEqual(json.loads((folder/'scheduled_review.json').read_text())['status'],'awaiting_review')
+                return dict(decision='keep',reason='Little to gain')
+            client.ask.side_effect=advise
+            review=ScheduledReview(RunLogger(folder),client,time.monotonic()+500)
+            checkpoint=dict(model_format='verified_trial_v1',single_candidate='a',model_sha256='baseline')
+            review.before(action(),5,checkpoint,banks,folds,caps,metric,6)
+            client.ask.assert_not_called()
+            self.assertEqual(review.record['status'],'skipped_invalid_evidence')
+            banks['primary']['b']['row_key']='primary'
+            review.before(action(),6,checkpoint,banks,folds,caps,metric,5)
+            self.assertEqual(review.record['status'],'declined')
+            client.ask.assert_called_once()
+
     def test_only_the_measurement_already_selected_can_trigger(self):
         banks,folds,caps,metric=setup()
         def options(choice,remaining=3):

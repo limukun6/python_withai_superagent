@@ -1,0 +1,161 @@
+{
+  "records": {
+    "n71": {
+      "replay": true,
+      "trigger_trial": 9,
+      "review": {
+        "status": "published",
+        "reason": "rank_reversal_before_planned_confirmation",
+        "executed": "publish_challenger_checkpoint",
+        "trial": 9,
+        "input_digest": "c2b666ee18d7e9f63f8356e7658f60c970220c1892567f73f100d582d1d8bfee",
+        "incumbent": "numeric_tabular_rbf_svm_C10.0",
+        "incumbent_sha256": "c3ebbe1aedde4bfa001bb6f50cb98200b958ef48ff6ca66925a8278ea90b140b",
+        "plan": {
+          "decision": "measure",
+          "option": 0,
+          "cited_folds": [
+            "primary",
+            "confirmation_1"
+          ],
+          "if_pass": "publish_challenger_checkpoint",
+          "if_fail": "keep_current_checkpoint",
+          "minimum_delta": 0.012328714629024178,
+          "reason": "Folds are mixed and small (n=60): primary favors incumbent by 0.0045, confirmation_1 favors challenger by only 0.0012. The scheduled confirmation_2 result should gate switching only if its delta is strictly positive and at least the displayed 0.01233 threshold, so the three-fold row-weighted gain reaches 0.003.",
+          "opportunity_cost": "The confirmation_2 measurement is already scheduled and runs either way; switching costs no incremental training, so the only cost is possible interim artifact churn if a noisy third fold passes."
+        },
+        "third": {
+          "fold": "confirmation_2",
+          "rows": 60,
+          "incumbent": 0.5050505050505051,
+          "challenger": 0.6548821548821548,
+          "delta": 0.14983164983164976,
+          "gained": 17,
+          "lost": 8
+        },
+        "weighted_delta": 0.04883431173420853,
+        "passed": true,
+        "interim_sha256": "ad2e84cbc81d65e5959835feb77f40b63be2ee08b6bf6a641da6e0435f81a220",
+        "delivered_sha256": "01d07372b8b5219061bab8437ed9b4f21233a7289d448597b97ae2f205fc19c8"
+      },
+      "usage": [
+        {
+          "served_model": "DeepSeek-V4.1-Flash",
+          "input_tokens": 651,
+          "output_tokens": 1601,
+          "course_cost_rmb": 0.007055,
+          "latency_seconds": 52.061,
+          "finish_reason": "stop"
+        }
+      ],
+      "fit_counts": [
+        15,
+        15
+      ],
+      "search_equal": true,
+      "final_predictions_equal": true,
+      "interim_changed_rows": 19
+    },
+    "n74": {
+      "replay": false,
+      "trigger_trial": null,
+      "review": {
+        "status": "skipped",
+        "reason": "no_decisive_scheduled_confirmation",
+        "executed": "keep_current_checkpoint",
+        "delivered_sha256": "e7f8f234f07d81902ee28de88e28519d2986edcc3db9d12c40767443775d8816"
+      },
+      "usage": [],
+      "fit_counts": [
+        9,
+        9
+      ],
+      "search_equal": true,
+      "final_predictions_equal": true,
+      "outer_rows": 160,
+      "final_scores": [
+        0.5604636591478697,
+        0.5604636591478697
+      ],
+      "final_changed_rows": 0
+    },
+    "n75": {
+      "replay": false,
+      "trigger_trial": 7,
+      "review": {
+        "status": "measured",
+        "reason": "rank_reversal_before_planned_confirmation",
+        "executed": "keep_current_checkpoint",
+        "trial": 7,
+        "input_digest": "70276941f0e11e92338708c41570857ca0c6dcea3efcc88101de2a948bed12d0",
+        "incumbent": "open_HistGradientBoostingClassifier_0f9525f01210ac0a4231",
+        "incumbent_sha256": "5423d136d11c1128f16e4cbab09a8234b6f50ba55777982215be9fce67d69bd5",
+        "plan": {
+          "decision": "measure",
+          "option": 0,
+          "cited_folds": [
+            "primary",
+            "confirmation_1"
+          ],
+          "if_pass": "publish_challenger_checkpoint",
+          "if_fail": "keep_current_checkpoint",
+          "minimum_delta": 0.10688654060066748,
+          "reason": "Folds disagree: primary delta -0.1023, confirmation_1 delta +0.0044. The scheduled confirmation_2 measurement can resolve this. With 60 rows per fold and balanced_accuracy, require the displayed threshold: third-fold delta >= 0.1069, strictly positive, so row-weighted 3-fold gain >= 0.003. Switching has no incremental training cost; if it fails, keep incumbent.",
+          "opportunity_cost": "None incremental: confirmation_2 is already scheduled and the full search continues either way; only the interim artifact may switch."
+        },
+        "third": {
+          "fold": "confirmation_2",
+          "rows": 60,
+          "incumbent": 0.5090497737556561,
+          "challenger": 0.5147058823529411,
+          "delta": 0.005656108597285048,
+          "gained": 13,
+          "lost": 12
+        },
+        "weighted_delta": -0.03074347733446081,
+        "passed": false,
+        "interim_sha256": "5423d136d11c1128f16e4cbab09a8234b6f50ba55777982215be9fce67d69bd5",
+        "delivered_sha256": "2a14c229fc86abea1af5bbdb45a41e13d31b1379cd3c0e7a7385a25445d03ea1"
+      },
+      "usage": [
+        {
+          "served_model": "DeepSeek-V4.1-Flash",
+          "input_tokens": 700,
+          "output_tokens": 2003,
+          "course_cost_rmb": 0.008712,
+          "latency_seconds": 63.329,
+          "finish_reason": "stop"
+        }
+      ],
+      "fit_counts": [
+        15,
+        15
+      ],
+      "search_equal": true,
+      "final_predictions_equal": true,
+      "interim_changed_rows": 0,
+      "outer_rows": 160,
+      "final_scores": [
+        0.541017162651551,
+        0.541017162651551
+      ],
+      "final_changed_rows": 0,
+      "interim_scores": [
+        0.5856558022358683,
+        0.5856558022358683
+      ],
+      "interim_corrected": 0,
+      "interim_spoiled": 0
+    }
+  },
+  "fits": 63,
+  "calls": 2,
+  "input_tokens": 1351,
+  "output_tokens": 3604,
+  "latency_seconds": 115.39,
+  "known_course_rmb": 0.015767,
+  "unresolved": 0,
+  "formal_test_accessed": false,
+  "fresh_signal": false,
+  "protocol_sha256": "582c2e39073e3a4e8853994b0d37ec69c8a7888ae5507679eba272d52eb5727c"
+}

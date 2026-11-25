@@ -34,13 +34,19 @@ class ScheduledReview:
         if 'trial' in self.record or choice['action']!='confirm' or checkpoint['model_format']!='verified_trial_v1':
             return
         incumbent=checkpoint['single_candidate']
-        options,_=feasible_probes([incumbent],observed,folds,caps,metric,remaining,scheduled=choice)
+        try:
+            options,_=feasible_probes([incumbent],observed,folds,caps,metric,remaining,scheduled=choice)
+        except (KeyError,ValueError,TypeError) as error:
+            self.log.event('scheduled_review_evidence_unavailable',trial=trial,reason=str(error)[:360])
+            self.record.update(status='skipped_invalid_evidence',reason='training_comparison_unavailable')
+            self.save()
+            return
         if not options:
             return
         packet=dict(metric=metric.name,incumbent=incumbent,options=options,remaining_fits=remaining,
                     scheduled_method=choice['members'][0],scheduled_fold=choice['split'],incremental_training_fits=0,
                     minimum_weighted_gain=MEAN_GAIN)
-        self.record.update(trial=trial,input_digest=identity(packet),incumbent=incumbent,
+        self.record.update(trial=trial,status='awaiting_review',input_digest=identity(packet),incumbent=incumbent,
                            incumbent_sha256=checkpoint['model_sha256'],reason='rank_reversal_before_planned_confirmation')
         self.log.write_json('scheduled_review_input.json',packet)
         self.log.write_json('scheduled_selection_before.json',checkpoint)

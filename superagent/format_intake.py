@@ -46,7 +46,7 @@ def declared_delimiter(prose):
 
 def manifest_descriptor(files, role):
     from .task_files import TrainingMembers
-    manifest = read_manifest(TrainingMembers(files) if role == 'train' else files)
+    manifest = read_manifest(TrainingMembers(files) if role == 'train' else files, read_metric=role == 'train')
     if manifest is None:
         return {}, {}, None
     descriptor = manifest.get('splits', {}).get(role, {})
@@ -220,7 +220,7 @@ def adapt_training(path, client=None, log=None):
             issue.verified_prior = prior
             raise issue from error
         if manifest and metric:
-            spec['goal_sources']['primary_metric'] = 'declared_manifest'
+            spec['goal_sources']['primary_metric'] = manifest.get('_metric_source','declared_manifest')
         spec.update(input_recipe=recipe, input_format=codec)
         if log:
             log.write_json('input_recipe.json', recipe)

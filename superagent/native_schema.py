@@ -52,10 +52,13 @@ def _column_type(values):
 
 
 def description(archive):
-    member = find_member(archive, ['readme.md', 'readme.txt'])
-    if member is None or archive.getinfo(member).file_size > 256 * 1024:
+    from .format_sources import decode_text,task_documents
+    names = task_documents(archive.namelist())
+    if not names:
         return ''
-    return archive.read(member).decode('utf-8-sig', errors='replace').replace(chr(96), '').replace('*', '')
+    if len(names)!=1 or archive.getinfo(names[0]).file_size > 256*1024:
+        raise ValueError('Task instructions exceed the reading limit or have multiple possible sources')
+    return decode_text(archive.read(names[0])).replace(chr(96), '').replace('*', '')
 
 
 def named_table(text,split):
@@ -135,10 +138,9 @@ def infer_manifest(archive, *, read_declarations=False):
     from .folder_images import infer_folder_manifest
     folder=infer_folder_manifest(archive)
     if folder is not None:
-        if read_declarations:
-            metric=declared_metric(description(archive))
-            if metric:
-                folder.update(metric=metric,_metric_source='declared_task_readme')
+        metric=declared_metric(description(archive))
+        if metric:
+            folder.update(metric=metric,_metric_source='declared_task_readme')
         return folder
     # This exact legacy categorical array convention keeps its existing adapter.
     if find_member(archive,['C_train.npy']) is not None:return None
@@ -178,7 +180,7 @@ def infer_manifest(archive, *, read_declarations=False):
         if x.dtype.kind not in 'biuf' or x.ndim not in (2,3,4):
             raise ValueError('Native arrays require numeric N,D or N,H,W[,C]; otherwise declare a supported manifest')
         manifest['modality']='tabular' if x.ndim==2 else 'image'
-    metric=declared_metric(prose)
+    metric=declared_metric(prose if read_declarations else description(archive))
     if metric:
         manifest.update(metric=metric,_metric_source='declared_task_readme')
     return manifest

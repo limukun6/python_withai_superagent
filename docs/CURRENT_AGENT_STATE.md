@@ -1,5 +1,7 @@
 # 当前接续状态：2026-11-25，发布验收v2：Task1新交付候选已成形，Task2待资产
 
+**B 侧统一入口，11 月 25 日。** 本地 `codex/task-driven-planning-1125` 已完成[陌生分类文件接入](ADAPTIVE_INPUT_20261125_zh.md)以及[指标和失败交付验收](METRICS_AND_VALID_PARTIAL_RESULTS_1125_zh.md)。前者有一次校园 Flash 真实调用，课程口径 ¥0.000829，等待合并团队账本。后者核实了同一组预测换指标会改变选择，并验证四种故障下均能交付逐行预测，真实 API 调用为零。本轮未重评 Task1、Task2。
+
 **2026-11-25 发布验收 v2（取代此前验收结论）**：① 只读查档未找到历史 1532 的任何一个模型摘要（`8c50b3ff…` portable table、`16e0a33c…` portable titles、`821fc7e7…` release table），也未找到 363 MB 交付包本体（184 个候选文件逐个算 SHA + 全盘 >300 MB 枚举，0 命中）⇒ **历史 1532 保留历史身份，不并入当前版本**。② Task1 新交付候选取自**完整自主运行**（`unified_agent` 9 fit、0 API、选中 `catboost_depth8_reg3.0`），指定验证 **1527/2030=0.752217**；模型/预测/任务包/源码/环境摘要全部记录，**独立进程 + 独立源码副本重载预测与交付完全一致**（预测值摘要 `f8d77292…`），产物在 `research/release_acceptance/delivery/`。③ **Task2 无法在当前环境核准**：交付的 12 层 MiniLM+E5 权重不在本机注册表内，重跑只能退回文本配方候选（6 fit、内部 0.6672、无指定验证分），因此不能"Task1 换新源、Task2 沿用旧分"宣称同版。④ 边界声明按复核收窄：训练读取只证明公开对象无测试数据（未做成员打开审计）；时间划分只覆盖字符串字典序与稳定性，相同时间戳可跨界故只主张**非递减**；逐 trial 指标只核了两份 accuracy 运行。⑤ 口径：本地运行不是 0 fit（A149/A150 共 19 次，本轮新增 15 次），全局累计仍双口径并列不写单一数。**研发探索可结束；功能冻结卡在 Task2 资产或"Task2 仅历史身份"的取舍，需发布层决定。** 报告 `docs/batches/RELEASE_ACCEPTANCE_V2_20261125_zh.md`，复核 `RELEASE_ACCEPTANCE_CODEX_REVIEW_20261125_zh.md`。
 
 11月25日接续只读核对：唯一ledger实读457/known¥7.925792/unknown16/pending0；A149两次探测含无效attempt共8fit/4API已记录。原1790fit为探测前快照，另有A149/A150报告把本地训练标0fit，须从物理fit日志去重后更新总数，不将0API当0训练。最新任务计划docs/NEXT_STAGE_TASK1_AND_INTEGRATION_20261125_zh.md：先适配B新统一入口及生命周期修复，再做Task1最多9fit研究筛查、有信号才两条至多11fit的完整自主路径；0API计划尚未执行。

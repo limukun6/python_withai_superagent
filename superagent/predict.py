@@ -12,6 +12,7 @@ import joblib
 import numpy as np
 
 from .data import load_prediction_features
+from .events import RunLogger, atomic_text
 from .models import predict_with_model,probability_with_model
 from .metrics import MetricSpec
 
@@ -73,6 +74,13 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
             or model.get("kind") != kind_to_loader[kind] or model.get("candidate") != selection["family"]):
             raise ValueError("Model bundle does not match its frozen task and selection.")
         model = model["model"]
+    elif model_format == 'verified_trial_v1':
+        metric = MetricSpec.from_payload({'metric_spec':specification['metric_spec']})
+        if (not isinstance(model,dict) or model.get('metrics',{}).get('resolved_configuration',{}).get('id') != selection['family']
+                or metric.check_identity(model['metrics'].get('metric_spec'))['status'] != 'confirmed'
+                or model.get('prediction_record',{}).get('evaluation_payload_sha256') != selection['evaluation_payload_sha256']):
+            raise ValueError('Verified partial trial differs from the frozen selection')
+        model = model['model']
     elif model_format != "bare_model":
         raise ValueError(f"Unsupported model format: {model_format}")
     features = load_prediction_features(task_package, kind_to_loader[kind], specification)
@@ -82,7 +90,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
     predictions,classes,scores,contract_check=validate_prediction_outputs(predictions,len(features),specification,classes,scores)
     destination = Path(output_path).resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with destination.open("w", newline="", encoding="utf-8") as file:
+    with atomic_text(destination, newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["row_id", "prediction"]+([f'score_{i}' for i in range(len(classes))] if scores is not None else []))
         writer.writerows([i,value,*scores[i].tolist()] if scores is not None else [i,value] for i,value in enumerate(predictions.tolist()))
@@ -90,13 +98,15 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         "time_utc": datetime.now(timezone.utc).isoformat(),
         "selected_experiment": selection["selected_experiment"],
         "prediction_count": int(len(predictions)),
+        "delivery_status": selection.get('delivery_status','completed'),
+        "source_trial": selection.get('source_trial'), "refit": selection.get('refit'),
+        "partial_reason": selection.get('partial_reason'),
         "input_source": str(Path(task_package).resolve()),
         "test_labels_read": False,
         "prediction_file": str(destination),
+        "prediction_sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
         'score_class_order':classes.tolist() if classes is not None else None,
         'prediction_contract':contract_check,
     }
-    (destination.parent / "prediction_manifest.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    RunLogger(destination.parent).write_json("prediction_manifest.json",manifest)
     return destination

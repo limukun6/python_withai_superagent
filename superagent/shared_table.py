@@ -62,8 +62,8 @@ def shared_source(archive,split,manifest,contract):
 
 
 @contextmanager
-def stage(archive,split,contract=None):
-    manifest=read_manifest(archive)
+def stage(archive,split,contract=None,*,for_partial_labels=False):
+    manifest=read_manifest(archive,for_partial_labels=for_partial_labels)
     member,required=shared_source(archive,split,manifest,contract)
     if not member:
         yield archive
@@ -121,6 +121,8 @@ def stage(archive,split,contract=None):
                 value['columns']=[c for c in value['columns'] if c['name']!=grouping]
             value['splits']={split:{'format':'csv','path':name}}
             out.writestr('manifest.json',json.dumps(value))
+            if split == 'train' and 'metric' not in value:
+                out.writestr('README.md',prose)
         elif split=='train':
             # Keep task semantics. The in-memory view has already resolved file-location declarations.
             out.writestr('README.md',prose)

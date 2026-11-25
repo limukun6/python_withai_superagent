@@ -12,6 +12,7 @@ import zipfile
 
 MAX_BYTES = 96 * 1024 * 1024
 MAX_MEMBERS = 4096
+TASK_DOCUMENTS = frozenset({'readme.md','readme.txt','task.md','task.txt','instructions.md','instructions.txt'})
 ROLE_WORDS = {
     'train': {'train', 'training', '训练', '训练集'},
     'test': {'test', 'testing', 'predict', 'prediction', 'predictions', 'inference', '测试', '测试集', '预测'},
@@ -30,6 +31,12 @@ class NativeContract(ValueError):
 def roles(name):
     tokens = set(re.split(r'[^\w]+|_', name.casefold()))
     return {key for key, words in ROLE_WORDS.items() if words & tokens}
+
+
+def task_documents(names):
+    return [checked_name(n) for n in names if PurePosixPath(n).name.casefold() in TASK_DOCUMENTS
+            and not any(part.startswith('.') or part == '__MACOSX' for part in PurePosixPath(n).parts)
+            and not roles(n).intersection({'validation','test'})]
 
 
 def checked_name(name):
@@ -87,8 +94,7 @@ class Package:
         return SimpleNamespace(file_size=self.size(name))
 
     def documentation(self):
-        docs = [n for n in self.names if PurePosixPath(n).name.casefold() in
-                {'readme.md', 'readme.txt', 'task.md', 'instructions.md'} and not roles(n)]
+        docs = task_documents(self.names)
         if len(docs) > 1:
             raise ValueError('Multiple task instructions need an explicit manifest')
         if not docs:
@@ -98,7 +104,7 @@ class Package:
     def data_names(self):
         return [n for n in self.names if not any(p.startswith('.') or p == '__MACOSX' for p in PurePosixPath(n).parts)
                 and PurePosixPath(n).name.casefold() not in
-                {'readme.md', 'readme.txt', 'task.md', 'instructions.md', 'info.json', 'manifest.json'}]
+                (TASK_DOCUMENTS | {'info.json','manifest.json'})]
 
 
 def decode_text(raw):
@@ -176,8 +182,8 @@ def package_files(value):
                     return checked_bytes(stream, limit)
             yield Package(members, read_tar, lambda n:members[n].size)
             return
-    docs = [p.name for p in path.parent.iterdir() if p.name.casefold() in
-            {'readme.md', 'readme.txt', 'instructions.md', 'task.md'} and p.is_file() and not p.is_symlink()]
+    docs = [p.name for p in path.parent.iterdir() if p.name.casefold() in TASK_DOCUMENTS
+            and p.is_file() and not p.is_symlink()]
     def read_standalone(name, limit):
         if name == path.name and body is not None:
             if len(body) > limit:

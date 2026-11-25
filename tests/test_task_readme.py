@@ -42,16 +42,17 @@ class TaskReadmeTests(unittest.TestCase):
                 self.assertEqual(task.spec['goal_sources']['primary_metric'],'declared_task_readme')
                 self.assertEqual(len(task.spec['task_description_source']['sha256']),64)
 
-    def test_negation_conflict_and_ambiguous_sources_stay_unknown(self):
+    def test_negation_and_ambiguous_sources_stay_unknown(self):
         cases=[('Do not report test accuracy.',False),('No requirement to report test accuracy.',False),
                ('Should we report test accuracy?',False),('We might report test accuracy.',False),
-               ('Report test accuracy. Report F1.',False),
                ('report test accuracy.',True)]
         for text,multiple in cases:
             with self.subTest(text=text),tempfile.TemporaryDirectory() as tmp:
                 task=load_training_task(self.package(Path(tmp),text,multiple))
                 goal=TaskSpec.from_task(task).record()['goal_resolution']['fields']['primary_metric']
                 self.assertEqual(goal['status'],'unknown')
+        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(ValueError,'conflicting'):
+            load_training_task(self.package(Path(tmp),'Report test accuracy. Report F1.'))
 
     def test_reverse_or_negated_preference_is_not_guessed(self):
         for text in ('The target label_pairwise is 0 if A had the higher rate and 1 if B did.',

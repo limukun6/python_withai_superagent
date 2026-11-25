@@ -4,13 +4,16 @@ import math
 import numpy as np
 from sklearn.metrics import accuracy_score,f1_score,balanced_accuracy_score,roc_auc_score
 
+from .metric_declarations import MetricDeclarationError, metric_name, resolved_name
+
 SUPPORTED=('accuracy','macro_f1','weighted_f1','micro_f1','binary_f1','balanced_accuracy','roc_auc')
 
 
 def validate_metric(name):
-    if not isinstance(name,str) or name not in SUPPORTED:
-        raise ValueError('Supported primary metrics are '+', '.join(SUPPORTED))
-    return name
+    value=metric_name(name)
+    if value=='f1':
+        raise MetricDeclarationError('F1 averaging must be resolved against the training class domain')
+    return value
 
 
 @dataclass(frozen=True)
@@ -19,7 +22,8 @@ class MetricSpec:
     labels: tuple
 
     def __post_init__(self):
-        validate_metric(self.name)
+        # Frozen worker records already carry an ordered class domain and a resolved metric.
+        object.__setattr__(self, "name", validate_metric(self.name))
         if len(self.labels)<2 or len(set(self.labels))!=len(self.labels):
             raise ValueError('Metric requires at least two distinct training classes')
         for value in self.labels:
@@ -35,7 +39,11 @@ class MetricSpec:
         if positive is not None:
             if len(labels)!=2 or positive not in labels:raise ValueError('positive_label must identify one of two training classes')
             labels=[v for v in labels if v!=positive]+[positive]
-        return cls(validate_metric(task.spec.get('metric','accuracy')),tuple(labels))
+        declared = task.spec.get('metric','accuracy')
+        name = resolved_name(declared,labels,positive)
+        if metric_name(declared) == 'f1' and positive is None:
+            labels.sort(key=lambda v: str(v).casefold() in ('1','1.0','true'))
+        return cls(name,tuple(labels))
 
     @classmethod
     def from_payload(cls,payload):

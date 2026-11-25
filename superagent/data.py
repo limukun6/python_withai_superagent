@@ -42,7 +42,7 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
     """Train-only capability for selection studies; never opens val or test."""
     with open_package(path,'train',shared=read_declarations) as archive:
         from .schema import read_manifest,load_manifest_split
-        manifest=read_manifest(archive)
+        manifest=read_manifest(archive, read_metric=True)
         if manifest is None:
             from .native_schema import infer_manifest
             manifest=infer_manifest(archive,read_declarations=read_declarations)
@@ -94,7 +94,7 @@ def _load_archive(path: Path) -> DevelopmentTask:
 
     with zipfile.ZipFile(path) as archive:
         from .schema import read_manifest,load_manifest_split
-        manifest=read_manifest(archive)
+        manifest=read_manifest(archive, read_metric=True)
         if manifest is None:
             from .native_schema import infer_manifest,add_native_split
             manifest=infer_manifest(archive)

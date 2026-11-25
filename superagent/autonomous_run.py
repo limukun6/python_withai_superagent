@@ -11,6 +11,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 
 from .ab_methods import PREFERENCE_CATALOG_ENV
 from .ab_run import Executor, explicit_windows, registered_capabilities, sha, sources
+from .autonomous_checkpoint import frozen_spec, interrupted, promote, standby
 from .contracts import TaskSpec
 from .data import TrainingTask, load_training_task
 from .events import RunLogger
@@ -116,9 +117,7 @@ def freeze_model(task, spec, metric, choice, executor, directory, log, timeout):
     model = models[0] if len(models)==1 else SoftVoteModel(task.kind,models,np.asarray(metric.labels))
     destination = directory/'selected_model.joblib'
     joblib.dump(dict(kind=task.kind,candidate=family,model=model),destination)
-    log.write_json('task_spec.json',dict(task.spec,task_kind=task.kind+'_classification',model_kind=task.kind,
-                    class_count=len(metric.labels),metric=metric.name,metric_spec=metric.record(),
-                    goal_resolution=spec['goal_resolution']))
+    log.write_json('task_spec.json',frozen_spec(task,spec,metric))
     selection = dict(selected_experiment='stop_'+identity(members)[:12],family=family,
                      ensemble_components=members if len(members)>1 else [],single_candidate=members[0],
                      primary_metric=metric.name,selection_metric='training folds',selection_score=choice['utility'],
@@ -138,7 +137,21 @@ def api_accounting(flash, log):
                 unresolved_api_requests=unknown, complete_run_course_cost_rmb=None if unknown else known)
 
 
-def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
+def train(package, directory, **options):
+    directory = Path(directory).resolve()
+    if directory.exists():
+        raise FileExistsError('Training requires a new run directory: '+str(directory))
+    try:
+        return _train(package,directory,**options)
+    except FileExistsError:
+        raise
+    except Exception as error:
+        if interrupted(directory,type(error).__name__+': '+str(error)[:500]):
+            return 0
+        raise
+
+
+def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
           flash_setup_issue=None):
     if type(fit_limit) is not int or not 2<=fit_limit<=11 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–11 physical fits including refits and positive finite deadlines')
@@ -169,11 +182,12 @@ def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=3
             except NativeContract:
                 raise native_error
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
-        phase='training partitions'
-        folds = partitions(task,seed)
+        log.event('selection_metric_resolved', **spec['goal_resolution']['fields']['primary_metric'])
     except DECODE_ERRORS as error:
         return record_input_failure(package,directory,log,error,phase,
                                     api_usage=api_accounting(flash,log), resolved_task=task)
+    checkpoint = standby(task,spec,metric,directory,log)
+    folds = partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -235,6 +249,11 @@ def train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=3
                     continue
                 bundle=joblib.load(destination)
                 observation=planner_observation(bundle,facts,payload,metric)
+                if fold == 'primary':
+                    try:
+                        checkpoint = promote(task,metric,checkpoint,monitor['trial'],name,destination,payload,observation,log)
+                    except (ValueError, OSError, RuntimeError, AssertionError) as error:
+                        log.event('checkpoint_not_promoted',trial=monitor['trial'],reason=str(error)[:320])
                 bank=observed[fold]
                 best=max(bank.values(),key=lambda o:o['score'],default=None)
                 paired=None

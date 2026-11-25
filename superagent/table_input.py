@@ -3,6 +3,8 @@ import csv
 import io
 import re
 
+from .metric_declarations import declared_metric
+
 
 def heading(archive,path,fmt):
     if fmt=='parquet':
@@ -78,19 +80,3 @@ def target_column(text,header):
     if len(conventional)!=1:
         raise ValueError('A unique declared target column is unavailable')
     return conventional[0]
-
-
-def declared_metric(text):
-    names={'accuracy':'accuracy','macro f1':'macro_f1','f1 macro':'macro_f1','weighted f1':'weighted_f1',
-           'f1 weighted':'weighted_f1','micro f1':'micro_f1','f1 micro':'micro_f1','binary f1':'binary_f1',
-           'balanced accuracy':'balanced_accuracy','roc auc':'roc_auc','准确率':'accuracy','宏平均f1':'macro_f1'}
-    terms='|'.join(re.escape(n) for n in sorted(names,key=len,reverse=True))
-    normalized=re.sub(r'[_-]+',' ',text.lower())
-    found=set()
-    for match in re.finditer(r'(?:\b(?:primary |evaluation |scoring )?metric\s*(?:is|[:=])?\s*|\breport\s+(?:test\s+)?|(?:评估指标|评价指标|主指标|指标)\s*(?:为|是|[:：])?\s*)('+terms+r')(?!\w)',normalized):
-        found.add(names[match[1]])
-    if len(found)>1:
-        raise ValueError('Conflicting primary metric declarations')
-    if not found and re.search(r'\b(?:primary|evaluation) metric\s*(?:is|[:=])\s*\S|(?:主指标|评估指标)\s*(?:为|是|[:：])\s*\S',normalized):
-        raise ValueError('Declared primary metric is unsupported or ambiguous')
-    return next(iter(found),None)

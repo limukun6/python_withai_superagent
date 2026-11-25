@@ -126,14 +126,19 @@ class ExperimentLLM:
         if self.disable_template_thinking:
             request_body["chat_template_kwargs"] = {"thinking": False, "enable_thinking": False}
         timeout=(10,60)
-        if self.deadline is not None:
-            remaining=self.deadline-time.monotonic()
+        deadline=self.deadline
+        if role in ('input_format','experiment_planner'):
+            now=time.monotonic()
+            remaining=180. if deadline is None else max(0.,deadline-now)
+            deadline=now+min(45.,remaining/4)
+        if deadline is not None:
+            remaining=deadline-time.monotonic()
             if remaining<=.05:raise PlanningTimeExhausted('No time remains for a new API request')
             timeout=(min(10.,remaining/4),min(60.,remaining*3/4))
         ticket=self.account.reserve(reserve,self.model) if self.account is not None else None
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve,
                      budget_request_id=ticket,
-                     request_timeout_seconds=timeout,planning_deadline_monotonic=self.deadline,
+                     request_timeout_seconds=timeout,planning_deadline_monotonic=deadline,
                      thinking_mode=self.thinking_mode, reasoning_effort=self.reasoning_effort,
                      chat_template_kwargs=request_body.get("chat_template_kwargs"), cache=request_body.get("cache"),
                      max_tokens=max_tokens, streaming=self.streaming)
@@ -153,7 +158,7 @@ class ExperimentLLM:
                         response.raise_for_status()
                         if not 200 <= response.status_code < 300:
                             raise requests.HTTPError(f'Unexpected HTTP status {response.status_code}')
-                        body = (read_chat_stream(response, self.deadline, request_started, progress)
+                        body = (read_chat_stream(response, deadline, request_started, progress)
                                 if self.streaming else response.json())
             else:
                 response = requests.post(self.api_url, **options)

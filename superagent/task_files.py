@@ -4,6 +4,7 @@ from pathlib import Path, PurePosixPath
 from types import SimpleNamespace
 import zipfile
 import re
+from .format_sources import TASK_DOCUMENTS
 
 
 TABLE_FORMATS = ('csv','tsv','parquet')
@@ -54,7 +55,7 @@ class LocalMembers:
         else:
             self.files={split+path.suffix.lower():path}
             for file in self.root.iterdir():
-                if file.name.casefold() in ('readme.md','readme.txt') and file.is_file() and not file.is_symlink():
+                if file.name.casefold() in TASK_DOCUMENTS and file.is_file() and not file.is_symlink():
                     self.files[file.name]=file
 
     def namelist(self):
@@ -71,7 +72,7 @@ class LocalMembers:
 
 
 @contextmanager
-def open_package(value,split,*,shared=False,contract=None):
+def open_package(value,split,*,shared=False,contract=None,for_partial_labels=False):
     from contextlib import nullcontext
     from .shared_table import stage
     path=Path(value).expanduser().resolve()
@@ -87,5 +88,5 @@ def open_package(value,split,*,shared=False,contract=None):
         source=package_files(path) if tar_or_gzip else zipfile.ZipFile(path)
     with source as opened:
         archive = TrainingMembers(opened) if split == 'train' else opened
-        with (stage(archive,split,contract) if shared or contract else nullcontext(archive)) as selected:
+        with (stage(archive,split,contract,for_partial_labels=for_partial_labels) if shared or contract else nullcontext(archive)) as selected:
             yield selected

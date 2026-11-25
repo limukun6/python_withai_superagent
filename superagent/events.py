@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import csv
 import json
+import os
+import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -11,6 +14,21 @@ from typing import Any
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+@contextmanager
+def atomic_text(path: Path, *, newline=None):
+    """Publish a complete file on the same filesystem, retaining its predecessor if writing fails."""
+    descriptor, name = tempfile.mkstemp(dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, 'w', encoding='utf-8', newline=newline) as stream:
+            yield stream
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 class RunLogger:
@@ -25,9 +43,9 @@ class RunLogger:
             file.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     def write_json(self, name: str, value: Any) -> None:
-        (self.run_dir / name).write_text(
-            json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        content = json.dumps(value, ensure_ascii=False, indent=2)
+        with atomic_text(self.run_dir / name) as stream:
+            stream.write(content)
 
     def write_experiments(self, rows: list[dict[str, Any]]) -> None:
         fields = [

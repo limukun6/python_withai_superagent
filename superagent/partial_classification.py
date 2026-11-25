@@ -9,6 +9,7 @@ import zipfile
 import numpy as np
 
 from .ab_run import sha
+from .events import RunLogger, atomic_text
 from .metrics import MetricSpec
 from .native_schema import declared_member, description, descriptor, find_member, named_table
 from .schema import _member, _validate_labels, read_manifest
@@ -27,17 +28,17 @@ def training_member(archive,manifest,field='path'):
     return desc,path
 
 
-def prior_evidence(package):
-    with open_package(package,'train',shared=True) as archive:
-        manifest=read_manifest(archive)
+def prior_evidence(package, *, unresolved_metric=False):
+    with open_package(package,'train',shared=True,for_partial_labels=unresolved_metric) as archive:
+        manifest=read_manifest(archive, read_metric=True, for_partial_labels=unresolved_metric)
         expected_prediction=None
         if manifest:
             desc=manifest.get('splits',{}).get('train',{})
             fmt=desc.get('format')
-            primary=manifest.get('metric','accuracy')
+            primary='unresolved' if unresolved_metric else manifest.get('metric','accuracy')
         else:
             prose=description(archive)
-            primary=declared_metric(prose) or 'accuracy'
+            primary='unresolved' if unresolved_metric else declared_metric(prose) or 'accuracy'
             formats=[fmt for fmt in TABLE_FORMATS if find_member(archive,['train.'+fmt])]
             named=None if getattr(archive,'shared_table',None) else named_table(prose,'train')
             expected_prediction=None if getattr(archive,'shared_table',None) else named_table(prose,'test')
@@ -83,6 +84,13 @@ def class_prior(labels, primary, positive=None):
     if not len(labels):
         raise ValueError('Training label evidence is empty')
     values,counts=np.unique(labels,return_counts=True)
+    from .metric_declarations import MetricDeclarationError, metric_name, resolved_name
+    if primary != 'unresolved' and metric_name(primary) == 'f1':
+        try:
+            primary = resolved_name(primary, values.tolist(), positive)
+        except MetricDeclarationError:
+            # Every F1 averaging scheme accepts class predictions; no ranking or score is claimed.
+            primary = 'unresolved_f1'
     if len(values)<2 and primary=='roc_auc':
         raise ValueError('A single observed class cannot define ROC-AUC probability columns')
     if positive is not None and labels.dtype.kind in 'US':
@@ -105,6 +113,9 @@ def record_input_failure(package,directory,logger,error,phase,*,api_usage=None,r
                  attempted_classifier_fits=0,completed_classifier_fits=0,unknown_failed_attempts=0,
                  new_api_requests=0,known_course_cost_rmb=0,formal_test_accessed=False,
                  external_score=None)
+    from .metric_declarations import MetricDeclarationError
+    if isinstance(error,MetricDeclarationError):
+        outcome.update(reason_code='metric_unresolved', selection_metric=None)
     if api_usage:
         outcome.update(api_usage)
     try:
@@ -114,8 +125,13 @@ def record_input_failure(package,directory,logger,error,phase,*,api_usage=None,r
             spec = resolved_task.spec
             stats = class_prior(resolved_task.y_train, spec['metric'], spec.get('positive_label'))
             evidence = dict(stats, format='adaptive_records', target=spec['input_recipe']['target'], frozen_spec=spec)
+        elif isinstance(error,MetricDeclarationError) and resolved_task is not None:
+            task_spec = dict(resolved_task.spec)
+            stats = class_prior(resolved_task.y_train,task_spec['metric'],task_spec.get('positive_label'))
+            evidence = dict(stats, format='frozen_features', model_kind=resolved_task.kind, frozen_spec=task_spec,
+                            target=task_spec.get('input_schema',{}).get('target'))
         else:
-            evidence=prior_evidence(package)
+            evidence=prior_evidence(package,unresolved_metric=isinstance(error,MetricDeclarationError))
     except DECODE_ERRORS as second:
         logger.write_json('run_outcome.json',dict(outcome,status='failed',delivery_status='unavailable',
             model_available=False,partial_reason=str(second)))
@@ -135,6 +151,9 @@ def record_input_failure(package,directory,logger,error,phase,*,api_usage=None,r
 
 def input_count(package,prior):
     fmt=prior['format']
+    if fmt == 'frozen_features':
+        from .data import load_prediction_features
+        return len(load_prediction_features(package,prior['model_kind'],prior['frozen_spec']))
     if fmt == 'adaptive_records':
         from .format_intake import prediction_rows
         records = prediction_rows(package, prior['frozen_spec'])
@@ -142,8 +161,9 @@ def input_count(package,prior):
         if not features or any(not features.intersection(row) for row in records):
             raise ValueError('Prediction rows have no verified input field in common with training')
         return len(records)
-    with open_package(package,'test',contract=prior.get('shared_table')) as archive:
-        manifest=read_manifest(archive)
+    with open_package(package,'test',contract=prior.get('shared_table'),
+                      for_partial_labels=prior['metric'].startswith('unresolved')) as archive:
+        manifest=read_manifest(archive,for_partial_labels=prior['metric'].startswith('unresolved'))
         if manifest is None:
             if fmt=='npy':
                 path=find_member(archive,['X_test.npy','C_test.npy'],required=True)
@@ -170,7 +190,8 @@ def input_count(package,prior):
             _,rows=table(archive,path,fmt,features[:1])
             return sum(1 for _ in rows)
         if fmt=='npy':
-            x=np.load(io.BytesIO(archive.read(path)),allow_pickle=False)
+            from .legacy_array import load_array
+            x=load_array(archive.read(path))
         elif fmt=='npz':
             with np.load(io.BytesIO(archive.read(path)),allow_pickle=False) as bundle:
                 x=bundle[desc.get('features_key','X')]
@@ -194,12 +215,13 @@ def predict(package,directory,output,selection):
         MetricSpec('roc_auc',tuple(prior['labels']))
     output=Path(output).resolve()
     output.parent.mkdir(parents=True,exist_ok=True)
-    with output.open('w',encoding='utf-8',newline='') as stream:
+    with atomic_text(output,newline='') as stream:
         writer=csv.writer(stream)
         writer.writerow(['row_id','prediction']+([f'score_{i}' for i in range(len(prior['prior']))] if scores else []))
         writer.writerows([i,prior['majority'],*(prior['prior'] if scores else [])] for i in range(count))
-    receipt=dict(selected_experiment='training_class_prior',delivery_status='partial',contract_unresolved=True,
+    receipt=dict(selected_experiment='training_class_prior',delivery_status='partial',
+                 contract_unresolved=selection.get('contract_unresolved',True),partial_reason=selection.get('partial_reason'),refit=False,
                  prediction_count=count,test_labels_read=False,model_sha256=selection['model_sha256'],
                  score_class_order=prior['labels'] if scores else None,prediction_sha256=sha(output),external_score=None)
-    (output.parent/'prediction_manifest.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
+    RunLogger(output.parent).write_json('prediction_manifest.json',receipt)
     return output

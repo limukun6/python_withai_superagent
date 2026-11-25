@@ -35,7 +35,7 @@ class TextTableRows(MixedRows):
         return TextTableRows(values,self.numeric_columns,self.columns,self.text_columns) if values.ndim==2 else values
 
 
-def read_manifest(archive):
+def read_manifest(archive, *, read_metric=False, for_partial_labels=False):
     names=[n for n in archive.namelist() if not n.startswith('__MACOSX/') and PurePosixPath(n).name=='manifest.json']
     if not names:return None
     if len(names)!=1:raise ValueError('Expected one task manifest')
@@ -44,8 +44,19 @@ def read_manifest(archive):
         raise ValueError('A task manifest and its split declarations must be JSON objects')
     if value.get('schema_version')!=1:raise ValueError('Unsupported manifest schema version')
     if value.get('objective','classification')!='classification':raise ValueError('Only classification is supported')
-    from .metrics import validate_metric
-    validate_metric(value.get('metric','accuracy'))
+    from .metric_declarations import manifest_metric, declared_metric
+    if for_partial_labels:
+        # Label-only recovery can use split and target declarations independently of the scoring rule.
+        value.pop('metric',None)
+    else:
+        metric = manifest_metric(value)
+        if metric:
+            value['metric'] = metric
+        elif read_metric:
+            from .native_schema import description
+            metric = declared_metric(description(archive))
+            if metric:
+                value.update(metric=metric,_metric_source='declared_task_readme')
     if value.get('modality') not in ('tabular','text','pair_text','image'):
         raise ValueError('Unsupported declared modality')
     value['_manifest_parent']=str(PurePosixPath(names[0]).parent)

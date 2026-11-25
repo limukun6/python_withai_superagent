@@ -116,15 +116,64 @@ def train_legacy(package, run_dir):
     return 0
 
 
-def train(package, run_dir, policy='autonomous'):
+def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None):
     if policy == 'legacy':
+        if fit_limit is not None or time_limit is not None:
+            raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    run_dir.mkdir(parents=True,exist_ok=False)
-    arguments=build_parser().parse_args(['unified',str(package),'--run-dir',str(run_dir/'agent')])
-    save(run_dir / 'training_protocol.json',dict(policy='anonymous-sequential-v1',
-         entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-         selection_data='training-only groups',final_refit='all supplied training rows'))
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
     return arguments.handler(arguments)
+
+
+def prepare_training(package,run_dir,fit_limit=None,time_limit=None):
+    run_dir.mkdir(parents=True,exist_ok=False)
+    flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
+    if fit_limit is not None:
+        flags.extend(['--fit-limit',str(fit_limit)])
+    if time_limit is not None:
+        flags.extend(['--time-limit',str(time_limit)])
+    arguments=build_parser().parse_args(flags)
+    save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
+         entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+         selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
+         fit_limit=arguments.fit_limit))
+    return arguments
+
+
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None):
+    """Keep prediction delivery in a separate process from training and its network client."""
+    import os
+    import signal
+    import subprocess
+    import sys
+    from superagent.autonomous_checkpoint import interrupted
+    if run_dir.exists():
+        raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
+    package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
+    child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
+                              '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit)],
+                             cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
+    try:
+        code = child.wait(timeout=arguments.time_limit+30)
+        reason = 'Training process exited with status '+str(code)
+    except subprocess.TimeoutExpired:
+        if os.name == 'posix':
+            os.killpg(child.pid,signal.SIGKILL)
+        else:
+            child.kill()
+        child.wait()
+        code, reason = 2, 'Training exceeded its configured wall time plus 30-second shutdown grace'
+    except KeyboardInterrupt:
+        if os.name == 'posix':
+            os.killpg(child.pid,signal.SIGTERM)
+        else:
+            child.terminate()
+        child.wait()
+        raise
+    if code and interrupted(run_dir/'agent',reason):
+        return 0
+    return code
 
 
 def main():
@@ -134,6 +183,9 @@ def main():
         command = commands.add_parser(action)
         command.add_argument("task_package", type=Path)
         command.add_argument("--run-dir", required=True, type=Path)
+        if action in ('train','solve'):
+            command.add_argument('--fit-limit',type=int)
+            command.add_argument('--time-limit',type=float)
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":
@@ -143,10 +195,10 @@ def main():
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
     if args.action == "train":
-        return train(args.task_package, args.run_dir, args.policy)
+        return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit)
     source=args.task_package
     if args.action=='solve':
-        code=train(source,args.run_dir)
+        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit)
         if code:
             return code
         source=args.prediction_input

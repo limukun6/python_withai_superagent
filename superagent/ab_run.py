@@ -96,11 +96,18 @@ def validate_options(args):
     return limit
 
 
+def declared_split_names(task):
+    """An explicit temporal/entity protocol yields one split; seed variants would repeat it."""
+    declared = (getattr(task, 'spec', {}) or {}).get('evaluation_protocol') or {}
+    kind = declared.get('kind', 'grouped_stratified') if isinstance(declared, dict) else None
+    return (PRIMARY,) if kind in ('temporal', 'entity') else (PRIMARY, *CONFIRMATIONS)
+
+
 def freeze_partitions(task, directory, seed, metric, *, preference_vote=False):
     trusted, allowed = {}, {}
     groups = sample_groups(task, 'shared_text')
     seen = set()
-    for index, split in enumerate((PRIMARY, *CONFIRMATIONS)):
+    for index, split in enumerate(declared_split_names(task)):
         split_seed = seed + 101 * index
         train, held, resource = grouped_partition(task, split_seed, 'shared_text')
         identity = frozenset(held.tolist())
@@ -402,7 +409,7 @@ def command(args):
                 logger.write_json(f'method_space_{len(history)+1}.json',generation)
             state = dict(ab_schema_version=1, task=spec, history=history,
                          available_candidates=untried_candidates(caps, history), prediction_evidence=evidence,
-                         budget=budget, registered_confirmation_splits=list(CONFIRMATIONS))
+                         budget=budget, registered_confirmation_splits=list(declared_split_names(task)[1:]))
             if picker and getattr(args,'proposal_contract','strict-v1')=='grounded-v1':
                 from .fact_registry import digest
                 state['grounding_binding']=dict(run_sha256=sha(directory/'run_manifest.json'),source_sha256=digest(frozen),origin='executor_record')

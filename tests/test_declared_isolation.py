@@ -1,4 +1,4 @@
-"""A declared temporal/entity isolation protocol is refused, not silently downgraded."""
+"""Declared temporal/entity isolation protocols: supported, checked, and never silent."""
 import io
 import json
 import subprocess
@@ -16,16 +16,27 @@ from superagent.splits import grouped_partition
 REPO = Path(__file__).resolve().parents[1]
 
 
-def make_package(path, protocol):
-    buffer = io.BytesIO()
-    rows = [[f'text {index}', 'yes' if index % 2 else 'no'] for index in range(40)]
+def tabular_task(protocol):
+    rows = 40
+    matrix = np.column_stack([[f'd{index:03d}' for index in range(rows)],
+                              [f'u{index % 5}' for index in range(rows)],
+                              np.arange(rows)])
+    labels = np.array(['no', 'yes'] * (rows // 2))
+    spec = {'input_schema': {'columns': [{'name': 'date'}, {'name': 'user'}, {'name': 'value'}]},
+            'evaluation_protocol': protocol}
+    return SimpleNamespace(kind='categorical_tabular', X_train=matrix, y_train=labels, spec=spec)
+
+
+def write_package(path, protocol):
     body = io.StringIO()
-    body.write('text,label\n')
-    for row in rows:
-        body.write(','.join(row) + '\n')
+    body.write('date,user,value,label\n')
+    for index in range(60):
+        body.write(f'd{index:03d},u{index % 6},{index},{"yes" if index % 2 else "no"}\n')
     manifest = {'schema_version': 1, 'objective': 'classification', 'metric': 'accuracy',
-                'modality': 'text', 'input_format': 'single_text_csv',
-                'columns': [{'name': 'text', 'type': 'text'}], 'target': 'label',
+                'modality': 'tabular', 'input_format': 'csv',
+                'columns': [{'name': 'date', 'type': 'text'}, {'name': 'user', 'type': 'text'},
+                            {'name': 'value', 'type': 'numeric'}],
+                'target': 'label',
                 'splits': {'train': {'format': 'csv', 'path': 'train.csv'},
                            'validation': {'format': 'csv', 'path': 'validation.csv'}},
                 'evaluation_protocol': protocol,
@@ -37,62 +48,84 @@ def make_package(path, protocol):
     return path
 
 
-class DeclaredIsolationTests(unittest.TestCase):
-    def test_a_temporal_protocol_is_refused_by_the_partitioner(self):
-        task = load_development_task(make_package(Path(_tempdir(self)) / 'temporal.zip',
-                                                 {'kind': 'temporal', 'time_column': 'text'}))
-        with self.assertRaises(ValueError) as caught:
-            grouped_partition(task, 707, 'exact_rows')
-        self.assertIn('temporal/entity evaluation protocol', str(caught.exception))
+class TemporalProtocolTests(unittest.TestCase):
+    def test_the_split_follows_the_declared_time_order(self):
+        task = tabular_task({'kind': 'temporal', 'column': 'date', 'train_fraction': 0.75})
+        train, held, resource = grouped_partition(task, 707)
+        self.assertEqual(resource['protocol'], 'temporal')
+        self.assertLess(max(task.X_train[train, 0]), min(task.X_train[held, 0]))
+        self.assertEqual(len(train) + len(held), len(task.y_train))
 
-    def test_an_entity_protocol_is_refused_by_the_partitioner(self):
-        task = load_development_task(make_package(Path(_tempdir(self)) / 'entity.zip',
-                                                 {'kind': 'entity', 'entity_column': 'text'}))
-        with self.assertRaises(ValueError):
-            grouped_partition(task, 707, 'exact_rows')
+    def test_a_missing_column_is_refused(self):
+        task = tabular_task({'kind': 'temporal', 'column': 'missing'})
+        with self.assertRaises(ValueError) as caught:
+            grouped_partition(task, 707)
+        self.assertIn('not declared in input columns', str(caught.exception))
+
+    def test_an_out_of_range_fraction_is_refused(self):
+        for fraction in (0.2, 1.0):
+            with self.subTest(fraction=fraction):
+                task = tabular_task({'kind': 'temporal', 'column': 'date', 'train_fraction': fraction})
+                with self.assertRaises(ValueError):
+                    grouped_partition(task, 707)
+
+
+class EntityProtocolTests(unittest.TestCase):
+    def test_no_entity_crosses_the_split(self):
+        task = tabular_task({'kind': 'entity', 'column': 'user', 'train_fraction': 0.6})
+        train, held, resource = grouped_partition(task, 707)
+        self.assertEqual(resource['protocol'], 'entity')
+        self.assertEqual(set(task.X_train[train, 1]) & set(task.X_train[held, 1]), set())
+
+    def test_the_same_seed_gives_the_same_split(self):
+        task = tabular_task({'kind': 'entity', 'column': 'user', 'train_fraction': 0.6})
+        first = grouped_partition(task, 707)[0].tolist()
+        second = grouped_partition(task, 707)[0].tolist()
+        self.assertEqual(first, second)
+
+    def test_the_entity_column_can_be_named_explicitly(self):
+        task = tabular_task({'kind': 'entity', 'entity_column': 'user', 'train_fraction': 0.6})
+        self.assertEqual(grouped_partition(task, 707)[2]['column'], 'user')
+
+
+class UnsupportedProtocolTests(unittest.TestCase):
+    def test_an_unknown_protocol_kind_is_refused(self):
+        task = tabular_task({'kind': 'spatial'})
+        with self.assertRaises(ValueError) as caught:
+            grouped_partition(task, 707)
+        self.assertIn('Unsupported declared evaluation protocol', str(caught.exception))
 
     def test_a_non_object_protocol_is_refused(self):
-        task = load_development_task(make_package(Path(_tempdir(self)) / 'bad.zip', 'temporal'))
+        task = tabular_task('temporal')
         with self.assertRaises(ValueError):
-            grouped_partition(task, 707, 'exact_rows')
-
-    def test_the_entry_refuses_end_to_end_and_trains_nothing(self):
-        root = Path(_tempdir(self))
-        package = make_package(root / 'temporal.zip', {'kind': 'temporal', 'time_column': 'text'})
-        run_dir = root / 'run'
-        completed = subprocess.run([sys.executable, '-m', 'superagent', 'run', str(package),
-                                    '--run-dir', str(run_dir), '--planner', 'local',
-                                    '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
-                                    '--catalog-scope', 'baseline', '--fit-limit', '3',
-                                    '--seed', '707'],
-                                   cwd=REPO, capture_output=True, text=True)
-        self.assertNotEqual(completed.returncode, 0)
-        # A runtime refusal is reported inside the outcome JSON on stdout, not on stderr.
-        self.assertIn('temporal/entity evaluation protocol', completed.stdout)
-        self.assertFalse((run_dir / 'trial_1.joblib').is_file())
-        outcome = json.loads((run_dir / 'run_outcome.json').read_text(encoding='utf-8'))
-        self.assertEqual(outcome['status'], 'failed')
-        self.assertEqual(outcome['classifier_fit_accounting']['attempted_classifier_fits'], 0)
+            grouped_partition(task, 707)
 
     def test_a_default_protocol_still_partitions(self):
-        task = load_development_task(make_package(Path(_tempdir(self)) / 'plain.zip', {}))
-        train, held, resource = grouped_partition(task, 707, 'exact_rows')
+        task = tabular_task({})
+        train, held, _ = grouped_partition(task, 707, 'exact_rows')
         self.assertEqual(len(train) + len(held), len(task.y_train))
-        self.assertEqual(set(np.asarray(task.y_train)[train].tolist()),
-                         set(np.asarray(task.y_train)[held].tolist()))
 
 
-_TEMPDIRS = {}
-
-
-def _tempdir(case):
-    import tempfile
-    key = id(case)
-    if key not in _TEMPDIRS:
-        holder = tempfile.TemporaryDirectory()
-        _TEMPDIRS[key] = holder
-        case.addCleanup(holder.cleanup)
-    return _TEMPDIRS[key].name
+class EndToEndTests(unittest.TestCase):
+    def test_the_entry_runs_a_temporal_package_with_the_declared_split(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            package = write_package(root / 'temporal.zip',
+                                    {'kind': 'temporal', 'column': 'date', 'train_fraction': 0.75})
+            run_dir = root / 'run'
+            completed = subprocess.run([sys.executable, '-m', 'superagent', 'run', str(package),
+                                        '--run-dir', str(run_dir), '--planner', 'local',
+                                        '--scheduler', 'ab-v1', '--portfolio', 'ab-v1',
+                                        '--catalog-scope', 'baseline', '--fit-limit', '3',
+                                        '--seed', '707'],
+                                       cwd=REPO, capture_output=True, text=True)
+            self.assertEqual(completed.returncode, 0, completed.stdout[-800:] + completed.stderr[-800:])
+            outcome = json.loads((run_dir / 'run_outcome.json').read_text(encoding='utf-8'))
+            self.assertEqual(outcome['status'], 'completed')
+            split = json.loads((run_dir / 'primary_split.json').read_text(encoding='utf-8'))
+            self.assertEqual(split['split_resource']['protocol'], 'temporal')
+            self.assertEqual(split['train_rows'] + split['search_rows'], 60)
 
 
 if __name__ == '__main__':

@@ -97,19 +97,38 @@ def validate_options(args):
 
 
 def declared_split_names(task):
-    """An explicit temporal/entity protocol yields one split; seed variants would repeat it."""
+    return (PRIMARY, *CONFIRMATIONS)
+
+
+def explicit_windows(task, seed):
+    """Rolling temporal windows or entity folds, one per registered split."""
     declared = (getattr(task, 'spec', {}) or {}).get('evaluation_protocol') or {}
-    kind = declared.get('kind', 'grouped_stratified') if isinstance(declared, dict) else None
-    return (PRIMARY,) if kind in ('temporal', 'entity') else (PRIMARY, *CONFIRMATIONS)
+    if not isinstance(declared, dict):
+        return None
+    kind = declared.get('kind', 'grouped_stratified')
+    names = declared_split_names(task)
+    if kind == 'temporal':
+        from .splits import temporal_windows
+        return {name: (train, held, resource)
+                for name, train, held, resource in temporal_windows(task, declared, names)}
+    if kind == 'entity':
+        from .splits import entity_windows
+        return {name: (train, held, resource)
+                for name, train, held, resource in entity_windows(task, seed, declared, names)}
+    return None
 
 
 def freeze_partitions(task, directory, seed, metric, *, preference_vote=False):
     trusted, allowed = {}, {}
     groups = sample_groups(task, 'shared_text')
     seen = set()
+    windows = explicit_windows(task, seed)
     for index, split in enumerate(declared_split_names(task)):
         split_seed = seed + 101 * index
-        train, held, resource = grouped_partition(task, split_seed, 'shared_text')
+        if windows is not None:
+            train, held, resource = windows[split]
+        else:
+            train, held, resource = grouped_partition(task, split_seed, 'shared_text')
         identity = frozenset(held.tolist())
         if identity in seen:
             raise ValueError('Registered confirmation repeats the same rows; no independent partition available')

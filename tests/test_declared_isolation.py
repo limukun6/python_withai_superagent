@@ -106,6 +106,30 @@ class UnsupportedProtocolTests(unittest.TestCase):
         self.assertEqual(len(train) + len(held), len(task.y_train))
 
 
+class RollingWindowTests(unittest.TestCase):
+    def test_temporal_windows_never_share_evaluation_rows(self):
+        from superagent.splits import temporal_windows
+        task = tabular_task({'kind': 'temporal', 'column': 'date'})
+        names = ('primary', 'confirmation_1', 'confirmation_2')
+        windows = {name: (train, held) for name, train, held, _ in temporal_windows(task, task.spec['evaluation_protocol'], names)}
+        searches = [set(windows[name][1].tolist()) for name in names]
+        for left in range(len(searches)):
+            for right in range(left + 1, len(searches)):
+                self.assertEqual(searches[left] & searches[right], set())
+        self.assertLess(max(task.X_train[windows['primary'][1], 0]),
+                        min(task.X_train[windows['confirmation_1'][1], 0]))
+
+    def test_entity_folds_never_share_entities(self):
+        from superagent.splits import entity_windows
+        task = tabular_task({'kind': 'entity', 'column': 'user'})
+        names = ('primary', 'confirmation_1', 'confirmation_2')
+        windows = {name: (train, held) for name, train, held, _ in entity_windows(task, 707, task.spec['evaluation_protocol'], names)}
+        searches = [set(task.X_train[windows[name][1], 1].tolist()) for name in names]
+        for left in range(len(searches)):
+            for right in range(left + 1, len(searches)):
+                self.assertEqual(searches[left] & searches[right], set())
+
+
 class EndToEndTests(unittest.TestCase):
     def test_the_entry_runs_a_temporal_package_with_the_declared_split(self):
         import tempfile
@@ -125,7 +149,9 @@ class EndToEndTests(unittest.TestCase):
             self.assertEqual(outcome['status'], 'completed')
             split = json.loads((run_dir / 'primary_split.json').read_text(encoding='utf-8'))
             self.assertEqual(split['split_resource']['protocol'], 'temporal')
-            self.assertEqual(split['train_rows'] + split['search_rows'], 60)
+            # Rolling origin: the primary window trains on the earlier 70% and is scored on the next 10%.
+            self.assertEqual(split['split_resource']['window'], [0.0, 0.7, 0.8])
+            self.assertEqual(split['train_rows'] + split['search_rows'], 48)
 
 
 if __name__ == '__main__':

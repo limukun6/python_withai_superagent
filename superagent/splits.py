@@ -117,6 +117,47 @@ def entity_partition(task, seed, declaration):
                          'selection_rule': 'whole entities assigned once by seeded key order; no model scores'}
 
 
+TEMPORAL_WINDOWS = ((0.0, 0.7, 0.8), (0.0, 0.8, 0.9), (0.0, 0.9, 1.0))
+
+
+def temporal_windows(task, declaration, names):
+    """Rolling-origin windows: each later split is evaluated on later rows only."""
+    column = declaration.get('column') or declaration.get('time_column')
+    values = _declared_column(task, column)
+    order = np.argsort(values, kind='stable')
+    total = len(order)
+    for name, (start, train_end, search_end) in zip(names, TEMPORAL_WINDOWS):
+        low, middle, high = (int(round(total * fraction)) for fraction in (start, train_end, search_end))
+        train, held = order[low:middle], order[middle:high]
+        _require_both_sides(task.y_train, train, held, 'temporal')
+        yield name, train, held, {'protocol': 'temporal', 'column': column,
+                                  'window': [start, train_end, search_end], 'total_rows': total,
+                                  'train_rows': int(len(train)), 'heldout_rows': int(len(held)),
+                                  'selection_rule': 'declared time order; later rows are always held out; '
+                                                    'no model scores'}
+
+
+def entity_windows(task, seed, declaration, names):
+    """Entity folds: every split is evaluated on entities no other split evaluates."""
+    column = declaration.get('column') or declaration.get('entity_column')
+    values = [str(value) for value in np.asarray(_declared_column(task, column)).tolist()]
+    unique = sorted(set(values),
+                    key=lambda value: hashlib.sha256(f'{seed}:{value}'.encode()).hexdigest())
+    blocks = [list(block) for block in np.array_split(np.asarray(unique, dtype=object), len(names))]
+    for index, name in enumerate(names):
+        held_entities = set(blocks[index])
+        held = np.asarray([row for row, value in enumerate(values) if value in held_entities], dtype=int)
+        train = np.asarray([row for row, value in enumerate(values) if value not in held_entities], dtype=int)
+        _require_both_sides(task.y_train, train, held, 'entity')
+        yield name, train, held, {'protocol': 'entity', 'column': column,
+                                  'fold': index, 'entities': len(unique),
+                                  'train_entities': len(unique) - len(held_entities),
+                                  'heldout_entities': len(held_entities),
+                                  'train_rows': int(len(train)), 'heldout_rows': int(len(held)),
+                                  'selection_rule': 'whole entities assigned to exactly one evaluation '
+                                                    'split by seeded key order; no model scores'}
+
+
 def grouped_partition(task, seed, grouping="exact_rows"):
     declared=getattr(task,'spec',{}).get('evaluation_protocol',{})
     if not isinstance(declared,dict):raise ValueError('Evaluation protocol must be an object')

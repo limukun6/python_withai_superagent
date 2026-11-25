@@ -38,27 +38,39 @@
 
 **等权平均把强模型拉低了**——这与项目里多次出现的“融合不自动等于更好”一致。
 
-## 4 预训练表格模型：被许可与门控挡住
+## 4 预训练表格模型：拿到了，但明显更差
 
-`pip install tabpfn` 成功（10.2.0），但 `fit()` 直接抛出：
+`pip install tabpfn` 成功（10.2.0）。默认 v3.5 权重在 HuggingFace 上**受门控**：
 
 ```
 TabPFNHuggingFaceGatedRepoError: HuggingFace authentication error
 downloading from 'Prior-Labs/tabpfn_3_5'.
-This model is gated and requires you to accept its terms.
 ```
 
-也就是说，要用它必须：
+正确地址是 **`https://huggingface.co/Prior-Labs/tabpfn_3_5`**（此前文档误写成 `tabpf_3_5`，所以打开是 404）。
 
-1. 用 HuggingFace 账号**接受 Prior Labs 的使用条款**；
-2. 设置 `HF_TOKEN`。
+绕开门控的办法是改用 **v2 检查点**（`Prior-Labs/TabPFN-v2-clf`，29 MB）。本机直连 HuggingFace 会被重置，改用镜像 `hf-mirror.com` 下载成功，SHA-256 `cf8c519c01eaf1613ee91239006d57b1c806ff5f23ac1aeb1315ba1015210e49`。
 
-**这不是技术问题，是授权问题——需要人来做决定，我不代做。**
+CPU 上默认拒绝超过 1,000 行，需设 `TABPFN_ALLOW_CPU_LARGE_DATASET=1`。实测（split 707，训练 6,495 行）：
 
-补充两条事实：
+| 编码方式 | 准确率 | 相对 depth8 | 耗时 |
+|---|---:|---:|---:|
+| 序数编码（21 维） | 0.712084 | **−4.13pp** | 40 秒 |
+| one-hot（111 维） | 0.704069 | **−4.93pp** | 127 秒 |
+| `catboost_depth8_reg3`（基线） | 0.753391 | — | 约 100 秒 |
 
-- 该系列权重是**非商业许可**（研究/内部评测允许，商业用途需授权），课程项目属研究用途，理论上可用；
-- 本机 GPU 是 RTX 5070（sm_120），而安装的 torch 是 cu126 构建，**不含 sm_120 内核**，所以即便拿到权重也只能**CPU 推理**，6,495 行的预测会慢很多。
+**两种编码都明显更差**，one-hot 还更慢。可能原因：
+
+1. Task1 的 21 列**全是类别**，TabPFN v2 主要在小规模数值/合成数据上预训练，没有原生类别处理；
+2. 8,117 行卡在它舒适区边缘（v2 建议 ≤10,000 行）。
+
+**结论：预训练表格模型在这份数据上不占优，差 4 个百分点以上。**
+
+### 若仍要试更强的 v3.5 权重
+
+1. 登录 HuggingFace 访问 `https://huggingface.co/Prior-Labs/tabpfn_3_5` 接受条款并配置 `HF_TOKEN`；
+2. 确认报告里可以写明"使用了预训练表格权重"及其许可（该系列为非商业许可，研究用途可用）；
+3. 本机 RTX 5070（sm_120）与已装的 torch cu126 内核不匹配，**只能 CPU 推理**。
 
 ## 5 把这一轮和前几轮合起来看
 
@@ -68,27 +80,21 @@ This model is gated and requires you to accept its terms.
 | 菜单外经典模型（5 个） | LightGBM | −0.19pp |
 | 菜单内被排除的候选（2 个） | adaptive CatBoost | +0.06pp（贵 2.8×） |
 | 离线等权集成 | — | −0.37pp |
-| 预训练表格模型（TabPFN） | **未能运行** | 需授权 |
+| 预训练表格模型（TabPFN v2，两种编码） | 0.7121 / 0.7041 | **−4.13 / −4.93pp** |
 
-**所有能跑出数字的方案，没有一个稳定超过 depth8 超过 0.2pp。**
+**所有跑出数字的方案，没有一个超过 depth8 超过 0.2pp。**
 
 ## 6 结论
 
-1. **菜单外没有找到更好的方案**：经典模型全输，集成全输，被排除的候选只打平且更贵。
-2. **唯一没试过的是预训练表格模型**，它被 HuggingFace 门控与非商业许可挡住；要用必须先由人接受条款。
+1. **菜单外没有找到更好的方案**：经典模型全输，集成全输，被排除的候选只打平且更贵，预训练表格模型差 4pp 以上。
+2. **预训练路线技术上可跑**（镜像拿到 v2 权重），但在这个"全类别、中等规模"的任务上不占优。
 3. 结合前几轮的 36 次 fit：Task1 在 75% 附近**已经饱和**，0.2pp 级别的差异远低于我们实测的 7.9pp 重跑漂移。
 
-## 7 如果仍想试 TabPFN，需要你做的三件事
+## 7 副作用记录
 
-1. 登录 HuggingFace，访问 `https://huggingface.co/Prior-Labs/tabpfn_3_5` 接受条款；
-2. 生成一个 read token，设置环境变量 `HF_TOKEN`；
-3. 确认课程/报告里可以写明“使用了非商业许可的预训练权重”。
+- 为测试安装了 `lightgbm 4.7.0` 与 `tabpfn 10.2.0`，并在 `%APPDATA%\tabpfn` 下载了 29 MB 的 v2 检查点；
+- **未加入交付依赖，未改变任何交付产物**；
+- 交付清单记录的环境仍是 Python 3.12.14 / catboost 1.2.10 / scikit-learn 1.7.2。
 
-做了这三步，我可以再跑一次单划分探测（CPU，预计几分钟），但那也只是一次单点对照，不改变“Task1 已饱和”的判断。
+证据：`research/task1_extra_candidates/{offmenu_models.json,ensemble.json,tabpfn_v2.json,tabpfn_v2_onehot.json}`。
 
-## 8 副作用记录
-
-- 本次为测试安装了 `lightgbm 4.7.0` 与 `tabpfn 10.2.0`（未加入交付依赖清单，也未改变任何交付产物）；
-- 交付清单里记录的环境仍是 Python 3.12.14 / catboost 1.2.10 / scikit-learn 1.7.2。
-
-证据：`research/task1_extra_candidates/{offmenu_models.json,ensemble.json}`。

@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA5真实Flash四案例完成，完整契约旧0/4、新1/4
+
+基线e43c31d，四个预登记开发机制案例（非独立盲测/真实迁移），0fit。旧native/局部适配接受2但输出等不完整、另拒绝2，0API；新proactive完整1/4（文本NDJSON、字段改名、正类概率全部通过），另3例停在工具参数/物理来源识别，4API。每格仅1请求，不冒充完整3调用闭环失败或成功。输入3643/输出9240token、课程费¥.040603、219.328秒。证据research/sa5_live_01和sa5_audit；报告batches/SA5_semantic_panel_results_20261126_zh.md。
+
+用户本轮明确接受新增4条既有未知，16条清单绑定原行SHA、SA5 scope及案例注册表，费用仍null。最初预检0请求被拦，授权后沿同一真实账本完成4已计量请求，原457行逐条不变；现461/known7.966395/unknown16/pending0。无新增未知，不查官网、不建空账本。B新用量尚未取得可导入逐请求原件，团队总预算仍未核验。授权快照仅在忽略目录runs/sa5_authorized_history_16，不自动扩大后续批次预算。
+
+下一步SA6离线修工具：同包prediction角色与独立包位置分开，flat格式返回无命名集合的事实；回放真实请求保持评价/答案边界，0新增API/fit。不按本轮结果回填成功，不冻结。真实Flash可以调用，本轮阻断已处理，不再称网络未解决。
+
 ## 2026-11-26：SA4已合入B最新自主研发版，150项回归＋4fit交付通过
 
 最新共同研发工作树D:/codex/python_withai/runs/semantic_joint，分支codex/ab-semantic-autonomy-1126。B来源b0944ae（与个人c6ea0b7发布目录127模块及入口相同），A来源0d09760。真实Git merge，三处共享文件逐段合并，A六模块/B十三模块对象保留通过；B方法排名与目录不改，开题和语义共用预算。proactive＋opening允许原client最多3次，旧fallback opening仍单次，更小/零额度不扩。

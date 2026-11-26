@@ -1,0 +1,64 @@
+{
+  "status": "prepared",
+  "tests": 5,
+  "failures": 0,
+  "errors": 0,
+  "legacy_no_client": [
+    {
+      "case": "P1",
+      "status": "accepted",
+      "complete": false,
+      "checks": {
+        "target": true,
+        "metric": true,
+        "columns": true,
+        "positive_class": true,
+        "class_domain": true,
+        "training_rows": true,
+        "output_recipe": false,
+        "prediction_values": true,
+        "prediction_rows": true,
+        "preflight": true
+      },
+      "accepted_wrong_contract": true,
+      "training_rows": 8
+    },
+    {
+      "case": "P2",
+      "status": "rejected",
+      "error_type": "UnsupportedFormat",
+      "reason": "No unambiguous train source"
+    },
+    {
+      "case": "P3",
+      "status": "accepted",
+      "complete": false,
+      "checks": {
+        "target": true,
+        "metric": true,
+        "columns": true,
+        "positive_class": false,
+        "class_domain": true,
+        "training_rows": true,
+        "output_recipe": false,
+        "prediction_values": false,
+        "prediction_rows": false,
+        "preflight": false
+      },
+      "accepted_wrong_contract": true,
+      "training_rows": 8
+    },
+    {
+      "case": "P4",
+      "status": "rejected",
+      "error_type": "ValueError",
+      "reason": "Training record fields are inconsistent"
+    }
+  ],
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "course_cost_rmb": 0,
+  "elapsed_seconds": 2.0,
+  "registry_sha256": "85adbe093b6aa045184aebfd03261f4287489a47be0055335751d633dcb612cb",
+  "scope": "oracle/preflight checks only; no real LLM success claim"
+}

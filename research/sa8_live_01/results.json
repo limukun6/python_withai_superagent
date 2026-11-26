@@ -1,0 +1,134 @@
+{
+  "status": "completed_with_failures",
+  "error": null,
+  "cases": [
+    {
+      "case": "V1",
+      "status": "failed",
+      "complete": false,
+      "error": {
+        "type": "RuntimeError",
+        "message": "Predetermined semantic oracle gate failed: {'complete': False, 'checks': {'target': True, 'metric': True, 'columns': True, 'positive_class': True, 'classes': True, 'training_rows': True, 'output': False, 'prediction_rows': True, 'prediction_shape': True, 'prediction_values': True, 'preflight': True}, 'accepted_wrong_contract': True}"
+      },
+      "actual_classifier_fits": 0,
+      "real_API_requests": 2,
+      "known_course_cost_rmb": 0.009037,
+      "semantic_gate": [
+        {
+          "complete": false,
+          "checks": {
+            "target": true,
+            "metric": true,
+            "columns": true,
+            "positive_class": true,
+            "classes": true,
+            "training_rows": true,
+            "output": false,
+            "prediction_rows": true,
+            "prediction_shape": true,
+            "prediction_values": true,
+            "preflight": true
+          },
+          "accepted_wrong_contract": true
+        }
+      ],
+      "elapsed_seconds": 36.10899999999674
+    },
+    {
+      "case": "V2",
+      "status": "delivered",
+      "complete": true,
+      "model_sha256": "84cd63fc1ac2b687c1339d6b48f59bdfea0a313c6fbb21dc011d31c6bce73724",
+      "family": "open_RandomForestClassifier_3ffcb0009d0cbd110a50",
+      "refit": true,
+      "prediction_sha256": "1edf0dacff349bcf847e9a4b93bed3b8f09bc245d1b17bf16d8e6c1fb97562be",
+      "prediction_rows": 60,
+      "actual_classifier_fits": 4,
+      "real_API_requests": 1,
+      "known_course_cost_rmb": 0.004361,
+      "semantic_gate": [
+        {
+          "complete": true,
+          "checks": {
+            "target": true,
+            "metric": true,
+            "columns": true,
+            "positive_class": true,
+            "classes": true,
+            "training_rows": true,
+            "output": true,
+            "prediction_rows": true,
+            "prediction_shape": true,
+            "prediction_values": true,
+            "preflight": true
+          },
+          "accepted_wrong_contract": false
+        }
+      ],
+      "elapsed_seconds": 33.07799999997951,
+      "development_score": {
+        "accuracy": 0.9166666666666666,
+        "macro_f1": 0.6996996996996997,
+        "primary_metric": "macro_f1",
+        "score": 0.6996996996996997,
+        "rows": 60
+      },
+      "development_correct": 55
+    },
+    {
+      "case": "V3",
+      "status": "failed",
+      "complete": false,
+      "error": {
+        "type": "RuntimeError",
+        "message": "Predetermined semantic oracle gate failed: {'complete': False, 'checks': {'target': True, 'metric': True, 'columns': True, 'positive_class': True, 'classes': True, 'training_rows': True, 'output': False, 'prediction_rows': True, 'prediction_shape': True, 'prediction_values': True, 'preflight': True}, 'accepted_wrong_contract': True}"
+      },
+      "actual_classifier_fits": 0,
+      "real_API_requests": 2,
+      "known_course_cost_rmb": 0.018421,
+      "semantic_gate": [
+        {
+          "complete": false,
+          "checks": {
+            "target": true,
+            "metric": true,
+            "columns": true,
+            "positive_class": true,
+            "classes": true,
+            "training_rows": true,
+            "output": false,
+            "prediction_rows": true,
+            "prediction_shape": true,
+            "prediction_values": true,
+            "preflight": true
+          },
+          "accepted_wrong_contract": true
+        }
+      ],
+      "elapsed_seconds": 64.14100000000326
+    }
+  ],
+  "actual_classifier_fits": 4,
+  "real_API_requests": 5,
+  "known_incremental_course_cost_rmb": 0.031819,
+  "project_before": {
+    "requests": 466,
+    "known_course_cost_rmb": 8.015344,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "project_after": {
+    "requests": 471,
+    "known_course_cost_rmb": 8.047163,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "elapsed_seconds": 133.5,
+  "team_total_verified": false,
+  "actual_school_debit_rmb": null,
+  "scope": "small real-data engineering deliveries; SMS previously used; no matched quality improvement or unseen guarantee"
+}

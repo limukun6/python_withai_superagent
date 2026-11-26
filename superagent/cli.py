@@ -327,6 +327,7 @@ def build_parser():
     common.add_argument('--time-limit',type=float,default=1200)
     common.add_argument('--task-interpretation',choices=['fallback','proactive'],default='fallback')
     common.add_argument('--prediction-input',help='Optional unlabeled input for pre-fit schema/output checks')
+    common.add_argument('--semantic-artifact-from',help='Reuse a hash-bound task interpretation without a new read-task request')
     common.set_defaults(handler=unified.command)
     from .adaptive_local import command
     adaptive=commands.add_parser('adaptive-local',help='Offline accuracy prototype: explore, replicate, or stop')

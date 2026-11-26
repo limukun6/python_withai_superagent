@@ -2,6 +2,8 @@
 
 ## 11月26日A/B共同研发集成
 
+SA11新增正式`--semantic-artifact-from`任务解释复用：187项相关检查及两条独立solve通过，新增4fit/0API。它复用已验证读题结果，仍会新做预算内训练，不等于恢复旧搜索或保证未知任务全成功。[正式用法与验收边界](docs/batches/SA11_semantic_artifact_results_20261126_zh.md)
+
 最新SA7–SA10：四个新开发案例真实Flash完整契约4/4；三模态小规模真实数据模型均完成交付（数值/图像在修正实验评分器误拒后恢复，非首次无人工3/3）。173项相关回归及三个冻结模型在当前源码新进程预测通过。该自动推进窗口共12fit、10API、课程¥0.080768。[结果与边界](docs/batches/SA9_SA10_delivery_closure_20261126_zh.md) · [后续自动队列](docs/AUTONOMOUS_NEXT_QUEUE_20261126_zh.md)
 
 本分支`codex/ab-semantic-autonomy-1126`已将A的SA1–SA3合入B最新完整研发版`b0944ae`（个人发布`c6ea0b7`的同源源码）。当前入口是本分支根目录；新增`--task-interpretation proactive`可与B的`--task-analysis`和自审组合。最初SA4集成验收150项通过、两条真实worker烟测共4fit/0API；后续进度见上方最新记录。下文课程分数属于B原版本，本集成版尚未重新评分，也尚未最终冻结。[共同交接与复跑说明](docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md)

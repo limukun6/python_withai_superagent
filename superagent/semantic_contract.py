@@ -355,13 +355,21 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     semantic_truth_certified=False, probe='passed', attempt=attempt, structure_steps=tool_steps))
                 log.event('semantic_contract_accepted', attempt=attempt, task_kind=task.kind,
                           training_rows=len(task.y_train))
+                from .semantic_artifact import write_artifact,last_usage,ArtifactUnavailable
+                try:
+                    write_artifact(log.run_dir/'semantic_artifact.json',path,query,task,response,provenance=last_usage(log))
+                except ArtifactUnavailable as error:
+                    log.event('semantic_artifact_unavailable',reason=str(error))
             return task
     raise UnsupportedFormat('Semantic contract probe did not pass within the shared repair allowance')
 
 
-def resolve_training_task(package, client=None, log=None, *, mode='fallback', prediction_package=None):
+def resolve_training_task(package, client=None, log=None, *, mode='fallback', prediction_package=None,artifact_from=None):
     if mode not in ('fallback','proactive'):
         raise ValueError('Unknown task interpretation mode')
+    if artifact_from is not None:
+        from .semantic_artifact import load_artifact
+        return load_artifact(artifact_from,package,prediction_package,log)
     if mode == 'proactive':
         base = None
         with package_files(package) as files:

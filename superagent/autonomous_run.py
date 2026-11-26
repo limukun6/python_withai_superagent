@@ -170,7 +170,7 @@ def train(package, directory, **options):
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
           flash_setup_issue=None, self_review=False, exploration_rule=None,feedback_reflection=None,reflection_history=None,
-          interpretation='fallback',prediction_package=None):
+          interpretation='fallback',prediction_package=None,semantic_artifact_from=None):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
     if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
@@ -187,7 +187,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash.set_deadline(start+wall)
     manifest = dict(policy='anonymous-sequential-v1',self_review=self_review,fit_limit=fit_limit,seed=seed,wall_seconds=wall,
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
-                    training_only=True,source_files=sources(),task_interpretation=interpretation)
+                    training_only=True,source_files=sources(),task_interpretation=interpretation,
+                    semantic_artifact_reuse=semantic_artifact_from is not None)
     if rule is not None:
         log.write_json('exploration_rule.json',rule)
         manifest['exploration_rule_digest'] = identity(rule)
@@ -208,7 +209,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     try:
         from .semantic_contract import resolve_training_task
         intake_client=flash if interpretation=='proactive' or opening_enabled or not feedback_reflection else None
-        task=resolve_training_task(package,intake_client,log,mode=interpretation,prediction_package=prediction_package)
+        task=resolve_training_task(package,intake_client,log,mode=interpretation,prediction_package=prediction_package,
+                                   artifact_from=semantic_artifact_from)
         if opening_enabled:
             task,lines,origin=instructions(package,task)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)

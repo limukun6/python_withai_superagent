@@ -1,5 +1,15 @@
 # 当前接续状态
 
+## 2026-11-26：SA11任务解释缓存接入正式CLI，187回归＋两条真实solve通过
+
+此前Git自动审批因额度错误未执行；用户继续后通过正常审批重试，SA7–SA10已提交推送00e32db。随后SA11独立开发，不重复付费。SemanticArtifact绑定文件任务/预测包SHA、规范化任务摘要、reader源码及原usage来源；恢复重编译/预检。新鲜成功解释自动导出，正式--semantic-artifact-from经train/solve/子进程/_train贯通，默认不初始化计费client。目录输入仍正常fresh解析但v1不导出缓存；它不是训练/搜索历史resume。
+
+14新＋173相关共187/187无fit/无API检查通过，10.265秒。原真实SA8回复显式重验证迁移成当前artifact，两条真实独立CLI solve（数值/图像）stdin关闭、无注入、各2fit含refit，60/40行预测ID/表头/顺序通过。新增4真实fit、0API/¥0、30.531秒，账本SHA不变。证据research/sa11_cli_reuse及sa11_semantic_artifact_attempt1；报告batches/SA11_semantic_artifact_results_20261126_zh.md。未重新评分开发答案，不做质量比较。
+
+当前API账本仍471/known8.047163/unknown16/pending0，无活动队列。SA7–SA11累计本自动窗口16fit/10API/课程¥.080768。之前12fit和SA11新增4分开记，模型/缓存/数据不进Git。未冻结。
+
+下一优先：正式新任务实时付费solve的历史清单与进程校园直连接线（configured_flash仍strict），再补无manifest图像/数组及真实字段工具后续提案。研究runner付费成功、正式缓存零API成功，不代表正式新任务实时API已验收。队列docs/AUTONOMOUS_NEXT_QUEUE_20261126_zh.md已更新，别重复实现SA11；旧16未知不再问，新未知仍停该付费批次并继续离线。
+
 ## 2026-11-26：自动推进SA7–SA10完成，三模态交付与173项回归通过
 
 用户明确“自动下一步，不用问我”，后续常规研发与已登记小批不重复确认。SA7新开发封装四例真实Flash完整契约4/4、5调用、¥.048949，Q2为未解决疑问→诊断→正确提案，**不是字段工具调用**。SA8三种真实数据首轮5调用/¥.031819、文本4fit交付；数值/图像被实验oracle因恒等映射误拒。原首轮已封存1df9029，不改failed字段。

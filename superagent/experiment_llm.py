@@ -59,12 +59,15 @@ def read_chat_stream(response, deadline, started, progress):
 class ExperimentLLM:
     def __init__(self, api_url: str, key_file: str, model: str, batch_budget: float, thinking_mode=None, reasoning_effort=None,
                  disable_template_thinking=False, max_requests=None, allowed_served_models=None, account=None,
-                 streaming=False):
+                 streaming=False, campus_ip=None):
         if not math.isfinite(batch_budget) or not 0 < batch_budget <= 20:
             raise ValueError("Batch budget must be finite and in (0, 20].")
         endpoint=urlsplit(api_url)
         if endpoint.scheme!='https' or not endpoint.netloc or endpoint.username or endpoint.password:
             raise ValueError("API URL must use HTTPS with a host and no embedded credentials.")
+        from .campus_transport import validate_address
+        validate_address(api_url,campus_ip)
+        self.campus_ip=campus_ip
         if max_requests is not None and (type(max_requests) is not int or max_requests<1):
             raise ValueError('max_requests must be a positive integer when supplied')
         if allowed_served_models is not None and (not allowed_served_models or
@@ -152,6 +155,8 @@ class ExperimentLLM:
             if self.direct:
                 with requests.Session() as session:
                     session.trust_env = False
+                    from .campus_transport import configure_session
+                    configure_session(session,self.api_url,self.campus_ip)
                     with session.post(self.api_url, stream=self.streaming, **options) as response:
                         progress['http_status'] = response.status_code
                         if not response.ok:

@@ -62,12 +62,28 @@ def configured_flash(directory, *, thinking_mode=None):
         return None
     if not all(settings):
         raise ValueError('Configure all three Flash billing settings or leave them all unset')
+    accepted_path=os.getenv('SUPERAGENT_ACCEPTED_HISTORY_FILE')
+    accepted_sha=os.getenv('SUPERAGENT_ACCEPTED_HISTORY_SHA256')
+    if bool(accepted_path)!=bool(accepted_sha):
+        raise ValueError('Accepted-history file and SHA256 must both be configured')
+    campus_ip=os.getenv('SUPERAGENT_CAMPUS_DIRECT_IP') or None
+    if accepted_path:
+        if os.environ.get('SUPERAGENT_OFFLINE')=='1':
+            raise ValueError('LLM mode is disabled in the current offline environment')
+        from .accepted_history import AcceptedHistoryAccount
+        from .task_budget import TaskBudgetLedger
+        from .ab_flash import ENDPOINT,MODEL
+        account=AcceptedHistoryAccount(TaskBudgetLedger(settings[1]),settings[2],str(directory),accepted_path,accepted_sha)
+        account.preflight()
+        return ExperimentLLM(ENDPOINT,settings[0],MODEL,account.allowance,max_requests=min(3,account.max_requests),
+                             allowed_served_models={MODEL},account=account,thinking_mode=thinking_mode,
+                             streaming=True,campus_ip=campus_ip)
     args=SimpleNamespace(api_url=None,model=None,api_key_file=settings[0],budget_ledger=settings[1],
                          task_budget_id=settings[2],llm_budget_rmb=None,history_policy='strict')
     ledger,allowance,_=preflight(args)
     return ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
                          allowed_served_models={args.model},account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory)),
-                         thinking_mode=thinking_mode,streaming=True)
+                         thinking_mode=thinking_mode,streaming=True,campus_ip=campus_ip)
 
 
 def reflection_client(directory,mode='flash'):

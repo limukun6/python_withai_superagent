@@ -2,9 +2,9 @@
 
 用户已明确“自动下一步，不用问我”。常规实现、无fit检查和已预登记的小额实验不重复询问。历史16未知保持原行/null，使用有scope/注册表/行SHA的清单；新unknown/pending仍停该付费批次，不自动重试，继续离线。任务开始先读CURRENT_AGENT_STATE并核对实际completion与真ledger，不能重复已完成批次。
 
-最新SA11已将任务解释缓存接入正式CLI：187项无fit检查和两条独立solve通过，新增4fit/0API/¥0。原第1项“生产化解释恢复”已完成首版，**不要重复实现或重跑验收**。当前最优先的新缺口是正式新任务实时付费入口：`configured_flash`仍使用strict历史预检，研究runner已支持的16条接受清单/进程校园直连须显式接入正式配置。缓存零API入口的通过不能代替实时API验收。先做0API配置/事务/传输mock检查，再预登记极小真实原入口调用；保留默认strict、不允许新未知或隐式代理重试。
+最新SA12已完成正式付费账户/校园直连接线，223项离线检查通过；真实CLI两次请求均HTTP200且结算，但source和ID field遗漏导致完整训练未完成（0fit，¥.011677），不得冒称成功。SA11缓存CLI已通过并推送2304403，不重复开发。下一批SA13修唯一工具来源解析和结构化输出schema，再预登记一条小额正式CLI；新旧批次分开，原失败保留。
 
-当前共同分支codex/ab-semantic-autonomy-1126，工作树runs/semantic_joint。SA7新四例4/4；SA8原始1/3交付（其余两例是评价误拒）；SA9恢复后三模态3/3；SA10 173回归＋三个模型新源码预测一致。总资源SA7–SA10为12fit/10API/¥0.080768，canonical ledger471/known8.047163/unknown16/pending0。没有后台队列。
+当前共同分支codex/ab-semantic-autonomy-1126，工作树runs/semantic_joint。SA7新四例4/4；SA8原始1/3交付（其余两例是评价误拒）；SA9恢复后三模态3/3；SA10 173回归＋三个模型新源码预测一致。总资源SA7–SA10为12fit/10API/¥0.080768，canonical ledger473/known8.058840/unknown16/pending0。没有后台队列。
 
 1. **解释缓存后续只补明确边界。** SA11首版已完成：绑定文件包/预测包、reader源码、已接受提案和任务摘要，0API重编译恢复，正式CLI两路径各2fit通过。目录缓存、跨reader版本迁移和搜索历史恢复仍未涵盖；本轮不继续为它们追加同样验收。报告batches/SA11_semantic_artifact_results_20261126_zh.md。
 2. **继续解决无manifest图像/数组的语义入口。** 目前显式manifest可输出overlay，陌生记录可LLM编译，但原生图像文件夹在proactive下尚不能通用表达。先列出本地native reader可验证的候选结构，让LLM解释候选/目标/指标/输出，不能把局部reader默认值当权威。独立manifest仍不可任意覆盖。先落盘typed schema、伪代码、案例和0fit runner，再决定有限真实调用。

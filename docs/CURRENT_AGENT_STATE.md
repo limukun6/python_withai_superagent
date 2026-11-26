@@ -1,5 +1,13 @@
 # 当前接续状态
 
+## 2026-11-26：SA12正式Flash入口接通，完整交付首轮失败已保留
+
+SA11已推送2304403。SA12显式接受快照账户进入正式configured_flash，逐事务检查scope/账本/16旧行SHA，次数/费用按scope累计；校园IP采用单client HTTPS连接，不改全局socket/系统代理，TLS原域名不变。223/223零fit/API检查通过10.266秒（首轮两测试夹具错误已保留）。
+
+真实standalone solve首次走通正式付费接线，2请求均HTTP200结算，0fit、¥.011677、60.625秒；模型先漏source再漏ID field，完整交付未通过，保留B的partial类先验，不算成功。证据research/sa12_live_entry_01；报告batches/SA12_live_entry_results_20261126_zh.md。账本473/known8.058840/unknown16/pending0，旧行SHA全不变；未冻结，无活动队列。
+
+下一步SA13：省略工具source且成员只在一个已公布包存在时解析唯一来源；显式source不覆盖、重名不猜。给LLM结构化输出列必填schema，程序不猜ID/目标/指标。新批先计划/代码再实跑，不能覆盖SA12失败或自动重试同scope。
+
 ## 2026-11-26：SA11任务解释缓存接入正式CLI，187回归＋两条真实solve通过
 
 此前Git自动审批因额度错误未执行；用户继续后通过正常审批重试，SA7–SA10已提交推送00e32db。随后SA11独立开发，不重复付费。SemanticArtifact绑定文件任务/预测包SHA、规范化任务摘要、reader源码及原usage来源；恢复重编译/预检。新鲜成功解释自动导出，正式--semantic-artifact-from经train/solve/子进程/_train贯通，默认不初始化计费client。目录输入仍正常fresh解析但v1不导出缓存；它不是训练/搜索历史resume。

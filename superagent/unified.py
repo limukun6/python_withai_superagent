@@ -90,20 +90,21 @@ def reflection_client(directory,mode='flash'):
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash') else None,
+                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash') else None,
                          account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
 def command(args):
     from .autonomous_run import train
-    reflection=getattr(args,'feedback_reflection',None)
+    from .planner_review import feedback_mode
+    reflection=feedback_mode(args)
     if getattr(args,'policy','autonomous')=='legacy':
         if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
         return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if reflection else configured_flash(args.run_dir)

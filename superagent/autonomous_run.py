@@ -195,6 +195,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
+    from .task_opening import MODES as opening_modes, TaskOpening
+    from .opening_evidence import instructions, verified_windows
+    opening_enabled=feedback_reflection in opening_modes
+    if opening_enabled and flash is not None:
+        flash.max_requests=min(flash.max_requests or 1,1)
+    opening=None
     phase='training schema'
     task = None
     try:
@@ -203,9 +209,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         except DECODE_ERRORS as native_error:
             log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
             try:
-                task=adapt_training(package, None if feedback_reflection else flash, log)
+                task=adapt_training(package, flash if opening_enabled or not feedback_reflection else None, log)
             except NativeContract:
                 raise native_error
+        if opening_enabled:
+            task,lines,origin=instructions(package,task)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
         log.event('selection_metric_resolved', **spec['goal_resolution']['fields']['primary_metric'])
     except DECODE_ERRORS as error:
@@ -213,7 +221,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                                     api_usage=api_accounting(flash,log), resolved_task=task)
     from .proposal_value import MODES as proposal_modes, DELIVERED_MODES, ProposalStudy, split_search
     pilot=None
-    core_limit=fit_limit
+    core_limit=min(10,fit_limit) if opening_enabled else fit_limit
     if feedback_reflection in proposal_modes+DELIVERED_MODES:
         pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
         core_limit=fit_limit-min(5,fit_limit//3)
@@ -227,7 +235,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         pilot.snapshot(checkpoint,0)
     else:
         checkpoint = standby(task,spec,metric,directory,log)
-        folds = partitions(task,seed)
+        folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -261,6 +269,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         if review is not None:
             log.write_json('policy_review.json',review.record())
         try:
+            if opening_enabled:
+                opening=TaskOpening(feedback_reflection,task,metric,folds,lines,origin,log,flash,start,wall)
+                opening.launch()
             while True:
                 caps, generation=generator.refresh(history,static)
                 executor.caps=caps
@@ -394,6 +405,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,
                                                 directory, log, timeout, observed, payloads)
+            if opening is not None:
+                selection,choice=opening.after_delivery(spec,choice,selection,history,observed,payloads,profile,executor,timeout,blocked)
             if feedback_reflection == 'conditional-flash':
                 from .conditional_review import review_delivery
                 selection, choice = review_delivery(task, spec, metric, selection, choice, executor, directory,
@@ -408,6 +421,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             outcome=dict(status='failed',model_available=False,error=type(error).__name__+': '+str(error))
             raise
         finally:
+            if opening is not None:
+                opening.finish()
             if pilot is not None:
                 pilot.finish()
             if 'outcome' in locals():

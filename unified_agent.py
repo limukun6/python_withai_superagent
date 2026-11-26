@@ -14,7 +14,7 @@ from superagent.data import load_training_task
 from superagent.experiment_policy import identity
 from superagent.exploration_rule import load_rule
 from superagent.metrics import MetricSpec
-from superagent.planner_review import add_review_arguments, review_flags
+from superagent.planner_review import add_review_arguments, feedback_mode, review_flags
 from superagent.predict import create_predictions
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import grouped_partition, sample_groups
@@ -227,6 +227,7 @@ def main():
         if action == "train":
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
+    args.feedback_reflection=feedback_mode(args)
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
                      self_review=args.self_review,exploration_rule=args.exploration_rule,

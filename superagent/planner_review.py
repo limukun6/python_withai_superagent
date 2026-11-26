@@ -10,8 +10,10 @@ def forecast(weights, expected, novelty):
 
 
 def add_review_arguments(parser):
-    parser.add_argument('--feedback-reflection', choices=('control','local','flash','conditional-flash','scheduled-flash',
-                        'evidence-control','evidence-local','proposal-flash','delivered-local','delivered-flash'),
+    control=parser.add_mutually_exclusive_group()
+    control.add_argument('--task-analysis',choices=('local','flash'),help='Read an anonymous task before training and verify one diagnosis after ordinary delivery')
+    control.add_argument('--feedback-reflection', choices=('control','local','flash','conditional-flash','scheduled-flash',
+                        'evidence-control','evidence-local','proposal-flash','delivered-local','delivered-flash','opening-local','opening-flash'),
                         help='Review an early action or a measured disagreement that could change the delivered model')
     parser.add_argument('--reflection-history', help='Verified anonymous prior outcome counts')
     parser.add_argument('--exploration-rule', metavar='JSON',
@@ -23,6 +25,11 @@ def add_review_arguments(parser):
                        help='Also value experiments that can distinguish two proposed rules')
     modes.add_argument('--protected-self-review', dest='self_review', action='store_const', const='protected',
                        help='Preserve the selected model and use spare fits for a matched challenger when affordable')
+
+
+def feedback_mode(args):
+    opening=getattr(args,'task_analysis',None)
+    return 'opening-'+opening if opening else getattr(args,'feedback_reflection',None)
 
 
 def review_flags(mode):

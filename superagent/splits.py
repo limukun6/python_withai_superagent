@@ -56,7 +56,7 @@ def _declared_column(task, column):
     names = [entry.get('name') for entry in columns if isinstance(entry, dict)]
     if column not in names:
         raise ValueError(f'Protocol column {column!r} is not declared in input columns')
-    matrix = np.asarray(task.X_train)
+    matrix = np.asarray(getattr(task.X_train,'values',task.X_train))
     if matrix.ndim != 2 or matrix.shape[1] != len(names):
         raise ValueError('An explicit protocol needs a table whose declared columns match the features')
     return matrix[:, names.index(column)]

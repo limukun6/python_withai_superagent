@@ -1,5 +1,11 @@
 # 当前接续状态：2026-11-25，发布验收v2：Task1新交付候选已成形，Task2待资产
 
+## 2026-11-26：继续A结构开发，SA1离线编译/修复通过，未冻结
+
+用户明确还有四天，要解决固定解析拒绝未知任务，不立刻停止研发。当前工作树D:/codex/python_withai/runs/semantic_adaptation、分支codex/a-semantic-adaptation-1126，基于B自主入口d501807；B方法菜单不改。新semantic_contract模块接入autonomous_run：旧native/adaptive失败后，多文档证据→LLM契约→真实试读→一次语义修复→复用现有TrainingTask/input_recipe。13项新测试与既有相关测试共43项通过，runner禁止训练和网络，0新增fit/真实API/费用。两项Windows旧夹具修正为明确close和UTF-8，不改生产解码。日志research/sa1_semantic_contract，报告docs/batches/SA1_semantic_contract_results_20261126_zh.md。
+
+下一步SA2输出recipe/工具循环/显式语义入口模式；真实Flash与完整训练未跑，不把模拟回复当语义成功率。仍有限定reader/文档范围，显式manifest不由此层覆盖。完整四天方案docs/LLM_SEMANTIC_ADAPTATION_4DAY_PLAN_20261126_zh.md；旧1532/1527/684等成绩都保留原版本，下面发布验收状态是历史，不是本新分支验收结论。账本未改，B一次真实格式调用仍待团队并账。
+
 **B 侧统一入口，11 月 25 日。** 本地 `codex/task-driven-planning-1125` 已完成[陌生分类文件接入](ADAPTIVE_INPUT_20261125_zh.md)以及[指标和失败交付验收](METRICS_AND_VALID_PARTIAL_RESULTS_1125_zh.md)。前者有一次校园 Flash 真实调用，课程口径 ¥0.000829，等待合并团队账本。后者核实了同一组预测换指标会改变选择，并验证四种故障下均能交付逐行预测，真实 API 调用为零。本轮未重评 Task1、Task2。
 
 **2026-11-25 发布验收 v2（取代此前验收结论）**：① 只读查档未找到历史 1532 的任何一个模型摘要（`8c50b3ff…` portable table、`16e0a33c…` portable titles、`821fc7e7…` release table），也未找到 363 MB 交付包本体（184 个候选文件逐个算 SHA + 全盘 >300 MB 枚举，0 命中）⇒ **历史 1532 保留历史身份，不并入当前版本**。② Task1 新交付候选取自**完整自主运行**（`unified_agent` 9 fit、0 API、选中 `catboost_depth8_reg3.0`），指定验证 **1527/2030=0.752217**；模型/预测/任务包/源码/环境摘要全部记录，**独立进程 + 独立源码副本重载预测与交付完全一致**（预测值摘要 `f8d77292…`），产物在 `research/release_acceptance/delivery/`。③ **Task2 无法在当前环境核准**：交付的 12 层 MiniLM+E5 权重不在本机注册表内，重跑只能退回文本配方候选（6 fit、内部 0.6672、无指定验证分），因此不能"Task1 换新源、Task2 沿用旧分"宣称同版。④ 边界声明按复核收窄：训练读取只证明公开对象无测试数据（未做成员打开审计）；时间划分只覆盖字符串字典序与稳定性，相同时间戳可跨界故只主张**非递减**；逐 trial 指标只核了两份 accuracy 运行。⑤ 口径：本地运行不是 0 fit（A149/A150 共 19 次，本轮新增 15 次），全局累计仍双口径并列不写单一数。**研发探索可结束；功能冻结卡在 Task2 资产或"Task2 仅历史身份"的取舍，需发布层决定。** 报告 `docs/batches/RELEASE_ACCEPTANCE_V2_20261125_zh.md`，复核 `RELEASE_ACCEPTANCE_CODEX_REVIEW_20261125_zh.md`。

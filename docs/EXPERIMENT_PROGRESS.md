@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA1语义契约接入，43无fit/无网络检查通过
+
+在B d501807独立分支codex/a-semantic-adaptation-1126接semantic_contract与正式训练入口。解决多文档/非标准源与跨句目标的编译入口：模型可提契约、程序真实解码、诊断回送及一次有界修复；指标/行角色/预测读法沿现有确定性执行。13新+30既有共43检查通过，3.219秒，新增fit/真实API均0。初相关回归两旧Windows夹具问题修正closing/UTF-8，未改生产reader。报告batches/SA1_semantic_contract_results_20261126_zh.md、证据research/sa1_semantic_contract；全部为模拟LLM工程验证，不是新任务质量或真实LLM成功率。下一批SA2输出契约/工具探查，尚未运行；项目未冻结。
+
 ## 2026-11-25：发布验收复核，0新增fit/API
 
 读取7be2458报告/acceptance原件及本机课程原文：统一自主重训1527/2030与历史1532预测差95行属训练复现差异，旧模型缺失故加载复现未核，不能直接说旧分数错误。建议完整自主9fit的当前1527模型先做交付候选，旧1532限时只读找回matched模型/清单，历史记录不覆盖。Python3.11.15与当前3.12.14不同、raw/release模型SHA不同为查档线索，不是根因结论；六项边界测试尚不证明实际禁读成员未打开或通用严格时间隔离。复核docs/batches/RELEASE_ACCEPTANCE_CODEX_REVIEW_20261125_zh.md。当前只核对未训练/未调用API/未改模型与账本，不宣布最终冻结。

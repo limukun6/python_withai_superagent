@@ -169,18 +169,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     training_only=True,source_files=sources())
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
-    from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
+    from .format_intake import DECODE_ERRORS
     phase='training schema'
     task = None
     try:
-        try:
-            task=load_training_task(package,read_declarations=True)
-        except DECODE_ERRORS as native_error:
-            log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
-            try:
-                task=adapt_training(package, flash, log)
-            except NativeContract:
-                raise native_error
+        from .semantic_contract import resolve_training_task
+        task=resolve_training_task(package, flash, log)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
         log.event('selection_metric_resolved', **spec['goal_resolution']['fields']['primary_metric'])
     except DECODE_ERRORS as error:

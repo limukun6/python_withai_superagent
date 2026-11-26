@@ -1,0 +1,680 @@
+{
+  "protocol": "158bbd9310b59fc437d8d50e47c4b8440b90a3d93f166f16555e406dee7dc97b",
+  "source": {
+    "agent": "ccdac07c2022fd0371294cb0490d4f3523a4a0196d46eb0f03260507991e5e0f",
+    "study": "0b6f5423586c53b7bc124c7c61526358d7c060f63f5948dd2815a75002a050c3"
+  },
+  "cases": {
+    "s91": {
+      "metric": "balanced_accuracy",
+      "train": 1188,
+      "outer": 412,
+      "arms": {
+        "local": {
+          "status": "completed",
+          "fits": 12,
+          "wall": 16.29535691696219,
+          "error": null,
+          "opening": {
+            "mode": "opening-local",
+            "brief_digest": "871f60b40a50be35bbe1fc96a2ac3367f6ac71ee1406ec7eefb1d11bb1f562b6",
+            "interpretation_status": "local",
+            "reply_used": false,
+            "changed_experiment": false,
+            "check_status": "no_advice",
+            "incumbent_sha": "cf9005dbac6f5184b9bc507fe1c3e8836dd28575a0a8071d39cb296918cbf2d1",
+            "incumbent_members": [
+              "numeric_tabular_rbf_svm_C10.0"
+            ],
+            "protected_seconds": 13.01528908405453,
+            "fits_at_delivery": 10,
+            "remaining_at_delivery": 6,
+            "result": "retained",
+            "decision_time_status": "local",
+            "decision_seconds": 13.015511083882302,
+            "local_experiment": "open_SVC_3aec94c89d7964c9a40b",
+            "tested_candidate": "open_SVC_3aec94c89d7964c9a40b",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 445,
+                "incumbent": 0.9589473466346552,
+                "challenger": 0.9649805447470817,
+                "delta": 0.00603319811242653,
+                "gained": 4,
+                "lost": 2
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 416,
+                "incumbent": 0.9602378298030472,
+                "challenger": 0.9267930137495355,
+                "delta": -0.03344481605351168,
+                "gained": 3,
+                "lost": 9
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 16.29495070897974,
+            "updates_during_search": 0
+          },
+          "final": 0.8481014455709863,
+          "original": 0.8481014455709863,
+          "usage": []
+        },
+        "flash": {
+          "status": "completed",
+          "fits": 12,
+          "wall": 28.66862816712819,
+          "error": null,
+          "opening": {
+            "mode": "opening-flash",
+            "brief_digest": "871f60b40a50be35bbe1fc96a2ac3367f6ac71ee1406ec7eefb1d11bb1f562b6",
+            "interpretation_status": "valid",
+            "reply_used": true,
+            "changed_experiment": false,
+            "check_status": "split_verified",
+            "dispatch_after_trials": 0,
+            "incumbent_sha": "cf9005dbac6f5184b9bc507fe1c3e8836dd28575a0a8071d39cb296918cbf2d1",
+            "incumbent_members": [
+              "numeric_tabular_rbf_svm_C10.0"
+            ],
+            "protected_seconds": 15.306333667133003,
+            "fits_at_delivery": 10,
+            "remaining_at_delivery": 6,
+            "result": "retained",
+            "interpretation": {
+              "goal": "Predict whether an acoustic syllable belongs to the target family, validating on unseen field_23 entities and judging adoption by balanced_accuracy.",
+              "metric": "balanced_accuracy",
+              "citations": [
+                "doc_3",
+                "doc_2",
+                "doc_4",
+                "contract"
+              ],
+              "uncertainty": "No evaluation data are available, so I cannot confirm that the actual internal folds separate field_23; overlap would make balanced_accuracy optimistic.",
+              "check": "split_integrity",
+              "hypothesis": "The actual internal folds have no field_23 overlap between fitting and validation entities.",
+              "if_false": "If field_23 overlaps across folds, treat the validation result as misleading and require a field_23-disjoint split before adopting the model."
+            },
+            "decision_time_status": "valid",
+            "decision_seconds": 24.6104393331334,
+            "check": "split_integrity",
+            "diagnosis": {
+              "primary": {
+                "overlapping_entities": 0,
+                "passes": true
+              },
+              "confirmation_1": {
+                "overlapping_entities": 0,
+                "passes": true
+              },
+              "confirmation_2": {
+                "overlapping_entities": 0,
+                "passes": true
+              }
+            },
+            "local_experiment": "open_SVC_3aec94c89d7964c9a40b",
+            "tested_candidate": "open_SVC_3aec94c89d7964c9a40b",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 445,
+                "incumbent": 0.9589473466346552,
+                "challenger": 0.9649805447470817,
+                "delta": 0.00603319811242653,
+                "gained": 4,
+                "lost": 2
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 416,
+                "incumbent": 0.9602378298030472,
+                "challenger": 0.9267930137495355,
+                "delta": -0.03344481605351168,
+                "gained": 3,
+                "lost": 9
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 28.667799832997844,
+            "updates_during_search": 0
+          },
+          "final": 0.8481014455709863,
+          "original": 0.8481014455709863,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 716,
+              "output_tokens": 2306,
+              "latency_seconds": 24.578,
+              "finish_reason": "stop",
+              "course_cost_rmb": 0.00994
+            }
+          ]
+        }
+      },
+      "delta": 0.0,
+      "changed": 0,
+      "corrected": 0,
+      "spoiled": 0
+    },
+    "s92": {
+      "metric": "macro_f1",
+      "train": 760,
+      "outer": 240,
+      "arms": {
+        "local": {
+          "status": "completed",
+          "fits": 12,
+          "wall": 109.81337479082868,
+          "error": null,
+          "opening": {
+            "mode": "opening-local",
+            "brief_digest": "4f0cb0478fabe5e95db7668d125526f9f67ea1bd045852b5835a8be084ab5a06",
+            "interpretation_status": "local",
+            "reply_used": false,
+            "changed_experiment": false,
+            "check_status": "no_advice",
+            "incumbent_sha": "0382fe1e43dd626b3758fd0bee6192f1b7d58fa24599e851f78a6b6d555e6bf7",
+            "incumbent_members": [
+              "e5_small_text_with_lexical_features"
+            ],
+            "protected_seconds": 104.07525979098864,
+            "fits_at_delivery": 10,
+            "remaining_at_delivery": 6,
+            "result": "retained",
+            "decision_time_status": "local",
+            "decision_seconds": 104.07556341588497,
+            "local_experiment": "open_DecisionTreeClassifier_eb43dbed78540ea66437",
+            "tested_candidate": "open_DecisionTreeClassifier_eb43dbed78540ea66437",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 152,
+                "incumbent": 0.9868329868329868,
+                "challenger": 0.9209979209979211,
+                "delta": -0.06583506583506571,
+                "gained": 0,
+                "lost": 10
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 152,
+                "incumbent": 0.9669320802332158,
+                "challenger": 0.9407253347198752,
+                "delta": -0.026206745513340568,
+                "gained": 3,
+                "lost": 7
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 109.8127762498334,
+            "updates_during_search": 0
+          },
+          "final": 0.9268174561891267,
+          "original": 0.9268174561891267,
+          "usage": []
+        },
+        "flash": {
+          "status": "completed",
+          "fits": 12,
+          "wall": 117.39275633287616,
+          "error": null,
+          "opening": {
+            "mode": "opening-flash",
+            "brief_digest": "4f0cb0478fabe5e95db7668d125526f9f67ea1bd045852b5835a8be084ab5a06",
+            "interpretation_status": "valid",
+            "reply_used": true,
+            "changed_experiment": false,
+            "check_status": "refuted",
+            "dispatch_after_trials": 0,
+            "interpretation": {
+              "goal": "Classify each public comment as unsolicited promotion or not, using comment text only.",
+              "metric": "macro_f1",
+              "citations": [
+                "doc_1",
+                "doc_3",
+                "word_count"
+              ],
+              "uncertainty": "Very short comments may lack enough context, so low-word-count rows could have excess out-of-fit classification errors.",
+              "check": "word_count_low",
+              "hypothesis": "Comments with word_count <= 5 have out-of-fit error at least 0.05 higher than remaining rows.",
+              "if_false": "If the low-word-count slice does not show excess error, drop that slice concern and keep the standard grouped-stratified macro-F1 validation."
+            },
+            "incumbent_sha": "2f30212680f5205f480450068b80e91fe4cee363bd779726989b0a05f7e076a6",
+            "incumbent_members": [
+              "e5_small_text_with_lexical_features"
+            ],
+            "protected_seconds": 112.55265429196879,
+            "fits_at_delivery": 10,
+            "remaining_at_delivery": 6,
+            "result": "retained",
+            "decision_time_status": "valid",
+            "decision_seconds": 112.55309837497771,
+            "check": "word_count_low",
+            "diagnosis": {
+              "primary": {
+                "rows": 46,
+                "others": 106,
+                "errors": 0,
+                "other_errors": 2,
+                "gap": -0.018867924528301886,
+                "supported": false
+              },
+              "confirmation_1": {
+                "rows": 44,
+                "others": 108,
+                "errors": 0,
+                "other_errors": 5,
+                "gap": -0.046296296296296294,
+                "supported": false
+              }
+            },
+            "local_experiment": "open_DecisionTreeClassifier_eb43dbed78540ea66437",
+            "tested_candidate": "open_DecisionTreeClassifier_eb43dbed78540ea66437",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 152,
+                "incumbent": 0.9868329868329868,
+                "challenger": 0.9209979209979211,
+                "delta": -0.06583506583506571,
+                "gained": 0,
+                "lost": 10
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 152,
+                "incumbent": 0.9669320802332158,
+                "challenger": 0.9407253347198752,
+                "delta": -0.026206745513340568,
+                "gained": 3,
+                "lost": 7
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 117.3921542079188,
+            "updates_during_search": 7
+          },
+          "final": 0.9268174561891267,
+          "original": 0.9268174561891267,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 608,
+              "output_tokens": 790,
+              "latency_seconds": 25.943,
+              "finish_reason": "stop",
+              "course_cost_rmb": 0.003768
+            }
+          ]
+        }
+      },
+      "delta": 0.0,
+      "changed": 0,
+      "corrected": 0,
+      "spoiled": 0
+    },
+    "s93": {
+      "metric": "accuracy",
+      "train": 900,
+      "outer": 300,
+      "arms": {
+        "local": {
+          "status": "completed",
+          "fits": 8,
+          "wall": 17.075004250044003,
+          "error": null,
+          "opening": {
+            "mode": "opening-local",
+            "brief_digest": "17d7adae1b01d23ef957ec463254eef218a9108e2fa87f12d525d99ea62f0cbe",
+            "interpretation_status": "local",
+            "reply_used": false,
+            "changed_experiment": false,
+            "check_status": "no_advice",
+            "incumbent_sha": "074028008e6342104b0e361b1d200d426a8aa45c95395a29b62cd2b0014d2ebb",
+            "incumbent_members": [
+              "image_gradient_histograms_logistic"
+            ],
+            "protected_seconds": 12.42429916607216,
+            "fits_at_delivery": 6,
+            "remaining_at_delivery": 10,
+            "result": "retained",
+            "decision_time_status": "local",
+            "decision_seconds": 12.424611499998719,
+            "local_experiment": "open_LogisticRegression_88808287278a7f542f33",
+            "tested_candidate": "open_LogisticRegression_88808287278a7f542f33",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 180,
+                "incumbent": 0.9388888888888889,
+                "challenger": 0.8944444444444445,
+                "delta": -0.0444444444444444,
+                "gained": 2,
+                "lost": 10
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 180,
+                "incumbent": 0.9611111111111111,
+                "challenger": 0.9277777777777778,
+                "delta": -0.033333333333333326,
+                "gained": 0,
+                "lost": 6
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 17.074332708027214,
+            "updates_during_search": 0
+          },
+          "final": 0.9733333333333334,
+          "original": 0.9733333333333334,
+          "usage": []
+        },
+        "flash": {
+          "status": "completed",
+          "fits": 8,
+          "wall": 34.56395887490362,
+          "error": null,
+          "opening": {
+            "mode": "opening-flash",
+            "brief_digest": "17d7adae1b01d23ef957ec463254eef218a9108e2fa87f12d525d99ea62f0cbe",
+            "interpretation_status": "valid",
+            "reply_used": true,
+            "changed_experiment": false,
+            "check_status": "refuted",
+            "dispatch_after_trials": 0,
+            "incumbent_sha": "074028008e6342104b0e361b1d200d426a8aa45c95395a29b62cd2b0014d2ebb",
+            "incumbent_members": [
+              "image_gradient_histograms_logistic"
+            ],
+            "protected_seconds": 9.456301958998665,
+            "fits_at_delivery": 6,
+            "remaining_at_delivery": 10,
+            "result": "retained",
+            "interpretation": {
+              "goal": "Recognize a handwritten numeral from one binary image and report classification accuracy.",
+              "metric": "accuracy",
+              "citations": [
+                "doc_1",
+                "doc_2",
+                "doc_3",
+                "contract",
+                "image_contrast"
+              ],
+              "uncertainty": "Low-contrast images may have higher out-of-fit classification error than remaining rows; no evaluation data are available.",
+              "check": "image_contrast_low",
+              "hypothesis": "Low-contrast images at or below the stated cut have out-of-fit classification error at least 0.05 higher than remaining rows.",
+              "if_false": "If refuted, do not treat low contrast as a slice needing separate mitigation; keep the frozen accuracy metric and proceed without that slice check."
+            },
+            "decision_time_status": "valid",
+            "decision_seconds": 30.914018291980028,
+            "check": "image_contrast_low",
+            "diagnosis": {
+              "primary": {
+                "rows": 56,
+                "others": 124,
+                "errors": 2,
+                "other_errors": 9,
+                "gap": -0.036866359447004615,
+                "supported": false
+              },
+              "confirmation_1": {
+                "rows": 48,
+                "others": 132,
+                "errors": 3,
+                "other_errors": 4,
+                "gap": 0.032196969696969696,
+                "supported": false
+              }
+            },
+            "local_experiment": "open_LogisticRegression_88808287278a7f542f33",
+            "tested_candidate": "open_LogisticRegression_88808287278a7f542f33",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 180,
+                "incumbent": 0.9388888888888889,
+                "challenger": 0.8944444444444445,
+                "delta": -0.0444444444444444,
+                "gained": 2,
+                "lost": 10
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 180,
+                "incumbent": 0.9611111111111111,
+                "challenger": 0.9277777777777778,
+                "delta": -0.033333333333333326,
+                "gained": 0,
+                "lost": 6
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 34.563491167034954,
+            "updates_during_search": 0
+          },
+          "final": 0.9733333333333334,
+          "original": 0.9733333333333334,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 803,
+              "output_tokens": 918,
+              "latency_seconds": 30.821,
+              "finish_reason": "stop",
+              "course_cost_rmb": 0.004475
+            }
+          ]
+        }
+      },
+      "delta": 0.0,
+      "changed": 0,
+      "corrected": 0,
+      "spoiled": 0
+    },
+    "s94": {
+      "metric": "macro_f1",
+      "train": 900,
+      "outer": 300,
+      "arms": {
+        "local": {
+          "status": "completed",
+          "fits": 7,
+          "wall": 19.095377707853913,
+          "error": null,
+          "opening": {
+            "mode": "opening-local",
+            "brief_digest": "ff050d3916fc179c1164f9dd8bbb0ec6bada943386e32d4a06620ad09a694a68",
+            "interpretation_status": "local",
+            "reply_used": false,
+            "changed_experiment": false,
+            "check_status": "no_advice",
+            "incumbent_sha": "0618cdf6219b8c59f3975506ac63619a26af9c4d3d48411fb4f585e9660b95d9",
+            "incumbent_members": [
+              "open_HistGradientBoostingClassifier_bc243ee4fa866ec81980"
+            ],
+            "protected_seconds": 12.699794999789447,
+            "fits_at_delivery": 5,
+            "remaining_at_delivery": 11,
+            "result": "retained",
+            "decision_time_status": "local",
+            "decision_seconds": 12.70011454098858,
+            "local_experiment": "open_GradientBoostingClassifier_874f96048f76306d833a",
+            "tested_candidate": "open_GradientBoostingClassifier_874f96048f76306d833a",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 180,
+                "incumbent": 0.967035742035742,
+                "challenger": 0.9664409234176676,
+                "delta": -0.0005948186180744219,
+                "gained": 1,
+                "lost": 1
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 180,
+                "incumbent": 0.9779554263565892,
+                "challenger": 0.9613123235692402,
+                "delta": -0.01664310278734893,
+                "gained": 1,
+                "lost": 4
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 19.094567874912173,
+            "updates_during_search": 0
+          },
+          "final": 0.9766629623241672,
+          "original": 0.9766629623241672,
+          "usage": []
+        },
+        "flash": {
+          "status": "completed",
+          "fits": 7,
+          "wall": 33.82204725011252,
+          "error": null,
+          "opening": {
+            "mode": "opening-flash",
+            "brief_digest": "ff050d3916fc179c1164f9dd8bbb0ec6bada943386e32d4a06620ad09a694a68",
+            "interpretation_status": "valid",
+            "reply_used": true,
+            "changed_experiment": false,
+            "check_status": "refuted",
+            "dispatch_after_trials": 0,
+            "incumbent_sha": "0618cdf6219b8c59f3975506ac63619a26af9c4d3d48411fb4f585e9660b95d9",
+            "incumbent_members": [
+              "open_HistGradientBoostingClassifier_bc243ee4fa866ec81980"
+            ],
+            "protected_seconds": 10.043304292019457,
+            "fits_at_delivery": 5,
+            "remaining_at_delivery": 11,
+            "result": "retained",
+            "interpretation": {
+              "goal": "Predict one of four room classes from seven numeric received-signal-strength measurements per reading.",
+              "metric": "macro_f1",
+              "citations": [
+                "doc_1",
+                "doc_3",
+                "balance"
+              ],
+              "uncertainty": "Class 3 is only slightly smaller than the other classes, so excess out-of-fit error is plausible but not established; no evaluation data are available.",
+              "check": "minority_errors",
+              "hypothesis": "Out-of-fit errors for class_index 3 exceed errors on remaining rows by at least 0.05.",
+              "if_false": "If refuted, drop the class-3 excess-error concern; keep macro_f1 as the governing metric and do not adopt a class-specific change."
+            },
+            "decision_time_status": "valid",
+            "decision_seconds": 28.964609834132716,
+            "check": "minority_errors",
+            "diagnosis": {
+              "primary": {
+                "rows": 52,
+                "others": 128,
+                "errors": 1,
+                "other_errors": 5,
+                "gap": -0.019831730769230768,
+                "supported": false
+              },
+              "confirmation_1": {
+                "rows": 46,
+                "others": 134,
+                "errors": 0,
+                "other_errors": 4,
+                "gap": -0.029850746268656716,
+                "supported": false
+              }
+            },
+            "local_experiment": "open_GradientBoostingClassifier_874f96048f76306d833a",
+            "tested_candidate": "open_GradientBoostingClassifier_874f96048f76306d833a",
+            "confirmation": [
+              "primary",
+              "confirmation_1"
+            ],
+            "comparisons": [
+              {
+                "fold": "primary",
+                "rows": 180,
+                "incumbent": 0.967035742035742,
+                "challenger": 0.9664409234176676,
+                "delta": -0.0005948186180744219,
+                "gained": 1,
+                "lost": 1
+              },
+              {
+                "fold": "confirmation_1",
+                "rows": 180,
+                "incumbent": 0.9779554263565892,
+                "challenger": 0.9613123235692402,
+                "delta": -0.01664310278734893,
+                "gained": 1,
+                "lost": 4
+              }
+            ],
+            "additional_fits": 2,
+            "closed_seconds": 33.82139608403668,
+            "updates_during_search": 0
+          },
+          "final": 0.9766629623241672,
+          "original": 0.9766629623241672,
+          "usage": [
+            {
+              "served_model": "DeepSeek-V4.1-Flash",
+              "input_tokens": 677,
+              "output_tokens": 859,
+              "latency_seconds": 28.881,
+              "finish_reason": "stop",
+              "course_cost_rmb": 0.004113
+            }
+          ]
+        }
+      },
+      "delta": 0.0,
+      "changed": 0,
+      "corrected": 0,
+      "spoiled": 0
+    }
+  },
+  "complete": true,
+  "actual_fits": 78,
+  "calls": 4,
+  "input_tokens": 2804,
+  "output_tokens": 4873,
+  "known_course_rmb": 0.022296,
+  "unknown": 0,
+  "changed_experiments": 0,
+  "mean_delta": 0.0,
+  "worst_delta": 0.0,
+  "meets_quality_criterion": false,
+  "formal_test_accessed": false
+}

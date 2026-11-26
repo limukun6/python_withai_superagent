@@ -210,18 +210,29 @@ def predict(package,directory,output,selection):
     count=input_count(package,prior)
     if not count:
         raise ValueError('The number of prediction rows is zero')
-    scores=prior['metric']=='roc_auc'
-    if scores:
+    from .output_recipe import needs_scores, write_export
+    spec = prior.get('frozen_spec') or {}
+    custom = spec.get('output_recipe') is not None
+    scores=prior['metric']=='roc_auc' or needs_scores(spec.get('output_recipe'))
+    if prior['metric']=='roc_auc':
         MetricSpec('roc_auc',tuple(prior['labels']))
     output=Path(output).resolve()
     output.parent.mkdir(parents=True,exist_ok=True)
-    with atomic_text(output,newline='') as stream:
-        writer=csv.writer(stream)
-        writer.writerow(['row_id','prediction']+([f'score_{i}' for i in range(len(prior['prior']))] if scores else []))
-        writer.writerows([i,prior['majority'],*(prior['prior'] if scores else [])] for i in range(count))
+    output_contract = None
+    if custom:
+        predictions = np.asarray([prior['majority']] * count)
+        values = np.tile(prior['prior'], (count,1)) if scores else None
+        output_contract = write_export(package, spec, output, predictions,
+                                       prior['labels'] if scores else None, values)
+    else:
+        with atomic_text(output,newline='') as stream:
+            writer=csv.writer(stream)
+            writer.writerow(['row_id','prediction']+([f'score_{i}' for i in range(len(prior['prior']))] if scores else []))
+            writer.writerows([i,prior['majority'],*(prior['prior'] if scores else [])] for i in range(count))
     receipt=dict(selected_experiment='training_class_prior',delivery_status='partial',
                  contract_unresolved=selection.get('contract_unresolved',True),partial_reason=selection.get('partial_reason'),refit=False,
                  prediction_count=count,test_labels_read=False,model_sha256=selection['model_sha256'],
-                 score_class_order=prior['labels'] if scores else None,prediction_sha256=sha(output),external_score=None)
+                 score_class_order=prior['labels'] if scores else None,prediction_sha256=sha(output),external_score=None,
+                 output_contract=output_contract)
     RunLogger(output.parent).write_json('prediction_manifest.json',receipt)
     return output

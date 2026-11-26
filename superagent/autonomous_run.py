@@ -208,6 +208,13 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         try:
             while True:
                 caps, generation=generator.refresh(history,static)
+                from .output_recipe import needs_scores
+                if needs_scores(task.spec.get('output_recipe')):
+                    excluded = [name for name, cap in caps.items() if not cap.get('supports_probabilities')]
+                    caps = {name: cap for name, cap in caps.items() if cap.get('supports_probabilities')}
+                    if excluded:
+                        log.event('output_capability_filter', requires='predict_proba', excluded=excluded,
+                                  scoring_metric=metric.name)
                 executor.caps=caps
                 remaining=fit_limit-executor.accounting()['attempted_classifier_fits']
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)

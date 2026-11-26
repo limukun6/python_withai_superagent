@@ -30,7 +30,9 @@ def validate_prediction_outputs(predictions, rows, specification, classes=None, 
     if metric is not None:
         if metric.name!=specification.get('metric','accuracy'):raise ValueError('Frozen metric declarations disagree')
         if not set(values)<=set(metric.labels):raise ValueError('Prediction contains a class outside the frozen training domain')
-    if specification.get('metric','accuracy')=='roc_auc':
+    from .output_recipe import needs_scores
+    require_scores = specification.get('metric','accuracy')=='roc_auc' or needs_scores(specification.get('output_recipe'))
+    if require_scores:
         if metric is None:raise ValueError('Probability export requires a frozen metric class domain')
         order=np.asarray(classes)
         matrix=np.asarray(scores,dtype=float)
@@ -41,7 +43,7 @@ def validate_prediction_outputs(predictions, rows, specification, classes=None, 
             raise ValueError('Prediction probabilities must be normalized')
         classes,scores=order,matrix
     return predictions,classes,scores,{'row_count_checked':True,'label_domain_checked':metric is not None,
-                                      'probability_contract_checked':specification.get('metric','accuracy')=='roc_auc'}
+                                      'probability_contract_checked':require_scores}
 
 
 def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path) -> Path:
@@ -86,14 +88,20 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
     features = load_prediction_features(task_package, kind_to_loader[kind], specification)
     predictions = predict_with_model(kind_to_loader[kind], model, features)
     scores=classes=None
-    if specification.get('metric','accuracy')=='roc_auc':classes,scores=probability_with_model(kind_to_loader[kind],model,features)
+    from .output_recipe import needs_scores, write_export
+    if specification.get('metric','accuracy')=='roc_auc' or needs_scores(specification.get('output_recipe')):
+        classes,scores=probability_with_model(kind_to_loader[kind],model,features)
     predictions,classes,scores,contract_check=validate_prediction_outputs(predictions,len(features),specification,classes,scores)
     destination = Path(output_path).resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with atomic_text(destination, newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["row_id", "prediction"]+([f'score_{i}' for i in range(len(classes))] if scores is not None else []))
-        writer.writerows([i,value,*scores[i].tolist()] if scores is not None else [i,value] for i,value in enumerate(predictions.tolist()))
+    output_contract = None
+    if specification.get('output_recipe') is not None:
+        output_contract = write_export(task_package, specification, destination, predictions, classes, scores)
+    else:
+        with atomic_text(destination, newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["row_id", "prediction"]+([f'score_{i}' for i in range(len(classes))] if scores is not None else []))
+            writer.writerows([i,value,*scores[i].tolist()] if scores is not None else [i,value] for i,value in enumerate(predictions.tolist()))
     manifest = {
         "time_utc": datetime.now(timezone.utc).isoformat(),
         "selected_experiment": selection["selected_experiment"],
@@ -107,6 +115,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         "prediction_sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
         'score_class_order':classes.tolist() if classes is not None else None,
         'prediction_contract':contract_check,
+        'output_contract':output_contract,
     }
     RunLogger(destination.parent).write_json("prediction_manifest.json",manifest)
     return destination

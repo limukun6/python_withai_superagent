@@ -1,5 +1,9 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA2真实预测流程接输出recipe，73项零训练/零真实API通过
+
+基线40be241，新增output_recipe/semantic-task-v2接线、预测/partial导出、原子发布前校验与概率接口准入。18新测试含前导零/乱序ID、模板重排、标签映射、F1任务指定类别概率、无表头/编码、坏模板/缺ID/篡改拒绝、partial标记与独立CLI重载；连同SA1等合73项通过，回执11.031秒。固定算术模型夹具无fit，模拟LLM不计真实调用，0fit/0API/¥0。真实账本/课程正式测试未动。计划与runner先行，证据research/sa2_output_recipe；普通native主动解释、工具探查、预测字段映射及真实Flash仍未实现/实测，不宣称全部未知任务可用。下一批SA3继续，不冻结。
+
 ## 2026-11-26：SA1语义契约接入，43无fit/无网络检查通过
 
 在B d501807独立分支codex/a-semantic-adaptation-1126接semantic_contract与正式训练入口。解决多文档/非标准源与跨句目标的编译入口：模型可提契约、程序真实解码、诊断回送及一次有界修复；指标/行角色/预测读法沿现有确定性执行。13新+30既有共43检查通过，3.219秒，新增fit/真实API均0。初相关回归两旧Windows夹具问题修正closing/UTF-8，未改生产reader。报告batches/SA1_semantic_contract_results_20261126_zh.md、证据research/sa1_semantic_contract；全部为模拟LLM工程验证，不是新任务质量或真实LLM成功率。下一批SA2输出契约/工具探查，尚未运行；项目未冻结。

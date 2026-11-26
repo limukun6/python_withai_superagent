@@ -1,5 +1,11 @@
 # 当前接续状态：2026-11-25，发布验收v2：Task1新交付候选已成形，Task2待资产
 
+## 2026-11-26：SA2公告驱动输出契约接通，73项无fit/无API检查通过
+
+基线SA1 40be241。semantic-task-v2包含可选output与引用，v1仍兼容；新output_recipe接入正式predict与prior partial。支持CSV编码/BOM/分隔符/表头、原ID/声明索引、标签映射、指定训练类别概率、样例ID顺序重排、原子发布前独立读回核对。输出需要概率时过滤无接口候选，保持原评分目标与B排名。18项新检查＋已有相关项合73通过，11.031秒，0新fit/真实API/费用；模型为无需训练的固定算术夹具，独立CLI重载预测一致。报告docs/batches/SA2_output_recipe_results_20261126_zh.md，证据research/sa2_output_recipe。
+
+下一批SA3解释模式/探查工具循环/预测前试读/字段映射。普通native快路还不会主动审阅未知输出公告，新recipe当前主要沿SA1 fallback编译；尚未发真实Flash，不称任意格式或完整未知任务验收。生产已有改动归本新分支，不复用旧Task成绩名义；真实账本未改，B待并账请求仍需核准。
+
 ## 2026-11-26：继续A结构开发，SA1离线编译/修复通过，未冻结
 
 用户明确还有四天，要解决固定解析拒绝未知任务，不立刻停止研发。当前工作树D:/codex/python_withai/runs/semantic_adaptation、分支codex/a-semantic-adaptation-1126，基于B自主入口d501807；B方法菜单不改。新semantic_contract模块接入autonomous_run：旧native/adaptive失败后，多文档证据→LLM契约→真实试读→一次语义修复→复用现有TrainingTask/input_recipe。13项新测试与既有相关测试共43项通过，runner禁止训练和网络，0新增fit/真实API/费用。两项Windows旧夹具修正为明确close和UTF-8，不改生产解码。日志research/sa1_semantic_contract，报告docs/batches/SA1_semantic_contract_results_20261126_zh.md。

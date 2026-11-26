@@ -1,8 +1,10 @@
 # SuperAgent 最新研发交接（11 月 26 日）
 
-此目录提供可独立运行的最新源码。完整研发分支 `codex/task-driven-planning-1125` 包含同一份入口、所有测试、实验脚本和复核证据。队友在研发分支根目录开发，可以直接沿用团队的测试和验收程序。[完整源码](https://github.com/limukun6/python_withai_superagent/tree/b0944aee1f4cc31a2e475990ae52679a1408f544) · [两代整合版核验与 Task1 开工说明](https://github.com/limukun6/python_withai_superagent/blob/b0944aee1f4cc31a2e475990ae52679a1408f544/docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
+此目录提供可独立运行的最新源码。完整研发分支 `codex/task-driven-planning-1125` 包含同一份入口、所有测试、实验脚本和复核证据。队友在研发分支根目录开发，可以直接沿用团队的测试和验收程序。[完整源码](https://github.com/limukun6/python_withai_superagent/tree/f03323574614e8876cde5078c7aa31f093b62a36) · [两代整合版核验与 Task1 开工说明](https://github.com/limukun6/python_withai_superagent/blob/f03323574614e8876cde5078c7aa31f093b62a36/docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
 
-本轮两道课程任务均从空目录自主训练，课程指定验证答对 **1,533/2,030（75.52%）** 和 **684/940（72.77%）**。每题 10 次拟合，新增模型 API 0 次。用此目录独立重载两个模型，2,970 行预测全部重现。正式测试留给最终评估。[本轮验收证据](verification/two-integrations.json) · [源码对应关系](verification/source.json) · [个人分支交付重载](verification/personal-package-reload.json)
+本轮两道课程任务用修复后的默认入口从头自主训练。Task1 指定验证答对 **1,533/2,030（75.52%）**，Task2 答对 **684/940（72.77%）**。每题 10 次拟合，模型 API 调用合计 0 次。个人包独立重载后，2,970 行预测全部重现。正式测试保留。[本轮验收证据](verification/task-contract.json) · [源码对应关系](verification/source.json) · [个人包独立重载](verification/personal-package-reload.json) · [前一版两代对照](verification/two-integrations.json)
+
+此版能核对无表头数组的列名、保存标签含义、按题面点名的类别评分，并在训练前执行方法禁令。遇到含糊的字段说明时，可选的校园 DeepSeek 能辅助定位原文。程序保留证据来源及不确定状态。[任务契约修复说明](https://github.com/limukun6/python_withai_superagent/blob/f03323574614e8876cde5078c7aa31f093b62a36/docs/TASK_CONTRACT_EVIDENCE_20261126_zh.md)
 
 ## 运行 Task1
 
@@ -26,4 +28,4 @@ export SUPERAGENT_E5_SMALL_WEIGHTS="$PWD/weights/e5-small-v2"
 export SUPERAGENT_BGE_SMALL_WEIGHTS="$PWD/weights/bge-small-en-v1.5"
 ```
 
-同一个入口提供 `--task-analysis flash`，可启用校园 DeepSeek 开题分析。默认模式自行根据训练反馈做决策，上表的两份成绩均来自默认模式。开启付费功能时请按团队同一任务累计账本配置。[开题分析使用说明](https://github.com/limukun6/python_withai_superagent/blob/b0944aee1f4cc31a2e475990ae52679a1408f544/docs/TASK_OPENING_V1_1126_zh.md)
+同一个入口提供 `--task-analysis flash`，可启用校园 DeepSeek 开题分析。默认模式自行根据训练反馈做决策，上表的两份成绩均来自默认模式。开启付费功能时请按团队同一任务累计账本配置。[开题分析使用说明](https://github.com/limukun6/python_withai_superagent/blob/f03323574614e8876cde5078c7aa31f093b62a36/docs/TASK_OPENING_V1_1126_zh.md)

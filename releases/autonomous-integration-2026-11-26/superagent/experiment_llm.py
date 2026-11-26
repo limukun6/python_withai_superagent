@@ -107,7 +107,8 @@ class ExperimentLLM:
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
-        limits={'experiment_proposal':1536,'protected_experiment_proposal':4096,'feedback_reflection':3072,'task_opening':4096}
+        limits={'experiment_proposal':1536,'protected_experiment_proposal':4096,'feedback_reflection':3072,
+                'task_opening':4096,'contract_extraction':128}
         max_tokens=limits.get(role,16384 if self.streaming else 2048)
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
                    * self.price.input_rmb_per_million + max_tokens * self.price.output_rmb_per_million) / 1e6
@@ -120,15 +121,18 @@ class ExperimentLLM:
             request_body.pop('response_format')
             request_body.pop('cache')
             request_body.update(stream=True, stream_options={'include_usage': True})
-        if self.thinking_mode is not None:
-            request_body["thinking"] = {"type": self.thinking_mode}
+        thinking_mode=self.thinking_mode
+        if role=='contract_extraction' and self.model.casefold()=='deepseek-v4.1-flash':
+            thinking_mode='disabled'
+        if thinking_mode is not None:
+            request_body["thinking"] = {"type": thinking_mode}
         if self.reasoning_effort is not None:
             request_body["reasoning_effort"] = self.reasoning_effort
         if self.disable_template_thinking:
             request_body["chat_template_kwargs"] = {"thinking": False, "enable_thinking": False}
         timeout=(10,60)
         deadline=self.deadline
-        if role in ('input_format','experiment_planner'):
+        if role in ('input_format','experiment_planner','contract_extraction'):
             now=time.monotonic()
             remaining=180. if deadline is None else max(0.,deadline-now)
             deadline=now+min(45.,remaining/4)
@@ -140,7 +144,7 @@ class ExperimentLLM:
         logger.event("llm_request", role=role, model=self.model, messages=messages, reserved_estimate_rmb=reserve,
                      budget_request_id=ticket,
                      request_timeout_seconds=timeout,planning_deadline_monotonic=deadline,
-                     thinking_mode=self.thinking_mode, reasoning_effort=self.reasoning_effort,
+                     thinking_mode=thinking_mode, reasoning_effort=self.reasoning_effort,
                      chat_template_kwargs=request_body.get("chat_template_kwargs"), cache=request_body.get("cache"),
                      max_tokens=max_tokens, streaming=self.streaming)
         request_started = time.monotonic()

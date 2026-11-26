@@ -85,7 +85,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
                          supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
                          resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
                          origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
-    return menu
+    from .task_constraints import permitted
+    return [entry for entry in menu if permitted(entry,task.get('method_restrictions',()))]
 
 
 def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):

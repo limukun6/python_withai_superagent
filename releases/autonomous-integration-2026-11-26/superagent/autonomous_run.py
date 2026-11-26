@@ -104,6 +104,8 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
 
 def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False, challenger_prefix='challenger_', provisional_total=None):
     members = choice['members']
+    if 'linear_only' in spec.get('method_restrictions',()) and len(members)!=1:
+        raise ValueError('The task requires a single linear model')
     prefix = 'core_ready_' if provisional_total is not None else challenger_prefix if challenger else ''
     log.write_json(prefix + 'selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
     refit = directory/('core_ready_refit_data.joblib' if provisional_total is not None else 'refit_data.joblib')
@@ -205,11 +207,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     task = None
     try:
         try:
-            task=load_training_task(package,read_declarations=True)
+            from .task_constraints import RestrictionError
+            from .task_declarations import DeclarationError
+            reader_client=flash if opening_enabled or not feedback_reflection else None
+            task=load_training_task(package,read_declarations=True,declaration_client=reader_client,log=log)
+        except (RestrictionError,DeclarationError):
+            raise
         except DECODE_ERRORS as native_error:
             log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
             try:
-                task=adapt_training(package, flash if opening_enabled or not feedback_reflection else None, log)
+                task=adapt_training(package, reader_client, log)
             except NativeContract:
                 raise native_error
         if opening_enabled:
@@ -255,7 +262,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         widths=task.X_train.shape[1] if task.kind=='numeric_tabular' else None
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths)
         generator=MethodSpace(spec,profile,directory)
-        executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log)
+        executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
         observed={f:{} for f in folds}
         flash_available=flash is not None and not feedback_reflection
@@ -379,6 +386,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     train_score=facts['train_score'],search_score=facts['search_score'],search_accuracy=facts['search_accuracy'],
                     class_recall=facts['class_recall'],paired_errors=paired,training_seconds=facts['training_seconds'],
                     resolved_configuration=facts['resolved_configuration']))
+                meanings=profile.get('label_meanings',{})
+                if meanings:
+                    history[-1]['documented_class_recall']=[
+                        dict(label=label,meaning=meanings[str(label)],
+                             recall=float(np.mean(observation['predictions'][payload['labels']==label]==label)))
+                        for label in metric.labels if str(label) in meanings and np.any(payload['labels']==label)]
                 log.write_json('history.json',history)
                 if scheduled is not None:
                     scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory)

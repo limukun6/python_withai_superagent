@@ -2,11 +2,11 @@
 from dataclasses import dataclass
 import math
 import numpy as np
-from sklearn.metrics import accuracy_score,f1_score,balanced_accuracy_score,roc_auc_score
+from sklearn.metrics import accuracy_score,f1_score,balanced_accuracy_score,roc_auc_score,recall_score
 
 from .metric_declarations import MetricDeclarationError, metric_name, resolved_name
 
-SUPPORTED=('accuracy','macro_f1','weighted_f1','micro_f1','binary_f1','balanced_accuracy','roc_auc')
+SUPPORTED=('accuracy','macro_f1','weighted_f1','micro_f1','binary_f1','balanced_accuracy','roc_auc','binary_recall')
 
 
 def validate_metric(name):
@@ -31,6 +31,8 @@ class MetricSpec:
                 raise ValueError('Class domain must contain finite scalar labels')
         if self.name=='binary_f1' and len(self.labels)!=2:
             raise ValueError('binary_f1 requires two classes; declare an averaging rule for multiclass')
+        if self.name=='binary_recall' and len(self.labels)!=2:
+            raise MetricDeclarationError('Named binary recall requires two training classes')
 
     @classmethod
     def for_task(cls,task):
@@ -41,6 +43,8 @@ class MetricSpec:
             labels=[v for v in labels if v!=positive]+[positive]
         declared = task.spec.get('metric','accuracy')
         name = resolved_name(declared,labels,positive)
+        if name=='binary_recall' and positive is None:
+            raise MetricDeclarationError('Binary recall requires a declared class matching one training label')
         if metric_name(declared) == 'f1' and positive is None:
             labels.sort(key=lambda v: str(v).casefold() in ('1','1.0','true'))
         return cls(name,tuple(labels))
@@ -89,6 +93,8 @@ class MetricSpec:
             average=self.name.removesuffix('_f1')
             options={'pos_label':self.labels[-1]} if average=='binary' else {}
             score=float(f1_score(labels,predictions,labels=list(self.labels),average=average,zero_division=0,**options))
+        elif self.name=='binary_recall':
+            score=float(recall_score(labels,predictions,pos_label=self.labels[-1],average='binary',zero_division=0))
         elif self.name=='balanced_accuracy':score=float(balanced_accuracy_score(labels,predictions))
         elif self.name=='roc_auc':
             if scores is None or score_labels is None:raise ValueError('ROC-AUC requires model scores and their class-column order')

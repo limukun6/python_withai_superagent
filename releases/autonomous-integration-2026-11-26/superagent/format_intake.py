@@ -26,6 +26,11 @@ DECODE_ERRORS = (ValueError, KeyError, IndexError, TypeError, OSError, EOFError,
 
 
 def declared_source(prose, role, unit):
+    if unit=='member':
+        from .split_declarations import declared_paths
+        found=declared_paths(prose).get(role)
+        if found:
+            return found
     split = {'train': r'(?:training|train|训练)', 'test': r'(?:prediction|test(?:ing)?|预测|测试)'}[role]
     term = {'member': r'(?:file|文件)', 'collection': r'(?:collection|sheet|table|工作表|数据表)'}[unit]
     pattern = split + r'\s*' + term + r'\s*(?:is\s+|[:=：]\s*|为|是)["\']?([\w./-]+)'
@@ -60,8 +65,12 @@ def manifest_descriptor(files, role):
     return manifest, descriptor, member
 
 
-def source(files, role, declaration):
+def source(files, role, declaration, *, excluded=()):
     names = files.data_names()
+    if excluded:
+        from .split_declarations import matches
+        other={member for path in excluded for member in matches(names,path)}
+        names=[n for n in names if n not in other]
     if declaration is None and any(PurePosixPath(n).suffix.casefold() in {'.npy', '.npz'} for n in names):
         raise NativeContract('An explicit array layout owns this package')
     name = select(names, role, explicit=declaration, single=True)
@@ -163,7 +172,11 @@ def adapt_training(path, client=None, log=None):
     with package_files(path) as files:
         manifest, descriptor, declared_train = manifest_descriptor(files, 'train')
         prose = files.documentation()
-        name, raw = source(files, 'train', declared_train or declared_source(prose, 'train', 'member'))
+        from .split_declarations import declared_paths
+        split_files=declared_paths(prose)
+        train_source=declared_train or declared_source(prose, 'train', 'member')
+        other_sources=[n for role,n in split_files.items() if role!='train' and n!=train_source]
+        name, raw = source(files, 'train', train_source,excluded=other_sources)
         selector = descriptor.get('collection') or declared_source(prose, 'train', 'collection')
         fixed, target, evidence = None, None, None
         try:
@@ -176,6 +189,8 @@ def adapt_training(path, client=None, log=None):
             fixed, target, evidence = fixed_width_plan(prose, raw, client, log)
             codec, location, records = 'fixed-width', '', fixed_records(raw, fixed, target, 'train')
         selected, group = records_for_role(records, 'train', prose, contract=manifest)
+        if train_source is not None and train_source in (split_files.get('validation'),split_files.get('test')) and not group and not roles(location):
+            raise ValueError('A shared source needs independent training rows or collections')
         header = fields(list(selected[0]))
         if any(row.keys() != selected[0].keys() for row in selected):
             raise ValueError('Training record fields are inconsistent')
@@ -224,7 +239,8 @@ def adapt_training(path, client=None, log=None):
         spec.update(input_recipe=recipe, input_format=codec)
         if log:
             log.write_json('input_recipe.json', recipe)
-        return TrainingTask(kind, x, y, spec)
+        from .task_declarations import bind
+        return bind(TrainingTask(kind,x,y,spec),files,client=client,log=log,manifest=manifest)
 
 
 def prediction_rows(path, spec):

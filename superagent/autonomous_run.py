@@ -199,7 +199,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     from .opening_evidence import instructions, verified_windows
     opening_enabled=feedback_reflection in opening_modes
     if opening_enabled and flash is not None:
-        flash.max_requests=min(flash.max_requests or 1,1)
+        flash.max_requests=1 if flash.max_requests is None else min(flash.max_requests,1)
     opening=None
     phase='training schema'
     task = None

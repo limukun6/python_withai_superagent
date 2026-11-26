@@ -50,7 +50,7 @@ def legacy_command(args):
     return native.handler(native)
 
 
-def configured_flash(directory):
+def configured_flash(directory, *, thinking_mode=None):
     """Optional deployment configuration. Billing identifiers never enter decision states."""
     import os
     from types import SimpleNamespace
@@ -67,7 +67,7 @@ def configured_flash(directory):
     ledger,allowance,_=preflight(args)
     return ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
                          allowed_served_models={args.model},account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory)),
-                         streaming=True)
+                         thinking_mode=thinking_mode,streaming=True)
 
 
 def reflection_client(directory,mode='flash'):
@@ -77,7 +77,7 @@ def reflection_client(directory,mode='flash'):
     from .task_budget import TaskBudgetAccount, TaskBudgetLedger
     path = os.getenv('SUPERAGENT_RESEARCH_REFLECTION_OUTBOX')
     if not path:
-        return configured_flash(directory)
+        return configured_flash(directory,thinking_mode='disabled' if mode=='opening-flash' else None)
     if os.getenv('SUPERAGENT_OFFLINE') == '1' or os.getenv('SUPERAGENT_PLANNER_LEDGER'):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)

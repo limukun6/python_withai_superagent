@@ -1,6 +1,10 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
-## 当前可交付的全自主版本
+## 最新版与 Task1 研发入口
+
+个人分支的最新版在 `releases/autonomous-integration-2026-11-26`，运行源码与完整研发分支逐文件相同。队友开发 Task1 时可直接从 `codex/task-driven-planning-1125` 建自己的分支，在仓库根目录运行默认 Agent。此次从头复跑的指定验证为 Task1 **1,533/2,030（75.52%）**、Task2 **684/940（72.77%）**。两题均由训练反馈选模，模型 API 共 0 次。[个人分支可运行目录](releases/autonomous-integration-2026-11-26/) · [完整研发源码](https://github.com/limukun6/python_withai_superagent/tree/b0944aee1f4cc31a2e475990ae52679a1408f544) · [自主性核验与 Task1 接入位置](https://github.com/limukun6/python_withai_superagent/blob/b0944aee1f4cc31a2e475990ae52679a1408f544/docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
+
+## 11 月 25 日自主提交存档
 
 两份 Released Task 在同一份源码上从头自主运行，指定验证分别为 1533/2030（75.52%）和 684/940（72.77%）。在个人分支先进入 `releases/autonomous-submission-2026-11-25`，再运行 `python -m unified_agent solve`。可运行源码、依赖、权重准备命令和验收凭据都在这个目录。[个人分支交付目录](releases/autonomous-submission-2026-11-25/) · [同版完整源码](https://github.com/limukun6/python_withai_superagent/tree/d501807e61b5df1ac431d8fdf300c4bf4aaa4c2f)
 

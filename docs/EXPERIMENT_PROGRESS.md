@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA6修复真实探查接口，162项离线检查通过
+
+SA5已封存于e9f0c31，本批0新API/fit。修复source=prediction的逻辑角色与物理包混用；CSV/根JSON列表可明确返回无命名集合的事实，多集合容器仍拒绝无效选择器；分开CSV decoder location中的分隔符与真实collection。原SA5三次模型动作逐字段核对后本地回放3/3得到字段；这是工具回放，不是真实LLM最终plan成功。新增7＋SA5 oracle5＋既有150合162/162，10.282秒，两条含fit旧夹具仍显式排除。首轮两错误保留，发现CSV location=', '的接口混淆并修复。
+
+报告batches/SA6_tool_repair_results_20261126_zh.md；证据research/sa6_tool_repair_v2；runner scripts/run_sa6_tool_repair.py。下一步另冻新案例，按完整共享3调用闭环测真实理解/修复，再跑三模态，不能用旧题回填SA5的1/4。未冻结、无活动队列。当前本轮合计0fit/4真实Flash/课程¥.040603，账本461/known7.966395/unknown16/pending0；所有旧费用null和旧行保持不变。
+
 ## 2026-11-26：SA5真实Flash四案例完成，完整契约旧0/4、新1/4
 
 基线e43c31d，四个预登记开发机制案例（非独立盲测/真实迁移），0fit。旧native/局部适配接受2但输出等不完整、另拒绝2，0API；新proactive完整1/4（文本NDJSON、字段改名、正类概率全部通过），另3例停在工具参数/物理来源识别，4API。每格仅1请求，不冒充完整3调用闭环失败或成功。输入3643/输出9240token、课程费¥.040603、219.328秒。证据research/sa5_live_01和sa5_audit；报告batches/SA5_semantic_panel_results_20261126_zh.md。

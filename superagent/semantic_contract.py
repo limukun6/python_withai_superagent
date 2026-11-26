@@ -47,7 +47,9 @@ INSTRUCTION = (
     'order is {mode:"input"} or {mode:"template",member:<sample CSV member>,id_column:<output ID column>}. '
     'For nonnull output include evidence.output document IDs. Never write prediction values or fabricate IDs.'
     ' If field structure is unknown, return exactly {action:"inspect_header",member,collection,delimiter,evidence_refs}. '
-    'For a member in the separately supplied prediction package, add source:"prediction"; otherwise source is omitted or "training". '
+    'source is the role: "training" by default, or "prediction" for prediction features. '
+    'A separately supplied prediction package is used when present; otherwise both roles use the task package. '
+    'collection means an actual sheet/table/list key within a container; for flat CSV or a root JSON list use null. '
     'The tool returns only column names and codec, never row values. Use real member names and document IDs. '
     'Tool steps, proposed plans and repairs share the original request limit. '
 )
@@ -224,11 +226,34 @@ def _inspect_header(files, workspace, request):
     _require(delimiter is None or isinstance(delimiter,str) and len(delimiter)==1, 'Invalid inspection delimiter')
     # Only names/signature reach the model; no row values or label statistics.
     role = 'test' if request.get('source')=='prediction' or 'test' in roles(member) else 'train'
-    codec, location, rows = decode_records(files.read(member), role, selector=request['collection'], delimiter=delimiter)
+    raw=files.read(member)
+    normalized=False
+    try:
+        codec,location,rows=decode_records(raw,role,selector=request['collection'],delimiter=delimiter)
+    except (ValueError,TypeError) as original:
+        # Only flat containers have a unique absence of named collections. Do
+        # not retry selection on SQLite, sheets or named JSON containers.
+        from .format_sources import uncompress
+        flat=False
+        try:
+            text=decode_text(uncompress(raw)).lstrip()
+            flat=(isinstance(json.loads(text),list) if text.startswith('[') else
+                  bool(text) and not text.startswith(('{','<')))
+        except (ValueError,TypeError,UnicodeError):
+            pass
+        if request['collection'] is None or not flat: raise original
+        codec,location,rows=decode_records(raw,role,selector=None,delimiter=delimiter)
+        _require(codec=='delimited' or codec in ('json-records','json-lines','arff') and not location,
+                 'Invalid collection cannot select another named container')
+        normalized=True
     first = next(iter(rows), None)
     _require(isinstance(first,dict), 'Inspection found no record fields')
-    return dict(member=member,source=request.get('source','training'),codec=codec,collection=location,
-                fields=fields(list(first)),row_values_disclosed=False)
+    collection=location or None if codec in ('json-records','xml-records','sqlite','xlsx') else None
+    return dict(member=member,source=request.get('source','training'),codec=codec,collection=collection,
+                delimiter=location if codec=='delimited' else None,
+                fields=fields(list(first)),row_values_disclosed=False,
+                requested_collection=request['collection'],collection_normalized=normalized,
+                collection_note='Flat container has no named collection; use null' if normalized else 'Selected existing structure')
 
 
 def probe_prediction_input(path, task, log=None):
@@ -300,9 +325,9 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             try:
                 if isinstance(response,dict) and response.get('action')=='inspect_header':
                     _require(tool_steps<2,'Inspection step allowance reached')
-                    owner = query_files if response.get('source')=='prediction' else files
-                    _require(owner is not None,'No separate prediction package was supplied')
+                    owner = query_files if response.get('source')=='prediction' and query_files is not None else files
                     observation = _inspect_header(owner,workspace,response)
+                    observation['package_source']='external_prediction' if owner is query_files else 'task'
                     observations.append(observation); tool_steps += 1
                     if log: log.event('semantic_structure_observed', observation=observation)
                     continue

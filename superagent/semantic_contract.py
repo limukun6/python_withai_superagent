@@ -69,7 +69,7 @@ OUTPUT_SCHEMA = {
             {'type':'object','required':['name','kind'],'additionalProperties':False,
              'properties':dict(name={'type':'string'},kind={'const':'label'},mapping={'type':'object'})},
             {'type':'object','required':['name','kind','class_label'],'additionalProperties':False,
-             'properties':dict(name={'type':'string'},kind={'const':'probability'},class_label={'type':'string'})}]}},
+             'properties':dict(name={'type':'string'},kind={'const':'probability'},class_label={'type':['string','number','boolean']})}]}},
         order={'oneOf':[
             {'type':'object','required':['mode'],'additionalProperties':False,'properties':{'mode':{'const':'input'}}},
             {'type':'object','required':['mode','member','id_column'],'additionalProperties':False,
@@ -103,7 +103,7 @@ def evidence_workspace(files):
                                   sha256=hashlib.sha256(raw).hexdigest(),
                                   start=offset, text=text[offset:offset+4000]))
     return dict(documents=documents, members=members,
-                limits='Scalar records through installed decoders; no generated code; no raw data in prompt')
+                limits='Installed scalar, numeric-array and image-folder decoders; no generated code; no raw values in prompt')
 
 
 def _require(condition, message):
@@ -343,7 +343,8 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
         while rejected<2 and tool_steps<=2:
             if client.blocked or client.request_count >= client.max_requests:
                 break
-            instruction = INSTRUCTION
+            from .native_semantics import INSTRUCTION as NATIVE_INSTRUCTION
+            instruction = INSTRUCTION + ' ' + NATIVE_INSTRUCTION
             if base_task is not None:
                 instruction = ('The explicit input/target/metric contract is authoritative. Interpret only submission requirements. '
                     'Return exactly {version:"semantic-output-v1",output:<output-csv-v1 recipe or null>,evidence_refs:[],uncertainties:[]}. '
@@ -370,11 +371,17 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     observations.append(observation); tool_steps += 1
                     if log: log.event('semantic_structure_observed', observation=observation)
                     continue
-                task = (_output_overlay(base_task,workspace,response) if base_task is not None else
-                        compile_plan(files,workspace,response,prediction_files=query_files))
+                if base_task is not None:
+                    task=_output_overlay(base_task,workspace,response)
+                elif isinstance(response,dict) and response.get('version')=='semantic-native-v1':
+                    from .native_semantics import compile_native
+                    task=compile_native(files,workspace,response,prediction_files=query_files)
+                else:
+                    task=compile_plan(files,workspace,response,prediction_files=query_files)
                 query = prediction_package
                 member = task.spec.get('input_recipe',{}).get('prediction_member')
                 if query is None and member in files.namelist(): query=path
+                if query is None and task.spec.get('native_input_recipe',{}).get('prediction') is not None:query=path
                 preflight = probe_prediction_input(query,task) if query is not None else None
             except OSError:
                 # Filesystem/logging failures are not repaired by spending model calls.

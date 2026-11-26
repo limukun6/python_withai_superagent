@@ -1,5 +1,15 @@
 # 实验持续工作记录
 
+## 2026-11-27：SA14无manifest数组/图像正式交付2/2
+
+基线dee7140。新增semantic-native-v1，LLM选择任意安全数组成员/键或图像类目录、指标/正类/像素处理与输出，既有reader执行；native_input_recipe冻结重放，artifact纳入新reader/recipe。245/245零fit/API检查12.735秒（16新＋229原）；两条预检/准备脚本错误原样保留，无训练/付费。
+
+两条正式standalone solve，stdin关闭，无client/resolver/算法注入，均第一次真实提案通过：N1 Iris数组96训练/24预测，balanced_accuracy＋分号BOM，ExtraTree；N2 Digits90/30，10×10 RGB类目录，macro_f1，梯度直方图＋逻辑回归。各2fit含refit/1API，合计4fit/2API/¥.015720/56.141秒，6580输入/2285输出token。外部9项契约检查各全通过；两模型新进程predict与原54行CSV逐字节一致。无预测答案读取或新评分。证据research/sa14_native_live_01、sa14_native_audit_01；报告batches/SA14_native_semantics_results_20261127_zh.md。
+
+无LLM本地既有读取器对同原包完整接入0/2，新语义＋Flash2/2；这是开发格式覆盖检查，不是随机策略消融、独立迁移或准确率提升。默认fallback的无manifest数组NativeContract阻断、元数据探查/任意布局/图像ID仍有边界，不能保证所有未知任务。
+
+账本477/known8.083541/unknown16/pending0，旧行SHA保留，无活动队列，未冻结。本自动窗口SA7–SA14累计22fit/16API/¥.117146。下一批优先审计默认fallback是否对无显式契约也禁止LLM接手，以及原真实语义回复跨reader显式迁移工具对native plan的支持；再做独立新任务验收。旧16未知不再问，新未知仍停当前付费批次。
+
 ## 2026-11-27：SA13正式实时工具闭环交付通过，229项回归
 
 SA12已推送a5bd0b9，原完整交付失败保留。SA13按唯一物理成员位置解析遗漏的工具source，显式source不覆盖，重名要求澄清；输出JSON增加条件必填schema，不由Python猜ID/目标/指标。229/229无fit/API检查通过10.547秒。

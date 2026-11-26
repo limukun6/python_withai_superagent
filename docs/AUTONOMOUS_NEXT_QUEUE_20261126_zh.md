@@ -2,12 +2,12 @@
 
 用户已明确“自动下一步，不用问我”。常规实现、无fit检查和已预登记的小额实验不重复询问。历史16未知保持原行/null，使用有scope/注册表/行SHA的清单；新unknown/pending仍停该付费批次，不自动重试，继续离线。任务开始先读CURRENT_AGENT_STATE并核对实际completion与真ledger，不能重复已完成批次。
 
-最新SA13完成正式live闭环：229项检查，真实Flash自然请求表头、收到观测后填写ID字段，2API/2fit/¥.008981/52.375秒，独立进程60行完整交付。SA12失败保留，SA11缓存入口已通过；这三项不要重复实现。当前最高优先是无manifest图像/数组全局语义入口，再用独立新任务检验。单条开发输入成功不等于任意未知成功。
+最新SA14已补无manifest数组/图像语义入口：245项检查，两条正式proactive solve首次真实提案即通过，各2fit/1API，合计¥.015720/56.141秒，54行新进程预测与原CSV完全相同。不要重复开发已完成的SA11–SA14。下一优先审计默认fallback里无显式契约仍拒绝LLM的NativeContract分支，以及旧native真实回复跨reader迁移工具；独立新任务迁移仍未完成。
 
-当前共同分支codex/ab-semantic-autonomy-1126，工作树runs/semantic_joint。SA7新四例4/4；SA8原始1/3交付（其余两例是评价误拒）；SA9恢复后三模态3/3；SA10 173回归＋三个模型新源码预测一致。总资源SA7–SA10为12fit/10API/¥0.080768，canonical ledger475/known8.067821/unknown16/pending0。没有后台队列。
+当前共同分支codex/ab-semantic-autonomy-1126，工作树runs/semantic_joint。SA7新四例4/4；SA8原始1/3交付（其余两例是评价误拒）；SA9恢复后三模态3/3；SA10 173回归＋三个模型新源码预测一致。总资源SA7–SA10为12fit/10API/¥0.080768，canonical ledger477/known8.083541/unknown16/pending0。没有后台队列。
 
 1. **解释缓存后续只补明确边界。** SA11首版已完成：绑定文件包/预测包、reader源码、已接受提案和任务摘要，0API重编译恢复，正式CLI两路径各2fit通过。目录缓存、跨reader版本迁移和搜索历史恢复仍未涵盖；本轮不继续为它们追加同样验收。报告batches/SA11_semantic_artifact_results_20261126_zh.md。
-2. **继续解决无manifest图像/数组的语义入口。** 目前显式manifest可输出overlay，陌生记录可LLM编译，但原生图像文件夹在proactive下尚不能通用表达。先列出本地native reader可验证的候选结构，让LLM解释候选/目标/指标/输出，不能把局部reader默认值当权威。独立manifest仍不可任意覆盖。先落盘typed schema、伪代码、案例和0fit runner，再决定有限真实调用。
+2. **无manifest数组/图像首版已完成，检查默认入口与剩余边界。** SA14支持NPY/NPZ任意安全成员/键、类目录前缀及明确像素处理。默认fallback的NativeContract分支、未声明元数据探查、任意目录布局/图像文件名ID仍未覆盖；先以0fit/API验证修复，不能再用proactive成功冒充默认入口全成功。
 3. **真实工具闭环已有首条，后续检验迁移。** SA13在正式CLI自然激活1次表头工具、第二次真实提案使用返回字段并完成交付；SA7 Q2仍只是真实语义修复，SA6/SA13旧动作回放不是新增LLM续答。后续独立任务应先封存，不重复同题试到成功。
 4. **独立未知任务演练与质量。** 先与B的新方法/自主调度保持共同版本，A覆盖输入/角色/输出与恢复，B维护方法空间，不因本次小样本分数手选模型或追Task1旧验证。准备独立案例和三模态正式训练/交付验收后再考虑冻结；课程test最后一次运行最终版本。
 

@@ -192,6 +192,9 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
     the declared input columns.  It deliberately has no evaluation function.
     """
     archive_path = Path(path).expanduser().resolve()
+    if (frozen_spec or {}).get('native_input_recipe'):
+        from .native_semantics import predict_native
+        return predict_native(archive_path,kind,frozen_spec)
     if (frozen_spec or {}).get('input_recipe'):
         from .format_intake import predict_records
         return predict_records(archive_path, kind, frozen_spec)

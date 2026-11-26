@@ -16,6 +16,7 @@ DENY = r'(?:\b(?:no|without|never use|(?:must|may|can|should)\s+not\s+(?:be\s+)?
 ONLY = r'(?:\bonly\b|\brestrict(?:ed)?\s+to\b|\blimited\s+to\b|\bexclusively\b|只能|只(?:可|准|允许|能用|使用)|仅(?:可|准|允许|能用|使用|限))'
 BARRED = r'(?:are|is|shall be|must be)?\s*(?:strictly\s+)?(?:forbidden|prohibited|disallowed|banned|not (?:permitted|allowed))\b|(?:不得使用|不可用|不允许|被禁止)'
 MODEL_WORD = re.compile(r'\b(?:classifiers?|encoders?|models?|estimators?|algorithms?|networks?|trees?|forests?|kernels?|svms?|boosting|regression|ensembles?|neural|knn|xgboost|catboost|lightgbm|training data|external data|features?)\b|模型|算法|分类器|神经网络|预训练|外部数据',re.I)
+METHOD_HEADING = re.compile(r'^\s*(?:(?:allowed|permitted|admissible)\s+(?:methods?|classifiers?|models?|algorithms?|model families)|(?:允许的|许可的)(?:方法|分类器|模型|算法))\s*[:：]',re.I)
 NON_BINDING = re.compile(r'\b(?:for example|hypothetical|if|unless|might|perhaps|not required|no restriction on|not (?:forbidden|prohibited|disallowed|restricted|limited)|not only|ignore (?:all|previous|these))\b|例如|假设|无需|并非只|没有限制|忽略.{0,6}指令',re.I)
 
 
@@ -43,6 +44,8 @@ def documented_flags(text):
                 raise RestrictionError('Conditional method restriction requires a supported condition: '+line[:200])
             if not line or NON_BINDING.search(line):
                 continue
+            if METHOD_HEADING.search(line):
+                line=METHOD_HEADING.sub('Use only ',line)
             flags = []
             for flag, subject in SUBJECTS.items():
                 if not re.search(subject, line, re.I):
@@ -57,7 +60,8 @@ def documented_flags(text):
                 flags.append('no_external_data')
             bounded = re.search(DENY + '|' + ONLY + '|' + BARRED, line,re.I)
             subject = re.sub(r'^(?:the |a |your )?(?:classifier|model|agent|superagent)\s+','',line,flags=re.I)
-            if bounded and MODEL_WORD.search(subject) and not flags:
+            affirmative=re.search(r'\b(?:must|required to)\s+(?:train|fit|select|use)\b|必须(?:使用|选用|训练)',line,re.I)
+            if (bounded or affirmative) and (MODEL_WORD.search(subject) or METHOD_HEADING.search(clause)) and not flags:
                 # File roles and metric instructions also use "only", without regulating methods.
                 if not re.search(r'\bonly\s+(?:for|after|when|on|if)\b|仅(?:用于|在)',line,re.I):
                     raise RestrictionError('Unsupported mandatory method restriction: ' + line[:200])

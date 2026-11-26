@@ -48,10 +48,10 @@ def metric_name(value):
 
 # A bare "recall" still lacks a class/averaging rule. A named binary-class request
 # carries an exact label reference which the intake subsequently binds to training labels.
-CLASS_WORD = r'[\x60"\x27]?([\w-]+)[\x60"\x27]?'
+CLASS_WORD = r'(\x60[^\x60\r\n]{1,64}\x60|"[^"\r\n]{1,64}"|\x27[^\x27\r\n]{1,64}\x27|[\w-]+)'
 NAMED_RECALL = (
-    re.compile(r'\brecall\s+(?:for|of)\s+(?:the\s+)?(?:class\s+|label\s+)?'+CLASS_WORD+r'(?:\s+class)?\b',re.I),
-    re.compile(r'\b'+CLASS_WORD+r'\s+class\s+recall\b',re.I),
+    re.compile(r'\brecall\s+(?:for|of)\s+(?:the\s+)?(?:class\s+|label\s+)?'+CLASS_WORD+r'(?:\s+class)?(?!\w)',re.I),
+    re.compile(r'(?<!\w)'+CLASS_WORD+r'\s+class\s+recall\b',re.I),
     re.compile(r'([\w-]+?)\s*类(?:别)?的?召回(?:率)?'),
 )
 
@@ -60,7 +60,7 @@ def named_recall_labels(text):
     result=[]
     for pattern in NAMED_RECALL:
         for match in pattern.finditer(text):
-            value=re.sub(r'^(?:请)?(?:报告|计算|评估|返回)','',match[1])
+            value=re.sub(r'^(?:请)?(?:报告|计算|评估|返回)','',match[1]).strip(chr(96)+'"\x27')
             if value.casefold() not in ('each','every','all','both','any','the','per','各','所有','每个','每一'):
                 result.append((match.group(),value))
     return result

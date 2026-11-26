@@ -176,6 +176,9 @@ class TaskDeclarations(unittest.TestCase):
             documented_flags('Use only decision trees.')
         with self.assertRaises(RestrictionError):
             documented_flags('No external data and no neural networks.')
+        self.assertEqual(set(documented_flags('Allowed classifiers: linear classifiers.')),{'linear_only'})
+        with self.assertRaises(RestrictionError):
+            documented_flags('Permitted methods: naive Bayes.')
         path=self.arrays('Only random forests are permitted.')
         self.assertEqual(train(path,self.root/'unresolved',fit_limit=2),2)
         data=json.loads((self.root/'unresolved/run_outcome.json').read_text())
@@ -205,6 +208,7 @@ class TaskDeclarations(unittest.TestCase):
             claim=task.spec['declaration_evidence']['fields']['columns']
             self.assertEqual((claim['value'],claim['status']),(['east','west','height'],'proposed'))
         self.assertEqual(client.request_count,1)
+        self.assertEqual(client.packet['quotations'],[note.rstrip('.')])
         for i,answer in enumerate(({'evidence':None},{'evidence':9},{'evidence':0,'method':'tree'})):
             bad=CitationClient(answer)
             task=load_training_task(self.arrays(note+' Version '+str(i)),read_declarations=True,declaration_client=bad,log=self.logger(str(i)))

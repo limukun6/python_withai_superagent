@@ -116,18 +116,20 @@ def train_legacy(package, run_dir):
     return 0
 
 
-def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None):
+def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None,
+          task_interpretation='fallback', prediction_input=None):
     if policy == 'legacy':
-        if fit_limit is not None or time_limit is not None:
+        if fit_limit is not None or time_limit is not None or task_interpretation!='fallback' or prediction_input is not None:
             raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,task_interpretation,prediction_input)
     return arguments.handler(arguments)
 
 
-def prepare_training(package,run_dir,fit_limit=None,time_limit=None):
+def prepare_training(package,run_dir,fit_limit=None,time_limit=None,task_interpretation='fallback',prediction_input=None):
     run_dir.mkdir(parents=True,exist_ok=False)
-    flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
+    flags = ['unified',str(package),'--run-dir',str(run_dir/'agent'),'--task-interpretation',task_interpretation]
+    if prediction_input is not None: flags.extend(['--prediction-input',str(Path(prediction_input).resolve())])
     if fit_limit is not None:
         flags.extend(['--fit-limit',str(fit_limit)])
     if time_limit is not None:
@@ -136,11 +138,13 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None):
     save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
          entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
-         fit_limit=arguments.fit_limit))
+         fit_limit=arguments.fit_limit,task_interpretation=task_interpretation,
+         prediction_input=str(prediction_input) if prediction_input is not None else None))
     return arguments
 
 
-def solve_training(package, run_dir, *, fit_limit=None, time_limit=None):
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None,
+                   task_interpretation='fallback', prediction_input=None):
     """Keep prediction delivery in a separate process from training and its network client."""
     import os
     import signal
@@ -150,9 +154,12 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None):
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
     package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit)
-    child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
-                              '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit)],
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,task_interpretation,prediction_input)
+    child_flags = [sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
+                   '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
+                   '--task-interpretation',task_interpretation]
+    if prediction_input is not None: child_flags.extend(['--prediction-input',str(Path(prediction_input).resolve())])
+    child = subprocess.Popen(child_flags,
                              cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
     try:
         code = child.wait(timeout=arguments.time_limit+30)
@@ -186,19 +193,23 @@ def main():
         if action in ('train','solve'):
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
+            command.add_argument('--task-interpretation',choices=['fallback','proactive'],default='fallback')
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":
             command.add_argument("--prediction-input", required=True, type=Path,
-                                 help="Prediction features, used only after the model is frozen")
+                                 help="Unlabeled features for pre-fit schema checks and frozen-model prediction")
         if action == "train":
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
+            command.add_argument('--prediction-input',type=Path,help='Optional unlabeled input for pre-fit checks')
     args = parser.parse_args()
     if args.action == "train":
-        return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit)
+        return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
+                     task_interpretation=args.task_interpretation,prediction_input=args.prediction_input)
     source=args.task_package
     if args.action=='solve':
-        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit)
+        code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,
+                            task_interpretation=args.task_interpretation,prediction_input=args.prediction_input)
         if code:
             return code
         source=args.prediction_input

@@ -1,5 +1,11 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA3主动解释和训练前预测契约验收，100项通过
+
+在9258318上接入显式proactive/fallback、共享预算的inspect_header工具、训练/独立预测包元信息、字段field_map及fit前特征/ID/模板检查。显式CSV/JSONL manifest仅允许输出overlay，不覆盖target/metric；solve子进程收到新参数，legacy不静默忽略。修复回路不重试传输/磁盘错误，库异常不回传私有数据值。27新＋73相关测试最终100/100，10.312秒，0fit/0真实API/¥0；模拟LLM与固定未训练模型仅为工程证据。94项首轮三问题和后续97/98项中间回执均保留，最终research/sa3_proactive_probe_final。报告batches/SA3_proactive_probe_results_20261126_zh.md，runner scripts/run_sa3_proactive_probe.py。
+
+SA1–SA3开发闭环已接通；四天计划仍处D1/D2离线验收，未冻结。下一步固定独立语义案例/oracle并做小规模真实Flash，再做三模态真实运行；当前未测真实语义成功率/完整未知任务成功率/节省费用。无manifest图像/数组的主动适配、预测后置LLM修复仍待开发。真实账本未改，B待并账调用需在付费前核对。
+
 ## 2026-11-26：SA2真实预测流程接输出recipe，73项零训练/零真实API通过
 
 基线40be241，新增output_recipe/semantic-task-v2接线、预测/partial导出、原子发布前校验与概率接口准入。18新测试含前导零/乱序ID、模板重排、标签映射、F1任务指定类别概率、无表头/编码、坏模板/缺ID/篡改拒绝、partial标记与独立CLI重载；连同SA1等合73项通过，回执11.031秒。固定算术模型夹具无fit，模拟LLM不计真实调用，0fit/0API/¥0。真实账本/课程正式测试未动。计划与runner先行，证据research/sa2_output_recipe；普通native主动解释、工具探查、预测字段映射及真实Flash仍未实现/实测，不宣称全部未知任务可用。下一批SA3继续，不冻结。

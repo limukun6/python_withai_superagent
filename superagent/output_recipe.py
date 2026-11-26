@@ -88,9 +88,20 @@ def _identity_context(package, specification, recipe, count):
     ids, template_ids, template_hash = None, None, None
     column = next((c for c in recipe['columns'] if c['kind'] == 'input_id'), None)
     if column:
-        _require('input_recipe' in specification, 'original ID extraction needs a frozen record reader')
-        from .format_intake import prediction_rows
-        records = prediction_rows(package, specification)
+        if 'input_recipe' in specification:
+            from .format_intake import prediction_rows
+            records = prediction_rows(package, specification)
+        else:
+            from .task_files import open_package
+            from .schema import _member, read_manifest
+            from .native_schema import prediction_manifest
+            from .table_input import table
+            with open_package(package, 'test', contract=specification.get('shared_table')) as archive:
+                manifest = read_manifest(archive, read_metric=False) or prediction_manifest(archive, specification)
+                descriptor, member = _member(archive, manifest, 'test')
+                _require(descriptor['format'] in ('csv','tsv','parquet'), 'original IDs need a supported table reader')
+                _, rows = table(archive, member, descriptor['format'], [column['field']])
+                records = [{column['field']: row[0]} for row in rows]
         _require(len(records) == count, 'ID rows differ from feature rows')
         _require(all(column['field'] in row for row in records), 'ID field missing from prediction input')
         from .record_streams import scalar
@@ -119,6 +130,14 @@ def _identity_context(package, specification, recipe, count):
     positions = {v: i for i, v in enumerate(ids)} if ids is not None else {}
     order_indices = [positions[v] for v in template_ids] if template_ids is not None else list(range(count))
     return ids, order_indices, template_hash
+
+
+def probe_output_context(package, specification, count):
+    """Inspect IDs and sample layout before training, without making up predictions."""
+    recipe = validate_recipe(specification['output_recipe'], specification['metric_spec']['labels'])
+    ids, indices, template_hash = _identity_context(package, specification, recipe, count)
+    return dict(rows=count, original_ids_checked=ids is not None,
+                row_order_checked=sorted(indices) == list(range(count)), template_sha256=template_hash)
 
 
 def _checked_arrays(predictions, labels, recipe, classes, scores):

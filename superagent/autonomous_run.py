@@ -152,7 +152,7 @@ def train(package, directory, **options):
 
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
-          flash_setup_issue=None):
+           flash_setup_issue=None, interpretation='fallback', prediction_package=None):
     if type(fit_limit) is not int or not 2<=fit_limit<=11 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
         raise ValueError('Need 2–11 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
@@ -166,7 +166,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash.set_deadline(start+wall)
     manifest = dict(policy='anonymous-sequential-v1',fit_limit=fit_limit,seed=seed,wall_seconds=wall,
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
-                    training_only=True,source_files=sources())
+                    training_only=True,source_files=sources(),task_interpretation=interpretation)
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS
@@ -174,7 +174,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     task = None
     try:
         from .semantic_contract import resolve_training_task
-        task=resolve_training_task(package, flash, log)
+        task=resolve_training_task(package, flash, log, mode=interpretation,prediction_package=prediction_package)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
         log.event('selection_metric_resolved', **spec['goal_resolution']['fields']['primary_metric'])
     except DECODE_ERRORS as error:

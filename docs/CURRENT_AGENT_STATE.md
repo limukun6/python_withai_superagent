@@ -1,5 +1,11 @@
 # 当前接续状态：2026-11-25，发布验收v2：Task1新交付候选已成形，Task2待资产
 
+## 2026-11-26：SA3主动解释和训练前预测契约验收，100项通过
+
+在9258318上接入显式proactive/fallback、共享预算的inspect_header工具、训练/独立预测包元信息、字段field_map及fit前特征/ID/模板检查。显式CSV/JSONL manifest仅允许输出overlay，不覆盖target/metric；solve子进程收到新参数，legacy不静默忽略。修复回路不重试传输/磁盘错误，库异常不回传私有数据值。27新＋73相关测试最终100/100，10.312秒，0fit/0真实API/¥0；模拟LLM与固定未训练模型仅为工程证据。94项首轮三问题和后续97/98项中间回执均保留，最终research/sa3_proactive_probe_final。报告batches/SA3_proactive_probe_results_20261126_zh.md，runner scripts/run_sa3_proactive_probe.py。
+
+SA1–SA3开发闭环已接通；四天计划仍处D1/D2离线验收，未冻结。下一步固定独立语义案例/oracle并做小规模真实Flash，再做三模态真实运行；当前未测真实语义成功率/完整未知任务成功率/节省费用。无manifest图像/数组的主动适配、预测后置LLM修复仍待开发。真实账本未改，B待并账调用需在付费前核对。
+
 ## 2026-11-26：SA2公告驱动输出契约接通，73项无fit/无API检查通过
 
 基线SA1 40be241。semantic-task-v2包含可选output与引用，v1仍兼容；新output_recipe接入正式predict与prior partial。支持CSV编码/BOM/分隔符/表头、原ID/声明索引、标签映射、指定训练类别概率、样例ID顺序重排、原子发布前独立读回核对。输出需要概率时过滤无接口候选，保持原评分目标与B排名。18项新检查＋已有相关项合73通过，11.031秒，0新fit/真实API/费用；模型为无需训练的固定算术夹具，独立CLI重载预测一致。报告docs/batches/SA2_output_recipe_results_20261126_zh.md，证据research/sa2_output_recipe。

@@ -73,6 +73,8 @@ def configured_flash(directory):
 def command(args):
     from .autonomous_run import train
     if getattr(args,'policy','autonomous')=='legacy':
+        if getattr(args,'task_interpretation','fallback') != 'fallback' or getattr(args,'prediction_input',None) is not None:
+            raise ValueError('Semantic interpretation and pre-fit input checks require the autonomous policy')
         return legacy_command(args)
     issue = None
     try:
@@ -80,4 +82,6 @@ def command(args):
     except (OSError, ValueError, RuntimeError) as error:
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
-                 wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue)
+                 wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
+                 interpretation=getattr(args,'task_interpretation','fallback'),
+                 prediction_package=getattr(args,'prediction_input',None))

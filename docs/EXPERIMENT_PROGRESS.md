@@ -1,5 +1,27 @@
 # 实验持续工作记录
 
+## 2026-11-26：SA4已合入B最新自主研发版，150项回归＋4fit交付通过
+
+最新共同研发工作树D:/codex/python_withai/runs/semantic_joint，分支codex/ab-semantic-autonomy-1126。B来源b0944ae（与个人c6ea0b7发布目录127模块及入口相同），A来源0d09760。真实Git merge，三处共享文件逐段合并，A六模块/B十三模块对象保留通过；B方法排名与目录不改，开题和语义共用预算。proactive＋opening允许原client最多3次，旧fallback opening仍单次，更小/零额度不扩。
+
+SA4无fit相关回归150/150，10.500秒；排除两条旧Dummy.fit夹具并明示。SA4M两条120行合成任务、同目录自主选择随机森林、各2fit含refit，合计4真实fit、27.204秒、0真实API/¥0。组合路径A proactive+B opening-local+protected self-review均到达，新进程各20行预测；原ID、BOM、Y/N、模板逆序通过，ID对齐后预测相同。脚本化语义回复1次不是真实Flash。首轮失败记录保留，真实账本/课程正式测试未动。
+
+交接docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md；无fit证据research/sa4_ab_merge_v2，烟测research/sa4m_joint_smoke_01，来源/物理fit审计research/sa4_merge_audit。下一步在此共同研发分支做真实Flash语义及三模态任务，不最终冻结；B的1533/684等分数保留原版本，不冒称本集成版实测。B新交付含多批真实API用量，付费前按新原件核对并账，不再将旧“仅一次待并账”当最新事实。本轮无活动训练/API队列。
+
+## 2026-11-26：SA3主动解释和训练前预测契约验收，100项通过
+
+在9258318上接入显式proactive/fallback、共享预算的inspect_header工具、训练/独立预测包元信息、字段field_map及fit前特征/ID/模板检查。显式CSV/JSONL manifest仅允许输出overlay，不覆盖target/metric；solve子进程收到新参数，legacy不静默忽略。修复回路不重试传输/磁盘错误，库异常不回传私有数据值。27新＋73相关测试最终100/100，10.312秒，0fit/0真实API/¥0；模拟LLM与固定未训练模型仅为工程证据。94项首轮三问题和后续97/98项中间回执均保留，最终research/sa3_proactive_probe_final。报告batches/SA3_proactive_probe_results_20261126_zh.md，runner scripts/run_sa3_proactive_probe.py。
+
+SA1–SA3开发闭环已接通；四天计划仍处D1/D2离线验收，未冻结。下一步固定独立语义案例/oracle并做小规模真实Flash，再做三模态真实运行；当前未测真实语义成功率/完整未知任务成功率/节省费用。无manifest图像/数组的主动适配、预测后置LLM修复仍待开发。真实账本未改，B待并账调用需在付费前核对。
+
+## 2026-11-26：SA2真实预测流程接输出recipe，73项零训练/零真实API通过
+
+基线40be241，新增output_recipe/semantic-task-v2接线、预测/partial导出、原子发布前校验与概率接口准入。18新测试含前导零/乱序ID、模板重排、标签映射、F1任务指定类别概率、无表头/编码、坏模板/缺ID/篡改拒绝、partial标记与独立CLI重载；连同SA1等合73项通过，回执11.031秒。固定算术模型夹具无fit，模拟LLM不计真实调用，0fit/0API/¥0。真实账本/课程正式测试未动。计划与runner先行，证据research/sa2_output_recipe；普通native主动解释、工具探查、预测字段映射及真实Flash仍未实现/实测，不宣称全部未知任务可用。下一批SA3继续，不冻结。
+
+## 2026-11-26：SA1语义契约接入，43无fit/无网络检查通过
+
+在B d501807独立分支codex/a-semantic-adaptation-1126接semantic_contract与正式训练入口。解决多文档/非标准源与跨句目标的编译入口：模型可提契约、程序真实解码、诊断回送及一次有界修复；指标/行角色/预测读法沿现有确定性执行。13新+30既有共43检查通过，3.219秒，新增fit/真实API均0。初相关回归两旧Windows夹具问题修正closing/UTF-8，未改生产reader。报告batches/SA1_semantic_contract_results_20261126_zh.md、证据research/sa1_semantic_contract；全部为模拟LLM工程验证，不是新任务质量或真实LLM成功率。下一批SA2输出契约/工具探查，尚未运行；项目未冻结。
+
 ## 2026-11-25：发布验收复核，0新增fit/API
 
 读取7be2458报告/acceptance原件及本机课程原文：统一自主重训1527/2030与历史1532预测差95行属训练复现差异，旧模型缺失故加载复现未核，不能直接说旧分数错误。建议完整自主9fit的当前1527模型先做交付候选，旧1532限时只读找回matched模型/清单，历史记录不覆盖。Python3.11.15与当前3.12.14不同、raw/release模型SHA不同为查档线索，不是根因结论；六项边界测试尚不证明实际禁读成员未打开或通用严格时间隔离。复核docs/batches/RELEASE_ACCEPTANCE_CODEX_REVIEW_20261125_zh.md。当前只核对未训练/未调用API/未改模型与账本，不宣布最终冻结。

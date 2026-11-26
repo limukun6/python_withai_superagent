@@ -17,15 +17,17 @@ def utc_now() -> str:
 
 
 @contextmanager
-def atomic_text(path: Path, *, newline=None):
+def atomic_text(path: Path, *, newline=None, encoding='utf-8', validate=None):
     """Publish a complete file on the same filesystem, retaining its predecessor if writing fails."""
     descriptor, name = tempfile.mkstemp(dir=path.parent)
     temporary = Path(name)
     try:
-        with os.fdopen(descriptor, 'w', encoding='utf-8', newline=newline) as stream:
+        with os.fdopen(descriptor, 'w', encoding=encoding, newline=newline) as stream:
             yield stream
             stream.flush()
             os.fsync(stream.fileno())
+        if validate is not None:
+            validate(temporary)
         os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)

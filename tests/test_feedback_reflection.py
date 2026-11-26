@@ -6,6 +6,7 @@ import sqlite3
 from tempfile import TemporaryDirectory
 from threading import Barrier
 import unittest
+from contextlib import closing
 from unittest.mock import Mock, patch
 
 from superagent import feedback_reflection as review
@@ -95,8 +96,8 @@ class FeedbackReflectionTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             for mode in (None,'flash'):
                 flash = Mock()
-                with patch('superagent.autonomous_run.load_training_task',side_effect=ValueError('unknown schema')), \
-                        patch('superagent.format_intake.adapt_training',side_effect=ValueError('unknown target')) as adapt, \
+                with patch('superagent.semantic_contract.load_training_task',side_effect=ValueError('unknown schema')), \
+                        patch('superagent.semantic_contract.adapt_training',side_effect=ValueError('unknown target')) as adapt, \
                         patch('superagent.partial_classification.record_input_failure',return_value=1):
                     _train('input.zip', Path(directory)/str(mode), flash=flash, feedback_reflection=mode)
                 self.assertIs(adapt.call_args.args[1], None if mode else flash)
@@ -112,7 +113,7 @@ class FeedbackReflectionTests(unittest.TestCase):
             with patch.dict(os.environ, env, clear=True):
                 with self.assertRaises(ValueError):
                     reflection_client(directory)
-                with sqlite3.connect(path) as db:
+                with closing(sqlite3.connect(path)) as db, db:
                     db.executemany('INSERT INTO metadata VALUES (?,?)',
                         [('ledger_kind','provisional_local_outbox'),('team_merge_state','pending_team_handoff')])
                 previous = ledger.reserve('past', .01, 'prior-test', 'DeepSeek-V4.1-Flash')

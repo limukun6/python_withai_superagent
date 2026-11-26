@@ -325,6 +325,8 @@ def build_parser():
     add_review_arguments(common)
     common.add_argument('--trial-timeout',type=float,default=300)
     common.add_argument('--time-limit',type=float,default=1200)
+    common.add_argument('--task-interpretation',choices=['fallback','proactive'],default='fallback')
+    common.add_argument('--prediction-input',help='Optional unlabeled input for pre-fit schema/output checks')
     common.set_defaults(handler=unified.command)
     from .adaptive_local import command
     adaptive=commands.add_parser('adaptive-local',help='Offline accuracy prototype: explore, replicate, or stop')

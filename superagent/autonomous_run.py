@@ -169,7 +169,8 @@ def train(package, directory, **options):
 
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
-          flash_setup_issue=None, self_review=False, exploration_rule=None,feedback_reflection=None,reflection_history=None):
+          flash_setup_issue=None, self_review=False, exploration_rule=None,feedback_reflection=None,reflection_history=None,
+          interpretation='fallback',prediction_package=None):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
     if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
@@ -186,7 +187,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash.set_deadline(start+wall)
     manifest = dict(policy='anonymous-sequential-v1',self_review=self_review,fit_limit=fit_limit,seed=seed,wall_seconds=wall,
                     timeout_seconds=timeout,controller='bounded-flash-and-local' if flash else 'local evidence policy',
-                    training_only=True,source_files=sources())
+                    training_only=True,source_files=sources(),task_interpretation=interpretation)
     if rule is not None:
         log.write_json('exploration_rule.json',rule)
         manifest['exploration_rule_digest'] = identity(rule)
@@ -194,24 +195,20 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         manifest.update(feedback_reflection=feedback_reflection,reflection_history_digest=identity(prior_feedback))
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
-    from .format_intake import DECODE_ERRORS, NativeContract, adapt_training
+    from .format_intake import DECODE_ERRORS
     from .task_opening import MODES as opening_modes, TaskOpening
     from .opening_evidence import instructions, verified_windows
     opening_enabled=feedback_reflection in opening_modes
     if opening_enabled and flash is not None:
-        flash.max_requests=1 if flash.max_requests is None else min(flash.max_requests,1)
+        ceiling=3 if interpretation=='proactive' else 1
+        flash.max_requests=ceiling if flash.max_requests is None else min(flash.max_requests,ceiling)
     opening=None
     phase='training schema'
     task = None
     try:
-        try:
-            task=load_training_task(package,read_declarations=True)
-        except DECODE_ERRORS as native_error:
-            log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
-            try:
-                task=adapt_training(package, flash if opening_enabled or not feedback_reflection else None, log)
-            except NativeContract:
-                raise native_error
+        from .semantic_contract import resolve_training_task
+        intake_client=flash if interpretation=='proactive' or opening_enabled or not feedback_reflection else None
+        task=resolve_training_task(package,intake_client,log,mode=interpretation,prediction_package=prediction_package)
         if opening_enabled:
             task,lines,origin=instructions(package,task)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
@@ -274,6 +271,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 opening.launch()
             while True:
                 caps, generation=generator.refresh(history,static)
+                from .output_recipe import needs_scores
+                if needs_scores(task.spec.get('output_recipe')):
+                    excluded=[name for name,cap in caps.items() if not cap.get('supports_probabilities')]
+                    caps={name:cap for name,cap in caps.items() if cap.get('supports_probabilities')}
+                    if excluded:
+                        log.event('output_capability_filter',requires='predict_proba',excluded=excluded,scoring_metric=metric.name)
                 executor.caps=caps
                 remaining=core_limit-executor.accounting()['attempted_classifier_fits']
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)

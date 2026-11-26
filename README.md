@@ -1,8 +1,12 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 11月26日A/B共同研发集成
+
+本分支`codex/ab-semantic-autonomy-1126`已将A的SA1–SA3合入B最新完整研发版`b0944ae`（个人发布`c6ea0b7`的同源源码）。当前入口是本分支根目录；新增`--task-interpretation proactive`可与B的`--task-analysis`和自审组合。150项相关回归通过，两条真实worker烟测共4fit，原ID/模板输出及新进程预测通过，0真实API。下文课程分数属于B原版本，本集成版尚未重新评分，也尚未最终冻结。[当前共同交接与复跑说明](docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md)
+
 ## 队友的 Task1 研发起点（11 月 26 日）
 
-本分支根目录是最新版。请从 `codex/task-driven-planning-1125` 分出自己的开发分支，再运行下面的统一入口。按老师最新自主性要求核验后，本机在同一份源码上重新冷启动，Task1 指定验证 **1,533/2,030（75.52%）**，Task2 **684/940（72.77%）**，各 10 次拟合、零模型 API。旧版 Task2 的 73.30% 有独立的运行记录。交接页包含两版结论、旧版输入特例、启动命令和通用表格候选的接入位置。[两版核验与 Task1 开发交接](docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
+以下为B来源 `codex/task-driven-planning-1125` 的研发起点记录；共同继续开发请使用上方的A/B集成分支。B按老师最新自主性要求核验后，在其同一份源码上重新冷启动，Task1 指定验证 **1,533/2,030（75.52%）**，Task2 **684/940（72.77%）**，各 10 次拟合、零模型 API。旧版 Task2 的 73.30% 有独立的运行记录。交接页包含两版结论、旧版输入特例、启动命令和通用表格候选的接入位置。[两版核验与 Task1 开发交接](docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
 
 ## 当前统一入口
 

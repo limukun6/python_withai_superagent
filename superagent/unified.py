@@ -101,16 +101,20 @@ def command(args):
     if getattr(args,'policy','autonomous')=='legacy':
         if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
+        if getattr(args,'task_interpretation','fallback')!='fallback' or getattr(args,'prediction_input',None) is not None:
+            raise ValueError('Semantic interpretation and pre-fit input checks require the autonomous policy')
         return legacy_command(args)
     issue = None
     try:
         if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
-            flash = None if reflection else configured_flash(args.run_dir)
+            flash = None if reflection and getattr(args,'task_interpretation','fallback')!='proactive' else configured_flash(args.run_dir)
     except (OSError, ValueError, RuntimeError) as error:
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
                  wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
                  self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None),
-                 feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None))
+                 feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None),
+                 interpretation=getattr(args,'task_interpretation','fallback'),
+                 prediction_package=getattr(args,'prediction_input',None))

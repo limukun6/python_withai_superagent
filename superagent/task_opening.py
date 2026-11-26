@@ -77,13 +77,18 @@ class TaskOpening:
     def launch(self):
         if self.mode=='opening-flash' and self.future is None and self.record['interpretation_status']=='local':
             self.record['interpretation_status']='unavailable'
-            if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked and self.flash.request_count==0
+            if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked
+                    and (self.flash.request_count==0 or type(self.flash.max_requests) is int
+                         and self.flash.request_count<self.flash.max_requests)
                     and self.deadline-time.monotonic()>12):
+                self.record['prior_shared_requests']=self.flash.request_count
                 self.flash.set_deadline(min(self.deadline-3,time.monotonic()+120))
                 self.pool=ThreadPoolExecutor(max_workers=1)
                 self.future=self.pool.submit(self.flash.ask,dict(instruction=PROMPT,**self.brief),
                                              self.log,'task_opening',cost_ceiling=.12)
                 self.record.update(interpretation_status='pending',dispatch_after_trials=0)
+            elif self.flash is not None:
+                self.record['skip_reason']='Shared model allowance exhausted, blocked, or insufficient time'
             self.save()
 
     def collect(self,wait):

@@ -1,5 +1,13 @@
 # 当前接续状态
 
+## 2026-11-26：SA4已合入B最新自主研发版，150项回归＋4fit交付通过
+
+最新共同研发工作树D:/codex/python_withai/runs/semantic_joint，分支codex/ab-semantic-autonomy-1126。B来源b0944ae（与个人c6ea0b7发布目录127模块及入口相同），A来源0d09760。真实Git merge，三处共享文件逐段合并，A六模块/B十三模块对象保留通过；B方法排名与目录不改，开题和语义共用预算。proactive＋opening允许原client最多3次，旧fallback opening仍单次，更小/零额度不扩。
+
+SA4无fit相关回归150/150，10.500秒；排除两条旧Dummy.fit夹具并明示。SA4M两条120行合成任务、同目录自主选择随机森林、各2fit含refit，合计4真实fit、27.204秒、0真实API/¥0。组合路径A proactive+B opening-local+protected self-review均到达，新进程各20行预测；原ID、BOM、Y/N、模板逆序通过，ID对齐后预测相同。脚本化语义回复1次不是真实Flash。首轮失败记录保留，真实账本/课程正式测试未动。
+
+交接docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md；无fit证据research/sa4_ab_merge_v2，烟测research/sa4m_joint_smoke_01，来源/物理fit审计research/sa4_merge_audit。下一步在此共同研发分支做真实Flash语义及三模态任务，不最终冻结；B的1533/684等分数保留原版本，不冒称本集成版实测。B新交付含多批真实API用量，付费前按新原件核对并账，不再将旧“仅一次待并账”当最新事实。本轮无活动训练/API队列。
+
 **11 月 26 日，已按老师新口径复核两代整合版，并从头验证 Task1 研发起点。** 旧版和新版都能根据真实训练反馈改变后续实验，终选由内部验证决定。旧版对偏好文本表头和语句有特例。研发版默认入口新跑的 Task1 为 75.52%、Task2 为 72.77%，2,970 行逐一重现自主提交版。研发与交接以本仓库正式入口为准。[对照证据、开工指引与复验命令](TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
 
 **11 月 26 日，统一入口已能让校园 DeepSeek 在训练开始前读题，并用本题的训练反馈核实猜想。** 四道真实开发题上，两组的 1,252 个留出预测全部相同。Agent 在评论题的训练过程中用七次观测修正了对短评论的判断。四次开题共 ¥0.022296。第一版作为可选模式保留，课程默认策略沿用原版。[运行方法、逐题成绩与适用范围](TASK_OPENING_V1_1126_zh.md)
@@ -17,6 +25,24 @@
 **11 月 25 日，B 侧同版自主验收。** 已将 `d501807` 的源码、两份冷启动模型、指定验证预测、日志及四个编码器冻结为可复现工程包。Task1 为 **1533/2030（75.52%）**，Task2 为 **684/940（72.77%）**。20 步由正式本地规划器决定。将已测反馈互换后，93/202 次改变下一步。RSI 研发分支完成四组配对，7 个提案均未在真实运行中生效，四组逐行预测相同。跨任务回放通过一代，在后面四份训练记录上的平均预报误差增加 0.00122。默认保留自主提交基线。本轮 20 次验收拟合、72 次研发拟合、模型 API 0 次。[验收、版本与结果](RSI_PLANNER_1125_zh.md)
 
 ## 此前的整合与发布记录
+
+## 2026-11-26：SA3主动解释和训练前预测契约验收，100项通过
+
+在9258318上接入显式proactive/fallback、共享预算的inspect_header工具、训练/独立预测包元信息、字段field_map及fit前特征/ID/模板检查。显式CSV/JSONL manifest仅允许输出overlay，不覆盖target/metric；solve子进程收到新参数，legacy不静默忽略。修复回路不重试传输/磁盘错误，库异常不回传私有数据值。27新＋73相关测试最终100/100，10.312秒，0fit/0真实API/¥0；模拟LLM与固定未训练模型仅为工程证据。94项首轮三问题和后续97/98项中间回执均保留，最终research/sa3_proactive_probe_final。报告batches/SA3_proactive_probe_results_20261126_zh.md，runner scripts/run_sa3_proactive_probe.py。
+
+SA1–SA3开发闭环已接通；四天计划仍处D1/D2离线验收，未冻结。下一步固定独立语义案例/oracle并做小规模真实Flash，再做三模态真实运行；当前未测真实语义成功率/完整未知任务成功率/节省费用。无manifest图像/数组的主动适配、预测后置LLM修复仍待开发。真实账本未改，B待并账调用需在付费前核对。
+
+## 2026-11-26：SA2公告驱动输出契约接通，73项无fit/无API检查通过
+
+基线SA1 40be241。semantic-task-v2包含可选output与引用，v1仍兼容；新output_recipe接入正式predict与prior partial。支持CSV编码/BOM/分隔符/表头、原ID/声明索引、标签映射、指定训练类别概率、样例ID顺序重排、原子发布前独立读回核对。输出需要概率时过滤无接口候选，保持原评分目标与B排名。18项新检查＋已有相关项合73通过，11.031秒，0新fit/真实API/费用；模型为无需训练的固定算术夹具，独立CLI重载预测一致。报告docs/batches/SA2_output_recipe_results_20261126_zh.md，证据research/sa2_output_recipe。
+
+下一批SA3解释模式/探查工具循环/预测前试读/字段映射。普通native快路还不会主动审阅未知输出公告，新recipe当前主要沿SA1 fallback编译；尚未发真实Flash，不称任意格式或完整未知任务验收。生产已有改动归本新分支，不复用旧Task成绩名义；真实账本未改，B待并账请求仍需核准。
+
+## 2026-11-26：继续A结构开发，SA1离线编译/修复通过，未冻结
+
+用户明确还有四天，要解决固定解析拒绝未知任务，不立刻停止研发。当前工作树D:/codex/python_withai/runs/semantic_adaptation、分支codex/a-semantic-adaptation-1126，基于B自主入口d501807；B方法菜单不改。新semantic_contract模块接入autonomous_run：旧native/adaptive失败后，多文档证据→LLM契约→真实试读→一次语义修复→复用现有TrainingTask/input_recipe。13项新测试与既有相关测试共43项通过，runner禁止训练和网络，0新增fit/真实API/费用。两项Windows旧夹具修正为明确close和UTF-8，不改生产解码。日志research/sa1_semantic_contract，报告docs/batches/SA1_semantic_contract_results_20261126_zh.md。
+
+下一步SA2输出recipe/工具循环/显式语义入口模式；真实Flash与完整训练未跑，不把模拟回复当语义成功率。仍有限定reader/文档范围，显式manifest不由此层覆盖。完整四天方案docs/LLM_SEMANTIC_ADAPTATION_4DAY_PLAN_20261126_zh.md；旧1532/1527/684等成绩都保留原版本，下面发布验收状态是历史，不是本新分支验收结论。账本未改，B一次真实格式调用仍待团队并账。
 
 **B 侧统一入口，11 月 25 日。** 本地 `codex/task-driven-planning-1125` 已完成[陌生分类文件接入](ADAPTIVE_INPUT_20261125_zh.md)以及[指标和失败交付验收](METRICS_AND_VALID_PARTIAL_RESULTS_1125_zh.md)。前者有一次校园 Flash 真实调用，课程口径 ¥0.000829，等待合并团队账本。后者核实了同一组预测换指标会改变选择，并验证四种故障下均能交付逐行预测，真实 API 调用为零。本轮未重评 Task1、Task2。
 

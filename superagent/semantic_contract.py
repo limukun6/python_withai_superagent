@@ -47,12 +47,34 @@ INSTRUCTION = (
     'order is {mode:"input"} or {mode:"template",member:<sample CSV member>,id_column:<output ID column>}. '
     'For nonnull output include evidence.output document IDs. Never write prediction values or fabricate IDs.'
     ' If field structure is unknown, return exactly {action:"inspect_header",member,collection,delimiter,evidence_refs}. '
-    'source is the role: "training" by default, or "prediction" for prediction features. '
+    'source is the role: "training", or "prediction" for prediction features. '
+    'If omitted, a unique member location resolves the role; names present in both packages require explicit source. '
     'A separately supplied prediction package is used when present; otherwise both roles use the task package. '
     'collection means an actual sheet/table/list key within a container; for flat CSV or a root JSON list use null. '
     'The tool returns only column names and codec, never row values. Use real member names and document IDs. '
     'Tool steps, proposed plans and repairs share the original request limit. '
 )
+
+
+OUTPUT_SCHEMA = {
+    'type':'object','additionalProperties':False,
+    'required':['version','delimiter','encoding','header','columns','order'],
+    'properties':dict(version={'const':'output-csv-v1'},delimiter={'type':'string','minLength':1,'maxLength':1},
+        encoding={'enum':['utf-8','utf-8-sig']},header={'type':'boolean'},
+        columns={'type':'array','minItems':1,'items':{'oneOf':[
+            {'type':'object','required':['name','kind','field'],'additionalProperties':False,
+             'properties':dict(name={'type':'string'},kind={'const':'input_id'},field={'type':'string'},unique={'type':'boolean'})},
+            {'type':'object','required':['name','kind','start'],'additionalProperties':False,
+             'properties':dict(name={'type':'string'},kind={'const':'row_index'},start={'enum':[0,1]})},
+            {'type':'object','required':['name','kind'],'additionalProperties':False,
+             'properties':dict(name={'type':'string'},kind={'const':'label'},mapping={'type':'object'})},
+            {'type':'object','required':['name','kind','class_label'],'additionalProperties':False,
+             'properties':dict(name={'type':'string'},kind={'const':'probability'},class_label={'type':'string'})}]}},
+        order={'oneOf':[
+            {'type':'object','required':['mode'],'additionalProperties':False,'properties':{'mode':{'const':'input'}}},
+            {'type':'object','required':['mode','member','id_column'],'additionalProperties':False,
+             'properties':dict(mode={'const':'template'},member={'type':'string'},id_column={'type':'string'})}]}),
+    'evidence_rule':'For input_id, field is the actual input header, not the output column name. Inspect headers when unknown. Never infer its values.'}
 
 
 class ContractProbeError(ValueError):
@@ -256,6 +278,20 @@ def _inspect_header(files, workspace, request):
                 collection_note='Flat container has no named collection; use null' if normalized else 'Selected existing structure')
 
 
+def inspection_source(files, prediction_files, request):
+    """Resolve only unambiguous physical membership; never infer task/label meaning."""
+    if 'source' in request:
+        return (prediction_files if request['source']=='prediction' and prediction_files is not None else files), request, 'explicit'
+    if prediction_files is None:
+        return files, request, 'single_package_default'
+    member=checked_name(request.get('member',''))
+    in_task=member in files.namelist();in_query=member in prediction_files.namelist()
+    _require(not (in_task and in_query), 'Inspection member occurs in both packages; provide source training or prediction')
+    if in_query:
+        return prediction_files, dict(request,source='prediction'), 'unique_package_membership'
+    return files, dict(request,source='training'), 'unique_package_membership' if in_task else 'member_not_found'
+
+
 def probe_prediction_input(path, task, log=None):
     from .data import load_prediction_features
     from .output_recipe import probe_output_context
@@ -314,7 +350,8 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     'Do not replace task fields. ' + INSTRUCTION.split(' output is null',1)[1] +
                     ' You may request the same inspect_header tool before replying.')
             payload = dict(instruction=instruction, evidence_workspace=workspace, diagnostic=diagnostic,
-                           tool_observations=observations)
+                           tool_observations=observations, output_contract_schema=deepcopy(OUTPUT_SCHEMA),
+                           inspection_source_rule='Explicit source is respected. If omitted, a member must occur in only one package; duplicate names require source. Use prediction for external query headers.')
             if base_task is not None:
                 payload['authoritative_contract'] = dict(input_schema=base_task.spec.get('input_schema'),
                                                          metric=MetricSpec.for_task(base_task).record())
@@ -325,9 +362,11 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             try:
                 if isinstance(response,dict) and response.get('action')=='inspect_header':
                     _require(tool_steps<2,'Inspection step allowance reached')
-                    owner = query_files if response.get('source')=='prediction' and query_files is not None else files
-                    observation = _inspect_header(owner,workspace,response)
+                    owner,request,source_resolution = inspection_source(files,query_files,response)
+                    observation = _inspect_header(owner,workspace,request)
                     observation['package_source']='external_prediction' if owner is query_files else 'task'
+                    observation['requested_source']=response.get('source')
+                    observation['source_resolution']=source_resolution
                     observations.append(observation); tool_steps += 1
                     if log: log.event('semantic_structure_observed', observation=observation)
                     continue

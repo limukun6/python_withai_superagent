@@ -1,5 +1,7 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+**11月27日，A线正式实时读题和工具闭环验收通过。** 229项检查；Flash自主请求预测字段，再填写正确ID输出契约，正式solve完成2次训练与60行独立进程预测。2次API，课程¥0.008981，52.375秒。此前SA12失败保留；这是单条已使用开发任务的部署证据，非任意未知任务保证。[结构、实际工具轨迹和资源边界](docs/batches/SA13_tool_source_results_20261127_zh.md)
+
 ## 11月26日A/B共同研发集成
 
 SA11新增正式`--semantic-artifact-from`任务解释复用：187项相关检查及两条独立solve通过，新增4fit/0API。它复用已验证读题结果，仍会新做预算内训练，不等于恢复旧搜索或保证未知任务全成功。[正式用法与验收边界](docs/batches/SA11_semantic_artifact_results_20261126_zh.md)

@@ -1,5 +1,15 @@
 # 当前接续状态
 
+## 2026-11-27：SA13正式实时工具闭环交付通过，229项回归
+
+SA12已推送a5bd0b9，原完整交付失败保留。SA13按唯一物理成员位置解析遗漏的工具source，显式source不覆盖，重名要求澄清；输出JSON增加条件必填schema，不由Python猜ID/目标/指标。229/229无fit/API检查通过10.547秒。
+
+正式standalone solve真实Flash自然探查表头→只返回字段名→第二次真实提案填record_id→B自主选择HistGradientBoosting→实际2fit含refit→独立进程60行完整预测。2真实API，3757输入/1306输出，课程¥.008981、52.375秒；独立审计11项语义/格式全部通过，实际usage与两条canonical ledger逐行匹配。未注入client/resolver/算法/工具请求，未看外层标签或新评分。证据research/sa13_live_entry_01及sa13_live_audit_01；报告batches/SA13_tool_source_results_20261127_zh.md。
+
+当前账本475/known8.067821/unknown16/pending0，旧行SHA全保留。本自动窗口SA7–SA13累计18fit/14API/¥.101426；SA12+SA13本次前后开发尝试2fit/4API/¥.020658，不是随机消融或独立未知迁移证据。无活动队列、未冻结。
+
+下一优先：无manifest图像/数组的全局语义入口（当前只编译scalar records，显式manifest图像可overlay）以及独立新任务验收。不要再将正式live接线或真实工具闭环说成未实现，也不要把单开发题成功当任意任务保证。按新批计划/代码先落盘，旧16未知不再问，新未知立即停当前付费批次。
+
 ## 2026-11-26：SA12正式Flash入口接通，完整交付首轮失败已保留
 
 SA11已推送2304403。SA12显式接受快照账户进入正式configured_flash，逐事务检查scope/账本/16旧行SHA，次数/费用按scope累计；校园IP采用单client HTTPS连接，不改全局socket/系统代理，TLS原域名不变。223/223零fit/API检查通过10.266秒（首轮两测试夹具错误已保留）。

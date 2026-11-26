@@ -1,0 +1,252 @@
+{
+  "runtime_commit": "7459f2e812a01324c29273fbc3ca483831da85ae",
+  "agent_source_sha256": "4758f29a4587d516bc769acd07e761583170f34074799f4ec19b6a673271b419",
+  "course_protocol": {
+    "entry": "unified_agent solve, no optional flags, no stdin",
+    "agent": "4758f29a4587d516bc769acd07e761583170f34074799f4ec19b6a673271b419",
+    "runner": "97817fa26d0eb1f742fd8c13bfcaed1f179ba9440fdb21a97e092a693821daae",
+    "packages": {
+      "table": {
+        "raw": "b64ab2938b3a96afb997b2e0ca4b0711df767f5e5c873453951e1c0e9bdfd6e5",
+        "features": "1d256de3c3e0d1651d626dcc8da90169cb44d7171120dda572f0333e8a51f047"
+      },
+      "titles": {
+        "raw": "56b5439ea3f77c7b933d9c0bc49705f3759b3a1d302da49adee80031904834e4",
+        "features": "aee2bf4abb1d5a48ab5874856f024562c35a48f4769c4d071a4cd031d0e49b3c"
+      }
+    },
+    "fits_per_case": 10,
+    "model_requests": 0,
+    "scoring": "Seal predictions of both tasks before consulting the designated validation labels."
+  },
+  "tests": {
+    "command": "python -m unittest discover -s tests -q",
+    "passed": 801
+  },
+  "designated_validation": {
+    "table": {
+      "members": [
+        "supported_field_interactions"
+      ],
+      "training_rows": 8117,
+      "fits": 10,
+      "actions": [
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "confirm",
+        "confirm",
+        "stop"
+      ],
+      "correct": 1533,
+      "rows": 2030,
+      "accuracy": 0.7551724137931034,
+      "prediction_sha256": "100a62be0cbcc6f6a1e0a08c290c97bd7f4d81774f8f260af4d5228a2b99e0ec",
+      "official_test_access": false,
+      "llm_calls": 0,
+      "independent_reload": true,
+      "personal_package_reload": true,
+      "matched_previous_prediction_file": true,
+      "matched_previous_ordered_actions_members_and_splits": true,
+      "primary_metric": {
+        "value": "accuracy",
+        "source": "declared_task_readme",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "ordered_columns": {
+        "value": [
+          "temperature",
+          "time",
+          "coupon",
+          "expiration",
+          "gender",
+          "age",
+          "maritalStatus",
+          "has_children",
+          "education",
+          "occupation",
+          "income",
+          "Bar",
+          "CoffeeHouse",
+          "CarryAway",
+          "RestaurantLessThan20",
+          "Restaurant20To50",
+          "toCoupon_GEQ5min",
+          "toCoupon_GEQ15min",
+          "toCoupon_GEQ25min",
+          "direction_same",
+          "direction_opp"
+        ],
+        "source": "declared_task_readme",
+        "status": "confirmed"
+      },
+      "label_meanings": {
+        "value": {
+          "1": "accept",
+          "0": "decline"
+        },
+        "source": "declared_task_readme",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": null,
+        "source": "not_applicable",
+        "status": "not_applicable"
+      },
+      "split_member_counts": {
+        "train": 2,
+        "validation": 2,
+        "test": 2
+      }
+    },
+    "titles": {
+      "members": [
+        "minilm_l12_with_corpus_familiarity"
+      ],
+      "training_rows": 8301,
+      "fits": 10,
+      "actions": [
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "explore",
+        "stop"
+      ],
+      "correct": 684,
+      "rows": 940,
+      "accuracy": 0.7276595744680852,
+      "prediction_sha256": "a2bd613ff851d9ab7446af67cd2a347011bc41021c9b132f6c9f3854d9f85183",
+      "official_test_access": false,
+      "llm_calls": 0,
+      "independent_reload": true,
+      "personal_package_reload": true,
+      "matched_previous_prediction_file": true,
+      "matched_previous_ordered_actions_members_and_splits": true,
+      "primary_metric": {
+        "value": "accuracy",
+        "source": "declared_task_readme",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "ordered_columns": {
+        "value": [
+          "headline_A",
+          "headline_B"
+        ],
+        "source": "native_v1",
+        "status": "confirmed"
+      },
+      "label_meanings": {
+        "value": {
+          "1": "left preferred",
+          "0": "right preferred"
+        },
+        "source": "verified_pair_direction",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": null,
+        "source": "not_applicable",
+        "status": "not_applicable"
+      },
+      "split_member_counts": {
+        "train": 1,
+        "validation": 1,
+        "test": 1
+      }
+    }
+  },
+  "anonymous_end_to_end": {
+    "test": "tests/test_task_declarations.py::TaskDeclarations::test_formal_solve_obeys_the_rule_and_reloads",
+    "protocol": "four-fit cap, primary metric recall for documented class 0, only linear models, isolated solve then predict, no model API"
+  },
+  "text_catalog_with_four_local_encoders": {
+    "unrestricted": {
+      "registered_visible": 42,
+      "all_visible": 63,
+      "pretrained_visible": 8,
+      "generated_visible": 21
+    },
+    "no_pretrained_assets": {
+      "registered_visible": 34,
+      "all_visible": 55,
+      "pretrained_visible": 0,
+      "generated_visible": 21
+    },
+    "no_external_data": {
+      "registered_visible": 34,
+      "all_visible": 55,
+      "pretrained_visible": 0,
+      "generated_visible": 21
+    },
+    "linear_only": {
+      "registered_visible": 18,
+      "all_visible": 24,
+      "pretrained_visible": 0,
+      "generated_visible": 6
+    }
+  },
+  "campus_column_extraction": {
+    "probes": [
+      {
+        "probe": "initial_shortened_context",
+        "model": "DeepSeek-V4.1-Flash",
+        "input_tokens": 136,
+        "output_tokens": 116,
+        "course_cost_rmb": 0.0006,
+        "ruling": "unknown",
+        "ordered_fields": null,
+        "live_requests": 1,
+        "replay_requests": 0,
+        "same_contract_after_replay": true,
+        "classifier_fits": 0
+      },
+      {
+        "probe": "complete_citation",
+        "model": "DeepSeek-V4.1-Flash",
+        "input_tokens": 132,
+        "output_tokens": 91,
+        "course_cost_rmb": 0.000496,
+        "ruling": "proposed",
+        "ordered_fields": [
+          "mass",
+          "length",
+          "volume",
+          "count"
+        ],
+        "live_requests": 1,
+        "replay_requests": 0,
+        "same_contract_after_replay": true,
+        "classifier_fits": 0
+      }
+    ],
+    "total": {
+      "input_tokens": 268,
+      "output_tokens": 207,
+      "course_cost_rmb": 0.001096,
+      "live_requests": 2
+    },
+    "cost_basis": "course off-peak pricing",
+    "cost_receipts": "Both local B ledger records matched; merge to the team ledger separately."
+  },
+  "development_runs_outside_final_scores": {
+    "preliminary": {
+      "table": 10,
+      "titles": 10
+    },
+    "interrupted_before_scoring": {
+      "table": 8,
+      "titles": 1
+    }
+  }
+}

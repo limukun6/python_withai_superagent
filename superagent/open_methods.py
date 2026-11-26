@@ -19,6 +19,7 @@ from .generated_pipeline import KINDS, make_preprocessor
 from .metrics import score_of
 from .models import Candidate, search_candidates
 from .runtime_inventory import ProviderRequirement, installed_extensions, runtime_classifiers
+from .task_constraints import permitted
 
 
 VERSION=4
@@ -169,7 +170,7 @@ def propose(task,profile,history):
                 excluded[name]='signed dense projection incompatible with count features'
                 continue
             projection='latent'
-        elif best and not tags.input_tags.positive_only:
+        elif best and not tags.input_tags.positive_only and 'linear_only' not in task.get('method_restrictions',()):
             if gap>.12:
                 projection='latent'
             elif best['train_score']<.9 and width<=256:
@@ -227,6 +228,11 @@ class MethodSpace:
         key=tuple(r['trial'] for r in history if r['split_id']=='primary' and r['status']=='completed')
         if key not in self.generations:
             proposals,why=propose(self.spec,self.profile,history)
+            restrictions=self.spec.get('method_restrictions',())
+            if restrictions:
+                allowed={n:s for n,s in proposals.items() if permitted(capability(s),restrictions)}
+                why['excluded_by_task_restrictions']=sorted(proposals.keys()-allowed.keys())
+                proposals=allowed
             new=sorted(proposals.keys()-self.entries.keys())
             self.entries.update(proposals)
             self.frontier=tuple(proposals)
@@ -243,4 +249,4 @@ class MethodSpace:
                                        generated=list(proposals),newly_seen=new,evidence=why)
         visible=set(self.frontier)|{r['candidate'] for r in history}
         caps={**baseline,**{n:capability(self.entries[n]) for n in sorted(visible&self.entries.keys())}}
-        return caps,self.generations[key]
+        return {n:c for n,c in caps.items() if permitted(c,self.spec.get('method_restrictions',()))},self.generations[key]

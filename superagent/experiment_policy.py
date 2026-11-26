@@ -47,11 +47,13 @@ def fit_prior(cap, profile):
             + .014*richness - .018*bool(encoder)/math.sqrt(max(1., n/128)))
 
 
-def measured_options(observations, metric):
+def measured_options(observations, metric, *, allow_votes=True):
     """Measure single models and equal votes only on identical, class-aligned, ordered rows."""
     primary = observations.get('primary', {})
     result = {}
-    groups = [(name,) for name in sorted(primary)] + list(combinations(sorted(primary), 2))
+    groups = [(name,) for name in sorted(primary)]
+    if allow_votes:
+        groups.extend(combinations(sorted(primary), 2))
     for members in groups:
         by_fold = {}
         for fold, records in observations.items():
@@ -73,7 +75,7 @@ def measured_options(observations, metric):
 
 
 def actions(caps, profile, history, observations, metric, folds, remaining, blocked=()):
-    options = measured_options(observations, metric)
+    options = measured_options(observations, metric,allow_votes='linear_only' not in profile.get('method_restrictions',()))
     first = observations.get('primary', {})
     missing = frozenset(blocked)
     descriptors = {n: descriptor(c) for n,c in caps.items()}

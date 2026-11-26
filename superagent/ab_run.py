@@ -155,11 +155,12 @@ def freeze_partitions(task, directory, seed, metric, *, preference_vote=False):
 
 
 class Executor:
-    def __init__(self, directory, caps, metric, start, wall, timeout, limit, logger):
+    def __init__(self, directory, caps, metric, start, wall, timeout, limit, logger, *, restrictions=()):
         self.directory, self.caps, self.metric = directory, caps, metric
         self.start, self.wall, self.timeout, self.limit = start, wall, timeout, limit
         self.logger = logger
         self.records = []
+        self.restrictions = tuple(restrictions)
 
     def accounting(self):
         return dict(attempted_classifier_fits=sum(r.get('attempted_classifier_fits', 0) for r in self.records),
@@ -168,6 +169,9 @@ class Executor:
 
     def worker(self, payload, name, destination, timeout, *, reserve=0):
         cap = self.caps[name]
+        from .task_constraints import permitted
+        if not permitted(cap,self.restrictions):
+            raise ValueError('Worker rejected a method outside the frozen task restrictions')
         expected = cap['refit_classifier_fits'] if Path(payload).name == 'refit_data.joblib' else cap['classifier_fits']
         counts = self.accounting()
         if counts['unknown_failed_attempts'] or counts['attempted_classifier_fits'] + expected + reserve > self.limit:

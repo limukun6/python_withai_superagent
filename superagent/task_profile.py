@@ -23,6 +23,11 @@ def training_facts(task):
         if isinstance(value,list) and len(value)>32:
             truncated[key]=dict(total_items=len(value),visible_items=32,rule='first 32 in schema order')
             statistics[key]=value[:32]
-    return dict(profile_version='training-facts-v1',computed_from='all supplied training rows; no external validation or test',
+    evidence=task.spec.get('declaration_evidence',{}).get('fields',{})
+    context={k:deepcopy(v['value']) for k,v in evidence.items() if k in ('label_meanings','method_restrictions') and v['value']}
+    if evidence.get('columns',{}).get('value'):
+        context['documented_columns']=deepcopy(evidence['columns']['value'][:32])
+        context['documented_columns_status']=evidence['columns']['status']
+    return dict(**context,profile_version='training-facts-v1',computed_from='all supplied training rows; no external validation or test',
         validation_accessed=False,formal_test_accessed=False,statistics=deepcopy(statistics),truncated_fields=truncated,
         majority_class_fraction=max(counts.values())/len(task.y_train),minority_class_fraction=min(counts.values())/len(task.y_train))

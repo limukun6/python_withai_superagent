@@ -149,6 +149,10 @@ class ProposalStudy:
         ordinary=[a['members'][0] for a in menu if a['action']=='explore']
         roots=[*top,*[n for n in ordinary if n in generator.entries][:3]]
         self.extra=contrasts(generator.entries,roots)
+        from .task_constraints import permitted
+        restrictions=generator.spec.get('method_restrictions',())
+        if restrictions:
+            self.extra={n:s for n,s in self.extra.items() if permitted(capability(s),restrictions)}
         candidates={n:caps[n] for n in ordinary}
         candidates.update({n:capability(spec) for n,spec in self.extra.items() if n not in bank})
         if not candidates:

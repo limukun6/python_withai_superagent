@@ -75,6 +75,9 @@ def save(path, value):
 
 
 def train_legacy(package, run_dir):
+    from superagent.task_constraints import package_restrictions
+    if package_restrictions(package):
+        return train(package,run_dir)
     task = load_training_task(package)
     partition, reason = audit_partition(task)
     run_dir.mkdir(parents=True, exist_ok=False)

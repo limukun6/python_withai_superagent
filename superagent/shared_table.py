@@ -55,6 +55,11 @@ def shared_source(archive,split,manifest,contract):
         return None,False
     choices=[n for n in archive.namelist() if PurePosixPath(n).suffix[1:].lower() in TABLE_FORMATS
              and '__MACOSX' not in PurePosixPath(n).parts and not evaluation_path(n,'train')]
+    named = getattr(archive,'documented_roles',{})
+    if 'train' in named:
+        member=declared_member(archive,named['train'])
+        if PurePosixPath(member).suffix[1:].lower() in TABLE_FORMATS:
+            return member,list(named.values()).count(named['train'])>1
     primary=[n for n in choices if PurePosixPath(n).stem.lower()=='train']
     if len(primary)==1:
         return primary[0],False
@@ -121,14 +126,18 @@ def stage(archive,split,contract=None,*,for_partial_labels=False):
                 value['columns']=[c for c in value['columns'] if c['name']!=grouping]
             value['splits']={split:{'format':'csv','path':name}}
             out.writestr('manifest.json',json.dumps(value))
-            if split == 'train' and 'metric' not in value:
-                out.writestr('README.md',prose)
-        elif split=='train':
-            # Keep task semantics. The in-memory view has already resolved file-location declarations.
-            out.writestr('README.md',prose)
+        if split=='train':
+            from .format_sources import task_documents
+            docs=task_documents(archive.namelist())
+            if docs:
+                # Preserve the source bytes, including ordering punctuation, alongside the selected rows.
+                out.writestr(PurePosixPath(docs[0]).name,archive.read(docs[0]))
     raw.seek(0)
     with zipfile.ZipFile(raw) as view:
         original=getattr(archive,'standalone',None)
+        view.role_names=getattr(archive,'role_names',archive.namelist())
+        view.documented_roles=getattr(archive,'documented_roles',{})
+        view.observed_roles={buckets[value] for value in seen}
         view.shared_table=dict(member=original[0] if original else member,split_column=grouping,
                                target=target,split_values=labels)
         yield view

@@ -32,6 +32,8 @@ def _mentions(text, name):
 
 def instructions(package, task):
     columns=[col['name'] for col in task.spec.get('input_schema',{}).get('columns',[]) if isinstance(col,dict) and isinstance(col.get('name'),str)]
+    if task.spec.get('declaration_evidence',{}).get('fields',{}).get('columns',{}).get('status')=='proposed':
+        columns=[]  # Evidence-only names cannot establish a grouping or chronological split.
     try:
         with open_package(package,'train',shared=True) as archive:
             prose=description(archive)

@@ -19,10 +19,23 @@ def evaluation_path(path,split):
 
 
 class TrainingMembers:
-    def __init__(self, archive):
+    def __init__(self, archive, *, read_roles=False):
         self.archive = archive
         self.standalone = getattr(archive, 'standalone', None)
-        self.names = [n for n in archive.namelist() if not evaluation_path(n, 'train')]
+        from .format_sources import roles
+        from .split_declarations import declared_paths, matches
+        self.role_names = archive.namelist()
+        self.documented_roles = {}
+        if read_roles:
+            from .task_declarations import read_document
+            self.documented_roles = declared_paths(read_document(archive)[0])
+        excluded = {n for role,path in self.documented_roles.items() if role != 'train'
+                    for n in matches(self.role_names,path)}
+        # A shared table is opened only by the existing split-marker stage, which selects training rows.
+        if 'train' in self.documented_roles:
+            excluded.difference_update(matches(self.role_names,self.documented_roles['train']))
+        self.names = [n for n in self.role_names if not evaluation_path(n, 'train')
+                      and not roles(n).intersection({'test','validation'}) and n not in excluded]
         self.allowed = set(self.names)
 
     def namelist(self):
@@ -87,6 +100,6 @@ def open_package(value,split,*,shared=False,contract=None,for_partial_labels=Fal
         tar_or_gzip = prefix[257:262] == b'ustar' or prefix.startswith(bytes([31,139]))
         source=package_files(path) if tar_or_gzip else zipfile.ZipFile(path)
     with source as opened:
-        archive = TrainingMembers(opened) if split == 'train' else opened
+        archive = TrainingMembers(opened,read_roles=shared) if split == 'train' else opened
         with (stage(archive,split,contract,for_partial_labels=for_partial_labels) if shared or contract else nullcontext(archive)) as selected:
             yield selected

@@ -101,7 +101,9 @@ def command(args):
     if getattr(args,'policy','autonomous')=='legacy':
         if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
-        return legacy_command(args)
+        from .task_constraints import package_restrictions
+        if not package_restrictions(args.task_package):
+            return legacy_command(args)
     issue = None
     try:
         if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash'):

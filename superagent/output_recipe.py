@@ -55,7 +55,7 @@ def validate_recipe(recipe, labels):
                 mapping = column['mapping']
                 _require(isinstance(mapping, dict) and set(mapping) == {str(v) for v in labels}
                          and all(_scalar(v) for v in mapping.values()), 'incomplete or invalid label mapping')
-                _require(len({json.dumps(v, ensure_ascii=False) for v in mapping.values()}) == len(labels),
+                _require(len({str(v) for v in mapping.values()}) == len(labels),
                          'label mapping collapses classes')
             predicted += 1
         elif kind == 'probability':

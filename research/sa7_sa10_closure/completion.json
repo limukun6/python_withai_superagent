@@ -1,0 +1,138 @@
+{
+  "status": "passed",
+  "physical_classifier_fits": 12,
+  "real_API_requests": 10,
+  "requests": [
+    {
+      "id": "7b144a1f-716d-48c8-b8e1-b2ff5069a5ab",
+      "scope": "sa7_multiturn_20261126",
+      "input_tokens": 942,
+      "output_tokens": 3209,
+      "course_cost_rmb": 0.013778
+    },
+    {
+      "id": "880e061d-ce42-4daa-b0e4-5e2e2b314deb",
+      "scope": "sa7_multiturn_20261126",
+      "input_tokens": 908,
+      "output_tokens": 2069,
+      "course_cost_rmb": 0.009184
+    },
+    {
+      "id": "8bbf46d6-87f5-4850-9ae8-bfde4cbf4801",
+      "scope": "sa7_multiturn_20261126",
+      "input_tokens": 897,
+      "output_tokens": 2229,
+      "course_cost_rmb": 0.009813
+    },
+    {
+      "id": "1762b407-6065-47d9-a5bd-df5168d1160c",
+      "scope": "sa7_multiturn_20261126",
+      "input_tokens": 934,
+      "output_tokens": 3070,
+      "course_cost_rmb": 0.013214
+    },
+    {
+      "id": "27bcb052-3f78-40c0-a0c8-652230838c42",
+      "scope": "sa7_multiturn_20261126",
+      "input_tokens": 1040,
+      "output_tokens": 480,
+      "course_cost_rmb": 0.00296
+    },
+    {
+      "id": "1904bd53-c66a-42dc-adfd-32664577e773",
+      "scope": "sa8_real_delivery_20261126",
+      "input_tokens": 1204,
+      "output_tokens": 762,
+      "course_cost_rmb": 0.004252
+    },
+    {
+      "id": "1b33093b-74b1-406c-870b-1c5c7ec1d466",
+      "scope": "sa8_real_delivery_20261126",
+      "input_tokens": 1193,
+      "output_tokens": 898,
+      "course_cost_rmb": 0.004785
+    },
+    {
+      "id": "4cf6087d-7be2-448a-a69a-6bdc53e2fc0c",
+      "scope": "sa8_real_delivery_20261126",
+      "input_tokens": 829,
+      "output_tokens": 883,
+      "course_cost_rmb": 0.004361
+    },
+    {
+      "id": "9ef0120b-a1ee-473c-b132-19da0a834325",
+      "scope": "sa8_real_delivery_20261126",
+      "input_tokens": 5194,
+      "output_tokens": 663,
+      "course_cost_rmb": 0.007846
+    },
+    {
+      "id": "bfb9558a-ee73-488e-bcd2-beb3161e1ddc",
+      "scope": "sa8_real_delivery_20261126",
+      "input_tokens": 5183,
+      "output_tokens": 1348,
+      "course_cost_rmb": 0.010575
+    }
+  ],
+  "input_tokens": 18324,
+  "output_tokens": 15611,
+  "known_incremental_course_cost_rmb": 0.080768,
+  "ledger_requests": 471,
+  "ledger_known_course_cost_rmb": 8.047163,
+  "ledger_unknown": 16,
+  "ledger_pending": 0,
+  "new_unknowns": 0,
+  "models": [
+    {
+      "case": "V2",
+      "physical_fits": 4,
+      "family": "open_RandomForestClassifier_3ffcb0009d0cbd110a50",
+      "model_sha256": "84cd63fc1ac2b687c1339d6b48f59bdfea0a313c6fbb21dc011d31c6bce73724",
+      "prediction_rows": 60,
+      "development_correct": 55,
+      "development_score": {
+        "accuracy": 0.9166666666666666,
+        "macro_f1": 0.6996996996996997,
+        "primary_metric": "macro_f1",
+        "score": 0.6996996996996997,
+        "rows": 60
+      }
+    },
+    {
+      "case": "V1",
+      "physical_fits": 4,
+      "family": "open_ExtraTreeClassifier_bf4ca57d880194d7abd6",
+      "model_sha256": "05262f693cc5e503dc1f914c766a4c27e5f605c93b497efd9f2c0539fa3bee9f",
+      "prediction_rows": 60,
+      "development_correct": 57,
+      "development_score": {
+        "accuracy": 0.95,
+        "macro_f1": 0.9466666666666667,
+        "primary_metric": "macro_f1",
+        "score": 0.9466666666666667,
+        "rows": 60
+      }
+    },
+    {
+      "case": "V3",
+      "physical_fits": 4,
+      "family": "image_gradient_histograms_logistic",
+      "model_sha256": "c8399e025cbb4388b3849cc70b6cf6843fb75bd204508fee33aadb1540035c3e",
+      "prediction_rows": 40,
+      "development_correct": 35,
+      "development_score": {
+        "accuracy": 0.875,
+        "macro_f1": 0.8740476190476191,
+        "primary_metric": "macro_f1",
+        "score": 0.8740476190476191,
+        "rows": 40
+      }
+    }
+  ],
+  "compatibility_models": 3,
+  "audit_classifier_fits": 0,
+  "audit_API_requests": 0,
+  "ledger_unchanged": true,
+  "team_total_verified": false,
+  "scope": "SA7 live cases plus SA8 original/SA9 recovery; no first-attempt 3/3 or causal accuracy-improvement claim"
+}

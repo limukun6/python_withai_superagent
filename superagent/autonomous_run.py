@@ -382,6 +382,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 log.write_json('history.json',history)
                 if scheduled is not None:
                     scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory)
+                if opening is not None:
+                    opening.observe(monitor['trial'],observed)
                 if pilot is not None:
                     pilot.snapshot(checkpoint,sum(r['status']=='completed' for r in history))
             if pilot is not None:

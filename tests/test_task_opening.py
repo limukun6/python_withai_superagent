@@ -39,13 +39,14 @@ class OpeningTests(unittest.TestCase):
     def test_reads_only_documented_role_and_structured_split_wins(self):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'random.zip'
-            make_zip(path,[('README.md',b'Predict a class for previously unseen devices identified by device_id. Report accuracy.'),
+            make_zip(path,[('README.md',b'Predict a class for previously unseen devices identified by device_id. Subjects can vary between locations. Report accuracy.'),
                            ('test/README.md',b'Predict the SECRET_TARGET.'),('test/labels.csv',b'secret')])
             task=TrainingTask('numeric_tabular',np.zeros((10,2)),np.arange(10)%2,
                  {'input_schema':{'columns':[{'name':'device_id'},{'name':'t'}]}})
             inferred,lines,origin=instructions(path,task)
             self.assertEqual((origin,inferred.spec['evaluation_protocol']),('documented_column',dict(kind='entity',column='device_id')))
             self.assertIn('field_1',lines[0])
+            self.assertIn('Subjects can vary between locations',lines)
             self.assertNotIn('SECRET',' '.join(lines))
             task.spec['evaluation_protocol']={'kind':'temporal','column':'t'}
             fixed,_,origin=instructions(path,task)

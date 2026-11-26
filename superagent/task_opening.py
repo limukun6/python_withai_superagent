@@ -63,6 +63,7 @@ class TaskOpening:
         self.task,self.metric,self.folds=task,metric,folds
         self.pool=self.future=None
         self.answer=None
+        self.updates=[]
         self.brief=make_brief(task,metric,folds,lines,origin)
         self.record=dict(mode=mode,brief_digest=identity(self.brief),interpretation_status='local',
                          reply_used=False,changed_experiment=False,check_status='no_advice')
@@ -91,19 +92,44 @@ class TaskOpening:
         try:
             self.answer=validate(self.future.result(timeout=max(0.,wait)),self.brief)
         except FutureTimeout:
-            if self.future.done():
-                self.record.update(interpretation_status='unavailable',issue='Request timed out')
+            if not self.future.done():
+                return
+            self.record.update(interpretation_status='unavailable',issue='Request timed out')
         except (KeyError,ValueError,TypeError,OSError,RuntimeError) as error:
             self.record.update(interpretation_status='invalid',issue=str(error)[:300])
         else:
             self.record.update(interpretation_status='valid',interpretation=self.answer)
         self.save()
 
+    def observe(self,trial,observed):
+        """Read any ready answer without waiting and track how the ordinary measurements affect it."""
+        self.collect(0.)
+        if not self.answer or self.answer['check']=='keep' or not observed['primary']:
+            return
+        check=self.brief['checks'][self.answer['check']]
+        if check['kind'] in ('entity','temporal'):
+            if self.updates:
+                return
+            evidence=split_audit(self.task,self.folds)
+            update=dict(trial=trial,check=self.answer['check'],verdict='split_verified' if all(e['passes'] for e in evidence.values()) else 'split_violation',
+                        observations=evidence)
+        else:
+            primary=observed['primary']
+            leader=min(primary,key=lambda n:(-primary[n]['score'],n))
+            evidence={f:error_gap(bank[leader],subset(self.task,self.metric,self.folds[f][1],check))
+                      for f,bank in observed.items() if leader in bank}
+            values=[r['supported'] for r in evidence.values()]
+            verdict='unmeasurable' if None in values else 'provisional' if len(values)==1 else 'supported' if all(values) else 'refuted' if not any(values) else 'mixed'
+            update=dict(trial=trial,check=self.answer['check'],reference=leader,verdict=verdict,observations=evidence)
+        self.updates.append(update)
+        self.log.write_json('opening_updates.json',self.updates)
+
     def finish(self):
         if self.pool is not None:
             self.pool.shutdown(wait=True)
             self.collect(0)
         self.record['closed_seconds']=time.monotonic()-self.start
+        self.record['updates_during_search']=len(self.updates)
         self.save()
         # Portable experience contains measured outcomes and conditions, never archive names, rows or prose.
         self.log.write_json('opening_lesson.json',dict(version=1,modality=self.task.kind,metric=self.metric.name,

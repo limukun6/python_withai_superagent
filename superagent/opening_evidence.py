@@ -13,6 +13,8 @@ from .task_files import open_package
 
 GOAL = re.compile(r'predict|classif|identify|recogniz|distinguish|determine|target|label|score|report|'
                   r'hold out|held.out|unseen|future|group|recording|sample|example|each row|each image|each comment|'
+                  r'\b(?:differ\w*|vary|repeated|overlap|independent|correlated|shift|unavailable)\b|'
+                  r'不同|变化|重复|关联|缺失|独立|重叠|来自|'
                   r'预测|分类|识别|目标|评分|标签|划分|分组|未来|每一|每个|样本',re.I)
 OMIT = re.compile(r'https?://|@|[/\\]|\.(zip|csv|np[yz]|json|parquet)\b|\b(dataset|corpus|benchmark)\b|'
                   r'benchmark|leaderboard|baseline|api.?key|password|credential|ignore (previous|all)|'

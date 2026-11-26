@@ -33,6 +33,8 @@ def matches(names, path):
 
 def inventory(names, declared, manifest=None):
     """Only paths that exist and agree with their declared role are reported as verified."""
+    names=[n for n in names if not n.endswith('/') and
+           not any(part.startswith('.') or part=='__MACOSX' for part in PurePosixPath(n).parts)]
     listed={}
     nameset=set(names)
     for role in ROLE:

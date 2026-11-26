@@ -63,7 +63,7 @@ class TaskDeclarations(unittest.TestCase):
     def arrays(self,text,width=3):
         return self.package('anonymous',{'C_train.npy':npy(np.arange(90*width).reshape(90,width).astype(str)),
             'y_train.npy':npy(np.tile([0,1],45)),'README.md':text,
-            'C_val.npy':b'not read','y_test.npy':b'not read'})
+            'C_val.npy':b'not read','y_test.npy':b'not read','__MACOSX/._C_val.npy':b'archive metadata'})
 
     def logger(self,name):
         folder=self.root/name

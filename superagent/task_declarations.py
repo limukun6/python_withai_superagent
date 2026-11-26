@@ -166,6 +166,10 @@ def bind(task, archive, *, client=None, log=None, manifest=None):
     meanings.update(manifest_meanings)
     if meanings:
         evidence['label_meanings'] = dict(value=meanings,source='declared_manifest' if manifest_meanings else 'declared_task_readme',status='confirmed')
+    elif schema.get('pair_semantics')=='preference' and schema.get('pair_label_one') in ('left','right') and set(domain)=={0,1}:
+        side=schema['pair_label_one']
+        meanings={'1':side+' preferred','0':('right' if side=='left' else 'left')+' preferred'}
+        evidence['label_meanings']=dict(value=meanings,source='verified_pair_direction',status='confirmed')
     positive = resolve_positive(text,domain,meanings,spec.get('metric'))
     if positive is not None:
         if spec.get('positive_label', positive)!=positive:

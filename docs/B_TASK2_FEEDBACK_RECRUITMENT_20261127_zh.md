@@ -15,6 +15,12 @@
 
 用同一入口跑公开 Wine 三分类，指定指标为宏平均 F1。Agent 只用 5 次拟合，保留梯度提升树，36 条留出均答对，宏平均 F1 为 1.00。这个小例子验证了它能切换指标和方法，也能主动保留单模型。[三分类决策](../research/paired_encoder_search_1127/recruitment_table_decision.json) · [三分类结果](../research/paired_encoder_search_1127/recruitment_table_results.json)
 
+### 回到完整课程原包
+
+固定原交付的通用模型目录，只给 32 次拟合和 1,800 秒上限。Agent 用课程原包的 8,301 条训练题，从头训练 20 次后已得到原三成员组合，随后主动提出给 MPNet 50% 票权。在两份此前未评分的训练划分上分别净增 14/1,616、29/1,696，遂采用新组合。最终权重为 MPNet 50%、BGE-small 18.75%、GTE-base 18.75%、GTE-base 的相似案例投票 12.5%。全程共 29 次拟合，约 10 分 45 秒，模型 API 0 次。[自主决策与新划分](../research/paired_encoder_search_1127/recruitment_raw_decision.json) · [用量](../research/paired_encoder_search_1127/recruitment_raw_outcome.json)
+
+对无标签的 940 行输入，模型在新进程逐行重现。相对可提交版改变了 65 行；本轮按事前约定封存指定验证答案，因此这个四成员模型的指定验证准确率仍未知。保留可提交版的 710/940。[文件读取与重载](../research/paired_encoder_search_1127/recruitment_raw_sealed.json) · [无标签比对](../research/paired_encoder_search_1127/recruitment_raw_changes.json)
+
 ### 决策依据和两条未晋级的路线
 
 - 在已结束的标题和电影台词运行上，分别匿名改名并打乱方法五次，同一份反馈的十次选择都一致。用原始反馈，标题选 MPNet 50%，台词选非线性 MiniLM 25%。把候选预测改成与原方案相同后，两次都决定保留原方案。把可用预算降到少一次拟合后，两次也都保留原方案。改写反馈的实验只用于检验决策机制。[回放记录](../research/paired_encoder_search_1127/recruitment_replay_results.json)

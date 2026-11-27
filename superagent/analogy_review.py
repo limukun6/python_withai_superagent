@@ -6,6 +6,7 @@ import numpy as np
 
 from .ab_run import sha
 from .preference_analogy import WeightedProbabilityVote, derived_candidate
+from .models import SoftVoteModel
 from .experiment_policy import identity
 from .finalist_race import paired_error
 from .splits import sample_groups
@@ -73,6 +74,41 @@ def promoted(primary_gain,confirmations,*,primary_rows=None):
             and gain+primary_gain>=.003*(rows+primary_rows))
 
 
+def incumbent_parts(members,model):
+    if len(members)==1:
+        return [model],[1.]
+    if not isinstance(model,SoftVoteModel) or len(set(members))!=len(members) or len(model.models)!=len(members):
+        raise ValueError('Cannot link ensemble constituents to their frozen fitted models')
+    shares=getattr(model,'weights',np.full(len(members),1./len(members)))
+    if len(shares)!=len(members) or min(shares)<0 or not np.isclose(sum(shares),1.):
+        raise ValueError('Invalid incumbent weights')
+    return model.models,list(map(float,shares))
+
+
+def representation_source(members,models,primary,caps):
+    options=[]
+    for m,model in zip(members,models):
+        record=primary.get(m)
+        if record is None or record.get('probabilities') is None:
+            continue
+        candidate=derived_candidate(model)
+        if candidate:
+            options.append((m,candidate,float(record['score']),identity(caps[m]['params'])))
+    if not options:
+        return None,[]
+    ordered=sorted(options,key=lambda x:(-x[2],x[3],identity(x[1].params)))
+    return ordered[0], [dict(member=n,adviser=c.family,measured_primary=s,execution_key=k) for n,c,s,k in ordered]
+
+
+def incumbent_evidence(records,shares,metric):
+    first=records[0]
+    if any(v['row_key']!=first['row_key'] or not np.array_equal(v['labels'],first['labels']) for v in records):
+        raise ValueError('Mixed incumbent has unmatched validation rows')
+    probabilities=np.average([r['probabilities'] for r in records],axis=0,weights=shares)
+    predictions=np.asarray(metric.labels)[probabilities.argmax(axis=1)]
+    return dict(first,probabilities=probabilities,predictions=predictions,score=float(np.mean(predictions==first['labels'])))
+
+
 def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,payloads):
     from .autonomous_run import planner_observation
     anchor_names=stop['members']
@@ -97,18 +133,17 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
         return evidence
 
     try:
-        if len(anchor_names)!=1:
-            record('retained_multiple_incumbents')
-            return result
-        anchor_name=anchor_names[0]
         path=directory/incumbent['model_file']
         if sha(path)!=incumbent['model_sha256']:
             raise ValueError('Frozen incumbent identity changed')
         anchor_model=joblib.load(path)['model']
-        candidate=derived_candidate(anchor_model)
-        if candidate is None:
+        anchor_models,anchor_shares=incumbent_parts(anchor_names,anchor_model)
+        elected,options=representation_source(anchor_names,anchor_models,observed['primary'],executor.caps)
+        if elected is None:
             record('retained_without_compatible_representation')
             return result
+        source_name,candidate,_,_=elected
+        report.update(incumbent_weights=anchor_shares,source_member=source_name,source_candidates=options)
         name=candidate.family
         cap=dict(id=name,kind='pair_text',params=candidate.params,route='preference_analogy',estimator='preference_analogy',
                  resource='local_frozen_encoder_cpu',origin='b_port',classifier_fits=1,refit_classifier_fits=1,
@@ -120,13 +155,15 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
             record('retained_incompatible_class_order')
             return result
         wanted=('primary','confirmation_1','confirmation_2')
-        needed=1+sum((anchor_name not in observed[f])*executor.caps[anchor_name]['classifier_fits']+1 for f in wanted)
+        def anchor_cost(fold):
+            return sum(executor.caps[m]['classifier_fits'] for m in anchor_names if m not in observed[fold])
+        needed=1+sum(anchor_cost(f)+1 for f in wanted)
         if needed>executor.limit-spent:
             record('retained_insufficient_budget',required=needed)
             return result
         executor.caps[name]=cap
         record('evaluating',candidate=name,derived_configuration=candidate.params,remaining_fits=executor.limit-spent)
-        primary=observed['primary'][anchor_name]
+        primary=incumbent_evidence([observed['primary'][m] for m in anchor_names],anchor_shares,metric)
         first=measure(name,'primary',needed-1)
         proposal=nominate(primary,first,payloads['primary']['labels'])
         share,gain,scores=proposal['weight'],proposal['primary_gain'],proposal['scores']
@@ -138,9 +175,13 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
             record('retained_primary')
             return result
         for j,fold in enumerate(wanted[1:]):
-            missing_next=(j==0 and anchor_name not in observed[wanted[2]])
-            reserve=1+(1-j)+int(missing_next)*executor.caps[anchor_name]['classifier_fits']
-            base=measure(anchor_name,fold,reserve+1)
+            pending=list(wanted[2+j:])
+            reserve=1+sum(anchor_cost(f)+1 for f in pending)
+            anchors=[]
+            for k,member in enumerate(anchor_names):
+                later=sum(executor.caps[m]['classifier_fits'] for m in anchor_names[k+1:] if m not in observed[fold])
+                anchors.append(measure(member,fold,reserve+1+later))
+            base=incumbent_evidence(anchors,anchor_shares,metric)
             near=measure(name,fold,reserve)
             truth=payloads[fold]['labels']
             base_count,vote_count=blend_counts(base,near,truth,[0.,share])
@@ -152,9 +193,9 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
             record('retained_confirmation')
             return result
         model,_=executor.worker(directory/'refit_data.joblib',name,directory/'analogy_full.joblib',timeout)
-        models=[anchor_model,model] if share<1 else [model]
-        members=[anchor_name,name] if share<1 else [name]
-        weights=[1-share,share] if share<1 else [1.]
+        models=[*anchor_models,model] if share<1 else [model]
+        members=[*anchor_names,name] if share<1 else [name]
+        weights=[*(float(w)*(1-share) for w in anchor_shares),share] if share<1 else [1.]
         final=WeightedProbabilityVote(task.kind,models,metric.labels,weights) if share<1 else model
         family='feedback_weighted_vote' if len(models)>1 else name
         destination=directory/'analogy_selected_model.joblib'

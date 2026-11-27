@@ -11,7 +11,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 
 from superagent.ab_run import sha
-from superagent.analogy_review import blend_counts, can_review, nominate, promoted, review
+from superagent.analogy_review import blend_counts, can_review, nominate, promoted, review, representation_source, incumbent_evidence
 from superagent.data import TrainingTask
 from superagent.events import RunLogger
 from superagent.preference_analogy import AnalogyIndex,WeightedProbabilityVote
@@ -81,7 +81,7 @@ class Comparison(unittest.TestCase):
         class BrokenExecutor:
             limit=16
             restrictions=()
-            caps={'anchor':dict(classifier_fits=1)}
+            caps={'anchor':dict(classifier_fits=1,params={'embedding':'opaque'})}
             def accounting(self):
                 return {'attempted_classifier_fits':10,'unknown_failed_attempts':0}
             def worker(self,*args,**kwargs):
@@ -96,7 +96,7 @@ class Comparison(unittest.TestCase):
             logger.write_json('final_selection.json',incumbent)
             frozen=sha(folder/'final_selection.json')
             candidate=SimpleNamespace(family='opaque',params=dict(encoder='public'))
-            folds={'primary':{'anchor':{}},'confirmation_1':{},'confirmation_2':{}}
+            folds={'primary':{'anchor':dict(probabilities=np.array([[.2,.8]]),labels=np.array([1]),score=1.,row_key='primary')},'confirmation_1':{},'confirmation_2':{}}
             with patch('superagent.analogy_review.derived_candidate',return_value=candidate):
                 outcome=review(SimpleNamespace(kind='pair_text'),SimpleNamespace(labels=[0,1]),stop,incumbent,
                    BrokenExecutor(),folder,logger,10,folds,{'primary':{'path':folder/'split.joblib'}})
@@ -119,3 +119,25 @@ class Comparison(unittest.TestCase):
         self.assertEqual(nominate(before,before,truth)['weight'],0)
         self.assertFalse(promoted(-2,[dict(rows=1000,gain=20),dict(rows=1000,gain=0)],primary_rows=1000))
         self.assertTrue(promoted(-2,[dict(rows=1000,gain=9),dict(rows=1000,gain=2)],primary_rows=1000))
+
+
+    def test_ensemble_source_tracks_measured_quality_after_renaming_and_reordering(self):
+        primary={'x':dict(score=.7,probabilities=[[.3,.7]]),'y':dict(score=.75,probabilities=[[.1,.9]])}
+        caps={'x':dict(params={'view':1}),'y':dict(params={'view':2})}
+        x=SimpleNamespace(family='a',params={'view':1})
+        y=SimpleNamespace(family='b',params={'view':2})
+        with patch('superagent.analogy_review.derived_candidate',side_effect=lambda m:m):
+            selected,_=representation_source(['x','y'],[x,y],primary,caps)
+            self.assertEqual(selected[1].params,{'view':2})
+            renamed={'opaque2':primary['y'],'opaque1':primary['x']}
+            choices={'opaque2':caps['y'],'opaque1':caps['x']}
+            chosen,_=representation_source(['opaque2','opaque1'],[y,x],renamed,choices)
+            self.assertEqual(chosen[1].params,selected[1].params)
+            primary['x']['score']=.8
+            changed,_=representation_source(['y','x'],[y,x],primary,caps)
+            self.assertEqual(changed[1].params,{'view':1})
+        truth=np.array([1,0])
+        a=dict(row_key='f',labels=truth,probabilities=np.array([[.2,.8],[.7,.3]]))
+        b=dict(a,probabilities=np.array([[.8,.2],[.3,.7]]))
+        obs=incumbent_evidence([a,b],[.75,.25],SimpleNamespace(labels=[0,1]))
+        np.testing.assert_allclose(obs['probabilities'],[[.35,.65],[.6,.4]])

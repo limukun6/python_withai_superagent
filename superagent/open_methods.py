@@ -210,7 +210,8 @@ def resolve(kind,name,document):
         spec=document['entries'][name]
         if spec['kind']!=kind:
             raise ValueError('Runtime pipeline has the wrong modality')
-        method=materialize(spec)
+        from . import group_exposure
+        method=group_exposure.materialize(spec) if spec.get("operator")==group_exposure.OPERATOR else materialize(spec)
         if method.family!=name:
             raise ValueError('Runtime configuration digest differs')
         return method
@@ -233,6 +234,11 @@ class MethodSpace:
                 allowed={n:s for n,s in proposals.items() if permitted(capability(s),restrictions)}
                 why['excluded_by_task_restrictions']=sorted(proposals.keys()-allowed.keys())
                 proposals=allowed
+            from . import group_exposure
+            if self.spec["kind"] == "pair_text" and self.spec["input_schema"].get("pair_semantics") == "preference":
+                additions=group_exposure.proposals(history,baseline)
+                proposals.update({n:s for n,s in additions.items() if permitted(group_exposure.capability(s,baseline),restrictions)})
+                why["group_weight_sources"]=sorted({s["template"] for s in additions.values()})
             new=sorted(proposals.keys()-self.entries.keys())
             self.entries.update(proposals)
             self.frontier=tuple(proposals)
@@ -248,5 +254,9 @@ class MethodSpace:
             self.generations[key]=dict(file=version.name,sha256=hashlib.sha256(payload).hexdigest(),
                                        generated=list(proposals),newly_seen=new,evidence=why)
         visible=set(self.frontier)|{r['candidate'] for r in history}
-        caps={**baseline,**{n:capability(self.entries[n]) for n in sorted(visible&self.entries.keys())}}
+        from . import group_exposure
+        caps=dict(baseline)
+        for name in sorted(visible & self.entries.keys()):
+            spec=self.entries[name]
+            caps[name]=group_exposure.capability(spec,baseline) if spec.get("operator")==group_exposure.OPERATOR else capability(spec)
         return {n:c for n,c in caps.items() if permitted(c,self.spec.get('method_restrictions',()))},self.generations[key]

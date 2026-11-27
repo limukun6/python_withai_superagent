@@ -264,6 +264,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                          X_search=take(task.X_train,held),y_search=labels,metric_spec=metric.record(),
                          pair_semantics=declared_semantics(task),capture_probabilities=True),path)
         payloads[name]=dict(path=path,labels=labels,sha256=sha(path))
+        if name=="primary" and task.kind=="pair_text" and task.spec.get("input_schema",{}).get("pair_semantics")=="preference":
+            from .group_exposure import sizes
+            payloads[name]["group_sizes"]=sizes(take(task.X_train,held))
         log.write_json(name+'_split.json',dict(fit=fit.tolist(),held=held.tolist(),resource=resource,
                        row_sha256=fingerprint(held),label_sha256=fingerprint(labels),payload_sha256=sha(path)))
     fit,_,_ = folds['primary']
@@ -434,6 +437,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     train_score=facts['train_score'],search_score=facts['search_score'],search_accuracy=facts['search_accuracy'],
                     class_recall=facts['class_recall'],paired_errors=paired,training_seconds=facts['training_seconds'],
                     resolved_configuration=facts['resolved_configuration']))
+                if "group_sizes" in payload:
+                    from .group_exposure import errors
+                    history[-1]["connected_group_errors"]=errors(payload["group_sizes"],payload["labels"],observation["predictions"])
                 meanings=profile.get('label_meanings',{})
                 if meanings:
                     history[-1]['documented_class_recall']=[

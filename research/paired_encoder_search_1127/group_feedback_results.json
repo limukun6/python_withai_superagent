@@ -1,0 +1,235 @@
+{
+  "protocol_sha256": "ff1f66c3358d1ffa6a46370836fd93154f3e711cd93c964ab1baaf478d0d00ca",
+  "feedback": {
+    "gte_base_paired_linear": {
+      "isolated": 927,
+      "repeated": 766,
+      "isolated_error": 0.25782092772384035,
+      "repeated_error": 0.29503916449086165,
+      "gap": 0.037218236767021295,
+      "standard_error": 0.021861989609295158,
+      "distinguishes": true
+    },
+    "gte_paired_linear": {
+      "isolated": 927,
+      "repeated": 766,
+      "isolated_error": 0.2610571736785329,
+      "repeated_error": 0.29503916449086165,
+      "gap": 0.03398199081232878,
+      "standard_error": 0.021900370599450436,
+      "distinguishes": true
+    }
+  },
+  "proposals": {
+    "group_weight_597e4d259bb8879397b0": {
+      "kind": "pair_text",
+      "operator": "reweight_connected_groups",
+      "template": "gte_base_paired_linear",
+      "power": 0.5
+    },
+    "group_weight_fceae8b24fc0dc05d7c2": {
+      "kind": "pair_text",
+      "operator": "reweight_connected_groups",
+      "template": "gte_base_paired_linear",
+      "power": -0.5
+    },
+    "group_weight_deea3dc0a6d71166f603": {
+      "kind": "pair_text",
+      "operator": "reweight_connected_groups",
+      "template": "gte_paired_linear",
+      "power": 0.5
+    },
+    "group_weight_4b8e96cc9a713846cb65": {
+      "kind": "pair_text",
+      "operator": "reweight_connected_groups",
+      "template": "gte_paired_linear",
+      "power": -0.5
+    }
+  },
+  "primary": [
+    {
+      "candidate": "group_weight_4b8e96cc9a713846cb65",
+      "template": "gte_paired_linear",
+      "power": -0.5,
+      "recipe": {
+        "members": [
+          "group_weight_4b8e96cc9a713846cb65"
+        ],
+        "weights": [
+          1.0
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1222,
+      "gained": 34,
+      "lost": 47,
+      "net": -13
+    },
+    {
+      "candidate": "group_weight_4b8e96cc9a713846cb65",
+      "template": "gte_paired_linear",
+      "power": -0.5,
+      "recipe": {
+        "members": [
+          "gte_paired_linear",
+          "gte_base_paired_linear",
+          "group_weight_4b8e96cc9a713846cb65"
+        ],
+        "weights": [
+          0.25,
+          0.25,
+          0.5
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1224,
+      "gained": 18,
+      "lost": 29,
+      "net": -11
+    },
+    {
+      "candidate": "group_weight_597e4d259bb8879397b0",
+      "template": "gte_base_paired_linear",
+      "power": 0.5,
+      "recipe": {
+        "members": [
+          "group_weight_597e4d259bb8879397b0"
+        ],
+        "weights": [
+          1.0
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1225,
+      "gained": 46,
+      "lost": 56,
+      "net": -10
+    },
+    {
+      "candidate": "group_weight_597e4d259bb8879397b0",
+      "template": "gte_base_paired_linear",
+      "power": 0.5,
+      "recipe": {
+        "members": [
+          "gte_paired_linear",
+          "gte_base_paired_linear",
+          "group_weight_597e4d259bb8879397b0"
+        ],
+        "weights": [
+          0.25,
+          0.25,
+          0.5
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1232,
+      "gained": 23,
+      "lost": 26,
+      "net": -3
+    },
+    {
+      "candidate": "group_weight_deea3dc0a6d71166f603",
+      "template": "gte_paired_linear",
+      "power": 0.5,
+      "recipe": {
+        "members": [
+          "group_weight_deea3dc0a6d71166f603"
+        ],
+        "weights": [
+          1.0
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1216,
+      "gained": 34,
+      "lost": 53,
+      "net": -19
+    },
+    {
+      "candidate": "group_weight_deea3dc0a6d71166f603",
+      "template": "gte_paired_linear",
+      "power": 0.5,
+      "recipe": {
+        "members": [
+          "gte_paired_linear",
+          "gte_base_paired_linear",
+          "group_weight_deea3dc0a6d71166f603"
+        ],
+        "weights": [
+          0.25,
+          0.25,
+          0.5
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1223,
+      "gained": 17,
+      "lost": 29,
+      "net": -12
+    },
+    {
+      "candidate": "group_weight_fceae8b24fc0dc05d7c2",
+      "template": "gte_base_paired_linear",
+      "power": -0.5,
+      "recipe": {
+        "members": [
+          "group_weight_fceae8b24fc0dc05d7c2"
+        ],
+        "weights": [
+          1.0
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1226,
+      "gained": 45,
+      "lost": 54,
+      "net": -9
+    },
+    {
+      "candidate": "group_weight_fceae8b24fc0dc05d7c2",
+      "template": "gte_base_paired_linear",
+      "power": -0.5,
+      "recipe": {
+        "members": [
+          "gte_paired_linear",
+          "gte_base_paired_linear",
+          "group_weight_fceae8b24fc0dc05d7c2"
+        ],
+        "weights": [
+          0.25,
+          0.25,
+          0.5
+        ]
+      },
+      "fold": "primary",
+      "rows": 1693,
+      "reference": 1235,
+      "correct": 1230,
+      "gained": 19,
+      "lost": 24,
+      "net": -5
+    }
+  ],
+  "confirmation": [],
+  "third": [],
+  "advance_to_raw": false,
+  "actual_fits": 4,
+  "new_model_api_requests": 0,
+  "released_validation_opened": false,
+  "H2_opened": false,
+  "formal_test_opened": false
+}

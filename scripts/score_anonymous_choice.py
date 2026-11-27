@@ -12,24 +12,26 @@ PATHS={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier","fr
        "auto_portfolio":"auto-raw/auto_portfolio","resource_default":"resource-raw/resource_default"}
 
 
-def score(root,course):
-    output=root/"anonymous-choice-scores"
+def score(root,course,portfolio=False):
+    series="anonymous-large" if portfolio else "anonymous-choice"
+    output=root/(series+"-scores")
     output.mkdir(exist_ok=True)
-    name="anonymous_default"
-    run=root/"anonymous-choice"/name
-    audit_path=root/"anonymous-choice/alias_audit.json"
+    name="anonymous_portfolio" if portfolio else "anonymous_default"
+    run=root/series/name
+    audit_path=root/series/"alias_audit.json"
     audit=read(audit_path)["new_cases"]["task2"]
-    require(audit["matched_opaque_replays"]==3*audit["decisions"] and audit["terminal_feedback_intervention"],
+    require(audit["matched_opaque_replays"]==3*audit["decisions"] and (audit["automatic_finalist_race"] if portfolio else audit["terminal_feedback_intervention"]),
             "Ordinary entry did not complete its decision audit")
     launch=read(run/"launch.json")
-    require(launch==dict(individual_model_variables=[],model_hint=None,review_flag=[],limits=[],resource_directory_argument=True),
+    expected_limits=["--fit-limit",28,"--time-limit",3600] if portfolio else []
+    require(launch==dict(individual_model_variables=[],model_hint=None,review_flag=[],limits=expected_limits,resource_directory_argument=True),
             "New solver was given extra instructions")
     plan=read(run/"protocol.json")
     old_plan=read(root/PATHS["resource_default"]/"protocol.json")
     require(plan["features_sha256"]==old_plan["features_sha256"] and plan["raw_sha256"]==old_plan["raw_sha256"]
             and plan["candidate_hint"] is None,"Comparison changed the inputs")
     frozen, predicted=prediction_file(run)
-    require(frozen["rows"]==8301 and frozen["fits"]==audit["actual_classifier_fits"]<=10 and frozen["api"]==0,
+    require(frozen["rows"]==8301 and frozen["fits"]==audit["actual_classifier_fits"]<=(28 if portfolio else 10) and frozen["api"]==0,
             "Incomplete ordinary run")
     previous=root/"delivery_scores"
     lock=read(previous/"evaluation_lock.json")
@@ -82,6 +84,7 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     for key in ("root","course"):
         p.add_argument("--"+key,type=lambda s:Path(s).resolve(),required=True)
+    p.add_argument("--portfolio-only",action="store_true")
     args=p.parse_args()
-    row=score(args.root,args.course)["completed"]["anonymous_default"]
+    row=next(iter(score(args.root,args.course,args.portfolio_only)["completed"].values()))
     print(row["correct"],row["rows"],row["identical_to"],row["trace"]["members"])

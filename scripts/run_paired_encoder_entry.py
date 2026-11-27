@@ -22,7 +22,8 @@ PROTOCOL=ROOT/"research/paired_encoder_search_1127/raw_protocol.json"
 def solve(args):
     folder=args.output/args.arm
     folder.mkdir(parents=True,exist_ok=False)
-    study_plan=PROTOCOL.with_name("race_protocol.json") if args.arm=="race" else PROTOCOL
+    plans={"race":"race_protocol.json","default":"default_protocol.json"}
+    study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
     raw_files=read(ROOT/"research/b_task2_handoff_1127/protocol.json")["input"]
@@ -51,7 +52,8 @@ def solve(args):
     save(folder/"protocol.json",dict(runtime_sha256=source_identity(ROOT),plan_sha256=sha(study_plan),arm=args.arm,
          candidate_hint=None,fit_limit=policy["fit_limit_each_including_refit"],raw_sha256=sha(course),features_sha256=sha(args.features)))
     review=["--feedback-reflection","matched-finalists"] if args.arm=="race" else []
-    execute(["solve",course,*review,"--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"],
+    limits=[] if args.arm=="default" else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
+    execute(["solve",course,*review,*limits,
              "--run-dir",run,"--prediction-input",args.features,"--output",result],"solve.log",settings)
     agent=run/"agent"
     outcome,chosen=read(agent/"run_outcome.json"),read(agent/"final_selection.json")
@@ -73,8 +75,8 @@ def solve(args):
 
 def score(args):
     folders=[args.reference,*[args.output/name for name in args.sealed_arms]]
-    require(len(args.sealed_arms)==len(set(args.sealed_arms)) and set(args.sealed_arms)=={"original","expanded","race"},
-            "The three registered autonomous cold runs must be sealed before evaluation")
+    require(len(args.sealed_arms)==len(set(args.sealed_arms)) and set(args.sealed_arms)=={"original","expanded","race","default"},
+            "All registered autonomous raw runs must be sealed before evaluation")
     predictions=[]
     for folder in folders:
         saved=read(folder/"sealed.json")
@@ -109,7 +111,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

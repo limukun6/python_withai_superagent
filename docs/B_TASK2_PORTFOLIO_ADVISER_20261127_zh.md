@@ -28,3 +28,9 @@ python -m unified_agent solve "$TASK_PACKAGE" --weights-dir "$WEIGHTS_DIR" \
 ```
 
 使用交付环境中相同的资源目录可以重跑上述预算。仓库包含运行实现、评分与重载回执。含权重和已拟合索引的本地交付包为 `Released-Task2-validation-95c3d7f5c681.zip`，331,792,378 字节。整包移到新目录、禁网、新进程加载后逐字节重现 940 行预测。[包及模型 SHA-256](../research/paired_encoder_search_1127/portfolio_adviser_portable.json) · [上一版的复现说明](B_TASK2_NEAR_TIE_20261127_zh.md)
+
+### 从相似案例学习权重的试验
+
+另一条路线让分类器学习哪些类似的比较更有参考价值。它用冻结的编码器计算两句话的改动方向和上下文，再从训练组抽取代表样本，学习这些样本对预测的影响。两种向量来源都取自 Agent 实际选出的成员。首轮 1,693 条中，GTE-base 方案多答对 12 条，BGE-small 方案多答对 6 条。程序锁定前者和 50% 权重。换到 1,645 条复核数据，原组合答对 1,196 条，加新模型后只答对 1,175 条，触发事先写好的淘汰规则。正式模型继续使用原权重。
+
+共发生 4 次本地分类器拟合。其中 3 次产生可评分预测，首次拟合因保存校验值时的数组维度错误，需要补跑一次。这 4 次都已计数，模型 API 为 0。此轮只比较训练内表现。[预设试验与方法来源](../research/paired_encoder_search_1127/preference_kernel_protocol.json) · [完整结果](../research/paired_encoder_search_1127/preference_kernel_results.json) · [首次拟合记录](../research/paired_encoder_search_1127/preference_kernel_first_attempt.json)

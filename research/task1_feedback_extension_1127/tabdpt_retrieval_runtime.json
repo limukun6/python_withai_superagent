@@ -1,0 +1,4 @@
+{
+  "evidence": "The first full 4061-row context fit finished and was sealed. On its first native nearest-neighbour search the process remained idle; a process stack showed IndexFlat::search blocked inside OpenMP. A small co-located torch/FAISS probe produced the explicit duplicate libomp error, while an independent FAISS-only process retrieved the correct self-neighbours.",
+  "repair": "Run the same FAISS IndexFlatL2 in a small separate process, on the identical train-imputed, train-standardized features and query batches of eight, using each registered k separately to preserve tie ordering. The frozen model consumes those indices in normal publisher inference. Check the exact input batch and count at every lookup. Preserve the first fit as an extra real context fit. No candidate probabilities or scoring were available before changing the runtime arrangement."
+}

@@ -51,7 +51,7 @@ def solve(root,source,impl,arm):
             and outcome['new_api_requests']==0 and sha(output)==sha(replay),'Incomplete movie delivery')
     review=read(agent/'analogy_review.json') if (agent/'analogy_review.json').exists() else {}
     result=dict(protocol=sha(out/'launch.json'),model=selection['model_sha256'],predictions=sha(output),independent_reload=True,
-         members=outcome['members'],fits=fits,rows=selection['training_rows'],adviser=review.get('status'),locked_share=review.get('locked_weight'),
+         members=outcome['members'],fits=fits,training_rows=selection['training_rows'],adviser=review.get('status'),locked_share=review.get('locked_weight'),
          initial_choices=len(read(agent/'decisions.json')[0]['alternatives']),api=0)
     lock(out/'sealed.json',result)
     print(arm,result,flush=True)
@@ -82,7 +82,7 @@ def score(root,source):
     _,idx=np.unique(groups,return_inverse=True)
     delta=np.bincount(idx,weights=b.astype(float)-a)
     result=dict(protocol=sha(folder/'evaluation_lock.json'),fitting_films=plan['train_films'],held_films=plan['held_films'],rows=len(y),
-         arms={arm:dict(correct=int(mask.sum()),accuracy=float(mask.mean()),**seals[arm]) for arm,mask in right.items()},
+         arms={arm:dict(correct=int(mask.sum()),evaluation_rows=len(y),accuracy=float(mask.mean()),**seals[arm]) for arm,mask in right.items()},
          revised_vs_original=dict(gained=fixed,lost=lost,net=fixed-lost,groups_ahead=int((delta>0).sum()),
                                   groups_behind=int((delta<0).sum()),groups_tied=int((delta==0).sum())),
          local_classifier_fits=sum(s['fits'] for s in seals.values()),model_api_calls=0,course_evaluation_opened=False,H2_opened=False)

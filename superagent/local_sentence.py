@@ -64,8 +64,11 @@ def describe(root):
     length = settings.get('max_seq_length')
     if type(length) is not int or not 1<=length<=config.get('max_position_embeddings',0):
         raise ValueError('Invalid declared sentence length')
-    if set(settings)-{'max_seq_length','do_lower_case'} or type(settings.get('do_lower_case',False)) is not bool:
+    if set(settings)-{'max_seq_length','do_lower_case','model_args'} or type(settings.get('do_lower_case',False)) is not bool:
         raise ValueError('Unsupported tokenizer settings')
+    model_args=settings.get('model_args',{})
+    if not isinstance(model_args,dict) or set(model_args)-{'add_pooling_layer'} or model_args.get('add_pooling_layer',False) is not False:
+        raise ValueError('Unsupported encoder initialization options')
     files = ['modules.json',pool_path,'sentence_bert_config.json','config.json','tokenizer.json','model.safetensors']
     for optional in ('config_sentence_transformers.json','tokenizer_config.json'):
         if (root/optional).is_file():
@@ -124,6 +127,8 @@ def backbone(root,length,identity):
     conf=AutoConfig.from_pretrained(root,local_files_only=True,trust_remote_code=False)
     model_cls=AutoModel._model_mapping[type(conf)]
     options={'add_pooling_layer':False} if 'add_pooling_layer' in inspect.signature(model_cls).parameters else {}
+    if metadata(root/'sentence_bert_config.json').get('model_args') and not options:
+        raise ValueError('The installed backbone cannot apply the declared encoder option')
     model,info=AutoModel.from_pretrained(root,config=conf,local_files_only=True,trust_remote_code=False,
                                          use_safetensors=True,output_loading_info=True,**options)
     if info['missing_keys'] or info.get('mismatched_keys') or info.get('error_msgs'):

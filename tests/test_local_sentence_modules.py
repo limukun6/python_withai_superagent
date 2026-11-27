@@ -23,6 +23,19 @@ def package(root):
 
 
 class LocalSentenceModules(TestCase):
+    def test_declared_pooler_option_matches_the_supported_backbone_setting(self):
+        with TemporaryDirectory() as tmp:
+            root=Path(tmp)/'opaque'
+            package(root)
+            settings=root/'sentence_bert_config.json'
+            settings.write_text(json.dumps(dict(max_seq_length=24,model_args={'add_pooling_layer':False})))
+            self.assertEqual(describe(root)['family'],'bert')
+            for unsupported in ({'add_pooling_layer':True},{'add_pooling_layer':0},
+                                {'trust_remote_code':True},'false'):
+                settings.write_text(json.dumps(dict(max_seq_length=24,model_args=unsupported)))
+                with self.assertRaises(ValueError):
+                    describe(root)
+
     def test_rename_export_restrictions_and_content_pin(self):
         with TemporaryDirectory() as tmp, patch.dict(os.environ,{},clear=True):
             base=Path(tmp)

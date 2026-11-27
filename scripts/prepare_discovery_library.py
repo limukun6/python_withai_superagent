@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -16,7 +17,14 @@ def read_public(url, path):
                     '--max-time','420','--output',str(path),url],check=True)
 
 
-def prepare(weights, expanded, record):
+def pinned_resource(value):
+    repo, separator, revision = value.partition('@')
+    if not separator or not re.fullmatch(r'[\w-][\w.-]*/[\w-][\w.-]*',repo,re.ASCII) or not re.fullmatch('[0-9a-f]{40}',revision):
+        raise argparse.ArgumentTypeError('Use an owner/model identifier followed by @ and the full immutable revision')
+    return repo, revision
+
+
+def prepare(weights, expanded, record, requested_resources=()):
     expanded.mkdir(parents=True,exist_ok=True)
     for source in weights.rglob('*'):
         if not source.is_file() or any(p.startswith('.') for p in source.relative_to(weights).parts):
@@ -25,12 +33,13 @@ def prepare(weights, expanded, record):
         target.parent.mkdir(parents=True,exist_ok=True)
         if not target.exists():
             os.link(source,target)
-    revisions = {'sentence-transformers/all-mpnet-base-v2':'e8c3b32edf5434bc2275fc9bab85f82640a19130',
+    revisions = dict(requested_resources) if requested_resources else {'sentence-transformers/all-mpnet-base-v2':'e8c3b32edf5434bc2275fc9bab85f82640a19130',
                  'sentence-transformers/all-distilroberta-v1':'842eaed40bee4d61673a81c92d5689a8fed7a09f',
                  'sentence-transformers/paraphrase-MiniLM-L3-v2':'4ca70771034acceecb2e72475f72050fcdde4ddc'}
     result = json.loads(record.read_text()) if record.exists() else {}
     for repo,requested in revisions.items():
         use = result.get(repo,{}).get('revision',requested)
+        require(use==requested,'Existing receipt belongs to a different revision')
         with NamedTemporaryFile() as file:
             read_public(f'https://huggingface.co/api/models/{repo}/revision/{use}?blobs=true',Path(file.name))
             meta = json.loads(Path(file.name).read_text())
@@ -73,5 +82,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for k in ('weights','expanded','record'):
         parser.add_argument('--'+k,type=Path,required=True)
+    parser.add_argument('--resource',action='append',type=pinned_resource,default=[],
+                        help='Public Sentence Transformers publisher/model@commit to add to the shared library')
     args=parser.parse_args()
-    prepare(args.weights,args.expanded,args.record)
+    prepare(args.weights,args.expanded,args.record,args.resource)

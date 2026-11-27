@@ -1,5 +1,19 @@
 # 实验持续工作记录
 
+## 2026-11-27：用户授权保留未知继续付费，SA23真实恢复2/2
+
+用户最新“忽略未知用量，继续付费调用”已写AGENTS：预登记小批内继续，逐批枚举未知ID/原行SHA，保留null，不再无限等对账；失败停当批且不重试，分析/新计划后承接，不能复用耗尽scope/忽略pending/建空账本。本轮显式17条private快照，原16行及新增d5663eee-60d5-47df-9410-1b0d4d227a17的SHA/null不改。别再把第17条本身当成用户尚未授权的暂停理由。
+
+基线15a79b4，本批不改生产实现，复用已通过347相关检查的SA22B修复版本。两条新晚到格式条件从SA21解释显式迁移后各自主训练2fit/0API；训练/预测同一新scope，每路径最多3Flash。V1原ID字段未在说明给出，真实JSON inspect_header→正确CSV映射/ID适配；V2 NPZ两数组同40×30，参考数组在首位，真实JSON inspect_array后按说明选第二个观测数组，唯一结构回退没有选。无注入，无人工选路。
+
+两条首次工具/第二次契约均成功，完整交付2/2、错误完成0、各40行。参考/恢复/重放三进程CSV一致、特征FP正确，原model/spec/selection/fit账本SHA不变，恢复新增fit0、重放API0。实际4fit/4Flash/¥.017244/133.593秒（V1 .011056/73.312秒，V2 .006188/60.219秒）。独立审计2/2，11220输入/1506输出token，4条真实usage/model/cost/canonical绑定；V2有1次自动结构预检＋1次LLM工具，不隐藏额外物理探查。
+
+证据research/sa23_history_preflight、sa23_delivery_prepared_02、sa23_delivery_live_01、sa23_delivery_audit_01；计划/报告docs/batches/SA23_PAID_DELIVERY_*_20261127_zh.md；复跑scripts/run_sa23_delivery_live.py、scripts/audit_sa23_delivery.py。prepared_01未实跑，_02在实跑前把V2参考数组放首位重新冻结；没有重试旧失败请求或SA22耗尽scope。
+
+当前canonical518/known8.349404/unknown17/pending0，全部旧514行SHA不变。原未知仍null、实际学校扣费/完整预算合规未核验。本轮无新未知/失败，无训练/API队列，未冻结。SA7–SA23自动窗口累计57fit/57API、已知课程¥.383009，另1新增未知，不是全项目累计或完整费用。
+
+边界：两个同源Breast Cancer晚到格式开发条件，不是两个独立未知任务/质量实验；不把SA22失败改写为成功，也不称单个提示修复的因果收益。下一步扩大原说明和模态接入，区分必须由任务定义的事实与Agent可自主选择的预处理参数，先计划/代码再运行。后续已授权小额付费可继续，不重复问旧未知对账；每批保留原账本和新scope上限。
+
 ## 2026-11-27：SA22预测恢复首轮失败，SA22B离线续跑2/2
 
 基线5f820bc。新增prediction_adapter.py/delivery_recovery.py，正式predict/solve的输入和输出来源预检失败进入恢复；只改预测成员/集合/分隔符/映射/原生描述符/既有ID来源，不改模型、目标、指标、类别、训练列/顺序/预处理及可见输出含义。适配器绑定model/spec/query/reader SHA，缓存跨进程复用。training_protocol绑定原包SHA和scope/ledger，同一训练＋交付scope合计≤3请求，local/control不启动付费恢复。模型损坏、文件写入错误不重训。

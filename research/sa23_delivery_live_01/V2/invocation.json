@@ -1,0 +1,55 @@
+{
+  "train": [
+    "D:\\codex\\python_withai\\runs\\a79_encoder_assets\\venv\\Scripts\\python.exe",
+    "-m",
+    "unified_agent",
+    "train",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\research\\sa23_delivery_prepared_02\\cases\\V2.zip",
+    "--prediction-input",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\research\\sa23_delivery_prepared_02\\cases\\V2.reference.zip",
+    "--semantic-artifact-from",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_prepared_02\\V2.semantic_artifact.json",
+    "--run-dir",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run",
+    "--fit-limit",
+    "2",
+    "--time-limit",
+    "360"
+  ],
+  "reference": [
+    "D:\\codex\\python_withai\\runs\\a79_encoder_assets\\venv\\Scripts\\python.exe",
+    "-m",
+    "unified_agent",
+    "predict",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\research\\sa23_delivery_prepared_02\\cases\\V2.reference.zip",
+    "--run-dir",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run",
+    "--output",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\reference\\predictions.csv"
+  ],
+  "late": [
+    "D:\\codex\\python_withai\\runs\\a79_encoder_assets\\venv\\Scripts\\python.exe",
+    "-m",
+    "unified_agent",
+    "predict",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\research\\sa23_delivery_prepared_02\\cases\\V2.late.zip",
+    "--run-dir",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run",
+    "--output",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\delivery\\predictions.csv"
+  ],
+  "replay": [
+    "D:\\codex\\python_withai\\runs\\a79_encoder_assets\\venv\\Scripts\\python.exe",
+    "-m",
+    "unified_agent",
+    "predict",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\research\\sa23_delivery_prepared_02\\cases\\V2.late.zip",
+    "--run-dir",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run",
+    "--output",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\replay\\predictions.csv"
+  ],
+  "scope": "sa23_delivery_20261127_01_v2",
+  "training_interpretation": "explicit validated historical artifact; zero new interpretation requests",
+  "injected_fault": false
+}

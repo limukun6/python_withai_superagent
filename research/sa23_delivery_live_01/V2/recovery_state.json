@@ -1,0 +1,100 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "prediction_ready",
+  "status": "running",
+  "goal": {
+    "metric": "balanced_accuracy",
+    "classes": [
+      "B",
+      "M"
+    ]
+  },
+  "observed_evidence": [
+    {
+      "member": "dual_bundle.npz",
+      "source": "prediction",
+      "values_disclosed": false,
+      "format": "npz",
+      "arrays": [
+        {
+          "key": "reference_bundle_9c",
+          "shape": [
+            40,
+            30
+          ],
+          "dtype": "<f8",
+          "fortran_order": false,
+          "values_disclosed": false
+        },
+        {
+          "key": "observation_bundle_7f",
+          "shape": [
+            40,
+            30
+          ],
+          "dtype": "<f8",
+          "fortran_order": false,
+          "values_disclosed": false
+        }
+      ]
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "prediction_delivery",
+      "diagnostic": {
+        "stage": "prediction_delivery",
+        "code": "ValueError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "a30daf1ef802779efd09a335590a9bc6a35c415627371a0b60a8c3d98eb42790",
+      "signature": "9f0b255c023c16dcdb444689b7e03165366beab68cba09529808ae02aa87876c",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false,
+      "action_summary": {
+        "version": "failed-action-summary-v1",
+        "not_executable": true,
+        "kind": "prediction_adapter",
+        "selected_input": {
+          "format": "npy",
+          "path": "features.npy"
+        },
+        "id_fields": {},
+        "truncated": false
+      },
+      "expected_check": "Replay the new input and output ID sources against the unchanged frozen model contract; do not train.",
+      "unresolved_fields": [],
+      "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "repeated_unresolved_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_array",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "prediction_adapter_preflight",
+      "outcome": "verified",
+      "stage": "prediction_ready"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "inspect_batch",
+    "repair_prediction_adapter",
+    "retain_model"
+  ],
+  "available_artifacts": [
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run\\agent\\selected_model.joblib",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V2\\run\\agent\\task_spec.json"
+  ],
+  "attempted_classifier_fits": 0,
+  "prior_training_classifier_fits": 2,
+  "remaining_requests": 1,
+  "remaining_fits": 0,
+  "remaining_seconds": 98.125
+}

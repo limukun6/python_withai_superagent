@@ -1,0 +1,146 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "prediction_ready",
+  "status": "running",
+  "goal": {
+    "metric": "macro_f1",
+    "classes": [
+      "B",
+      "M"
+    ]
+  },
+  "observed_evidence": [
+    {
+      "member": "arrivals_23.csv",
+      "source": "prediction",
+      "codec": "delimited",
+      "collection": null,
+      "delimiter": ",",
+      "fields": [
+        "delivery_token",
+        "measurement_00",
+        "measurement_01",
+        "measurement_02",
+        "measurement_03",
+        "measurement_04",
+        "measurement_05",
+        "measurement_06",
+        "measurement_07",
+        "measurement_08",
+        "measurement_09",
+        "measurement_10",
+        "measurement_11",
+        "measurement_12",
+        "measurement_13",
+        "measurement_14",
+        "measurement_15",
+        "measurement_16",
+        "measurement_17",
+        "measurement_18",
+        "measurement_19",
+        "measurement_20",
+        "measurement_21",
+        "measurement_22",
+        "measurement_23",
+        "measurement_24",
+        "measurement_25",
+        "measurement_26",
+        "measurement_27",
+        "measurement_28",
+        "measurement_29"
+      ],
+      "row_values_disclosed": false,
+      "requested_collection": null,
+      "collection_normalized": false,
+      "collection_note": "Selected existing structure"
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "prediction_delivery",
+      "diagnostic": {
+        "stage": "prediction_delivery",
+        "code": "ValueError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "0b3afa750e8a44c1eeef5eb4cc36928c4d1da64c17e67fa9facde3d5f18b8839",
+      "signature": "62b65dc96335d1a7d3ce616bf8a15c2c52d04ecd0657e56310921984bce2d433",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false,
+      "action_summary": {
+        "version": "failed-action-summary-v1",
+        "not_executable": true,
+        "kind": "prediction_adapter",
+        "selected_input": {
+          "field_map": {
+            "measure_00": "read_00",
+            "measure_01": "read_01",
+            "measure_02": "read_02",
+            "measure_03": "read_03",
+            "measure_04": "read_04",
+            "measure_05": "read_05",
+            "measure_06": "read_06",
+            "measure_07": "read_07",
+            "measure_08": "read_08",
+            "measure_09": "read_09",
+            "measure_10": "read_10",
+            "measure_11": "read_11",
+            "measure_12": "read_12",
+            "measure_13": "read_13",
+            "measure_14": "read_14",
+            "measure_15": "read_15",
+            "measure_16": "read_16",
+            "measure_17": "read_17",
+            "measure_18": "read_18",
+            "measure_19": "read_19",
+            "measure_20": "read_20",
+            "measure_21": "read_21",
+            "measure_22": "read_22",
+            "measure_23": "read_23",
+            "measure_24": "read_24",
+            "measure_25": "read_25",
+            "measure_26": "read_26",
+            "measure_27": "read_27",
+            "measure_28": "read_28",
+            "measure_29": "read_29"
+          }
+        },
+        "id_fields": {},
+        "truncated": false
+      },
+      "expected_check": "Replay the new input and output ID sources against the unchanged frozen model contract; do not train.",
+      "unresolved_fields": [],
+      "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "repeated_unresolved_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_header",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "prediction_adapter_preflight",
+      "outcome": "verified",
+      "stage": "prediction_ready"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "inspect_batch",
+    "repair_prediction_adapter",
+    "retain_model"
+  ],
+  "available_artifacts": [
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V1\\run\\agent\\selected_model.joblib",
+    "D:\\codex\\python_withai\\runs\\semantic_joint\\runs\\sa23_delivery_live_01\\V1\\run\\agent\\task_spec.json"
+  ],
+  "attempted_classifier_fits": 0,
+  "prior_training_classifier_fits": 2,
+  "remaining_requests": 1,
+  "remaining_fits": 0,
+  "remaining_seconds": 85.75
+}

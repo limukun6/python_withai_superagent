@@ -16,7 +16,7 @@ from superagent.ab_sentence import ALTERNATIVES
 from superagent.paired_encoder import VARIANTS
 
 
-PROTOCOL=ROOT/"research/paired_encoder_search_1127/raw_protocol.json"
+PROTOCOL=ROOT/"research/paired_encoder_search_1127/cold_control_protocol.json"
 
 
 def solve(args):
@@ -44,7 +44,7 @@ def solve(args):
     def execute(arguments,log,environment):
         with (folder/log).open("x") as stream:
             subprocess.run([sys.executable,"-m","unified_agent",*map(str,arguments)],cwd=ROOT,env=environment,
-                           stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,check=True,timeout=1400)
+                           stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,check=True,timeout=policy["wall_seconds_each"]+180)
     run=folder/"run"
     result=folder/"delivery/predictions.csv"
     save(folder/"protocol.json",dict(runtime_sha256=source_identity(ROOT),plan_sha256=sha(PROTOCOL),arm=args.arm,

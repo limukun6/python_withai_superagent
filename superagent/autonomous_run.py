@@ -239,7 +239,13 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             release_training()
         return selected
 
-    if feedback_reflection in proposal_modes+DELIVERED_MODES:
+    fusion_holdout = (feedback_reflection == 'fusion-holdout' and len(task.y_train) >= 1000 and
+                      (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified') == 'grouped_stratified')
+    if fusion_holdout:
+        inner,folds,sealed,split_record=split_search(task,seed,partitions)
+        log.write_json('fusion_partition.json',split_record)
+        checkpoint=standby_for(inner)
+    elif feedback_reflection in proposal_modes+DELIVERED_MODES:
         pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
         core_limit=fit_limit-min(5,fit_limit//3)
         try:
@@ -295,7 +301,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and not feedback_reflection and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
@@ -475,6 +481,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 log.write_json('pre_refit_proposal_selection.json',choice)
                 if sum(executor.caps[n]['refit_classifier_fits'] for n in choice['members'])>fit_limit-executor.accounting()['attempted_classifier_fits']:
                     raise ValueError('Retain the published checkpoint; selected refit exceeds remaining fits')
+            if fusion_holdout:
+                from .fusion_holdout import review as review_fusion
+                choice=review_fusion(task,metric,choice,history,observed,sealed,directory,log)
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop

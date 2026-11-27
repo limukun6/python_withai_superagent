@@ -9,6 +9,7 @@ import time
 
 import joblib
 import numpy as np
+import pandas as pd
 
 from scripts.study_task1_extensions import PLAN,ROLES
 from scripts.unified_released_study import read,require,save,sha
@@ -61,7 +62,7 @@ def train(out,method):
         json.dump(dict(physical_fit_calls=1,member_units=4 if method=="pretrained_icl" else 1,
                        subset="fixed fitting rows"),stream)
     try:
-        model.fit(x,y)
+        model.fit(pd.DataFrame(x,dtype=object) if method=="pretrained_icl" else x,y)
         train_seconds=round(time.monotonic()-start,3)
         if method=="attribute_alignment":
             metadata.update(model.audit_)
@@ -75,6 +76,8 @@ def train(out,method):
             # Future role features may be predicted with the frozen fit; their labels remain in separate files.
             t=time.monotonic()
             query=bound(out,role+"_features.joblib",src)
+            if method=="pretrained_icl":
+                query=pd.DataFrame(query,dtype=object)
             probs=np.asarray(model.predict_proba(query),dtype=float)[:,columns]
             require(probs.shape==(len(query),len(classes)) and np.isfinite(probs).all()
                     and (probs>=0).all() and np.allclose(probs.sum(1),1,atol=1e-5),"Invalid probabilities")

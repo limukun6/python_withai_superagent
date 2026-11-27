@@ -1,0 +1,50 @@
+{
+  "protocol": "cf05c9e77158c12c1d3cf6662fc8ea8c962c23fd2d72c758826707b2571af33f",
+  "training": "84a622fc5e5aecae57f58f84e79e2c74b2a68783d29d687cd780e1fc1ec0c761",
+  "seals": {
+    "two_encoders": "a050141fcadfba6ff027e3c3d1c9b91bde3c70d6780051073db4c306a3ac5e86",
+    "one_encoder_with_advice": "39de7253863364a96cd477ec34bed092ac7449216e08555b166b7f35133da25c",
+    "two_encoders_with_advice": "4b8ef8619b4837ac51508b92e3031cfc8ff7368cfd1723fc036359f51c181f1e"
+  },
+  "recipes": {
+    "two_encoders": {
+      "members": [
+        "bge_small_text_with_lexical_features",
+        "gte_base_paired_linear"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    "one_encoder_with_advice": {
+      "members": [
+        "gte_base_paired_linear",
+        "preference_analogy_45cb39291ca5c8321d9e"
+      ],
+      "weights": [
+        0.75,
+        0.25
+      ]
+    },
+    "two_encoders_with_advice": {
+      "members": [
+        "bge_small_text_with_lexical_features",
+        "gte_base_paired_linear",
+        "preference_analogy_45cb39291ca5c8321d9e"
+      ],
+      "weights": [
+        0.375,
+        0.375,
+        0.25
+      ]
+    }
+  },
+  "seeds": [
+    2590021682,
+    844935391
+  ],
+  "rows": 8301,
+  "groups": 6119,
+  "planned_fits": 30
+}

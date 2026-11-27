@@ -14,7 +14,8 @@ from superagent.ab_sentence import ALTERNATIVES,DEEP_ENV,DEEP_MODEL,MODEL
 def make(args):
     path={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier",
           "frontier_scale":"frontier-raw/frontier_scale","auto_portfolio":"auto-raw/auto_portfolio",
-          "resource_default":"resource-raw/resource_default","anonymous_default":"anonymous-choice/anonymous_default"}[args.arm]
+          "resource_default":"resource-raw/resource_default","anonymous_default":"anonymous-choice/anonymous_default",
+          "discovered":"discovered-raw/discovered"}[args.arm]
     run=args.root/path
     plan=read(run/"protocol.json")
     sealed=read(run/"sealed.json")
@@ -34,6 +35,8 @@ def make(args):
         where=args.weights/model.split("/")[-1]
         if where.is_dir():
             env[key]=str(where)
+    from superagent.external_assets import activate_resource_directory
+    activate_resource_directory(args.weights,env)
     args.output.mkdir(parents=True,exist_ok=True)
     with TemporaryDirectory(dir=args.output) as stage:
         stage=Path(stage)
@@ -52,8 +55,8 @@ def make(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default"),required=True)
-    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores"),
+    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered"),required=True)
+    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores"),
                    default="delivery_scores")
     for name in ("root","features","weights","notices","source","output"):
         p.add_argument("--"+name,type=lambda x:Path(x).resolve(),required=True)

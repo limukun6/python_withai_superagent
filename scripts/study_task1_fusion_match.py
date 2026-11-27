@@ -13,7 +13,7 @@ from scripts.unified_released_study import ROOT, make_zip, read, require, save, 
 from superagent.splits import sample_groups
 
 PLAN=ROOT/"research/task1_feedback_extension_1127/fusion_holdout.json"
-ARMS=("regular","separate")
+ARMS=("regular","separate","prior")
 REUSE=("weighted","replicas")
 
 
@@ -80,7 +80,8 @@ def grade(out):
         guard=read(fold/"separate/run/agent/fusion_check.json")
         summary.append(dict(fold=i,methods=methods,guard=guard,reuse=read(reuse/"decision.json")))
     save(out/"score_lock.json",dict(inputs=sha(out/"prepared.json"),results=locked,protocol=sha(PLAN),
-        additional_inference_protocol=sha(PLAN.with_name("inference_reuse.json"))))
+        additional_inference_protocol=sha(PLAN.with_name("inference_reuse.json")),
+        unchanged_control_protocol=sha(PLAN.with_name("three_fold_anchor.json"))))
     total={a:[] for a in (*ARMS,*REUSE)}
     groups=[]
     for i,row in enumerate(summary):
@@ -89,16 +90,24 @@ def grade(out):
         scores={arm:predictions[i,arm]==y for arm in total}
         row.update(rows=len(y),correct={a:int(v.sum()) for a,v in scores.items()},
                    paired=compare(scores["separate"],scores["regular"],answer["groups"]),
+                   vs_prior={a:compare(scores[a],scores["prior"],answer["groups"]) for a in ("regular","separate")},
                    diagnostic_comparisons={a:compare(scores[a],scores["regular"],answer["groups"]) for a in REUSE})
         for a in total:
             total[a].extend(scores[a])
         groups.extend(answer["groups"])
     d=compare(np.array(total["separate"]),np.array(total["regular"]),groups)
-    gains=[v["paired"]["gain"] for v in summary]
+    against_prior={a:compare(np.array(total[a]),np.array(total["prior"]),groups) for a in ("regular","separate")}
+    def qualifies(gains,pooled):
+        return sum(delta>0 for delta in gains)>=2 and min(gains)>=-.003 and pooled["gain"]>=.003
+    regular_pass=qualifies([row["vs_prior"]["regular"]["gain"] for row in summary],against_prior["regular"])
+    guard_vs_regular=qualifies([row["paired"]["gain"] for row in summary],d)
+    guard_vs_prior=qualifies([row["vs_prior"]["separate"]["gain"] for row in summary],against_prior["separate"])
+    release="separate" if guard_vs_regular and guard_vs_prior else "regular" if regular_pass else None
     result=dict(score_lock=sha(out/"score_lock.json"),folds=summary,pooled=d,
         correct={a:int(np.sum(x)) for a,x in total.items()},rows=len(groups),
         diagnostic_comparisons={a:compare(np.array(total[a]),np.array(total["regular"]),groups) for a in REUSE},
-        advance=sum(delta>0 for delta in gains)>=2 and min(gains)>=-.003 and d["gain"]>=.003,
+        against_prior=against_prior,guard_vs_regular_qualified=guard_vs_regular,guard_vs_prior_qualified=guard_vs_prior,
+        regular_qualified=regular_pass,advance=release,
         api_requests=0,designated_validation_opened=False,official_test_opened=False)
     save(out/"result.json",result)
     print(result,flush=True)

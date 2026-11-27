@@ -52,7 +52,7 @@ def train(out,name):
         require(version("xgboost")=="3.2.0","Unexpected XGBoost build")
         levels=[np.unique(col) for col in x.T]
         def nominal(rows):
-            return pd.DataFrame({str(i):pd.Categorical(col,categories=v) for i,(col,v) in enumerate(zip(rows.T,levels))})
+            return pd.DataFrame({str(i):pd.Categorical.from_codes(pd.Index(v).get_indexer(col),categories=v) for i,(col,v) in enumerate(zip(rows.T,levels))})
         x=nominal(x)
         queries={role:nominal(v) for role,v in queries.items()}
         model=XGBClassifier(enable_categorical=True,tree_method="hist",n_estimators=600,learning_rate=.04,max_depth=6,

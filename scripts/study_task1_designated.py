@@ -12,7 +12,11 @@ from scripts.unified_released_study import read,require,save,sha
 
 def grade(archive,out):
     match=out/"fusion_match/result.json"
-    require(read(match)["advance"],"No policy has qualified on the new training folds")
+    qualified=read(match)["advance"]
+    require(qualified in ("regular","separate"),"No policy has qualified on the new training folds")
+    required_mode="fusion-holdout" if qualified=="separate" else None
+    require(read(out/"release/inputs.json")["selection_policy"]==required_mode and read(out/"release/inputs.json")["fit_cap"]==32,
+            "Release differs from the policy that qualified")
     predictions={}
     locks={}
     for arm in ("anchor","release"):

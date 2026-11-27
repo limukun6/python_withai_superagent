@@ -1,5 +1,9 @@
+import csv
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -71,6 +75,40 @@ class WorkedContract(unittest.TestCase):
         card=examples();card['examples'][0]['truth'][0:0]=[4]
         with self.assertRaises(MetricDeclarationError): declared_metric('',evidence=card)
         with self.assertRaises(MetricDeclarationError): declared_metric('Scoring examples:\n{broken')
+
+    def test_unresolved_examples_still_export_honest_partial_predictions(self):
+        environment = dict(os.environ, SUPERAGENT_OFFLINE='1')
+        for name in ('SUPERAGENT_PLANNER_KEY_FILE', 'SUPERAGENT_PLANNER_LEDGER',
+                     'SUPERAGENT_TASK_BUDGET_ID', 'SUPERAGENT_RESEARCH_REFLECTION_OUTBOX'):
+            environment.pop(name, None)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            features = root/'features.zip'
+            schema = dict(schema_version=1, modality='tabular', target='outcome',
+                          columns=[dict(name='f0', type='numeric')],
+                          splits={'test':dict(format='csv', path='data.csv')})
+            with zipfile.ZipFile(features, 'w') as archive:
+                archive.writestr('manifest.json', json.dumps(schema))
+                archive.writestr('data.csv', 'f0\n' + '\n'.join(str(v) for v in range(12)))
+            cases = [('conflict', 'accuracy', examples()), ('undetermined', None, examples('accuracy'))]
+            for tag, explicit, card in cases:
+                with self.subTest(case=tag):
+                    training = root/(tag+'.zip')
+                    fixture(training, metric=explicit, evidence=card)
+                    run, output = root/tag, root/(tag+'-delivery')/'predictions.csv'
+                    subprocess.run([sys.executable, '-m', 'unified_agent', 'solve', str(training),
+                                    '--prediction-input', str(features), '--run-dir', str(run),
+                                    '--output', str(output), '--fit-limit', '5'], env=environment,
+                                   stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   check=True, timeout=60)
+                    outcome = json.loads((run/'agent'/'run_outcome.json').read_text())
+                    receipt = json.loads((output.parent/'prediction_manifest.json').read_text())
+                    self.assertEqual((outcome['status'], outcome['attempted_classifier_fits'],
+                                      outcome['new_api_requests']), ('partial', 0, 0))
+                    self.assertIn('MetricDeclarationError', outcome['reason'])
+                    self.assertEqual((receipt['delivery_status'], receipt['prediction_count']), ('partial', 12))
+                    with output.open(newline='') as stream:
+                        self.assertEqual([int(row['row_id']) for row in csv.DictReader(stream)], list(range(12)))
 
     def test_exact_math_matches_worker_and_score_printing(self):
         import numpy as np

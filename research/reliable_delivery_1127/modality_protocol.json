@@ -1,0 +1,14 @@
+{
+  "runtime_commit": "653df912d9028c5807994c395d665832a1fc130e",
+  "parent_protocol_sha256": "09c7ddb9eb29b4375c37e1a018bcf63c917a76a477f6ca978b230ee6882443c4",
+  "question": "Does the opt-in training-feedback reviewer still deliver all rows with its published ten-fit ceiling across different modalities?",
+  "design": "Reuse identical pre-existing public development training packets, withheld prediction inputs, and frozen released-agent outputs. Three cold starts for the candidate, each with feedback-local and no prior memory. Freeze all new outputs before rescoring. Results are regression evidence on known public development material.",
+  "cases": [
+    "UCI Vehicle Silhouettes (numeric, macro F1)",
+    "UCI YouTube Spam (text, source held out, macro F1)",
+    "UCI Semeion (images, accuracy; original and shifted versions of the same 300 rows)"
+  ],
+  "maximum_per_path_including_refit": 10,
+  "maximum_api_calls": 0,
+  "implementation_frozen": true
+}

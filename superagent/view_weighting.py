@@ -17,7 +17,9 @@ def scales(blocks, mode, labels=None, groups=None):
         signal=np.divide(1.,energy,out=np.zeros_like(energy),where=energy>1e-12)
     elif mode=="aligned":
         y=np.asarray(labels)
-        if y.ndim!=1 or not np.isin(y,[0,1]).all() or any(v.shape[0]!=len(y) for v in blocks):
+        groups=np.asarray(groups)
+        if (y.ndim!=1 or groups.shape!=y.shape or not np.isin(y,[0,1]).all()
+                or any(v.shape[0]!=len(y) for v in blocks)):
             raise ValueError("Supervised block scaling requires aligned binary preference data")
         rng=np.random.default_rng(2369)
         units=rng.permutation(np.unique(groups))
@@ -42,9 +44,9 @@ def scales(blocks, mode, labels=None, groups=None):
         signal=np.asarray(evidence)
     else:
         raise ValueError("Unknown representation-weighting rule")
-    positive=np.maximum(signal,0.)
-    if not np.isfinite(positive).all():
+    if not np.isfinite(signal).all():
         raise ValueError("Nonfinite feature block statistics")
+    positive=np.maximum(signal,0.)
     if positive.sum()<=1e-12:
         return np.ones(count),signal
     kernel=(1.+count*positive/positive.sum())/2.

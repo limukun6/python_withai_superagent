@@ -15,7 +15,7 @@ def make(args):
     path={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier",
           "frontier_scale":"frontier-raw/frontier_scale","auto_portfolio":"auto-raw/auto_portfolio",
           "resource_default":"resource-raw/resource_default","anonymous_default":"anonymous-choice/anonymous_default",
-          "discovered":"discovered-raw/discovered"}[args.arm]
+          "discovered":"discovered-raw/discovered","discovered_default":"discovered-ordinary/discovered_default"}[args.arm]
     run=args.root/path
     plan=read(run/"protocol.json")
     sealed=read(run/"sealed.json")
@@ -55,8 +55,8 @@ def make(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered"),required=True)
-    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores"),
+    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered","discovered_default"),required=True)
+    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores","discovered-ordinary-scores"),
                    default="delivery_scores")
     for name in ("root","features","weights","notices","source","output"):
         p.add_argument("--"+name,type=lambda x:Path(x).resolve(),required=True)

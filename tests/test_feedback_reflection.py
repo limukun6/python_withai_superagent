@@ -83,13 +83,23 @@ class FeedbackReflectionTests(unittest.TestCase):
         with patch('superagent.unified.configured_flash') as standard, patch('superagent.unified.reflection_client') as live, \
                 patch('superagent.autonomous_run.train') as train:
             for mode in ('control','local','flash'):
-                args = build_parser().parse_args(['unified','train.zip','--run-dir','run','--feedback-reflection',mode])
+                args = build_parser().parse_args(['unified','train.zip','--run-dir','run','--feedback-reflection',mode,
+                                                  '--task-interpretation','fallback'])
                 args.handler(args)
                 expected = live.return_value if mode=='flash' else None
                 self.assertIs(train.call_args.kwargs['flash'], expected)
                 self.assertEqual(train.call_args.kwargs['feedback_reflection'], mode)
             standard.assert_not_called()
             live.assert_called_once()
+
+    def test_default_auto_intake_with_no_billing_keeps_local_reflection_offline(self):
+        with patch.dict(os.environ,{},clear=True), patch('superagent.unified.reflection_client') as live, \
+                patch('superagent.autonomous_run.train') as train:
+            args=build_parser().parse_args(['unified','train.zip','--run-dir','run','--feedback-reflection','local'])
+            args.handler(args)
+            self.assertEqual(train.call_args.kwargs['interpretation'],'auto')
+            self.assertIsNone(train.call_args.kwargs['flash'])
+            live.assert_not_called()
 
     def test_format_intake_cannot_spend_the_request_reserved_for_reflection(self):
         from superagent.autonomous_run import _train

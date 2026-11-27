@@ -2,8 +2,6 @@
 import argparse
 from pathlib import Path
 
-import numpy as np
-
 from scripts.unified_released_study import read,require,save,sha
 
 

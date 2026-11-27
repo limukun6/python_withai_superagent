@@ -1,7 +1,6 @@
 """Cold-run an already open image development packet without sending the planner a method hint."""
 import argparse
 import csv
-import os
 from pathlib import Path
 import subprocess
 import sys

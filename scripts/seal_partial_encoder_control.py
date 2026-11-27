@@ -1,7 +1,6 @@
 """Retain the actual deadline checkpoint if the ordinary unexpanded control is partial."""
 import argparse
 import json
-import os
 from pathlib import Path
 import subprocess
 import sys

@@ -77,12 +77,40 @@ def trial(root):
     print(name,observed,done["members"],flush=True)
 
 
+def trace(root):
+    out=root/"static-menu-cold"
+    choice=read(out/"choice.json")
+    name=choice["candidate"]
+    menus={}
+    positions={}
+    receipts={}
+    for arm in ("control","challenger"):
+        file=out/"comparison"/arm/"run/agent/decisions.json"
+        steps=read(file)
+        receipts[arm]=sha(file)
+        menus[arm]={m for action in steps[0]["alternatives"] for m in action["members"]}
+        positions[arm]=[]
+        for step in steps:
+            entries=[(r+1,a) for r,a in enumerate(step["alternatives"]) if a["members"]==[name] and a["action"]=="explore"]
+            if entries:
+                position,option=entries[0]
+                positions[arm].append(dict(step=step["step"],rank=position,chosen=step["choice"]["members"],
+                    equally_valued=sum(a["utility"]==option["utility"] for a in step["alternatives"]),
+                    tied_for_highest=option["utility"]==max(a["utility"] for a in step["alternatives"])))
+    require(menus["challenger"]-menus["control"]=={name} and menus["control"]<=menus["challenger"],
+            "More than one initial candidate identity changed")
+    lock(out/"menu_trace.json",dict(decisions=receipts,initial_options={k:len(v) for k,v in menus.items()},
+         added=name,positions=positions["challenger"],control_exposures=len(positions["control"])))
+
+
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("action",choices=("prepare","trial"))
+    p.add_argument("action",choices=("prepare","trial","trace"))
     p.add_argument("--root",required=True,type=lambda s:Path(s).resolve())
     args=p.parse_args()
     if args.action=="prepare":
         prepare(args.root)
-    else:
+    elif args.action=="trial":
         trial(args.root)
+    else:
+        trace(args.root)

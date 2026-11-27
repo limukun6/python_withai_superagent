@@ -1,5 +1,7 @@
 # 当前接续状态
 
+**B 线轻量编码器研发。** Potion-base-8M 已进入正式候选目录。统一入口仍选 MPNet 与 BGE-small，在相同训练内留出上维持 1,285/1,711。单独给 Potion 一次同条件训练，几种融合权重均未超过原组合。[接入、模型选择和实测结果](B_STATIC_ENCODER_TRIAL_20261127_zh.md)
+
 **B 线大预算调度的训练内实测。** 同样允许 32 次拟合，原版单用 MPNet，1,268/1,711（74.11%）；新版自己选 MPNet 与 BGE-small 各半，1,285/1,711（75.10%）。两边分别用 28、23 次拟合。Wine 三分类用同一入口留下梯度提升树。课程指定验证仍以草稿 PR #4 已核实的 710/940 交付。[预算、真实决策和逐题得失](B_TASK2_FEEDBACK_RECRUITMENT_20261127_zh.md)
 
 **B 线修正版从课程原包复现 Task2 的 710/940（75.53%）。** 使用原通用资源目录，20 次实际拟合，模型 API 0 次；另起进程和交付包换目录断网重载，均复现原来的 940 行预测，未重读课程指定验证答案。修复了新编码器派生投票时的模型身份，也支持正类为 0 的二分类。运行源码指纹 `c7982b0159ad`。离线交付包为 `Released-Task2-validation-c7982b0159ad.zip`。[复跑与修复](B_DISCOVERED_ENCODER_IDENTITY_20261127_zh.md) · [便携包凭据](../research/paired_encoder_search_1127/corrected_delivery_portable.json) · [反向类别次序](B_ADVISER_CLASS_ORDER_20261127_zh.md)

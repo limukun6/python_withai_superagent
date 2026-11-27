@@ -1,6 +1,7 @@
 """Pinned local sentence encoders for supervised lexical classifiers."""
 from functools import lru_cache
 import hashlib
+import json
 from importlib.util import find_spec
 import os
 from pathlib import Path
@@ -40,6 +41,16 @@ DEEP_FILES = {
 }
 _ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
 ALTERNATIVES={
+    'bge_base':dict(model='BAAI/bge-base-en-v1.5',revision='a5beb1e3e68b9ab74eb54cfd186867f64f240e1a',
+        env='SUPERAGENT_BGE_BASE_WEIGHTS',prefix='',pool='cls',
+        files={'config.json':(777,'bc00af31a4a31b74040d73370aa83b62da34c90b75eb77bfa7db039d90abd591'),
+               'tokenizer.json':_ALT_TOKENIZER,
+               'model.safetensors':(437955512,'c7c1988aae201f80cf91a5dbbd5866409503b89dcaba877ca6dba7dd0a5167d7')}),
+    'distilroberta':dict(model='sentence-transformers/all-distilroberta-v1',revision='842eaed40bee4d61673a81c92d5689a8fed7a09f',
+        env='SUPERAGENT_DISTILROBERTA_WEIGHTS',prefix='',pool='mean',
+        files={'config.json':(653,'6f9efb40bd192274dd2e6f43c326cd4571cbefe647f4a274e83073be4f13f928'),
+               'tokenizer.json':(1356047,'7a6751507c44ab383cc8ba8ab97cd857d35025ff1b29162b1690cc5e0c6030e9'),
+               'model.safetensors':(328489328,'3c739fad12f3f12428a677cfcc73391a5860a8bad0ff7a971fd67e6065201fc2')}),
     'gte_base':dict(model='thenlper/gte-base',revision='c078288308d8dee004ab72c6191778064285ec0c',
         env='SUPERAGENT_GTE_BASE_WEIGHTS',prefix='',pool='mean',
         files={'config.json':(618,'88bed05d7640945dd2de4b4e81fbe4dd962289c32fc1c0aacfd13deb7ea90155'),
@@ -101,14 +112,16 @@ def pinned_folder(folder,files):
 def _encoder(root,max_length=256):
     import torch
     from tokenizers import Tokenizer
-    from transformers import BertModel
+    from transformers import BertModel, RobertaModel
+    model_type = json.loads((root/'config.json').read_text())['model_type']
+    model_class = {'bert': BertModel, 'roberta': RobertaModel}[model_type]
     tokenizer=Tokenizer.from_file(str(root/'tokenizer.json'))
     tokenizer.no_padding()
     tokenizer.enable_truncation(max_length=max_length)
-    model,info=BertModel.from_pretrained(root,local_files_only=True,use_safetensors=True,
+    model,info=model_class.from_pretrained(root,local_files_only=True,use_safetensors=True,
                                          add_pooling_layer=False,output_loading_info=True)
     if info['missing_keys'] or info['mismatched_keys'] or info['error_msgs']:
-        raise ValueError('Incomplete MiniLM checkpoint')
+        raise ValueError('Incomplete sentence encoder checkpoint')
     torch.set_num_threads(min(3,torch.get_num_threads()))
     return tokenizer, model.eval().requires_grad_(False)
 
@@ -159,7 +172,7 @@ def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):
     with torch.inference_mode():
         for offset in range(0,len(order),48):
             idx=order[offset:offset+48]
-            tokens=torch.zeros((len(idx),int(lengths[idx].max())),dtype=torch.long)
+            tokens=torch.full((len(idx),int(lengths[idx].max())), model.config.pad_token_id or 0, dtype=torch.long)
             mask=torch.zeros_like(tokens)
             for row,j in enumerate(idx):
                 tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)

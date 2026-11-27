@@ -15,11 +15,12 @@ from .word_familiarity import WordFamiliarity
 
 
 VARIANTS = ("gte", "electra")
-AVAILABLE_ENCODERS = (*VARIANTS, "gte_base")
-VECTOR_SIZES = {"gte": 384, "electra": 260, "gte_base": 768}
+LINEAR_ENCODERS = ("gte_base", "bge_base", "distilroberta")
+AVAILABLE_ENCODERS = (*VARIANTS, *LINEAR_ENCODERS)
+VECTOR_SIZES = {"gte": 384, "electra": 260, **dict.fromkeys(LINEAR_ENCODERS, 768)}
 NAMES = {f"{variant}_paired_{head}": (variant, head)
          for variant in VARIANTS for head in ("linear", "quadratic")}
-NAMES["gte_base_paired_linear"] = ("gte_base", "linear")
+NAMES.update({f"{variant}_paired_linear": (variant, "linear") for variant in LINEAR_ENCODERS})
 
 
 @lru_cache(maxsize=1)
@@ -44,9 +45,9 @@ def encode_texts(variant, texts):
     root = verified_files(spec["env"], spec["files"])
     if root is None:
         raise ValueError("Missing pinned weights for " + variant)
-    if variant in ("gte", "gte_base"):
+    if variant in AVAILABLE_ENCODERS and variant != "electra":
         tokenizer, model = _encoder(root, 512)
-        return encode_frozen(texts, tokenizer, model)[0]
+        return encode_frozen(texts, tokenizer, model, prefix=spec["prefix"], pool=spec["pool"])[0]
     if variant != "electra":
         raise ValueError("Unknown encoder")
     tokenizer, model = discriminator(root)

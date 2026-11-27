@@ -1,19 +1,22 @@
 import json
 import os
+from importlib.util import find_spec
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest import TestCase
+from unittest import TestCase, skipUnless
 from unittest.mock import patch
 
 import numpy as np
-from safetensors.numpy import save_file
-from tokenizers import Tokenizer, models, pre_tokenizers
 
 from superagent.local_sentence import describe, discover, encode
 
 
+@skipUnless(find_spec("safetensors") and find_spec("tokenizers"), "Optional encoder dependencies are unavailable")
 class StaticSentenceTest(TestCase):
     def test_embedding_bag_respects_declared_normalization_and_empty_inputs(self):
+        from safetensors.numpy import save_file
+        from tokenizers import Tokenizer, models, pre_tokenizers
+
         with TemporaryDirectory() as temp, patch.dict(os.environ,{},clear=True):
             root=Path(temp)
             table=np.array([[0,0],[3,0],[0,3]],dtype=np.float32)

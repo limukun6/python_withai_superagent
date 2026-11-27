@@ -109,9 +109,7 @@ def examine(out, fold_name, bank, truth, groups, families, configs, incumbents):
                 results=measures, rotations=rotations)
 
 
-def run(root):
-    out = root / 'consensus-feedback'
-    out.mkdir(exist_ok=True)
+def aligned_training_predictions(root,out,plan):
     agent = root / 'raw/race/run/agent'
     data = joblib.load(agent/'refit_data.joblib')
     full_labels = np.asarray(data['y_train'])
@@ -146,10 +144,9 @@ def run(root):
         slots.append((tag, payload, paths, held))
     members = set.intersection(*(set(paths) for _,_,paths,_ in slots))
     require(set(inc)<=members, 'Missing incumbent probabilities')
-    lock(out/'inputs.json',dict(protocol=sha(PLAN),incumbent=sha(seal),members=sorted(members),folds=[
+    lock(out/'inputs.json',dict(protocol=sha(plan),incumbent=sha(seal),members=sorted(members),folds=[
         dict(name=tag,held=fingerprint(held),payload=sha(payload),trials={n:sha(paths[n]) for n in sorted(members)})
         for tag,payload,paths,held in slots]))
-    records = []
     expected_configs = None
     for tag,payload,paths,held in slots:
         context = joblib.load(payload)
@@ -176,8 +173,14 @@ def run(root):
             configs[n] = identity(params)
         require(expected_configs is None or expected_configs==configs,'A component configuration changed')
         expected_configs = configs
-        records.append(examine(out,tag,bank,labels==metric.labels[1],groups,families,configs,inc))
-    total = len(full_labels)
+        yield tag,bank,labels==metric.labels[1],groups,families,configs,inc
+
+
+def run(root):
+    out=root/'consensus-feedback'
+    out.mkdir(exist_ok=True)
+    records=[examine(out,*item) for item in aligned_training_predictions(root,out,PLAN)]
+    total=sum(r['rows'] for r in records)
     results = {arm:{k:sum(r['results'][arm][k] for r in records) for k in ('gains','losses','net')}
                for arm in ('confirmed','nominee','always')}
     net = [r['results']['confirmed']['net'] for r in records]

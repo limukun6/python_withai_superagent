@@ -10,11 +10,12 @@ from .metrics import MetricSpec
 from .models import search_candidates
 from . import numeric_kernel
 from . import ab_varied_preferences
+from . import paired_encoder
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
 ADAPTER_VERSION = '1.5'
-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
+FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*paired_encoder.NAMES,*(name for _,name in TRANSFER_METHODS.values())}
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None):

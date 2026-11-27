@@ -4,11 +4,18 @@ from pathlib import Path
 import subprocess
 from tempfile import NamedTemporaryFile
 
-from tools.encoder_assets import MODELS, matches, verified
+from superagent.ab_sentence import ALTERNATIVES
+from superagent.paired_encoder import VARIANTS
+from tools.encoder_assets import MODELS, matches
+
+DOWNLOADS = dict(MODELS)
+for variant in VARIANTS:
+    spec = ALTERNATIVES[variant]
+    DOWNLOADS[spec["model"].split("/")[-1]] = dict(repo=spec["model"], revision=spec["revision"], files=spec["files"])
 
 
 def fetch(weights, name, endpoint):
-    spec = MODELS[name]
+    spec = DOWNLOADS[name]
     folder = weights / name
     folder.mkdir(parents=True, exist_ok=True)
     for filename, identity in spec["files"].items():
@@ -27,13 +34,14 @@ def fetch(weights, name, endpoint):
             print(name, filename, identity[0], "verified", flush=True)
         finally:
             temp.unlink(missing_ok=True)
-    verified(weights, name)
+    if not all(matches(folder/file, identity) for file, identity in spec["files"].items()):
+        raise ValueError(f"Incomplete {name} installation")
 
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--weights", required=True, type=Path)
-    p.add_argument("--model", required=True, choices=tuple(MODELS))
+    p.add_argument("--model", required=True, choices=tuple(DOWNLOADS))
     p.add_argument("--endpoint", choices=("https://huggingface.co", "https://hf-mirror.com"),
                    default="https://huggingface.co")
     args = p.parse_args()

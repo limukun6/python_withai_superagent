@@ -40,6 +40,16 @@ DEEP_FILES = {
 }
 _ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
 ALTERNATIVES={
+    'gte':dict(model='thenlper/gte-small',revision='17e1f347d17fe144873b1201da91788898c639cd',
+        env='SUPERAGENT_GTE_SMALL_WEIGHTS',prefix='',pool='mean',
+        files={'config.json':(583,'00273cdfb3e05c7304d180270bdef8adae45023e7bdfc396338bdd815943dc59'),
+               'tokenizer.json':(711661,'da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0'),
+               'model.safetensors':(66746168,'9a1eb90bbac323ea08aa5629b624fe6ae75db121b904799c2266a1e2c2de22d2')}),
+    'electra':dict(model='google/electra-small-discriminator',revision='fa8239aadc095e9164941d05878b98afe9b953c3',
+        env='SUPERAGENT_ELECTRA_SMALL_WEIGHTS',prefix='',pool='mean_and_token_scores',
+        files={'config.json':(665,'9708dadc5705ed0b5b8f6a63e723e959fe52b18aceedd9e704d8058739d3747b'),
+               'tokenizer.json':(466062,'ce64fce797c24f68df90b40a3f74f579b336a493db14bd583fd520ea0d8c9a98'),
+               'pytorch_model.bin':(54245363,'735154b1a8a78ba97da3c8c53c2e3d1d58b8dec5fa5caf0e144661c8bbe0e787')}),
     'e5':dict(model='intfloat/e5-small-v2',revision='ffb93f3bd4047442299a41ebb6fa998a38507c52',
         env='SUPERAGENT_E5_SMALL_WEIGHTS',prefix='query: ',pool='mean',
         files={'config.json':(615,'5dfb0363cd0243be179c03bcaafd1542d0fbb95e8cbcf575fff3e229342adc2f'),

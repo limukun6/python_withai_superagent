@@ -14,6 +14,7 @@ from . import numeric_kernel
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
 from . import ab_text_recipes, ab_vision, symmetric_text
 from . import ab_varied_preferences
+from . import paired_encoder
 
 
 FIELDS = 'supported_field_interactions'
@@ -37,6 +38,7 @@ ROUTES.update(ab_text_recipes.ROUTES)
 ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
+ROUTES.update({name:name for name in paired_encoder.NAMES})
 ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
 ROUTES.update({name:name for name in (ab_varied_preferences.TOPIC,ab_varied_preferences.BINARY)})
 
@@ -132,6 +134,8 @@ def additions(kind, *, include_legacy_methods=True):
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
         all_installed = catalog == 'all-installed'
+        if all_installed and kind == 'pair_text':
+            extra.extend(paired_encoder.candidates())
         if kind=='pair_text' and (all_installed or catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS)) and verified_directory(deep=True) is not None:
             from .ab_sentence import DEEP_MODEL, DEEP_REVISION
             params=dict(encoder=DEEP_MODEL,revision=DEEP_REVISION,C=.3,

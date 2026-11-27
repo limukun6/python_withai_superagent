@@ -1,10 +1,19 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from types import SimpleNamespace
+from unittest.mock import patch
+
+import joblib
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 
-from superagent.analogy_review import blend_counts, promoted
+from superagent.ab_run import sha
+from superagent.analogy_review import blend_counts, can_review, promoted, review
+from superagent.data import TrainingTask
+from superagent.events import RunLogger
 from superagent.preference_analogy import AnalogyIndex,WeightedProbabilityVote
 
 
@@ -50,3 +59,48 @@ class Comparison(unittest.TestCase):
             blend_counts(a,dict(b,row_key='different'),truth,[.5])
         self.assertFalse(promoted(1,[dict(rows=1000,gain=12),dict(rows=1000,gain=-1)]))
         self.assertTrue(promoted(1,[dict(rows=1000,gain=6),dict(rows=1000,gain=0)]))
+
+
+    def test_entry_respects_modality_allowance_and_connected_holdouts(self):
+        schema={'input_schema':{'pair_semantics':'preference'}}
+        task=TrainingTask('pair_text',[('a','b'),('c','d'),('e','f')],np.array([0,1,0]),schema)
+        folds={key:(np.asarray([j for j in range(3) if j!=i]),np.asarray([i]),{})
+               for i,key in enumerate(('primary','confirmation_1','confirmation_2'))}
+        metric=SimpleNamespace(name='accuracy',labels=[0,1])
+        caps={'anonymous':dict(resource='local_frozen_encoder_cpu',params={'encoder':'opaque'})}
+        self.assertTrue(can_review(task,metric,folds,caps,16))
+        self.assertFalse(can_review(task,metric,folds,caps,10))
+        self.assertFalse(can_review(task,metric,folds,{},16))
+        task.spec={'input_schema':{'pair_semantics':'symmetric'}}
+        self.assertFalse(can_review(task,metric,folds,caps,16))
+        task.spec=schema
+        task.X_train[2]=('b','different')
+        self.assertFalse(can_review(task,metric,folds,caps,16))
+
+    def test_failed_adviser_preserves_the_already_delivered_incumbent(self):
+        class BrokenExecutor:
+            limit=16
+            restrictions=()
+            caps={'anchor':dict(classifier_fits=1)}
+            def accounting(self):
+                return {'attempted_classifier_fits':10,'unknown_failed_attempts':0}
+            def worker(self,*args,**kwargs):
+                raise RuntimeError('staged candidate failed')
+        with TemporaryDirectory() as temp:
+            folder=Path(temp)
+            path=folder/'selected_model.joblib'
+            joblib.dump(dict(model='already delivered'),path)
+            incumbent=dict(model_file=path.name,model_sha256=sha(path))
+            stop={'members':['anchor']}
+            logger=RunLogger(folder)
+            logger.write_json('final_selection.json',incumbent)
+            frozen=sha(folder/'final_selection.json')
+            candidate=SimpleNamespace(family='opaque',params=dict(encoder='public'))
+            folds={'primary':{'anchor':{}},'confirmation_1':{},'confirmation_2':{}}
+            with patch('superagent.analogy_review.derived_candidate',return_value=candidate):
+                outcome=review(SimpleNamespace(kind='pair_text'),SimpleNamespace(labels=[0,1]),stop,incumbent,
+                   BrokenExecutor(),folder,logger,10,folds,{'primary':{'path':folder/'split.joblib'}})
+            self.assertEqual(outcome,(incumbent,stop))
+            self.assertEqual(sha(folder/'final_selection.json'),frozen)
+            self.assertEqual(sha(path),incumbent['model_sha256'])
+            self.assertIn('retained_after_failed_opportunity',(folder/'analogy_review.json').read_text())

@@ -9,6 +9,7 @@ def model_resources(model):
                               FILES, MODEL, REVISION, SentenceFeatures)
     from .ab_symmetric import UnorderedSentenceFeatures
     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
+    from .confusion_specialist import ClassPairModel
 
     found=set();visited=set()
     def walk(value):
@@ -18,7 +19,10 @@ def model_resources(model):
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')
-        if isinstance(value,dict):
+        if isinstance(value, ClassPairModel):
+            walk(value.base)
+            walk(value.expert)
+        elif isinstance(value,dict):
             for child in value.values():walk(child)
         elif isinstance(value,(list,tuple)):
             for child in value:walk(child)

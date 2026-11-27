@@ -1,0 +1,8 @@
+{
+  "question": "Can the current default unified agent independently train, stop, refit and deliver Released Task2, and can another process reproduce every prediction from the portable package?",
+  "input": {"raw": "56b5439ea3f77c7b933d9c0bc49705f3759b3a1d302da49adee80031904834e4", "features": "aee2bf4abb1d5a48ab5874856f024562c35a48f4769c4d071a4cd031d0e49b3c"},
+  "study": "One cold run of unified_agent solve, default policy, no Task2-specific method override or previous winner passed to the agent. Use the official training archive and the previously sealed feature-only designated validation packet. No other task is part of this run.",
+  "limits": {"fits_including_refit": 10, "model_api_requests": 0},
+  "score": "After freezing all predictions and independently reloading, score all 940 designated validation rows by row ID and accuracy. Keep official test members closed. This score measures reproduction; do not select the policy on its value.",
+  "delivery": "Export from the exact source used to fit, include the selected model, project source, verified encoder files, pinned runtime dependencies, and the validation predictions. Unpack to another directory and require identical predictions with network disabled and training forbidden."
+}

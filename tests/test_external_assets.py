@@ -13,9 +13,21 @@ from superagent.ab_sentence import SentenceFeatures,KernelSentenceFeatures
 from superagent.ab_symmetric import UnorderedSentenceFeatures
 from superagent.ab_vision import FrozenVisionFeatures
 from superagent.external_assets import model_resources,verify_resources
+from superagent.ab_sentence import AlternativeSentenceFeatures
+from superagent.confusion_specialist import ClassPairModel
 
 
 class ExternalAssetTests(unittest.TestCase):
+    def test_refinement_carries_resources_of_both_fitted_models(self):
+        base = Pipeline([('text', SentenceFeatures('single_text'))])
+        expert = Pipeline([('features', FeatureUnion([
+            ('first', SentenceFeatures('single_text')),
+            ('second', AlternativeSentenceFeatures('single_text', 'e5')),
+        ]))])
+        resources, packages = model_resources(ClassPairModel('single_text', base, expert, [0, 1, 2], (0, 1)))
+        self.assertEqual([r['name'] for r in resources], ['minilm', 'e5'])
+        self.assertIn('transformers', packages)
+
     def test_nested_actual_objects_determine_resources_not_candidate_name(self):
         for feature in (SentenceFeatures('single_text'),KernelSentenceFeatures('pair_text'),UnorderedSentenceFeatures()):
             model=Pipeline([('different_name',FeatureUnion([('nested',feature)])),('head',LogisticRegression())])

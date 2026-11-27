@@ -82,11 +82,16 @@ def describe(root):
     files = ['modules.json',pool_path,'config.json','tokenizer.json','model.safetensors']
     if settings_file.is_file():
         files.append('sentence_bert_config.json')
+    padding_side='right'
     for optional in ('config_sentence_transformers.json','tokenizer_config.json'):
         if (root/optional).is_file():
             item=metadata(root/optional)
             if item.get('default_prompt_name') or item.get('auto_map') or item.get('truncation_side','right')!='right':
                 raise ValueError('Unsupported default prompt or tokenizer behavior')
+            if optional=='tokenizer_config.json':
+                padding_side=item.get('padding_side','right')
+                if padding_side not in ('left','right'):
+                    raise ValueError('Unsupported tokenizer padding side')
             files.append(optional)
     records={}
     for name in files:
@@ -94,9 +99,14 @@ def describe(root):
         stat=path.stat()
         records[name]=dict(bytes=stat.st_size,sha256=_checksum(path,(stat.st_size,stat.st_ino,stat.st_mtime_ns,stat.st_ctime_ns)))
     signature=hashlib.sha256(json.dumps(records,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    if padding_side=='left':
+        # Distinguish new features from caches produced when left padding was ignored.
+        signature=hashlib.sha256(('left-padding-v1/'+signature).encode()).hexdigest()
     descriptor=dict(signature=signature,environment_variable=PREFIX+signature.upper()+'_WEIGHTS',width=width,
                 family=topology,pooling=pooling,normalize=len(stages)==3,max_length=length,
                 lower_case=settings.get('do_lower_case',False),files=records)
+    if padding_side=='left':
+        descriptor['padding_side']='left'
     if pooling=='last':
         descriptor['publisher_max_length']=length
         descriptor['max_length']=min(1024,length)
@@ -153,6 +163,13 @@ def backbone(root,length,identity,causal=False,device="cpu"):
     return tokenizer,model.eval().requires_grad_(False).to(device)
 
 
+def last_real_token(hidden, mask):
+    import torch
+    positions=torch.arange(mask.shape[1],device=mask.device).expand_as(mask)
+    last=positions.masked_fill(~mask.bool(),-1).amax(1)
+    return hidden[torch.arange(mask.shape[0],device=mask.device),last]
+
+
 def _encode(spec,texts,device,return_tokens=False):
     import torch
     root=Path(os.environ[spec['environment_variable']])
@@ -169,7 +186,9 @@ def _encode(spec,texts,device,return_tokens=False):
     if pad_id is None:
         raise ValueError('The local encoder has no declared pad token')
     chunks=tokenizer.encode_batch([s.strip().lower() if spec['lower_case'] else s.strip() for s in texts])
-    order=sorted(range(len(chunks)),key=lambda i:len(chunks[i].ids))
+    # Tokenizers without special symbols can return no tokens for an empty field.
+    # Its semantic feature is a zero vector; never pool a padded token as evidence.
+    order=sorted((i for i,chunk in enumerate(chunks) if chunk.ids),key=lambda i:len(chunks[i].ids))
     result=np.zeros((len(texts),spec['width']),dtype=np.float32)
     with torch.inference_mode():
         start=0
@@ -184,14 +203,14 @@ def _encode(spec,texts,device,return_tokens=False):
             mask=torch.zeros_like(ids)
             for row,i in enumerate(indices):
                 tokens=chunks[i].ids
-                ids[row,:len(tokens)]=torch.as_tensor(tokens)
-                mask[row,:len(tokens)]=1
+                offset=size-len(tokens) if spec.get('padding_side')=='left' else 0
+                ids[row,offset:offset+len(tokens)]=torch.as_tensor(tokens)
+                mask[row,offset:offset+len(tokens)]=1
             ids,mask=ids.to(device),mask.to(device)
             options={'use_cache':False} if causal else {}
             hidden=model(input_ids=ids,attention_mask=mask,**options).last_hidden_state
             if causal:
-                last=mask.sum(dim=1)-1
-                pooled=hidden[torch.arange(len(indices),device=device),last].float()
+                pooled=last_real_token(hidden,mask).float()
             elif spec['pooling']=='cls':
                 pooled=hidden[:,0,:]
             elif spec['pooling']=='max':

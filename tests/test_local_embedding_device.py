@@ -37,3 +37,20 @@ class LocalEmbeddingDevice(TestCase):
              patch.object(local_sentence.time,'perf_counter',side_effect=[0.,10.,15.,15.5]):
             choice=local_sentence.choose_backend({'signature':'test','pooling':'last'},[str(i) for i in range(12)])
         self.assertEqual(choice,'cpu')
+
+    def test_padding_side_and_last_real_positions(self):
+        import torch
+        with TemporaryDirectory() as temp:
+            folder=Path(temp)/'opaque'
+            package(folder)
+            config=folder/'tokenizer_config.json'
+            config.write_text(json.dumps({'padding_side':'left'}))
+            self.assertEqual(local_sentence.describe(folder)['padding_side'],'left')
+            config.write_text(json.dumps({'padding_side':'right'}))
+            self.assertNotIn('padding_side',local_sentence.describe(folder))
+            config.write_text(json.dumps({'padding_side':'invalid'}))
+            with self.assertRaisesRegex(ValueError,'padding side'):
+                local_sentence.describe(folder)
+        hidden=torch.arange(12).reshape(3,4,1)
+        mask=torch.tensor([[1,1,0,0],[0,0,1,1],[1,0,1,0]])
+        self.assertEqual(local_sentence.last_real_token(hidden,mask).flatten().tolist(),[1,7,10])

@@ -38,9 +38,14 @@ class TrainingTask:
     spec: dict[str, Any] = field(default_factory=dict)
 
 
-def load_training_task(path: str | Path, *, read_declarations=False) -> TrainingTask:
+def load_training_task(path: str | Path, *, read_declarations=False, declaration_client=None, log=None) -> TrainingTask:
     """Train-only capability for selection studies; never opens val or test."""
     with open_package(path,'train',shared=read_declarations) as archive:
+        from .task_declarations import bind
+        def finish(task, manifest=None):
+            if read_declarations or manifest and ('restrictions' in manifest or 'label_meanings' in manifest):
+                return bind(task,archive,client=declaration_client,log=log,manifest=manifest)
+            return task
         from .schema import read_manifest,load_manifest_split
         manifest=read_manifest(archive, read_metric=True)
         if manifest is None:
@@ -51,7 +56,7 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
             if getattr(archive,'shared_table',None):
                 spec['shared_table']=archive.shared_table
             if len(np.unique(y))<2:raise TaskFormatError('Training requires at least two classes')
-            return TrainingTask(kind,x,y,spec)
+            return finish(TrainingTask(kind,x,y,spec),manifest)
         names = [n for n in archive.namelist() if not n.startswith("__MACOSX/")]
         if any(n.endswith("C_train.npy") for n in names):
             x = load_array(archive.read(_member_by_suffix(names,"C_train.npy")))
@@ -67,13 +72,14 @@ def load_training_task(path: str | Path, *, read_declarations=False) -> Training
                 if metric:
                     spec['metric']=metric
                     spec.setdefault('goal_sources',{})['primary_metric']='declared_task_readme'
-            return TrainingTask("categorical_tabular", x, y, spec)
+                spec.update(input_format='legacy_categorical_npy',feature_shape=list(x.shape[1:]))
+            return finish(TrainingTask("categorical_tabular", x, y, spec))
         rows = _read_csv(archive, _member_by_suffix(names,"train.csv"))
         if not rows or not {"headline_A","headline_B","label_pairwise"}.issubset(rows[0]):
             raise TaskFormatError("Unsupported training CSV schema")
         from .task_readme import legacy_declarations
-        return TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
-                            np.asarray([int(r["label_pairwise"]) for r in rows]),legacy_declarations(archive,'pair_text',{}))
+        return finish(TrainingTask("pair_text", [(r["headline_A"],r["headline_B"]) for r in rows],
+                            np.asarray([int(r["label_pairwise"]) for r in rows]),legacy_declarations(archive,'pair_text',{})))
 
 
 def _member_by_suffix(names: list[str], suffix: str) -> str:
@@ -209,12 +215,15 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
                 # A legacy two-column CSV records its fields and README semantics without input_format.
                 legacy_csv = (kind == 'pair_text' and frozen_spec.get('task_kind') == 'pair_text_binary'
                               and frozen_spec.get('input_fields') == ['headline_A', 'headline_B'])
-                if 'input_format' in frozen_spec or not legacy_csv:
+                if frozen_spec.get('input_format') != 'legacy_categorical_npy' and ('input_format' in frozen_spec or not legacy_csv):
                     from .native_schema import prediction_manifest
                     manifest=prediction_manifest(archive,frozen_spec)
             else:
                 expected=frozen_spec['input_schema']
                 for key in ('modality','columns','pair_label_one','pair_semantics','image_preprocessing'):
+                    if (key=='columns' and key not in manifest and frozen_spec.get('declaration_evidence',{}).get('fields',{}).get('columns',{}).get('source') in ('declared_task_readme','llm_extracted')
+                            and manifest.get('splits',{}).get('test',{}).get('format') in ('npz','npy')):
+                        continue
                     if manifest.get(key)!=expected.get(key):raise TaskFormatError('Prediction schema differs from frozen training schema')
             if frozen_spec.get('image_decoder_policy'):
                 from importlib.metadata import version
@@ -234,7 +243,11 @@ def load_prediction_features(path: str | Path, kind: str, frozen_spec=None) -> A
         names = [name for name in archive.namelist() if not name.startswith("__MACOSX/")]
         if kind == "categorical_tabular":
             member = _member_by_suffix(names, "C_test.npy")
-            return load_array(archive.read(member))
+            values=load_array(archive.read(member))
+            expected=(frozen_spec or {}).get('feature_shape')
+            if expected is not None and list(values.shape[1:])!=expected:
+                raise TaskFormatError('Prediction dimensions differ from frozen training schema')
+            return values
         if kind == "pair_text":
             member = _member_by_suffix(names, "test.csv")
             content = archive.read(member).decode("utf-8-sig")

@@ -1,0 +1,87 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "id": "ordinary",
+      "passed": true,
+      "checks": {
+        "model_hash": true,
+        "early_hash": true,
+        "early_model_hash": true,
+        "early_disclosed": true,
+        "final_complete": true,
+        "final_replay": true,
+        "fit_records": true,
+        "no_LLM_call": true,
+        "restrictions": true,
+        "rows": true,
+        "original_row_order": true,
+        "labels": true,
+        "relocated_isolated_export": true
+      }
+    },
+    {
+      "id": "custom",
+      "passed": true,
+      "checks": {
+        "model_hash": true,
+        "early_hash": true,
+        "early_model_hash": true,
+        "early_disclosed": true,
+        "final_complete": true,
+        "final_replay": true,
+        "fit_records": true,
+        "no_LLM_call": true,
+        "rows": true,
+        "header": true,
+        "original_ids": true,
+        "classes": true,
+        "probabilities": true,
+        "migrated_interpretation": true,
+        "relocated_isolated_export": true
+      }
+    },
+    {
+      "id": "late_replay",
+      "passed": true,
+      "checks": {
+        "features": true,
+        "two_exports": true,
+        "same_as_reference": true,
+        "protected_files": true,
+        "two_receipts": true,
+        "original_goal_preserved": true
+      }
+    },
+    {
+      "id": "windows_interruption",
+      "passed": true,
+      "checks": {
+        "all_created_processes_exited": true,
+        "owned_tree": true,
+        "paused_before_fit": true,
+        "partial_disclosed": true,
+        "early_replay": true,
+        "separate_windows_batch": true
+      }
+    }
+  ],
+  "entire_canonical_ledger_unchanged": true,
+  "source_unchanged": true,
+  "actual_classifier_fits": 0,
+  "new_campus_API_requests": 0,
+  "new_course_cost_rmb": 0,
+  "ledger_now": {
+    "requests": 526,
+    "known_course_cost_rmb": 8.428396,
+    "unresolved_requests": 17,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "scope": "same A developer independent recheck, not human blind evaluation",
+  "evidence_sources": {
+    "first_three": "SA25B, original fourth fixture failure preserved",
+    "windows": "SA25C separate zero-fit continuation"
+  }
+}

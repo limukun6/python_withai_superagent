@@ -126,7 +126,7 @@ class SemanticAutonomyMergeTests(unittest.TestCase):
                              ('--prediction-input',str((self.root/'query.zip').resolve()))]:
             self.assertEqual(flags[flags.index(option)+1],value)
         self.assertIn('--protected-self-review',flags)
-        self.assertEqual(Path(flags[flags.index('--exploration-rule')+1]),run/'exploration_rule.json')
+        self.assertEqual(Path(flags[flags.index('--exploration-rule')+1]),(run/'exploration_rule.json').resolve())
         record=json.loads((run/'training_protocol.json').read_text(encoding='utf-8'))
         self.assertEqual(record['task_interpretation'],'proactive')
         self.assertEqual(record['feedback_reflection'],'opening-local')

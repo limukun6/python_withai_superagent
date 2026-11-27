@@ -62,6 +62,10 @@ def description(archive):
 
 
 def named_table(text,split):
+    from .split_declarations import declared_paths
+    path=declared_paths(text).get(split)
+    if path and PurePosixPath(path).suffix[1:].lower() in TABLE_FORMATS:
+        return path
     words={'train':r'(?:training|train|训练)','test':r'(?:prediction|testing|test|预测|测试)'}[split]
     field=r'(?:\s*(?:data\s*)?(?:file|table)|(?:文件|数据文件))'
     found=set(re.findall(words+field+r'\s*(?:is\s+|为|是|[:：=]\s*)?[\"\']?([\w./-]+\.(?:csv|tsv|parquet))\b',text,re.I))

@@ -18,6 +18,37 @@ from .format_sources import (TASK_DOCUMENTS, UnsupportedFormat, checked_name,
                              decode_text, package_files, roles)
 from .metrics import MetricSpec
 from .record_streams import decode_records, fields, scalar
+from .metric_declarations import MetricDeclarationError, UnknownMetricWording
+from .task_constraints import RestrictionError, declared_restrictions
+from .task_declarations import DeclarationError
+
+
+BINDING_ERRORS = (RestrictionError, DeclarationError, MetricDeclarationError)
+
+
+def bind_semantic_rules(task, workspace):
+    """Enforce documented restrictions and worked scores also on model-compiled input layouts."""
+    from .metric_declarations import declared_metric
+    from .worked_metrics import extract
+    evidence = {}
+    for block in workspace['documents']:
+        evidence.setdefault(block['member'], []).append(block)
+    documents = [''.join(b['text'] for b in sorted(parts, key=lambda b:b['start']))
+                 for parts in evidence.values()]
+    flags = set(task.spec.get('method_restrictions', ()))
+    for doc in documents:
+        restrictions, _ = declared_restrictions(None, doc)
+        flags.update(restrictions)
+        _, examples = extract(doc)
+        if examples is not None:
+            resolved = declared_metric(doc, evidence=examples, explicit=task.spec.get('metric'))
+            task.spec['metric'] = resolved
+            task.spec.setdefault('goal_sources', {})['primary_metric'] = 'verified_worked_examples'
+            task.spec['metric_evidence'] = dict(metric=resolved, examples=len(examples['examples']),
+                candidates=examples['candidates'], scope='task-authored illustrative rows')
+    if flags:
+        task.spec['method_restrictions'] = sorted(flags)
+    return task
 
 
 VERSION = 'semantic-task-v3'
@@ -453,6 +484,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     task=compile_native(files,workspace,response,prediction_files=query_files)
                 else:
                     task=compile_plan(files,workspace,response,prediction_files=query_files)
+                bind_semantic_rules(task, workspace)
                 query = prediction_package
                 member = task.spec.get('input_recipe',{}).get('prediction_member')
                 if query is None and member in files.namelist(): query=path
@@ -514,6 +546,8 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
             if any(PurePosixPath(n).name.casefold()=='manifest.json' for n in files.namelist()):
                 try:
                     base = load_training_task(package,read_declarations=True)
+                except BINDING_ERRORS:
+                    raise
                 except DECODE_ERRORS:
                     # Declared record formats (JSONL, workbook, etc.) use the
                     # existing adaptive reader without model reinterpretation.
@@ -525,17 +559,32 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
                 try:
                     tentative=load_training_task(package,read_declarations=True)
                     if prediction_package is not None:probe_prediction_input(prediction_package,tentative)
+                except UnknownMetricWording as error:
+                    prior_error=error
+                except BINDING_ERRORS:
+                    raise
                 except DECODE_ERRORS as error:
                     prior_error=error
         return semantic_training(package,client,log,prior_error,
                                  prediction_package=prediction_package,base_task=base,recovery=recovery)
     try:
-        task = load_training_task(package, read_declarations=True)
+        task = load_training_task(package, read_declarations=True, declaration_client=client, log=log)
+    except UnknownMetricWording as error:
+        if client is None or client.blocked or client.request_count >= client.max_requests:
+            raise
+        with package_files(package) as files:
+            if any(PurePosixPath(n).name.casefold() == 'manifest.json' for n in files.namelist()):
+                raise
+        return semantic_training(package, client, log, error, prediction_package=prediction_package, recovery=recovery)
+    except BINDING_ERRORS:
+        raise
     except DECODE_ERRORS as native_error:
         if log:
             log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
         try:
             task = adapt_training(package, client, log)
+        except BINDING_ERRORS:
+            raise
         except NativeContract:
             # A specialized reader's filename claim is not an explicit task
             # contract. Without a manifest, a configured semantic reader may

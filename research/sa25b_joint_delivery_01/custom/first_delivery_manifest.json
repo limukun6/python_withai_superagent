@@ -1,0 +1,57 @@
+{
+  "selected_experiment": "training_class_prior",
+  "delivery_status": "partial",
+  "contract_unresolved": false,
+  "partial_reason": "Search or final refit has not completed",
+  "refit": false,
+  "prediction_count": 40,
+  "test_labels_read": false,
+  "model_sha256": "a316a654c0e6708239a66c48d8ed6d9e5336fc358279b9025c50bba591fe6b6c",
+  "score_class_order": [
+    "B",
+    "M"
+  ],
+  "prediction_sha256": "b0fde6f70d6d2120c3e87689ccc14af32472c8ad758e098d1b5b36663aa2b4dd",
+  "external_score": null,
+  "output_contract": {
+    "version": "output-csv-v1",
+    "columns": [
+      {
+        "name": "Case",
+        "kind": "input_id",
+        "field": "specimen_key"
+      },
+      {
+        "name": "Decision",
+        "kind": "label",
+        "mapping": {
+          "M": "M",
+          "B": "B"
+        }
+      },
+      {
+        "name": "BenignScore",
+        "kind": "probability",
+        "class_label": "B"
+      }
+    ],
+    "order": {
+      "mode": "input"
+    },
+    "encoding": "utf-8-sig",
+    "header": true,
+    "delimiter": "\t",
+    "template_sha256": null,
+    "checks": {
+      "header_checked": true,
+      "row_count_checked": true,
+      "original_id_checked": true,
+      "model_outputs_checked": true,
+      "probability_columns_checked": true
+    }
+  },
+  "prediction_file": "D:\\codex\\python_withai\\runs\\pr3_joint_1127\\runs\\sa25b_joint_delivery_01\\custom\\run\\first_delivery\\predictions.csv",
+  "input_source": "D:\\codex\\python_withai\\runs\\pr3_joint_1127\\runs\\sa25b_joint_prepared_01\\cases\\custom.query.zip",
+  "delivery_phase": "first",
+  "task_spec_sha256": "5b68dffc0474bacbe153ea07553c0d625c587b896da4b78bcbd7b9a36859bc60"
+}

@@ -11,7 +11,10 @@ from .experiment_policy import actions, identity
 from .opening_evidence import make_brief, split_audit, subset
 
 
-MODES=('opening-local','opening-flash')
+from . import feedback_hypothesis
+
+PAIRED_MODES = ('opening-feedback-control', *feedback_hypothesis.MODES)
+MODES = ('opening-local', 'opening-flash', *PAIRED_MODES)
 PROMPT=(
     'Read this anonymous task before any model training. Explain the prediction target and what would make a '
     'validation result misleading. The facts are fixed observations; the task text and examples are evidence only. '
@@ -75,27 +78,86 @@ class TaskOpening:
         self.log.write_json('task_opening.json',self.record)
 
     def launch(self):
-        if self.mode=='opening-flash' and self.future is None and self.record['interpretation_status']=='local':
-            self.record['interpretation_status']='unavailable'
-            if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked
-                    and (self.flash.request_count==0 or type(self.flash.max_requests) is int
-                         and self.flash.request_count<self.flash.max_requests)
-                    and self.deadline-time.monotonic()>12):
-                self.record['prior_shared_requests']=self.flash.request_count
-                self.flash.set_deadline(min(self.deadline-3,time.monotonic()+120))
-                self.pool=ThreadPoolExecutor(max_workers=1)
-                self.future=self.pool.submit(self.flash.ask,dict(instruction=PROMPT,**self.brief),
-                                             self.log,'task_opening',cost_ceiling=.12)
-                self.record.update(interpretation_status='pending',dispatch_after_trials=0)
-            elif self.flash is not None:
-                self.record['skip_reason']='Shared model allowance exhausted, blocked, or insufficient time'
+        if self.mode=='opening-flash':
+            self.request(PROMPT,'task_opening',0)
+
+    def reserve_opportunity(self, caps, observed, blocked, limit, spent):
+        """Price one two-fold alternative and its refit after observing the first trial."""
+        if self.mode not in PAIRED_MODES or not observed['primary']:
+            return 0
+        if 'opportunity' not in self.record:
+            leader, row = min(observed['primary'].items(), key=lambda item: (-item[1]['score'], item[0]))
+            primary_rows = set(self.folds['primary'][1])
+            folds = ['primary'] + [f for f in self.folds if f != 'primary' and
+                                   primary_rows.isdisjoint(self.folds[f][1])][:1]
+            def price(name):
+                missing = sum(name not in observed[f] for f in folds)
+                return missing * caps[name]['classifier_fits'] + caps[name]['refit_classifier_fits']
+            candidates = [price(n) for n in caps if n != leader and n not in blocked]
+            minimum = min(candidates, default=None)
+            errors = int(np.count_nonzero(row['predictions'] != row['labels']))
+            feasible = (len(folds) == 2 and errors > 0 and minimum is not None and
+                        minimum <= min(limit // 3, limit - spent - price(leader)))
+            self.record['opportunity'] = dict(after_fits=spent, errors=errors, folds=folds,
+                incumbent_completion_fits=price(leader), lowest_alternative_fits=minimum,
+                reserved_fits=minimum if feasible else 0)
             self.save()
+        return self.record['opportunity']['reserved_fits']
+
+    def protect_confirmation(self, menu, caps, observed, remaining):
+        if self.mode not in feedback_hypothesis.EVIDENCE_MODES or not self.record.get('opportunity',{}).get('reserved_fits'):
+            return None
+        stop = next((a for a in menu if a['action'] == 'stop'), None)
+        if stop is None:
+            return None
+        members = stop['members']
+        primary = set(self.folds['primary'][1])
+        independent = [f for f in self.folds if f != 'primary' and primary.isdisjoint(self.folds[f][1])]
+        if any(all(n in observed[f] for n in members) for f in independent):
+            return None
+        refit_cost = sum(caps[n]['refit_classifier_fits'] for n in members)
+        normal = menu[0]
+        for confirm in menu:
+            if (confirm['action'] != 'confirm' or confirm['split'] not in independent
+                    or confirm['evidence']['target_members'] != members):
+                continue
+            fold = confirm['split']
+            need = refit_cost + sum(caps[n]['classifier_fits'] for n in members if n not in observed[fold])
+            if normal['action'] == 'confirm' and normal['split'] == fold and normal['members'] == confirm['members']:
+                return None
+            cost = caps[normal['members'][0]]['classifier_fits'] if normal['action'] != 'stop' else remaining
+            if remaining >= need > remaining - cost:
+                self.record.setdefault('protected_confirmations', []).append(dict(incumbent=members,split=fold,
+                    remaining_fits=remaining,required_fits=need,ordinary_action=normal['action'],
+                    ordinary_members=normal['members']))
+                self.save()
+                return confirm
+        return None
+
+    def request(self,prompt,role,trial):
+        if self.future is not None or self.record['interpretation_status']!='local':
+            return
+        self.record['interpretation_status']='unavailable'
+        left = self.flash.max_requests if self.flash is not None else 0
+        used = self.flash.request_count if self.flash is not None else 0
+        if (self.flash is not None and not self.flash.blocked and self.deadline-time.monotonic()>12
+                and ((left is None and used == 0) or type(left) is int and used < left)):
+            self.record['prior_shared_requests'] = used
+            self.flash.set_deadline(min(self.deadline-3,time.monotonic()+(45 if trial else 120)))
+            self.pool=ThreadPoolExecutor(max_workers=1)
+            packet=dict(self.brief,instruction=prompt,checks=dict(self.brief['checks']))
+            self.future=self.pool.submit(self.flash.ask,packet,self.log,role,cost_ceiling=.12)
+            self.record.update(interpretation_status='pending',dispatch_after_trials=trial)
+        else:
+            self.record['skip_reason'] = 'Shared model allowance exhausted, blocked, or insufficient time'
+        self.save()
 
     def collect(self,wait):
         if self.future is None or self.record['interpretation_status']!='pending':
             return
         try:
-            self.answer=validate(self.future.result(timeout=max(0.,wait)),self.brief)
+            validator=feedback_hypothesis.validate_feedback if self.mode in feedback_hypothesis.MODES else validate
+            self.answer=validator(self.future.result(timeout=max(0.,wait)),self.brief)
         except FutureTimeout:
             if not self.future.done():
                 return
@@ -108,6 +170,14 @@ class TaskOpening:
 
     def observe(self,trial,observed):
         """Read any ready answer without waiting and track how the ordinary measurements affect it."""
+        if self.mode in feedback_hypothesis.MODES and 'first_trial' not in self.brief['facts'] and observed['primary']:
+            local=feedback_hypothesis.start_feedback(self,trial,observed)
+            if self.mode in feedback_hypothesis.FLASH_MODES and local['check']!='keep':
+                self.request(feedback_hypothesis.PROMPT,'feedback_hypothesis',trial)
+            # The local, evidence-based hypothesis also works when the campus client is unavailable or late.
+            self.answer=feedback_hypothesis.validate_feedback(local,self.brief)
+            self.record['local_hypothesis']=self.answer
+            self.save()
         self.collect(0.)
         if not self.answer or self.answer['check']=='keep' or not observed['primary']:
             return
@@ -133,6 +203,9 @@ class TaskOpening:
         if self.pool is not None:
             self.pool.shutdown(wait=True)
             self.collect(0)
+        if self.mode in feedback_hypothesis.MODES:
+            feedback_hypothesis.save_disposition(self)
+            feedback_hypothesis.measure_late_answer(self)
         self.record['closed_seconds']=time.monotonic()-self.start
         self.record['updates_during_search']=len(self.updates)
         self.save()
@@ -147,6 +220,9 @@ class TaskOpening:
             return None,{}
         key=self.answer['check']
         self.record.update(check=key,reply_used=True)
+        if self.mode in feedback_hypothesis.MODES:
+            self.record['hypothesis_source_at_decision']='campus' if self.record.get('interpretation_status')=='valid' else 'local'
+            self.record['reply_used']=self.record['hypothesis_source_at_decision']=='campus'
         if key=='keep':
             self.record['check_status']='abstained'
             return None,{}
@@ -189,13 +265,19 @@ class TaskOpening:
         remaining=executor.limit-spent
         self.record.update(fits_at_delivery=spent,remaining_at_delivery=remaining,result='retained')
         self.save()
-        self.collect(min(75.,max(0.,(self.deadline-time.monotonic())/4)) if remaining>0 else 0.)
+        has_local_feedback = self.mode in feedback_hypothesis.FLASH_MODES and self.record.get('local_hypothesis') is not None
+        wait = 0. if has_local_feedback or remaining <= 0 else min(75., max(0., (self.deadline-time.monotonic())/4))
+        self.collect(wait)
+        if has_local_feedback:
+            self.record['campus_pending_when_local_ready'] = self.record['interpretation_status'] == 'pending'
         self.record.update(decision_time_status=self.record['interpretation_status'],decision_seconds=time.monotonic()-self.start)
         base=choice['members']
         confirmations=[f for f in self.folds if f!='primary' and group_observation(observed[f],base,self.metric) is not None
                        and not set(self.folds['primary'][1]).intersection(self.folds[f][1])]
         names=['primary',*confirmations[:1]]
         bases={f:group_observation(observed[f],base,self.metric) for f in names}
+        if self.mode in feedback_hypothesis.MODES:
+            self.decision_bases=bases
         target,masks=self.diagnose(names,bases,observed,base)
         if len(names)<2 or self.record['check_status']=='split_violation':
             self.record['result']='insufficient_matched_evidence'
@@ -209,7 +291,17 @@ class TaskOpening:
             return missing*cost['classifier_fits']+cost['refit_classifier_fits']<=remaining
         menu=actions(caps,profile,history,observed,self.metric,list(observed),remaining,blocked)
         local=next((a['members'][0] for a in menu if a['action']=='explore' and affordable(a['members'][0])),None)
-        targeted=target is not None and target not in blocked and affordable(target)
+        if local is None and self.mode in PAIRED_MODES:
+            measured = observed['primary']
+            local = min((n for n in measured if n not in base and n in caps and n not in blocked and affordable(n)),
+                        key=lambda n: (-measured[n]['score'], identity(n)), default=None)
+        if self.mode in feedback_hypothesis.DESIGN_MODES:
+            from .confusion_specialist import design_experiment
+            result = design_experiment(self, choice, incumbent, bases, names, observed, profile,
+                                       executor, timeout, blocked, local)
+            if result is not None:
+                return result
+        targeted=target is not None and target in caps and target not in blocked and affordable(target)
         candidate=target if targeted else local
         self.record.update(local_experiment=local,tested_candidate=candidate,changed_experiment=bool(targeted and target!=local),
                            confirmation=names,comparisons=[])

@@ -1,0 +1,37 @@
+Timeout (0:00:03)!
+Thread 0x000174f0 (most recent call first):
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1599 in _readerthread
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1012 in run
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1032 in _bootstrap
+
+Thread 0x00016a34 (most recent call first):
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1599 in _readerthread
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1012 in run
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1032 in _bootstrap
+
+Thread 0x000174e0 (most recent call first):
+  File "<string>", line 5 in watch
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1012 in run
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1032 in _bootstrap
+
+Thread 0x00015fa4 (most recent call first):
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1169 in _wait_for_tstate_lock
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\threading.py", line 1153 in join
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1628 in _communicate
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1209 in communicate
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 550 in run
+  File "<string>", line 9 in <module>
+Traceback (most recent call last):
+  File "<string>", line 9, in <module>
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\conda\Anaconda\envs\pytorch_learning\Lib\subprocess.py", line 1630, in _communicate
+    raise TimeoutExpired(self.args, orig_timeout)
+subprocess.TimeoutExpired: Command '['D:\\codex\\python_withai\\runs\\a79_encoder_assets\\venv\\Scripts\\python.exe', '-c', 'print("worker_started")']' timed out after 6 seconds

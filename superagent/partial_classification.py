@@ -118,6 +118,20 @@ def record_input_failure(package,directory,logger,error,phase,*,api_usage=None,r
         outcome.update(reason_code='metric_unresolved', selection_metric=None)
     if api_usage:
         outcome.update(api_usage)
+    from .task_constraints import RestrictionError, package_restrictions
+    if resolved_task is None and not isinstance(error,RestrictionError):
+        # A failed decoder must not turn an unsupported mandatory rule into an unrestricted fallback.
+        try:
+            package_restrictions(package)
+        except RestrictionError as policy_error:
+            error=policy_error
+            outcome['reason']=str(policy_error)
+        except DECODE_ERRORS:
+            pass
+    if isinstance(error,RestrictionError):
+        logger.write_json('run_outcome.json',dict(outcome,status='failed',delivery_status='unavailable',
+            model_available=False,reason_code='method_restriction_unresolved'))
+        return 2
     try:
         if getattr(error,'verified_prior',None) is not None:
             evidence = error.verified_prior
@@ -157,7 +171,8 @@ def input_count(package,prior):
     if fmt == 'adaptive_records':
         from .format_intake import prediction_rows
         records = prediction_rows(package, prior['frozen_spec'])
-        features = {c['name'] for c in prior['frozen_spec']['input_schema']['columns']}
+        mapping=prior['frozen_spec']['input_recipe'].get('field_map') or {}
+        features = {mapping.get(c['name'],c['name']) for c in prior['frozen_spec']['input_schema']['columns']}
         if not features or any(not features.intersection(row) for row in records):
             raise ValueError('Prediction rows have no verified input field in common with training')
         return len(records)

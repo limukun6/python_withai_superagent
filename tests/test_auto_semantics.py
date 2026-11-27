@@ -118,7 +118,8 @@ class AutoSemanticsTests(unittest.TestCase):
         with patch('unified_agent.train_legacy',return_value=0) as legacy:
             self.assertEqual(unified_agent.train('task.zip',self.root/'legacy',policy='legacy',task_interpretation='auto'),0)
         legacy.assert_called_once()
-        args=build_parser().parse_args(['unified','task.zip','--run-dir','unused','--policy','legacy'])
+        path, _, _ = standard_case(self.root/'unrestricted.zip')
+        args=build_parser().parse_args(['unified',str(path),'--run-dir','unused','--policy','legacy'])
         with patch('superagent.unified.legacy_command',return_value=0) as command:
             self.assertEqual(args.handler(args),0)
         command.assert_called_once()

@@ -12,7 +12,9 @@ VERSION='semantic-artifact-v1'
 MAX_BYTES=1024*1024
 READERS=('semantic_artifact.py','semantic_contract.py','format_intake.py','format_sources.py',
          'record_streams.py','schema.py','native_schema.py','data.py','metrics.py','metric_declarations.py',
-         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py','native_semantics.py','task_questions.py','structure_tools.py','recovery.py','action_context.py','design_choices.py')
+         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py',
+         'native_semantics.py','task_questions.py','structure_tools.py','recovery.py','task_constraints.py',
+         'task_declarations.py','worked_metrics.py','contract_extraction.py','action_context.py','design_choices.py')
 
 
 class ArtifactUnavailable(ValueError):pass
@@ -111,7 +113,7 @@ def load_artifact(path,package,prediction_package=None,log=None):
     if mode!='unbound' and (query is None or file_digest(query)!=payload['prediction_package_sha256']):
         raise ValueError('Semantic artifact belongs to different prediction bytes')
     from .format_sources import package_files
-    from .semantic_contract import compile_plan,evidence_workspace,_output_overlay,probe_prediction_input
+    from .semantic_contract import BINDING_ERRORS,bind_semantic_rules,compile_plan,evidence_workspace,_output_overlay,probe_prediction_input
     from .data import load_training_task
     from .format_intake import DECODE_ERRORS,adapt_training
     from contextlib import ExitStack
@@ -119,6 +121,7 @@ def load_artifact(path,package,prediction_package=None,log=None):
         files=stack.enter_context(package_files(package));workspace=evidence_workspace(files)
         if payload['proposal'].get('version') in ('semantic-output-v1','semantic-output-v2'):
             try:base=load_training_task(package,read_declarations=True)
+            except BINDING_ERRORS:raise
             except DECODE_ERRORS:base=adapt_training(package)
             task=_output_overlay(base,workspace,payload['proposal'])
         elif payload['proposal'].get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
@@ -128,6 +131,7 @@ def load_artifact(path,package,prediction_package=None,log=None):
         else:
             other=stack.enter_context(package_files(query)) if query is not None and mode=='external' else None
             task=compile_plan(files,workspace,payload['proposal'],prediction_files=other)
+        bind_semantic_rules(task, workspace)
         if task_digest(task)!=payload['task_sha256']:raise ValueError('Restored semantic task differs from its accepted digest')
         if query is not None:probe_prediction_input(query,task,log)
     receipt=dict(artifact_sha256=file_digest(path),task_sha256=payload['task_sha256'],

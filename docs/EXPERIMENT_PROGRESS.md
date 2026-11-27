@@ -1,5 +1,17 @@
 # 实验持续工作记录
 
+## 2026-11-27：P0完成，PR3与A SA22–24已在独立分支整合
+
+当前工作区runs/pr3_joint_1127、分支codex/a-pr3-joint-1127。合并父提交A7e9d142/B4d4222a，保留B早期/最终交付、方法/调度/资产/限制绑定与A预测恢复、共享请求额度、独立凭据、native-v3设计记录。普通/分阶段预测共用selected_prediction，恢复优先于partial保底，发布错误不降级覆盖。迁移工具也绑定B限制；显式local/control不误建付费client。
+
+修复Windows SQLite连接不关闭、输入特征被误识别成算法禁令、worker继承控制stdin导致超时、先验计数漏field_map；Windows控制器退出清理自建进程树。最终396/396零fit/API检查36.078秒，3个有fit夹具明确排除。首次失败、两次正式验收失败和夹具问题均保留，详见docs/batches/SA25_PR3_JOINT_RESULTS_20261127_zh.md。
+
+SA25B前三条：ordinary24行完整14.062秒/2fit；custom40行自定义完整21.985秒/2fit；晚到适配40行两进程相同6.140秒/0fit，引用旧SA23真实回复显式再验证，不是新LLM推理。原B第四条观察器影响asyncio，在进训练前退出；原completion仍failed。SA25C修夹具单独补Windows1/1：早期24行4.938秒交付，控制器丢失后六个launcher/解释器全退出，重放相同；0fit/API/7.235秒。独立审计4/4，两最终模型经正式导出搬到新目录，python -I/no-network/no-fit重放64行相同。
+
+本次P0总8次已确认fit＋1次旧未计量worker，0新API/费用；原未计量记录不改为0。A canonical仍526/known8.428396/unknown17/pending0、原行SHA不变；B原增量待导入缺口不变。无训练/API队列，未冻结。没有新质量评分/原包泛化/Flash恢复增益结论，不重跑B166次历史训练，正式测试/H2未开。
+
+下一步P1：先计划/代码，补任务声明/限制/评分解析失败的LLM查证与受支持解释恢复。之后图像ID/原生-记录适配和不同真实来源原包跨模态完整验收。PR3在GitHub的状态未被本地整合更改，不自动替用户合并目标分支。
+
 ## 2026-11-27：SA24图像设计验证完成；PR3已核对，尚未整合
 
 SA24新增semantic-native-v3设计来源，区分图像参数的task_constraints和自主chosen，约束逐项校验、理由/引用入spec与解释缓存；目标/指标/输出不作为自由设计，原v1/v2提案支持，跨源码旧缓存仍显式迁移。初次360检查有1个v3缓存分派错误，保留checks_01；修复checks_02为360/360、34.109秒、0fit/API。

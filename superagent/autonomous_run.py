@@ -105,6 +105,8 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
 
 def freeze_model(task, spec, metric, choice, executor, directory, log, timeout, *, challenger=False, challenger_prefix='challenger_', provisional_total=None):
     members = choice['members']
+    if 'linear_only' in spec.get('method_restrictions',()) and len(members)!=1:
+        raise ValueError('The task requires a single linear model')
     prefix = 'core_ready_' if provisional_total is not None else challenger_prefix if challenger else ''
     log.write_json(prefix + 'selection.json', dict(choice=choice, scope='frozen before full training and external evaluation'))
     refit = directory/('core_ready_refit_data.joblib' if provisional_total is not None else 'refit_data.joblib')
@@ -171,7 +173,7 @@ def train(package, directory, **options):
 
 def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=300., flash=None,
           flash_setup_issue=None, self_review=False, exploration_rule=None,feedback_reflection=None,reflection_history=None,
-          interpretation='fallback',prediction_package=None,semantic_artifact_from=None):
+          interpretation='fallback', prediction_package=None, semantic_artifact_from=None, await_first_delivery=False):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
     if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
@@ -200,7 +202,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS
-    from .task_opening import MODES as opening_modes, TaskOpening
+    from .task_opening import MODES as opening_modes, PAIRED_MODES, TaskOpening
     from .opening_evidence import instructions, verified_windows
     opening_enabled=feedback_reflection in opening_modes
     if opening_enabled and flash is not None:
@@ -229,19 +231,26 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     from .proposal_value import MODES as proposal_modes, DELIVERED_MODES, ProposalStudy, split_search
     pilot=None
     core_limit=min(10,fit_limit) if opening_enabled else fit_limit
+    def standby_for(training_task):
+        selected = standby(training_task,spec,metric,directory,log)
+        if await_first_delivery:
+            from .first_delivery import release_training
+            release_training()
+        return selected
+
     if feedback_reflection in proposal_modes+DELIVERED_MODES:
         pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
         core_limit=fit_limit-min(5,fit_limit//3)
         try:
             inner,folds,sealed,split_record=split_search(task,seed,partitions)
         except ValueError:
-            standby(task,spec,metric,directory,log)
+            standby_for(task)
             raise
         log.write_json('proposal_partition.json',split_record)
-        checkpoint=standby(inner,spec,metric,directory,log)
+        checkpoint=standby_for(inner)
         pilot.snapshot(checkpoint,0)
     else:
-        checkpoint = standby(task,spec,metric,directory,log)
+        checkpoint = standby_for(task)
         folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
@@ -262,7 +271,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         widths=task.X_train.shape[1] if task.kind=='numeric_tabular' else None
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths)
         generator=MethodSpace(spec,profile,directory)
-        executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log)
+        executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
         observed={f:{} for f in folds}
         flash_available=flash is not None and not feedback_reflection
@@ -289,7 +298,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if excluded:
                         log.event('output_capability_filter',requires='predict_proba',excluded=excluded,scoring_metric=metric.name)
                 executor.caps=caps
-                remaining=core_limit-executor.accounting()['attempted_classifier_fits']
+                spent = executor.accounting()['attempted_classifier_fits']
+                if opening is not None and opening.mode in PAIRED_MODES:
+                    core_limit = fit_limit - opening.reserve_opportunity(caps, observed, blocked, fit_limit, spent)
+                remaining=core_limit-spent
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
                     raise ValueError('No admissible action with known fit cost or deployable observation')
@@ -303,6 +315,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if opening is not None:
+                    corroborate = opening.protect_confirmation(menu,caps,observed,remaining)
+                    if corroborate is not None:
+                        choice,source=corroborate,'last affordable independent confirmation'
                 if pilot is not None:
                     pilot.launch(choice,menu,generator,caps,observed,history,profile,metric,
                                  remaining+fit_limit-core_limit)
@@ -398,6 +414,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     train_score=facts['train_score'],search_score=facts['search_score'],search_accuracy=facts['search_accuracy'],
                     class_recall=facts['class_recall'],paired_errors=paired,training_seconds=facts['training_seconds'],
                     resolved_configuration=facts['resolved_configuration']))
+                meanings=profile.get('label_meanings',{})
+                if meanings:
+                    history[-1]['documented_class_recall']=[
+                        dict(label=label,meaning=meanings[str(label)],
+                             recall=float(np.mean(observation['predictions'][payload['labels']==label]==label)))
+                        for label in metric.labels if str(label) in meanings and np.any(payload['labels']==label)]
                 log.write_json('history.json',history)
                 if scheduled is not None:
                     scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory)

@@ -30,6 +30,8 @@ class TaskSpec:
 
     def record(self):return {'contract_version':VERSION,'objective':'classification','kind':self.kind,
         'metric':self.metric.record(),'input_schema':snapshot(self.input_schema),
+        **({'method_restrictions':snapshot(self.goal_resolution['fields']['method_restrictions']['value'])}
+           if self.goal_resolution and self.goal_resolution['fields'].get('method_restrictions',{}).get('value') else {}),
         'selection_data':'training-derived partitions only','formal_test_available_to_agent':False,
         'goal_resolution':snapshot(self.goal_resolution)}
 

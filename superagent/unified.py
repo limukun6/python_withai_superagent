@@ -93,7 +93,7 @@ def reflection_client(directory,mode='flash'):
     from .task_budget import TaskBudgetAccount, TaskBudgetLedger
     path = os.getenv('SUPERAGENT_RESEARCH_REFLECTION_OUTBOX')
     if not path:
-        return configured_flash(directory,thinking_mode='disabled' if mode=='opening-flash' else None)
+        return configured_flash(directory,thinking_mode='disabled' if mode in ('opening-flash','opening-feedback-flash','opening-feedback-design-flash') else None)
     if os.getenv('SUPERAGENT_OFFLINE') == '1' or os.getenv('SUPERAGENT_PLANNER_LEDGER'):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)
@@ -106,7 +106,7 @@ def reflection_client(directory,mode='flash'):
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash') else None,
+                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash','opening-feedback-flash','opening-feedback-design-flash') else None,
                          account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
@@ -120,13 +120,17 @@ def command(args):
         if (getattr(args,'task_interpretation','fallback') not in ('fallback','auto') or getattr(args,'prediction_input',None) is not None
                 or getattr(args,'semantic_artifact_from',None) is not None):
             raise ValueError('Semantic interpretation and pre-fit input checks require the autonomous policy')
-        return legacy_command(args)
+        from .task_constraints import package_restrictions
+        if not package_restrictions(args.task_package):
+            return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash','opening-feedback-flash','opening-feedback-design-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
-            flash = None if getattr(args,'semantic_artifact_from',None) or reflection and getattr(args,'task_interpretation','fallback')!='proactive' else configured_flash(args.run_dir)
+            interpretation=getattr(args,'task_interpretation','fallback')
+            explicit_local=reflection in ('control','local','opening-local') and interpretation!='proactive'
+            flash = None if getattr(args,'semantic_artifact_from',None) or explicit_local or reflection and interpretation not in ('auto','proactive') else configured_flash(args.run_dir)
     except (OSError, ValueError, RuntimeError) as error:
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
@@ -135,4 +139,5 @@ def command(args):
                  feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None),
                  interpretation=getattr(args,'task_interpretation','fallback'),
                  prediction_package=getattr(args,'prediction_input',None),
-                 semantic_artifact_from=getattr(args,'semantic_artifact_from',None))
+                 semantic_artifact_from=getattr(args,'semantic_artifact_from',None),
+                 await_first_delivery=getattr(args,'await_first_delivery',False))

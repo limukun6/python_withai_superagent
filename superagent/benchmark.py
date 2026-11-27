@@ -109,7 +109,7 @@ def train_candidate(payload_path, candidate, destination, timeout, *, fit_admiss
     if fit_admission_path is not None:
         command.extend(['--fit-admission', str(fit_admission_path)])
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout,
+        result = subprocess.run(command, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=timeout,
                                 cwd=Path(__file__).resolve().parents[1])
     except subprocess.TimeoutExpired:
         elapsed=time.monotonic()-started

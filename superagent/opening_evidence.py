@@ -32,6 +32,8 @@ def _mentions(text, name):
 
 def instructions(package, task):
     columns=[col['name'] for col in task.spec.get('input_schema',{}).get('columns',[]) if isinstance(col,dict) and isinstance(col.get('name'),str)]
+    if task.spec.get('declaration_evidence',{}).get('fields',{}).get('columns',{}).get('status')=='proposed':
+        columns=[]  # Evidence-only names cannot establish a grouping or chronological split.
     try:
         with open_package(package,'train',shared=True) as archive:
             prose=description(archive)
@@ -123,6 +125,9 @@ def make_brief(task, metric, folds, lines, origin):
 
 
 def subset(task,metric,held,check):
+    if check['kind']=='all_of':
+        left,right=check['parts']
+        return subset(task,metric,held,left) & subset(task,metric,held,right)
     if check['kind']=='class':
         return task.y_train[held]==metric.labels[check['class_index']]
     signal=row_signals(task.kind,take(task.X_train,held))[check['signal']]

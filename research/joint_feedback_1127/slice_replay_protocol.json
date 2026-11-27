@@ -1,0 +1,7 @@
+{
+  "scope": "Exploratory follow-up on the three local arms' existing training-fold predictions, registered after training traces and before the development holdout scores are opened. Physical fits 0, API 0.",
+  "eligibility": "Use only the existing chosen hypothesis when it was corroborated on disjoint rows. Its membership must be computable from input alone. Class-label-defined groups are ineligible for prediction routing.",
+  "selection": "On primary training rows try each existing measured candidate, including the incumbent's constituents and the existing post-delivery probe. Within the identified group substitute its predictions and class scores, outside the group preserve the delivered incumbent. Freeze the greatest positive primary-metric gain (name breaks ties), or abstain.",
+  "confirmation": "Check only the frozen winner on the preexisting disjoint confirmation rows if predictions already exist. Require positive gain on both folds and mean gain >= 0.003. Unmeasured is inconclusive. This retrospective has access to prior training measurements and cannot establish out-of-sample utility.",
+  "diagnostic": "Count incorrect incumbent rows in the group rescued by any physically observed method. This oracle count is descriptive, cannot be used as a model, and is never scored on the development evaluation panels. No method is deployed on these data."
+}

@@ -68,6 +68,38 @@ def find_cached(query,root):
     return None
 
 
+def selected_prediction(query,root,output,*,prediction_adapter=None):
+    """Predict with the selected model, recovering its input before any prior fallback."""
+    from .predict import create_predictions,PredictionAdaptationError
+    root=Path(root);model=root/'agent'
+    explicit=prediction_adapter is not None
+    adapter=prediction_adapter if explicit else find_cached(query,root)
+    try:
+        path=(create_predictions(str(query),model,output,prediction_adapter=adapter) if adapter is not None
+              else create_predictions(str(query),model,output))
+    except PredictionAdaptationError as error:
+        if explicit:raise
+        adapter=recover_prediction(query,root,output,error)
+        if adapter is None:raise
+        path=create_predictions(str(query),model,output,prediction_adapter=adapter)
+    spec=json.loads((model/'task_spec.json').read_text(encoding='utf-8'))
+    if adapter is not None:
+        # Publication validates the effective input-ID source, not the old source header.
+        selection=json.loads((model/'final_selection.json').read_text(encoding='utf-8'))
+        spec=load_adapter(adapter,query,model,spec,selection)
+    return path,spec,adapter
+
+
+def record_delivery(adapter,path):
+    """Record only an actually published prediction; every replay gets a fresh receipt."""
+    if adapter is None:return
+    path=Path(path);receipt=json.loads((path.parent/'prediction_manifest.json').read_text(encoding='utf-8'))
+    if sha(path)!=receipt['prediction_sha256']:raise ValueError('Published adapted prediction changed')
+    folder=Path(adapter).parent/'deliveries';folder.mkdir(exist_ok=True)
+    RunLogger(folder).write_json(uuid.uuid4().hex+'.json',dict(status=receipt.get('delivery_status','completed'),
+        prediction_sha256=receipt['prediction_sha256'],prediction_count=receipt['prediction_count'],model_retrained=False))
+
+
 def training_context(root):
     from .prediction_adapter import require
     record=json.loads((Path(root)/'training_protocol.json').read_text(encoding='utf-8'))

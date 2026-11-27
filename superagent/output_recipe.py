@@ -206,4 +206,4 @@ def write_export(package, specification, output, predictions, classes=None, scor
         if recipe['header']: writer.writerow([c['name'] for c in recipe['columns']])
         writer.writerows([_cell(c, i, predicted, ids, classes, scores) for c in recipe['columns']] for i in indices)
     return dict(version=VERSION, columns=recipe['columns'], order=recipe['order'], encoding=recipe['encoding'],
-                delimiter=recipe['delimiter'], template_sha256=template_hash, checks=checks)
+                header=recipe['header'], delimiter=recipe['delimiter'], template_sha256=template_hash, checks=checks)

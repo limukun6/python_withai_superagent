@@ -1,0 +1,7 @@
+# SA25C：只修Windows中断夹具并补验收
+
+SA25B前三条真实路径通过（4fit、0API），Windows夹具在asyncio导入时退出：测试观察器把subprocess.Popen这个可继承的类改成函数，windows_utils.Popen无法继承。属于夹具错误，尚未进入trainer/worker，不归为Agent训练失败。原SA25B失败记录保留，不改成4/4。
+
+生产源码和原run_sa25_joint_delivery.py不改、已完成模型不重训。新scripts/run_sa25c_windows_interruption.py提供保留Popen类继承关系的观察器，只记录自建进程身份；所有观察器异常终止对应测试进程，防止sitecustomize错误被Python忽略后进入真实fit。worker模块执行前暂停，控制器结束后核对全部六个venv launcher/解释器退出。仅使用已冻结ordinary输入。
+
+本批0新增实际fit、0API、费用0，机器约15–30秒。新protocol/results/completion和私有目录，不覆盖SA25B。生产源码及A canonical账本前后完全相同；最后审计将SA25B前三条与SA25C这条明确分开引用，不能冒称单次四条均通过。另使用正式导出器将两个已训练模型搬到新目录，isolated -I/no-network/no-fit入口重放，0新增fit/API。

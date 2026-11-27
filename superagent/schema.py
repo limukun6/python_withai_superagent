@@ -50,13 +50,27 @@ def read_manifest(archive, *, read_metric=False, for_partial_labels=False):
         value.pop('metric',None)
     else:
         metric = manifest_metric(value)
+        if read_metric:
+            from .format_sources import task_documents
+            from .native_schema import description
+            from .worked_metrics import extract
+            # Fully declared historic manifests can carry several unrelated documents.
+            documents = task_documents(archive.namelist())
+            bounded = len(documents) == 1 and archive.getinfo(documents[0]).file_size <= 256*1024
+            prose = description(archive) if bounded or metric is None else ''
+            if 'metric_evidence' in value and value['metric_evidence'] is None:
+                from .metric_declarations import MetricDeclarationError
+                raise MetricDeclarationError('Missing declared worked scoring evidence')
+            _, worked = extract(prose, value.get('metric_evidence'))
+            if worked is not None:
+                metric = declared_metric(prose, evidence=worked, explicit=metric)
+                value['_metric_source'] = 'verified_worked_examples'
+            elif metric is None:
+                metric = declared_metric(prose)
+                if metric:
+                    value['_metric_source'] = 'declared_task_readme'
         if metric:
             value['metric'] = metric
-        elif read_metric:
-            from .native_schema import description
-            metric = declared_metric(description(archive))
-            if metric:
-                value.update(metric=metric,_metric_source='declared_task_readme')
     if value.get('modality') not in ('tabular','text','pair_text','image'):
         raise ValueError('Unsupported declared modality')
     value['_manifest_parent']=str(PurePosixPath(names[0]).parent)

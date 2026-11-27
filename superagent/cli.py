@@ -321,6 +321,7 @@ def build_parser():
     common.add_argument('--seed',type=int,default=18643)
     common.add_argument('--fit-limit',type=int,default=10)
     common.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
+    common.add_argument('--await-first-delivery', action='store_true', help=argparse.SUPPRESS)
     from .planner_review import add_review_arguments
     add_review_arguments(common)
     common.add_argument('--trial-timeout',type=float,default=300)

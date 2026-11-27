@@ -1,0 +1,17 @@
+{
+  "parent": "8073ad3",
+  "question": "Can a general scheduler design a targeted method from anonymous out-of-fit errors, test it at equal cost, and either improve or promptly retain the incumbent on new rows?",
+  "arms": ["feedback-local", "feedback-design"],
+  "sources": {
+    "u31": ["UCI Letter Recognition, first 16000 records per publisher training convention", "https://archive.ics.uci.edu/static/public/59/letter+recognition.zip", "tabular", "balanced_accuracy"],
+    "u46": ["TREC coarse question classes, publisher training pool", "https://cogcomp.seas.upenn.edu/Data/QA/QC/train_5500.label", "text", "macro_f1"],
+    "u72": ["Fashion-MNIST publisher training pool", "https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion", "image", "accuracy"]
+  },
+  "sampling": {"train": 1000, "outer": 320, "pilot_seed": 276101, "replication_seed": 276102, "previous_joint_seed": 271127, "rule": "Remove exact duplicates and conflicting labels, exclude all 1200 registered prior rows on shared sources, then reserve two disjoint stratified panels per source. Never select from publisher tests."},
+  "cost": {"fit_limit_including_final_refits": 11, "wall_seconds": 600, "model_API_requests": 0, "pilot_paths": 6, "maximum_replication_paths": 4},
+  "design": "The same ordinary scheduler, method inventory, first trial and reserved opportunity in both arms. The design arm can propose a binary refinement when two specific classes recur among the incumbent's two most probable labels and there are multiple errors it could correct. Estimate opportunity from the primary out-of-fit evidence only. Elect a probabilistic learner from permitted single-fit capabilities using pair discrimination evidence and the existing representation similarity. Apply it only when that same pair is encountered at prediction time. Retain the original classifications and probabilities elsewhere.",
+  "acceptance": "Freeze pair and underlying method before any specialist fit. Train on the two classes in primary fitting rows, measure the frozen whole-row metric, abandon if no gain. Confirm a positive primary gain on a disjoint training fold. Adopt only if each fold improves and their mean gain is at least 0.003. The third conditional fit is a refit of the specialist on all fitting rows of the pair. The original full-data model is reused without fitting twice. Absent feasible evidence, use the ordinary feedback route.",
+  "replication": "Before reading any outer labels, replicate up to two source types whose pilot design actually passed the two-fold adoption rule. Choose in fixed u31,u46,u72 order if more than two qualify. Run both arms from fresh training rows. No adaptive retries on the same external panel.",
+  "delivery": "All selected paths must write a valid early and final prediction, serve it byte-identically from a fresh process and account independently for every estimator fit. Outer scores and row gains/losses are computed only after all selected paths freeze.",
+  "scope": "Registered research policy only, the default course policy stays available. Statistical units are separate development panels. H1/H2 and course tests are not study inputs."
+}

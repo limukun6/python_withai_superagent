@@ -1,0 +1,13 @@
+# SA25B：修复早期交付对预测字段映射的兼容
+
+A=7e9d142、B=4d4222a的P0整合续批。先读SA25_PR3_JOINT_PLAN和所有失败记录。本批开始前保存计划与run_sa25_joint_delivery.py更新版，冻结新源码和输入。无校园API、无新付费scope。
+
+SA25 delivery_01普通路径超时，账本0已知fit＋1个未计量worker；最小Windows探针证实继承控制stdin会阻止子进程正常完成，DEVNULL成功。修复后delivery_02普通路径完整（2fit），custom最终模型和输出也完整（2fit），但早期先验预测失败。原因是partial_classification.input_count只拿规范训练列名与实际预测字段比较，漏用了已经冻结的field_map；不能把缺早期文件的这一轮算全验收成功。
+
+修复仅将先验计数的已知预测字段映射为真实输入列名，不填值、不改目标/指标/输出含义。增加零fit回归。前两次delivery失败和4次已知训练均保留，不回滚计费或伪称首次成功。首轮未计量worker原记录仍unknown_failed_attempts=1，不把它当确定0fit。
+
+本续批新登记上限4次实际拟合、0 API、0新增课程费用，普通和自定义路径各2fit含refit；晚到适配重放、Windows预fit中断0新fit。新prepared、delivery、audit目录，不重用SA25旧输出。本批4fit是明确新增额度；P0截至续批前4个已知fit＋1个旧未计量worker，续批全跑完为8个已知fit＋原未计量尝试，而非原批6上限内完成。用户持续授权本地自主开发与验收，无需新增付费确认。
+
+四条验收沿用SA25：manifest普通完整solve；复用真实SA21解释的自定义CSV完整solve；复用真实SA23回复显式再验证的晚到适配（不是新LLM推理）；Windows控制器意外退出后保留先验、六个受控launcher/解释器全部退出、独立进程重放。Windows夹具仅观察Popen身份并在worker模块执行前暂停，不改模型/选择；只结束已绑定父子关系的自建进程。不是实际断电或fit内部中断，不证明任意任务。
+
+预计机器2–4分钟。先396项相关零fit检查，冻结所有源码/包/历史回复，再run/audit。全程学校账本526条及原行SHA不变。课程正式测试/H2封存、B已有研究不重跑。若仍失败，保存原因再定下一批，不能悄悄扩大本批或覆写结果。

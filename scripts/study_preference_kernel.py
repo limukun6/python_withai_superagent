@@ -61,12 +61,15 @@ def learn(train, held, y, groups, provider):
     require(np.allclose(model.predict_proba(features(reverse, reverse_context))[:,1]+p[:len(reverse),1],
                         1., rtol=0, atol=1e-6), "Reversing a comparison must invert its probability")
     require(list(model.classes_) == [0, 1] and np.isfinite(p).all(), "Invalid probability matrix")
-    return p, dict(landmarks=len(ids), rank=int(use.sum()), held_probability_sha256=fingerprint(p))
+    return p, dict(landmarks=len(ids), rank=int(use.sum()), positive_probability_sha256=fingerprint(p[:,1]))
 
 
 def run(root):
     out = root/"preference-kernel"
-    out.mkdir(exist_ok=False)
+    out.mkdir(exist_ok=True)
+    require(not (out/"results.json").exists(), "Kernel study already complete")
+    previous = out/"attempt_01_failure.json"
+    prior_fits = read(previous)["completed_fits_without_predictions"] if previous.exists() else 0
     base = root/"analogy-portfolio-raw/portfolio_revised"
     agent = base/"run/agent"
     review, seal = read(agent/"analogy_review.json"), read(base/"sealed.json")
@@ -117,9 +120,18 @@ def run(root):
         fit, held = np.asarray(split["fit"]), np.asarray(split["held"])
         require(not set(groups[fit]) & set(groups[held]), "Training group also appears in evaluation")
         provider = lambda strings: vectors[source][[text_index[s] for s in strings]]
+        receipt_path = out/(fold+"_"+sources[source][:12]+".json")
+        retained = receipt_path.with_suffix(".npy")
+        if retained.exists() and receipt_path.exists():
+            positive = np.load(retained,allow_pickle=False)
+            require(len(positive) == len(held) and read(receipt_path)["positive_probability_sha256"] == fingerprint(positive),
+                    "Retained kernel predictions changed")
+            return dict(anchor, probabilities=np.column_stack((1-positive,positive)))
+        require(not retained.exists() and not receipt_path.exists(), "Incomplete supervised prediction receipt")
         probs, detail = learn([rows[i] for i in fit], [rows[i] for i in held], labels[fit], groups[fit], provider)
+        np.save(retained, probs[:,1], allow_pickle=False)
         candidate = dict(anchor, probabilities=probs)
-        lock(out/(fold+"_"+sources[source][:12]+".json"), dict(fold=fold, source=source, fits=1, **detail))
+        lock(receipt_path, dict(fold=fold, source=source, fits=1, **detail))
         return candidate
     primary = anchors("primary")
     nominees = {}
@@ -147,7 +159,8 @@ def run(root):
     passed = bool(winner is not None and promoted(nominees[winner]["primary_gain"], confirmations,
                   primary_rows=len(primary["labels"])))
     result = dict(nomination=sha(out/"nomination.json"), nominees=nominees, source=winner,
-                  confirmation=confirmations, passed=passed, local_classifier_fits=fits,
+                  confirmation=confirmations, passed=passed, local_classifier_fits=fits+prior_fits,
+                  fits_with_scored_predictions=fits, completed_fits_without_predictions=prior_fits,
                   supervised_share_nominations=len(sources), model_api_calls=0, designated_validation_opened=False,
                   official_test_opened=False, H2_opened=False)
     lock(out/"results.json", result)

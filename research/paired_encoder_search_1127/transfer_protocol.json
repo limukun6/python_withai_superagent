@@ -1,0 +1,7 @@
+{
+  "question": "Can different English sentence encoders improve on the trained GTE-base plus GTE-small equal vote in group-held-out preference tasks?",
+  "models": {"BAAI/bge-base-en-v1.5": "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a", "sentence-transformers/all-distilroberta-v1": "842eaed40bee4d61673a81c92d5689a8fed7a09f"},
+  "comparison": "On the original primary training fold, train one identical pair-aware, regularized linear head for each new frozen encoder and reuse both locked GTE control components. Compare each newcomer alone, in an equal three-component probability vote, and as a 50/50 vote against the incumbent ensemble. Whole connected groups of shared text stay within a fold. Never use released validation feedback for selecting a recipe.",
+  "gate": "Per newcomer lock the single best strictly positive primary challenger, with ties going to the simpler and then more uniform option. Verify on a disjoint confirmation fold. Require positive gains on both and at least 0.003 pooled gain. The best qualifying challenger by worst-fold gain then pooled gain must strictly improve on a third group fold before it can be considered for a fresh autonomous course run. No winning member or order is passed to that run.",
+  "resources": "At most six new supervised fits across the three folds, shared by all mixtures. No paid API, external answers or H2. Compute and compare training-only vectors from public immutable checkpoints. Record every tried configuration and every fit."
+}

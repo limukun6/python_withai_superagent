@@ -13,7 +13,7 @@ from scripts.run_planner_self_review import source_identity
 from scripts.unified_released_study import ROOT, archive, env, read, require, save, sha, title_rows
 from scripts.verify_unified_raw import MEMBERS
 from superagent.ab_sentence import ALTERNATIVES
-from superagent.paired_encoder import VARIANTS
+from superagent.paired_encoder import AVAILABLE_ENCODERS
 
 
 PROTOCOL=ROOT/"research/paired_encoder_search_1127/raw_protocol.json"
@@ -22,7 +22,8 @@ PROTOCOL=ROOT/"research/paired_encoder_search_1127/raw_protocol.json"
 def solve(args):
     folder=args.output/args.arm
     folder.mkdir(parents=True,exist_ok=False)
-    plans={"race":"race_protocol.json","default":"default_protocol.json"}
+    plans={"race":"race_protocol.json","default":"default_protocol.json",
+           "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json"}
     study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
@@ -34,10 +35,10 @@ def solve(args):
     for name in ("SUPERAGENT_PLANNER_KEY_FILE","SUPERAGENT_PLANNER_LEDGER","SUPERAGENT_TASK_BUDGET_ID",
                  "SUPERAGENT_RESEARCH_REFLECTION_OUTBOX","SUPERAGENT_PAIRED_FEATURE_CACHE"):
         settings.pop(name,None)
-    for name in VARIANTS:
+    for name in AVAILABLE_ENCODERS:
         spec=ALTERNATIVES[name]
         settings.pop(spec["env"],None)
-        if args.arm != "original":
+        if args.arm != "original" and (name != "gte_base" or args.arm == "frontier_scale"):
             settings[spec["env"]]=str(args.weights/spec["model"].split("/")[-1])
     if args.arm != "original":
         settings["SUPERAGENT_PAIRED_FEATURE_CACHE"]=str(args.cache)
@@ -46,12 +47,14 @@ def solve(args):
     def execute(arguments,log,environment):
         with (folder/log).open("x") as stream:
             subprocess.run([sys.executable,"-m","unified_agent",*map(str,arguments)],cwd=ROOT,env=environment,
-                           stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,check=True,timeout=1400)
+                           stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,check=True,
+                           timeout=policy["wall_seconds_each"]+180)
     run=folder/"run"
     result=folder/"delivery/predictions.csv"
     save(folder/"protocol.json",dict(runtime_sha256=source_identity(ROOT),plan_sha256=sha(study_plan),arm=args.arm,
          candidate_hint=None,fit_limit=policy["fit_limit_each_including_refit"],raw_sha256=sha(course),features_sha256=sha(args.features)))
-    review=["--feedback-reflection","matched-finalists"] if args.arm=="race" else []
+    modes={"race":"matched-finalists","frontier":"complementary-frontier","frontier_scale":"complementary-frontier"}
+    review=["--feedback-reflection",modes[args.arm]] if args.arm in modes else []
     limits=[] if args.arm=="default" else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
     execute(["solve",course,*review,*limits,
              "--run-dir",run,"--prediction-input",args.features,"--output",result],"solve.log",settings)
@@ -114,7 +117,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race","default"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

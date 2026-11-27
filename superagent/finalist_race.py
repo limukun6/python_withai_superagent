@@ -27,7 +27,7 @@ def observation(records, group, metric):
                 score=float(np.mean(predicted == first["labels"])))
 
 
-def shortlist(primary, metric, allow_votes, available):
+def shortlist(primary, metric, allow_votes, available, *, frontier=False):
     singles = sorted(((name,) for name in available), key=lambda g: (-primary[g[0]]["score"], identity(g)))
     if len(singles) < 3:
         return None
@@ -40,8 +40,22 @@ def shortlist(primary, metric, allow_votes, available):
     def improves_subsets(group):
         value = evaluate(group)
         controls = [evaluate(other) for other in subsets(group)]
-        return (value is not None and all(row is not None for row in controls)
-                and value["score"] > max(records[anchor]["score"], *(r["score"] for r in controls)))
+        if value is None or any(row is None or value["score"] <= row["score"] for row in controls):
+            return False
+        reference = records[anchor]
+        if value["score"] > reference["score"]:
+            return True
+        if not frontier or metric.name != "accuracy":
+            return False
+        paired = compare("primary", reference, value)
+        count = paired["rows"]
+        if count < 2 or not paired["gained"]:
+            return False
+        changes = paired["gained"] + paired["lost"]
+        net = paired["gained"] - paired["lost"]
+        # Row-level uncertainty admits a trial. Independent grouped folds govern deployment.
+        paired_error = np.sqrt(max(0., changes - net * net / count) / (count * (count - 1)))
+        return -paired["delta"] <= paired_error
     blends = []
     if allow_votes:
         names = sorted(available)
@@ -63,8 +77,9 @@ def shortlist(primary, metric, allow_votes, available):
 
 
 class FinalistRace:
-    def __init__(self, logger, folds):
+    def __init__(self, logger, folds, *, frontier=False):
         self.logger = logger
+        self.frontier = frontier
         self.rows = {name: set(map(int, held)) for name, (_, held, _) in folds.items()}
         self.plan = None
         self.cancelled = False
@@ -82,14 +97,32 @@ class FinalistRace:
                     occupied.update(held)
             if not fresh:
                 return None
-            found = shortlist(primary, metric, allow_votes, (set(primary) & set(caps)) - set(blocked))
+            found = shortlist(primary, metric, allow_votes, (set(primary) & set(caps)) - set(blocked),
+                              frontier=self.frontier)
             if found is None:
                 return None
             anchor, challenger, groups, paired = found
             members = sorted(set(anchor) | set(challenger), key=lambda n:(-primary[n]["score"], identity(n)))
             per_fold = sum(caps[n]["classifier_fits"] for n in members)
             reserve = max(sum(caps[n]["refit_classifier_fits"] for n in g) for g in groups)
-            if remaining > per_fold * len(fresh) + reserve + 1 and menu[0]["action"] == "explore":
+            planned = per_fold * len(fresh) + reserve
+            if self.frontier and remaining > planned:
+                leader = primary[anchor[0]]
+                n = len(leader["labels"])
+                score = leader["score"]
+                scale = np.sqrt(max(.02, score * (1-score)) / max(1,n)) if metric.name == "accuracy" else 1 / np.sqrt(max(1,n))
+                for action in menu:
+                    if action["action"] != "explore":
+                        continue
+                    name = action["members"][0]
+                    evidence = action["evidence"]
+                    allowance = 2 * scale * (1 + evidence["novelty"])
+                    if (caps[name]["classifier_fits"] + planned <= remaining and
+                            evidence["expected"] + allowance >= score):
+                        return dict(action, reason="Measure a competitive untried method while retaining the complete confirmation and refit budget.",
+                                    evidence=dict(evidence, reserved_confirm_and_refit=planned, incumbent_score=score,
+                                                  exploration_allowance=float(allowance)))
+            if not self.frontier and remaining > planned + 1 and menu[0]["action"] == "explore":
                 return None
             fresh = fresh[:max(0, (remaining-reserve)//per_fold)]
             if not fresh:

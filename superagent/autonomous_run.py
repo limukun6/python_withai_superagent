@@ -278,7 +278,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         reflection = None
         scheduled = None
         from .finalist_race import FinalistRace
-        race = FinalistRace(log,folds) if feedback_reflection=='matched-finalists' else None
+        race = (FinalistRace(log, folds, frontier=feedback_reflection=='complementary-frontier')
+                if feedback_reflection in ('matched-finalists','complementary-frontier') else None)
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)

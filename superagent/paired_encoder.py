@@ -15,8 +15,11 @@ from .word_familiarity import WordFamiliarity
 
 
 VARIANTS = ("gte", "electra")
+AVAILABLE_ENCODERS = (*VARIANTS, "gte_base")
+VECTOR_SIZES = {"gte": 384, "electra": 260, "gte_base": 768}
 NAMES = {f"{variant}_paired_{head}": (variant, head)
          for variant in VARIANTS for head in ("linear", "quadratic")}
+NAMES["gte_base_paired_linear"] = ("gte_base", "linear")
 
 
 @lru_cache(maxsize=1)
@@ -41,7 +44,7 @@ def encode_texts(variant, texts):
     root = verified_files(spec["env"], spec["files"])
     if root is None:
         raise ValueError("Missing pinned weights for " + variant)
-    if variant == "gte":
+    if variant in ("gte", "gte_base"):
         tokenizer, model = _encoder(root, 512)
         return encode_frozen(texts, tokenizer, model)[0]
     if variant != "electra":
@@ -85,7 +88,7 @@ def bank_name(variant):
 def read_bank(path, modified):
     with np.load(path, allow_pickle=False) as archive:
         keys, vectors = archive["keys"], archive["vectors"]
-    dimension = 384 if path.name.startswith("gte-") else 260
+    dimension = VECTOR_SIZES[path.name.split("-", 1)[0]]
     if vectors.shape != (len(keys), dimension) or not np.isfinite(vectors).all():
         raise ValueError("Invalid frozen feature bank")
     return dict(zip(keys.tolist(), vectors))

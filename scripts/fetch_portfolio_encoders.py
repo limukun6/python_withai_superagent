@@ -5,11 +5,11 @@ import subprocess
 from tempfile import NamedTemporaryFile
 
 from superagent.ab_sentence import ALTERNATIVES
-from superagent.paired_encoder import VARIANTS
+from superagent.paired_encoder import AVAILABLE_ENCODERS
 from tools.encoder_assets import MODELS, matches
 
 DOWNLOADS = dict(MODELS)
-for variant in VARIANTS:
+for variant in AVAILABLE_ENCODERS:
     spec = ALTERNATIVES[variant]
     DOWNLOADS[spec["model"].split("/")[-1]] = dict(repo=spec["model"], revision=spec["revision"], files=spec["files"])
 

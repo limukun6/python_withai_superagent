@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from superagent.finalist_race import FinalistRace
+from superagent.finalist_race import FinalistRace, shortlist
 from superagent.metrics import MetricSpec
 
 
@@ -61,3 +61,23 @@ class TestFinalistRace(unittest.TestCase):
         result=FinalistRace(self.log,self.folds).consider([{"action":"stop"}],self.caps,
                    dict(primary=primary,fresh={}),self.metric,6,set(),True)
         self.assertIsNone(result)
+
+    def test_nearby_vote_can_earn_confirmation_and_spare_fit_cannot_spend_its_reserve(self):
+        a, b, c = self.names
+        bank = {a:self.row("primary", slice(10)),
+                b:self.row("primary", list(range(10,22))+list(range(30,36))),
+                c:self.row("primary", list(range(10,22))+list(range(36,42)))}
+        bank[a]["probabilities"] = None
+        self.assertEqual(len(shortlist(bank,self.metric,True,self.names)[1]),1)
+        anchor, challenger, _, paired = shortlist(bank,self.metric,True,self.names,frontier=True)
+        self.assertEqual(anchor,(a,))
+        self.assertEqual(challenger,(b,c))
+        self.assertEqual((paired["gained"],paired["lost"]),(10,12))
+        caps = dict(self.caps, untried=dict(classifier_fits=1,refit_classifier_fits=1))
+        menu = [dict(action="stop"),dict(action="explore",members=["untried"],evidence=dict(expected=.89,novelty=.4))]
+        race = FinalistRace(self.log,self.folds,frontier=True)
+        observed = dict(primary=bank,fresh={})
+        self.assertEqual(race.consider(menu,caps,observed,self.metric,6,set(),True)["action"],"explore")
+        self.assertIsNone(race.plan)
+        self.assertEqual(race.consider(menu,caps,observed,self.metric,5,set(),True)["action"],"confirm")
+        self.assertEqual(race.plan["reserve"],2)

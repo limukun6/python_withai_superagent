@@ -241,7 +241,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
 
     fusion_holdout = (feedback_reflection == 'fusion-holdout' and len(task.y_train) >= 1000 and
                       (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified') == 'grouped_stratified')
-    if fusion_holdout:
+    high_fidelity = (feedback_reflection == 'near-full-confirmation' and fit_limit >= 12 and len(task.y_train) >= 1000 and
+                     (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified') == 'grouped_stratified')
+    if high_fidelity:
+        from .near_full_confirmation import partition as reserve_near_full
+        inner,folds,sealed,split_record=reserve_near_full(task,seed,partitions)
+        log.write_json('near_full_partition.json',split_record)
+        if len(sealed):
+            core_limit=fit_limit-3
+        checkpoint=standby_for(inner)
+    elif fusion_holdout:
         inner,folds,sealed,split_record=split_search(task,seed,partitions)
         log.write_json('fusion_partition.json',split_record)
         checkpoint=standby_for(inner)
@@ -305,7 +314,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout') and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
@@ -485,6 +494,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 log.write_json('pre_refit_proposal_selection.json',choice)
                 if sum(executor.caps[n]['refit_classifier_fits'] for n in choice['members'])>fit_limit-executor.accounting()['attempted_classifier_fits']:
                     raise ValueError('Retain the published checkpoint; selected refit exceeds remaining fits')
+            if high_fidelity:
+                from .near_full_confirmation import audit as review_near_full
+                choice=review_near_full(task,inner,sealed,choice,menu,history,metric,executor,directory,log,timeout)
             if fusion_holdout:
                 from .fusion_holdout import review as review_fusion
                 choice=review_fusion(task,metric,choice,history,observed,sealed,directory,log)

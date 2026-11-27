@@ -17,7 +17,7 @@ ARMS=("regular","separate","prior")
 REUSE=("weighted","replicas")
 
 
-def prepare(previous,out):
+def prepare(previous,out, *, indices=(0,1,2), protocol=PLAN):
     original=previous/"anonymous/training.zip"
     require(sha(original)==read(previous/"inputs.json")["entry_inputs"],"Origin changed")
     x,y=arrays(original,["C_train.npy","y_train.npy"])
@@ -26,8 +26,8 @@ def prepare(previous,out):
     out.mkdir(exist_ok=False)
     used=set()
     for i,(fit,held) in enumerate(StratifiedGroupKFold(5,shuffle=True,random_state=seed).split(x,y,group)):
-        if i==3:
-            break
+        if i not in indices:
+            continue
         folder=out/str(i)
         packets=folder/"anonymous"
         packets.mkdir(parents=True)
@@ -41,12 +41,12 @@ def prepare(previous,out):
         make_zip(query,[("C_test.npy",npy(x[held]))])
         answer=folder/"outer_answers.joblib"
         joblib.dump(dict(y=y[held],groups=group[held]),answer)
-        save(folder/"inputs.json",dict(protocol=sha(PLAN),source=sha(original),seed=seed,
+        save(folder/"inputs.json",dict(protocol=sha(protocol),source=sha(original),seed=seed,
              entry_inputs=sha(train),entry_queries=sha(query),outer_answers=sha(answer),
              roles=dict(external=dict(rows=len(held),groups=len(groups),digest=key(held)),
                         fit=dict(rows=len(fit),digest=key(fit)))))
-    save(out/"prepared.json",dict(protocol=sha(PLAN),source=sha(original),folds={str(i):sha(out/str(i)/"inputs.json")
-                for i in range(3)},unique_evaluation_groups=len(used)))
+    save(out/"prepared.json",dict(protocol=sha(protocol),source=sha(original),folds={str(i):sha(out/str(i)/"inputs.json")
+                for i in indices},unique_evaluation_groups=len(used)))
 
 
 def grade(out):

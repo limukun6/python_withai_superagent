@@ -131,7 +131,7 @@ if __name__=="__main__":
     p.add_argument("--cap",type=int,choices=(10,32))
     p.add_argument("--table-weight", type=lambda s: Path(s).resolve())
     p.add_argument("--optional-runtime", type=lambda s: Path(s).resolve())
-    p.add_argument("--feedback-mode",choices=["fusion-holdout"])
+    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation"])
     args=p.parse_args()
     if args.action=="prepare":
         prepare(args.archive,args.out)

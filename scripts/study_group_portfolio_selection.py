@@ -64,7 +64,7 @@ def test_fold(out,name,bank,truth,groups,keys):
         learn,confirm,held=[roles==(i+j)%3 for j in range(3)]
         anchor,leader,robust,count=selection({r:p[learn] for r,p in prob.items()},truth[learn],groups[learn],keys)
         candidates={'row':leader,'group':robust}
-        lock(out/f'{name}_{i}_learn.json',dict(anchor=anchor,row_leader=leader,group_nominee=robust,
+        lock(out/f'{name}_{i}_learn.json',dict(anchor=list(anchor),row_leader=list(leader),group_nominee=list(robust),
              eligible_within_one_paired_se=count,learning_rows=int(learn.sum())))
         row_right=((prob[anchor][confirm]>.5)==truth[confirm]).astype(float)
         actions={}
@@ -74,12 +74,12 @@ def test_fold(out,name,bank,truth,groups,keys):
             delta,equal,_=group_stats(alt-row_right,groups[confirm])
             approve=delta>0 and (arm=='row' or equal>=-1e-12)
             final=nominee if approve else anchor
-            actions[arm]=dict(proposal=nominee,confirmation_row_change=delta,confirmation_group_change=equal,
-                              confirmed=approve,selected=final)
+            actions[arm]=dict(proposal=list(nominee),confirmation_row_change=delta,confirmation_group_change=equal,
+                              confirmed=approve,selected=list(final))
         lock(out/f'{name}_{i}_choice.json',actions)
         for arm,action in actions.items():
-            correct[arm][held]=(prob[action['selected']][held]>.5)==truth[held]
-        decisions.append(dict(rotation=i,anchor=anchor,options=len(prob),near_ties=count,
+            correct[arm][held]=(prob[tuple(action['selected'])][held]>.5)==truth[held]
+        decisions.append(dict(rotation=i,anchor=list(anchor),options=len(prob),near_ties=count,
              proposals_different=leader!=robust,decisions_different=actions['row']['selected']!=actions['group']['selected'],
              held_rows=int(held.sum()),actions=actions))
     row,group=correct['row'],correct['group']

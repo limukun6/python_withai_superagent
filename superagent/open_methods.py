@@ -210,7 +210,11 @@ def resolve(kind,name,document):
         spec=document['entries'][name]
         if spec['kind']!=kind:
             raise ValueError('Runtime pipeline has the wrong modality')
-        method=materialize(spec)
+        if spec.get("operator")=="add_masked_context":
+            from .masked_context import materialize as context_method
+            method=context_method(spec)
+        else:
+            method=materialize(spec)
         if method.family!=name:
             raise ValueError('Runtime configuration digest differs')
         return method

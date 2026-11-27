@@ -43,7 +43,9 @@ def model_resources(model):
     def walk(value):
         if id(value) in visited:return
         visited.add(id(value))
-        if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
+        if isinstance(value,AlternativeSentenceFeatures):
+            found.add(value.variant)
+            found.update(getattr(value,"additional_frozen_sentence_variants",()))
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')

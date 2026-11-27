@@ -40,6 +40,11 @@ DEEP_FILES = {
 }
 _ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
 ALTERNATIVES={
+    'masked_roberta':dict(model='FacebookAI/roberta-base',revision='e2da8e2f811d1448a5b465c236feacd80ffbac7b',
+        env='SUPERAGENT_MASKED_ROBERTA_DIR',prefix='',pool='masked_token_surprisal',
+        files={'config.json':(481,'ef0185e2aae6e06c5f105a285006952c340e20c7dbf43c86ec82601b13fc45e9'),
+               'tokenizer.json':(1355863,'847bbeab6174d66a88898f729d52fa8d355fafe1bea101cf960dd404581df70e'),
+               'model.safetensors':(498818054,'5bde1d28afb363d0103324efeb5afc8b2b397fe5e04beabb9b1ef355255ade81')}),
     'gte_base':dict(model='thenlper/gte-base',revision='c078288308d8dee004ab72c6191778064285ec0c',
         env='SUPERAGENT_GTE_BASE_WEIGHTS',prefix='',pool='mean',
         files={'config.json':(618,'88bed05d7640945dd2de4b4e81fbe4dd962289c32fc1c0aacfd13deb7ea90155'),

@@ -134,6 +134,9 @@ def additions(kind, *, include_legacy_methods=True):
                                    swap_augmentation=kind=='pair_text'),partial(fit_sentence,kind=kind)))
         catalog=os.environ.get(PREFERENCE_CATALOG_ENV,'standard')
         all_installed = catalog == 'all-installed'
+        if all_installed:
+            from .local_sentence import candidates as local_sentence_candidates
+            extra.extend(local_sentence_candidates(kind))
         if all_installed and kind == 'pair_text':
             extra.extend(paired_encoder.candidates())
         if kind=='pair_text' and (all_installed or catalog in ('deep','deep-edit','deep-familiarity',JOINT_PREFERENCE,ab_varied_preferences.CATALOG,*TRANSFER_METHODS)) and verified_directory(deep=True) is not None:

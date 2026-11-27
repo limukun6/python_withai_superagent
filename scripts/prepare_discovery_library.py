@@ -27,7 +27,7 @@ def prepare(weights, expanded, record):
             os.link(source,target)
     revisions = {'sentence-transformers/all-mpnet-base-v2':'e8c3b32edf5434bc2275fc9bab85f82640a19130',
                  'sentence-transformers/all-distilroberta-v1':'842eaed40bee4d61673a81c92d5689a8fed7a09f',
-                 'sentence-transformers/paraphrase-MiniLM-L3-v2':'main'}
+                 'sentence-transformers/paraphrase-MiniLM-L3-v2':'4ca70771034acceecb2e72475f72050fcdde4ddc'}
     result = json.loads(record.read_text()) if record.exists() else {}
     for repo,requested in revisions.items():
         use = result.get(repo,{}).get('revision',requested)

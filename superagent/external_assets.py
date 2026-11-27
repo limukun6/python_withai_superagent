@@ -23,6 +23,8 @@ def activate_resource_directory(directory, environment=None):
             if location.is_dir() and pinned_folder(location,files) is not None:
                 env[variable]=str(location)
                 break
+    from .local_sentence import discover
+    discover(root,env)
     if not env.get(WEIGHT_ENV):
         for location in (root/("mobilenet_v3_small-"+WEIGHT_SHA256[:8]+".pth"),root/"vision"/"weights"):
             if location.is_file() and location.stat().st_size==WEIGHT_BYTES:
@@ -39,11 +41,14 @@ def model_resources(model):
     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
     from .confusion_specialist import ClassPairModel
 
+    from .local_sentence import LocalSentenceFeatures
+    modular={}
     found=set();visited=set()
     def walk(value):
         if id(value) in visited:return
         visited.add(id(value))
-        if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
+        if isinstance(value,LocalSentenceFeatures):modular[value.spec["signature"]]=value.resource()
+        elif isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')
@@ -61,6 +66,9 @@ def model_resources(model):
             children=getattr(value,name,None)
             if isinstance(children,(list,tuple,dict)):walk(children)
     walk(model);resources=[];packages=set()
+    if modular:
+        resources.extend(modular[k] for k in sorted(modular))
+        packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
     if 'minilm' in found:
         resources.append(dict(name='minilm',environment_variable='SUPERAGENT_MINILM_WEIGHTS',path_kind='directory',
             model=MODEL,revision=REVISION,files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in FILES.items()}))

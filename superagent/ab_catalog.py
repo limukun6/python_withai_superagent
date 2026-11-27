@@ -84,8 +84,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
-                         resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
-                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
+                         resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION or route=='local_sentence' else 'cpu',
+                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS or route=='local_sentence' else 'shared_baseline'))
     from .task_constraints import permitted
     return [entry for entry in menu if permitted(entry,task.get('method_restrictions',()))]
 

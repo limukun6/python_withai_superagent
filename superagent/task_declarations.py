@@ -96,6 +96,21 @@ def bind(task, archive, *, client=None, log=None, manifest=None):
     from .contract_extraction import proposed_columns
     spec = task.spec
     text, document_hash = read_document(archive)
+    from .worked_metrics import extract
+    from .metric_declarations import declared_metric, manifest_metric
+    _, worked = extract(text, (manifest or {}).get('metric_evidence'))
+    if worked is not None:
+        if manifest and manifest.get('_metric_source')=='verified_worked_examples':
+            resolved = manifest['metric']
+        else:
+            named = None
+            if manifest and manifest.get('_schema_origin')!='native_v1' and manifest.get('_metric_source')!='declared_task_readme':
+                named = manifest_metric(manifest)
+            resolved = declared_metric(text, evidence=worked, explicit=named)
+        spec['metric'] = resolved
+        spec.setdefault('goal_sources', {})['primary_metric'] = 'verified_worked_examples'
+        spec['worked_metric_check'] = dict(metric=resolved, examples=len(worked['examples']),
+                                           candidates=worked['candidates'], scope='task-authored illustrative rows')
     domain = np.unique(task.y_train).tolist()
     schema = spec.get('input_schema',{})
     target = schema.get('target')

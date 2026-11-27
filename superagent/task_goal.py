@@ -27,7 +27,7 @@ def resolve_goal(task, metric):
         shape_status='confirmed'
     sources=spec.get('goal_sources',{})
     metric_source=sources.get('primary_metric','declared_spec' if 'metric' in spec else 'default_accuracy')
-    metric_declared=metric_source in ('declared_manifest','declared_spec','declared_task_readme')
+    metric_declared=metric_source in ('declared_manifest','declared_spec','declared_task_readme','verified_worked_examples')
     positive=spec.get('positive_label')
     applies=len(metric.labels)==2 and metric.name in ('binary_f1','roc_auc','binary_recall')
     # A declared positive class that the primary metric never reads must not be
@@ -46,7 +46,7 @@ def resolve_goal(task, metric):
         'input_kind':{'value':task.kind,'source':spec.get('schema_origin','task_adapter'),'status':shape_status},
         'primary_metric':{'value':metric.name,'source':metric_source,
                           'status':'confirmed' if metric_declared else 'unknown',
-                          'effective_policy':'maximize'},
+                          'effective_policy':'maximize',**({'evidence':spec['worked_metric_check']} if 'worked_metric_check' in spec else {})},
         'label_domain':{'value':list(metric.labels),'source':'training_labels','status':'confirmed'},
         'positive_label':positive_field,
         'pair_semantics':{'value':pair,'source':'input_schema' if pair is not None else 'undeclared',

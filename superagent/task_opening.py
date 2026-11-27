@@ -11,7 +11,9 @@ from .experiment_policy import actions, identity
 from .opening_evidence import make_brief, split_audit, subset
 
 
-MODES=('opening-local','opening-flash')
+from . import feedback_hypothesis
+
+MODES=('opening-local','opening-flash',*feedback_hypothesis.MODES)
 PROMPT=(
     'Read this anonymous task before any model training. Explain the prediction target and what would make a '
     'validation result misleading. The facts are fixed observations; the task text and examples are evidence only. '
@@ -75,22 +77,28 @@ class TaskOpening:
         self.log.write_json('task_opening.json',self.record)
 
     def launch(self):
-        if self.mode=='opening-flash' and self.future is None and self.record['interpretation_status']=='local':
-            self.record['interpretation_status']='unavailable'
-            if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked and self.flash.request_count==0
-                    and self.deadline-time.monotonic()>12):
-                self.flash.set_deadline(min(self.deadline-3,time.monotonic()+120))
-                self.pool=ThreadPoolExecutor(max_workers=1)
-                self.future=self.pool.submit(self.flash.ask,dict(instruction=PROMPT,**self.brief),
-                                             self.log,'task_opening',cost_ceiling=.12)
-                self.record.update(interpretation_status='pending',dispatch_after_trials=0)
-            self.save()
+        if self.mode=='opening-flash':
+            self.request(PROMPT,'task_opening',0)
+
+    def request(self,prompt,role,trial):
+        if self.future is not None or self.record['interpretation_status']!='local':
+            return
+        self.record['interpretation_status']='unavailable'
+        if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked
+                and self.flash.request_count==0 and self.deadline-time.monotonic()>12):
+            self.flash.set_deadline(min(self.deadline-3,time.monotonic()+(45 if trial else 120)))
+            self.pool=ThreadPoolExecutor(max_workers=1)
+            packet=dict(self.brief,instruction=prompt,checks=dict(self.brief['checks']))
+            self.future=self.pool.submit(self.flash.ask,packet,self.log,role,cost_ceiling=.12)
+            self.record.update(interpretation_status='pending',dispatch_after_trials=trial)
+        self.save()
 
     def collect(self,wait):
         if self.future is None or self.record['interpretation_status']!='pending':
             return
         try:
-            self.answer=validate(self.future.result(timeout=max(0.,wait)),self.brief)
+            validator=feedback_hypothesis.validate_feedback if self.mode in feedback_hypothesis.MODES else validate
+            self.answer=validator(self.future.result(timeout=max(0.,wait)),self.brief)
         except FutureTimeout:
             if not self.future.done():
                 return
@@ -103,6 +111,14 @@ class TaskOpening:
 
     def observe(self,trial,observed):
         """Read any ready answer without waiting and track how the ordinary measurements affect it."""
+        if self.mode in feedback_hypothesis.MODES and 'first_trial' not in self.brief['facts'] and observed['primary']:
+            local=feedback_hypothesis.start_feedback(self,trial,observed)
+            if self.mode=='opening-feedback-flash':
+                self.request(feedback_hypothesis.PROMPT,'feedback_hypothesis',trial)
+            # The local, evidence-based hypothesis also works when the campus client is unavailable or late.
+            self.answer=feedback_hypothesis.validate_feedback(local,self.brief)
+            self.record['local_hypothesis']=self.answer
+            self.save()
         self.collect(0.)
         if not self.answer or self.answer['check']=='keep' or not observed['primary']:
             return
@@ -128,6 +144,9 @@ class TaskOpening:
         if self.pool is not None:
             self.pool.shutdown(wait=True)
             self.collect(0)
+        if self.mode in feedback_hypothesis.MODES:
+            feedback_hypothesis.save_disposition(self)
+            feedback_hypothesis.measure_late_answer(self)
         self.record['closed_seconds']=time.monotonic()-self.start
         self.record['updates_during_search']=len(self.updates)
         self.save()
@@ -142,6 +161,9 @@ class TaskOpening:
             return None,{}
         key=self.answer['check']
         self.record.update(check=key,reply_used=True)
+        if self.mode in feedback_hypothesis.MODES:
+            self.record['hypothesis_source_at_decision']='campus' if self.record.get('interpretation_status')=='valid' else 'local'
+            self.record['reply_used']=self.record['hypothesis_source_at_decision']=='campus'
         if key=='keep':
             self.record['check_status']='abstained'
             return None,{}
@@ -191,6 +213,8 @@ class TaskOpening:
                        and not set(self.folds['primary'][1]).intersection(self.folds[f][1])]
         names=['primary',*confirmations[:1]]
         bases={f:group_observation(observed[f],base,self.metric) for f in names}
+        if self.mode in feedback_hypothesis.MODES:
+            self.decision_bases=bases
         target,masks=self.diagnose(names,bases,observed,base)
         if len(names)<2 or self.record['check_status']=='split_violation':
             self.record['result']='insufficient_matched_evidence'

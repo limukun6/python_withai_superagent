@@ -77,7 +77,7 @@ def reflection_client(directory,mode='flash'):
     from .task_budget import TaskBudgetAccount, TaskBudgetLedger
     path = os.getenv('SUPERAGENT_RESEARCH_REFLECTION_OUTBOX')
     if not path:
-        return configured_flash(directory,thinking_mode='disabled' if mode=='opening-flash' else None)
+        return configured_flash(directory,thinking_mode='disabled' if mode in ('opening-flash','opening-feedback-flash') else None)
     if os.getenv('SUPERAGENT_OFFLINE') == '1' or os.getenv('SUPERAGENT_PLANNER_LEDGER'):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)
@@ -90,7 +90,7 @@ def reflection_client(directory,mode='flash'):
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash') else None,
+                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash','opening-feedback-flash') else None,
                          account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
@@ -106,7 +106,7 @@ def command(args):
             return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash','opening-feedback-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if reflection else configured_flash(args.run_dir)
@@ -115,4 +115,5 @@ def command(args):
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
                  wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
                  self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None),
-                 feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None))
+                 feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None),
+                 await_first_delivery=getattr(args,'await_first_delivery',False))

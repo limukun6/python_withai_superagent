@@ -7,6 +7,10 @@ class MetricDeclarationError(ValueError):
     pass
 
 
+class UnknownMetricWording(MetricDeclarationError):
+    pass
+
+
 ALIASES = {
     'accuracy': ('accuracy','classification accuracy','accuracy score','准确率'),
     'balanced_accuracy': ('balanced accuracy','balanced accuracy score','balanced classification accuracy','平衡准确率'),
@@ -123,7 +127,7 @@ def announced_clause(raw):
     return ' '.join(kept)
 
 
-def declared_metric(text):
+def text_metric(text):
     declarations = []
     text = re.sub(r'((?:\b(?:primary |evaluation |scoring )?metric|主指标|评价指标|评估指标)\s*[:：]?)\s*\n\s*(?=\S)',r'\1 ',text,flags=re.I)
     for raw in re.findall(r'[^.!?。！？;\n；]+[.!?。！？]?',text):
@@ -151,6 +155,28 @@ def declared_metric(text):
         return None
     active = [r for r in declarations if r[0]] or declarations
     names = set().union(*(r[1] for r in active))
+    if not names and all(not PATTERN.search(normalized(r[2])) or
+            (re.search(r'harmonic mean|调和平均',r[2],re.I) and
+             set(PATTERN.findall(normalized(r[2]))) <= {'precision','recall'}) for r in active):
+        raise UnknownMetricWording('Unresolved announced evaluation metric: '+active[0][2])
     if any(r[3] for r in active) or len(names) != 1:
         raise MetricDeclarationError('Unresolved or conflicting announced evaluation metric: '+' / '.join(r[2] for r in active)[:300])
     return names.pop()
+
+
+def declared_metric(text, *, evidence=None, explicit=None):
+    from .worked_metrics import extract, verify
+    prose, evidence = extract(text, evidence)
+    if evidence is None:
+        return explicit if explicit is not None else text_metric(prose)
+    try:
+        named = text_metric(prose)
+    except UnknownMetricWording:
+        named = None
+    if explicit is not None and named is not None and named != explicit and 'f1' not in (named,explicit):
+        raise MetricDeclarationError('Manifest metric disagrees with the task scoring instruction')
+    if named == 'f1' and explicit is not None and not explicit.endswith('_f1') and explicit!='f1':
+        raise MetricDeclarationError('Manifest metric disagrees with an F1 instruction')
+    if explicit == 'f1' and named is not None and not named.endswith('_f1') and named!='f1':
+        raise MetricDeclarationError('Manifest F1 declaration disagrees with the scoring instruction')
+    return verify(evidence, named if explicit in (None,'f1') and named is not None else explicit)

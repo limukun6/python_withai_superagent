@@ -125,6 +125,9 @@ def make_brief(task, metric, folds, lines, origin):
 
 
 def subset(task,metric,held,check):
+    if check['kind']=='all_of':
+        left,right=check['parts']
+        return subset(task,metric,held,left) & subset(task,metric,held,right)
     if check['kind']=='class':
         return task.y_train[held]==metric.labels[check['class_index']]
     signal=row_signals(task.kind,take(task.X_train,held))[check['signal']]

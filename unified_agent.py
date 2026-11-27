@@ -168,44 +168,82 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=
     return arguments
 
 
-def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False,exploration_rule=None,
-                   feedback_reflection=None,reflection_history=None):
-    """Keep prediction delivery in a separate process from training and its network client."""
+def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False, exploration_rule=None,
+                   feedback_reflection=None, reflection_history=None, prediction_input=None, output=None):
+    """The training process only sees training inputs and a one-byte acknowledgement."""
     import os
     import signal
     import subprocess
     import sys
+    import time
     from superagent.autonomous_checkpoint import interrupted
+    package, run_dir = Path(package).resolve(), Path(run_dir).resolve()
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
-    package,run_dir=Path(package).resolve(),Path(run_dir).resolve()
+    preview = prediction_input is not None
+    if preview != (output is not None):
+        raise ValueError('First delivery needs both prediction features and an output path')
+    if preview:
+        prediction_input, output = Path(prediction_input).resolve(), Path(output).resolve()
+        from superagent.first_delivery import guard_output
+        guard_output(output, run_dir, (package, prediction_input))
     arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history)
     inherited = ['--exploration-rule', arguments.exploration_rule] if arguments.exploration_rule else []
     if feedback_reflection:
         inherited.extend(['--feedback-reflection',feedback_reflection])
     if arguments.reflection_history:
         inherited.extend(['--reflection-history',arguments.reflection_history])
+    if preview:
+        inherited.append('--await-first-delivery')
+    directory = Path(__file__).resolve().parent
+    deadline = time.monotonic()+arguments.time_limit+30
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
                               '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
-                              *review_flags(self_review), *inherited],
-                             cwd=Path(__file__).resolve().parent,start_new_session=os.name=='posix')
+                              *review_flags(self_review), *inherited], cwd=directory,
+                             stdin=subprocess.PIPE if preview else subprocess.DEVNULL, start_new_session=os.name=='posix')
+    def stop_child(force):
+        if child.poll() is None:
+            if os.name == 'posix':
+                try:
+                    os.killpg(child.pid, signal.SIGKILL if force else signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+            elif force:
+                child.kill()
+            else:
+                child.terminate()
+        child.wait()
     try:
-        code = child.wait(timeout=arguments.time_limit+30)
+        if preview:
+            prior = run_dir/'agent'/'prior_selection.json'
+            while not prior.is_file() and child.poll() is None and time.monotonic()<deadline:
+                time.sleep(.05)
+            if prior.is_file() and child.poll() is None:
+                # The exporter has no planner or training callback. Training receives the same byte even
+                # if the prediction input is invalid; its choice of experiments cannot depend on the export.
+                with (run_dir/'first_delivery.log').open('w',encoding='utf-8') as log:
+                    subprocess.run([sys.executable,'-m','superagent.first_delivery',str(prediction_input),
+                                    str(run_dir),str(output)], cwd=directory,stdin=subprocess.DEVNULL,
+                                   stdout=log,stderr=subprocess.STDOUT,timeout=max(.01,deadline-time.monotonic()))
+                try:
+                    child.stdin.write(b'G')
+                    child.stdin.flush()
+                except BrokenPipeError:
+                    pass
+        code = child.wait(timeout=max(.01,deadline-time.monotonic()))
         reason = 'Training process exited with status '+str(code)
     except subprocess.TimeoutExpired:
-        if os.name == 'posix':
-            os.killpg(child.pid,signal.SIGKILL)
-        else:
-            child.kill()
-        child.wait()
+        stop_child(True)
         code, reason = 2, 'Training exceeded its configured wall time plus 30-second shutdown grace'
     except KeyboardInterrupt:
-        if os.name == 'posix':
-            os.killpg(child.pid,signal.SIGTERM)
-        else:
-            child.terminate()
-        child.wait()
+        stop_child(False)
         raise
+    finally:
+        if child.stdin is not None:
+            try:
+                child.stdin.close()
+            except BrokenPipeError:
+                pass
     if code and interrupted(run_dir/'agent',reason):
         return 0
     return code
@@ -226,7 +264,7 @@ def main():
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":
             command.add_argument("--prediction-input", required=True, type=Path,
-                                 help="Prediction features, used only after the model is frozen")
+                                 help="Features read by a separate exporter after a training checkpoint is frozen")
         if action == "train":
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
     args = parser.parse_args()
@@ -236,27 +274,38 @@ def main():
                      self_review=args.self_review,exploration_rule=args.exploration_rule,
                      feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history)
     source=args.task_package
+    if args.action == 'predict':
+        from superagent.first_delivery import guard_output
+        guard_output(args.output.resolve(), args.run_dir.resolve(), (source.resolve(),))
     if args.action=='solve':
         code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,
                             self_review=args.self_review,exploration_rule=args.exploration_rule,
-                            feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history)
+                            feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history,
+                            prediction_input=args.prediction_input,output=args.output)
         if code:
             return code
         source=args.prediction_input
     from superagent.format_intake import DECODE_ERRORS
     attempt = args.output.parent / 'prediction_attempt.json'
+    staged = args.action == 'solve' or (args.run_dir/'first_delivery'/'prediction_manifest.json').is_file()
     try:
-        path = create_predictions(str(source), args.run_dir / "agent", args.output)
+        if staged:
+            from superagent.first_delivery import final_prediction
+            path = final_prediction(source.resolve(), args.run_dir.resolve(), args.output.resolve())
+        else:
+            path = create_predictions(str(source), args.run_dir / 'agent', args.output)
     except DECODE_ERRORS + (RuntimeError,) as error:
         args.output.parent.mkdir(parents=True,exist_ok=True)
-        attempt.write_text(json.dumps(dict(delivery_status='unavailable', generated_by_this_attempt=False,
-            reason=str(error)[:500], error_type=type(error).__name__, prediction_count=None),
-            ensure_ascii=False,indent=2),encoding='utf-8')
+        from superagent.events import RunLogger
+        RunLogger(args.output.parent).write_json(attempt.name,dict(delivery_status='unavailable',
+            generated_by_this_attempt=False,reason=str(error)[:500],error_type=type(error).__name__,prediction_count=None))
         print(attempt)
         return 2
-    receipt = json.loads((args.output.parent/'prediction_manifest.json').read_text(encoding='utf-8'))
-    attempt.write_text(json.dumps(dict(delivery_status=receipt.get('delivery_status','completed'),
-        generated_by_this_attempt=True,prediction_count=receipt['prediction_count']),indent=2),encoding='utf-8')
+    if not staged:
+        from superagent.events import RunLogger
+        receipt = json.loads((args.output.parent/'prediction_manifest.json').read_text(encoding='utf-8'))
+        RunLogger(args.output.parent).write_json(attempt.name,dict(delivery_status=receipt.get('delivery_status','completed'),
+            generated_by_this_attempt=True,prediction_count=receipt['prediction_count']))
     print(path)
     return 0
 

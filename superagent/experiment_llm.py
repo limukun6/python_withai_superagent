@@ -108,7 +108,7 @@ class ExperimentLLM:
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
         limits={'experiment_proposal':1536,'protected_experiment_proposal':4096,'feedback_reflection':3072,
-                'task_opening':4096,'contract_extraction':128}
+                'task_opening':4096,'feedback_hypothesis':768,'contract_extraction':128}
         max_tokens=limits.get(role,16384 if self.streaming else 2048)
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
                    * self.price.input_rmb_per_million + max_tokens * self.price.output_rmb_per_million) / 1e6
@@ -122,7 +122,7 @@ class ExperimentLLM:
             request_body.pop('cache')
             request_body.update(stream=True, stream_options={'include_usage': True})
         thinking_mode=self.thinking_mode
-        if role=='contract_extraction' and self.model.casefold()=='deepseek-v4.1-flash':
+        if role in ('contract_extraction','feedback_hypothesis') and self.model.casefold()=='deepseek-v4.1-flash':
             thinking_mode='disabled'
         if thinking_mode is not None:
             request_body["thinking"] = {"type": thinking_mode}

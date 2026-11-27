@@ -54,11 +54,20 @@ class ScopedQuestionsTests(unittest.TestCase):
             answer=deepcopy(self.answer);answer['uncertainties']=[note(text=question)]
             with self.subTest(question=question):self.assertEqual(len(self.native(answer).y_train),8)
 
-    def test_binary_roc_and_f1_positive_questions_are_blocking(self):
-        for metric in ['roc_auc','binary_f1']:
-            answer=deepcopy(self.answer);answer['plan']['metric']=metric
-            with self.subTest(metric=metric),self.assertRaisesRegex(ValueError,'positive_label'):
-                self.native(answer)
+    def test_binary_f1_positive_question_remains_unresolved(self):
+        answer=deepcopy(self.answer);answer['plan']['metric']='binary_f1'
+        with self.assertRaisesRegex(ValueError,'positive_label'):self.native(answer)
+
+    def test_binary_auc_continues_with_its_named_normalized_score_interface(self):
+        answer=deepcopy(self.answer);answer['plan']['metric']='roc_auc'
+        task=self.native(answer);item=task.spec['uncertainty_resolution']['items'][0]
+        self.assertEqual(item['reason'],'binary_auc_invariant_under_swapping_named_class_probabilities')
+        self.assertEqual(item['facts']['score_interface'],'normalized_class_probability_matrix_with_class_order')
+
+    def test_auc_continuation_does_not_guess_an_unidentified_output_probability_column(self):
+        answer=deepcopy(self.answer);answer['plan']['metric']='roc_auc'
+        answer['plan']['output']['columns']=[dict(name='Score',kind='probability',class_label=None)]
+        with self.assertRaisesRegex(ValueError,'probability class'):self.native(answer)
 
     def test_questioned_positive_label_is_not_ignored_when_plan_asserts_one(self):
         answer=deepcopy(self.answer);answer['plan']['positive_label']='a';answer['evidence']['positive_label']=['doc:README.md:0']
@@ -123,12 +132,12 @@ class ScopedQuestionsTests(unittest.TestCase):
                 reader.assert_not_called()
 
     def test_diagnostic_retains_field_and_machine_dependency_facts(self):
-        answer=deepcopy(self.answer);answer['plan']['metric']='roc_auc'
+        answer=deepcopy(self.answer);answer['plan']['metric']='binary_f1'
         try:self.native(answer)
         except ValueError as error:
             diagnostic=_diagnostic(error,'contract_probe')
         self.assertEqual(diagnostic['uncertainty_fields'],['positive_label'])
-        self.assertEqual(diagnostic['uncertainty_dependency']['metric'],'roc_auc')
+        self.assertEqual(diagnostic['uncertainty_dependency']['metric'],'binary_f1')
         self.assertEqual(diagnostic['uncertainty_dependency']['class_count'],2)
 
     def test_artifact_roundtrips_all_three_new_response_versions(self):

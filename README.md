@@ -1,5 +1,7 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+**11月27日，A线主线纠正为失败后自主恢复。** 用户明确要求LLM查证、修复或换路线使任务继续，不能以“阻断正确”替代完整Agent交付。已审计跨阶段恢复的缺口，并解除内部AUC的一条误阻断；完整RecoveryController仍待实现。本批0fit/0API。[恢复架构与主验收](docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md) · [首项纠偏证据](docs/batches/SA18_RECOVERY_CORRECTION_RESULTS_20261127_zh.md)
+
 **11月27日，字段疑问由实际任务判定是否阻断。** LLM报告问题字段，执行器核对类别数、指标和类型，保留不适用的疑问继续执行。292项检查，真实受控面板1放行/2阻断均符合预期，0fit/3API/课程¥0.017223；尚未证明自然任务节省费用。[结构、原始误阻断与证据边界](docs/batches/SA17_scoped_questions_results_20261127_zh.md)
 
 **11月27日，人用CLI默认自动读题。** 本地能读输入也会在模型已配置且有文档时复核输出要求；显式manifest输入保持权威。274项检查，裸solve自主完成原ID、三类映射、指定类别概率和管道/BOM输出，2fit/2API/课程¥0.008978、27.781秒。程序化API和显式fallback保留旧默认，不代表独立未知任务全成功。[结构、兼容约定和实际证据](docs/batches/SA16_auto_semantic_review_results_20261127_zh.md)

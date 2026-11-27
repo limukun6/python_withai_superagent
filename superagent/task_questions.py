@@ -64,7 +64,10 @@ def resolve_questions(task,response,notes):
         field=item['field'];reason=None
         if field=='positive_label' and not facts['positive_label_declared']:
             if len(metric.labels)>2:reason='multiclass_metric_has_no_single_positive_class'
-            elif metric.name not in ('binary_f1','roc_auc'):reason='metric_does_not_require_positive_class_orientation'
+            elif metric.name=='roc_auc':
+                reason='binary_auc_invariant_under_swapping_named_class_probabilities'
+                facts['score_interface']='normalized_class_probability_matrix_with_class_order'
+            elif metric.name!='binary_f1':reason='metric_does_not_require_positive_class_orientation'
         elif field=='image_preprocessing' and task.kind!='image':reason='decoded_task_is_not_an_image_task'
         if reason is None:fail('Unresolved required task semantics: '+field,[field],facts)
         resolved.append(dict(**deepcopy(item),status='not_required_for_compiled_task',reason=reason,

@@ -1,5 +1,17 @@
 # 实验持续工作记录
 
+## 2026-11-27：用户纠正主目标，SA18改为自主恢复与正确交付
+
+用户明确不是要增加阻断，而是LLM介入后任务继续运行。已更新AGENTS和主计划docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md：失败动作→FailureRecord/RecoveryState→LLM查证/改适配/换路线→验证→继续。单个动作拒绝不能结束整个Agent；主验收是无人干预恢复后正确交付、错误完成率和资源代价。
+
+源码盘点确认semantic_training两次拒绝后抛异常，_train直接return record_input_failure，完整跨阶段RecoveryController尚未实现。不得把新增工具/检查数量或“阻断正确”当主成果；下一批应把结构工具与恢复控制、正式继续执行一起实现。
+
+已纠正一条实际过度限制：内部binary ROC-AUC使用完整归一化、带类标签概率矩阵，类方向交换数值不变。4种固定合成评分验证；解除仅因缺语义正类的误阻断，SA17真实U2原回复未改即可重新编译/预检继续。未指定输出概率类别仍不猜，binary_f1等未决含义仍需进入恢复。SA17旧JSON保留，报告已加校正说明。294/294回归25.203秒，本批0fit/0API/¥0。
+
+报告batches/SA18_RECOVERY_CORRECTION_RESULTS_20261127_zh.md；证据research/sa18_recovery_inventory_01、sa18_auc_orientation_probe_01、sa18_auc_continuation_replay_02、sa18_recovery_checks_01。首轮回放完整性检查是恒等比较，已保留并在_02用前后SHA真正复核；不把首轮当SHA证据。
+
+只读核账仍485/known8.129441/unknown16/pending0，无队列、未冻结。旧16未知授权保持，新unknown仍停当批付费；可以切本地/保存成果继续其他可行工作，不重复原失败请求。不能宣称完整RecoveryController已实现或任何输入都能正确完成。
+
 ## 2026-11-27：SA17字段疑问＋执行依赖核对完成，受控3/3
 
 基线1ecc4c9。新增task_questions.py：LLM报告{field,question,evidence_refs}，程序根据实际类别/指标/类型决定是否必需；不让模型自报低风险，不按文本关键词跳过。新协议task-v3/native-v2/output-v2，老空列表兼容、旧非空文字仍阻断；18个reader＋resolution摘要入缓存/迁移。292/292相关检查23.047秒、0fit/API（18新＋274原）。

@@ -9,7 +9,7 @@ from scipy.sparse import csr_matrix, vstack
 from sklearn.linear_model import LogisticRegression
 
 from .ab_preference_output import CanonicalPreferencePipeline
-from .ab_sentence import ALTERNATIVES, AlternativeSentenceFeatures, _encoder, encode_frozen, verified_files
+from .ab_sentence import ALTERNATIVES, AlternativeSentenceFeatures, _batch, verified_files
 from .models import Candidate
 from .word_familiarity import WordFamiliarity
 
@@ -45,8 +45,7 @@ def encode_texts(variant, texts):
     if root is None:
         raise ValueError("Missing pinned weights for " + variant)
     if variant in ("gte", "gte_base"):
-        tokenizer, model = _encoder(root, 512)
-        return encode_frozen(texts, tokenizer, model)[0]
+        return _batch(root,512,texts,prefix='',pool='mean')[0]
     if variant != "electra":
         raise ValueError("Unknown encoder")
     tokenizer, model = discriminator(root)

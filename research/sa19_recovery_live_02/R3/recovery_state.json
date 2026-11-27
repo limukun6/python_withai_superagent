@@ -1,0 +1,114 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "model_exported",
+  "status": "training_completed",
+  "goal": {
+    "task_kind": "numeric_tabular",
+    "metric": {
+      "name": "balanced_accuracy",
+      "labels": [
+        "0",
+        "1",
+        "2"
+      ],
+      "direction": "maximize"
+    }
+  },
+  "observed_evidence": [
+    {
+      "member": "train.csv",
+      "source": "training",
+      "codec": "delimited",
+      "collection": null,
+      "delimiter": ",",
+      "fields": [
+        "m00",
+        "m01",
+        "m02",
+        "m03",
+        "m04",
+        "m05",
+        "m06",
+        "m07",
+        "m08",
+        "m09",
+        "m10",
+        "m11",
+        "m12",
+        "label"
+      ],
+      "row_values_disclosed": false,
+      "requested_collection": null,
+      "collection_normalized": false,
+      "collection_note": "Selected existing structure",
+      "package_source": "task",
+      "requested_source": null,
+      "source_resolution": "unique_package_membership"
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "task_adaptation",
+      "diagnostic": {
+        "stage": "task_adaptation",
+        "code": "ValueError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "signature": "8085b2123d5ecd5eef4820b1ff3a62c6f47a9f81aaa7fb47ba1dfa6d2b0e5a7f",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false
+    },
+    {
+      "stage": "training_method",
+      "diagnostic": {
+        "code": "RuntimeError",
+        "message": "Selected candidate failed in the worker; blocked for this run. Choose another executable method.",
+        "candidate": "open_RandomForestClassifier_d46f0b601bc653a677dc"
+      },
+      "action_sha256": "92b02503dc723c945a69fc74636b8c249b5abc597a708a079e65eb9622ed2825",
+      "signature": "46b909b5d76bb982e8f63a6b98516b7067496c3c854ffc72bab002d3afe11612",
+      "evidence_count": 1,
+      "repeated_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_header",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "cited_contract_and_prediction_preflight",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "repair_adapter",
+    "revise_interpretation",
+    "alternate_method"
+  ],
+  "available_artifacts": [
+    "selected_model.joblib",
+    "task_spec.json",
+    "final_selection.json"
+  ],
+  "attempted_classifier_fits": 3,
+  "remaining_requests": 0,
+  "remaining_fits": 1,
+  "remaining_seconds": 269.0
+}

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "purpose": "Test whether an agent can use early training errors to choose a better next experiment on independently sourced development tasks. The course validation reruns only check the integrated default.",
+  "sources": {
+    "d14": ["UCI Chess King-Rook vs King-Pawn", "https://archive.ics.uci.edu/static/public/22/chess+king+rook+vs+king+pawn.zip", "categorical", "balanced_accuracy"],
+    "d37": ["TREC question classification, coarse labels, original train pool", "https://cogcomp.seas.upenn.edu/Data/QA/QC/train_5500.label", "text", "macro_f1"],
+    "d58": ["Zalando Fashion-MNIST, original train images and labels", "https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion", "image", "accuracy"]
+  },
+  "sampling": {"training": 900, "evaluation": 300, "seed": 271127, "design": "Stratify after grouping exact feature duplicates and removing conflicting duplicate labels. Anonymous packages preserve task features and original target. Never use publisher test data."},
+  "arms": ["feedback-control", "feedback-local"],
+  "limits": {"physical_fits_including_refits_per_arm": 11, "wall_seconds_per_arm": 600, "local_model_api": 0},
+  "common": "Same data, seed, environment, executable registry, opportunity priced after first training feedback, prefit delivery and incumbent protection. The control ranks affordable alternatives by its ordinary planner; the treatment can prioritize an alternative rescuing errors on a slice supported on two disjoint internal folds.",
+  "outcomes": ["valid export and byte-identical fresh-process reload", "actual fit count", "first-error hypothesis, second-fold verdict, whether tested candidate changed", "adoption requires positive gain on both folds and mean gain meeting the existing matched-review threshold", "all frozen external primary scores and row-correct counts, with paired disagreements"],
+  "campus_gate": "Choose the first case (d14,d37,d58) whose local path corroborates a first-trial hypothesis on two disjoint folds and has a priced affordable alternative at decision time. Freeze this selection before opening any development evaluation labels. At most one additional campus-arm run with the same fit budget, at most one new Flash call and an incremental RMB 0.12 ceiling. No reroll of the request. A local-only result cannot establish an LLM benefit.",
+  "boundaries": "Agent and fit workers cannot read outer truth. Only export and bounded schema preflight may see the separate unlabeled input. All arms freeze before evaluator scoring. No official tests, H1, H2, or repeated validation tuning. Results from declared packets do not verify unmodified upstream file-format intake."
+}

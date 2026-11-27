@@ -1,0 +1,42 @@
+{
+  "recoverable": true,
+  "expected": {
+    "kind": "numeric_tabular",
+    "metric": "balanced_accuracy",
+    "classes": [
+      "0",
+      "1",
+      "2"
+    ],
+    "training_rows": 142,
+    "prediction_rows": 36,
+    "training_features_sha256": "c8cbc01b47b4d26d6db899861f8b89595b0e41abd1c437e5943e29bfd9ca297e",
+    "training_labels_sha256": "545d22978200b485f4df89994481ce622cf50a884d04564ce175066a0db36a21",
+    "prediction_shape": [
+      36,
+      13
+    ],
+    "prediction_features_sha256": "23d9238416bbd5ba84fd4633d0519e6a801216e91e5de9723e99c16e2c8850ba",
+    "output": {
+      "version": "output-csv-v1",
+      "delimiter": ",",
+      "encoding": "utf-8",
+      "header": true,
+      "columns": [
+        {
+          "name": "Row",
+          "kind": "row_index",
+          "start": 1
+        },
+        {
+          "name": "Decision",
+          "kind": "label"
+        }
+      ],
+      "order": {
+        "mode": "input"
+      }
+    }
+  },
+  "fault": "first selected worker raises RuntimeError before launch; zero fits for that attempt"
+}

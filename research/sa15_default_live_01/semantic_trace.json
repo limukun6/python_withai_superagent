@@ -1,0 +1,88 @@
+[
+  {
+    "time_utc": "2026-11-27T00:24:59.324572+00:00",
+    "kind": "semantic_reader_handoff",
+    "reason": "unowned_native_layout",
+    "explicit_manifest": false
+  },
+  {
+    "time_utc": "2026-11-27T00:25:34.873531+00:00",
+    "kind": "semantic_contract_rejected",
+    "attempt": 1,
+    "diagnostic": {
+      "stage": "contract_probe",
+      "code": "ContractProbeError",
+      "message": "Native contract: unresolved required semantics"
+    },
+    "proposal": {
+      "version": "semantic-native-v1",
+      "plan": {
+        "modality": "tabular",
+        "training": {
+          "format": "npy",
+          "path": "observations.npy",
+          "target_path": "decisions.npy"
+        },
+        "prediction": {
+          "format": "npy",
+          "path": "arrivals.npy"
+        },
+        "metric": "balanced_accuracy",
+        "positive_label": null,
+        "image_preprocessing": null,
+        "output": {
+          "version": "output-csv-v1",
+          "delimiter": ";",
+          "encoding": "utf-8-sig",
+          "header": true,
+          "columns": [
+            {
+              "name": "Row",
+              "kind": "row_index",
+              "start": 1
+            },
+            {
+              "name": "Decision",
+              "kind": "label"
+            }
+          ],
+          "order": {
+            "mode": "input"
+          }
+        }
+      },
+      "evidence": {
+        "training": [
+          "doc:README.md:0"
+        ],
+        "target": [
+          "doc:README.md:0"
+        ],
+        "modality": [
+          "doc:README.md:0"
+        ],
+        "metric": [
+          "doc:README.md:0"
+        ],
+        "prediction": [
+          "doc:README.md:0"
+        ],
+        "positive_label": [],
+        "image_preprocessing": [],
+        "output": [
+          "doc:README.md:0"
+        ]
+      },
+      "uncertainties": [
+        "No positive class is specified; positive_label is null."
+      ]
+    }
+  },
+  {
+    "time_utc": "2026-11-27T00:26:00.155964+00:00",
+    "kind": "semantic_contract_accepted",
+    "attempt": 2,
+    "task_kind": "numeric_tabular",
+    "training_rows": 96
+  }
+]

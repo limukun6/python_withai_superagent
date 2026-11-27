@@ -1,0 +1,69 @@
+{
+  "version": "semantic-native-v2",
+  "plan": {
+    "modality": "tabular",
+    "training": {
+      "format": "npy",
+      "path": "observations.npy",
+      "target_path": "decisions.npy"
+    },
+    "prediction": {
+      "format": "npy",
+      "path": "arrivals.npy"
+    },
+    "metric": "ROC-AUC",
+    "positive_label": null,
+    "image_preprocessing": null,
+    "output": {
+      "version": "output-csv-v1",
+      "delimiter": ",",
+      "encoding": "utf-8",
+      "header": true,
+      "columns": [
+        {
+          "name": "Row",
+          "kind": "row_index",
+          "start": 1
+        },
+        {
+          "name": "Decision",
+          "kind": "label"
+        }
+      ],
+      "order": {
+        "mode": "input"
+      }
+    }
+  },
+  "evidence": {
+    "training": [
+      "doc:README.md:0"
+    ],
+    "target": [
+      "doc:README.md:0"
+    ],
+    "modality": [
+      "doc:README.md:0"
+    ],
+    "metric": [
+      "doc:README.md:0"
+    ],
+    "prediction": [
+      "doc:README.md:0"
+    ],
+    "positive_label": [],
+    "image_preprocessing": [],
+    "output": [
+      "doc:README.md:0"
+    ]
+  },
+  "uncertainties": [
+    {
+      "field": "positive_label",
+      "question": "Which of the two arbitrary codes is the positive event?",
+      "evidence_refs": [
+        "doc:README.md:0"
+      ]
+    }
+  ]
+}

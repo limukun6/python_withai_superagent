@@ -17,6 +17,13 @@ from .pricing import resolve_pricing
 from .runtime_budget import PlanningTimeExhausted
 
 
+class MeteredResponseFormatError(ValueError):
+    """A completed response was metered; its content was not the requested JSON."""
+    def __init__(self, message, *, settlement_complete=False):
+        super().__init__(message)
+        self.settlement_complete=settlement_complete
+
+
 def read_chat_stream(response, deadline, started, progress):
     """Collect choice zero and the final usage event from a campus SSE response."""
     body = {}
@@ -59,12 +66,15 @@ def read_chat_stream(response, deadline, started, progress):
 class ExperimentLLM:
     def __init__(self, api_url: str, key_file: str, model: str, batch_budget: float, thinking_mode=None, reasoning_effort=None,
                  disable_template_thinking=False, max_requests=None, allowed_served_models=None, account=None,
-                 streaming=False):
+                 streaming=False, campus_ip=None):
         if not math.isfinite(batch_budget) or not 0 < batch_budget <= 20:
             raise ValueError("Batch budget must be finite and in (0, 20].")
         endpoint=urlsplit(api_url)
         if endpoint.scheme!='https' or not endpoint.netloc or endpoint.username or endpoint.password:
             raise ValueError("API URL must use HTTPS with a host and no embedded credentials.")
+        from .campus_transport import validate_address
+        validate_address(api_url,campus_ip)
+        self.campus_ip=campus_ip
         if max_requests is not None and (type(max_requests) is not int or max_requests<1):
             raise ValueError('max_requests must be a positive integer when supplied')
         if allowed_served_models is not None and (not allowed_served_models or
@@ -108,7 +118,7 @@ class ExperimentLLM:
         ]
         # Byte count plus overhead is a conservative estimate, not a tokenizer guarantee.
         limits={'experiment_proposal':1536,'protected_experiment_proposal':4096,'feedback_reflection':3072,
-                'task_opening':4096,'feedback_hypothesis':768,'contract_extraction':128}
+                'task_opening':4096,'feedback_hypothesis':1536,'contract_extraction':128}
         max_tokens=limits.get(role,16384 if self.streaming else 2048)
         reserve = ((len(json.dumps(messages, ensure_ascii=False).encode("utf-8")) + 512)
                    * self.price.input_rmb_per_million + max_tokens * self.price.output_rmb_per_million) / 1e6
@@ -156,6 +166,8 @@ class ExperimentLLM:
             if self.direct:
                 with requests.Session() as session:
                     session.trust_env = False
+                    from .campus_transport import configure_session
+                    configure_session(session,self.api_url,self.campus_ip)
                     with session.post(self.api_url, stream=self.streaming, **options) as response:
                         progress['http_status'] = response.status_code
                         if not response.ok:
@@ -241,13 +253,19 @@ class ExperimentLLM:
             raise ValueError("Output token limit reached; response is incomplete; no automatic retry")
         if self.streaming and first.get('finish_reason') != 'stop':
             raise ValueError('Completion stream did not finish normally')
+        def format_error(message):
+            if first.get('finish_reason')=='stop':
+                return MeteredResponseFormatError(message,settlement_complete=ticket is not None and not settlement_failed)
+            return ValueError(message)
         if not isinstance(content, str):
-            raise ValueError("Missing text response.")
+            raise format_error("Missing text response.")
         if content.strip().startswith("```"):
             content = "\n".join(content.strip().splitlines()[1:-1])
-        decision = json.loads(content)
+        try:decision = json.loads(content)
+        except json.JSONDecodeError as error:
+            raise format_error('Completed metered response is not valid JSON; revise the requested format') from error
         if not isinstance(decision, dict):
-            raise ValueError("Expected a JSON object.")
+            raise format_error("Expected a JSON object.")
         return decision
 
 

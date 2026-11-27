@@ -3,6 +3,7 @@ import sqlite3
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from contextlib import closing
 from unittest.mock import Mock, patch
 
 import numpy as np
@@ -131,7 +132,7 @@ class ConditionalReviewTests(unittest.TestCase):
             path=Path(temp)/'local.sqlite'
             ledger=TaskBudgetLedger.initialize(path,new_project=True)
             model='DeepSeek-V4.1-Flash'
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.executemany('INSERT INTO metadata VALUES (?,?)',[('ledger_kind','provisional_local_outbox'),
                                                                    ('team_merge_state','pending_team_handoff')])
             seed=ledger.reserve('past',.01,'past',model)

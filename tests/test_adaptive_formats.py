@@ -1,4 +1,5 @@
 import gzip
+from contextlib import closing
 import io
 import json
 from pathlib import Path
@@ -124,7 +125,7 @@ class AdaptiveFormats(unittest.TestCase):
 
     def test_sqlite(self):
         path = self.root/'anonymous.bin'
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute('CREATE TABLE train(signal INTEGER,label TEXT)')
             db.execute('CREATE TABLE test(signal INTEGER)')
             db.executemany('INSERT INTO train VALUES(?,?)',TRAIN)
@@ -319,9 +320,9 @@ class AdaptiveFormats(unittest.TestCase):
         task = adapt_training(p,unused)
         np.testing.assert_equal(predict_records(q,task.kind,task.spec),[[7,14],[2,4]])
         self.assertEqual(unused.request_count,0)
-        docs.write_text('The separator is "§".')
-        p.write_text('signal§label\n'+''.join(f'{i}§{y}\n' for i,y in TRAIN))
-        q.write_text('signal\n'+'\n'.join(map(str,QUERY))+'\n')
+        docs.write_text('The separator is "§".', encoding='utf-8')
+        p.write_text('signal§label\n'+''.join(f'{i}§{y}\n' for i,y in TRAIN), encoding='utf-8')
+        q.write_text('signal\n'+'\n'.join(map(str,QUERY))+'\n', encoding='utf-8')
         self.check(p,q,'delimited')
 
     def test_missing_or_contradictory_explicit_manifest_stays_unavailable(self):

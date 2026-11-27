@@ -10,7 +10,7 @@ import sys
 import tempfile
 import threading
 
-from .events import RunLogger, atomic_text
+from .events import RunLogger
 from .predict import create_predictions
 
 
@@ -52,10 +52,30 @@ def guard_output(output, run, inputs):
         raise ValueError('Prediction output collides with the input, receipt, or frozen model storage')
 
 
-def checked_receipt(source):
+def checked_receipt(source, specification=None):
     receipt = read(source.parent/'prediction_manifest.json')
     if receipt.get('test_labels_read') is not False or receipt['prediction_sha256'] != digest(source):
         raise ValueError('Published prediction failed its integrity check')
+    contract = receipt.get('output_contract')
+    recipe = (specification or {}).get('output_recipe')
+    if contract is not None or recipe is not None:
+        from .output_recipe import needs_scores, validate_recipe
+        if not isinstance(contract, dict) or not isinstance(recipe, dict):
+            raise ValueError('Custom export must match the frozen submission recipe')
+        recipe = validate_recipe(recipe, specification['metric_spec']['labels'])
+        bound = ('version', 'columns', 'order', 'encoding', 'delimiter', 'header')
+        checks = contract.get('checks', {})
+        required = ['header_checked', 'row_count_checked', 'model_outputs_checked']
+        if any(c['kind'] == 'input_id' for c in recipe['columns']):
+            required.append('original_id_checked')
+        if needs_scores(recipe):
+            required.append('probability_columns_checked')
+        if (any(contract.get(k) != recipe[k] for k in bound)
+                or any(checks.get(k) is not True for k in required)
+                or type(receipt.get('prediction_count')) is not int or receipt['prediction_count'] < 1):
+            raise ValueError('Custom export was not verified against original rows and model outputs')
+        # The native writer verified every serialized cell before atomically publishing these bytes.
+        return receipt
     with source.open(encoding='utf-8', newline='') as stream:
         reader = csv.DictReader(stream)
         labels = receipt.get('score_class_order') or []
@@ -71,12 +91,22 @@ def checked_receipt(source):
     return receipt
 
 
-def publish(source, output, *, phase, reason=None):
-    receipt = checked_receipt(source)
+def publish(source, output, *, phase, specification, reason=None):
+    receipt = checked_receipt(source, specification)
     output.parent.mkdir(parents=True, exist_ok=True)
     # Readers can always verify the hash; the separate first-delivery directory is immutable.
-    with source.open(encoding='utf-8', newline='') as incoming, atomic_text(output, newline='') as dest:
-        shutil.copyfileobj(incoming, dest)
+    descriptor, filename = tempfile.mkstemp(dir=output.parent)
+    temporary = Path(filename)
+    try:
+        with os.fdopen(descriptor, 'wb') as dest, source.open('rb') as incoming:
+            shutil.copyfileobj(incoming, dest)
+            dest.flush()
+            os.fsync(dest.fileno())
+        if digest(temporary) != receipt['prediction_sha256']:
+            raise ValueError('Prediction changed during publication')
+        os.replace(temporary, output)
+    finally:
+        temporary.unlink(missing_ok=True)
     receipt.update(prediction_file=str(output), delivery_phase=phase)
     if reason:
         receipt['delivery_issue'] = reason
@@ -104,8 +134,9 @@ def first_prediction(features, run, output):
             if digest(model/name) != selected[key]:
                 raise ValueError('First prediction checkpoint changed')
         RunLogger(model).write_json('final_selection.json', selected)
+        specification = read(model/'task_spec.json')
         source = create_predictions(str(features), model, stage/'predictions.csv')
-        receipt = checked_receipt(source)
+        receipt = checked_receipt(source, specification)
         receipt.update(prediction_file=str(frozen/'predictions.csv'), input_source=str(features),
                        delivery_phase='first', task_spec_sha256=selected['task_spec_sha256'])
         snapshot = RunLogger(stage)
@@ -113,7 +144,7 @@ def first_prediction(features, run, output):
         snapshot.write_json('first_delivery.json', dict(model_sha256=selected['model_sha256'],
                             prediction_sha256=receipt['prediction_sha256']))
         os.rename(stage, frozen)
-    return publish(frozen/'predictions.csv', output, phase='first')
+    return publish(frozen/'predictions.csv', output, phase='first', specification=specification)
 
 
 def final_prediction(features, run, output):
@@ -124,13 +155,14 @@ def final_prediction(features, run, output):
         stage = Path(temporary)/'predictions.csv'
         try:
             create_predictions(str(features), run/'agent', stage)
-            return publish(stage, output, phase='selected')
+            return publish(stage, output, phase='selected', specification=read(run/'agent/task_spec.json'))
         except DECODE_ERRORS + (RuntimeError,) as error:
             if not (run/'first_delivery'/'prediction_manifest.json').is_file():
                 raise
             issue = type(error).__name__ + ': ' + str(error)[:300]
             create_predictions(str(features), run/'first_delivery'/'agent', stage)
-            return publish(stage, output, phase='recovered_first', reason=issue)
+            return publish(stage, output, phase='recovered_first', reason=issue,
+                           specification=read(run/'first_delivery/agent/task_spec.json'))
 
 
 if __name__ == '__main__':

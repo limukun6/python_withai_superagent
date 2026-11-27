@@ -147,8 +147,8 @@ class OpeningTests(unittest.TestCase):
                 reflection_client(directory,'opening-flash')
                 factory.assert_called_once_with(directory,thinking_mode='disabled')
             flash=Mock(blocked=False,request_count=0,max_requests=0)
-            with patch('superagent.autonomous_run.load_training_task',side_effect=ValueError('unknown schema')), \
-                    patch('superagent.format_intake.adapt_training',side_effect=ValueError('unknown target')), \
+            with patch('superagent.semantic_contract.load_training_task',side_effect=ValueError('unknown schema')), \
+                    patch('superagent.semantic_contract.adapt_training',side_effect=ValueError('unknown target')), \
                     patch('superagent.partial_classification.record_input_failure',return_value=1):
                 _train('input.zip',directory/'run',fit_limit=8,seed=42,wall=60,timeout=5,flash=flash,
                        feedback_reflection='opening-flash')

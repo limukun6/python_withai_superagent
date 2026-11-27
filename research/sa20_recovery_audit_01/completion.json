@@ -1,0 +1,252 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "id": "R1",
+      "passed": true,
+      "checks": {
+        "receipts": true,
+        "fits_bounded": true,
+        "requests_bounded": true,
+        "has_recovery_state": true,
+        "no_oracle_in_prompt": true,
+        "shared_state_in_prompts": true,
+        "source_bound": true,
+        "history_preserved": true,
+        "real_accepted_reply": true,
+        "fresh_process_equal": true,
+        "semantic_oracle": true,
+        "recorded_prior_failure": true,
+        "training_completed": true,
+        "physical_structure_tools_bounded": true,
+        "structure_values_not_disclosed": true,
+        "no_premature_unresolved": true,
+        "total_budget_not_expanded": true
+      },
+      "receipts": [
+        {
+          "request_id": "229bce25-2487-4254-bead-c6e17dbd2f61",
+          "role": "task_semantic_interpretation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "69202961-22c8-41a1-8166-f915570b0dac",
+          "role": "task_semantic_continuation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "bf898627-3d83-42ed-9335-23ecb875664c",
+          "role": "experiment_planner",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        }
+      ],
+      "actions": [
+        {
+          "role": "task_semantic_interpretation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "ValueError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 3
+        },
+        {
+          "role": "task_semantic_continuation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "ValueError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 2
+        },
+        {
+          "role": "experiment_planner",
+          "action": null,
+          "remaining": 1
+        }
+      ],
+      "structure_tools": [
+        {
+          "member": "train.csv",
+          "source": "training",
+          "format": "delimited"
+        },
+        {
+          "member": "query.csv",
+          "source": "prediction",
+          "format": "delimited"
+        }
+      ],
+      "repeated_failures": 0
+    },
+    {
+      "id": "R2",
+      "passed": true,
+      "checks": {
+        "receipts": true,
+        "fits_bounded": true,
+        "requests_bounded": true,
+        "has_recovery_state": true,
+        "no_oracle_in_prompt": true,
+        "shared_state_in_prompts": true,
+        "source_bound": true,
+        "history_preserved": true,
+        "real_accepted_reply": true,
+        "fresh_process_equal": true,
+        "semantic_oracle": true,
+        "recorded_prior_failure": true,
+        "training_completed": true,
+        "physical_structure_tools_bounded": true,
+        "structure_values_not_disclosed": true,
+        "no_premature_unresolved": true,
+        "total_budget_not_expanded": true
+      },
+      "receipts": [
+        {
+          "request_id": "1455b077-7cef-4cc6-a8b1-1a07baf48c64",
+          "role": "task_semantic_interpretation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "56eed117-7465-4422-8430-9901d96e3edf",
+          "role": "task_semantic_continuation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "142c5b8a-cca8-44e8-a4e8-da7bb32c15ae",
+          "role": "experiment_planner",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        }
+      ],
+      "actions": [
+        {
+          "role": "task_semantic_interpretation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 3
+        },
+        {
+          "role": "task_semantic_continuation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 2
+        },
+        {
+          "role": "experiment_planner",
+          "action": null,
+          "remaining": 1
+        }
+      ],
+      "structure_tools": [
+        {
+          "member": "packed.npz",
+          "source": "training",
+          "format": "npz"
+        },
+        {
+          "member": "arrivals.npz",
+          "source": "prediction",
+          "format": "npz"
+        }
+      ],
+      "repeated_failures": 0
+    },
+    {
+      "id": "R4",
+      "passed": true,
+      "checks": {
+        "receipts": true,
+        "fits_bounded": true,
+        "requests_bounded": true,
+        "has_recovery_state": true,
+        "no_oracle_in_prompt": true,
+        "shared_state_in_prompts": true,
+        "source_bound": true,
+        "history_preserved": true,
+        "real_unresolved_reply": true,
+        "target_question": true,
+        "not_claimed_semantic_proof": true,
+        "no_false_completion": true,
+        "unresolved": true,
+        "no_classifier_fit": true,
+        "physical_structure_tools_bounded": true,
+        "structure_values_not_disclosed": true,
+        "no_premature_unresolved": true
+      },
+      "receipts": [
+        {
+          "request_id": "8842fabe-485b-4154-9003-9d5a788f8f34",
+          "role": "task_semantic_interpretation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        }
+      ],
+      "actions": [
+        {
+          "role": "task_semantic_interpretation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 3
+        }
+      ],
+      "structure_tools": [],
+      "repeated_failures": 0
+    }
+  ],
+  "audited_course_cost_rmb": 0.05103,
+  "input_tokens": 29622,
+  "output_tokens": 5352,
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "elapsed_seconds": 0.0470000000204891
+}

@@ -1,5 +1,163 @@
 # 实验持续工作记录
 
+## 2026-11-27：SA20组合结构探查＋未决报告完成
+
+基线85550b5。inspect_batch将两次底层元数据探查合成一次Flash往返（仍总2工具/3请求）；RecoveryState按未决字段＋去重事实指纹识别语义空转，增加有来源的report_unresolved；已正常stop且持久结算的坏JSON可带新诊断修复，timeout/截断/未结算仍不重试。A改接入/恢复/LLM解析，不改B排序。
+
+317/317无fit/API检查26.093秒（14新）；原SA19同字节R1/R2/R4自然真实solve一次运行：R1/R2完整2/2，各接入3→2调用、B0→1调用，各3fit/3API，新进程72行一致；R4首次真实回复明确target未决，3→1API、0fit。错误完成0、阳性过早未决0、运行中人工介入0。独立审计3/3，7请求真实回复/model/token/cost/canonical行绑定。
+
+合计6fit/7API/¥.051030/202.734秒。相同三条件旧9API/¥.060365，本次少2API、课程折算少¥.009335（15.46%），主要是R4省空转；R1/R2因新增B规划总费用各略增，不能称每条都省钱或预测质量提高。单次顺序开发对照，不是独立泛化或单因子因果实验。坏JSON恢复只有模拟已结算HTTP验证，非本批自然真实出错样本。
+
+报告docs/batches/SA20_EFFICIENT_RECOVERY_RESULTS_20261127_zh.md，证据research/sa20_recovery_checks_01、sa20_recovery_prepared_02、sa20_recovery_live_01、sa20_recovery_audit_01；脚本scripts/run_sa20_recovery_live.py、scripts/audit_sa20_recovery.py。prepared_01仅准备、未运行，新_02补了baseline哈希绑定。无失败HTTP重试，密钥/模型/包/SQLite不进Git。
+
+当前canonical ledger504/known8.264113/unknown16/pending0，无训练/API队列，未冻结；旧16仍null，实际学校扣费/预算合规未核验。SA7–SA20自动窗口累计41fit/43API/¥.297718，非全项目累计。
+
+下一优先：failed_actions现在主要是提案SHA，补有界、结构化失败动作摘要，使LLM能看见上一次适配与具体失败检查；再做独立原包多模态完整恢复及最终预测阶段修复。先计划/复跑代码，不以工具检查数量或未决报告替代完整任务成果，不重复SA20付费路径。
+
+## 2026-11-27：SA19最小恢复控制器＋正式路径3/3交付
+
+基线0769d22。新增recovery.py和structure_tools.py；正式_train把同一失败/证据/预算/已有成果状态贯穿接入与B调度。语义循环不再固定两次拒绝退出，仍共享最多3次Flash、两次工具；fallback预测预检失败也可交语义修复。NPY/NPZ键/shape/dtype和图像尺寸/模式工具不返回值；20个reader绑定新artifact。B方法排序和失败换候选保留。
+
+303/303无fit/API检查25.437秒；真实四条件一次冻结后运行：R1字段映射、R2未知NPZ键、R3首方法启动前受控故障均完整交付，各3fit/3API，新进程各36行一致；R4目标确实没指定，0fit/3API，保留未决。可恢复3/3、四条件错误完成0、运行中人工介入0。合计9fit/12API/¥.083642/372.515秒。独立审计4/4，39054输入/11147输出token与真ledger逐条绑定；旧行SHA不变。
+
+注意R3故障发生时Flash额度已用完，由B既有本地规则恢复，不能说LLM看见训练故障后改善了选择，也不能把B能力算A新增因果收益。R1/R2本地同输入接入0/2 vs恢复2/2，只证明开发条件接入，不是预测质量消融。全是同一公开Wine来源，不是3个独立未知任务；图像工具本批未新增真实恢复。ask内部JSON解析/坏文件异常分类/最终预测失败等尚未统一恢复，不能保证任意阶段或任意任务。
+
+证据research/sa19_recovery_checks_03、sa19_recovery_prepared_02、sa19_recovery_live_02、sa19_recovery_audit_01；计划与报告docs/batches/SA19_RECOVERY_*_20261127_zh.md；可复跑scripts/run_sa19_recovery_live.py、scripts/audit_sa19_recovery.py。首次live因scope大写在预检前失败0fit/API，新目录修正运行；所有旧失败保留，不重试已发请求。
+
+当前canonical ledger497/known8.213083/unknown16/pending0，无训练/API队列，未冻结。原16未知仍null，预算合规未核验；新增未知仍停当批付费。SA7–SA19自动窗口累计35fit/36API/¥.246688，非全项目累计。
+
+下一批：同3请求预算下组合结构探查，减少接入耗尽B额度；按未决字段＋证据增量识别R4式语义空转，允许明确未决报告；补已计量JSON和最终预测阶段恢复。先落盘计划/代码再运行。继续独立来源多模态演练，不追Task1旧分数，不重复本批。
+
+## 2026-11-27：用户纠正主目标，SA18改为自主恢复与正确交付
+
+用户明确不是要增加阻断，而是LLM介入后任务继续运行。已更新AGENTS和主计划docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md：失败动作→FailureRecord/RecoveryState→LLM查证/改适配/换路线→验证→继续。单个动作拒绝不能结束整个Agent；主验收是无人干预恢复后正确交付、错误完成率和资源代价。
+
+源码盘点确认semantic_training两次拒绝后抛异常，_train直接return record_input_failure，完整跨阶段RecoveryController尚未实现。不得把新增工具/检查数量或“阻断正确”当主成果；下一批应把结构工具与恢复控制、正式继续执行一起实现。
+
+已纠正一条实际过度限制：内部binary ROC-AUC使用完整归一化、带类标签概率矩阵，类方向交换数值不变。4种固定合成评分验证；解除仅因缺语义正类的误阻断，SA17真实U2原回复未改即可重新编译/预检继续。未指定输出概率类别仍不猜，binary_f1等未决含义仍需进入恢复。SA17旧JSON保留，报告已加校正说明。294/294回归25.203秒，本批0fit/0API/¥0。
+
+报告batches/SA18_RECOVERY_CORRECTION_RESULTS_20261127_zh.md；证据research/sa18_recovery_inventory_01、sa18_auc_orientation_probe_01、sa18_auc_continuation_replay_02、sa18_recovery_checks_01。首轮回放完整性检查是恒等比较，已保留并在_02用前后SHA真正复核；不把首轮当SHA证据。
+
+只读核账仍485/known8.129441/unknown16/pending0，无队列、未冻结。旧16未知授权保持，新unknown仍停当批付费；可以切本地/保存成果继续其他可行工作，不重复原失败请求。不能宣称完整RecoveryController已实现或任何输入都能正确完成。
+
+## 2026-11-27：SA17字段疑问＋执行依赖核对完成，受控3/3
+
+基线1ecc4c9。新增task_questions.py：LLM报告{field,question,evidence_refs}，程序根据实际类别/指标/类型决定是否必需；不让模型自报低风险，不按文本关键词跳过。新协议task-v3/native-v2/output-v2，老空列表兼容、旧非空文字仍阻断；18个reader＋resolution摘要入缓存/迁移。292/292相关检查23.047秒、0fit/API（18新＋274原）。
+
+改前封存SA15原拒绝提案：plan与后来接受plan完全一致，历史修复25.25秒/¥.005597。改后旧文字仍阻断；开发者显式字段化的事后回放可接受，不冒充原模型回复或已省费用。
+
+三例受控真实Flash接口各1请求、0fit：U1实际3类balanced_accuracy的positive_label疑问保留并通过；U2实际2类ROC-AUC的正类疑问阻断；U3 target未定在读取数组前阻断。3/3指按预期判定，不是3个训练任务交付。输入6939/输出2571，¥.017223/51.875秒。独立审计回复/usage/真ledger绑定、U3读前阻断、真实U1新协议缓存与显式迁移一致；0新fit/API。报告batches/SA17_scoped_questions_results_20261127_zh.md；证据research/sa17_question_live_01、sa17_question_audit_01。
+
+账本485/known8.129441/unknown16/pending0，原行SHA/null保留。SA7–SA17累计26fit/24API/¥.163046，无队列、未冻结。未证明自然任务省钱/准确率/字段误标可自动识别；仅两个已实现可核对的非必需字段，其他疑问保守阻断。
+
+下一优先：结构元数据工具（NPY/NPZ shape/dtype/keys及图像结构，不披露行值/预测标签），再冻结后引入独立自然任务，别重复同一Iris包装充当泛化。旧16未知不再问，新未知停当批付费。
+
+## 2026-11-27：SA16人用CLI默认auto，补“本地可读但输出未理解”
+
+SA15已推送b620b83。SA16改前封存两微案例：本地都读入输入，完整输出0/2。CLI train/solve和superagent unified默认auto：有模型client和文档则读题，显式manifest只允许输出overlay；显式fallback/proactive、程序化API旧默认、legacy和local/control对照保留。无client/无文档日志说明本地，预检失败/blocked/耗尽不冒称已完成模型复核。274/274零fit/API检查13.063秒，模拟机制两例修后2/2（不是两次真实模型样本）。
+
+正式裸solve A1（Iris原96/24开发行标准CSV/manifest重封装）自动复核原文输出：Case原ID前导零、Result三类映射、ScoreFor2、管道/BOM/行序全部成立，manifest输入/目标/指标逐项不变。首次真实语义提案通过，B默认Flash选RandomForest，2fit/2API/¥.008978/27.781秒，5674输入/826输出。语义¥.003157＋B规划¥.005821分开。新进程24行CSV完全一致；usage与真ledger绑定，后续B请求不串用。报告batches/SA16_auto_semantic_review_results_20261127_zh.md；证据research/sa16_auto_live_01和sa16_auto_audit_01。
+
+当前账本482/known8.112218/unknown16/pending0，所有旧行SHA保留，无活动队列，未冻结。SA15＋SA16本次4fit/5API/¥.028677；自动窗口SA7–SA16累计26fit/21API/¥.145823。无预测答案读取/新评分，仍不是独立未知任务迁移。
+
+下一优先：有作用域的疑问状态（SA15把可选正类当阻断，额外花一次修复）、数组/图像结构元数据工具，再做独立封存新任务。人用CLI已补auto，别重复该实现；程序化API默认fallback是显式兼容选择，local/control仍无付费读题，要A付费+B本地用proactive组合。旧16未知不再问，新未知停当批付费。
+
+## 2026-11-27：SA15默认NativeContract接管＋真实迁移验收完成
+
+无manifest的专用reader认领不再阻止默认fallback交给已配置LLM；显式manifest仍权威，无client/blocked/耗尽不请求，本地成功仍本地。迁移工具新增native编译和原包/proposal/已结算model-token-cost绑定，选语义接受之前的对应请求，避免串用后续B调用。261/261零fit/API检查13.484秒。
+
+SA14两真实回复显式迁移，原artifact不改、两旧模型54行新进程CSV一致，0fit/API。正式裸solve（无解释/开题覆盖）D1原Iris96/24行重封装NPY成功接管；首次提案把不适用正类记为阻断，第二次修复通过，第三次B规划选RandomForest。2fit/3API/¥.019699/82.938秒；9883输入/2454输出。语义¥.012498＋B规划¥.007201分开。9项契约通过，24行新进程一致；真实后续B调用存在时迁移绑定语义第二条而非B第三条。证据research/sa15_default_live_01、sa15_default_audit_01；报告batches/SA15_default_handoff_results_20261127_zh.md。
+
+账本480/known8.103240/unknown16/pending0，旧行SHA保留，无活动队列；SA7–SA15累计24fit/19API/¥.136845。未看预测答案/新评分，数据重封装不是独立泛化；未冻结。
+
+下一优先：本地可读≠任务语义完整，默认fallback仍可能漏自定义输出。预登记自动模式审计/兼容策略，保留显式fallback与本地对照；另处理flat uncertainties将可选信息误当阻断的空转。别再重复SA15的原scope，旧未知不问，新未知停付费。
+
+## 2026-11-27：SA14无manifest数组/图像正式交付2/2
+
+基线dee7140。新增semantic-native-v1，LLM选择任意安全数组成员/键或图像类目录、指标/正类/像素处理与输出，既有reader执行；native_input_recipe冻结重放，artifact纳入新reader/recipe。245/245零fit/API检查12.735秒（16新＋229原）；两条预检/准备脚本错误原样保留，无训练/付费。
+
+两条正式standalone solve，stdin关闭，无client/resolver/算法注入，均第一次真实提案通过：N1 Iris数组96训练/24预测，balanced_accuracy＋分号BOM，ExtraTree；N2 Digits90/30，10×10 RGB类目录，macro_f1，梯度直方图＋逻辑回归。各2fit含refit/1API，合计4fit/2API/¥.015720/56.141秒，6580输入/2285输出token。外部9项契约检查各全通过；两模型新进程predict与原54行CSV逐字节一致。无预测答案读取或新评分。证据research/sa14_native_live_01、sa14_native_audit_01；报告batches/SA14_native_semantics_results_20261127_zh.md。
+
+无LLM本地既有读取器对同原包完整接入0/2，新语义＋Flash2/2；这是开发格式覆盖检查，不是随机策略消融、独立迁移或准确率提升。默认fallback的无manifest数组NativeContract阻断、元数据探查/任意布局/图像ID仍有边界，不能保证所有未知任务。
+
+账本477/known8.083541/unknown16/pending0，旧行SHA保留，无活动队列，未冻结。本自动窗口SA7–SA14累计22fit/16API/¥.117146。下一批优先审计默认fallback是否对无显式契约也禁止LLM接手，以及原真实语义回复跨reader显式迁移工具对native plan的支持；再做独立新任务验收。旧16未知不再问，新未知仍停当前付费批次。
+
+## 2026-11-27：SA13正式实时工具闭环交付通过，229项回归
+
+SA12已推送a5bd0b9，原完整交付失败保留。SA13按唯一物理成员位置解析遗漏的工具source，显式source不覆盖，重名要求澄清；输出JSON增加条件必填schema，不由Python猜ID/目标/指标。229/229无fit/API检查通过10.547秒。
+
+正式standalone solve真实Flash自然探查表头→只返回字段名→第二次真实提案填record_id→B自主选择HistGradientBoosting→实际2fit含refit→独立进程60行完整预测。2真实API，3757输入/1306输出，课程¥.008981、52.375秒；独立审计11项语义/格式全部通过，实际usage与两条canonical ledger逐行匹配。未注入client/resolver/算法/工具请求，未看外层标签或新评分。证据research/sa13_live_entry_01及sa13_live_audit_01；报告batches/SA13_tool_source_results_20261127_zh.md。
+
+当前账本475/known8.067821/unknown16/pending0，旧行SHA全保留。本自动窗口SA7–SA13累计18fit/14API/¥.101426；SA12+SA13本次前后开发尝试2fit/4API/¥.020658，不是随机消融或独立未知迁移证据。无活动队列、未冻结。
+
+下一优先：无manifest图像/数组的全局语义入口（当前只编译scalar records，显式manifest图像可overlay）以及独立新任务验收。不要再将正式live接线或真实工具闭环说成未实现，也不要把单开发题成功当任意任务保证。按新批计划/代码先落盘，旧16未知不再问，新未知立即停当前付费批次。
+
+## 2026-11-26：SA12正式Flash入口接通，完整交付首轮失败已保留
+
+SA11已推送2304403。SA12显式接受快照账户进入正式configured_flash，逐事务检查scope/账本/16旧行SHA，次数/费用按scope累计；校园IP采用单client HTTPS连接，不改全局socket/系统代理，TLS原域名不变。223/223零fit/API检查通过10.266秒（首轮两测试夹具错误已保留）。
+
+真实standalone solve首次走通正式付费接线，2请求均HTTP200结算，0fit、¥.011677、60.625秒；模型先漏source再漏ID field，完整交付未通过，保留B的partial类先验，不算成功。证据research/sa12_live_entry_01；报告batches/SA12_live_entry_results_20261126_zh.md。账本473/known8.058840/unknown16/pending0，旧行SHA全不变；未冻结，无活动队列。
+
+下一步SA13：省略工具source且成员只在一个已公布包存在时解析唯一来源；显式source不覆盖、重名不猜。给LLM结构化输出列必填schema，程序不猜ID/目标/指标。新批先计划/代码再实跑，不能覆盖SA12失败或自动重试同scope。
+
+## 2026-11-26：SA11任务解释缓存接入正式CLI，187回归＋两条真实solve通过
+
+此前Git自动审批因额度错误未执行；用户继续后通过正常审批重试，SA7–SA10已提交推送00e32db。随后SA11独立开发，不重复付费。SemanticArtifact绑定文件任务/预测包SHA、规范化任务摘要、reader源码及原usage来源；恢复重编译/预检。新鲜成功解释自动导出，正式--semantic-artifact-from经train/solve/子进程/_train贯通，默认不初始化计费client。目录输入仍正常fresh解析但v1不导出缓存；它不是训练/搜索历史resume。
+
+14新＋173相关共187/187无fit/无API检查通过，10.265秒。原真实SA8回复显式重验证迁移成当前artifact，两条真实独立CLI solve（数值/图像）stdin关闭、无注入、各2fit含refit，60/40行预测ID/表头/顺序通过。新增4真实fit、0API/¥0、30.531秒，账本SHA不变。证据research/sa11_cli_reuse及sa11_semantic_artifact_attempt1；报告batches/SA11_semantic_artifact_results_20261126_zh.md。未重新评分开发答案，不做质量比较。
+
+当前API账本仍471/known8.047163/unknown16/pending0，无活动队列。SA7–SA11累计本自动窗口16fit/10API/课程¥.080768。之前12fit和SA11新增4分开记，模型/缓存/数据不进Git。未冻结。
+
+下一优先：正式新任务实时付费solve的历史清单与进程校园直连接线（configured_flash仍strict），再补无manifest图像/数组及真实字段工具后续提案。研究runner付费成功、正式缓存零API成功，不代表正式新任务实时API已验收。队列docs/AUTONOMOUS_NEXT_QUEUE_20261126_zh.md已更新，别重复实现SA11；旧16未知不再问，新未知仍停该付费批次并继续离线。
+
+## 2026-11-26：自动推进SA7–SA10完成，三模态交付与173项回归通过
+
+用户明确“自动下一步，不用问我”，后续常规研发与已登记小批不重复确认。SA7新开发封装四例真实Flash完整契约4/4、5调用、¥.048949，Q2为未解决疑问→诊断→正确提案，**不是字段工具调用**。SA8三种真实数据首轮5调用/¥.031819、文本4fit交付；数值/图像被实验oracle因恒等映射误拒。原首轮已封存1df9029，不改failed字段。
+
+SA9评价工具按CSV可见语义等价，复用V1/V3原真实接受回复（绑定包、源码、proposal/response和已结算请求），0新API完成8fit；SMS模型不重训。恢复后V1/V2/V3各4fit，独立进程160行预测与格式通过，恢复交付3/3不是首次无人干预3/3。小开发划分数字为数值57/60 macroF1 .946667、SMS55/60 macroF1 .699700、图像35/40 macroF1 .874048；不与旧大样本成绩比提升。
+
+SA10先复现JSON数字0/字符串0写CSV合并类别、旧校验漏放，生产只按序列化字符串检查映射唯一性。173无fit回归通过（8.078秒），旧两条含fit夹具仍排除。三个冻结模型在新校验源码各新进程输出逐字节相同，模型/spec不变，只是预测兼容，不是新源码重训。
+
+本次SA7–SA10合计12新fit、10真实API、课程¥.080768；真账本471/known8.047163/unknown16/pending0、新未知0。旧行/null保留，B待并账部分和学校实扣仍未知。证据research/sa7_sa10_closure；报告batches/SA9_SA10_delivery_closure_20261126_zh.md。模型/数据留runs/sa8_live_01、sa9_recovery_01，不进Git。无活动队列，未最终冻结。
+
+下一步队列docs/AUTONOMOUS_NEXT_QUEUE_20261126_zh.md：先生产化有效语义契约恢复，再补无manifest图像/数组、真实工具后续提案和独立未知任务验收。SA9当前仅实验适配器，不冒充已具备正式CLI恢复能力。继续遵守每批计划/代码先落盘、同账本/最多3调用每路径/新失败停付费不重试；无需再问旧16未知或查官网。
+
+## 2026-11-26：SA6修复真实探查接口，162项离线检查通过
+
+SA5已封存于e9f0c31，本批0新API/fit。修复source=prediction的逻辑角色与物理包混用；CSV/根JSON列表可明确返回无命名集合的事实，多集合容器仍拒绝无效选择器；分开CSV decoder location中的分隔符与真实collection。原SA5三次模型动作逐字段核对后本地回放3/3得到字段；这是工具回放，不是真实LLM最终plan成功。新增7＋SA5 oracle5＋既有150合162/162，10.282秒，两条含fit旧夹具仍显式排除。首轮两错误保留，发现CSV location=', '的接口混淆并修复。
+
+报告batches/SA6_tool_repair_results_20261126_zh.md；证据research/sa6_tool_repair_v2；runner scripts/run_sa6_tool_repair.py。下一步另冻新案例，按完整共享3调用闭环测真实理解/修复，再跑三模态，不能用旧题回填SA5的1/4。未冻结、无活动队列。当前本轮合计0fit/4真实Flash/课程¥.040603，账本461/known7.966395/unknown16/pending0；所有旧费用null和旧行保持不变。
+
+## 2026-11-26：SA5真实Flash四案例完成，完整契约旧0/4、新1/4
+
+基线e43c31d，四个预登记开发机制案例（非独立盲测/真实迁移），0fit。旧native/局部适配接受2但输出等不完整、另拒绝2，0API；新proactive完整1/4（文本NDJSON、字段改名、正类概率全部通过），另3例停在工具参数/物理来源识别，4API。每格仅1请求，不冒充完整3调用闭环失败或成功。输入3643/输出9240token、课程费¥.040603、219.328秒。证据research/sa5_live_01和sa5_audit；报告batches/SA5_semantic_panel_results_20261126_zh.md。
+
+用户本轮明确接受新增4条既有未知，16条清单绑定原行SHA、SA5 scope及案例注册表，费用仍null。最初预检0请求被拦，授权后沿同一真实账本完成4已计量请求，原457行逐条不变；现461/known7.966395/unknown16/pending0。无新增未知，不查官网、不建空账本。B新用量尚未取得可导入逐请求原件，团队总预算仍未核验。授权快照仅在忽略目录runs/sa5_authorized_history_16，不自动扩大后续批次预算。
+
+下一步SA6离线修工具：同包prediction角色与独立包位置分开，flat格式返回无命名集合的事实；回放真实请求保持评价/答案边界，0新增API/fit。不按本轮结果回填成功，不冻结。真实Flash可以调用，本轮阻断已处理，不再称网络未解决。
+
+## 2026-11-26：SA4已合入B最新自主研发版，150项回归＋4fit交付通过
+
+最新共同研发工作树D:/codex/python_withai/runs/semantic_joint，分支codex/ab-semantic-autonomy-1126。B来源b0944ae（与个人c6ea0b7发布目录127模块及入口相同），A来源0d09760。真实Git merge，三处共享文件逐段合并，A六模块/B十三模块对象保留通过；B方法排名与目录不改，开题和语义共用预算。proactive＋opening允许原client最多3次，旧fallback opening仍单次，更小/零额度不扩。
+
+SA4无fit相关回归150/150，10.500秒；排除两条旧Dummy.fit夹具并明示。SA4M两条120行合成任务、同目录自主选择随机森林、各2fit含refit，合计4真实fit、27.204秒、0真实API/¥0。组合路径A proactive+B opening-local+protected self-review均到达，新进程各20行预测；原ID、BOM、Y/N、模板逆序通过，ID对齐后预测相同。脚本化语义回复1次不是真实Flash。首轮失败记录保留，真实账本/课程正式测试未动。
+
+交接docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md；无fit证据research/sa4_ab_merge_v2，烟测research/sa4m_joint_smoke_01，来源/物理fit审计research/sa4_merge_audit。下一步在此共同研发分支做真实Flash语义及三模态任务，不最终冻结；B的1533/684等分数保留原版本，不冒称本集成版实测。B新交付含多批真实API用量，付费前按新原件核对并账，不再将旧“仅一次待并账”当最新事实。本轮无活动训练/API队列。
+
+## 2026-11-26：SA3主动解释和训练前预测契约验收，100项通过
+
+在9258318上接入显式proactive/fallback、共享预算的inspect_header工具、训练/独立预测包元信息、字段field_map及fit前特征/ID/模板检查。显式CSV/JSONL manifest仅允许输出overlay，不覆盖target/metric；solve子进程收到新参数，legacy不静默忽略。修复回路不重试传输/磁盘错误，库异常不回传私有数据值。27新＋73相关测试最终100/100，10.312秒，0fit/0真实API/¥0；模拟LLM与固定未训练模型仅为工程证据。94项首轮三问题和后续97/98项中间回执均保留，最终research/sa3_proactive_probe_final。报告batches/SA3_proactive_probe_results_20261126_zh.md，runner scripts/run_sa3_proactive_probe.py。
+
+SA1–SA3开发闭环已接通；四天计划仍处D1/D2离线验收，未冻结。下一步固定独立语义案例/oracle并做小规模真实Flash，再做三模态真实运行；当前未测真实语义成功率/完整未知任务成功率/节省费用。无manifest图像/数组的主动适配、预测后置LLM修复仍待开发。真实账本未改，B待并账调用需在付费前核对。
+
+## 2026-11-26：SA2真实预测流程接输出recipe，73项零训练/零真实API通过
+
+基线40be241，新增output_recipe/semantic-task-v2接线、预测/partial导出、原子发布前校验与概率接口准入。18新测试含前导零/乱序ID、模板重排、标签映射、F1任务指定类别概率、无表头/编码、坏模板/缺ID/篡改拒绝、partial标记与独立CLI重载；连同SA1等合73项通过，回执11.031秒。固定算术模型夹具无fit，模拟LLM不计真实调用，0fit/0API/¥0。真实账本/课程正式测试未动。计划与runner先行，证据research/sa2_output_recipe；普通native主动解释、工具探查、预测字段映射及真实Flash仍未实现/实测，不宣称全部未知任务可用。下一批SA3继续，不冻结。
+
+## 2026-11-26：SA1语义契约接入，43无fit/无网络检查通过
+
+在B d501807独立分支codex/a-semantic-adaptation-1126接semantic_contract与正式训练入口。解决多文档/非标准源与跨句目标的编译入口：模型可提契约、程序真实解码、诊断回送及一次有界修复；指标/行角色/预测读法沿现有确定性执行。13新+30既有共43检查通过，3.219秒，新增fit/真实API均0。初相关回归两旧Windows夹具问题修正closing/UTF-8，未改生产reader。报告batches/SA1_semantic_contract_results_20261126_zh.md、证据research/sa1_semantic_contract；全部为模拟LLM工程验证，不是新任务质量或真实LLM成功率。下一批SA2输出契约/工具探查，尚未运行；项目未冻结。
+
 ## 2026-11-25：发布验收复核，0新增fit/API
 
 读取7be2458报告/acceptance原件及本机课程原文：统一自主重训1527/2030与历史1532预测差95行属训练复现差异，旧模型缺失故加载复现未核，不能直接说旧分数错误。建议完整自主9fit的当前1527模型先做交付候选，旧1532限时只读找回matched模型/清单，历史记录不覆盖。Python3.11.15与当前3.12.14不同、raw/release模型SHA不同为查档线索，不是根因结论；六项边界测试尚不证明实际禁读成员未打开或通用严格时间隔离。复核docs/batches/RELEASE_ACCEPTANCE_CODEX_REVIEW_20261125_zh.md。当前只核对未训练/未调用API/未改模型与账本，不宣布最终冻结。

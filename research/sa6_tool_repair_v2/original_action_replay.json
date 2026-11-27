@@ -1,0 +1,93 @@
+{
+  "scope": "post-hoc tool-only replay; no model continuation",
+  "requests": [
+    {
+      "case": "P1",
+      "exact_original_request_dict": true,
+      "request": {
+        "action": "inspect_header",
+        "member": "train.csv",
+        "collection": "evidence_workspace",
+        "delimiter": null,
+        "evidence_refs": [
+          "doc:README.md:0"
+        ]
+      },
+      "observation": {
+        "member": "train.csv",
+        "source": "training",
+        "codec": "delimited",
+        "collection": null,
+        "delimiter": ",",
+        "fields": [
+          "signal",
+          "label"
+        ],
+        "row_values_disclosed": false,
+        "requested_collection": "evidence_workspace",
+        "collection_normalized": true,
+        "collection_note": "Flat container has no named collection; use null"
+      }
+    },
+    {
+      "case": "P2",
+      "exact_original_request_dict": true,
+      "request": {
+        "action": "inspect_header",
+        "member": "incoming.payload",
+        "collection": "incoming",
+        "delimiter": null,
+        "evidence_refs": [
+          "doc:00_notice.md:0"
+        ],
+        "source": "prediction"
+      },
+      "observation": {
+        "member": "incoming.payload",
+        "source": "prediction",
+        "codec": "delimited",
+        "collection": null,
+        "delimiter": ",",
+        "fields": [
+          "event_id",
+          "signal"
+        ],
+        "row_values_disclosed": false,
+        "requested_collection": "incoming",
+        "collection_normalized": true,
+        "collection_note": "Flat container has no named collection; use null"
+      }
+    },
+    {
+      "case": "P4",
+      "exact_original_request_dict": true,
+      "request": {
+        "action": "inspect_header",
+        "member": "records.payload",
+        "collection": "records",
+        "delimiter": null,
+        "evidence_refs": [
+          "doc:README.md:0"
+        ]
+      },
+      "observation": {
+        "member": "records.payload",
+        "source": "training",
+        "codec": "json-records",
+        "collection": null,
+        "delimiter": null,
+        "fields": [
+          "reading",
+          "decision",
+          "phase"
+        ],
+        "row_values_disclosed": false,
+        "requested_collection": "records",
+        "collection_normalized": true,
+        "collection_note": "Flat container has no named collection; use null"
+      }
+    }
+  ],
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0
+}

@@ -45,7 +45,7 @@ class CrossTaskExplorationTests(unittest.TestCase):
             args = unified_agent.prepare_training(folder/'train.zip', folder/'run', 16, 600, 'protected', path)
             path.write_text(json.dumps(snapshot([.1, 0, 0])))
             self.assertEqual(load_rule(args.exploration_rule), expected)
-            protocol = json.loads((folder/'run/training_protocol.json').read_text())
+            protocol = json.loads((folder/'run/training_protocol.json').read_text(encoding='utf-8'))
             self.assertEqual(protocol['exploration_rule_digest'], identity(expected))
 
     def test_rejects_task_lookup_fields_nonfinite_and_invalid_weights(self):

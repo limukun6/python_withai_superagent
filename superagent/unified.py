@@ -62,12 +62,28 @@ def configured_flash(directory, *, thinking_mode=None):
         return None
     if not all(settings):
         raise ValueError('Configure all three Flash billing settings or leave them all unset')
+    accepted_path=os.getenv('SUPERAGENT_ACCEPTED_HISTORY_FILE')
+    accepted_sha=os.getenv('SUPERAGENT_ACCEPTED_HISTORY_SHA256')
+    if bool(accepted_path)!=bool(accepted_sha):
+        raise ValueError('Accepted-history file and SHA256 must both be configured')
+    campus_ip=os.getenv('SUPERAGENT_CAMPUS_DIRECT_IP') or None
+    if accepted_path:
+        if os.environ.get('SUPERAGENT_OFFLINE')=='1':
+            raise ValueError('LLM mode is disabled in the current offline environment')
+        from .accepted_history import AcceptedHistoryAccount
+        from .task_budget import TaskBudgetLedger
+        from .ab_flash import ENDPOINT,MODEL
+        account=AcceptedHistoryAccount(TaskBudgetLedger(settings[1]),settings[2],str(directory),accepted_path,accepted_sha)
+        account.preflight()
+        return ExperimentLLM(ENDPOINT,settings[0],MODEL,account.allowance,max_requests=min(3,account.max_requests),
+                             allowed_served_models={MODEL},account=account,thinking_mode=thinking_mode,
+                             streaming=True,campus_ip=campus_ip)
     args=SimpleNamespace(api_url=None,model=None,api_key_file=settings[0],budget_ledger=settings[1],
                          task_budget_id=settings[2],llm_budget_rmb=None,history_policy='strict')
     ledger,allowance,_=preflight(args)
     return ExperimentLLM(args.api_url,args.api_key_file,args.model,allowance,max_requests=3,
                          allowed_served_models={args.model},account=TaskBudgetAccount(ledger,args.task_budget_id,str(directory)),
-                         thinking_mode=thinking_mode,streaming=True)
+                         thinking_mode=thinking_mode,streaming=True,campus_ip=campus_ip)
 
 
 def reflection_client(directory,mode='flash'):
@@ -101,6 +117,9 @@ def command(args):
     if getattr(args,'policy','autonomous')=='legacy':
         if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
+        if (getattr(args,'task_interpretation','fallback') not in ('fallback','auto') or getattr(args,'prediction_input',None) is not None
+                or getattr(args,'semantic_artifact_from',None) is not None):
+            raise ValueError('Semantic interpretation and pre-fit input checks require the autonomous policy')
         from .task_constraints import package_restrictions
         if not package_restrictions(args.task_package):
             return legacy_command(args)
@@ -109,11 +128,14 @@ def command(args):
         if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash','opening-feedback-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
-            flash = None if reflection else configured_flash(args.run_dir)
+            flash = None if getattr(args,'semantic_artifact_from',None) or reflection and getattr(args,'task_interpretation','fallback') not in ('auto','proactive') else configured_flash(args.run_dir)
     except (OSError, ValueError, RuntimeError) as error:
         flash, issue = None, str(error)[:320]
     return train(args.task_package,args.run_dir,fit_limit=args.fit_limit,seed=args.seed,
                  wall=args.time_limit,timeout=args.trial_timeout,flash=flash,flash_setup_issue=issue,
                  self_review=getattr(args,'self_review',False),exploration_rule=getattr(args,'exploration_rule',None),
                  feedback_reflection=reflection,reflection_history=getattr(args,'reflection_history',None),
+                 interpretation=getattr(args,'task_interpretation','fallback'),
+                 prediction_package=getattr(args,'prediction_input',None),
+                 semantic_artifact_from=getattr(args,'semantic_artifact_from',None),
                  await_first_delivery=getattr(args,'await_first_delivery',False))

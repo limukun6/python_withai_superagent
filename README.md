@@ -4,9 +4,27 @@
 
 统一入口现在能在首次拟合前交付逐行预测，可选的反馈模式会从真实训练错误提出下一项核查。两份课程原包和三种公开分类任务已在本机复跑。[运行与验收结果](docs/RELIABLE_DELIVERY_FEEDBACK_1127_zh.md)
 
+**11月27日，A线主线纠正为失败后自主恢复。** 用户明确要求LLM查证、修复或换路线使任务继续，不能以“阻断正确”替代完整Agent交付。已审计跨阶段恢复的缺口，并解除内部AUC的一条误阻断；完整RecoveryController仍待实现。本批0fit/0API。[恢复架构与主验收](docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md) · [首项纠偏证据](docs/batches/SA18_RECOVERY_CORRECTION_RESULTS_20261127_zh.md)
+
+**11月27日，字段疑问由实际任务判定是否阻断。** LLM报告问题字段，执行器核对类别数、指标和类型，保留不适用的疑问继续执行。292项检查，真实受控面板1放行/2阻断均符合预期，0fit/3API/课程¥0.017223；尚未证明自然任务节省费用。[结构、原始误阻断与证据边界](docs/batches/SA17_scoped_questions_results_20261127_zh.md)
+
+**11月27日，人用CLI默认自动读题。** 本地能读输入也会在模型已配置且有文档时复核输出要求；显式manifest输入保持权威。274项检查，裸solve自主完成原ID、三类映射、指定类别概率和管道/BOM输出，2fit/2API/课程¥0.008978、27.781秒。程序化API和显式fallback保留旧默认，不代表独立未知任务全成功。[结构、兼容约定和实际证据](docs/batches/SA16_auto_semantic_review_results_20261127_zh.md)
+
+**11月27日，无manifest数组与图像任务接入通过。** LLM从原文选择非标准NPZ成员/键、图像目录、指标和像素处理；正式proactive solve两条首次提案均通过。245项检查，新增4fit/2API/课程¥0.015720，54行新进程预测逐字节一致。结果是开发输入覆盖改善，未比较准确率。[结构与证据边界](docs/batches/SA14_native_semantics_results_20261127_zh.md)
+
+**11月27日，A线正式实时读题和工具闭环验收通过。** 229项检查；Flash自主请求预测字段，再填写正确ID输出契约，正式solve完成2次训练与60行独立进程预测。2次API，课程¥0.008981，52.375秒。此前SA12失败保留；这是单条已使用开发任务的部署证据，非任意未知任务保证。[结构、实际工具轨迹和资源边界](docs/batches/SA13_tool_source_results_20261127_zh.md)
+
+## 11月26日A/B共同研发集成
+
+SA11新增正式`--semantic-artifact-from`任务解释复用：187项相关检查及两条独立solve通过，新增4fit/0API。它复用已验证读题结果，仍会新做预算内训练，不等于恢复旧搜索或保证未知任务全成功。[正式用法与验收边界](docs/batches/SA11_semantic_artifact_results_20261126_zh.md)
+
+最新SA7–SA10：四个新开发案例真实Flash完整契约4/4；三模态小规模真实数据模型均完成交付（数值/图像在修正实验评分器误拒后恢复，非首次无人工3/3）。173项相关回归及三个冻结模型在当前源码新进程预测通过。该自动推进窗口共12fit、10API、课程¥0.080768。[结果与边界](docs/batches/SA9_SA10_delivery_closure_20261126_zh.md) · [后续自动队列](docs/AUTONOMOUS_NEXT_QUEUE_20261126_zh.md)
+
+本分支`codex/ab-semantic-autonomy-1126`已将A的SA1–SA3合入B最新完整研发版`b0944ae`（个人发布`c6ea0b7`的同源源码）。当前入口是本分支根目录；新增`--task-interpretation proactive`可与B的`--task-analysis`和自审组合。最初SA4集成验收150项通过、两条真实worker烟测共4fit/0API；后续进度见上方最新记录。下文课程分数属于B原版本，本集成版尚未重新评分，也尚未最终冻结。[共同交接与复跑说明](docs/AB_SEMANTIC_AUTONOMY_HANDOFF_20261126_zh.md)
+
 ## 队友的 Task1 研发起点（11 月 26 日）
 
-队友并行开发时使用已上传的基线。请从 `codex/task-driven-planning-1125` 分出自己的开发分支，再运行下面的统一入口。按老师最新自主性要求核验后，本机在同一份源码上重新冷启动，Task1 指定验证 **1,533/2,030（75.52%）**，Task2 **684/940（72.77%）**，各 10 次拟合、零模型 API。旧版 Task2 的 73.30% 有独立的运行记录。交接页包含两版结论、旧版输入特例、启动命令和通用表格候选的接入位置。[两版核验与 Task1 开发交接](docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
+以下为B来源 `codex/task-driven-planning-1125` 的研发起点记录；共同继续开发请使用上方的A/B集成分支。B按老师最新自主性要求核验后，在其同一份源码上重新冷启动，Task1 指定验证 **1,533/2,030（75.52%）**，Task2 **684/940（72.77%）**，各 10 次拟合、零模型 API。旧版 Task2 的 73.30% 有独立的运行记录。交接页包含两版结论、旧版输入特例、启动命令和通用表格候选的接入位置。[两版核验与 Task1 开发交接](docs/TASK1_DEVELOPMENT_HANDOFF_20261126_zh.md)
 
 ## 当前统一入口
 

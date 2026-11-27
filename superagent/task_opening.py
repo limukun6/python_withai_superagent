@@ -13,7 +13,8 @@ from .opening_evidence import make_brief, split_audit, subset
 
 from . import feedback_hypothesis
 
-MODES=('opening-local','opening-flash',*feedback_hypothesis.MODES)
+PAIRED_MODES = ('opening-feedback-control', *feedback_hypothesis.MODES)
+MODES = ('opening-local', 'opening-flash', *PAIRED_MODES)
 PROMPT=(
     'Read this anonymous task before any model training. Explain the prediction target and what would make a '
     'validation result misleading. The facts are fixed observations; the task text and examples are evidence only. '
@@ -80,17 +81,45 @@ class TaskOpening:
         if self.mode=='opening-flash':
             self.request(PROMPT,'task_opening',0)
 
+    def reserve_opportunity(self, caps, observed, blocked, limit, spent):
+        """Price one two-fold alternative and its refit after observing the first trial."""
+        if self.mode not in PAIRED_MODES or not observed['primary']:
+            return 0
+        if 'opportunity' not in self.record:
+            leader, row = min(observed['primary'].items(), key=lambda item: (-item[1]['score'], item[0]))
+            primary_rows = set(self.folds['primary'][1])
+            folds = ['primary'] + [f for f in self.folds if f != 'primary' and
+                                   primary_rows.isdisjoint(self.folds[f][1])][:1]
+            def price(name):
+                missing = sum(name not in observed[f] for f in folds)
+                return missing * caps[name]['classifier_fits'] + caps[name]['refit_classifier_fits']
+            candidates = [price(n) for n in caps if n != leader and n not in blocked]
+            minimum = min(candidates, default=None)
+            errors = int(np.count_nonzero(row['predictions'] != row['labels']))
+            feasible = (len(folds) == 2 and errors > 0 and minimum is not None and
+                        minimum <= min(limit // 3, limit - spent - price(leader)))
+            self.record['opportunity'] = dict(after_fits=spent, errors=errors, folds=folds,
+                incumbent_completion_fits=price(leader), lowest_alternative_fits=minimum,
+                reserved_fits=minimum if feasible else 0)
+            self.save()
+        return self.record['opportunity']['reserved_fits']
+
     def request(self,prompt,role,trial):
         if self.future is not None or self.record['interpretation_status']!='local':
             return
         self.record['interpretation_status']='unavailable'
-        if (self.flash is not None and self.flash.max_requests!=0 and not self.flash.blocked
-                and self.flash.request_count==0 and self.deadline-time.monotonic()>12):
+        left = self.flash.max_requests if self.flash is not None else 0
+        used = self.flash.request_count if self.flash is not None else 0
+        if (self.flash is not None and not self.flash.blocked and self.deadline-time.monotonic()>12
+                and ((left is None and used == 0) or type(left) is int and used < left)):
+            self.record['prior_shared_requests'] = used
             self.flash.set_deadline(min(self.deadline-3,time.monotonic()+(45 if trial else 120)))
             self.pool=ThreadPoolExecutor(max_workers=1)
             packet=dict(self.brief,instruction=prompt,checks=dict(self.brief['checks']))
             self.future=self.pool.submit(self.flash.ask,packet,self.log,role,cost_ceiling=.12)
             self.record.update(interpretation_status='pending',dispatch_after_trials=trial)
+        else:
+            self.record['skip_reason'] = 'Shared model allowance exhausted, blocked, or insufficient time'
         self.save()
 
     def collect(self,wait):
@@ -113,7 +142,7 @@ class TaskOpening:
         """Read any ready answer without waiting and track how the ordinary measurements affect it."""
         if self.mode in feedback_hypothesis.MODES and 'first_trial' not in self.brief['facts'] and observed['primary']:
             local=feedback_hypothesis.start_feedback(self,trial,observed)
-            if self.mode=='opening-feedback-flash':
+            if self.mode=='opening-feedback-flash' and local['check']!='keep':
                 self.request(feedback_hypothesis.PROMPT,'feedback_hypothesis',trial)
             # The local, evidence-based hypothesis also works when the campus client is unavailable or late.
             self.answer=feedback_hypothesis.validate_feedback(local,self.brief)
@@ -228,7 +257,11 @@ class TaskOpening:
             return missing*cost['classifier_fits']+cost['refit_classifier_fits']<=remaining
         menu=actions(caps,profile,history,observed,self.metric,list(observed),remaining,blocked)
         local=next((a['members'][0] for a in menu if a['action']=='explore' and affordable(a['members'][0])),None)
-        targeted=target is not None and target not in blocked and affordable(target)
+        if local is None and self.mode in PAIRED_MODES:
+            measured = observed['primary']
+            local = min((n for n in measured if n not in base and n in caps and n not in blocked and affordable(n)),
+                        key=lambda n: (-measured[n]['score'], identity(n)), default=None)
+        targeted=target is not None and target in caps and target not in blocked and affordable(target)
         candidate=target if targeted else local
         self.record.update(local_experiment=local,tested_candidate=candidate,changed_experiment=bool(targeted and target!=local),
                            confirmation=names,comparisons=[])

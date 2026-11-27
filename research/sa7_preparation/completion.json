@@ -1,0 +1,52 @@
+{
+  "status": "prepared",
+  "tests": 3,
+  "failures": 0,
+  "errors": 0,
+  "source_unchanged": true,
+  "local_controls": [
+    {
+      "case": "Q1",
+      "status": "rejected",
+      "error_type": "UnsupportedFormat",
+      "reason": "A documented interpretation needs a configured model with remaining budget"
+    },
+    {
+      "case": "Q2",
+      "status": "rejected",
+      "error_type": "UnsupportedFormat",
+      "reason": "No unambiguous train source"
+    },
+    {
+      "case": "Q3",
+      "status": "rejected",
+      "error_type": "ValueError",
+      "reason": "Training record fields are inconsistent"
+    },
+    {
+      "case": "Q4",
+      "status": "accepted",
+      "complete": false,
+      "checks": {
+        "target": true,
+        "metric": true,
+        "columns": true,
+        "positive_class": true,
+        "classes": true,
+        "training_rows": true,
+        "output": false,
+        "prediction_rows": true,
+        "prediction_shape": true,
+        "prediction_values": true,
+        "preflight": true
+      },
+      "accepted_wrong_contract": true
+    }
+  ],
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "course_cost_rmb": 0,
+  "elapsed_seconds": 1.7660000000032596,
+  "registry_sha256": "7525d68d4852c3b287970b726be1d6e6ce2f24bb4a2d8a1937292a055dd619f9",
+  "scope": "new developer-authored packaging cases; no independent blind-test claim"
+}

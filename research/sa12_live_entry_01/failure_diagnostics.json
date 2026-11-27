@@ -1,0 +1,72 @@
+[
+  {
+    "kind": "semantic_contract_rejected",
+    "attempt": 1,
+    "diagnostic": {
+      "stage": "contract_probe",
+      "code": "ContractProbeError",
+      "message": "Inspection source is not admissible"
+    },
+    "proposal": {
+      "action": "inspect_header",
+      "member": "test.csv",
+      "collection": null,
+      "delimiter": ",",
+      "evidence_refs": [
+        "doc:README.md:0"
+      ]
+    }
+  },
+  {
+    "kind": "semantic_contract_rejected",
+    "attempt": 2,
+    "diagnostic": {
+      "stage": "contract_probe",
+      "code": "ValueError",
+      "message": "Output contract: invalid ID source"
+    },
+    "proposal": {
+      "version": "semantic-output-v1",
+      "output": {
+        "version": "output-csv-v1",
+        "delimiter": ",",
+        "encoding": "utf-8",
+        "header": true,
+        "columns": [
+          {
+            "name": "Ticket",
+            "kind": "input_id"
+          },
+          {
+            "name": "Verdict",
+            "kind": "label",
+            "mapping": {
+              "0": "0",
+              "1": "1"
+            }
+          },
+          {
+            "name": "PositiveScore",
+            "kind": "probability",
+            "class_label": "1"
+          }
+        ],
+        "order": {
+          "mode": "input"
+        }
+      },
+      "evidence_refs": [
+        "doc:README.md:0"
+      ],
+      "uncertainties": []
+    }
+  },
+  {
+    "kind": "partial_prior_frozen",
+    "reason": "UnsupportedFormat: Semantic contract probe did not pass within the shared repair allowance",
+    "observed_labels": [
+      "0",
+      "1"
+    ]
+  }
+]

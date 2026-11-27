@@ -1,0 +1,40 @@
+{
+  "status": "inventory_complete_plan_only",
+  "source_unchanged": true,
+  "runtime_recovery_controller_implemented": false,
+  "evidence": [
+    {
+      "file": "superagent/semantic_contract.py",
+      "function": "semantic_training",
+      "line": 418,
+      "finding": "intake_exhaustion_raises",
+      "code": "raise UnsupportedFormat('Semantic contract probe did not pass within the shared repair allowance')"
+    },
+    {
+      "file": "superagent/semantic_contract.py",
+      "function": "semantic_training",
+      "line": 348,
+      "finding": "bounded_semantic_loop",
+      "code": "rejected < 2 and tool_steps <= 2"
+    },
+    {
+      "file": "superagent/autonomous_run.py",
+      "function": "_train",
+      "line": 222,
+      "finding": "input_failure_returns_from_training",
+      "code": "return record_input_failure(package, directory, log, error, phase, api_usage=api_accounting(flash, log), resolved_task=task)"
+    }
+  ],
+  "ledger_summary": {
+    "requests": 485,
+    "known_course_cost_rmb": 8.129441,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "course_cost_rmb": 0,
+  "conclusion": "Current per-proposal feedback is not yet a cross-stage autonomous recovery controller. Verify recovery and correct delivery, not rejection counts."
+}

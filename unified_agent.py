@@ -123,24 +123,31 @@ def train_legacy(package, run_dir):
 
 
 def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=None, self_review=False,
-          exploration_rule=None, feedback_reflection=None, reflection_history=None):
+          exploration_rule=None, feedback_reflection=None, reflection_history=None,
+          task_interpretation='fallback',prediction_input=None,semantic_artifact_from=None):
     if policy == 'legacy':
-        if fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None or feedback_reflection or reflection_history:
+        if task_interpretation=='auto':task_interpretation='fallback'
+        if (fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None
+                or feedback_reflection or reflection_history or task_interpretation!='fallback' or prediction_input is not None
+                or semantic_artifact_from is not None):
             raise ValueError('Budget overrides apply to the autonomous course entry point')
         return train_legacy(package, run_dir)
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history,
+                               task_interpretation=task_interpretation,prediction_input=prediction_input,semantic_artifact_from=semantic_artifact_from)
     return arguments.handler(arguments)
 
 
 def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=False,exploration_rule=None,
-                     feedback_reflection=None,reflection_history=None):
+                     feedback_reflection=None,reflection_history=None,*,task_interpretation='fallback',prediction_input=None,semantic_artifact_from=None):
     from superagent.feedback_reflection import load_memory
     if reflection_history and not feedback_reflection:
         raise ValueError('A reflection history needs an enabled reviewer')
     prior = load_memory(reflection_history)
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     run_dir.mkdir(parents=True,exist_ok=False)
-    flags = ['unified',str(package),'--run-dir',str(run_dir/'agent')]
+    flags=['unified',str(package),'--run-dir',str(run_dir/'agent'),'--task-interpretation',task_interpretation]
+    if prediction_input is not None: flags.extend(['--prediction-input',str(Path(prediction_input).resolve())])
+    if semantic_artifact_from is not None: flags.extend(['--semantic-artifact-from',str(Path(semantic_artifact_from).resolve())])
     extra = {}
     if feedback_reflection:
         flags.extend(['--feedback-reflection', feedback_reflection])
@@ -164,13 +171,16 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=
     save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
          entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
-         fit_limit=arguments.fit_limit,self_review=self_review,**extra))
+         fit_limit=arguments.fit_limit,self_review=self_review,task_interpretation=task_interpretation,
+         prediction_input=str(prediction_input) if prediction_input is not None else None,
+         semantic_artifact_from=str(semantic_artifact_from) if semantic_artifact_from is not None else None,**extra))
     return arguments
 
 
 def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_review=False, exploration_rule=None,
-                   feedback_reflection=None, reflection_history=None, prediction_input=None, output=None):
-    """The training process only sees training inputs and a one-byte acknowledgement."""
+                   feedback_reflection=None, reflection_history=None, task_interpretation='fallback',
+                   prediction_input=None, semantic_artifact_from=None, output=None):
+    """Only intake may check unlabeled prediction structure. Export and training use separate processes."""
     import os
     import signal
     import subprocess
@@ -180,14 +190,15 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_re
     package, run_dir = Path(package).resolve(), Path(run_dir).resolve()
     if run_dir.exists():
         raise FileExistsError('A fresh solve needs a new run directory. Existing frozen models support predict.')
-    preview = prediction_input is not None
-    if preview != (output is not None):
+    preview = output is not None
+    if output is not None and prediction_input is None:
         raise ValueError('First delivery needs both prediction features and an output path')
     if preview:
         prediction_input, output = Path(prediction_input).resolve(), Path(output).resolve()
         from superagent.first_delivery import guard_output
         guard_output(output, run_dir, (package, prediction_input))
-    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history)
+    arguments=prepare_training(package,run_dir,fit_limit,time_limit,self_review,exploration_rule,feedback_reflection,reflection_history,
+                               task_interpretation=task_interpretation,prediction_input=prediction_input,semantic_artifact_from=semantic_artifact_from)
     inherited = ['--exploration-rule', arguments.exploration_rule] if arguments.exploration_rule else []
     if feedback_reflection:
         inherited.extend(['--feedback-reflection',feedback_reflection])
@@ -197,6 +208,9 @@ def solve_training(package, run_dir, *, fit_limit=None, time_limit=None, self_re
         inherited.append('--await-first-delivery')
     directory = Path(__file__).resolve().parent
     deadline = time.monotonic()+arguments.time_limit+30
+    inherited.extend(['--task-interpretation',task_interpretation])
+    if prediction_input is not None: inherited.extend(['--prediction-input',str(Path(prediction_input).resolve())])
+    if semantic_artifact_from is not None: inherited.extend(['--semantic-artifact-from',str(Path(semantic_artifact_from).resolve())])
     child = subprocess.Popen([sys.executable,'-m','superagent','unified',str(package),'--run-dir',str(run_dir/'agent'),
                               '--fit-limit',str(arguments.fit_limit),'--time-limit',str(arguments.time_limit),
                               *review_flags(self_review), *inherited], cwd=directory,
@@ -260,19 +274,24 @@ def main():
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
             add_review_arguments(command)
+            command.add_argument('--task-interpretation',choices=['auto','fallback','proactive'],default='auto',
+                                 help='auto reviews documents when a model is configured; fallback keeps the local-first path')
+            command.add_argument('--semantic-artifact-from',type=Path)
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
         if action == "solve":
             command.add_argument("--prediction-input", required=True, type=Path,
-                                 help="Features read by a separate exporter after a training checkpoint is frozen")
+                                 help="Unlabeled features for pre-fit schema checks and frozen-model prediction")
         if action == "train":
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
+            command.add_argument('--prediction-input',type=Path,help='Optional unlabeled input for pre-fit checks')
     args = parser.parse_args()
     args.feedback_reflection=feedback_mode(args)
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,
                      self_review=args.self_review,exploration_rule=args.exploration_rule,
-                     feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history)
+                     feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history,
+                     task_interpretation=args.task_interpretation,prediction_input=args.prediction_input,semantic_artifact_from=args.semantic_artifact_from)
     source=args.task_package
     if args.action == 'predict':
         from superagent.first_delivery import guard_output
@@ -281,7 +300,7 @@ def main():
         code=solve_training(source,args.run_dir,fit_limit=args.fit_limit,time_limit=args.time_limit,
                             self_review=args.self_review,exploration_rule=args.exploration_rule,
                             feedback_reflection=args.feedback_reflection,reflection_history=args.reflection_history,
-                            prediction_input=args.prediction_input,output=args.output)
+                            task_interpretation=args.task_interpretation,prediction_input=args.prediction_input,semantic_artifact_from=args.semantic_artifact_from,output=args.output)
         if code:
             return code
         source=args.prediction_input

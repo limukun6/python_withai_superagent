@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "old_registered_expectation": "blocked",
+  "current_contract_continues": true,
+  "metric": "ROC-AUC",
+  "training_rows": 64,
+  "resolution": {
+    "version": "scoped-questions-v1",
+    "items": [
+      {
+        "field": "positive_label",
+        "question": "Which of the two arbitrary codes is the positive event?",
+        "evidence_refs": [
+          "doc:README.md:0"
+        ],
+        "status": "not_required_for_compiled_task",
+        "reason": "binary_auc_invariant_under_swapping_named_class_probabilities",
+        "decision_source": "executor_decoded_training_kind_and_metric",
+        "facts": {
+          "task_kind": "numeric_tabular",
+          "metric": "roc_auc",
+          "class_count": 2,
+          "positive_label_declared": false,
+          "score_interface": "normalized_class_probability_matrix_with_class_order"
+        }
+      }
+    ],
+    "status": "all_reported_questions_not_required",
+    "semantic_truth_certified": false
+  },
+  "original_response_unchanged": true,
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "course_cost_rmb": 0,
+  "boundary": "corrected one unnecessary rule; a complete cross-stage recovery controller is still pending"
+}

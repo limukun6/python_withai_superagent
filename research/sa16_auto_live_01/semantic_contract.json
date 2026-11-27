@@ -1,0 +1,44 @@
+{
+  "proposal": {
+    "version": "semantic-output-v1",
+    "output": {
+      "version": "output-csv-v1",
+      "delimiter": "|",
+      "encoding": "utf-8-sig",
+      "header": true,
+      "columns": [
+        {
+          "name": "Case",
+          "kind": "input_id",
+          "field": "record_id"
+        },
+        {
+          "name": "Result",
+          "kind": "label",
+          "mapping": {
+            "0": "c0",
+            "1": "c1",
+            "2": "c2"
+          }
+        },
+        {
+          "name": "ScoreFor2",
+          "kind": "probability",
+          "class_label": "2"
+        }
+      ],
+      "order": {
+        "mode": "input"
+      }
+    },
+    "evidence_refs": [
+      "doc:README.md:0"
+    ],
+    "uncertainties": []
+  },
+  "source_citations_checked": true,
+  "semantic_truth_certified": false,
+  "probe": "passed",
+  "attempt": 1,
+  "structure_steps": 0
+}

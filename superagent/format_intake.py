@@ -266,7 +266,8 @@ def prediction_rows(path, spec):
         else:
             detected_codec, location, records = decode_records(raw, 'test', selector=selector,
                 delimiter=recipe.get('prediction_delimiter') or descriptor.get('delimiter') or recipe.get('documented_delimiter'),
-                expected_columns=[c['name'] for c in spec['input_schema']['columns']])
+                expected_columns=[recipe.get('field_map',{}).get(c['name'],c['name'])
+                                  for c in spec['input_schema']['columns']])
             check_codec(descriptor, detected_codec)
         different_member = hashlib.sha256(raw).hexdigest() != recipe['train_member_sha256']
         separate_query = different_member and (roles(name) == {'test'} or name == expected)
@@ -280,9 +281,16 @@ def prediction_rows(path, spec):
 def predict_records(path, kind, spec):
     selected = prediction_rows(path,spec)
     header = [c['name'] for c in spec['input_schema']['columns']]
-    if any(not set(header) <= row.keys() for row in selected):
+    mapping = spec['input_recipe'].get('field_map') or {}
+    if (not isinstance(mapping, dict) or not set(mapping) <= set(header)
+            or any(not isinstance(v, str) or not v for v in mapping.values())):
+        raise ValueError('Invalid frozen prediction field mapping')
+    sources = [mapping.get(name, name) for name in header]
+    if len(set(sources)) != len(sources) or spec['input_schema'].get('target') in sources:
+        raise ValueError('Prediction mapping duplicates a field or uses the target')
+    if any(not set(sources) <= row.keys() for row in selected):
         raise ValueError('Required frozen feature fields are missing from prediction records')
-    rows = ([scalar(row[n]) for n in header] for row in selected)
+    rows = ([scalar(row[n]) for n in sources] for row in selected)
     detected, x, _, result = canonical('test', spec['input_schema'], header, rows, spec['metric'], False)
     if detected != kind or result.get('feature_shape') != spec.get('feature_shape'):
         raise ValueError('Prediction records do not match the frozen model')

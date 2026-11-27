@@ -129,7 +129,7 @@ class OpeningTests(unittest.TestCase):
     def test_invalid_or_unavailable_call_never_retries(self):
         with tempfile.TemporaryDirectory() as tmp:
             task,folds=training_task()
-            flash=Mock(blocked=False,request_count=0)
+            flash=Mock(blocked=False,request_count=0,max_requests=1)
             flash.ask.return_value=dict(metric='incorrect')
             run=TaskOpening('opening-flash',task,METRIC,folds,[],'ordinary',RunLogger(Path(tmp)),flash,time.monotonic(),60)
             run.launch()

@@ -109,7 +109,9 @@ def run(a, *, expected_fingerprint=None, additional_sealed_directory=None):
         JOINT_OUTER_ANSWERS=str(study/'evaluation'), JOINT_UPSTREAM_SOURCES=str(a.root/'sources'),
         JOINT_PREDICTION_INPUT=str(query), REFLECTION_STUDY_LIVE='0', OMP_NUM_THREADS='1',
         OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
-    if additional_sealed_directory is not None:
+    if isinstance(additional_sealed_directory,(tuple,list)):
+        settings['JOINT_ADDITIONAL_SEALED_DIRECTORIES'] = json.dumps([str(p) for p in additional_sealed_directory])
+    elif additional_sealed_directory is not None:
         settings['JOINT_ADDITIONAL_SEALED_DIRECTORY'] = str(additional_sealed_directory)
     if arm == CAMPUS:
         settings.update(REFLECTION_STUDY_LIVE='1', SUPERAGENT_PLANNER_KEY_FILE=str(a.key_file),

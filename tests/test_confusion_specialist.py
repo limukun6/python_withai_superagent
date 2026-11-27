@@ -93,7 +93,9 @@ class PairDesignTests(unittest.TestCase):
     def test_repeated_confusion_and_scoring_contract_needed(self):
         self.assertEqual(propose_pair(self.bases['primary'],self.metric)['pair'],[0,1])
         self.assertIsNone(propose_pair(self.bases['primary'],MetricSpec('accuracy',(0,1))))
-        self.assertIsNone(propose_pair(dict(self.bases['primary'],probabilities=None),self.metric))
+        no_scores=dict(self.bases['primary'],probabilities=None)
+        self.assertEqual(propose_pair(no_scores,self.metric)['gate'],'predicted_member')
+        self.assertIsNone(propose_pair(no_scores,MetricSpec('roc_auc',(0,1,2))))
 
     def test_two_confirmed_gains_publish_new_file_using_only_pair_rows(self):
         w=MeasuredWorker(True)
@@ -119,6 +121,30 @@ class PairDesignTests(unittest.TestCase):
         self.assertEqual(len(w.calls),1)
         self.assertEqual(self.opening.record['designed_method']['status'],'rejected')
         self.assertFalse((self.path/'designed_model.joblib').exists())
+
+    def test_hard_route_uses_labels_without_synthesizing_probability(self):
+        for row in self.bases.values():row['probabilities']=None
+        w=MeasuredWorker(True)
+        w.caps['measured']['supports_probabilities']=False
+        selected,_=self.run_design(w)
+        fitted=joblib.load(self.path/selected['model_file'])['model']
+        self.assertEqual(fitted.gate,'predicted_member')
+        np.testing.assert_array_equal(fitted.predict(self.x),self.y)
+        with self.assertRaisesRegex(ValueError,'no probability'):fitted.predict_proba(self.x)
+
+    def test_reserve_only_the_last_feasible_independent_confirmation(self):
+        from superagent.task_opening import TaskOpening
+        o=SimpleNamespace(mode='opening-feedback-confirm',folds=self.folds,record={'opportunity':{'reserved_fits':3}},save=lambda:None)
+        cap={'classifier_fits':1,'refit_classifier_fits':1}
+        caps={'base':cap,'new':cap}
+        menu=[dict(action='explore',members=['new'],split='primary'),dict(action='stop',members=['base'],split=None),
+              dict(action='confirm',members=['base'],split='confirmation_1',evidence={'target_members':['base']})]
+        observed={'primary':{'base':{}},'confirmation_1':{}}
+        self.assertIsNone(TaskOpening.protect_confirmation(o,menu,caps,observed,3))
+        self.assertEqual(TaskOpening.protect_confirmation(o,menu,caps,observed,2),menu[2])
+        self.assertIsNone(TaskOpening.protect_confirmation(o,menu,caps,observed,1))
+        observed['confirmation_1']['base']={}
+        self.assertIsNone(TaskOpening.protect_confirmation(o,menu,caps,observed,2))
 
     def test_restrictions_and_short_allowance_fall_back_without_fitting(self):
         w=MeasuredWorker(True)

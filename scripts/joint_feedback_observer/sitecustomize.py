@@ -1,4 +1,5 @@
 """Keep answer files out of every agent process and prediction packages out of fitting subprocesses."""
+import json
 import os
 from pathlib import Path
 import runpy
@@ -8,6 +9,7 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
     denied = [Path(os.environ[key]).resolve() for key in ('JOINT_OUTER_ANSWERS', 'JOINT_UPSTREAM_SOURCES')]
     if os.environ.get('JOINT_ADDITIONAL_SEALED_DIRECTORY'):
         denied.append(Path(os.environ['JOINT_ADDITIONAL_SEALED_DIRECTORY']).resolve())
+    denied.extend(Path(name).resolve() for name in json.loads(os.getenv('JOINT_ADDITIONAL_SEALED_DIRECTORIES','[]')))
     query = Path(os.environ['JOINT_PREDICTION_INPUT']).resolve()
     worker = 'superagent.experiment_worker' in sys.orig_argv
 

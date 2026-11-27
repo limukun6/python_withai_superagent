@@ -1,0 +1,15 @@
+{
+  "parent": "0f0ca0c2",
+  "question": "When the leading model changes late or does not supply probabilities, can the agent buy the missing confirmation and test a useful method within the same budget?",
+  "evidence_available_at_design": "Before the first study's external scores were opened, the image pilot had a new leading SVM measured on only one fold with three fits left; the numeric pilot had a confirmed hard-label SVM. Both blocked the probabilistic experiment. The text replication was separately qualified and is not part of this study.",
+  "panels": {"v21": ["u31","tabular","balanced_accuracy"], "v83": ["u72","image","accuracy"]},
+  "sampling": {"train": 1100, "outer": 350, "first": 276201, "second": 276202, "rule": "Remove every sample in both source panels registered in feedback_design_1127 and all earlier joint development rows before drawing. UCI letter uses only the first 16000 training records. Publish both group fingerprints before judging any predictions."},
+  "arms": ["feedback-local", "feedback-confirm", "feedback-design"],
+  "common": "Identical data, candidate inventory, cold start, budgets, scoring contract and installed resources. All arms can run the original feedback strategy. The middle arm may prioritize the last affordable confirmation of a provisional leader. The third can also construct a class-pair learner, using hard decisions if the incumbent cannot supply class probabilities and the task requires only labels.",
+  "scheduling": "If the incumbent has no measurement on a disjoint training fold, reserve its last affordable chance to confirm and refit when the ordinary next step would otherwise consume that chance. Do not repeat a completed confirmation, exceed the budget, or manufacture probabilities.",
+  "criteria": "The pair, routing condition and specialist are fixed from primary evidence before fitting. Retain the incumbent unless the complete task metric improves on each of two disjoint training folds with mean gain at least 0.003. On a nonpositive first gain do not spend another fit to retest the same proposal.",
+  "replication": "Before opening external labels, replicate one source if the design arm adopted a challenger. Choose the first qualifying source in v21,v83 order and compare feedback-confirm with feedback-design on fresh disjoint rows. The replication tests the incremental method, not the ordinary arm again.",
+  "limits": {"local_fits_including_refit_per_path": 11, "time_seconds": 600, "model_api_requests": 0, "first_paths": 6, "max_replication_paths": 2},
+  "primary_endpoints": ["actual autonomous decisions and reasons", "audited fits", "whole-panel declared metric", "gains and losses on the same output rows", "independent model reload and early delivery"],
+  "boundary": "Development packages only. No course validation retuning, sealed team tasks, or campus request."
+}

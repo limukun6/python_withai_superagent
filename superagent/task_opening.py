@@ -104,6 +104,36 @@ class TaskOpening:
             self.save()
         return self.record['opportunity']['reserved_fits']
 
+    def protect_confirmation(self, menu, caps, observed, remaining):
+        if self.mode not in feedback_hypothesis.EVIDENCE_MODES or not self.record.get('opportunity',{}).get('reserved_fits'):
+            return None
+        stop = next((a for a in menu if a['action'] == 'stop'), None)
+        if stop is None:
+            return None
+        members = stop['members']
+        primary = set(self.folds['primary'][1])
+        independent = [f for f in self.folds if f != 'primary' and primary.isdisjoint(self.folds[f][1])]
+        if any(all(n in observed[f] for n in members) for f in independent):
+            return None
+        refit_cost = sum(caps[n]['refit_classifier_fits'] for n in members)
+        normal = menu[0]
+        for confirm in menu:
+            if (confirm['action'] != 'confirm' or confirm['split'] not in independent
+                    or confirm['evidence']['target_members'] != members):
+                continue
+            fold = confirm['split']
+            need = refit_cost + sum(caps[n]['classifier_fits'] for n in members if n not in observed[fold])
+            if normal['action'] == 'confirm' and normal['split'] == fold and normal['members'] == confirm['members']:
+                return None
+            cost = caps[normal['members'][0]]['classifier_fits'] if normal['action'] != 'stop' else remaining
+            if remaining >= need > remaining - cost:
+                self.record.setdefault('protected_confirmations', []).append(dict(incumbent=members,split=fold,
+                    remaining_fits=remaining,required_fits=need,ordinary_action=normal['action'],
+                    ordinary_members=normal['members']))
+                self.save()
+                return confirm
+        return None
+
     def request(self,prompt,role,trial):
         if self.future is not None or self.record['interpretation_status']!='local':
             return

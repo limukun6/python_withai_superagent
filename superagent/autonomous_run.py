@@ -315,6 +315,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if opening is not None:
+                    corroborate = opening.protect_confirmation(menu,caps,observed,remaining)
+                    if corroborate is not None:
+                        choice,source=corroborate,'last affordable independent confirmation'
                 if pilot is not None:
                     pilot.launch(choice,menu,generator,caps,observed,history,profile,metric,
                                  remaining+fit_limit-core_limit)

@@ -36,12 +36,12 @@ def sources():
     return {p.relative_to(root).as_posix(): sha(p) for p in sorted(root.rglob('*.py'))}
 
 
-def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kernel_width=None, repeated_context=False, comparable_context=False):
+def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kernel_width=None, repeated_context=False, comparable_context=False, table_extensions=False):
     """A-owned study projection of B's registry; never constructs new methods."""
     if scope not in ('baseline','full'):
         raise ValueError('Unknown candidate catalogue scope')
     caps=capabilities_for(task_spec,train_rows=train_rows,numeric_kernel_width=numeric_kernel_width,
-                          repeated_context=repeated_context,comparable_context=comparable_context)
+                          repeated_context=repeated_context, comparable_context=comparable_context, table_extensions=table_extensions)
     if scope=='baseline':
         if any(c.get('origin') not in ('shared_baseline','b_port') for c in caps.values()):
             raise ValueError('Cannot define baseline from unknown candidate origins')

@@ -17,7 +17,7 @@ ADAPTER_VERSION = '1.5'
 FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
 
 
-def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False):
+def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False, table_extensions=False):
     if task.get('contract_version') != 1 or task.get('objective') != 'classification':
         raise ValueError('Expected an A/B v1 classification task')
     metric = MetricSpec.from_payload({'metric_spec': task['metric']})
@@ -35,9 +35,9 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
     if repeated_context and kind == 'categorical_tabular' and len(metric.labels) == 2 and find_spec('catboost') is not None:
         from .ab_methods import context_candidate, aligned_candidate
         methods.append(context_candidate())
-        if comparable_context:
+        if comparable_context and table_extensions:
             methods.append(aligned_candidate())
-    if (kind in ("numeric_tabular","categorical_tabular") and train_rows is not None and 2 <= train_rows <= 12000
+    if (table_extensions and kind in ("numeric_tabular","categorical_tabular") and train_rows is not None and 2 <= train_rows <= 12000
             and len(metric.labels)<=10
             and not {"no_pretrained_assets","no_external_data","linear_only"}.intersection(task.get("method_restrictions",()))
             and table_foundation.checkpoint() is not None):
@@ -103,10 +103,10 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
     return [entry for entry in menu if permitted(entry,task.get('method_restrictions',()))]
 
 
-def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False):
+def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False, table_extensions=False):
     """Build the executor's registry before exploration. Use only locally runnable methods."""
     entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes,
-                             numeric_kernel_width=numeric_kernel_width, repeated_context=repeated_context,comparable_context=comparable_context)
+                             numeric_kernel_width=numeric_kernel_width, repeated_context=repeated_context, comparable_context=comparable_context, table_extensions=table_extensions)
     return {
         entry['id']: dict(entry, kind=task['kind'], classifier_fits=entry['expected_classifier_fits'],
                           refit_classifier_fits=1)

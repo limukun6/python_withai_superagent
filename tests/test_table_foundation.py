@@ -24,12 +24,15 @@ class OptionalTableModelTests(TestCase):
         spec=dict(recorded()["task"],kind="categorical_tabular",input_schema={})
         spec["metric"]=dict(spec["metric"],labels=[0,1])
         with patch.object(table,"checkpoint",return_value=Path("verified")):
-            possible=registered_capabilities(spec,800,repeated_context=True,comparable_context=True)
+            unchanged=registered_capabilities(spec,800,repeated_context=True,comparable_context=True)
+            self.assertNotIn(ALIGNED,unchanged)
+            self.assertNotIn(table.NAME,unchanged)
+            possible=registered_capabilities(spec,800,repeated_context=True,comparable_context=True,table_extensions=True)
             self.assertEqual(possible[table.NAME]["classifier_fits"],1)
             self.assertIn(ALIGNED,possible)
             self.assertNotIn(ALIGNED,registered_capabilities(spec,800,repeated_context=True))
             for flag in ("no_external_data","no_pretrained_assets","linear_only"):
                 restricted=registered_capabilities(dict(spec,method_restrictions=[flag]),800,
-                                                   repeated_context=True,comparable_context=True)
+                                                   repeated_context=True,comparable_context=True,table_extensions=True)
                 self.assertNotIn(table.NAME,restricted)
                 self.assertEqual(ALIGNED in restricted,flag!="linear_only")

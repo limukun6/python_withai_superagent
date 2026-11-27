@@ -1,0 +1,952 @@
+{
+  "prior_sha256": "9709b808da474f64ec392e20e06a31c72c5176024850759702ea36b9564b6f0c",
+  "prior_completed_fits": 413,
+  "new_fits": {
+    "semantic": 4,
+    "binding": 6,
+    "distill": 2,
+    "distill_shared_teachers": 8
+  },
+  "new_fits_total": 20,
+  "accumulated_completed_fits": 433,
+  "synthetic_engineering_probe_fits": 1,
+  "shared_teacher_record": {
+    "sha256": "a76152eec79857b03d3181db2b663ed754afd2cd1f8c485cfaa47bf091817ef2",
+    "protocol": "aa1046e24caa2f9aeeecaf5b2b1627722c613089942f96a90d2a9abbb35998e0",
+    "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+    "fits": 8,
+    "overlap": 0,
+    "folds": [
+      {
+        "fold": 0,
+        "teacher_fits": 2,
+        "training": 3043,
+        "held": 1018,
+        "fitting_sha256": "13e27791c612a415f73bd8662d0e3ef72ba1aca110c195e2b6e4d3ac482a43bc",
+        "held_sha256": "c6572de7d5f90f8422c5cba68d1a0da7a7f1616293b229e26c74cedbb4b7f514"
+      },
+      {
+        "fold": 1,
+        "teacher_fits": 2,
+        "training": 3047,
+        "held": 1014,
+        "fitting_sha256": "c4a9da14f3fc69e45559451ae6d254d72d0e15a313b962246bd50b0e0aae2ecd",
+        "held_sha256": "53844059d7310e689232d7f87c92e62ac2c224d4a64f505f11e352727eb7ea9c"
+      },
+      {
+        "fold": 2,
+        "teacher_fits": 2,
+        "training": 3048,
+        "held": 1013,
+        "fitting_sha256": "29019fdd555f4ea028591ca41b0fbfda6df2d3036a8aea8ad0e320a061b20544",
+        "held_sha256": "453f139558993da905e61a939f7b0d6027138ddc6d7d2e7292366e42331df79f"
+      },
+      {
+        "fold": 3,
+        "teacher_fits": 2,
+        "training": 3045,
+        "held": 1016,
+        "fitting_sha256": "c496b5c5e4f9a01c081d3a3a430453c00f7731818848076c4288a243417735f8",
+        "held_sha256": "1c8435691b97fde7dc3e44c8fdffdfb9df94a2cfc9c247a4579446ce526d074a"
+      }
+    ],
+    "predictions": "dd2386a65f14a252973b3b3584a92a125be24f6726faf84a2e05dda2a9d1d934",
+    "rows": 4061,
+    "same_label_fraction": 0.8864811622753016,
+    "seconds": 36.38,
+    "api_requests": 0
+  },
+  "studies": {
+    "semantic": {
+      "candidates": {
+        "e5_tree": {
+          "seal": "dcd7751c902469d571042b70e52e498373018a0bc8228c2b1b8bd4047e1c1252",
+          "protocol": "44d81b60bfec777214f2c63c5b52c54446582bb658fd7a4607f13f75ad2c8dfb",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "supervised_fits": 1,
+          "predictions": {
+            "nomination": "0db83decabfa68eb4e7af84166e45bc42aec6d7e2d1f2d86a043237f625e3068",
+            "confirmation": "32b2c6b086fcb6f5e3a31cfa7cb4c17285682295261cd8ada71040dc5e0fa160",
+            "audit": "8247db622ffb649e6cea664734a8f221df8f5e05c488fc72635f6f05d3d06d9d"
+          },
+          "model": "intfloat/e5-small-v2",
+          "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+          "weights_sha256": "45bfa60070649aae2244fbc9d508537779b93b6f353c17b0f95ceccb1c5116c1",
+          "frozen": true,
+          "local_encoder_tokens_shared": 53999,
+          "encoding_seconds_shared": 6.95,
+          "class_head_seconds": 5.28,
+          "api_requests": 0
+        },
+        "e5_linear": {
+          "seal": "f13804e1b850125b2d1b5fc7e7abf0856c188cb2d500071c4d2950767ac7d719",
+          "protocol": "44d81b60bfec777214f2c63c5b52c54446582bb658fd7a4607f13f75ad2c8dfb",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "supervised_fits": 1,
+          "predictions": {
+            "nomination": "115b7d805ac9d77bd4c7083d008c318e4d2658b223167ff2611dd080568cf216",
+            "confirmation": "fa1156cd5f1e6242ed1490aa76ddc0daa49858ea126ef8113a1fefb398116eb9",
+            "audit": "d0a94944381fdced33e6deaadb0836b749bc8683a1f42efc69b28bab0737ba4c"
+          },
+          "model": "intfloat/e5-small-v2",
+          "revision": "ffb93f3bd4047442299a41ebb6fa998a38507c52",
+          "weights_sha256": "45bfa60070649aae2244fbc9d508537779b93b6f353c17b0f95ceccb1c5116c1",
+          "frozen": true,
+          "local_encoder_tokens_shared": 53999,
+          "encoding_seconds_shared": 6.95,
+          "class_head_seconds": 0.19,
+          "api_requests": 0
+        },
+        "bge_tree": {
+          "seal": "e80b89ef1de8a2fb37042ad9b641b9a3c94ff6af69dee1f37058a2fef3a1ec82",
+          "protocol": "44d81b60bfec777214f2c63c5b52c54446582bb658fd7a4607f13f75ad2c8dfb",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "supervised_fits": 1,
+          "predictions": {
+            "nomination": "13a48ddeb2aae8c5e3d657f0b1efd0531031fc61f783f53253d25de3b74bd2a0",
+            "confirmation": "28c10c69e514b704e3dab83a5dca342b02cd8850cea8b2ab5807d1bc086c06dc",
+            "audit": "9c07d591edea4ae9e8de903824c401b0b9bad2081fd3eb9a1b2165055cae5d14"
+          },
+          "model": "BAAI/bge-small-en-v1.5",
+          "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+          "weights_sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad",
+          "frozen": true,
+          "local_encoder_tokens_shared": 52519,
+          "encoding_seconds_shared": 5.93,
+          "class_head_seconds": 5.03,
+          "api_requests": 0
+        },
+        "bge_linear": {
+          "seal": "c990185d391e6baf9020346279dbddb50f6c22a45ee4c5592d7e963f3222cb5d",
+          "protocol": "44d81b60bfec777214f2c63c5b52c54446582bb658fd7a4607f13f75ad2c8dfb",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "supervised_fits": 1,
+          "predictions": {
+            "nomination": "14028eda699b2955e2d3566f7e3fa6d4ee6bbae20fd95d5e210c8ff6122c821a",
+            "confirmation": "d88a9b3e286e3ea9fa464d255da62b7195161f4a7699ae081988e61d67919925",
+            "audit": "437ec17f7ece5b7b2bc3682abeaed2602af571fed295f1a2e6345de4cd641b6e"
+          },
+          "model": "BAAI/bge-small-en-v1.5",
+          "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+          "weights_sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad",
+          "frozen": true,
+          "local_encoder_tokens_shared": 52519,
+          "encoding_seconds_shared": 5.93,
+          "class_head_seconds": 0.17,
+          "api_requests": 0
+        }
+      },
+      "nomination": [
+        {
+          "method": "retain",
+          "share": 0.0,
+          "correct": 609,
+          "fixed": 0,
+          "lost": 0,
+          "net": 0
+        },
+        {
+          "method": "e5_tree",
+          "share": 0.125,
+          "correct": 608,
+          "fixed": 3,
+          "lost": 4,
+          "net": -1
+        },
+        {
+          "method": "e5_tree",
+          "share": 0.25,
+          "correct": 611,
+          "fixed": 9,
+          "lost": 7,
+          "net": 2
+        },
+        {
+          "method": "e5_tree",
+          "share": 0.5,
+          "correct": 613,
+          "fixed": 14,
+          "lost": 10,
+          "net": 4
+        },
+        {
+          "method": "e5_tree",
+          "share": 1.0,
+          "correct": 607,
+          "fixed": 28,
+          "lost": 30,
+          "net": -2
+        },
+        {
+          "method": "e5_linear",
+          "share": 0.125,
+          "correct": 607,
+          "fixed": 8,
+          "lost": 10,
+          "net": -2
+        },
+        {
+          "method": "e5_linear",
+          "share": 0.25,
+          "correct": 607,
+          "fixed": 11,
+          "lost": 13,
+          "net": -2
+        },
+        {
+          "method": "e5_linear",
+          "share": 0.5,
+          "correct": 599,
+          "fixed": 18,
+          "lost": 28,
+          "net": -10
+        },
+        {
+          "method": "e5_linear",
+          "share": 1.0,
+          "correct": 556,
+          "fixed": 35,
+          "lost": 88,
+          "net": -53
+        },
+        {
+          "method": "bge_tree",
+          "share": 0.125,
+          "correct": 611,
+          "fixed": 5,
+          "lost": 3,
+          "net": 2
+        },
+        {
+          "method": "bge_tree",
+          "share": 0.25,
+          "correct": 614,
+          "fixed": 10,
+          "lost": 5,
+          "net": 5
+        },
+        {
+          "method": "bge_tree",
+          "share": 0.5,
+          "correct": 611,
+          "fixed": 15,
+          "lost": 13,
+          "net": 2
+        },
+        {
+          "method": "bge_tree",
+          "share": 1.0,
+          "correct": 595,
+          "fixed": 27,
+          "lost": 41,
+          "net": -14
+        },
+        {
+          "method": "bge_linear",
+          "share": 0.125,
+          "correct": 604,
+          "fixed": 5,
+          "lost": 10,
+          "net": -5
+        },
+        {
+          "method": "bge_linear",
+          "share": 0.25,
+          "correct": 605,
+          "fixed": 11,
+          "lost": 15,
+          "net": -4
+        },
+        {
+          "method": "bge_linear",
+          "share": 0.5,
+          "correct": 595,
+          "fixed": 23,
+          "lost": 37,
+          "net": -14
+        },
+        {
+          "method": "bge_linear",
+          "share": 1.0,
+          "correct": 565,
+          "fixed": 41,
+          "lost": 85,
+          "net": -44
+        }
+      ],
+      "reference": 609,
+      "lock": "56264bb8d83f8da231521ed295ce39d6daf9a00fa3646291a5eca195a25540e4",
+      "score_sha256": "bc264d1f70f52c73e14d051bc0a5ab67b928ef60030334bf0e183b36abf2b050",
+      "winner": [
+        "bge_tree",
+        0.25
+      ],
+      "checks": [
+        {
+          "role": "confirmation",
+          "rows": 817,
+          "reference": 620,
+          "correct": 618,
+          "fixed": 5,
+          "lost": 7,
+          "net": -2
+        },
+        {
+          "role": "audit",
+          "rows": 807,
+          "reference": 604,
+          "correct": 602,
+          "fixed": 5,
+          "lost": 7,
+          "net": -2
+        }
+      ],
+      "eligible": false
+    },
+    "binding": {
+      "candidates": {
+        "global": {
+          "seal": "e946030cb47ba5d9a30d4063a2a2badc8b1cde2236d5a464a8855a1577d76ac9",
+          "protocol": "9bfd404433c04d3406dfcf94becb0faec7a36d6c6f8bd78e60cfd7c45819edf7",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "declared_spec_sha256": "f545cd7014468696824589f1b9f61b2c50d5ca5e7ba5e6eda2eeddeae0b0fbed",
+          "classes": [
+            0,
+            1
+          ],
+          "predictions": {
+            "nomination": "7df078a90de37ceb92896a16cc305e8b112fd08c6302576befef5f55fd626da4",
+            "confirmation": "cde777c3e53a55692b302056e28486a29371a2b76596e16958e371ef6a0770f3",
+            "audit": "4b5ce7a391abe218a4f3158e13ffd4750ebe5617f8a81a6bfced28c933d3ebe8"
+          },
+          "additional_classifier_fits": 1,
+          "family_size": 5,
+          "selector_coverage": 1.0,
+          "distinct_bound_fields": 5,
+          "specialists": [],
+          "shared_frozen_encoder": "BAAI/bge-small-en-v1.5",
+          "local_text_tokens_shared": 207,
+          "anonymous_abstention": true,
+          "permutation_invariant": true,
+          "seconds_both": 11.18,
+          "api_requests": 0
+        },
+        "pooled": {
+          "seal": "369be89dc2cc002cad7776931d3a15a98ed95ff2163a4a72df73f0f3debeb8a3",
+          "protocol": "9bfd404433c04d3406dfcf94becb0faec7a36d6c6f8bd78e60cfd7c45819edf7",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "declared_spec_sha256": "f545cd7014468696824589f1b9f61b2c50d5ca5e7ba5e6eda2eeddeae0b0fbed",
+          "classes": [
+            0,
+            1
+          ],
+          "predictions": {
+            "nomination": "6bb402949f0df1e71f9428f43f978e25f277db6da95c752834535bc075268df9",
+            "confirmation": "6151698bdf8ee12a8b092e03d962a95e91d27d7f3610c14a4f6ee92d58293e75",
+            "audit": "58b8a0cd15e25a3b5556fccd1345656a7d7bd9d07d12c70c1319130f5624132a"
+          },
+          "additional_classifier_fits": 5,
+          "family_size": 5,
+          "selector_coverage": 1.0,
+          "distinct_bound_fields": 5,
+          "specialists": [
+            1233,
+            884,
+            787,
+            655,
+            502
+          ],
+          "shared_frozen_encoder": "BAAI/bge-small-en-v1.5",
+          "local_text_tokens_shared": 207,
+          "anonymous_abstention": true,
+          "permutation_invariant": true,
+          "seconds_both": 11.18,
+          "api_requests": 0
+        }
+      },
+      "nomination": [
+        {
+          "method": "retain",
+          "share": 0.0,
+          "correct": 609,
+          "fixed": 0,
+          "lost": 0,
+          "net": 0
+        },
+        {
+          "method": "global",
+          "share": 0.125,
+          "correct": 611,
+          "fixed": 4,
+          "lost": 2,
+          "net": 2
+        },
+        {
+          "method": "global",
+          "share": 0.25,
+          "correct": 613,
+          "fixed": 9,
+          "lost": 5,
+          "net": 4
+        },
+        {
+          "method": "global",
+          "share": 0.5,
+          "correct": 611,
+          "fixed": 16,
+          "lost": 14,
+          "net": 2
+        },
+        {
+          "method": "global",
+          "share": 1.0,
+          "correct": 603,
+          "fixed": 24,
+          "lost": 30,
+          "net": -6
+        },
+        {
+          "method": "pooled",
+          "share": 0.125,
+          "correct": 611,
+          "fixed": 5,
+          "lost": 3,
+          "net": 2
+        },
+        {
+          "method": "pooled",
+          "share": 0.25,
+          "correct": 614,
+          "fixed": 11,
+          "lost": 6,
+          "net": 5
+        },
+        {
+          "method": "pooled",
+          "share": 0.5,
+          "correct": 605,
+          "fixed": 17,
+          "lost": 21,
+          "net": -4
+        },
+        {
+          "method": "pooled",
+          "share": 1.0,
+          "correct": 598,
+          "fixed": 33,
+          "lost": 44,
+          "net": -11
+        }
+      ],
+      "reference": 609,
+      "lock": "0cda2d103cb183e30d1931d73b18ac3978756dffce40b2065f8939657874b223",
+      "score_sha256": "dcb3c561b35df26ae17c6a05a9bfda9a07cebd97de1b70e6b7710d25276b0e23",
+      "winner": [
+        "pooled",
+        0.25
+      ],
+      "checks": [
+        {
+          "role": "confirmation",
+          "rows": 817,
+          "reference": 620,
+          "correct": 619,
+          "fixed": 7,
+          "lost": 8,
+          "net": -1
+        },
+        {
+          "role": "audit",
+          "rows": 807,
+          "reference": 604,
+          "correct": 605,
+          "fixed": 9,
+          "lost": 8,
+          "net": 1
+        }
+      ],
+      "eligible": false
+    },
+    "distill": {
+      "candidates": {
+        "constant": {
+          "seal": "7990c26ee5fe00ece6f48bb2875b88a04c12654a7adad6d1f2ba81d32611d14a",
+          "protocol": "aa1046e24caa2f9aeeecaf5b2b1627722c613089942f96a90d2a9abbb35998e0",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "predictions": {
+            "nomination": "735db7bb2a141f7342c1e03ed366169727340e4bff002e0c03a0d06c9bcc5381",
+            "confirmation": "b192ec832ffeb67fdfbda682320832bf8871cbd6f3e22de23d87b449d13146e3",
+            "audit": "9460cea27bb67f87b9f29b40b1e08277c37c7845128d22f7b07dd9a3feabf7ed"
+          },
+          "shared_teacher_seal": "a76152eec79857b03d3181db2b663ed754afd2cd1f8c485cfaa47bf091817ef2",
+          "student_fits": 1,
+          "mean_teacher_share": 0.29999999999999993,
+          "majority_hard_labels": 4061,
+          "api_requests": 0
+        },
+        "agreement": {
+          "seal": "387d27854c125a5cf3eeee56af6bc3c72f0f86f51abf51fdbf7b32bf7343f219",
+          "protocol": "aa1046e24caa2f9aeeecaf5b2b1627722c613089942f96a90d2a9abbb35998e0",
+          "inputs": "2d46c82cf36bc8e8f52a2bd1af8c3774e80cd97eb38c99d1bf9a7c0c03374ca4",
+          "classes": [
+            0,
+            1
+          ],
+          "predictions": {
+            "nomination": "b5e6719d23c7ac18a55d26a1f0be36ca8486ad5ffa8dfde7bc1c534420118ff3",
+            "confirmation": "56d2b7048e53804c762fb0557914527d20ffe43d586908b72c9614e231bc2360",
+            "audit": "3a7c8fbd27d725322dac4f6f7073c939a614b7d25aea6026609d1de8f7efc270"
+          },
+          "shared_teacher_seal": "a76152eec79857b03d3181db2b663ed754afd2cd1f8c485cfaa47bf091817ef2",
+          "student_fits": 1,
+          "mean_teacher_share": 0.30769025806974715,
+          "majority_hard_labels": 4061,
+          "api_requests": 0
+        }
+      },
+      "nomination": [
+        {
+          "method": "retain",
+          "share": 0.0,
+          "correct": 609,
+          "fixed": 0,
+          "lost": 0,
+          "net": 0
+        },
+        {
+          "method": "constant",
+          "share": 0.125,
+          "correct": 608,
+          "fixed": 2,
+          "lost": 3,
+          "net": -1
+        },
+        {
+          "method": "constant",
+          "share": 0.25,
+          "correct": 606,
+          "fixed": 5,
+          "lost": 8,
+          "net": -3
+        },
+        {
+          "method": "constant",
+          "share": 0.5,
+          "correct": 605,
+          "fixed": 12,
+          "lost": 16,
+          "net": -4
+        },
+        {
+          "method": "constant",
+          "share": 1.0,
+          "correct": 593,
+          "fixed": 26,
+          "lost": 42,
+          "net": -16
+        },
+        {
+          "method": "agreement",
+          "share": 0.125,
+          "correct": 608,
+          "fixed": 2,
+          "lost": 3,
+          "net": -1
+        },
+        {
+          "method": "agreement",
+          "share": 0.25,
+          "correct": 606,
+          "fixed": 7,
+          "lost": 10,
+          "net": -3
+        },
+        {
+          "method": "agreement",
+          "share": 0.5,
+          "correct": 606,
+          "fixed": 17,
+          "lost": 20,
+          "net": -3
+        },
+        {
+          "method": "agreement",
+          "share": 1.0,
+          "correct": 601,
+          "fixed": 28,
+          "lost": 36,
+          "net": -8
+        }
+      ],
+      "reference": 609,
+      "lock": "29772ac9b9da5c1b9ed416d6952865063f5f99e2d159c0599641f36c33ca39b8",
+      "score_sha256": "e3fbde33f8cab17af85660c64351959b29a1469413b0beda90e70b31853607d4",
+      "winner": [
+        "retain",
+        0.0
+      ],
+      "checks": [
+        {
+          "role": "confirmation",
+          "rows": 817,
+          "reference": 620,
+          "correct": 620,
+          "fixed": 0,
+          "lost": 0,
+          "net": 0
+        },
+        {
+          "role": "audit",
+          "rows": 807,
+          "reference": 604,
+          "correct": 604,
+          "fixed": 0,
+          "lost": 0,
+          "net": 0
+        }
+      ],
+      "eligible": false
+    }
+  },
+  "diagnostics": {
+    "replica": {
+      "sha256": "91afd40384c433ff998a68e6e17d3fa7a066f43dd7268fd3890a940c0b7de3ab",
+      "lock": "0d4bec628e43a466ab04ef35f113f7b9812daa2af0085b4daad59d3acfe16445",
+      "folds": [
+        {
+          "fold": 0,
+          "rows": 1299,
+          "scores": {
+            "ordinary": 989,
+            "weighted": 989,
+            "replicas": 991
+          }
+        },
+        {
+          "fold": 1,
+          "rows": 1301,
+          "scores": {
+            "ordinary": 984,
+            "weighted": 984,
+            "replicas": 989
+          }
+        },
+        {
+          "fold": 2,
+          "rows": 1294,
+          "scores": {
+            "ordinary": 988,
+            "weighted": 988,
+            "replicas": 984
+          }
+        },
+        {
+          "fold": 3,
+          "rows": 1295,
+          "scores": {
+            "ordinary": 961,
+            "weighted": 961,
+            "replicas": 964
+          }
+        },
+        {
+          "fold": 4,
+          "rows": 1304,
+          "scores": {
+            "ordinary": 974,
+            "weighted": 974,
+            "replicas": 969
+          }
+        }
+      ],
+      "rows": 6493,
+      "totals": {
+        "ordinary": 4896,
+        "weighted": 4896,
+        "replicas": 4897
+      },
+      "differences": {
+        "weighted": {
+          "fixed": 0,
+          "lost": 0,
+          "net": 0,
+          "gain": 0.0,
+          "group_bootstrap_95": [
+            0.0,
+            0.0
+          ]
+        },
+        "replicas": {
+          "fixed": 35,
+          "lost": 34,
+          "net": 1,
+          "gain": 0.00015401201293700908,
+          "group_bootstrap_95": [
+            -0.0023141184419532153,
+            0.0026206966401939678
+          ]
+        }
+      },
+      "fits": 0,
+      "api_requests": 0
+    },
+    "allocation": {
+      "sha256": "eceb076bdc3cda2adf61fcba1c4f846d275094d7a61b2f3582a10cbbb503e2f8",
+      "lock": "f1ae88f4212332dd9c0466b1ab7e0aecc4937aed5be8640f2ba554cf96f4ea91",
+      "protocol": "1e4570102970fe21abb2f6761b20f99ccb63593bca15e502edaf03b64380a0d2",
+      "unique_candidates": 27,
+      "rows": 2432,
+      "episodes": [
+        {
+          "outer_fold": 0,
+          "rows": 405,
+          "correct": {
+            "retain": 298,
+            "nomination": 291,
+            "pooled": 298,
+            "protected": 298
+          }
+        },
+        {
+          "outer_fold": 1,
+          "rows": 408,
+          "correct": {
+            "retain": 301,
+            "nomination": 304,
+            "pooled": 300,
+            "protected": 301
+          }
+        },
+        {
+          "outer_fold": 2,
+          "rows": 407,
+          "correct": {
+            "retain": 319,
+            "nomination": 308,
+            "pooled": 319,
+            "protected": 319
+          }
+        },
+        {
+          "outer_fold": 3,
+          "rows": 403,
+          "correct": {
+            "retain": 302,
+            "nomination": 301,
+            "pooled": 301,
+            "protected": 301
+          }
+        },
+        {
+          "outer_fold": 4,
+          "rows": 404,
+          "correct": {
+            "retain": 312,
+            "nomination": 313,
+            "pooled": 310,
+            "protected": 310
+          }
+        },
+        {
+          "outer_fold": 5,
+          "rows": 405,
+          "correct": {
+            "retain": 301,
+            "nomination": 292,
+            "pooled": 300,
+            "protected": 301
+          }
+        }
+      ],
+      "correct": {
+        "retain": 1833,
+        "nomination": 1809,
+        "pooled": 1828,
+        "protected": 1830
+      },
+      "versus_reference": {
+        "nomination": {
+          "fixed": 40,
+          "lost": 64,
+          "net": -24,
+          "gain": -0.009868421052631578,
+          "group_bootstrap_95": [
+            -0.017674017431034913,
+            -0.0016501140225270985
+          ]
+        },
+        "pooled": {
+          "fixed": 10,
+          "lost": 15,
+          "net": -5,
+          "gain": -0.002055921052631579,
+          "group_bootstrap_95": [
+            -0.006170300287947347,
+            0.0016488046166529267
+          ]
+        },
+        "protected": {
+          "fixed": 2,
+          "lost": 5,
+          "net": -3,
+          "gain": -0.0012335526315789473,
+          "group_bootstrap_95": [
+            -0.0033016921172100704,
+            0.000821701130139843
+          ]
+        }
+      },
+      "protected_against_pooled": {
+        "fixed": 10,
+        "lost": 8,
+        "net": 2,
+        "gain": 0.0008223684210526315,
+        "group_bootstrap_95": [
+          -0.0024681963544740944,
+          0.004122011541632316
+        ]
+      },
+      "selections": [
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "tabm_structure",
+            0.25
+          ],
+          "pooled": [
+            "retain",
+            0.0
+          ],
+          "protected": [
+            "retain",
+            0.0
+          ]
+        },
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "tabm_raw",
+            0.25
+          ],
+          "pooled": [
+            "icl_global_structure",
+            0.25
+          ],
+          "protected": [
+            "retain",
+            0.0
+          ]
+        },
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "mitra_local",
+            0.5
+          ],
+          "pooled": [
+            "binding_pooled",
+            0.25
+          ],
+          "protected": [
+            "retain",
+            0.0
+          ]
+        },
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "trial_attribute_alignment",
+            0.125
+          ],
+          "pooled": [
+            "trial_attribute_alignment",
+            0.125
+          ],
+          "protected": [
+            "trial_attribute_alignment",
+            0.125
+          ]
+        },
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "trial_attribute_alignment",
+            0.125
+          ],
+          "pooled": [
+            "mitra_global",
+            0.125
+          ],
+          "protected": [
+            "mitra_global",
+            0.125
+          ]
+        },
+        {
+          "retain": [
+            "retain",
+            0.0
+          ],
+          "nomination": [
+            "semantic_e5_tree",
+            1.0
+          ],
+          "pooled": [
+            "factor_fields",
+            0.125
+          ],
+          "protected": [
+            "retain",
+            0.0
+          ]
+        }
+      ],
+      "reads_per_pooled_or_protected_episode": 39,
+      "reads_per_nomination_episode": 27,
+      "new_classifier_fits": 0,
+      "api_requests": 0
+    }
+  },
+  "api_requests": 0,
+  "campus_input_tokens": 0,
+  "campus_output_tokens": 0,
+  "course_api_cost_rmb": 0,
+  "designated_validation_opened": false,
+  "official_test_opened": false,
+  "h2_opened": false
+}

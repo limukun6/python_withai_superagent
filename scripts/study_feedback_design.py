@@ -88,8 +88,12 @@ def run(args):
     joint.run(args,expected_fingerprint=frozen(),additional_sealed_directory=args.previous)
 
 
+def sealed_directory(folder):
+    return folder if (folder/'sealed.json').is_file() else folder/'export-recovery'
+
+
 def paired(folder):
-    control,design=[read(folder/arm/'sealed.json') for arm in ARMS]
+    control,design=[read(sealed_directory(folder/arm)/'sealed.json') for arm in ARMS]
     require(control['core_actions']==design['core_actions'] and control['core']==design['core'] and
             control['opportunity']==design['opportunity'],'Pre-intervention search differed')
     data=read(folder/ARMS[1]/'run/agent/task_opening.json')
@@ -124,7 +128,7 @@ def score(args):
         rows={}
         ys=[]
         for arm,seal in zip(ARMS,(control,design)):
-            directory=study/case/arm
+            directory=sealed_directory(study/case/arm)
             output=directory/'delivery/predictions.csv'
             require(sha(output)==sha(directory/'reload/predictions.csv')==seal['output_sha'],'Changed output or replay')
             with output.open(newline='') as handle:data=list(csv.DictReader(handle))
@@ -134,7 +138,7 @@ def score(args):
             pred=np.asarray(raw,dtype=truth.dtype)
             ys.append(pred)
             rows[arm]=dict(primary_score=joint.metrics(info['metric'],truth,pred),correct=int(sum(truth==pred)),
-                           **{k:seal[k] for k in ('fits','requests','course_cost_rmb','core','remaining','seconds','fresh_reload',
+                           export_recovery=seal.get('export_recovery'), **{k:seal[k] for k in ('fits','requests','course_cost_rmb','core','remaining','seconds','fresh_reload',
                                  'model_sha','output_sha','tested','result','comparisons','opportunity')})
         results[case]=dict(metric=info['metric'],rows=len(truth),arms=rows,design=proposal,
                            disagreements=int(sum(ys[0]!=ys[1])),gained=int(sum((ys[0]!=truth)&(ys[1]==truth))),

@@ -72,8 +72,14 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
     model = joblib.load(model_path)
     model_format = selection.get("model_format", "bare_model")
     if model_format == "candidate_bundle_v1":
-        if (not isinstance(model, dict) or "model" not in model
-            or model.get("kind") != kind_to_loader[kind] or model.get("candidate") != selection["family"]):
+        family = selection["family"]
+        if family == 'class_pair_refinement':
+            from .confusion_specialist import ClassPairModel
+            fitted = model.get('model') if isinstance(model,dict) else None
+            if isinstance(fitted,ClassPairModel):
+                family = fitted.verified_legacy_id(selection)
+        if (not isinstance(model, dict) or "model" not in model or not family
+            or model.get("kind") != kind_to_loader[kind] or model.get("candidate") != family):
             raise ValueError("Model bundle does not match its frozen task and selection.")
         model = model["model"]
     elif model_format == 'verified_trial_v1':

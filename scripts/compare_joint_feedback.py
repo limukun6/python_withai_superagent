@@ -120,7 +120,11 @@ def run(a, *, expected_fingerprint=None, additional_sealed_directory=None):
     execute(['solve',train,'--run-dir',run_dir,'--prediction-input',query,'--output',output,
              '--fit-limit','11','--time-limit','600','--task-interpretation','fallback','--task-analysis',arm],
             folder/'solve.log',settings)
-    elapsed=time.monotonic()-start
+    return seal_run(folder, run_dir, output, query, settings, meta, case, arm, time.monotonic()-start, folder)
+
+
+def seal_run(folder,run_dir,output,query,settings,meta,case,arm,elapsed,evidence_dir,*,recovery=None):
+    physical=folder/'physical.jsonl'
     agent=run_dir/'agent'
     outcome=read(agent/'run_outcome.json')
     selected=read(agent/'final_selection.json')
@@ -136,8 +140,8 @@ def run(a, *, expected_fingerprint=None, additional_sealed_directory=None):
     require(receipt['prediction_count'] == first['prediction_count'] == meta['held_rows']
             and receipt['prediction_sha256'] == sha(output) and receipt['delivery_phase'] == 'selected',
             'Incomplete first or final delivery')
-    replay=folder/'reload/predictions.csv'
-    execute(['predict',query,'--run-dir',run_dir,'--output',replay],folder/'reload.log',settings)
+    replay=evidence_dir/'reload/predictions.csv'
+    execute(['predict',query,'--run-dir',run_dir,'--output',replay],evidence_dir/'reload.log',settings)
     require(sha(replay) == sha(output) and len(physical.read_text().splitlines()) == fit_count, 'Reload changed output or refit')
     decisions=read(agent/'decisions.json')
     seal=dict(case=case,arm=arm,seconds=round(elapsed,2),fits=fit_count,requests=outcome['new_api_requests'],
@@ -150,7 +154,9 @@ def run(a, *, expected_fingerprint=None, additional_sealed_directory=None):
               changed=opening['changed_experiment'],remaining=opening['remaining_at_delivery'],result=opening['result'],
               comparisons=opening.get('comparisons',[]),interpretation=opening['interpretation_status'],
               source_at_decision=opening.get('hypothesis_source_at_decision'))
-    save(folder/'sealed.json',seal)
+    if recovery is not None:
+        seal['export_recovery'] = recovery
+    save(evidence_dir/'sealed.json',seal)
     print(case,arm,fit_count,'fits',opening['check_status'],opening['result'],flush=True)
 
 

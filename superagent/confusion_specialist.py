@@ -52,6 +52,20 @@ class ClassPairModel:
     classes_: np.ndarray
     pair: tuple
 
+    def verified_legacy_id(self, selection):
+        """Recover the unique ID of the first producer's signed, fully described model."""
+        detail = selection.get('refinement', {})
+        members = selection.get('ensemble_components')
+        if (selection.get('family') != 'class_pair_refinement' or not selection.get('model_sha256')
+                or not selection.get('task_spec_sha256') or not isinstance(members,list) or not members
+                or not isinstance(detail,dict) or not isinstance(detail.get('method'),str)):
+            return None
+        labels = self.classes_.tolist()
+        if detail.get('classes') != [labels[k] for k in self.pair]:
+            return None
+        route = 'pair_refinement_' + identity([members,list(self.pair),detail['method'],labels])[:16]
+        return route if route == selection.get('selected_experiment') else None
+
     def predict(self, inputs):
         from .models import predict_with_model
         pred = predict_with_model(self.kind, self.base, inputs)
@@ -212,7 +226,7 @@ def design_experiment(opening, choice, incumbent, bases, names, observed, profil
         temporary.replace(destination)
         scores = {r['fold']:r['challenger'] for r in rows}
         value = float(np.mean(list(scores.values())))
-        updated = dict(incumbent,selected_experiment=route,family='class_pair_refinement',model_file=destination.name,
+        updated = dict(incumbent,selected_experiment=route,family=route,composition='class_pair_refinement',model_file=destination.name,
                        model_sha256=sha(destination),single_candidate=None,ensemble_components=list(choice['members']),
                        refinement=dict(method=expert,classes=labels.tolist(),refit_rows=design['physical_training_rows']['refit']),
                        incumbent_model_sha256=incumbent['model_sha256'],selection_evidence='task_opening.json',

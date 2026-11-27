@@ -98,7 +98,12 @@ class PairDesignTests(unittest.TestCase):
     def test_two_confirmed_gains_publish_new_file_using_only_pair_rows(self):
         w=MeasuredWorker(True)
         selected,_=self.run_design(w)
-        self.assertEqual(selected['family'],'class_pair_refinement')
+        self.assertEqual(selected['composition'],'class_pair_refinement')
+        bundle=joblib.load(self.path/selected['model_file'])
+        self.assertEqual(selected['family'],bundle['candidate'])
+        legacy=dict(selected,family='class_pair_refinement',task_spec_sha256='test-spec')
+        self.assertEqual(bundle['model'].verified_legacy_id(legacy),bundle['candidate'])
+        self.assertIsNone(bundle['model'].verified_legacy_id(dict(legacy,selected_experiment='unbound')))
         self.assertEqual(selected['incumbent_model_sha256'],sha(self.path/'selected_model.joblib'))
         self.assertEqual(json.loads((self.path/'final_selection.json').read_text()),selected)
         for ids,(_,held,_) in zip(w.calls,self.folds.values()):

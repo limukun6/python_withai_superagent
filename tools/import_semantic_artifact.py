@@ -69,19 +69,9 @@ def migrate(package,prediction,accepted_receipt,ledger_path,destination):
     from superagent.semantic_contract import BINDING_ERRORS,bind_semantic_rules
     with ExitStack() as stack:
         files=stack.enter_context(package_files(package));workspace=evidence_workspace(files)
-        if proposal.get('version') in ('semantic-output-v1','semantic-output-v2'):
-            try:base=load_training_task(package,read_declarations=True)
-            except BINDING_ERRORS:raise
-            except DECODE_ERRORS:base=adapt_training(package)
-            task=_output_overlay(base,workspace,proposal)
-        elif proposal.get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
-            from superagent.native_semantics import compile_native
-            other=stack.enter_context(package_files(prediction)) if prediction is not None and Path(prediction).resolve()!=Path(package).resolve() else None
-            task=compile_native(files,workspace,proposal,prediction_files=other)
-        else:
-            other=stack.enter_context(package_files(prediction)) if prediction is not None and Path(prediction).resolve()!=Path(package).resolve() else None
-            task=compile_plan(files,workspace,proposal,prediction_files=other)
-        bind_semantic_rules(task,workspace)
+        from superagent.rule_resolution import compile_response
+        other=stack.enter_context(package_files(prediction)) if prediction is not None and Path(prediction).resolve()!=Path(package).resolve() else None
+        task=compile_response(package,files,workspace,proposal,prediction_files=other)
         if prediction is not None:probe_prediction_input(prediction,task)
     provenance=dict(kind='explicit_migration_revalidated_with_current_readers',
         original_receipt_sha256=file_digest(accepted_receipt),original_request_id=last['budget_request_id'],

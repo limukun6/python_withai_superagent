@@ -70,6 +70,12 @@ def summarize_action(action):
         values=action.get('requests');values=values if isinstance(values,list) else []
         result.update(kind='structure_batch',requests=[tool(r) for r in values[:2]],request_count=len(values))
         if len(values)>2:truncated=True
+    elif version=='semantic-rules-v1':
+        inner=action.get('interpretation')
+        result.update(kind='task_rule_normalization',interpretation=summarize_action(inner) if isinstance(inner,dict) and inner.get('version') in VERSIONS else None)
+        entries=action.get('rules');entries=entries if isinstance(entries,list) else []
+        result['rules']=[fields(r,('field','quote','evidence_ref','value')) for r in entries[:8]]
+        if len(entries)>8:truncated=True
     elif version=='prediction-adapter-v1':
         result.update(kind='prediction_adapter',selected_input=descriptor(action.get('input')),
                       id_fields=mapping(action.get('id_fields')))

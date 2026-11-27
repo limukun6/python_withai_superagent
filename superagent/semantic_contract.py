@@ -176,9 +176,10 @@ def _diagnostic(error, stage):
     message = str(error)
     structural = ('Required frozen feature fields are missing from prediction records',
                   'Prediction records do not match the frozen model')
-    if not (isinstance(error,ContractProbeError) or message.startswith('Output contract:') or message in structural):
+    if not (isinstance(error,(ContractProbeError,)+BINDING_ERRORS) or message.startswith('Output contract:') or message in structural):
         message = 'Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation'
     diagnostic=dict(stage=stage,code=type(error).__name__,message=message[:700])
+    if getattr(error,'rule_clause',None):diagnostic['unrecognized_rule_clause']=error.rule_clause
     if getattr(error,'uncertainty_fields',None):diagnostic['uncertainty_fields']=error.uncertainty_fields
     if getattr(error,'uncertainty_dependency',None):diagnostic['uncertainty_dependency']=error.uncertainty_dependency
     return diagnostic
@@ -381,7 +382,7 @@ def _output_overlay(task, workspace, response):
     return result
 
 
-def semantic_training(path, client, log, prior_error, *, prediction_package=None, base_task=None, recovery=None):
+def semantic_training(path, client, log, prior_error, *, prediction_package=None, base_task=None, recovery=None,declaration_recovery=False):
     if client is None or client.blocked or client.request_count >= client.max_requests:
         raise UnsupportedFormat('Semantic interpretation needs a configured model and remaining shared allowance')
     diagnostic = _diagnostic(prior_error,'task_adaptation')
@@ -393,7 +394,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
         files = stack.enter_context(package_files(path))
         query_files = stack.enter_context(package_files(prediction_package)) if prediction_package is not None else None
         explicit = any(PurePosixPath(n).name.casefold() == 'manifest.json' for n in files.namelist())
-        if explicit and base_task is None:
+        if explicit and base_task is None and not declaration_recovery:
             raise UnsupportedFormat('Explicit manifests remain owned by the declared contract reader')
         workspace = evidence_workspace(files)
         if query_files is not None:
@@ -408,13 +409,14 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             from .native_semantics import INSTRUCTION as NATIVE_INSTRUCTION
             from .task_questions import INSTRUCTION as QUESTION_INSTRUCTION,SCHEMA as QUESTION_SCHEMA
             from .structure_tools import INSTRUCTION as STRUCTURE_INSTRUCTION,inspect_structure
+            from .rule_resolution import INSTRUCTION as RULE_INSTRUCTION,compile_response
             instruction = INSTRUCTION + ' ' + NATIVE_INSTRUCTION
-            if base_task is not None:
+            if base_task is not None or explicit and declaration_recovery:
                 instruction = ('The explicit input/target/metric contract is authoritative. Interpret only submission requirements. '
                     'Return exactly {version:"semantic-output-v2",output:<output-csv-v1 recipe or null>,evidence_refs:[],uncertainties:<field-scoped question list>}. '
                     'Do not replace task fields. ' + INSTRUCTION.split(' output is null',1)[1] +
                     ' You may request the same inspect_header tool before replying.')
-            payload = dict(instruction=instruction+' '+QUESTION_INSTRUCTION+' '+STRUCTURE_INSTRUCTION, evidence_workspace=workspace, diagnostic=diagnostic,
+            payload = dict(instruction=instruction+' '+QUESTION_INSTRUCTION+' '+STRUCTURE_INSTRUCTION+' '+RULE_INSTRUCTION, evidence_workspace=workspace, diagnostic=diagnostic,
                            tool_observations=observations, output_contract_schema=deepcopy(OUTPUT_SCHEMA),
                            recovery_state=recovery.context(),
                            uncertainty_schema=deepcopy(QUESTION_SCHEMA),
@@ -427,6 +429,9 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             if base_task is not None:
                 payload['authoritative_contract'] = dict(input_schema=base_task.spec.get('input_schema'),
                                                          metric=MetricSpec.for_task(base_task).record())
+            elif explicit:
+                payload['authoritative_contract']=dict(explicit_manifest=True,reader_pending_declaration_recovery=True,
+                    permitted_interpretation='semantic-output-v2; no replacement input/target/manifest metric')
             # Transport/usage/settlement failures deliberately propagate: no automatic retry.
             from .experiment_llm import MeteredResponseFormatError
             try:
@@ -477,14 +482,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                         recovery.observed(raw_request['action'],observation)
                         if log: log.event('semantic_structure_observed', observation=observation)
                     continue
-                if base_task is not None:
-                    task=_output_overlay(base_task,workspace,response)
-                elif isinstance(response,dict) and response.get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
-                    from .native_semantics import compile_native
-                    task=compile_native(files,workspace,response,prediction_files=query_files)
-                else:
-                    task=compile_plan(files,workspace,response,prediction_files=query_files)
-                bind_semantic_rules(task, workspace)
+                task=compile_response(path,files,workspace,response,prediction_files=query_files,base_task=base_task)
                 query = prediction_package
                 member = task.spec.get('input_recipe',{}).get('prediction_member')
                 if query is None and member in files.namelist(): query=path
@@ -530,6 +528,10 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
     if artifact_from is not None:
         from .semantic_artifact import load_artifact
         return load_artifact(artifact_from,package,prediction_package,log)
+    def binding_recovery(error):
+        if client is None or client.blocked or client.request_count>=client.max_requests:raise error
+        return semantic_training(package,client,log,error,prediction_package=prediction_package,
+                                 recovery=recovery,declaration_recovery=True)
     if mode=='auto':
         documented=False
         if client is not None:
@@ -546,12 +548,13 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
             if any(PurePosixPath(n).name.casefold()=='manifest.json' for n in files.namelist()):
                 try:
                     base = load_training_task(package,read_declarations=True)
-                except BINDING_ERRORS:
-                    raise
+                except BINDING_ERRORS as error:
+                    return binding_recovery(error)
                 except DECODE_ERRORS:
                     # Declared record formats (JSONL, workbook, etc.) use the
                     # existing adaptive reader without model reinterpretation.
-                    base = adapt_training(package)
+                    try:base = adapt_training(package)
+                    except BINDING_ERRORS as error:return binding_recovery(error)
             else:
                 # A cheap installed-reader probe supplies an actual failed
                 # operation to recover from, without promoting inferred defaults
@@ -561,8 +564,8 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
                     if prediction_package is not None:probe_prediction_input(prediction_package,tentative)
                 except UnknownMetricWording as error:
                     prior_error=error
-                except BINDING_ERRORS:
-                    raise
+                except BINDING_ERRORS as error:
+                    return binding_recovery(error)
                 except DECODE_ERRORS as error:
                     prior_error=error
         return semantic_training(package,client,log,prior_error,
@@ -574,17 +577,17 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
             raise
         with package_files(package) as files:
             if any(PurePosixPath(n).name.casefold() == 'manifest.json' for n in files.namelist()):
-                raise
+                return binding_recovery(error)
         return semantic_training(package, client, log, error, prediction_package=prediction_package, recovery=recovery)
-    except BINDING_ERRORS:
-        raise
+    except BINDING_ERRORS as error:
+        return binding_recovery(error)
     except DECODE_ERRORS as native_error:
         if log:
             log.event('adaptive_input_inspection', native_reason=str(native_error)[:320])
         try:
             task = adapt_training(package, client, log)
-        except BINDING_ERRORS:
-            raise
+        except BINDING_ERRORS as error:
+            return binding_recovery(error)
         except NativeContract:
             # A specialized reader's filename claim is not an explicit task
             # contract. Without a manifest, a configured semantic reader may

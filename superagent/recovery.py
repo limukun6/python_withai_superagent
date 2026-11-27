@@ -16,7 +16,7 @@ class RecoveryController:
         self.state = dict(version='recovery-state-v1',stage='task_adaptation',status='running',
             goal=None,observed_evidence=[],unresolved_fields=[],failed_actions=[],actions=[],
             installed_capabilities=['inspect_header','inspect_array','inspect_image','inspect_batch',
-                                    'repair_adapter','revise_interpretation','alternate_method','report_unresolved'],
+                                    'repair_adapter','revise_interpretation','normalize_task_rules','alternate_method','report_unresolved'],
             available_artifacts=[],attempted_classifier_fits=0)
 
     def context(self):

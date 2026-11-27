@@ -158,6 +158,9 @@ def text_metric(text):
     if not names and all(not PATTERN.search(normalized(r[2])) or
             (re.search(r'harmonic mean|调和平均',r[2],re.I) and
              set(PATTERN.findall(normalized(r[2]))) <= {'precision','recall'}) for r in active):
+        from .rule_resolution import lookup
+        resolved=[lookup('metric',r[2]) for r in active]
+        if all(r is not None for r in resolved) and len(set(resolved))==1:return resolved[0]
         raise UnknownMetricWording('Unresolved announced evaluation metric: '+active[0][2])
     if any(r[3] for r in active) or len(names) != 1:
         raise MetricDeclarationError('Unresolved or conflicting announced evaluation metric: '+' / '.join(r[2] for r in active)[:300])

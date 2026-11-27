@@ -14,7 +14,7 @@ READERS=('semantic_artifact.py','semantic_contract.py','format_intake.py','forma
          'record_streams.py','schema.py','native_schema.py','data.py','metrics.py','metric_declarations.py',
          'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py',
          'native_semantics.py','task_questions.py','structure_tools.py','recovery.py','task_constraints.py',
-         'task_declarations.py','worked_metrics.py','contract_extraction.py','action_context.py','design_choices.py')
+         'task_declarations.py','worked_metrics.py','contract_extraction.py','action_context.py','design_choices.py','rule_resolution.py')
 
 
 class ArtifactUnavailable(ValueError):pass
@@ -57,7 +57,8 @@ def task_digest(task):
         input_schema=task.spec.get('input_schema'),metric=MetricSpec.for_task(task).record(),
         positive_label=task.spec.get('positive_label'),input_recipe=task.spec.get('input_recipe'),native_input_recipe=task.spec.get('native_input_recipe'),
         output_recipe=task.spec.get('output_recipe'),evaluation_protocol=task.spec.get('evaluation_protocol'),
-        uncertainty_resolution=task.spec.get('uncertainty_resolution'),design_decisions=task.spec.get('design_decisions')))
+        uncertainty_resolution=task.spec.get('uncertainty_resolution'),design_decisions=task.spec.get('design_decisions'),
+        rule_resolution=task.spec.get('rule_resolution'),method_restrictions=task.spec.get('method_restrictions')))
 
 
 def last_usage(log):
@@ -119,19 +120,9 @@ def load_artifact(path,package,prediction_package=None,log=None):
     from contextlib import ExitStack
     with ExitStack() as stack:
         files=stack.enter_context(package_files(package));workspace=evidence_workspace(files)
-        if payload['proposal'].get('version') in ('semantic-output-v1','semantic-output-v2'):
-            try:base=load_training_task(package,read_declarations=True)
-            except BINDING_ERRORS:raise
-            except DECODE_ERRORS:base=adapt_training(package)
-            task=_output_overlay(base,workspace,payload['proposal'])
-        elif payload['proposal'].get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
-            from .native_semantics import compile_native
-            other=stack.enter_context(package_files(query)) if query is not None and mode=='external' else None
-            task=compile_native(files,workspace,payload['proposal'],prediction_files=other)
-        else:
-            other=stack.enter_context(package_files(query)) if query is not None and mode=='external' else None
-            task=compile_plan(files,workspace,payload['proposal'],prediction_files=other)
-        bind_semantic_rules(task, workspace)
+        from .rule_resolution import compile_response
+        other=stack.enter_context(package_files(query)) if query is not None and mode=='external' else None
+        task=compile_response(package,files,workspace,payload['proposal'],prediction_files=other)
         if task_digest(task)!=payload['task_sha256']:raise ValueError('Restored semantic task differs from its accepted digest')
         if query is not None:probe_prediction_input(query,task,log)
     receipt=dict(artifact_sha256=file_digest(path),task_sha256=payload['task_sha256'],

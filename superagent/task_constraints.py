@@ -6,6 +6,12 @@ class RestrictionError(ValueError):
     """A binding method restriction could not be enforced."""
 
 
+class UnknownRestrictionWording(RestrictionError):
+    def __init__(self,message,clause):
+        super().__init__(message)
+        self.rule_clause=clause
+
+
 SUBJECTS = {
     'no_pretrained_assets': r'(?:\bpre[\s-]?trained\b(?:\s+(?:models?|weights?|assets?|encoders?|embeddings?|networks?|checkpoints?))?|预训练(?:权重|模型|编码器|资产)?)',
     'no_external_data': r'(?:\b(?:external|outside|third[- ]party|additional external)\s+(?:(?:training|labelled|labeled)\s+)?(?:datasets?|data|corpora|resources?)\b|外部(?:训练)?(?:数据集?|语料|资源))',
@@ -39,6 +45,7 @@ def documented_flags(text):
         if part[2] in ('?','？') or re.match(r'\s*(?:for (?:example|instance)|hypothetical|例如|比如|假设)',raw,re.I):
             continue
         for clause in re.split(r'[,，]\s*(?=(?:and\s+)?(?:only|no |do not|must not|只|禁止|不得))|\s+(?:and|but)\s+(?=(?:only|do not|must not|never|no )\b)', raw, flags=re.I):
+            original_clause=clause.strip()
             line = clause.strip(' *' + chr(96) + '\t\r')
             if (re.search(r'\b(?:if|unless)\b|如果|除非',line,re.I) and MODEL_WORD.search(line)
                     and re.search(DENY+'|'+ONLY+'|'+BARRED,line,re.I)):
@@ -66,14 +73,20 @@ def documented_flags(text):
             if (bounded or affirmative) and (MODEL_WORD.search(method_subject) or METHOD_HEADING.search(clause)) and not flags:
                 # File roles and metric instructions also use "only", without regulating methods.
                 if not re.search(r'\bonly\s+(?:for|after|when|on|if)\b|仅(?:用于|在)',line,re.I):
-                    raise RestrictionError('Unsupported mandatory method restriction: ' + line[:200])
+                    from .rule_resolution import lookup
+                    resolved=lookup('method_restrictions',original_clause)
+                    if resolved is None:raise UnknownRestrictionWording('Unrecognized mandatory method restriction: '+line[:200],original_clause)
+                    flags=list(resolved)
             if flags:
                 # Do not drop a second, unimplemented rule piggybacking on a supported one.
                 rest = line
                 for flag in flags:
                     rest = re.sub(SUBJECTS[flag], '', rest, flags=re.I)
                 if re.search(r'\b(?:and|or|except|excluding)\b|以及|同时|除外',rest,re.I) and MODEL_WORD.search(rest):
-                    raise RestrictionError('Partly understood mandatory method restriction: ' + line[:200])
+                    from .rule_resolution import lookup
+                    resolved=lookup('method_restrictions',original_clause,flags)
+                    if resolved is None:raise UnknownRestrictionWording('Partly understood mandatory method restriction: '+line[:200],original_clause)
+                    flags=list(resolved)
                 for flag in flags:
                     found.setdefault(flag, line[:400])
     return found

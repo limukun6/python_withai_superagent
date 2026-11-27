@@ -13,7 +13,10 @@ from scripts.unified_released_study import read,require,save,sha
 def grade(archive,out,study="fusion_match"):
     match=out/study/"result.json"
     budget = 32
-    if study=="remaining_folds":
+    if study=="ordinary_catalogue":
+        require(read(match)["advance"] is True,"Ordinary catalogue did not qualify on the remaining partitions")
+        qualified,required_mode,indices,budget="regular",None,(3,4),48
+    elif study=="remaining_folds":
         require(read(match)["advance"] is True,"Additional held folds did not qualify")
         qualified,required_mode,indices,budget="extended","remaining-folds",(0,1,2),48
     elif study=="near_full":
@@ -56,6 +59,6 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     for k in ("archive","out"):
         parser.add_argument("--"+k,required=True,type=lambda s:Path(s).resolve())
-    parser.add_argument("--study",choices=("fusion_match","near_full","remaining_folds"),default="fusion_match")
+    parser.add_argument("--study",choices=("fusion_match","near_full","remaining_folds","ordinary_catalogue"),default="fusion_match")
     a=parser.parse_args()
     grade(a.archive,a.out,a.study)

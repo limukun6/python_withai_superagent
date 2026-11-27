@@ -17,12 +17,12 @@ ARMS=("regular","separate","prior")
 REUSE=("weighted","replicas")
 
 
-def prepare(previous,out, *, indices=(0,1,2), protocol=PLAN):
+def prepare(previous,out, *, indices=(0,1,2), protocol=PLAN, seed_label="AIAA new training partition blend qualification v1"):
     original=previous/"anonymous/training.zip"
     require(sha(original)==read(previous/"inputs.json")["entry_inputs"],"Origin changed")
     x,y=arrays(original,["C_train.npy","y_train.npy"])
     group=sample_groups(SimpleNamespace(kind="categorical_tabular",X_train=x))
-    seed=seeded("AIAA new training partition blend qualification v1")
+    seed=seeded(seed_label)
     out.mkdir(exist_ok=False)
     used=set()
     for i,(fit,held) in enumerate(StratifiedGroupKFold(5,shuffle=True,random_state=seed).split(x,y,group)):

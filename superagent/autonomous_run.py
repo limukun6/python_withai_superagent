@@ -40,7 +40,7 @@ def installed_methods():
             os.environ[PREFERENCE_CATALOG_ENV] = previous
 
 
-def partitions(task, seed):
+def partitions(task, seed, *, names=("primary", "confirmation_1", "confirmation_2")):
     declared = explicit_windows(task, seed)
     if declared is not None:
         return declared
@@ -57,7 +57,7 @@ def partitions(task, seed):
                   if set(y[a].tolist())==labels and set(y[b].tolist())==labels]
         if usable:
             return {name:(a,b,dict(protocol=protocol,fold_count=count,shared_groups=0))
-                    for name,(a,b) in zip(('primary','confirmation_1','confirmation_2'),usable)}
+                    for name,(a,b) in zip(names,usable)}
     raise ValueError('No class-preserving holdout of independent training groups is available')
 
 
@@ -177,8 +177,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
           interpretation='fallback', prediction_package=None, semantic_artifact_from=None, await_first_delivery=False):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
-    if type(fit_limit) is not int or not 2<=fit_limit<=32 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
-        raise ValueError('Need 2–32 physical fits including refits and positive finite deadlines')
+    if type(fit_limit) is not int or not 2<=fit_limit<=48 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
+        raise ValueError('Need 2–48 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     directory.mkdir(parents=True,exist_ok=False)
@@ -314,7 +314,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation') and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
@@ -497,6 +497,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             if high_fidelity:
                 from .near_full_confirmation import audit as review_near_full
                 choice=review_near_full(task,inner,sealed,choice,menu,history,metric,executor,directory,log,timeout)
+            if feedback_reflection == 'remaining-folds' and fit_limit > 16:
+                from .remaining_fold_review import review as review_remaining
+                choice = review_remaining(task, seed, folds, choice, menu, history, metric, executor, directory, log,
+                                          timeout, partitions, planner_observation)
             if fusion_holdout:
                 from .fusion_holdout import review as review_fusion
                 choice=review_fusion(task,metric,choice,history,observed,sealed,directory,log)

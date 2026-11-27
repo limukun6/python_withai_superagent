@@ -128,10 +128,10 @@ if __name__=="__main__":
     p.add_argument("--out",required=True,type=lambda s:Path(s).resolve())
     p.add_argument("--source",type=lambda s:Path(s).resolve())
     p.add_argument("--arm")
-    p.add_argument("--cap",type=int,choices=(10,32))
+    p.add_argument("--cap",type=int,choices=(10,32,48))
     p.add_argument("--table-weight", type=lambda s: Path(s).resolve())
     p.add_argument("--optional-runtime", type=lambda s: Path(s).resolve())
-    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation"])
+    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation","remaining-folds"])
     args=p.parse_args()
     if args.action=="prepare":
         prepare(args.archive,args.out)

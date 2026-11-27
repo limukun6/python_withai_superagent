@@ -2,6 +2,8 @@
 
 Task1 课程指定验证新纪录 **1,561 / 2,030（76.90%）**。同机队友原版 **1,549 / 2,030（76.31%）**。产生新成绩的统一入口已冻结在 `f214f8b33b7066fb4c670379fc6bbb4920553dab`，使用预登记的 64 次上限和 `seed-replication` 策略，实际训练 23 次，新增模型 API ¥0。Agent 自选的属性对齐树用三个种子重训取平均，独立进程逐行重现。正式测试及 H2 保持封存。[交接与复现](batches/TASK1_B_CONTEXT_EXTENSION_20261127_zh.md) · [验证、模型及预测指纹](../research/task1_feedback_extension_1127/designated_release.json)
 
+B 线 Task1 本轮已收尾，实验队列为空。新划分完整训练内五折净增 25 道，四折采用复训，一折根据反馈保留初选。旧划分的追加对照中，三种子比进一步扩展至五种子表现更好。本机模型、预测、研究汇总均已归档。[本轮结果](../research/task1_feedback_extension_1127/foundation_completion_results.json)
+
 ## 2026-11-27：Task1 七轮探索结束，保留 76.31% 的实测模型
 
 最新已完成容量、离线TabPFN和LightGBM数值副本三轮，均未通过各自预登记晋级线。深树两折平均+0.279pp且一负，有序提升−0.863pp；TabPFN固定2048训练行、8成员，两表示分别−5.764/−5.457pp；LightGBM三配置均低于情境token树。TabPFN首次0fit准备失败保留，修正后fresh02完成。GPU实际求和失败，cu126构建不含sm120内核，故CPU运行。

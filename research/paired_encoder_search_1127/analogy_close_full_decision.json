@@ -1,0 +1,98 @@
+{
+  "incumbent_members": [
+    "gte_base_paired_linear"
+  ],
+  "incumbent_model": "d428af99739269ff74c3fc583d39f4ea2d22a5f6c5847526981f95021a67a8a2",
+  "before_fits": 10,
+  "permitted_weights": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "allocations": [
+    {
+      "fold": "confirmation_1",
+      "row_key": "8eae64e3dfaaf9f9af24365e3a454746e2d67d7e1273f721797d4c1bf90da43e",
+      "rows": 1645,
+      "incumbent": 1179,
+      "candidate": 1185,
+      "gain": 6
+    },
+    {
+      "fold": "confirmation_2",
+      "row_key": "64342aae9c1cc7ccee265f25d2a4ef8912e0377800a9a57d0ee54ab02cfc65d5",
+      "rows": 1651,
+      "incumbent": 1176,
+      "candidate": 1186,
+      "gain": 10
+    }
+  ],
+  "all_decisions_training_only": true,
+  "status": "accepted",
+  "candidate": "preference_analogy_45cb39291ca5c8321d9e",
+  "derived_configuration": {
+    "encoder": "thenlper/gte-base",
+    "revision": "c078288308d8dee004ab72c6191778064285ec0c",
+    "classifier": "preference_analogy",
+    "representation": "direction and midpoint of individual frozen embeddings",
+    "independent_training_groups": true,
+    "orientation": "complement",
+    "neighbors": "clipped_sqrt_groups_3_40"
+  },
+  "remaining_fits": 6,
+  "extra_fits": 6,
+  "primary": {
+    "row_key": "067d761fa8911567cf814a4e0cb8b2fa734d2e791b2f9d70c4e606e2c7130bd7",
+    "rows": 1693,
+    "scores": [
+      1228,
+      1227,
+      1225,
+      1143
+    ]
+  },
+  "locked_weight": 0.25,
+  "transparent_nomination": {
+    "weight": 0.25,
+    "reason": "paired_near_tie",
+    "scores": [
+      1228,
+      1227,
+      1225,
+      1143
+    ],
+    "primary_gain": -1,
+    "paired": {
+      "rows": 1693,
+      "gained": 33,
+      "lost": 34
+    },
+    "paired_standard_error": 0.004836228684322862
+  },
+  "already_observed_folds": {
+    "primary": [
+      "bge_small_text_with_lexical_features",
+      "e5_small_text_with_lexical_features",
+      "electra_paired_quadratic",
+      "gte_base_paired_linear",
+      "local_sentence_2153768fd1a817ee2a3e",
+      "local_sentence_fb8ba2cc889cb4eef506",
+      "minilm_l12_topic_style_interactions",
+      "minilm_text_with_nonlinear_lexical_features",
+      "open_RandomForestClassifier_4096604a07ecf7ba7441",
+      "preference_analogy_45cb39291ca5c8321d9e"
+    ],
+    "confirmation_1": [],
+    "confirmation_2": []
+  },
+  "final_members": [
+    "gte_base_paired_linear",
+    "preference_analogy_45cb39291ca5c8321d9e"
+  ],
+  "weights": [
+    0.75,
+    0.25
+  ],
+  "model_sha256": "eecac5a14c1730aeee34074ce27ed159aae5e64a312a6b817494f12e0eba7540"
+}

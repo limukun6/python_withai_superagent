@@ -29,7 +29,13 @@ def main() -> None:
     payload_sha256=hashlib.sha256(payload_bytes).hexdigest()
     metric=MetricSpec.from_payload(payload)
     registry_sha256=None;origin='static'
-    if len(arguments)==4:
+    if candidate_id.startswith('preference_analogy_'):
+        if payload['kind']!='pair_text' or payload.get('pair_semantics')!='preference':
+            raise ValueError('An analogy vote requires a declared preference task')
+        from .preference_analogy import supported
+        candidate=next(c for c in supported() if c.family==candidate_id)
+        origin='derived_from_fitted_representation'
+    elif len(arguments)==4:
         from .candidate_refinement import resolve_registered
         registry_bytes=Path(arguments[3]).read_bytes();document=json.loads(registry_bytes)
         candidate=resolve_registered(payload['kind'],candidate_id,document)

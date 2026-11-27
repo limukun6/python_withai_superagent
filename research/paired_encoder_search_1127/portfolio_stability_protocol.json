@@ -1,0 +1,13 @@
+{
+  "question": "Do the three previously shipped, fully specified elections retain their relative accuracy when trained and evaluated on new connected-group assignments within the same released training data?",
+  "runs": {
+    "two_encoders": "analogy-raw/original",
+    "one_encoder_with_advice": "analogy-close-raw/close",
+    "two_encoders_with_advice": "analogy-portfolio-raw/portfolio_revised"
+  },
+  "assignments": {"seed_domain": "AIAA3102 B paired portfolio stability v2", "seed_indices": [1, 2], "folds": 5},
+  "method": "Before fitting, freeze each source seal, the deployed members and exact deployed weights. Generate two five-fold shuffles solely from the four-byte SHA256 prefix of seed_domain/index. Keep all rows linked by shared titles together. Share each distinct supervised fit across locked recipes within one fold. Do not rank or change weights using these results. Retain aligned out-of-fold probabilities in local study storage to support later registered analyses. Each assignment covers every training row exactly once; the two totals concern the same people/items, not independent corpora.",
+  "comparisons": ["two_encoders", "one_encoder_with_advice"],
+  "gate": "For the three-part recipe to be called consistently better than both previous recipes within this development corpus, require >=0.30 percentage point improvement versus each on each assignment, and positive net changes versus each on at least seven of ten folds. Report paired corrections, regressions and a 95% paired cluster bootstrap interval per assignment. Group intervals are descriptive conditional on the fitted models and do not correct for prior development. A negative outcome keeps the designated score as reported without promoting a new ranking policy.",
+  "usage": "At most thirty actual local supervised component fits, including the label-dependent retrieval index, and zero language model calls. Use only the released training payload already sealed by the recorded runs. No designated validation, formal test, or H2 inputs or answers."
+}

@@ -38,6 +38,10 @@ def route_of(candidate):
     from .ab_methods import ROUTES
     if candidate in ROUTES:
         return ROUTES[candidate]
+    if candidate.startswith('local_sentence_'):
+        suffix=candidate.removeprefix('local_sentence_')
+        if len(suffix)==20 and all(c in '0123456789abcdef' for c in suffix):
+            return 'local_sentence'
     if candidate.startswith('open_'):
         route, _, signature=candidate.rpartition('_')
         if route[5:].isidentifier() and len(signature)==20 and all(ch in '0123456789abcdef' for ch in signature):

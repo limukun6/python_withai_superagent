@@ -29,10 +29,14 @@ from .task_semantics import declared_semantics
 @contextmanager
 def installed_methods():
     previous = os.environ.get(PREFERENCE_CATALOG_ENV)
+    previous_reuse = os.environ.get("SUPERAGENT_FROZEN_BATCH_REUSE")
     os.environ[PREFERENCE_CATALOG_ENV] = 'all-installed'
+    os.environ.setdefault("SUPERAGENT_FROZEN_BATCH_REUSE","1")
     try:
         yield
     finally:
+        if previous_reuse is None:
+            os.environ.pop("SUPERAGENT_FROZEN_BATCH_REUSE",None)
         if previous is None:
             os.environ.pop(PREFERENCE_CATALOG_ENV, None)
         else:
@@ -176,8 +180,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
           interpretation='fallback', prediction_package=None, semantic_artifact_from=None, await_first_delivery=False):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
-    if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
-        raise ValueError('Need 2–16 physical fits including refits and positive finite deadlines')
+    if type(fit_limit) is not int or not 2<=fit_limit<=32 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
+        raise ValueError('Need 2–32 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     directory.mkdir(parents=True,exist_ok=False)
@@ -270,6 +274,13 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     with installed_methods():
         widths=task.X_train.shape[1] if task.kind=='numeric_tabular' else None
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths)
+        from .analogy_review import can_review as can_review_analogy
+        analogy_available=(feedback_reflection is None and not self_review and rule is None and flash is None
+                           and can_review_analogy(task,metric,folds,static,fit_limit))
+        if analogy_available:
+            # At most three supervised indices, two matched control comparisons and one final index.
+            core_limit=fit_limit-6
+            log.event('representation_review_opportunity',core_fit_limit=core_limit,reserved_fits=6)
         generator=MethodSpace(spec,profile,directory)
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
@@ -277,6 +288,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         scheduled = None
+        from .finalist_race import FinalistRace
+        automatic = (feedback_reflection is None and flash is None and rule is None and not self_review
+                     and len(folds)>=3 and core_limit >= 4*(len(folds)+1))
+        if automatic:
+            race = FinalistRace(log,folds,frontier=True,multiple=True)
+            log.event('automatic_finalist_review_available',fit_limit=core_limit,independent_partitions=len(folds))
+        elif feedback_reflection in ('matched-finalists','complementary-frontier'):
+            race = FinalistRace(log,folds,frontier=feedback_reflection=='complementary-frontier')
+        else:
+            race = None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)
@@ -315,6 +336,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if race is not None:
+                    finalist = race.consider(menu, caps, observed, metric, remaining, blocked,
+                                             'linear_only' not in profile.get('method_restrictions',()))
+                    if finalist is not None:
+                        choice, source = finalist, 'matched training finalists'
+                        menu = [finalist, *menu]
                 if opening is not None:
                     corroborate = opening.protect_confirmation(menu,caps,observed,remaining)
                     if corroborate is not None:
@@ -444,6 +471,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 if sum(executor.caps[n]['refit_classifier_fits'] for n in choice['members'])>fit_limit-executor.accounting()['attempted_classifier_fits']:
                     raise ValueError('Retain the published checkpoint; selected refit exceeds remaining fits')
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
+            if analogy_available:
+                from .analogy_review import review as review_analogy
+                selection,choice=review_analogy(task,metric,choice,selection,executor,directory,log,timeout,observed,payloads)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,

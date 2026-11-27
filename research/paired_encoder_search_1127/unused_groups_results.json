@@ -1,0 +1,148 @@
+{
+  "selections": {
+    "single": {
+      "members": [
+        "gte_paired_linear"
+      ],
+      "weights": [
+        1.0
+      ]
+    },
+    "legacy_vote": {
+      "members": [
+        "bge_small_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    "scale_vote": {
+      "members": [
+        "gte_paired_linear",
+        "gte_base_paired_linear"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    "simple": {
+      "members": [
+        "gte_base_paired_linear",
+        "minilm_l12_topic_style_interactions",
+        "minilm_l12_with_corpus_familiarity"
+      ],
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ]
+    },
+    "weighted": {
+      "members": [
+        "gte_base_paired_linear",
+        "bge_small_text_with_lexical_features",
+        "e5_small_text_with_lexical_features"
+      ],
+      "weights": [
+        0.4908701091011424,
+        0.2824541354180039,
+        0.2266757554808537
+      ]
+    },
+    "own_uniform": {
+      "members": [
+        "gte_base_paired_linear",
+        "bge_small_text_with_lexical_features",
+        "e5_small_text_with_lexical_features"
+      ],
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ]
+    }
+  },
+  "folds": [
+    {
+      "fold": 4,
+      "rows": 1616,
+      "scores": {
+        "single": {
+          "correct": 1159,
+          "gained": 0,
+          "lost": 0
+        },
+        "legacy_vote": {
+          "correct": 1169,
+          "gained": 70,
+          "lost": 60
+        },
+        "scale_vote": {
+          "correct": 1189,
+          "gained": 59,
+          "lost": 29
+        },
+        "simple": {
+          "correct": 1175,
+          "gained": 77,
+          "lost": 61
+        },
+        "weighted": {
+          "correct": 1193,
+          "gained": 82,
+          "lost": 48
+        },
+        "own_uniform": {
+          "correct": 1179,
+          "gained": 80,
+          "lost": 60
+        }
+      }
+    },
+    {
+      "fold": 5,
+      "rows": 1696,
+      "scores": {
+        "single": {
+          "correct": 1214,
+          "gained": 0,
+          "lost": 0
+        },
+        "legacy_vote": {
+          "correct": 1231,
+          "gained": 77,
+          "lost": 60
+        },
+        "scale_vote": {
+          "correct": 1223,
+          "gained": 49,
+          "lost": 40
+        },
+        "simple": {
+          "correct": 1219,
+          "gained": 84,
+          "lost": 79
+        },
+        "weighted": {
+          "correct": 1230,
+          "gained": 83,
+          "lost": 67
+        },
+        "own_uniform": {
+          "correct": 1239,
+          "gained": 93,
+          "lost": 68
+        }
+      }
+    }
+  ],
+  "actual_classifier_fits": 12,
+  "new_weight_fits": 0,
+  "new_model_api_requests": 0,
+  "designated_validation_opened": false,
+  "official_test_opened": false,
+  "H2_opened": false
+}

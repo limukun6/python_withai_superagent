@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from sklearn.pipeline import FeatureUnion,Pipeline
 from sklearn.linear_model import LogisticRegression
@@ -18,6 +19,27 @@ from superagent.confusion_specialist import ClassPairModel
 
 
 class ExternalAssetTests(unittest.TestCase):
+    def test_shared_directory_exposes_verified_installs_and_preserves_explicit_override(self):
+        from superagent.external_assets import activate_resource_directory
+        digest=hashlib.sha256(b"good").hexdigest()
+        spec=dict(env="TEST_OPTIONAL_ENCODER",model="publisher/encoder",files={"weights":(4,digest)})
+        with tempfile.TemporaryDirectory() as tmp, patch("superagent.ab_sentence.ALTERNATIVES",{"generic":spec}):
+            root=Path(tmp)
+            broken=root/"publisher"/"encoder"
+            valid=root/"encoder"
+            broken.mkdir(parents=True)
+            valid.mkdir()
+            (broken/"weights").write_bytes(b"oops")
+            env={}
+            activate_resource_directory(root,env)
+            self.assertNotIn(spec["env"],env)
+            (valid/"weights").write_bytes(b"good")
+            activate_resource_directory(root,env)
+            self.assertEqual(env[spec["env"]],str(valid.resolve()))
+            env[spec["env"]]="individually configured"
+            activate_resource_directory(root,env)
+            self.assertEqual(env[spec["env"]],"individually configured")
+
     def test_refinement_carries_resources_of_both_fitted_models(self):
         base = Pipeline([('text', SentenceFeatures('single_text'))])
         expert = Pipeline([('features', FeatureUnion([

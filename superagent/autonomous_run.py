@@ -267,22 +267,27 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     profile=training_facts(TrainingTask(task.kind,take(task.X_train,fit),task.y_train[fit],task.spec))
     profile['computed_from']='primary fitting rows only'
     context_columns = ()
+    comparable_context = False
     if (task.kind == 'categorical_tabular' and len(metric.labels) == 2 and find_spec('catboost') is not None and
             200 <= len(fit) <= len(task.y_train) <= 25000 and 3 <= task.X_train.shape[1] <= 40
             and 'linear_only' not in spec.get('method_restrictions', ())):
         from .joint_context import blocks
         from .models import _clean_categories
         try:
-            context_columns, _ = blocks(_clean_categories(take(task.X_train,fit)))
+            from .attribute_alignment import comparable_fields
+            fitting_categories=_clean_categories(take(task.X_train,fit))
+            context_columns, _ = blocks(fitting_categories)
+            comparable_context=bool(comparable_fields(fitting_categories,context_columns))
         except ValueError:
             pass
         profile['recurring_profile_columns'] = list(context_columns)
+        profile['comparable_recurring_fields'] = comparable_context
     log.write_json('training_profile.json',profile)
     log.write_json('task_contract.json',spec)
     with installed_methods():
         widths=task.X_train.shape[1] if task.kind=='numeric_tabular' else None
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths,
-                                       repeated_context=bool(context_columns))
+                                       repeated_context=bool(context_columns),comparable_context=comparable_context)
         generator=MethodSpace(spec,profile,directory)
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()

@@ -21,6 +21,7 @@ _BY_CLASS = {
     'GradientBoostingClassifier': 'gradient_boosting',
     'HistGradientBoostingClassifier': 'gradient_boosting',
     'DummyClassifier': 'dummy',
+    'TabICLClassifier': 'tabular_in_context',
     'GaussianNB': 'naive_bayes',
     'MultinomialNB': 'naive_bayes',
     'BernoulliNB': 'naive_bayes',

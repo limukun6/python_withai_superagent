@@ -8,7 +8,7 @@ from .ab_vision import NAME as VISION, supports_decoder
 from .evidence_agent import route_of
 from .metrics import MetricSpec
 from .models import search_candidates
-from . import numeric_kernel
+from . import numeric_kernel, table_foundation
 from . import ab_varied_preferences
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
@@ -17,7 +17,7 @@ ADAPTER_VERSION = '1.5'
 FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
 
 
-def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False):
+def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False):
     if task.get('contract_version') != 1 or task.get('objective') != 'classification':
         raise ValueError('Expected an A/B v1 classification task')
     metric = MetricSpec.from_payload({'metric_spec': task['metric']})
@@ -33,8 +33,13 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
     menu = []
     methods = search_candidates(kind, 'ab-v1')
     if repeated_context and kind == 'categorical_tabular' and len(metric.labels) == 2 and find_spec('catboost') is not None:
-        from .ab_methods import context_candidate
+        from .ab_methods import context_candidate, aligned_candidate
         methods.append(context_candidate())
+        if comparable_context:
+            methods.append(aligned_candidate())
+    if (kind in ("numeric_tabular","categorical_tabular") and train_rows is not None and 2 <= train_rows <= 12000
+            and len(metric.labels)<=10 and table_foundation.checkpoint() is not None):
+        methods.append(table_foundation.candidate(kind))
     for candidate in methods:
         name, params = candidate.family, candidate.params
         if name == numeric_kernel.NAME and (numeric_kernel_width is None or train_rows is None
@@ -64,6 +69,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
             estimator=ab_varied_preferences.ESTIMATORS[name]
             if (estimator=='catboost' and find_spec('catboost') is None) or (estimator=='linear_svm' and metric.requires_scores):
                 continue
+        elif name == table_foundation.NAME:
+            estimator = "tabular_in_context"
         elif name == FIELDS or 'catboost' in route:
             estimator = 'catboost'
             if find_spec('catboost') is None:
@@ -87,16 +94,17 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
                          representation=representation, estimator=estimator,
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
-                         resource='local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu',
+                         resource=('local_frozen_table' if name==table_foundation.NAME else
+                                   'local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu'),
                          origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
     from .task_constraints import permitted
     return [entry for entry in menu if permitted(entry,task.get('method_restrictions',()))]
 
 
-def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False):
+def capabilities_for(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False):
     """Build the executor's registry before exploration. Use only locally runnable methods."""
     entries = common_catalog(task, train_rows=train_rows, kernel_memory_bytes=kernel_memory_bytes,
-                             numeric_kernel_width=numeric_kernel_width, repeated_context=repeated_context)
+                             numeric_kernel_width=numeric_kernel_width, repeated_context=repeated_context,comparable_context=comparable_context)
     return {
         entry['id']: dict(entry, kind=task['kind'], classifier_fits=entry['expected_classifier_fits'],
                           refit_classifier_fits=1)

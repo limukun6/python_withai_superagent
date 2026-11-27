@@ -41,6 +41,10 @@ def admitted_fits(admission, candidate, *, runtime_estimator=None):
         from catboost import CatBoostClassifier
         if CatBoostClassifier not in classes:
             classes.append(CatBoostClassifier)
+    from .table_foundation import NAME as table_foundation_name
+    if candidate == table_foundation_name:
+        from tabicl import TabICLClassifier
+        classes.append(TabICLClassifier)
     originals = []
 
     def instrument(original):

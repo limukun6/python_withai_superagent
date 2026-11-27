@@ -72,7 +72,7 @@ def prepare(archive,out):
     print({k:v["rows"] for k,v in info["roles"].items()},flush=True)
 
 
-def entry(source,out,arm,cap):
+def entry(source, out, arm, cap, table_weight=None, optional_runtime=None):
     data=read(out/"inputs.json")
     inputs=out/"anonymous/training.zip";query=out/"anonymous/queries.zip"
     require(sha(inputs)==data["entry_inputs"] and sha(query)==data["entry_queries"],"Anonymous packet changed")
@@ -81,11 +81,20 @@ def entry(source,out,arm,cap):
     for k in list(settings):
         if k.startswith("SUPERAGENT_"):
             settings.pop(k)
-    settings.update(PYTHONPATH=os.pathsep.join(map(str,(source/"scripts/unified_acceptance",source))),
+    modules = [source/"scripts/unified_acceptance", source]
+    if optional_runtime:
+        modules.append(optional_runtime)
+    resources = {}
+    if table_weight:
+        from superagent.table_foundation import SHA256, WEIGHT_ENV
+        require(sha(table_weight) == SHA256, "Unverified optional resource")
+        settings[WEIGHT_ENV] = str(table_weight)
+        resources["tabicl_v2"] = SHA256
+    settings.update(PYTHONPATH=os.pathsep.join(map(str, modules)),
                     UNIFIED_RAW_INPUT=str(inputs),UNIFIED_RAW_LOG=str(folder/"opened.jsonl"),
                     UNIFIED_RAW_MEMBERS=json.dumps(["C_train.npy","y_train.npy","Readme.md"]),SUPERAGENT_OFFLINE="1")
     save(folder/"launch.json",dict(inputs=sha(out/"inputs.json"),source=source_identity(source),cap=cap,seconds=1800,
-                                   method_hint=None))
+                                   method_hint=None, optional_resources=resources))
     for phase,args in [("solve",["solve",inputs,"--prediction-input",query,"--fit-limit",cap,"--time-limit",1800]),
                        ("reload",["predict",query])]:
         with (folder/(phase+".log")).open("x") as stream:
@@ -119,8 +128,10 @@ if __name__=="__main__":
     p.add_argument("--source",type=lambda s:Path(s).resolve())
     p.add_argument("--arm")
     p.add_argument("--cap",type=int,choices=(10,32))
+    p.add_argument("--table-weight", type=lambda s: Path(s).resolve())
+    p.add_argument("--optional-runtime", type=lambda s: Path(s).resolve())
     args=p.parse_args()
     if args.action=="prepare":
         prepare(args.archive,args.out)
     else:
-        entry(args.source,args.out,args.arm,args.cap)
+        entry(args.source,args.out,args.arm,args.cap,args.table_weight,args.optional_runtime)

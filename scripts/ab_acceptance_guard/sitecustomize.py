@@ -47,5 +47,8 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
             from catboost import CatBoostClassifier
             if CatBoostClassifier not in classes:
                 classes.append(CatBoostClassifier)
+        if len(sys.argv)>2 and sys.argv[2]=="tabicl_v2_frozen_classifier":
+            from tabicl import TabICLClassifier
+            classes.append(TabICLClassifier)
         for cls, original in [(cls, cls.fit) for cls in classes]:
             observe(cls, original)

@@ -10,7 +10,7 @@ from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .models import Candidate
-from . import numeric_kernel
+from . import numeric_kernel, table_foundation
 from .ab_symmetric import CHANNELS, ENCODER, UnorderedPairFeatures, candidates as symmetric_candidates
 from . import ab_text_recipes, ab_vision, symmetric_text
 from . import ab_varied_preferences
@@ -18,6 +18,7 @@ from . import ab_varied_preferences
 
 FIELDS = 'supported_field_interactions'
 CONTEXT = 'catboost_recurring_context'
+ALIGNED = 'catboost_context_aligned_fields'
 TEXT = 'minilm_text_with_lexical_features'
 TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
@@ -36,6 +37,8 @@ ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 ROUTES.update(ab_text_recipes.ROUTES)
 ROUTES[CONTEXT] = 'catboost_recurring_context'
+ROUTES[ALIGNED] = 'catboost_context_aligned_fields'
+ROUTES[table_foundation.NAME] = 'frozen_table_in_context'
 ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
@@ -53,6 +56,17 @@ def _context_tree(rows, labels, query):
     from .joint_context import ContextTokenTree
     model = ContextTokenTree(dict(pair_limit=3)).fit(rows, labels)
     return model, model.predict(query)
+
+
+def _aligned_tree(rows,labels,query):
+    from .attribute_alignment import AttributeAlignmentTree
+    model=AttributeAlignmentTree(dict(pair_limit=3)).fit(rows,labels)
+    return model,model.predict(query)
+
+
+def aligned_candidate():
+    return Candidate(ALIGNED,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
+                     representation="native categorical context and conditionally aligned attributes"),_aligned_tree)
 
 
 def context_candidate():
@@ -120,7 +134,10 @@ def additions(kind, *, include_legacy_methods=True):
         params = dict(C=1.0, kernel_components=numeric_kernel.COMPONENTS,
                       bandwidth_sample_limit=numeric_kernel.SAMPLE_LIMIT, kernel_seed=numeric_kernel.SEED,
                       representation='scaled numeric columns with random Fourier features')
-        return [Candidate(numeric_kernel.NAME, params, partial(_fit, kind, 'fourier_logistic'))]
+        methods=[Candidate(numeric_kernel.NAME, params, partial(_fit, kind, 'fourier_logistic'))]
+        if not include_legacy_methods and table_foundation.checkpoint() is not None:
+            methods.append(table_foundation.candidate(kind))
+        return methods
     if kind == 'text_tabular':
         return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
                           representation='ordered columns with word and character pair interactions'), _ordered_relation)]
@@ -129,8 +146,12 @@ def additions(kind, *, include_legacy_methods=True):
                              representation='training-selected categorical field interactions'),_field_tree)]
         # The worker resolves from 'all'. Controllers admit the extra method using fitting rows.
         if not include_legacy_methods:
-            methods.append(context_candidate())
+            methods.extend([context_candidate(),aligned_candidate()])
+            if table_foundation.checkpoint() is not None:
+                methods.append(table_foundation.candidate(kind))
         return methods
+    if kind=="categorical_tabular" and not include_legacy_methods and table_foundation.checkpoint() is not None:
+        return [table_foundation.candidate(kind)]
     if kind=='image':
         methods = [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
         if ab_vision.weights_file() is not None:

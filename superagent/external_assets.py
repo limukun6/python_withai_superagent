@@ -10,6 +10,7 @@ def model_resources(model):
     from .ab_symmetric import UnorderedSentenceFeatures
     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
     from .confusion_specialist import ClassPairModel
+    from .table_foundation import FrozenTableClassifier, resource as table_resource
 
     found=set();visited=set()
     def walk(value):
@@ -18,6 +19,7 @@ def model_resources(model):
         if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
+        if isinstance(value,FrozenTableClassifier):found.add('tabicl_v2')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')
         if isinstance(value, ClassPairModel):
             walk(value.base)
@@ -33,6 +35,9 @@ def model_resources(model):
             children=getattr(value,name,None)
             if isinstance(children,(list,tuple,dict)):walk(children)
     walk(model);resources=[];packages=set()
+    if "tabicl_v2" in found:
+        resources.append(table_resource())
+        packages.update(("tabicl","torch","einops","pandas"))
     if 'minilm' in found:
         resources.append(dict(name='minilm',environment_variable='SUPERAGENT_MINILM_WEIGHTS',path_kind='directory',
             model=MODEL,revision=REVISION,files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in FILES.items()}))

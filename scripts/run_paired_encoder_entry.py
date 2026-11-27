@@ -23,7 +23,8 @@ def solve(args):
     folder=args.output/args.arm
     folder.mkdir(parents=True,exist_ok=False)
     plans={"race":"race_protocol.json","default":"default_protocol.json",
-           "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json"}
+           "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json",
+           "auto_portfolio":"auto_portfolio_protocol.json"}
     study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
@@ -38,7 +39,7 @@ def solve(args):
     for name in AVAILABLE_ENCODERS:
         spec=ALTERNATIVES[name]
         settings.pop(spec["env"],None)
-        if args.arm != "original" and (name != "gte_base" or args.arm == "frontier_scale"):
+        if args.arm != "original" and (name != "gte_base" or args.arm in ("frontier_scale","auto_portfolio")):
             settings[spec["env"]]=str(args.weights/spec["model"].split("/")[-1])
     if args.arm != "original":
         settings["SUPERAGENT_PAIRED_FEATURE_CACHE"]=str(args.cache)
@@ -117,7 +118,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

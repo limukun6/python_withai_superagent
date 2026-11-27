@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from superagent.finalist_race import FinalistRace, shortlist
+from superagent.finalist_race import FinalistRace, additional_finalist, shortlist
 from superagent.metrics import MetricSpec
 
 
@@ -81,3 +81,19 @@ class TestFinalistRace(unittest.TestCase):
         self.assertIsNone(race.plan)
         self.assertEqual(race.consider(menu,caps,observed,self.metric,5,set(),True)["action"],"confirm")
         self.assertEqual(race.plan["reserve"],2)
+
+    def test_second_challenger_must_fit_two_complete_comparisons_and_refit(self):
+        a,b,c = self.names
+        d = "additional_model"
+        primary={a:self.row("primary",slice(10)),
+                 b:self.row("primary",list(range(10,22))+list(range(30,36))),
+                 c:self.row("primary",list(range(10,22))+list(range(36,42))),
+                 d:self.row("primary",slice(24,35))}
+        primary[a]["probabilities"]=None
+        caps=dict(self.caps,additional_model=dict(classifier_fits=1,refit_classifier_fits=1))
+        groups=[(a,),(b,),(c,),(b,c)]
+        def decide(budget):
+            return additional_finalist(primary,self.metric,set(primary),caps,(a,),(b,c),groups,
+                                       ["one","two"],budget,True)
+        self.assertIsNone(decide(9))
+        self.assertIn(d,decide(10))

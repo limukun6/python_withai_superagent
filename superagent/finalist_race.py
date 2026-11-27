@@ -11,6 +11,15 @@ def subsets(names):
     return [part for size in range(1, len(names)) for part in combinations(names, size)]
 
 
+def paired_error(change):
+    n = change["rows"]
+    if n < 2:
+        return 0.
+    changed = change["gained"] + change["lost"]
+    net = change["gained"] - change["lost"]
+    return float(np.sqrt(max(0., changed - net * net / n) / (n * (n - 1))))
+
+
 def observation(records, group, metric):
     if len(group) == 1 or metric.name != "accuracy":
         return group_observation(records, group, metric)
@@ -51,11 +60,8 @@ def shortlist(primary, metric, allow_votes, available, *, frontier=False):
         count = paired["rows"]
         if count < 2 or not paired["gained"]:
             return False
-        changes = paired["gained"] + paired["lost"]
-        net = paired["gained"] - paired["lost"]
         # Row-level uncertainty admits a trial. Independent grouped folds govern deployment.
-        paired_error = np.sqrt(max(0., changes - net * net / count) / (count * (count - 1)))
-        return -paired["delta"] <= paired_error
+        return -paired["delta"] <= paired_error(paired)
     blends = []
     if allow_votes:
         names = sorted(available)
@@ -76,10 +82,42 @@ def shortlist(primary, metric, allow_votes, available, *, frontier=False):
     return anchor, challenger, groups, compare("primary", records[anchor], records[challenger])
 
 
+def additional_finalist(primary, metric, available, caps, anchor, challenger, groups, folds, remaining, allow_votes):
+    if metric.name != "accuracy" or len(folds) < 2:
+        return None
+    names = sorted(available)
+    options = [(n,) for n in names]
+    if allow_votes:
+        options.extend(combinations(names,2))
+    current = {name for g in groups for name in g}
+    anchor_record = primary[anchor[0]]
+    leader_record = observation(primary,challenger,metric)
+    alternatives = []
+    for option in options:
+        if option in groups:
+            continue
+        row = observation(primary,option,metric)
+        if row is None or (len(option)>1 and row["score"] <= max(primary[n]["score"] for n in option)):
+            continue
+        against_anchor = compare("primary",anchor_record,row)
+        uncertainty = paired_error(against_anchor)
+        if not against_anchor["gained"] or -against_anchor["delta"] > uncertainty:
+            continue
+        if not compare("primary",leader_record,row)["gained"]:
+            continue
+        added = set(option)-current
+        refits = max(sum(caps[n]["refit_classifier_fits"] for n in g) for g in (*groups,option))
+        cost = len(folds)*sum(caps[n]["classifier_fits"] for n in (current|added)) + refits
+        if cost <= remaining:
+            alternatives.append((-(row["score"]+uncertainty),cost,len(option),identity(option),option))
+    return min(alternatives)[-1] if alternatives else None
+
+
 class FinalistRace:
-    def __init__(self, logger, folds, *, frontier=False):
+    def __init__(self, logger, folds, *, frontier=False, multiple=False):
         self.logger = logger
         self.frontier = frontier
+        self.multiple = multiple
         self.rows = {name: set(map(int, held)) for name, (_, held, _) in folds.items()}
         self.plan = None
         self.cancelled = False
@@ -97,12 +135,16 @@ class FinalistRace:
                     occupied.update(held)
             if not fresh:
                 return None
-            found = shortlist(primary, metric, allow_votes, (set(primary) & set(caps)) - set(blocked),
-                              frontier=self.frontier)
+            available = (set(primary) & set(caps)) - set(blocked)
+            found = shortlist(primary, metric, allow_votes, available, frontier=self.frontier)
             if found is None:
                 return None
             anchor, challenger, groups, paired = found
-            members = sorted(set(anchor) | set(challenger), key=lambda n:(-primary[n]["score"], identity(n)))
+            extra = (additional_finalist(primary,metric,available,caps,anchor,challenger,groups,fresh,remaining,allow_votes)
+                     if self.multiple else None)
+            if extra:
+                groups = sorted({*groups,extra,*subsets(extra)},key=lambda g:(len(g),identity(g)))
+            members = sorted({n for g in groups for n in g},key=lambda n:(-primary[n]["score"],identity(n)))
             per_fold = sum(caps[n]["classifier_fits"] for n in members)
             reserve = max(sum(caps[n]["refit_classifier_fits"] for n in g) for g in groups)
             planned = per_fold * len(fresh) + reserve
@@ -130,6 +172,8 @@ class FinalistRace:
             self.plan = dict(anchor=list(anchor), challenger=list(challenger), groups=[list(g) for g in groups],
                              members=members, fresh=fresh, reserve=reserve, primary_comparison=paired,
                              remaining_at_lock=remaining, legal_measured_singles=len(primary))
+            if self.multiple:
+                self.plan["additional_challenger"] = list(extra) if extra else None
             self.logger.write_json("finalist_lock.json", self.plan)
         plan = self.plan
         if any(n in blocked or n not in caps for n in plan["members"]):

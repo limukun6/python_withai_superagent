@@ -29,10 +29,14 @@ from .task_semantics import declared_semantics
 @contextmanager
 def installed_methods():
     previous = os.environ.get(PREFERENCE_CATALOG_ENV)
+    previous_reuse = os.environ.get("SUPERAGENT_FROZEN_BATCH_REUSE")
     os.environ[PREFERENCE_CATALOG_ENV] = 'all-installed'
+    os.environ.setdefault("SUPERAGENT_FROZEN_BATCH_REUSE","1")
     try:
         yield
     finally:
+        if previous_reuse is None:
+            os.environ.pop("SUPERAGENT_FROZEN_BATCH_REUSE",None)
         if previous is None:
             os.environ.pop(PREFERENCE_CATALOG_ENV, None)
         else:
@@ -278,8 +282,15 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         reflection = None
         scheduled = None
         from .finalist_race import FinalistRace
-        race = (FinalistRace(log, folds, frontier=feedback_reflection=='complementary-frontier')
-                if feedback_reflection in ('matched-finalists','complementary-frontier') else None)
+        automatic = (feedback_reflection is None and flash is None and rule is None and not self_review
+                     and len(folds)>=3 and core_limit >= 4*(len(folds)+1))
+        if automatic:
+            race = FinalistRace(log,folds,frontier=True,multiple=True)
+            log.event('automatic_finalist_review_available',fit_limit=core_limit,independent_partitions=len(folds))
+        elif feedback_reflection in ('matched-finalists','complementary-frontier'):
+            race = FinalistRace(log,folds,frontier=feedback_reflection=='complementary-frontier')
+        else:
+            race = None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)

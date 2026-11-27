@@ -4,6 +4,34 @@ import os
 from pathlib import Path
 
 
+def activate_resource_directory(directory, environment=None):
+    """Expose every verified supported local installation independently of the task and winner."""
+    from .ab_sentence import ALTERNATIVES,DEEP_ENV,DEEP_FILES,DEEP_MODEL,FILES,MODEL,pinned_folder
+    from .ab_vision import WEIGHT_BYTES,WEIGHT_ENV,WEIGHT_SHA256
+
+    env = os.environ if environment is None else environment
+    root = Path(directory).expanduser().resolve()
+    if not root.is_dir():
+        raise ValueError(f"Encoder resource directory does not exist: {root}")
+    text = [("minilm","SUPERAGENT_MINILM_WEIGHTS",MODEL,FILES),("minilm_l12",DEEP_ENV,DEEP_MODEL,DEEP_FILES)]
+    text.extend((k,s["env"],s["model"],s["files"]) for k,s in ALTERNATIVES.items())
+    for alias,variable,model,files in text:
+        if env.get(variable):
+            continue
+        for relative in dict.fromkeys((model,model.split("/")[-1],alias)):
+            location=root/relative
+            if location.is_dir() and pinned_folder(location,files) is not None:
+                env[variable]=str(location)
+                break
+    if not env.get(WEIGHT_ENV):
+        for location in (root/("mobilenet_v3_small-"+WEIGHT_SHA256[:8]+".pth"),root/"vision"/"weights"):
+            if location.is_file() and location.stat().st_size==WEIGHT_BYTES:
+                with location.open("rb") as stream:
+                    if hashlib.file_digest(stream,"sha256").hexdigest()==WEIGHT_SHA256:
+                        env[WEIGHT_ENV]=str(location)
+                        break
+
+
 def model_resources(model):
     from .ab_sentence import (ALTERNATIVES,AlternativeSentenceFeatures,DEEP_ENV, DEEP_FILES, DEEP_MODEL, DEEP_REVISION, DeepPreferenceFeatures,
                               FILES, MODEL, REVISION, SentenceFeatures)

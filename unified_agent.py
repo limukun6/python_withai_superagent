@@ -4,6 +4,7 @@ import csv
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import zipfile
 
@@ -270,6 +271,8 @@ def main():
         command = commands.add_parser(action)
         command.add_argument("task_package", type=Path)
         command.add_argument("--run-dir", required=True, type=Path)
+        command.add_argument("--weights-dir",type=Path,
+                             help="Offer all supported verified checkpoints in a local directory; explicit resource overrides take precedence")
         if action in ('train','solve'):
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
@@ -286,6 +289,10 @@ def main():
             command.add_argument('--policy',choices=['autonomous','legacy'],default='autonomous')
             command.add_argument('--prediction-input',type=Path,help='Optional unlabeled input for pre-fit checks')
     args = parser.parse_args()
+    directory = args.weights_dir or os.environ.get("SUPERAGENT_WEIGHTS_DIR")
+    if directory is not None:
+        from superagent.external_assets import activate_resource_directory
+        activate_resource_directory(directory)
     args.feedback_reflection=feedback_mode(args)
     if args.action == "train":
         return train(args.task_package, args.run_dir, args.policy,fit_limit=args.fit_limit,time_limit=args.time_limit,

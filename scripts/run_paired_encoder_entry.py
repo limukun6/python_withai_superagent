@@ -24,7 +24,7 @@ def solve(args):
     folder.mkdir(parents=True,exist_ok=False)
     plans={"race":"race_protocol.json","default":"default_protocol.json",
            "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json",
-           "auto_portfolio":"auto_portfolio_protocol.json"}
+           "auto_portfolio":"auto_portfolio_protocol.json","resource_default":"resource_root_protocol.json"}
     study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
@@ -33,6 +33,7 @@ def solve(args):
     physical=folder/"physical.jsonl"
     opened=folder/"opened.jsonl"
     settings=env(args.weights,physical)
+    settings.pop("SUPERAGENT_WEIGHTS_DIR",None)
     for name in ("SUPERAGENT_PLANNER_KEY_FILE","SUPERAGENT_PLANNER_LEDGER","SUPERAGENT_TASK_BUDGET_ID",
                  "SUPERAGENT_RESEARCH_REFLECTION_OUTBOX","SUPERAGENT_PAIRED_FEATURE_CACHE"):
         settings.pop(name,None)
@@ -43,6 +44,12 @@ def solve(args):
             settings[spec["env"]]=str(args.weights/spec["model"].split("/")[-1])
     if args.arm != "original":
         settings["SUPERAGENT_PAIRED_FEATURE_CACHE"]=str(args.cache)
+    shared_root = []
+    if args.arm=="resource_default":
+        for key in list(settings):
+            if key.startswith("SUPERAGENT_") and key.endswith("_WEIGHTS"):
+                settings.pop(key)
+        shared_root=["--weights-dir",args.weights]
     settings.update(PYTHONPATH=os.pathsep.join(map(str,(ROOT/"scripts/unified_acceptance",ROOT))),
                     UNIFIED_RAW_INPUT=str(course),UNIFIED_RAW_MEMBERS=json.dumps(MEMBERS["titles"]),UNIFIED_RAW_LOG=str(opened))
     def execute(arguments,log,environment):
@@ -56,8 +63,11 @@ def solve(args):
          candidate_hint=None,fit_limit=policy["fit_limit_each_including_refit"],raw_sha256=sha(course),features_sha256=sha(args.features)))
     modes={"race":"matched-finalists","frontier":"complementary-frontier","frontier_scale":"complementary-frontier"}
     review=["--feedback-reflection",modes[args.arm]] if args.arm in modes else []
-    limits=[] if args.arm=="default" else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
-    execute(["solve",course,*review,*limits,
+    limits=[] if args.arm in ("default","resource_default") else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
+    if shared_root:
+        save(folder/"launch.json",dict(individual_model_variables=sorted(k for k in settings if k.startswith("SUPERAGENT_") and k.endswith("_WEIGHTS")),
+             model_hint=None,review_flag=review,limits=limits,resource_directory_argument=True))
+    execute(["solve",course,*review,*limits,*shared_root,
              "--run-dir",run,"--prediction-input",args.features,"--output",result],"solve.log",settings)
     agent=run/"agent"
     outcome,chosen=read(agent/"run_outcome.json"),read(agent/"final_selection.json")
@@ -69,7 +79,7 @@ def solve(args):
             "Model or training boundaries changed")
     replay=folder/"replay/predictions.csv"
     settings.pop("SUPERAGENT_PAIRED_FEATURE_CACHE",None)
-    execute(["predict",args.features,"--run-dir",run,"--output",replay],"reload.log",settings)
+    execute(["predict",args.features,*shared_root,"--run-dir",run,"--output",replay],"reload.log",settings)
     require(sha(result)==sha(replay) and len(physical.read_text().splitlines())==actual,"Uncached reload differs")
     save(folder/"sealed.json",dict(prediction_sha256=sha(result),model_sha256=chosen["model_sha256"],fits=actual,
          members=read(agent/"decisions.json")[-1]["choice"]["members"],opened=members, independent_reload=True,
@@ -118,7 +128,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio","resource_default"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

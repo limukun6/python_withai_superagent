@@ -82,7 +82,11 @@ def verified_files(env,files):
     folder = os.environ.get(env)
     if not folder or any(find_spec(p) is None for p in ('torch','transformers','tokenizers','safetensors')):
         return None
-    root = Path(folder).resolve()
+    return pinned_folder(Path(folder),files)
+
+
+def pinned_folder(folder,files):
+    root = Path(folder).expanduser().resolve()
     for name,(size,sha) in files.items():
         path = root/name
         if not path.is_file():

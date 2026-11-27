@@ -1,5 +1,6 @@
 """Course entry point for anonymous classification. Only training data reach the planner."""
 from contextlib import contextmanager
+from importlib.util import find_spec
 import math
 import os
 from pathlib import Path
@@ -266,7 +267,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     profile=training_facts(TrainingTask(task.kind,take(task.X_train,fit),task.y_train[fit],task.spec))
     profile['computed_from']='primary fitting rows only'
     context_columns = ()
-    if (task.kind == 'categorical_tabular' and len(metric.labels) == 2 and
+    if (task.kind == 'categorical_tabular' and len(metric.labels) == 2 and find_spec('catboost') is not None and
             200 <= len(fit) <= len(task.y_train) <= 25000 and 3 <= task.X_train.shape[1] <= 40
             and 'linear_only' not in spec.get('method_restrictions', ())):
         from .joint_context import blocks

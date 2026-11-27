@@ -47,7 +47,8 @@ class ContextTokenTree(InteractionTree):
         self.pairs = choose_pairs(rank_pairs(x, labels), self.params['pair_limit'])
         features = self.transform(x)
         self.classifier = _tabular_catboost(labels, 6, 3.)
-        self.classifier.set_params(thread_count=6)
+        settings = self.params.get('tree_params', {})
+        self.classifier.set_params(thread_count=6, **settings)
         self.classifier.fit(features, labels, cat_features=list(range(features.shape[1])))
         self.classes_ = self.classifier.classes_
         return self

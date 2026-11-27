@@ -1,5 +1,6 @@
 """Run the equal-budget sealed raw control and challenger on independent source trees."""
 import argparse
+import csv
 import json
 import os
 from pathlib import Path
@@ -17,7 +18,18 @@ PLAN=ROOT/'research/paired_encoder_search_1127/analogy_raw_protocol.json'
 
 def run(root, impl, source, features, arm):
     limit=16
-    if arm=='corrected_delivery':
+    if arm=='recruitment_raw':
+        study=ROOT/'research/paired_encoder_search_1127/recruitment_raw_protocol.json'
+        pair=read(root/'portfolio-recruitment/comparison/results.json')
+        transfer=read(root/'portfolio-recruitment/table/results.json')
+        replay=read(root/'recruitment-replay/results.json')['tasks']
+        require(pair['paired_accuracy']['protected']['net']>=0 and transfer['received_score_after_sealing']
+                and all(v['matched']==5 and v['neutral_retained'] and v['one_fit_short_retained'] for v in replay.values())
+                and source_identity(impl)==read(root/'portfolio-recruitment/inputs.json')['challenger'],
+                'Registered transfer and autonomy conditions have not passed')
+        folder=root/'recruitment-raw'/arm
+        limit=32
+    elif arm=='corrected_delivery':
         study=ROOT/'research/paired_encoder_search_1127/corrected_delivery_protocol.json'
         folder=root/'corrected-delivery'/arm
         limit=22
@@ -73,7 +85,7 @@ def run(root, impl, source, features, arm):
             and sha(prediction)==sha(replay) and sha(agent/selected['model_file'])==selected['model_sha256'],'Incomplete raw delivery')
     lock(folder/'sealed.json',dict(protocol_sha256=sha(folder/'protocol.json'),prediction_sha256=sha(prediction),model_sha256=selected['model_sha256'],
         members=outcome['members'],rows=selected['training_rows'],fits=count,opened=observed,independent_reload=True,api=outcome['new_api_requests']))
-    if arm=='corrected_delivery':
+    if arm in ('corrected_delivery','recruitment_raw'):
         prior=ROOT/'research/paired_encoder_search_1127/portfolio_adviser_seal.json'
         scored=ROOT/'research/paired_encoder_search_1127/portfolio_adviser_score.json'
         earlier=read(scored)['completed']['portfolio_revised']
@@ -85,6 +97,15 @@ def run(root, impl, source, features, arm):
              rows=rows,identical_predictions=identical,carried_correct=earlier['correct'] if identical else None,
              carried_accuracy=earlier['accuracy'] if identical else None,designated_labels_opened=False,
              official_test_opened=False,H2_opened=False))
+        if arm=='recruitment_raw':
+            before=root/'corrected-delivery/corrected_delivery/delivery/predictions.csv'
+            require(sha(before)==read(prior)['prediction_sha256'],'Changed release comparison')
+            with before.open(newline='') as a,prediction.open(newline='') as b:
+                left,right=list(csv.DictReader(a)),list(csv.DictReader(b))
+            require([r['row_id'] for r in left]==[r['row_id'] for r in right], 'Row comparison is misaligned')
+            lock(folder/'unlabelled_changes.json',dict(comparison=sha(folder/'comparison.json'),
+                 changed=sum(x['prediction']!=y['prediction'] for x,y in zip(left,right)),rows=len(right),
+                 recruitment=sha(agent/'portfolio_review.json'),validation_labels_opened=False))
     print(arm,count,outcome['members'],read(folder/'sealed.json')['prediction_sha256'],flush=True)
 
 
@@ -92,6 +113,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('root','impl','course','features'):
         parser.add_argument('--'+name,type=lambda v:Path(v).resolve(),required=True)
-    parser.add_argument('--arm',choices=('original','revised','close','portfolio_control','portfolio_revised','corrected_delivery'),required=True)
+    parser.add_argument('--arm',choices=('original','revised','close','portfolio_control','portfolio_revised','corrected_delivery','recruitment_raw'),required=True)
     args=parser.parse_args()
     run(args.root,args.impl,args.course,args.features,args.arm)

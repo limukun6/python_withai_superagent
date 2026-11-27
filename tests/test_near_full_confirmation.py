@@ -18,6 +18,18 @@ class NearFinalSizeTests(TestCase):
         for fit,check,_ in search.values():
             self.assertFalse(set(x[held,0]).intersection(x[np.concatenate([fit,check]),0]))
 
+    def test_rare_class_keeps_the_ordinary_partition(self):
+        x = np.arange(80)[:, None]
+        y = np.zeros(80, dtype=int)
+        y[:4] = 1
+        task = SimpleNamespace(kind="numeric_tabular", X_train=x, y_train=y, spec={})
+        previous = {"primary": (np.arange(10), np.arange(10, 20), "existing")}
+        inner, folds, held, info = partition(task, 19, lambda t, seed: previous)
+        self.assertIs(inner, task)
+        self.assertIs(folds, previous)
+        self.assertEqual(len(held), 0)
+        self.assertEqual(info["status"], "unavailable")
+
     def test_retraining_choices_respect_reserved_full_refits(self):
         scores={"primary":.75,"confirmation_1":.75}
         def stop(members,u):

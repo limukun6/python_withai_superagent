@@ -10,14 +10,19 @@ from scripts.study_task1_outer import prediction_csv
 from scripts.unified_released_study import read,require,save,sha
 
 
-def grade(archive,out):
-    match=out/"fusion_match/result.json"
-    qualified=read(match)["advance"]
-    require(qualified in ("regular","separate"),"No policy has qualified on the new training folds")
-    required_mode="fusion-holdout" if qualified=="separate" else None
+def grade(archive,out,study="fusion_match"):
+    match=out/study/"result.json"
+    if study=="near_full":
+        require(read(match)["advance"] is True,"Near-final-size confirmation did not qualify")
+        qualified,required_mode,indices="near_full","near-full-confirmation",(3,4)
+    else:
+        qualified=read(match)["advance"]
+        require(qualified in ("regular","separate"),"No policy has qualified on the new training folds")
+        required_mode="fusion-holdout" if qualified=="separate" else None
+        indices=(0,1,2)
     require(read(out/"release/inputs.json")["selection_policy"]==required_mode and read(out/"release/inputs.json")["fit_cap"]==32,
             "Release differs from the policy that qualified")
-    source_ids={read(out/"fusion_match"/str(i)/qualified/"launch.json")["source"] for i in range(3)}
+    source_ids={read(out/study/str(i)/qualified/"launch.json")["source"] for i in indices}
     require(source_ids=={read(out/"release/inputs.json")["source"]},"Release is not the qualified runtime")
     predictions={}
     locks={}
@@ -47,5 +52,6 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     for k in ("archive","out"):
         parser.add_argument("--"+k,required=True,type=lambda s:Path(s).resolve())
+    parser.add_argument("--study",choices=("fusion_match","near_full"),default="fusion_match")
     a=parser.parse_args()
-    grade(a.archive,a.out)
+    grade(a.archive,a.out,a.study)

@@ -17,6 +17,8 @@ from .task_semantics import declared_semantics
 def partition(task,seed,regular):
     groups=sample_groups(task,"shared_text")
     domain=set(task.y_train.tolist())
+    if min(len(np.unique(groups[task.y_train==label])) for label in domain) < 8:
+        return task,regular(task,seed),np.array([],dtype=int),dict(status="unavailable",reason="Sparse class groups")
     split=StratifiedGroupKFold(8,shuffle=True,random_state=seed+103)
     for pool,held in split.split(np.zeros(len(groups)),task.y_train,groups):
         if set(task.y_train[held].tolist())!=domain or set(task.y_train[pool].tolist())!=domain:

@@ -1,0 +1,92 @@
+{
+  "version": "semantic-native-v3",
+  "plan": {
+    "modality": "image",
+    "training": {
+      "format": "image_folder",
+      "prefix": "gallery/"
+    },
+    "prediction": {
+      "format": "image_folder",
+      "prefix": "incoming/"
+    },
+    "metric": "macro_f1",
+    "positive_label": null,
+    "image_preprocessing": {
+      "width": 12,
+      "height": 12,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    },
+    "output": {
+      "version": "output-csv-v1",
+      "delimiter": ",",
+      "encoding": "utf-8",
+      "header": true,
+      "columns": [
+        {
+          "name": "Row",
+          "kind": "row_index",
+          "start": 1
+        },
+        {
+          "name": "Class",
+          "kind": "label",
+          "mapping": {
+            "amber": "amber",
+            "cobalt": "cobalt",
+            "jade": "jade"
+          }
+        }
+      ],
+      "order": {
+        "mode": "input"
+      }
+    }
+  },
+  "evidence": {
+    "training": [
+      "doc:README.md:0"
+    ],
+    "target": [
+      "doc:README.md:0"
+    ],
+    "modality": [
+      "doc:README.md:0"
+    ],
+    "metric": [
+      "doc:README.md:0"
+    ],
+    "prediction": [
+      "doc:README.md:0"
+    ],
+    "positive_label": [],
+    "image_preprocessing": [
+      "doc:README.md:0"
+    ],
+    "output": [
+      "doc:README.md:0"
+    ]
+  },
+  "uncertainties": [],
+  "design_decisions": {
+    "image_preprocessing": {
+      "task_constraints": {
+        "width": 12,
+        "mode": "RGB"
+      },
+      "constraint_evidence": {
+        "width": [
+          "doc:README.md:0"
+        ],
+        "mode": [
+          "doc:README.md:0"
+        ]
+      },
+      "reason": "The task requires width 12 and RGB. A compact 12x12 square representation keeps the image tensor small within the execution budget while preserving color information; stretch_bilinear is the fixed image-folder resize mode.",
+      "evidence_refs": [
+        "doc:README.md:0"
+      ]
+    }
+  }
+}

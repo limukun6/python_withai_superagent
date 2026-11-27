@@ -1,0 +1,29 @@
+[
+  {
+    "time_utc": "2026-11-27T06:51:13.601763+00:00",
+    "kind": "llm_response",
+    "role": "task_semantic_interpretation",
+    "content": "{\"version\":\"semantic-native-v2\",\"plan\":{\"modality\":\"image\",\"training\":{\"format\":\"image_folder\",\"prefix\":\"gallery/\"},\"prediction\":{\"format\":\"image_folder\",\"prefix\":\"incoming/\"},\"metric\":\"macro_f1\",\"positive_label\":null,\"image_preprocessing\":{\"width\":64,\"height\":64,\"mode\":\"RGB\",\"resize\":\"stretch_bilinear\"},\"output\":{\"version\":\"output-csv-v1\",\"delimiter\":\",\",\"encoding\":\"utf-8\",\"header\":true,\"columns\":[{\"name\":\"Row\",\"kind\":\"row_index\",\"start\":1},{\"name\":\"Class\",\"kind\":\"label\"}],\"order\":{\"mode\":\"input\"}}},\"evidence\":{\"training\":[\"doc:README.md:0\"],\"target\":[\"doc:README.md:0\"],\"modality\":[\"doc:README.md:0\"],\"metric\":[\"doc:README.md:0\"],\"prediction\":[\"doc:README.md:0\"],\"positive_label\":[],\"image_preprocessing\":[\"doc:README.md:0\"],\"output\":[\"doc:README.md:0\"]},\"uncertainties\":[]}",
+    "data_events": 368,
+    "http_status": 200,
+    "first_event_seconds": 4.48499999998603,
+    "last_event_seconds": 29.0
+  },
+  {
+    "time_utc": "2026-11-27T06:51:13.687149+00:00",
+    "kind": "semantic_contract_accepted",
+    "attempt": 1,
+    "task_kind": "image",
+    "training_rows": 90
+  },
+  {
+    "time_utc": "2026-11-27T06:51:30.830395+00:00",
+    "kind": "llm_response",
+    "role": "experiment_planner",
+    "content": "{\"option\": 0, \"reason\": \"With no observed trials, choose the highest-prior exploration: gradient-histogram logistic regression. It uses a lower-dimensional, more generalizable image representation than raw pixels or deep trees, is CPU-appropriate, and preserves one remaining fit for corroboration or final model selection.\", \"evidence_trials\": []}",
+    "data_events": 146,
+    "http_status": 200,
+    "first_event_seconds": 5.797000000020489,
+    "last_event_seconds": 14.719000000040978
+  }
+]

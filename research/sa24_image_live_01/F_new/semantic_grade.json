@@ -1,0 +1,56 @@
+{
+  "complete": true,
+  "checks": {
+    "kind": true,
+    "metric": true,
+    "classes": true,
+    "training_rows": true,
+    "training_pixels": true,
+    "training_labels": true,
+    "prediction_pixels": true,
+    "prediction_rows": true,
+    "task_constraints": true,
+    "frozen_choices": true,
+    "output": true
+  },
+  "chosen": {
+    "width": 64,
+    "height": 64,
+    "mode": "RGB",
+    "resize": "stretch_bilinear"
+  },
+  "design_record": {
+    "version": "image-design-decision-v1",
+    "chosen": {
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    },
+    "task_constraints": {},
+    "constraint_evidence": {},
+    "parameter_origins": {
+      "width": "agent_design_choice",
+      "height": "agent_design_choice",
+      "mode": "agent_design_choice",
+      "resize": "agent_design_choice"
+    },
+    "reason": "The task explicitly leaves image dimensions and color conversion unspecified. A compact 64x64 RGB stretch-bilinear representation preserves color information while fitting the execution budget, and it will be frozen for prediction.",
+    "evidence_refs": [
+      "doc:README.md:0"
+    ],
+    "constraint_values_enforced": true,
+    "source_citations_checked": true,
+    "semantic_requirement_extraction_certified": false
+  },
+  "provenance_checks": {
+    "extracted_constraints": true,
+    "origins": true,
+    "chosen": true,
+    "limits_explicit": true
+  },
+  "provenance_correct": true,
+  "training_features_sha256": "69e860e0629d941f7a5ef4e91ef2b6299d35b928f92730cbfc2c86f6a40b1b6a",
+  "prediction_features_sha256": "8b6650c46b7f7edd3132a926169118b0f42469189940745ff6a10cd1b0acbf17",
+  "interpretation_certification": "oracle checks these two documents only, not arbitrary requirement extraction"
+}

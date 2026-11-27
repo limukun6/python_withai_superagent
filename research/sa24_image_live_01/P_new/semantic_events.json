@@ -1,0 +1,29 @@
+[
+  {
+    "time_utc": "2026-11-27T06:53:36.957984+00:00",
+    "kind": "llm_response",
+    "role": "task_semantic_interpretation",
+    "content": "{\"version\":\"semantic-native-v3\",\"plan\":{\"modality\":\"image\",\"training\":{\"format\":\"image_folder\",\"prefix\":\"gallery/\"},\"prediction\":{\"format\":\"image_folder\",\"prefix\":\"incoming/\"},\"metric\":\"macro_f1\",\"positive_label\":null,\"image_preprocessing\":{\"width\":12,\"height\":12,\"mode\":\"RGB\",\"resize\":\"stretch_bilinear\"},\"output\":{\"version\":\"output-csv-v1\",\"delimiter\":\",\",\"encoding\":\"utf-8\",\"header\":true,\"columns\":[{\"name\":\"Row\",\"kind\":\"row_index\",\"start\":1},{\"name\":\"Class\",\"kind\":\"label\",\"mapping\":{\"amber\":\"amber\",\"cobalt\":\"cobalt\",\"jade\":\"jade\"}}],\"order\":{\"mode\":\"input\"}}},\"evidence\":{\"training\":[\"doc:README.md:0\"],\"target\":[\"doc:README.md:0\"],\"modality\":[\"doc:README.md:0\"],\"metric\":[\"doc:README.md:0\"],\"prediction\":[\"doc:README.md:0\"],\"positive_label\":[],\"image_preprocessing\":[\"doc:README.md:0\"],\"output\":[\"doc:README.md:0\"]},\"uncertainties\":[],\"design_decisions\":{\"image_preprocessing\":{\"task_constraints\":{\"width\":12,\"mode\":\"RGB\"},\"constraint_evidence\":{\"width\":[\"doc:README.md:0\"],\"mode\":[\"doc:README.md:0\"]},\"reason\":\"The task requires width 12 and RGB. A compact 12x12 square representation keeps the image tensor small within the execution budget while preserving color information; stretch_bilinear is the fixed image-folder resize mode.\",\"evidence_refs\":[\"doc:README.md:0\"]}}}",
+    "data_events": 634,
+    "http_status": 200,
+    "first_event_seconds": 3.140999999945052,
+    "last_event_seconds": 49.65599999995902
+  },
+  {
+    "time_utc": "2026-11-27T06:53:37.053638+00:00",
+    "kind": "semantic_contract_accepted",
+    "attempt": 1,
+    "task_kind": "image",
+    "training_rows": 90
+  },
+  {
+    "time_utc": "2026-11-27T06:53:50.044176+00:00",
+    "kind": "llm_response",
+    "role": "experiment_planner",
+    "content": "{\"option\": 0, \"reason\": \"No trials have been observed yet, so choose the option with the highest supplied prior and a distinct image-specific representation. Gradient histograms plus logistic regression is a strong, low-variance baseline for small 12x12 images and provides useful evidence for later corroboration or final model selection with the remaining fits.\", \"evidence_trials\": []}",
+    "data_events": 106,
+    "http_status": 200,
+    "first_event_seconds": 4.296999999904074,
+    "last_event_seconds": 9.625
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "time_utc": "2026-11-27T06:54:45.288686+00:00",
+    "kind": "llm_response",
+    "role": "task_semantic_interpretation",
+    "content": "{\"version\":\"semantic-native-v2\",\"plan\":{\"modality\":\"image\",\"training\":{\"format\":\"image_folder\",\"prefix\":\"gallery/\"},\"prediction\":{\"format\":\"image_folder\",\"prefix\":\"incoming/\"},\"metric\":\"macro_f1\",\"positive_label\":null,\"image_preprocessing\":{\"width\":12,\"height\":12,\"mode\":\"RGB\",\"resize\":\"stretch_bilinear\"},\"output\":{\"version\":\"output-csv-v1\",\"delimiter\":\",\",\"encoding\":\"utf-8\",\"header\":true,\"columns\":[{\"name\":\"Row\",\"kind\":\"row_index\",\"start\":1},{\"name\":\"Class\",\"kind\":\"label\"}],\"order\":{\"mode\":\"input\"}}},\"evidence\":{\"training\":[\"doc:README.md:0\"],\"target\":[\"doc:README.md:0\"],\"modality\":[\"doc:README.md:0\"],\"metric\":[\"doc:README.md:0\"],\"prediction\":[\"doc:README.md:0\"],\"positive_label\":[],\"image_preprocessing\":[\"doc:README.md:0\"],\"output\":[\"doc:README.md:0\"]},\"uncertainties\":[]}",
+    "data_events": 551,
+    "http_status": 200,
+    "first_event_seconds": 3.405999999959022,
+    "last_event_seconds": 44.15599999995902
+  },
+  {
+    "time_utc": "2026-11-27T06:54:45.378951+00:00",
+    "kind": "semantic_contract_accepted",
+    "attempt": 1,
+    "task_kind": "image",
+    "training_rows": 90
+  },
+  {
+    "time_utc": "2026-11-27T06:55:04.585628+00:00",
+    "kind": "llm_response",
+    "role": "experiment_planner",
+    "content": "{\"option\": 0, \"reason\": \"No trials have been observed, so uncertainty is maximal. Option 0 has the highest supplied prior among the candidate experiments and tests a distinct gradient-histogram representation that may generalize better on small 12x12 images than raw-pixel or tree variants, while remaining CPU-cheap with two fits left.\", \"evidence_trials\": []}",
+    "data_events": 170,
+    "http_status": 200,
+    "first_event_seconds": 4.782000000006519,
+    "last_event_seconds": 15.937999999965541
+  }
+]

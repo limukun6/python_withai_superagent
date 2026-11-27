@@ -1,0 +1,77 @@
+{
+  "version": "semantic-native-v3",
+  "plan": {
+    "modality": "image",
+    "training": {
+      "format": "image_folder",
+      "prefix": "gallery/"
+    },
+    "prediction": {
+      "format": "image_folder",
+      "prefix": "incoming/"
+    },
+    "metric": "macro_f1",
+    "positive_label": null,
+    "image_preprocessing": {
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    },
+    "output": {
+      "version": "output-csv-v1",
+      "delimiter": ",",
+      "encoding": "utf-8",
+      "header": true,
+      "columns": [
+        {
+          "name": "Row",
+          "kind": "row_index",
+          "start": 1
+        },
+        {
+          "name": "Class",
+          "kind": "label"
+        }
+      ],
+      "order": {
+        "mode": "input"
+      }
+    }
+  },
+  "evidence": {
+    "training": [
+      "doc:README.md:0"
+    ],
+    "target": [
+      "doc:README.md:0"
+    ],
+    "modality": [
+      "doc:README.md:0"
+    ],
+    "metric": [
+      "doc:README.md:0"
+    ],
+    "prediction": [
+      "doc:README.md:0"
+    ],
+    "positive_label": [],
+    "image_preprocessing": [
+      "doc:README.md:0"
+    ],
+    "output": [
+      "doc:README.md:0"
+    ]
+  },
+  "uncertainties": [],
+  "design_decisions": {
+    "image_preprocessing": {
+      "task_constraints": {},
+      "constraint_evidence": {},
+      "reason": "The task explicitly leaves image dimensions and color conversion unspecified. A compact 64x64 RGB stretch-bilinear representation preserves color information while fitting the execution budget, and it will be frozen for prediction.",
+      "evidence_refs": [
+        "doc:README.md:0"
+      ]
+    }
+  }
+}

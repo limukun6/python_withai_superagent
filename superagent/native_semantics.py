@@ -14,12 +14,12 @@ from .metrics import MetricSpec
 from .schema import load_manifest_split,read_manifest
 from .task_files import TrainingMembers,evaluation_path
 
-VERSION='semantic-native-v2'
+VERSION='semantic-native-v3'
 RECIPE_VERSION='semantic-native-input-v1'
 INSTRUCTION=(
     'For numeric numpy arrays or class-folder images without manifest.json you may instead return '
-    '{version:"semantic-native-v2",plan:{modality,training,prediction,metric,positive_label,image_preprocessing,output},'
-    'evidence:{training:[],target:[],modality:[],metric:[],prediction:[],positive_label:[],image_preprocessing:[],output:[]},uncertainties:[]}. '
+    '{version:"semantic-native-v3",plan:{modality,training,prediction,metric,positive_label,image_preprocessing,output},'
+    'evidence:{training:[],target:[],modality:[],metric:[],prediction:[],positive_label:[],image_preprocessing:[],output:[]},uncertainties:[],design_decisions:{}}. '
     'modality is tabular or image. training/prediction are existing reader descriptors, NOT code: '
     'npy training={format:"npy",path:<feature member>,target_path:<label member>}, prediction={format:"npy",path}; '
     'npz training={format:"npz",path,features_key,target_key}, prediction={format:"npz",path,features_key}; '
@@ -28,7 +28,16 @@ INSTRUCTION=(
     'For image_folder, image_preprocessing must be {width:<integer>,height:<integer>,mode:"RGB" or "L",resize:"stretch_bilinear"}; '
     'for arrays image_preprocessing must be null. prediction may be null only when no input is announced. '
     'metric must be explicit, positive_label may be null; numeric array labels retain numeric types. '
-    'Every non-null declaration requires real document citations; target always requires evidence. '
+    'Every task/source declaration requires real document citations; target always requires evidence. '
+    'For images, distinguish task constraints from your internal design choices. '
+    'design_decisions must be {image_preprocessing:{task_constraints:{<only parameters explicitly required by the task>},'
+    'constraint_evidence:{<each constrained parameter>:[<doc IDs>]},reason:<why the chosen representation fits this task/budget>,evidence_refs:[<image task doc IDs>]}}. '
+    'The four possible constrained parameters are width,height,mode,resize. Record only actual task requirements in task_constraints; '
+    'the executor checks chosen values against them. For parameters not specified, autonomously select valid compact settings, '
+    'using image metadata and preserving useful color information, and record the design reason. Empty task_constraints is valid. '
+    'Do not claim your chosen size was stated in the task. Omitted internal size/color settings alone are not missing target meaning; '
+    'choose them rather than asking a task-fact uncertainty. Genuine unclear/conflicting task requirements stay in uncertainties. '
+    'For arrays design_decisions must be {}. Preprocessing evidence cites the task context, not a fabricated declaration of the chosen values. '
     'Use native descriptors when the evidence describes arrays/folders; scalar-record plans cannot decode them. '
     'Do not reinterpret explicit manifests or select evaluation labels as features. '
     'The same output-csv-v1 schema applies; row_index is allowed only when the instructions request it. '
@@ -90,7 +99,9 @@ def manifest_for(recipe,split):
 
 def compile_native(files,workspace,response,*,prediction_files=None):
     require(not explicit_manifest(files),'explicit manifest cannot be overridden')
-    require(isinstance(response,dict) and set(response)=={'version','plan','evidence','uncertainties'} and response['version'] in (VERSION,'semantic-native-v1'),
+    required={'version','plan','evidence','uncertainties'}
+    if isinstance(response,dict) and response.get('version')==VERSION:required.add('design_decisions')
+    require(isinstance(response,dict) and set(response)==required and response['version'] in (VERSION,'semantic-native-v2','semantic-native-v1'),
             'invalid response envelope')
     from .task_questions import parse_questions,resolve_questions
     questions=parse_questions(response,workspace)
@@ -116,6 +127,10 @@ def compile_native(files,workspace,response,*,prediction_files=None):
     else:
         require(plan['image_preprocessing'] is None,'array input cannot silently apply a pixel transform')
         require(query is None or query['format'] in ('npy','npz'),'array prediction needs an array reader')
+    decisions=None
+    if response['version']==VERSION:
+        from .design_choices import compile_design_decisions
+        decisions=compile_design_decisions(response,workspace,plan)
     recipe=dict(version=RECIPE_VERSION,**deepcopy({k:plan[k] for k in ('modality','metric','positive_label','image_preprocessing')}),
                 training=training,prediction=query)
     # Restrict before decoding: even explicit LLM selections cannot read eval members.
@@ -126,6 +141,7 @@ def compile_native(files,workspace,response,*,prediction_files=None):
     spec.update(native_input_recipe=recipe,semantic_interpretation=dict(version=response['version'],evidence=deepcopy(evidence),
                 claims_status='source_citations_checked; interpretation_requires_evaluation'))
     spec['goal_sources']['primary_metric']='declared_task_readme'
+    if decisions is not None:spec['design_decisions']=decisions
     # Preserve source meaning separately from inference-time columns.
     spec['semantic_target_source']=training.get('target_path',training.get('target_key','immediate_class_directory'))
     task=TrainingTask(kind,x,y,spec);metric=MetricSpec.for_task(task)

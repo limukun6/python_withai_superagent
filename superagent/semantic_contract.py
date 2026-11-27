@@ -448,7 +448,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     continue
                 if base_task is not None:
                     task=_output_overlay(base_task,workspace,response)
-                elif isinstance(response,dict) and response.get('version') in ('semantic-native-v1','semantic-native-v2'):
+                elif isinstance(response,dict) and response.get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
                     from .native_semantics import compile_native
                     task=compile_native(files,workspace,response,prediction_files=query_files)
                 else:

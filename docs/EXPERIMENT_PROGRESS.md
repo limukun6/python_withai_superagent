@@ -1,5 +1,19 @@
 # 实验持续工作记录
 
+## 2026-11-27：SA24图像设计验证完成；PR3已核对，尚未整合
+
+SA24新增semantic-native-v3设计来源，区分图像参数的task_constraints和自主chosen，约束逐项校验、理由/引用入spec与解释缓存；目标/指标/输出不作为自由设计，原v1/v2提案支持，跨源码旧缓存仍显式迁移。初次360检查有1个v3缓存分派错误，保留checks_01；修复checks_02为360/360、34.109秒、0fit/API。
+
+同一旧Digits来源F自由参数/P只指定width12+RGB，旧1887ffa与新版各默认solve＋离线新进程predict。四条完整交付4/4、错误完成0、120行各自重放相同；新版来源正确2/2，独立审计4/4。两版每条件模型和CSV都相同，不声称成功率、准确率或省钱改善。共8fit/8Flash/¥.078992/271.484秒，48076输入/7729输出token；新两条比旧两条多¥.001120。证据research/sa24_image_*，计划/报告docs/batches/SA24_IMAGE_DESIGN_*_20261127_zh.md。私有模型runs/sa24_image_private_01，原scope已用不得重试。
+
+A canonical现526/known8.428396/unknown17/pending0，全部原518行SHA不改；原未知null。无训练/API队列，未冻结。SA7–SA24自动窗口累计65fit/65API、已知课程¥.462001，另1新增未知；非全项目累计。
+
+用户要求检查PR https://github.com/limukun6/python_withai_superagent/pull/3 。已取实际head4d4222a（open/未合并），与A共同祖先SA21=5f820bc；对方未含SA22–24。B已有Task2统一版72.77%和独立训练内70.40%复核、方法/调度/离线包/早期交付，不重复开发。只读merge-tree有CURRENT_AGENT_STATE、experiment_llm、unified_agent冲突；重点把first_delivery和A预测恢复接通，不能覆盖一边，partial不算完整成功。当前未执行合并或重跑B训练。详细缺口/验收/9–17小时排期见docs/PR3_A_REMAINING_WORK_20261127_zh.md。
+
+另已查明B unknown b77d6d15-a6cc-4eb5-a1d7-6fcd8a830070不在A canonical，B文档有另几笔已知回执待导入。需原增量账本去重，不凭摘要造行；此事不等待官网、不停止本地整合研发。A当前17条不是全团队完整数。
+
+下一步P0先隔离整合PR3＋SA22–24并做零fit检查；再验收统一入口普通/自定义/晚到格式恢复/Windows中断。后续补原说明与限制的LLM恢复、图像ID和原生-记录适配、不同真实来源原包跨模态完整路径。先保存计划/复跑代码/预算，不从重跑课程分数开始。
+
 ## 2026-11-27：用户授权保留未知继续付费，SA23真实恢复2/2
 
 用户最新“忽略未知用量，继续付费调用”已写AGENTS：预登记小批内继续，逐批枚举未知ID/原行SHA，保留null，不再无限等对账；失败停当批且不重试，分析/新计划后承接，不能复用耗尽scope/忽略pending/建空账本。本轮显式17条private快照，原16行及新增d5663eee-60d5-47df-9410-1b0d4d227a17的SHA/null不改。别再把第17条本身当成用户尚未授权的暂停理由。

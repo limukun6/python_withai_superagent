@@ -1,0 +1,29 @@
+[
+  {
+    "time_utc": "2026-11-27T06:52:19.421768+00:00",
+    "kind": "llm_response",
+    "role": "task_semantic_interpretation",
+    "content": "{\"version\":\"semantic-native-v3\",\"plan\":{\"modality\":\"image\",\"training\":{\"format\":\"image_folder\",\"prefix\":\"gallery/\"},\"prediction\":{\"format\":\"image_folder\",\"prefix\":\"incoming/\"},\"metric\":\"macro_f1\",\"positive_label\":null,\"image_preprocessing\":{\"width\":64,\"height\":64,\"mode\":\"RGB\",\"resize\":\"stretch_bilinear\"},\"output\":{\"version\":\"output-csv-v1\",\"delimiter\":\",\",\"encoding\":\"utf-8\",\"header\":true,\"columns\":[{\"name\":\"Row\",\"kind\":\"row_index\",\"start\":1},{\"name\":\"Class\",\"kind\":\"label\"}],\"order\":{\"mode\":\"input\"}}},\"evidence\":{\"training\":[\"doc:README.md:0\"],\"target\":[\"doc:README.md:0\"],\"modality\":[\"doc:README.md:0\"],\"metric\":[\"doc:README.md:0\"],\"prediction\":[\"doc:README.md:0\"],\"positive_label\":[],\"image_preprocessing\":[\"doc:README.md:0\"],\"output\":[\"doc:README.md:0\"]},\"uncertainties\":[],\"design_decisions\":{\"image_preprocessing\":{\"task_constraints\":{},\"constraint_evidence\":{},\"reason\":\"The task explicitly leaves image dimensions and color conversion unspecified. A compact 64x64 RGB stretch-bilinear representation preserves color information while fitting the execution budget, and it will be frozen for prediction.\",\"evidence_refs\":[\"doc:README.md:0\"]}}}",
+    "data_events": 410,
+    "http_status": 200,
+    "first_event_seconds": 6.407000000006519,
+    "last_event_seconds": 36.313000000081956
+  },
+  {
+    "time_utc": "2026-11-27T06:52:19.514002+00:00",
+    "kind": "semantic_contract_accepted",
+    "attempt": 1,
+    "task_kind": "image",
+    "training_rows": 90
+  },
+  {
+    "time_utc": "2026-11-27T06:52:35.826714+00:00",
+    "kind": "llm_response",
+    "role": "experiment_planner",
+    "content": "{\"option\": 0, \"reason\": \"With no observed trials and only two fits remaining, start with the most promising low-variance image-specific representation: gradient histograms plus logistic regression. It is more suitable for 64x64x3 images and 72 rows than raw-pixel high-dimensional models, has the highest supplied prior among options, and preserves a refit for corroboration or final model selection.\", \"evidence_trials\": []}",
+    "data_events": 155,
+    "http_status": 200,
+    "first_event_seconds": 3.2660000000614673,
+    "last_event_seconds": 13.094000000040978
+  }
+]

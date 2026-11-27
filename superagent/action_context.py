@@ -4,7 +4,7 @@ import math
 
 MAX_BYTES=8192
 VERSIONS={'semantic-task-v1','semantic-task-v2','semantic-task-v3','semantic-native-v1',
-          'semantic-native-v2','semantic-output-v1','semantic-output-v2'}
+          'semantic-native-v2','semantic-native-v3','semantic-output-v1','semantic-output-v2'}
 TOOLS={'inspect_header','inspect_array','inspect_image'}
 CHECKS=dict(task_adaptation='Decode the documented training input with an installed reader.',
     contract_probe='Compile the cited task contract and replay prediction features and output rules before fitting.',
@@ -93,6 +93,9 @@ def summarize_action(action):
                         for k,value in split['values'].items() if k in ('train','test','validation')}
             if isinstance(plan.get('output'),dict):selected['output']=output(plan['output'])
             result['selected']=selected
+            decisions=action.get('design_decisions',{})
+            if isinstance(decisions,dict) and isinstance(decisions.get('image_preprocessing'),dict):
+                result['image_task_constraints']=fields(decisions['image_preprocessing'].get('task_constraints'),('width','height','mode','resize'))
         elif isinstance(action.get('output'),dict):result['selected_output']=output(action['output'])
         evidence=action.get('evidence')
         if isinstance(evidence,dict):

@@ -1,0 +1,66 @@
+{
+  "complete": true,
+  "checks": {
+    "kind": true,
+    "metric": true,
+    "classes": true,
+    "training_rows": true,
+    "training_pixels": true,
+    "training_labels": true,
+    "prediction_pixels": true,
+    "prediction_rows": true,
+    "task_constraints": true,
+    "frozen_choices": true,
+    "output": true
+  },
+  "chosen": {
+    "width": 12,
+    "height": 12,
+    "mode": "RGB",
+    "resize": "stretch_bilinear"
+  },
+  "design_record": {
+    "version": "image-design-decision-v1",
+    "chosen": {
+      "width": 12,
+      "height": 12,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    },
+    "task_constraints": {
+      "width": 12,
+      "mode": "RGB"
+    },
+    "constraint_evidence": {
+      "width": [
+        "doc:README.md:0"
+      ],
+      "mode": [
+        "doc:README.md:0"
+      ]
+    },
+    "parameter_origins": {
+      "width": "task_requirement",
+      "height": "agent_design_choice",
+      "mode": "task_requirement",
+      "resize": "agent_design_choice"
+    },
+    "reason": "The task requires width 12 and RGB. A compact 12x12 square representation keeps the image tensor small within the execution budget while preserving color information; stretch_bilinear is the fixed image-folder resize mode.",
+    "evidence_refs": [
+      "doc:README.md:0"
+    ],
+    "constraint_values_enforced": true,
+    "source_citations_checked": true,
+    "semantic_requirement_extraction_certified": false
+  },
+  "provenance_checks": {
+    "extracted_constraints": true,
+    "origins": true,
+    "chosen": true,
+    "limits_explicit": true
+  },
+  "provenance_correct": true,
+  "training_features_sha256": "f986812e3e7593f667c9b03dfe4c387e0259400640fc719469e0d2f5178eedd7",
+  "prediction_features_sha256": "c478cf57000ec95cc9356ba811e3dfe48731f70dd0b04eab2a2a4613efcac232",
+  "interpretation_certification": "oracle checks these two documents only, not arbitrary requirement extraction"
+}

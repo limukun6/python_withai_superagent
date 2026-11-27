@@ -8,7 +8,7 @@ from copy import deepcopy
 from .metrics import MetricSpec
 
 
-TYPED_VERSIONS={'semantic-task-v3','semantic-native-v2','semantic-output-v2'}
+TYPED_VERSIONS={'semantic-task-v3','semantic-native-v2','semantic-native-v3','semantic-output-v2'}
 FIELDS=('training','prediction','target','columns','modality','metric','split','output','positive_label','image_preprocessing')
 DEFERRED={'positive_label','image_preprocessing'}
 SCHEMA=dict(type='array',maxItems=8,items=dict(type='object',additionalProperties=False,

@@ -1,0 +1,154 @@
+{
+  "manifest_schema_version": 1,
+  "modality": "image",
+  "metric": "macro_f1",
+  "goal_sources": {
+    "primary_metric": "declared_task_readme"
+  },
+  "test_accessed": false,
+  "schema_origin": "folder_v1",
+  "input_format": "image_folder",
+  "feature_shape": [
+    64,
+    64,
+    3
+  ],
+  "image_decoder_policy": "single_frame_bitmap_exif_white_background_bilinear_v2",
+  "image_decoder_version": "12.3.0",
+  "kind": "image",
+  "input_schema": {
+    "modality": "image",
+    "image_preprocessing": {
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    }
+  },
+  "native_input_recipe": {
+    "version": "semantic-native-input-v1",
+    "modality": "image",
+    "metric": "macro_f1",
+    "positive_label": null,
+    "image_preprocessing": {
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "resize": "stretch_bilinear"
+    },
+    "training": {
+      "format": "image_folder",
+      "prefix": "gallery/"
+    },
+    "prediction": {
+      "format": "image_folder",
+      "prefix": "incoming/"
+    }
+  },
+  "semantic_interpretation": {
+    "version": "semantic-native-v2",
+    "evidence": {
+      "training": [
+        "doc:README.md:0"
+      ],
+      "target": [
+        "doc:README.md:0"
+      ],
+      "modality": [
+        "doc:README.md:0"
+      ],
+      "metric": [
+        "doc:README.md:0"
+      ],
+      "prediction": [
+        "doc:README.md:0"
+      ],
+      "positive_label": [],
+      "image_preprocessing": [
+        "doc:README.md:0"
+      ],
+      "output": [
+        "doc:README.md:0"
+      ]
+    },
+    "claims_status": "source_citations_checked; interpretation_requires_evaluation"
+  },
+  "semantic_target_source": "immediate_class_directory",
+  "uncertainty_resolution": {
+    "version": "scoped-questions-v1",
+    "items": [],
+    "status": "no_reported_questions",
+    "semantic_truth_certified": false
+  },
+  "output_recipe": {
+    "version": "output-csv-v1",
+    "delimiter": ",",
+    "encoding": "utf-8",
+    "header": true,
+    "columns": [
+      {
+        "name": "Row",
+        "kind": "row_index",
+        "start": 1
+      },
+      {
+        "name": "Class",
+        "kind": "label"
+      }
+    ],
+    "order": {
+      "mode": "input"
+    }
+  },
+  "output_recipe_evidence": [
+    "doc:README.md:0"
+  ],
+  "task_kind": "image_classification",
+  "model_kind": "image",
+  "class_count": 3,
+  "metric_spec": {
+    "name": "macro_f1",
+    "labels": [
+      "amber",
+      "cobalt",
+      "jade"
+    ],
+    "direction": "maximize"
+  },
+  "goal_resolution": {
+    "resolution_version": 1,
+    "fields": {
+      "input_kind": {
+        "value": "image",
+        "source": "folder_v1",
+        "status": "confirmed"
+      },
+      "primary_metric": {
+        "value": "macro_f1",
+        "source": "declared_task_readme",
+        "status": "confirmed",
+        "effective_policy": "maximize"
+      },
+      "label_domain": {
+        "value": [
+          "amber",
+          "cobalt",
+          "jade"
+        ],
+        "source": "training_labels",
+        "status": "confirmed"
+      },
+      "positive_label": {
+        "value": null,
+        "source": "not_applicable",
+        "status": "not_applicable"
+      },
+      "pair_semantics": {
+        "value": null,
+        "source": "undeclared",
+        "status": "unknown"
+      }
+    },
+    "scope": "Effective defaults remain executable; unknown intent is not a verified task declaration"
+  }
+}

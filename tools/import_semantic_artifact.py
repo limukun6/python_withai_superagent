@@ -72,7 +72,7 @@ def migrate(package,prediction,accepted_receipt,ledger_path,destination):
             try:base=load_training_task(package,read_declarations=True)
             except DECODE_ERRORS:base=adapt_training(package)
             task=_output_overlay(base,workspace,proposal)
-        elif proposal.get('version') in ('semantic-native-v1','semantic-native-v2'):
+        elif proposal.get('version') in ('semantic-native-v1','semantic-native-v2','semantic-native-v3'):
             from superagent.native_semantics import compile_native
             other=stack.enter_context(package_files(prediction)) if prediction is not None and Path(prediction).resolve()!=Path(package).resolve() else None
             task=compile_native(files,workspace,proposal,prediction_files=other)

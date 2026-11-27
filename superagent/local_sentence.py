@@ -34,11 +34,24 @@ def describe(root):
     """Return a portable descriptor for supported one-pool packages, without importing their code."""
     parts = metadata(root/'modules.json')
     stages = [part['type'] for part in parts]
+    if (any(p.get('idx')!=i or p.get('kwargs') for i,p in enumerate(parts))
+            or any(set(p)-{'idx','type','name','path','kwargs'} for p in parts)):
+        raise ValueError('Unsupported sentence encoder module layout')
+    if stages in ([MODULE+'StaticEmbedding'],[MODULE+'StaticEmbedding',MODULE+'Normalize']):
+        from .static_sentence import layout
+        prefix,width=layout(root,parts)
+        files=['modules.json',prefix+'model.safetensors',prefix+'tokenizer.json']
+        if (root/(prefix+'config.json')).is_file():
+            config=metadata(root/(prefix+'config.json'))
+            if config.get('auto_map') or config.get('hidden_dim',width)!=width:
+                raise ValueError('Incompatible static model configuration')
+            files.append(prefix+'config.json')
+        return descriptor(root,files,family='static_embedding',pooling='mean',normalize=len(stages)==2,
+                          width=width,max_length=None,lower_case=False,module_prefix=prefix)
     if stages not in ([MODULE+'Transformer',MODULE+'Pooling'],
                       [MODULE+'Transformer',MODULE+'Pooling',MODULE+'Normalize']):
         raise ValueError('Unsupported sentence encoder stages')
-    if (parts[0]['path'] or any(p.get('idx')!=i or p.get('kwargs') for i,p in enumerate(parts))
-            or any(set(p)-{'idx','type','name','path','kwargs'} for p in parts)):
+    if parts[0]['path']:
         raise ValueError('Unsupported sentence encoder module layout')
     pools = parts[1]['path']
     if not pools or not pools.replace('_','').isalnum():
@@ -70,6 +83,11 @@ def describe(root):
     if not isinstance(model_args,dict) or set(model_args)-{'add_pooling_layer'} or model_args.get('add_pooling_layer',False) is not False:
         raise ValueError('Unsupported encoder initialization options')
     files = ['modules.json',pool_path,'sentence_bert_config.json','config.json','tokenizer.json','model.safetensors']
+    return descriptor(root,files,width=width,family=topology,pooling=pooling,normalize=len(stages)==3,
+                      max_length=length,lower_case=settings.get('do_lower_case',False))
+
+
+def descriptor(root,files,**behavior):
     for optional in ('config_sentence_transformers.json','tokenizer_config.json'):
         if (root/optional).is_file():
             item=metadata(root/optional)
@@ -82,14 +100,13 @@ def describe(root):
         stat=path.stat()
         records[name]=dict(bytes=stat.st_size,sha256=_checksum(path,(stat.st_size,stat.st_ino,stat.st_mtime_ns,stat.st_ctime_ns)))
     signature=hashlib.sha256(json.dumps(records,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-    return dict(signature=signature,environment_variable=PREFIX+signature.upper()+'_WEIGHTS',width=width,
-                family=topology,pooling=pooling,normalize=len(stages)==3,max_length=length,
-                lower_case=settings.get('do_lower_case',False),files=records)
+    return dict(signature=signature,environment_variable=PREFIX+signature.upper()+'_WEIGHTS',files=records,**behavior)
 
 
 def discover(root,env):
-    if not all(find_spec(k) is not None for k in ('torch','transformers','tokenizers','safetensors')):
+    if not all(find_spec(k) is not None for k in ('tokenizers','safetensors')):
         return
+    contextual=all(find_spec(k) is not None for k in ('torch','transformers'))
     candidates = [root/'modules.json',*sorted(root.glob('*/modules.json')),*sorted(root.glob('*/*/modules.json'))]
     for path in candidates:
         if not path.is_file():
@@ -98,7 +115,8 @@ def discover(root,env):
             spec=describe(path.parent)
         except (KeyError,ValueError,IndexError,TypeError,OSError,AttributeError):
             continue
-        env[spec['environment_variable']]=str(path.parent.resolve())
+        if contextual or spec['family']=='static_embedding':
+            env[spec['environment_variable']]=str(path.parent.resolve())
 
 
 def installed():
@@ -108,7 +126,7 @@ def installed():
             root=Path(value)
             try:
                 spec=describe(root)
-            except (KeyError,ValueError,IndexError,TypeError,OSError,AttributeError):
+            except (KeyError,ValueError,IndexError,TypeError,OSError,AttributeError,ImportError):
                 continue
             if spec['environment_variable']==key:
                 specs.append(spec)
@@ -138,10 +156,13 @@ def backbone(root,length,identity):
 
 
 def encode(spec,texts):
-    import torch
     root=Path(os.environ[spec['environment_variable']])
     if describe(root)!=spec:
         raise ValueError('Local sentence encoder bytes or behavior have changed')
+    if spec['family']=='static_embedding':
+        from .static_sentence import encode as static_encode
+        return static_encode(root,spec,texts)
+    import torch
     tokenizer,model=backbone(root,spec['max_length'],spec['signature'])
     chunks=tokenizer.encode_batch([s.strip().lower() if spec['lower_case'] else s.strip() for s in texts])
     order=sorted(range(len(chunks)),key=lambda i:len(chunks[i].ids))

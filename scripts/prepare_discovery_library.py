@@ -45,8 +45,24 @@ def prepare(weights, expanded, record, requested_resources=()):
             meta = json.loads(Path(file.name).read_text())
         revision = meta['sha']
         require(meta['id']==repo and len(revision)==40 and (use=='main' or revision==use),'Invalid publisher revision')
-        required = {'modules.json','1_Pooling/config.json','sentence_bert_config.json','config.json','tokenizer.json','model.safetensors'}
         present = {item['rfilename']:item for item in meta['siblings']}
+        required = {'modules.json','config.json','tokenizer.json','model.safetensors'}
+        # Older publishers store contextual pooling settings in separate files. Static
+        # embedding bags instead declare their single table in the first module.
+        if '1_Pooling/config.json' in present or 'sentence_bert_config.json' in present:
+            required.update(('1_Pooling/config.json','sentence_bert_config.json'))
+        else:
+            with NamedTemporaryFile() as file:
+                path=Path(file.name)
+                read_public(f'https://huggingface.co/{repo}/resolve/{revision}/modules.json',path)
+                declaration=present.get('modules.json')
+                require(declaration and matches(path,(declaration['size'],declaration['blobId'])),'Missing valid module declaration')
+                stages=json.loads(path.read_text())
+            require([r.get('type') for r in stages] in (
+                ['sentence_transformers.models.StaticEmbedding'],
+                ['sentence_transformers.models.StaticEmbedding','sentence_transformers.models.Normalize']),
+                'Unsupported published module declaration')
+            require(stages[0].get('path') in ('','.'),'This installer expects root-level weights')
         require(required<=present.keys(),'Incomplete model metadata')
         names = sorted(required | ({'config_sentence_transformers.json','tokenizer_config.json'} & present.keys()))
         folder = expanded / repo.split('/')[-1]

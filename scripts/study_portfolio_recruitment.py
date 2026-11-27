@@ -93,8 +93,8 @@ def prepare(root,control):
     print({n:(v["fit_rows"],v["held_rows"]) for n,v in info.items()},flush=True)
 
 
-def solve(root,control,case,arm):
-    out=root/"portfolio-recruitment"
+def solve(root,control,case,arm,*,out=None,library=None):
+    out=out or root/"portfolio-recruitment"
     plan=read(out/"inputs.json")
     impl=control if arm=="control" else ROOT
     folder=out/case
@@ -103,7 +103,7 @@ def solve(root,control,case,arm):
             "Changed source or inputs")
     base=folder/arm
     base.mkdir(exist_ok=False)
-    library=root/"arctic-library"
+    library=library or root/"arctic-library"
     require(sorted(inventory(library))==plan["resources"],"Changed resource inventory")
     physical=base/"physical.jsonl"
     settings=env(library,physical)
@@ -159,8 +159,8 @@ def solve(root,control,case,arm):
     print(case,arm,count,outcome["members"],protected,flush=True)
 
 
-def score(root,case):
-    out=root/"portfolio-recruitment"
+def score(root,case,*,out=None):
+    out=out or root/"portfolio-recruitment"
     folder=out/case
     info=read(out/"inputs.json")["cases"][case]
     arms=["control","challenger"] if case=="comparison" else ["challenger"]

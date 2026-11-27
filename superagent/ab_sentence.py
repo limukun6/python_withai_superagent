@@ -40,6 +40,11 @@ DEEP_FILES = {
 }
 _ALT_TOKENIZER=(711396,'d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66')
 ALTERNATIVES={
+    'gte_base':dict(model='thenlper/gte-base',revision='c078288308d8dee004ab72c6191778064285ec0c',
+        env='SUPERAGENT_GTE_BASE_WEIGHTS',prefix='',pool='mean',
+        files={'config.json':(618,'88bed05d7640945dd2de4b4e81fbe4dd962289c32fc1c0aacfd13deb7ea90155'),
+               'tokenizer.json':(711661,'da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0'),
+               'model.safetensors':(218990904,'4a9e28bdb13c193da16ae4bdd6ba40ecceb5102b56bf8c1b039054290f644019')}),
     'gte':dict(model='thenlper/gte-small',revision='17e1f347d17fe144873b1201da91788898c639cd',
         env='SUPERAGENT_GTE_SMALL_WEIGHTS',prefix='',pool='mean',
         files={'config.json':(583,'00273cdfb3e05c7304d180270bdef8adae45023e7bdfc396338bdd815943dc59'),

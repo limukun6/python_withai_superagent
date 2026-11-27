@@ -18,13 +18,15 @@ from .word_familiarity import WordFamiliarity
 
 
 VARIANTS = ("gte", "electra")
+AVAILABLE_ENCODERS=(*VARIANTS,"gte_base")
 def method_names(heads):
     return {f"{variant}_paired_{head}": (variant, head) for variant in VARIANTS for head in heads}
 
 
 BASE_HEADS = method_names(("linear", "quadratic"))
 CONTEXT_HEADS = method_names(("context", "landmark"))
-NAMES = {**BASE_HEADS, **CONTEXT_HEADS}
+SCALE_HEADS = {"gte_base_paired_linear":("gte_base","linear")}
+NAMES = {**BASE_HEADS, **CONTEXT_HEADS, **SCALE_HEADS}
 COMPLEMENTS = {f"{base}_plus_{second}_residual": (base, second)
                for base in VARIANTS for second in (*VARIANTS,"minilm_l12") if base!=second}
 
@@ -53,7 +55,7 @@ def encode_texts(variant, texts):
     root = verified_files(spec["env"], spec["files"])
     if root is None:
         raise ValueError("Missing pinned weights for " + variant)
-    if variant == "gte":
+    if variant in ("gte","gte_base"):
         tokenizer, model = _encoder(root, 512)
         return encode_frozen(texts, tokenizer, model)[0]
     if variant != "electra":
@@ -98,7 +100,7 @@ def bank_name(variant):
 def read_bank(path, modified):
     with np.load(path, allow_pickle=False) as archive:
         keys, vectors = archive["keys"], archive["vectors"]
-    dimension = 260 if path.name.startswith("electra-") else 384
+    dimension = 768 if path.name.startswith("gte_base-") else 260 if path.name.startswith("electra-") else 384
     if vectors.shape != (len(keys), dimension) or not np.isfinite(vectors).all():
         raise ValueError("Invalid frozen feature bank")
     return dict(zip(keys.tolist(), vectors))

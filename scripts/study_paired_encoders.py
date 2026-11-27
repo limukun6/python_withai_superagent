@@ -12,7 +12,7 @@ import numpy as np
 from scripts.cache_paired_encoders import configure_weights
 from scripts.unified_released_study import ROOT, env, read, require, save, sha
 from superagent.ab_methods import PREFERENCE_CATALOG_ENV
-from superagent.paired_encoder import BASE_HEADS, CONTEXT_HEADS, COMPLEMENTS
+from superagent.paired_encoder import BASE_HEADS, CONTEXT_HEADS, COMPLEMENTS, SCALE_HEADS
 from superagent.prediction_evidence import fingerprint
 
 
@@ -43,7 +43,9 @@ def run_study(args):
         incumbent = previous["candidate_locked"][0]
         inherited = {fold: args.reference_study/fold/incumbent/"trial.joblib"
                      for fold in ("primary", "confirmation_1", "confirmation_2")}
-        if args.multiview:
+        if args.scale:
+            methods,plan=SCALE_HEADS,PLAN.with_name("scale_protocol.json")
+        elif args.multiview:
             methods = [name for name,(base,_) in COMPLEMENTS.items() if base=="gte"]
             plan = PLAN.with_name("multiview_protocol.json")
         else:
@@ -111,7 +113,8 @@ def run_study(args):
     for name in sorted(methods):
         for members in ([name],[incumbent,name]):
             discovery.append(evaluate(members,columns,labels,incumbent))
-    choices=sorted(discovery[1:],key=order_key)[:2]
+    shortlist=[r for r in discovery[1:] if not args.scale or r["delta"]>0]
+    choices=sorted(shortlist,key=order_key)[:2]
     save(args.output/"discovery_lock.json",dict(all_options=discovery,locked=[row["members"] for row in choices]))
     print("discovery",[(r["members"],r["correct"],r["gained"]-r["lost"]) for r in discovery],flush=True)
     columns,labels=fold_data("confirmation_1",[incumbent,*(n for c in choices for n in c["members"])])
@@ -142,7 +145,9 @@ def run_study(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--multiview",action="store_true")
+    variants=p.add_mutually_exclusive_group()
+    variants.add_argument("--multiview",action="store_true")
+    variants.add_argument("--scale",action="store_true")
     for name in ("source","confirmed","reference-study","output","weights","cache"):
         p.add_argument("--"+name,required=name not in ("confirmed","reference-study"),type=lambda s:Path(s).resolve())
     run_study(p.parse_args())

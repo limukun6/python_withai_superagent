@@ -50,6 +50,20 @@ class Comparison(unittest.TestCase):
         ensemble=WeightedProbabilityVote('pair_text',[first,second],[0,1],[.75,.25])
         np.testing.assert_allclose(ensemble.predict_proba([('x','y')]),[[.45,.55]])
 
+    def test_adviser_election_follows_the_declared_class_order(self):
+        truth=np.array([0,0,1,1,1])
+        base=np.array([[.7,.3],[.4,.6],[.7,.3],[.3,.7],[.2,.8]])
+        other=np.array([[.8,.2],[.9,.1],[.1,.9],[.3,.7],[.1,.9]])
+        def observed(p):
+            return dict(row_key='same fold',labels=truth,probabilities=p)
+        reference=nominate(observed(base),observed(other),truth,classes=[0,1])
+        reversed_order=nominate(observed(base[:,::-1]),observed(other[:,::-1]),truth,classes=[1,0])
+        self.assertEqual(reference,reversed_order)
+        self.assertEqual(reference['scores'][0],3)
+        self.assertEqual(reference['scores'][-1],5)
+        tie=observed(np.full((len(truth),2),.5))
+        self.assertEqual(blend_counts(tie,tie,truth,[0.,1.],classes=[1,0]),[3,3])
+
     def test_reject_mismatched_rows_and_hold_a_gain_to_confirmation(self):
         truth=np.array([1,0])
         a=dict(row_key='source',labels=truth,probabilities=np.array([[.6,.4],[.8,.2]]))

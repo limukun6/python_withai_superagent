@@ -1,0 +1,99 @@
+{
+  "incumbent_members": [
+    "gte_paired_linear"
+  ],
+  "incumbent_model": "4c7c5b550d97caac51c89eabcc0f2635b0ac7e31616492cf6ae72dbbb4c8c3e2",
+  "before_fits": 10,
+  "permitted_weights": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "allocations": [
+    {
+      "fold": "confirmation_1",
+      "row_key": "9d2003a21d5961f5eec37838275cb02860afe7edf0029e7390d7fec50bf279b7",
+      "rows": 349,
+      "incumbent": 261,
+      "candidate": 261,
+      "gain": 0
+    },
+    {
+      "fold": "confirmation_2",
+      "row_key": "01ab6f280d1919231fb7b7047f6fea31e74f0e59ecb476f889bbf52bd02cdd32",
+      "rows": 350,
+      "incumbent": 268,
+      "candidate": 264,
+      "gain": -4
+    }
+  ],
+  "all_decisions_training_only": true,
+  "incumbent_weights": [
+    1.0
+  ],
+  "source_member": "gte_paired_linear",
+  "source_candidates": [
+    {
+      "member": "gte_paired_linear",
+      "adviser": "preference_analogy_4f729e053c1a1a0cf86a",
+      "measured_primary": 0.7758620689655172,
+      "execution_key": "bac1b26bbb05b5be8296841478330a153cd60fd84b17de9b50a30222e9b970bd"
+    }
+  ],
+  "status": "retained_confirmation",
+  "candidate": "preference_analogy_4f729e053c1a1a0cf86a",
+  "derived_configuration": {
+    "encoder": "thenlper/gte-small",
+    "revision": "17e1f347d17fe144873b1201da91788898c639cd",
+    "classifier": "preference_analogy",
+    "representation": "direction and midpoint of individual frozen embeddings",
+    "independent_training_groups": true,
+    "orientation": "complement",
+    "neighbors": "clipped_sqrt_groups_3_40"
+  },
+  "remaining_fits": 6,
+  "extra_fits": 5,
+  "primary": {
+    "row_key": "63359986d26609782be3eb0467a901f30659db9f5122cdff55668f8e7c6a29a1",
+    "rows": 348,
+    "scores": [
+      270,
+      271,
+      265,
+      239
+    ]
+  },
+  "locked_weight": 0.25,
+  "transparent_nomination": {
+    "weight": 0.25,
+    "reason": "primary_improvement",
+    "scores": [
+      270,
+      271,
+      265,
+      239
+    ],
+    "primary_gain": 1,
+    "paired": {
+      "rows": 348,
+      "gained": 6,
+      "lost": 5
+    },
+    "paired_standard_error": 0.009543007162138394
+  },
+  "already_observed_folds": {
+    "primary": [
+      "bge_small_text_with_lexical_features",
+      "electra_paired_quadratic",
+      "gte_paired_linear",
+      "local_sentence_2153768fd1a817ee2a3e",
+      "minilm_l12_topic_style_interactions",
+      "minilm_text_with_nonlinear_lexical_features",
+      "open_ExtraTreesClassifier_40c56cf308f90aa06de2",
+      "preference_analogy_4f729e053c1a1a0cf86a"
+    ],
+    "confirmation_1": [],
+    "confirmation_2": []
+  }
+}

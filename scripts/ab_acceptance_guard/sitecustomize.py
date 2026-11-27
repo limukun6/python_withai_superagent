@@ -37,6 +37,9 @@ if os.environ.get('AB_B1_OFFLINE') == '1':
             cls.fit = fit
 
         classes=[LogisticRegression,ExtraTreesClassifier,SVC,LinearSVC,BernoulliNB]
+        if len(sys.argv)>2 and sys.argv[2].startswith('preference_analogy_'):
+            from superagent.preference_analogy import AnalogyClassifier
+            classes.append(AnalogyClassifier)
         if len(sys.argv)>2 and sys.argv[2].startswith('open_'):
             from superagent.runtime_inventory import runtime_classifiers
             registry=json.loads(Path(sys.argv[4]).read_text(encoding='utf-8'))

@@ -1,0 +1,161 @@
+"""Allow a retained preference model to recruit a supervised nearest-example adviser."""
+import os
+
+import joblib
+import numpy as np
+
+from .ab_run import sha
+from .preference_analogy import WeightedProbabilityVote, derived_candidate
+from .experiment_policy import identity
+from .splits import sample_groups
+from .task_constraints import permitted
+
+
+SHARES=(0.,.25,.5,1.)
+
+
+def can_review(task,metric,folds,static,limit):
+    from .autonomous_run import declared_semantics
+    if (task.kind!='pair_text' or declared_semantics(task)!='preference' or metric.name!='accuracy'
+            or set(metric.labels)!={0,1} or limit<16 or len(folds)<3):
+        return False
+    # Only reserve opportunities when the ordinary menu already offers usable encoders and
+    # each confirmation provides different held rows under the task's requested split.
+    first=[set(folds[name][1]) for name in ('primary','confirmation_1','confirmation_2') if name in folds]
+    if len(first)!=3 or any(first[i]&first[j] for i in range(3) for j in range(i)):
+        return False
+    groups=sample_groups(task,'shared_text')
+    if any(set(groups[fit]) & set(groups[held]) for fit,held,_ in folds.values()):
+        return False
+    return any(cap.get('resource')=='local_frozen_encoder_cpu' and cap['params'].get('encoder')
+               for cap in static.values())
+
+
+def blend_counts(anchor,neighbour,truth,shares):
+    if anchor['row_key']!=neighbour['row_key'] or not np.array_equal(anchor['labels'],truth) or not np.array_equal(neighbour['labels'],truth):
+        raise ValueError('Blend requires two aligned, previously withheld sets of predictions')
+    matrices=[np.asarray(obs['probabilities']) for obs in (anchor,neighbour)]
+    if any(a.ndim!=2 or a.shape!=(len(truth),2) or not np.isfinite(a).all() for a in matrices):
+        raise ValueError('Blend has no calibrated binary probability evidence')
+    return [int(np.sum(np.argmax((1-w)*matrices[0]+w*matrices[1],axis=1)==truth)) for w in shares]
+
+
+def promoted(primary_gain,confirmations):
+    return (primary_gain>0 and len(confirmations)==2
+            and all(v['gain']>=0 for v in confirmations)
+            and sum(v['gain'] for v in confirmations)>=.003*sum(v['rows'] for v in confirmations))
+
+
+def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,payloads):
+    from .autonomous_run import planner_observation
+    anchor_names=stop['members']
+    spent=executor.accounting()['attempted_classifier_fits']
+    report=dict(incumbent_members=anchor_names,incumbent_model=incumbent['model_sha256'],before_fits=spent,
+                permitted_weights=list(SHARES),allocations=[],all_decisions_training_only=True)
+    result=incumbent,stop
+
+    def record(status,**values):
+        report.update(status=status,**values)
+        report['extra_fits']=executor.accounting()['attempted_classifier_fits']-spent
+        log.write_json('analogy_review.json',report)
+
+    def measure(name,fold,reserve):
+        if name in observed[fold]:
+            return observed[fold][name]
+        source=payloads[fold]
+        artifact=directory/f'analogy_{fold}_{name}.joblib'
+        _,facts=executor.worker(source['path'],name,artifact,timeout,reserve=reserve)
+        evidence=planner_observation(joblib.load(artifact),facts,source,metric)
+        observed[fold][name]=evidence
+        return evidence
+
+    try:
+        if len(anchor_names)!=1:
+            record('retained_multiple_incumbents')
+            return result
+        anchor_name=anchor_names[0]
+        path=directory/incumbent['model_file']
+        if sha(path)!=incumbent['model_sha256']:
+            raise ValueError('Frozen incumbent identity changed')
+        anchor_model=joblib.load(path)['model']
+        candidate=derived_candidate(anchor_model)
+        if candidate is None:
+            record('retained_without_compatible_representation')
+            return result
+        name=candidate.family
+        cap=dict(id=name,kind='pair_text',params=candidate.params,route='preference_analogy',estimator='preference_analogy',
+                 resource='local_frozen_encoder_cpu',origin='b_port',classifier_fits=1,refit_classifier_fits=1,
+                 supports_probabilities=True)
+        if not permitted(cap,executor.restrictions):
+            record('retained_task_restrictions')
+            return result
+        if list(metric.labels)!=[0,1]:
+            record('retained_incompatible_class_order')
+            return result
+        wanted=('primary','confirmation_1','confirmation_2')
+        needed=1+sum((anchor_name not in observed[f])*executor.caps[anchor_name]['classifier_fits']+1 for f in wanted)
+        if needed>executor.limit-spent:
+            record('retained_insufficient_budget',required=needed)
+            return result
+        executor.caps[name]=cap
+        record('evaluating',candidate=name,derived_configuration=candidate.params,remaining_fits=executor.limit-spent)
+        primary=observed['primary'][anchor_name]
+        first=measure(name,'primary',needed-1)
+        scores=blend_counts(primary,first,payloads['primary']['labels'],SHARES)
+        position=int(np.argmax(scores))
+        share=SHARES[position]
+        gain=scores[position]-scores[0]
+        measured_scores={'primary':scores[position]/len(first['labels'])}
+        report.update(primary=dict(row_key=primary['row_key'],rows=len(first['labels']),scores=scores),locked_weight=share)
+        record('weight_locked',already_observed_folds={f:sorted(observed[f]) for f in wanted})
+        if gain<=0:
+            record('retained_primary')
+            return result
+        for j,fold in enumerate(wanted[1:]):
+            missing_next=(j==0 and anchor_name not in observed[wanted[2]])
+            reserve=1+(1-j)+int(missing_next)*executor.caps[anchor_name]['classifier_fits']
+            base=measure(anchor_name,fold,reserve+1)
+            near=measure(name,fold,reserve)
+            truth=payloads[fold]['labels']
+            base_count,vote_count=blend_counts(base,near,truth,[0.,share])
+            report['allocations'].append(dict(fold=fold,row_key=base['row_key'],rows=len(truth),
+                                              incumbent=base_count,candidate=vote_count,gain=vote_count-base_count))
+            measured_scores[fold]=vote_count/len(truth)
+            record('confirming')
+        if not promoted(gain,report['allocations']):
+            record('retained_confirmation')
+            return result
+        model,_=executor.worker(directory/'refit_data.joblib',name,directory/'analogy_full.joblib',timeout)
+        models=[anchor_model,model] if share<1 else [model]
+        members=[anchor_name,name] if share<1 else [name]
+        weights=[1-share,share] if share<1 else [1.]
+        final=WeightedProbabilityVote(task.kind,models,metric.labels,weights) if share<1 else model
+        family='feedback_weighted_vote' if len(models)>1 else name
+        destination=directory/'analogy_selected_model.joblib'
+        temp=directory/'analogy_selected_model.tmp'
+        joblib.dump(dict(kind=task.kind,candidate=family,model=final),temp)
+        probe=[task.X_train[i] for i in np.linspace(0,len(task.y_train)-1,min(12,len(task.y_train)),dtype=int)]
+        recovered=joblib.load(temp)['model']
+        if not np.array_equal(recovered.predict(probe),final.predict(probe)):
+            raise ValueError('Combined model failed local reload')
+        os.replace(temp,destination)
+        score=sum(measured_scores[f]*len(payloads[f]['labels']) for f in wanted)/sum(len(payloads[f]['labels']) for f in wanted)
+        proposal=dict(action='stop',members=members,split=None,utility=score,reason='An independently confirmed neighbour weight improved the declared metric.',
+                      evidence=dict(scores=measured_scores,weights=weights,selection_evidence='analogy_review.json'))
+        selected=dict(incumbent,selected_experiment='stop_'+identity(dict(members=members,weights=weights))[:12],
+                      family=family,ensemble_components=members if len(members)>1 else [],single_candidate=members[0],
+                      selection_metric='matched primary and confirmation training folds',selection_score=score,fold_scores=measured_scores,
+                      weights=weights,incumbent_model_sha256=incumbent['model_sha256'],selection_evidence='analogy_review.json',
+                      model_file=destination.name,model_sha256=sha(destination))
+        log.write_json('analogy_incumbent.json',incumbent)
+        log.write_json('analogy_selection.json',dict(choice=proposal,scope='training feedback only'))
+        record('accepted',final_members=members,weights=weights,model_sha256=selected['model_sha256'])
+        # Predictions follow this last pointer. The intact incumbent is available throughout review.
+        log.write_json('final_selection.json',selected)
+        log.write_json('selection.json',dict(choice=proposal,scope='frozen from matched training feedback before external evaluation'))
+        return selected,proposal
+    except (ValueError,RuntimeError,OSError,KeyError,AssertionError) as error:
+        record('retained_after_failed_opportunity',error=f'{type(error).__name__}: {error}'[:400])
+        if executor.accounting()['unknown_failed_attempts']:
+            raise
+        return result

@@ -26,6 +26,7 @@ _BY_CLASS = {
     'BernoulliNB': 'naive_bayes',
     'DecisionTreeClassifier': 'decision_tree',
     'KNeighborsClassifier': 'nearest_neighbours',
+    'AnalogyClassifier': 'preference_analogy',
 }
 
 

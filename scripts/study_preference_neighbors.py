@@ -14,9 +14,8 @@ from scripts.unified_released_study import ROOT, read, require, sha
 from superagent.autonomous_run import planner_observation
 from superagent.data import TrainingTask
 from superagent.external_assets import activate_resource_directory
-from superagent.local_sentence import LocalSentenceFeatures, vectors
+from superagent.preference_analogy import AnalogyIndex, embedding_function
 from superagent.metrics import MetricSpec
-from superagent.paired_encoder import PairedEncoderFeatures, vectors_for
 from superagent.prediction_evidence import fingerprint
 from superagent.splits import sample_groups
 
@@ -25,73 +24,9 @@ PLAN = ROOT/'research/paired_encoder_search_1127/preference_neighbors_protocol.j
 WEIGHTS = (0., .25, .5, 1.)
 
 
-def unit(values):
-    return values/np.maximum(np.linalg.norm(values, axis=1, keepdims=True),1e-12)
-
-
-def views(rows, provider):
-    # Embed each individual text without labels, or features from other rows.
-    unique = list(dict.fromkeys(x for pair in rows for x in pair))
-    lookup = {text:i for i,text in enumerate(unique)}
-    encoded = provider(unique)
-    left, right = (encoded[[lookup[pair[t]] for pair in rows]] for t in (0,1))
-    return unit(left-right), unit(left+right)
-
-
-class AnalogyVote:
-    def fit(self, rows, labels, groups, provider):
-        self.change, self.context = views(rows, provider)
-        self.signed = 2*np.asarray(labels,dtype=float)-1
-        require(set(self.signed)=={-1.,1.},'Expected a two-sided preference target')
-        self.groups = np.asarray(groups)
-        self.k = int(np.clip(round(np.sqrt(len(set(groups)))),3,40))
-        # Resolve exact similarities by input content, consistently for swapped sides.
-        self.order = np.asarray(sorted(range(len(rows)),key=lambda i:(
-            tuple(sorted(rows[i])), int(self.signed[i]*np.sign((rows[i][0]>rows[i][1])-(rows[i][0]<rows[i][1]))))))
-        return self
-
-    def predict_probability(self, rows, provider):
-        diff, middle = views(rows, provider)
-        output = np.full(len(rows), .5, dtype=float)
-        for start in range(0, len(rows), 96):
-            directional = diff[start:start+96] @ self.change.T
-            context = np.maximum(0.,middle[start:start+96] @ self.context.T)
-            similarity = np.abs(directional)*context
-            for offset, scores in enumerate(similarity):
-                # Try the closest rows first and expand only when many share the same training group.
-                stable = scores[self.order]
-                count = min(len(stable),max(4*self.k,self.k))
-                while True:
-                    minimum = np.partition(stable,len(stable)-count)[len(stable)-count]
-                    eligible = np.flatnonzero(stable>=minimum)
-                    closest = self.order[eligible[np.argsort(-stable[eligible],kind='stable')]]
-                    selected, used = [],set()
-                    for j in closest:
-                        if scores[j]<=0:
-                            break
-                        if self.groups[j] not in used:
-                            used.add(self.groups[j])
-                            selected.append(j)
-                            if len(selected)==self.k:
-                                break
-                    if len(selected)==self.k or count==len(stable) or minimum<=0:
-                        break
-                    count = min(2*count,len(stable))
-                if selected:
-                    weights = np.square(scores[selected]).astype(float)
-                    votes = self.signed[selected]*np.sign(directional[offset,selected])
-                    margin = np.dot(weights,votes)/(weights.sum()+2*weights.mean())
-                    output[start+offset] = (1.+margin)/2.
-        return output
-
-
 def vector_provider(model):
-    feature = model.named_steps['features']
-    if isinstance(feature,PairedEncoderFeatures):
-        return (lambda texts:vectors_for(feature.variant,texts)),feature.encoder_model
-    if isinstance(feature,LocalSentenceFeatures):
-        return (lambda texts:vectors(feature.spec,texts)),feature.spec['signature']
-    raise ValueError('The elected incumbent does not expose a compatible standalone vector provider')
+    feature=model.named_steps['features']
+    return embedding_function(feature),feature.encoder_model
 
 
 def mixed(anchor, neighbour, weight):
@@ -165,7 +100,7 @@ def run(root):
         anchor=np.asarray(obs['probabilities'])[:,list(metric.labels).index(1)]
         provider,encoder=vector_provider(trial['model'])
         # A labelled index is one supervised fit, even though the frozen encoder receives no updates.
-        vote=AnalogyVote().fit(train,y[fit],groups[fit],provider)
+        vote=AnalogyIndex().fit(train,y[fit],groups[fit],provider)
         neighbour=vote.predict_probability(query,provider)
         flip=vote.predict_probability([(b,a) for a,b in query[:21]],provider)
         require(np.allclose(neighbour[:21]+flip,1,rtol=0,atol=1e-9),'Pair swapping changed vote direction')

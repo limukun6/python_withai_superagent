@@ -35,6 +35,9 @@ def admitted_fits(admission, candidate, *, runtime_estimator=None):
     from sklearn.naive_bayes import BernoulliNB
     from sklearn.svm import LinearSVC, SVC
     classes = [LogisticRegression, ExtraTreesClassifier, SVC, LinearSVC, BernoulliNB]
+    if candidate.startswith('preference_analogy_'):
+        from .preference_analogy import AnalogyClassifier
+        classes.append(AnalogyClassifier)
     if runtime_estimator is not None and runtime_estimator not in classes:
         classes.append(runtime_estimator)
     if find_spec('catboost') is not None:

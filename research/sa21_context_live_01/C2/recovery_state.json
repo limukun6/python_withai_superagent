@@ -1,0 +1,113 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "model_exported",
+  "status": "training_completed",
+  "goal": {
+    "task_kind": "numeric_tabular",
+    "metric": {
+      "name": "balanced_accuracy",
+      "labels": [
+        "B",
+        "M"
+      ],
+      "direction": "maximize"
+    }
+  },
+  "observed_evidence": [
+    {
+      "member": "archive.npz",
+      "source": "training",
+      "values_disclosed": false,
+      "format": "npz",
+      "arrays": [
+        {
+          "key": "bedrock",
+          "shape": [
+            240,
+            30
+          ],
+          "dtype": "<f8",
+          "fortran_order": false,
+          "values_disclosed": false
+        },
+        {
+          "key": "lattice",
+          "shape": [
+            240
+          ],
+          "dtype": "<U1",
+          "fortran_order": false,
+          "values_disclosed": false
+        }
+      ],
+      "package_source": "task",
+      "requested_source": "training",
+      "source_resolution": "explicit"
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "task_adaptation",
+      "diagnostic": {
+        "stage": "task_adaptation",
+        "code": "TaskFormatError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "signature": "d3aed127d2510be8113684264d829741219605f250bdf5afd5d66f04963264d9",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false,
+      "action_summary": null,
+      "expected_check": "Decode the documented training input with an installed reader.",
+      "unresolved_fields": [],
+      "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "repeated_unresolved_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_array",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "cited_contract_and_prediction_preflight",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "inspect_batch",
+    "repair_adapter",
+    "revise_interpretation",
+    "alternate_method",
+    "report_unresolved"
+  ],
+  "available_artifacts": [
+    "selected_model.joblib",
+    "task_spec.json",
+    "final_selection.json"
+  ],
+  "attempted_classifier_fits": 4,
+  "remaining_requests": 0,
+  "remaining_fits": 0,
+  "remaining_seconds": 283.03100000007544
+}

@@ -1,0 +1,75 @@
+{
+  "proposal": {
+    "version": "semantic-native-v2",
+    "plan": {
+      "modality": "tabular",
+      "training": {
+        "format": "npz",
+        "path": "archive.npz",
+        "features_key": "bedrock",
+        "target_key": "lattice"
+      },
+      "prediction": {
+        "format": "npy",
+        "path": "features.npy"
+      },
+      "metric": "balanced_accuracy",
+      "positive_label": null,
+      "image_preprocessing": null,
+      "output": {
+        "version": "output-csv-v1",
+        "delimiter": ";",
+        "encoding": "utf-8",
+        "header": true,
+        "columns": [
+          {
+            "name": "Index",
+            "kind": "row_index",
+            "start": 0
+          },
+          {
+            "name": "Class",
+            "kind": "label"
+          }
+        ],
+        "order": {
+          "mode": "input"
+        }
+      }
+    },
+    "evidence": {
+      "training": [
+        "doc:README.md:0"
+      ],
+      "target": [
+        "doc:README.md:0"
+      ],
+      "modality": [
+        "doc:README.md:0"
+      ],
+      "metric": [
+        "doc:README.md:0"
+      ],
+      "prediction": [
+        "doc:README.md:0"
+      ],
+      "positive_label": [],
+      "image_preprocessing": [],
+      "output": [
+        "doc:README.md:0"
+      ]
+    },
+    "uncertainties": []
+  },
+  "source_citations_checked": true,
+  "semantic_truth_certified": false,
+  "probe": "passed",
+  "attempt": 2,
+  "structure_steps": 1,
+  "uncertainty_resolution": {
+    "version": "scoped-questions-v1",
+    "items": [],
+    "status": "no_reported_questions",
+    "semantic_truth_certified": false
+  }
+}

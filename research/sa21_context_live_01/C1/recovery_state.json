@@ -1,0 +1,182 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "model_exported",
+  "status": "training_completed",
+  "goal": {
+    "task_kind": "numeric_tabular",
+    "metric": {
+      "name": "macro_f1",
+      "labels": [
+        "B",
+        "M"
+      ],
+      "direction": "maximize"
+    }
+  },
+  "observed_evidence": [
+    {
+      "member": "observations.jsonl",
+      "source": "training",
+      "codec": "json-lines",
+      "collection": null,
+      "delimiter": null,
+      "fields": [
+        "batch_id",
+        "status_code",
+        "measure_00",
+        "measure_01",
+        "measure_02",
+        "measure_03",
+        "measure_04",
+        "measure_05",
+        "measure_06",
+        "measure_07",
+        "measure_08",
+        "measure_09",
+        "measure_10",
+        "measure_11",
+        "measure_12",
+        "measure_13",
+        "measure_14",
+        "measure_15",
+        "measure_16",
+        "measure_17",
+        "measure_18",
+        "measure_19",
+        "measure_20",
+        "measure_21",
+        "measure_22",
+        "measure_23",
+        "measure_24",
+        "measure_25",
+        "measure_26",
+        "measure_27",
+        "measure_28",
+        "measure_29"
+      ],
+      "row_values_disclosed": false,
+      "requested_collection": null,
+      "collection_normalized": false,
+      "collection_note": "Selected existing structure",
+      "package_source": "task",
+      "requested_source": null,
+      "source_resolution": "unique_package_membership"
+    },
+    {
+      "member": "arrivals.jsonl",
+      "source": "prediction",
+      "codec": "json-lines",
+      "collection": null,
+      "delimiter": null,
+      "fields": [
+        "specimen_key",
+        "read_29",
+        "read_28",
+        "read_27",
+        "read_26",
+        "read_25",
+        "read_24",
+        "read_23",
+        "read_22",
+        "read_21",
+        "read_20",
+        "read_19",
+        "read_18",
+        "read_17",
+        "read_16",
+        "read_15",
+        "read_14",
+        "read_13",
+        "read_12",
+        "read_11",
+        "read_10",
+        "read_09",
+        "read_08",
+        "read_07",
+        "read_06",
+        "read_05",
+        "read_04",
+        "read_03",
+        "read_02",
+        "read_01",
+        "read_00"
+      ],
+      "row_values_disclosed": false,
+      "requested_collection": null,
+      "collection_normalized": false,
+      "collection_note": "Selected existing structure",
+      "package_source": "external_prediction",
+      "requested_source": null,
+      "source_resolution": "unique_package_membership"
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "task_adaptation",
+      "diagnostic": {
+        "stage": "task_adaptation",
+        "code": "TaskFormatError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "signature": "d3aed127d2510be8113684264d829741219605f250bdf5afd5d66f04963264d9",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false,
+      "action_summary": null,
+      "expected_check": "Decode the documented training input with an installed reader.",
+      "unresolved_fields": [],
+      "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "repeated_unresolved_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_header",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "inspect_header",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "cited_contract_and_prediction_preflight",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "inspect_batch",
+    "repair_adapter",
+    "revise_interpretation",
+    "alternate_method",
+    "report_unresolved"
+  ],
+  "available_artifacts": [
+    "selected_model.joblib",
+    "task_spec.json",
+    "final_selection.json"
+  ],
+  "attempted_classifier_fits": 4,
+  "remaining_requests": 0,
+  "remaining_fits": 0,
+  "remaining_seconds": 240.89100000006147
+}

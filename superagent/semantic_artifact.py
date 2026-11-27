@@ -12,7 +12,7 @@ VERSION='semantic-artifact-v1'
 MAX_BYTES=1024*1024
 READERS=('semantic_artifact.py','semantic_contract.py','format_intake.py','format_sources.py',
          'record_streams.py','schema.py','native_schema.py','data.py','metrics.py','metric_declarations.py',
-         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py','native_semantics.py','task_questions.py','structure_tools.py','recovery.py')
+         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py','native_semantics.py','task_questions.py','structure_tools.py','recovery.py','action_context.py')
 
 
 class ArtifactUnavailable(ValueError):pass

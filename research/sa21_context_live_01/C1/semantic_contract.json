@@ -1,0 +1,236 @@
+{
+  "proposal": {
+    "version": "semantic-task-v3",
+    "plan": {
+      "training": {
+        "member": "observations.jsonl",
+        "collection": null,
+        "delimiter": null
+      },
+      "prediction": {
+        "member": "arrivals.jsonl",
+        "collection": null,
+        "delimiter": null,
+        "field_map": {
+          "measure_00": "read_00",
+          "measure_01": "read_01",
+          "measure_02": "read_02",
+          "measure_03": "read_03",
+          "measure_04": "read_04",
+          "measure_05": "read_05",
+          "measure_06": "read_06",
+          "measure_07": "read_07",
+          "measure_08": "read_08",
+          "measure_09": "read_09",
+          "measure_10": "read_10",
+          "measure_11": "read_11",
+          "measure_12": "read_12",
+          "measure_13": "read_13",
+          "measure_14": "read_14",
+          "measure_15": "read_15",
+          "measure_16": "read_16",
+          "measure_17": "read_17",
+          "measure_18": "read_18",
+          "measure_19": "read_19",
+          "measure_20": "read_20",
+          "measure_21": "read_21",
+          "measure_22": "read_22",
+          "measure_23": "read_23",
+          "measure_24": "read_24",
+          "measure_25": "read_25",
+          "measure_26": "read_26",
+          "measure_27": "read_27",
+          "measure_28": "read_28",
+          "measure_29": "read_29"
+        }
+      },
+      "target": "status_code",
+      "columns": [
+        {
+          "name": "measure_00",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_01",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_02",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_03",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_04",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_05",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_06",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_07",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_08",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_09",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_10",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_11",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_12",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_13",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_14",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_15",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_16",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_17",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_18",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_19",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_20",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_21",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_22",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_23",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_24",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_25",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_26",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_27",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_28",
+          "type": "numeric"
+        },
+        {
+          "name": "measure_29",
+          "type": "numeric"
+        }
+      ],
+      "metric": "macro_f1",
+      "positive_label": null,
+      "split": null,
+      "output": {
+        "version": "output-csv-v1",
+        "delimiter": "\t",
+        "encoding": "utf-8-sig",
+        "header": true,
+        "columns": [
+          {
+            "name": "Case",
+            "kind": "input_id",
+            "field": "specimen_key"
+          },
+          {
+            "name": "Decision",
+            "kind": "label",
+            "mapping": {
+              "M": "M",
+              "B": "B"
+            }
+          },
+          {
+            "name": "BenignScore",
+            "kind": "probability",
+            "class_label": "B"
+          }
+        ],
+        "order": {
+          "mode": "input"
+        }
+      }
+    },
+    "evidence": {
+      "training": [
+        "doc:README.md:0"
+      ],
+      "target": [
+        "doc:README.md:0"
+      ],
+      "columns": [
+        "doc:README.md:0"
+      ],
+      "metric": [
+        "doc:README.md:0"
+      ],
+      "prediction": [
+        "doc:README.md:0"
+      ],
+      "output": [
+        "doc:README.md:0"
+      ]
+    },
+    "uncertainties": []
+  },
+  "source_citations_checked": true,
+  "semantic_truth_certified": false,
+  "probe": "passed",
+  "attempt": 2,
+  "structure_steps": 2,
+  "uncertainty_resolution": {
+    "version": "scoped-questions-v1",
+    "items": [],
+    "status": "no_reported_questions",
+    "semantic_truth_certified": false
+  }
+}

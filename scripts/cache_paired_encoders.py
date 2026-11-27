@@ -12,6 +12,7 @@ from superagent.paired_encoder import VARIANTS, bank_name, encode_texts, text_ke
 
 
 def configure_weights(weights):
+    os.environ["SUPERAGENT_DEEP_MINILM_WEIGHTS"] = str(weights / "all-MiniLM-L12-v2")
     for variant in VARIANTS:
         spec = ALTERNATIVES[variant]
         os.environ[spec["env"]] = str(weights / spec["model"].split("/")[-1])
@@ -21,7 +22,7 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     for name in ("training-payload", "cache", "weights"):
         p.add_argument("--"+name, type=lambda s:Path(s).resolve(), required=True)
-    p.add_argument("--encoder", choices=VARIANTS, required=True)
+    p.add_argument("--encoder", choices=(*VARIANTS,"minilm_l12"), required=True)
     args = p.parse_args()
     configure_weights(args.weights)
     payload = joblib.load(args.training_payload)

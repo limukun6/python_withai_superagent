@@ -11,7 +11,8 @@ from sklearn.kernel_approximation import Nystroem
 from sklearn.linear_model import LogisticRegression
 
 from .ab_preference_output import CanonicalPreferencePipeline
-from .ab_sentence import ALTERNATIVES, AlternativeSentenceFeatures, _encoder, encode_frozen, verified_files
+from .ab_sentence import (ALTERNATIVES, DEEP_REVISION, AlternativeSentenceFeatures, _encoder, encode,
+                          encode_frozen, verified_files)
 from .models import Candidate
 from .word_familiarity import WordFamiliarity
 
@@ -44,6 +45,8 @@ def discriminator(root):
 
 def encode_texts(variant, texts):
     import torch
+    if variant == "minilm_l12":
+        return encode(texts, deep=True)[0]
     spec = ALTERNATIVES[variant]
     root = verified_files(spec["env"], spec["files"])
     if root is None:
@@ -85,14 +88,15 @@ def text_key(text):
 
 
 def bank_name(variant):
-    return variant + "-" + ALTERNATIVES[variant]["revision"] + "-pool-v1.npz"
+    revision = DEEP_REVISION if variant == "minilm_l12" else ALTERNATIVES[variant]["revision"]
+    return variant + "-" + revision + "-pool-v1.npz"
 
 
 @lru_cache(maxsize=4)
 def read_bank(path, modified):
     with np.load(path, allow_pickle=False) as archive:
         keys, vectors = archive["keys"], archive["vectors"]
-    dimension = 384 if path.name.startswith("gte-") else 260
+    dimension = 260 if path.name.startswith("electra-") else 384
     if vectors.shape != (len(keys), dimension) or not np.isfinite(vectors).all():
         raise ValueError("Invalid frozen feature bank")
     return dict(zip(keys.tolist(), vectors))

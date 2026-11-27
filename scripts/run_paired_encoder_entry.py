@@ -25,7 +25,8 @@ def solve(args):
     plans={"race":"race_protocol.json","default":"default_protocol.json",
            "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json",
            "auto_portfolio":"auto_portfolio_protocol.json","resource_default":"resource_root_protocol.json","anonymous_default":"anonymous_choice_protocol.json",
-           "anonymous_portfolio":"anonymous_portfolio_protocol.json","discovered":"discovery_protocol.json"}
+           "anonymous_portfolio":"anonymous_portfolio_protocol.json","discovered":"discovery_protocol.json",
+           "discovered_default":"discovery_ordinary_protocol.json"}
     study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
@@ -46,7 +47,7 @@ def solve(args):
     if args.arm != "original":
         settings["SUPERAGENT_PAIRED_FEATURE_CACHE"]=str(args.cache)
     shared_root = []
-    if args.arm in ("resource_default","anonymous_default","anonymous_portfolio","discovered"):
+    if args.arm in ("resource_default","anonymous_default","anonymous_portfolio","discovered","discovered_default"):
         for key in list(settings):
             if key.startswith("SUPERAGENT_") and key.endswith("_WEIGHTS"):
                 settings.pop(key)
@@ -64,7 +65,7 @@ def solve(args):
          candidate_hint=None,fit_limit=policy["fit_limit_each_including_refit"],raw_sha256=sha(course),features_sha256=sha(args.features)))
     modes={"race":"matched-finalists","frontier":"complementary-frontier","frontier_scale":"complementary-frontier"}
     review=["--feedback-reflection",modes[args.arm]] if args.arm in modes else []
-    limits=[] if args.arm in ("default","resource_default","anonymous_default") else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
+    limits=[] if args.arm in ("default","resource_default","anonymous_default","discovered_default") else ["--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"]]
     if shared_root:
         save(folder/"launch.json",dict(individual_model_variables=sorted(k for k in settings if k.startswith("SUPERAGENT_") and k.endswith("_WEIGHTS")),
              model_hint=None,review_flag=review,limits=limits,resource_directory_argument=True))
@@ -129,7 +130,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","anonymous_portfolio","discovered"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","anonymous_portfolio","discovered","discovered_default"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

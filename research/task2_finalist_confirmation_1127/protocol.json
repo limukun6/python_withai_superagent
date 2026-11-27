@@ -1,0 +1,9 @@
+{
+  "question": "How does the method selected by the delivered agent perform on its first unused, disjoint internal confirmation fold?",
+  "runtime_sha256": "cd3f443b057287e5e5731be41708ec7f5118b3fde66e76f23ad827a1b0c94c5c",
+  "original_selection_file_sha256_of_model": "137514206e46fdd0e448f7afe387064d8165188bb74f622b3da854d2d30d34e9",
+  "confirmation_payload_sha256": "8eae64e3dfaaf9f9af24365e3a454746e2d67d7e1273f721797d4c1bf90da43e",
+  "rule": "Use the winner already frozen by the official default solve. Fit the same configuration and preprocessor once on the archived fitting rows of confirmation_1. Evaluate its entire held fold. Check that neither rows nor connected groups of shared headlines overlap the primary and new evaluation folds or cross the new fit/evaluation boundary. Use the original per-trial registry.",
+  "limits": {"additional_classifier_fits": 1, "language_model_calls": 0, "fit_seconds": 300},
+  "interpretation": "A post-run development diagnostic, registered before measuring the new fold. The fitting sets can overlap across folds. Do not use course validation or test labels, update the delivered model, or select another candidate based on the result."
+}

@@ -114,8 +114,7 @@ def encode(texts, *, deep=False):
     if root is None:
         key = DEEP_ENV if deep else 'SUPERAGENT_MINILM_WEIGHTS'
         raise ValueError(f'Set {key} to the directory of the pinned local files')
-    tokenizer,model=_encoder(root,128) if deep else _encoder(root)
-    return encode_frozen(texts,tokenizer,model)
+    return _batch(root,128 if deep else 256,texts,prefix='',pool='mean')
 
 
 def encode_alternative(texts,variant):
@@ -123,8 +122,25 @@ def encode_alternative(texts,variant):
     root=verified_files(spec['env'],spec['files'])
     if root is None:
         raise ValueError('Missing verified local weights: '+spec['env'])
-    tokenizer,model=_encoder(root,512)
-    return encode_frozen(texts,tokenizer,model,prefix=spec['prefix'],pool=spec['pool'])
+    return _batch(root,512,texts,prefix=spec['prefix'],pool=spec['pool'])
+
+
+@lru_cache(maxsize=2)
+def _recent_batch(root, max_length, prefix, pool, ordered_texts):
+    tokenizer,model = _encoder(root,max_length)
+    return encode_frozen(ordered_texts,tokenizer,model,prefix=prefix,pool=pool)
+
+
+def _batch(root, max_length, texts, *, prefix, pool):
+    if os.environ.get('SUPERAGENT_FROZEN_BATCH_REUSE') == '1':
+        ordered = tuple(dict.fromkeys(texts))
+        if ordered and len(ordered) <= 16000:
+            vectors, tokens = _recent_batch(root,max_length,prefix,pool,ordered)
+            indices = {text:i for i,text in enumerate(ordered)}
+            # Preserve the logical input-token accounting and give each caller independent rows.
+            return vectors[[indices[t] for t in texts]],tokens
+    tokenizer,model = _encoder(root,max_length)
+    return encode_frozen(texts,tokenizer,model,prefix=prefix,pool=pool)
 
 
 def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):

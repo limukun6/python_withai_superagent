@@ -22,3 +22,11 @@ python -m unified_agent solve <任务包> --weights-dir <通用模型目录> --r
 将 Task2 最后两名领先者的**真实训练反馈互换**，保留候选、预算及配置，选中的方法由 GTE-base 换成 GTE-small。这是对决定的干预，正式成绩取自未作干预的真实运行。图像任务中，Agent 在两份训练划分上的 440 个验证位置选出极端随机树，答对 369 个（83.86%）。它另外预测并独立重放了 350 行无标签图像输入，外部图像成绩未评估。上述范围覆盖这两个任务的本地自主流程。课程正式测试和 H2 保持封存。[图像确认与重放](../research/paired_encoder_search_1127/anonymous_image.json)
 
 Task2 使用相同核心工具、较大训练预算时，运行可以依据多个分组的证据选择融合。上一交付的普通大预算组实际训练 25 次，最终选 GTE-base 与 GTE-small 等权融合，发布验证集 693/940。预算差异与候选目录差异均保留在历史对照中。[原始五组对照](B_TASK2_AUTONOMOUS_DELIVERY_20261127_zh.md)
+
+## 扩大预算后的普通入口
+
+在相同的通用资源目录、原始训练包和预测输入上，把上限改为 28 次拟合及 3,600 秒。模型、组合、调度模式均由 Agent 自己决定。它用 25 次拟合完成 15 次探索、8 次确认、一次停止和最终双模型重训。两个确认划分各复查四个候选，最终留下 GTE-small 与 GTE-base 等权融合。24 步分别换三套匿名标识并逆序展示，72 次均选择相同的动作、成员和划分。加上前述普通预算和图像运行，三次完整轨迹合计 141 次。
+
+独立进程重载后，940 条预测逐条与先前扩大预算的交付相同，复用其已封存的 693/940（73.72%）。普通预算交付继续为 700/940（74.47%）。本次模型 API 为 0，课程验证标签无需重新打开。
+
+[事前方案](../research/paired_encoder_search_1127/anonymous_portfolio_protocol.json) · [实际启动参数](../research/paired_encoder_search_1127/anonymous_portfolio_launch.json) · [逐步匿名复核](../research/paired_encoder_search_1127/anonymous_portfolio_decisions.json) · [指定验证分数复用凭据](../research/paired_encoder_search_1127/anonymous_portfolio_score.json)

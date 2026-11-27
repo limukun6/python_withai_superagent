@@ -176,8 +176,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
           interpretation='fallback', prediction_package=None, semantic_artifact_from=None, await_first_delivery=False):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
-    if type(fit_limit) is not int or not 2<=fit_limit<=16 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
-        raise ValueError('Need 2–16 physical fits including refits and positive finite deadlines')
+    if type(fit_limit) is not int or not 2<=fit_limit<=32 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
+        raise ValueError('Need 2–32 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     directory.mkdir(parents=True,exist_ok=False)

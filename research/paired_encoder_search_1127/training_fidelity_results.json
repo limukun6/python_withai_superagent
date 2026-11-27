@@ -1,0 +1,150 @@
+{
+  "prediction_lock": "dc1329c140c9d818227f99ef308382e43651ef5fc5de13c4f707245d2589ff13",
+  "rows": {
+    "small_search": 145,
+    "small_common": 256,
+    "large_common": 256,
+    "large_search": 1693
+  },
+  "compared": 13,
+  "by_method": {
+    "minilm_text_with_nonlinear_lexical_features": {
+      "small_search": 90,
+      "small_common": 169,
+      "large_common": 180,
+      "large_search": 1193
+    },
+    "minilm_l12_topic_style_interactions": {
+      "small_search": 92,
+      "small_common": 163,
+      "large_common": 183,
+      "large_search": 1213
+    },
+    "local_sentence_85dbafef5f2be44b042b": {
+      "small_search": 94,
+      "small_common": 162,
+      "large_common": 175,
+      "large_search": 1212
+    },
+    "bge_small_text_with_lexical_features": {
+      "small_search": 99,
+      "small_common": 171,
+      "large_common": 183,
+      "large_search": 1205
+    },
+    "local_sentence_2153768fd1a817ee2a3e": {
+      "small_search": 91,
+      "small_common": 163,
+      "large_common": 173,
+      "large_search": 1182
+    },
+    "e5_small_text_with_lexical_features": {
+      "small_search": 100,
+      "small_common": 165,
+      "large_common": 185,
+      "large_search": 1197
+    },
+    "electra_paired_quadratic": {
+      "small_search": 97,
+      "small_common": 158,
+      "large_common": 171,
+      "large_search": 1154
+    },
+    "gte_base_paired_linear": {
+      "small_search": 92,
+      "small_common": 165,
+      "large_common": 179,
+      "large_search": 1228
+    },
+    "local_sentence_fb8ba2cc889cb4eef506": {
+      "small_search": 94,
+      "small_common": 163,
+      "large_common": 186,
+      "large_search": 1222
+    },
+    "minilm_l12_text_with_lexical_features": {
+      "small_search": 97,
+      "small_common": 169,
+      "large_common": 171,
+      "large_search": 1187
+    },
+    "word_char_stats_C3.0": {
+      "small_search": 95,
+      "small_common": 153,
+      "large_common": 166,
+      "large_search": 1105
+    },
+    "gte_paired_quadratic": {
+      "small_search": 93,
+      "small_common": 161,
+      "large_common": 187,
+      "large_search": 1216
+    },
+    "minilm_l12_with_edit_context": {
+      "small_search": 96,
+      "small_common": 167,
+      "large_common": 175,
+      "large_search": 1189
+    }
+  },
+  "rank_analysis": {
+    "search_vs_large_common": -0.09695290858725764,
+    "search_vs_small_common": 0.13073827295441806,
+    "small_vs_large_common": 0.19610740943162708,
+    "common_group_bootstrap_95pct": [
+      -0.29104388171933016,
+      0.676563943520303
+    ],
+    "valid_group_draws": 1000,
+    "grouped_bootstrap_draws": 1000,
+    "large_common": {
+      "first": "gte_paired_quadratic",
+      "tied_first": [
+        "gte_paired_quadratic"
+      ],
+      "first_three": [
+        "gte_paired_quadratic",
+        "local_sentence_fb8ba2cc889cb4eef506",
+        "e5_small_text_with_lexical_features"
+      ],
+      "retains_large_leader": true,
+      "top_one_regret_rows": 0,
+      "top_three_oracle_regret_rows": 0
+    },
+    "small_search": {
+      "first": "e5_small_text_with_lexical_features",
+      "tied_first": [
+        "e5_small_text_with_lexical_features"
+      ],
+      "first_three": [
+        "e5_small_text_with_lexical_features",
+        "bge_small_text_with_lexical_features",
+        "electra_paired_quadratic"
+      ],
+      "retains_large_leader": false,
+      "top_one_regret_rows": 2,
+      "top_three_oracle_regret_rows": 2
+    },
+    "small_common": {
+      "first": "bge_small_text_with_lexical_features",
+      "tied_first": [
+        "bge_small_text_with_lexical_features"
+      ],
+      "first_three": [
+        "bge_small_text_with_lexical_features",
+        "minilm_text_with_nonlinear_lexical_features",
+        "minilm_l12_text_with_lexical_features"
+      ],
+      "retains_large_leader": false,
+      "top_one_regret_rows": 4,
+      "top_three_oracle_regret_rows": 4
+    },
+    "qualifies_for_controlled_trial": false
+  },
+  "retrospective": true,
+  "new_classifier_fits": 0,
+  "model_api_requests": 0,
+  "designated_validation_opened": false,
+  "official_test_opened": false,
+  "H2_opened": false
+}

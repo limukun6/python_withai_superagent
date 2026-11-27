@@ -75,7 +75,10 @@ def solve(args):
 
 def score(args):
     folders=[args.reference,*[args.output/name for name in args.sealed_arms]]
-    require(len(args.sealed_arms)==len(set(args.sealed_arms)) and set(args.sealed_arms)=={"original","expanded","race","default"},
+    expected={"original","expanded","race","default"}
+    if read(args.output/"original/sealed.json").get("status")=="partial":
+        expected.add("original_compute_matched")
+    require(len(args.sealed_arms)==len(set(args.sealed_arms)) and set(args.sealed_arms)==expected,
             "All registered autonomous raw runs must be sealed before evaluation")
     predictions=[]
     for folder in folders:
@@ -91,9 +94,9 @@ def score(args):
     truth=np.array([r[2] for r in title_rows(archive(args.course,"titles"),"val",labels=True)])
     base=predictions[0]==truth
     report={}
-    for name,labels in zip(["delivered_10_fits",*args.sealed_arms],predictions):
+    for name,labels,folder in zip(["delivered_10_fits",*args.sealed_arms],predictions,folders):
         right=labels==truth
-        report[name]=dict(correct=int(sum(right)),rows=len(right),accuracy=float(right.mean()),
+        report[name]=dict(status=read(folder/"sealed.json").get("status","completed"),correct=int(sum(right)),rows=len(right),accuracy=float(right.mean()),
                           fixed=int(sum(right & ~base)),lost=int(sum(base & ~right)))
     names=["delivered_10_fits",*args.sealed_arms]
     paired=[]

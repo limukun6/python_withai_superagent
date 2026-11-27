@@ -4,7 +4,7 @@ from itertools import combinations
 import numpy as np
 
 from .conditional_review import compare, group_observation
-from .experiment_policy import identity
+from .experiment_policy import group_key, option_keys
 
 
 def subsets(names):
@@ -36,8 +36,10 @@ def observation(records, group, metric):
                 score=float(np.mean(predicted == first["labels"])))
 
 
-def shortlist(primary, metric, allow_votes, available, *, frontier=False):
-    singles = sorted(((name,) for name in available), key=lambda g: (-primary[g[0]]["score"], identity(g)))
+def shortlist(primary, metric, allow_votes, available, *, frontier=False, keys=None):
+    if keys is None:
+        keys=option_keys({n:{} for n in available},primary)
+    singles = sorted(((name,) for name in available), key=lambda g: (-primary[g[0]]["score"], group_key(g,keys)))
     if len(singles) < 3:
         return None
     anchor = singles[0]
@@ -64,28 +66,29 @@ def shortlist(primary, metric, allow_votes, available, *, frontier=False):
         return -paired["delta"] <= paired_error(paired)
     blends = []
     if allow_votes:
-        names = sorted(available)
+        names = sorted(available,key=keys.__getitem__)
         pairs = [pair for pair in combinations(names, 2) if improves_subsets(pair)]
-        pairs.sort(key=lambda g: (-records[g]["score"], identity(g)))
+        pairs.sort(key=lambda g: (-records[g]["score"], group_key(g,keys)))
         # Only extend genuinely complementary pairs. Limit search multiplicity before confirmation.
-        triples = {tuple(sorted((*pair, n))) for pair in pairs[:2] for n in names if n not in pair}
+        triples = {tuple(sorted((*pair, n),key=keys.__getitem__)) for pair in pairs[:2] for n in names if n not in pair}
         blends = [*pairs, *(triple for triple in triples if improves_subsets(triple))]
     if blends:
-        challenger = min(blends, key=lambda g: (-records[g]["score"], len(g), identity(g)))
+        challenger = min(blends, key=lambda g: (-records[g]["score"], len(g), group_key(g,keys)))
     else:
         runner = singles[1]
         matched = compare("primary", records[anchor], records[runner])
         if not matched["gained"] or -matched["delta"] > 1/np.sqrt(matched["rows"]):
             return None
         challenger = runner
-    groups = sorted({anchor, challenger, *subsets(challenger)}, key=lambda g:(len(g), identity(g)))
+    groups = sorted({anchor, challenger, *subsets(challenger)}, key=lambda g:(len(g), group_key(g,keys)))
     return anchor, challenger, groups, compare("primary", records[anchor], records[challenger])
 
 
 def additional_finalist(primary, metric, available, caps, anchor, challenger, groups, folds, remaining, allow_votes):
     if metric.name != "accuracy" or len(folds) < 2:
         return None
-    names = sorted(available)
+    keys=option_keys(caps,primary)
+    names = sorted(available,key=keys.__getitem__)
     options = [(n,) for n in names]
     if allow_votes:
         options.extend(combinations(names,2))
@@ -94,7 +97,7 @@ def additional_finalist(primary, metric, available, caps, anchor, challenger, gr
     leader_record = observation(primary,challenger,metric)
     alternatives = []
     for option in options:
-        if option in groups:
+        if any(set(option)==set(group) for group in groups):
             continue
         row = observation(primary,option,metric)
         if row is None or (len(option)>1 and row["score"] <= max(primary[n]["score"] for n in option)):
@@ -109,8 +112,8 @@ def additional_finalist(primary, metric, available, caps, anchor, challenger, gr
         refits = max(sum(caps[n]["refit_classifier_fits"] for n in g) for g in (*groups,option))
         cost = len(folds)*sum(caps[n]["classifier_fits"] for n in (current|added)) + refits
         if cost <= remaining:
-            alternatives.append((-(row["score"]+uncertainty),cost,len(option),identity(option),option))
-    return min(alternatives)[-1] if alternatives else None
+            alternatives.append((-(row["score"]+uncertainty),cost,len(option),group_key(option,keys),option))
+    return min(alternatives,key=lambda item:item[:-1])[-1] if alternatives else None
 
 
 class FinalistRace:
@@ -136,15 +139,16 @@ class FinalistRace:
             if not fresh:
                 return None
             available = (set(primary) & set(caps)) - set(blocked)
-            found = shortlist(primary, metric, allow_votes, available, frontier=self.frontier)
+            keys=option_keys(caps,primary)
+            found = shortlist(primary, metric, allow_votes, available, frontier=self.frontier, keys=keys)
             if found is None:
                 return None
             anchor, challenger, groups, paired = found
             extra = (additional_finalist(primary,metric,available,caps,anchor,challenger,groups,fresh,remaining,allow_votes)
                      if self.multiple else None)
             if extra:
-                groups = sorted({*groups,extra,*subsets(extra)},key=lambda g:(len(g),identity(g)))
-            members = sorted({n for g in groups for n in g},key=lambda n:(-primary[n]["score"],identity(n)))
+                groups = sorted({*groups,extra,*subsets(extra)},key=lambda g:(len(g),group_key(g,keys)))
+            members = sorted({n for g in groups for n in g},key=lambda n:(-primary[n]["score"],keys[n]))
             per_fold = sum(caps[n]["classifier_fits"] for n in members)
             reserve = max(sum(caps[n]["refit_classifier_fits"] for n in g) for g in groups)
             planned = per_fold * len(fresh) + reserve
@@ -196,6 +200,7 @@ class FinalistRace:
 
     def finish(self, observed, metric, caps):
         plan = self.plan
+        keys=option_keys(caps,observed["primary"])
         folds = ["primary", *plan["fresh"]]
         groups = [tuple(g) for g in plan["groups"]]
         scores = {g: {f: observation(observed[f], g, metric)["score"] for f in folds} for g in groups}
@@ -203,7 +208,7 @@ class FinalistRace:
             return float(np.average([scores[group][f] for f in which], weights=[len(self.rows[f]) for f in which]))
         anchor = tuple(plan["anchor"])
         singles = [g for g in groups if len(g)==1 and mean(g,plan["fresh"])>=mean(anchor,plan["fresh"])]
-        best_single = min(singles,key=lambda g:(-mean(g,folds), identity(g)))
+        best_single = min(singles,key=lambda g:(-mean(g,folds), group_key(g,keys)))
         eligible = [best_single]
         for group in groups:
             if len(group) < 2:
@@ -214,7 +219,7 @@ class FinalistRace:
             if (pooled_advantage >= .003 and corroborated and
                     all(mean(group,plan["fresh"])>mean(base,plan["fresh"]) for base in checks)):
                 eligible.append(group)
-        winner = min(eligible, key=lambda g:(-mean(g,folds), len(g), identity(g)))
+        winner = min(eligible, key=lambda g:(-mean(g,folds), len(g), group_key(g,keys)))
         result = dict(status="completed", selected=list(winner), anchor=list(anchor), folds=folds,
                       comparisons=[dict(members=list(g), scores=scores[g], pooled=mean(g,folds)) for g in groups])
         self.logger.write_json("finalist_result.json",result)

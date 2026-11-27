@@ -13,6 +13,29 @@ def identity(value):
                                      ensure_ascii=False, allow_nan=False).encode()).hexdigest()
 
 
+def option_keys(capabilities, primary=None):
+    """Order real executable configurations independently of menu labels and enumeration."""
+    from collections import Counter
+    fields=("estimator","estimator_class","input_kind","representation","params","resource",
+            "classifier_fits","refit_classifier_fits","supports_probabilities","swap_label_rule")
+    documents={name:identity({k:cap[k] for k in fields if k in cap}) for name,cap in capabilities.items()}
+    duplicates=Counter(documents.values())
+    primary=primary or {}
+    result={}
+    for name, signature in documents.items():
+        evidence=""
+        if duplicates[signature]>1 and name in primary:
+            row=primary[name]
+            evidence=identity([np.asarray(row["predictions"]).tolist(),
+                               None if row.get("probabilities") is None else np.asarray(row["probabilities"]).tolist()])
+        result[name]=(signature,evidence)
+    return result
+
+
+def group_key(members, keys):
+    return tuple(sorted(keys[n] for n in members))
+
+
 def descriptor(cap):
     params = cap['params']
     settings = {**params, **params.get('kwargs', {})}
@@ -47,13 +70,14 @@ def fit_prior(cap, profile):
             + .014*richness - .018*bool(encoder)/math.sqrt(max(1., n/128)))
 
 
-def measured_options(observations, metric, *, allow_votes=True):
+def measured_options(observations, metric, *, allow_votes=True, member_order=None):
     """Measure single models and equal votes only on identical, class-aligned, ordered rows."""
     primary = observations.get('primary', {})
     result = {}
-    groups = [(name,) for name in sorted(primary)]
+    ordered = sorted(primary, key=member_order)
+    groups = [(name,) for name in ordered]
     if allow_votes:
-        groups.extend(combinations(sorted(primary), 2))
+        groups.extend(combinations(ordered, 2))
     for members in groups:
         by_fold = {}
         for fold, records in observations.items():
@@ -75,8 +99,14 @@ def measured_options(observations, metric, *, allow_votes=True):
 
 
 def actions(caps, profile, history, observations, metric, folds, remaining, blocked=()):
-    options = measured_options(observations, metric,allow_votes='linear_only' not in profile.get('method_restrictions',()))
-    first = observations.get('primary', {})
+    primary = observations.get('primary', {})
+    keys = option_keys(caps, primary)
+    first = {n:primary[n] for n in sorted(primary,key=keys.__getitem__)}
+    options = measured_options(observations,metric,allow_votes='linear_only' not in profile.get('method_restrictions',()),
+                               member_order=keys.__getitem__)
+    def choice_key(action):
+        return (group_key(action['members'],keys),action['action'],action['split'] or "",
+                group_key(action.get('evidence',{}).get('target_members',()),keys))
     missing = frozenset(blocked)
     descriptors = {n: descriptor(c) for n,c in caps.items()}
     # Row counts, rather than how often a candidate was selected, determine its evidence weight.
@@ -113,8 +143,8 @@ def actions(caps, profile, history, observations, metric, folds, remaining, bloc
     stops = [a for a in choices if a['action']=='stop']
     incumbent = max((a['utility'] for a in stops), default=prior_center)
     if first and maximum >= 1 and any(len(options[(m,)])>=2 and min(options[(m,)].values())==1 for m in first):
-        return sorted(stops, key=lambda a:(-a['utility'], identity(a['members'])))
-    leader = max(stops, key=lambda a:(a['utility'],-refit(a['members'])), default=None)
+        return sorted(stops, key=lambda a:(-a['utility'], len(a['members']), choice_key(a)))
+    leader = min(stops, key=lambda a:(-a['utility'],refit(a['members']),choice_key(a)), default=None)
     incumbent_cost = refit(leader['members']) if leader else 1
     for name, cap in caps.items():
         reserve = max(incumbent_cost, cap['refit_classifier_fits'])
@@ -152,10 +182,10 @@ def actions(caps, profile, history, observations, metric, folds, remaining, bloc
             if need + reserve <= remaining and expected + se >= incumbent:
                 uncertainty = error_scale(expected, sum(size[f] for f in values))
                 value = expected + uncertainty / math.sqrt(len(values)*need) + gain - se*.35
-                target = min(absent, key=lambda m:(-singles[m], identity(m)))
+                target = min(absent, key=lambda m:(-singles[m], keys[m]))
                 add('confirm', (target,), fold, value, 'Check a competitive result on different training groups.',
                     target_members=list(members), matched_scores=values, paired_gain=gain, reserved_refits=reserve)
             break
     # Never let enumeration order, dataset filenames or display aliases break a tie.
-    choices.sort(key=lambda a:(-a['utility'], len(a['members']), identity([a['action'],a['members'],a['split']])))
+    choices.sort(key=lambda a:(-a['utility'], len(a['members']), choice_key(a)))
     return choices

@@ -16,7 +16,14 @@ PLAN=ROOT/'research/paired_encoder_search_1127/analogy_raw_protocol.json'
 
 
 def run(root, impl, source, features, arm):
-    folder=root/'analogy-raw'/arm
+    if arm=='close':
+        study=ROOT/'research/paired_encoder_search_1127/analogy_near_tie_protocol.json'
+        evidence=read(root/'analogy-close-confirm/results.json')
+        require(evidence['advance'] and evidence['protocol']==sha(study),'The registered trial has not earned a full run')
+        folder=root/'analogy-close-raw'/arm
+    else:
+        study=PLAN
+        folder=root/'analogy-raw'/arm
     folder.mkdir(parents=True,exist_ok=False)
     raw=archive(source,'titles')
     original=read(ROOT/'research/b_task2_handoff_1127/protocol.json')['input']
@@ -32,7 +39,7 @@ def run(root, impl, source, features, arm):
     settings.update(PYTHONPATH=os.pathsep.join(map(str,(impl/'scripts/unified_acceptance',impl))),
                     SUPERAGENT_PAIRED_FEATURE_CACHE=str(root/'feature_bank'),UNIFIED_RAW_INPUT=str(raw),
                     UNIFIED_RAW_MEMBERS=json.dumps(MEMBERS['titles']),UNIFIED_RAW_LOG=str(opened))
-    protocol=dict(runtime_sha256=source_identity(impl),plan_sha256=sha(PLAN),arm=arm,fit_limit=16,wall_seconds=1800,
+    protocol=dict(runtime_sha256=source_identity(impl),plan_sha256=sha(study),arm=arm,fit_limit=16,wall_seconds=1800,
                   model_hint=None,policy_hint=None,raw_sha256=sha(raw),features_sha256=sha(features))
     if arm=='original':
         require(protocol['runtime_sha256']==read(root/'discovered-ordinary/discovered_default/protocol.json')['runtime_sha256'],'Unexpected control runtime')
@@ -63,6 +70,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('root','impl','course','features'):
         parser.add_argument('--'+name,type=lambda v:Path(v).resolve(),required=True)
-    parser.add_argument('--arm',choices=('original','revised'),required=True)
+    parser.add_argument('--arm',choices=('original','revised','close'),required=True)
     args=parser.parse_args()
     run(args.root,args.impl,args.course,args.features,args.arm)

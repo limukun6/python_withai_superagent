@@ -294,6 +294,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         observed={f:{} for f in folds}
         flash_available=flash is not None and not feedback_reflection
         reflection = None
+        coverage = None
+        if fit_limit > 16 and flash is None and not feedback_reflection and not self_review and rule is None:
+            from .coverage_review import CoverageReview
+            coverage = CoverageReview()
         scheduled = None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
@@ -356,6 +360,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     except (ValueError,RuntimeError,TimeoutError,OSError) as err:
                         flash_available=False
                         log.event('planner_unavailable',error_type=type(err).__name__,reason=str(err)[:320])
+                if coverage is not None:
+                    reviewed = coverage.choose(choice,menu,caps,observed,metric,list(folds),remaining,blocked,
+                                              start+wall-time.monotonic(),history,
+                                              allow_votes='linear_only' not in spec.get('method_restrictions', ()))
+                    if reviewed != choice:
+                        choice, source = reviewed, 'protected representation review'
+                        if choice not in menu:
+                            menu = [*menu, choice]
+                    if coverage.incumbent is not None:
+                        log.write_json('coverage_review.json',coverage.record())
                 decisions.append(dict(step=len(decisions)+1,source=source,choice=choice,remaining_fits=remaining,
                      observed_trials=[r['trial'] for r in history],registry=generation['file'],
                      registry_sha256=generation['sha256'],alternatives=menu))

@@ -19,12 +19,12 @@ SHARES=(.125,.25,.5,1.)
 POLICIES=("retain","nomination","pooled","protected")
 
 
-def load_bank(data):
+def load_bank(data, prefixes=PREFIXES):
     classes = read(data/"trial_anchor/sealed.json")["classes"]
     bank, seals, unique = {}, {}, set()
     for entry in sorted(data.iterdir()):
         record=entry/"sealed.json"
-        if not entry.name.startswith(PREFIXES) or not record.is_file():
+        if not entry.name.startswith(prefixes) or not record.is_file():
             continue
         d=read(record)
         if not isinstance(d.get("predictions"),dict) or not set(ROLES)<=d["predictions"].keys():

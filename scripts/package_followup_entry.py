@@ -16,7 +16,8 @@ def make(args):
           "frontier_scale":"frontier-raw/frontier_scale","auto_portfolio":"auto-raw/auto_portfolio",
           "resource_default":"resource-raw/resource_default","anonymous_default":"anonymous-choice/anonymous_default",
           "discovered":"discovered-raw/discovered","discovered_default":"discovered-ordinary/discovered_default",
-          "original":"analogy-raw/original","revised":"analogy-raw/revised","close":"analogy-close-raw/close"}[args.arm]
+          "original":"analogy-raw/original","revised":"analogy-raw/revised","close":"analogy-close-raw/close",
+          "portfolio_control":"analogy-portfolio-raw/portfolio_control","portfolio_revised":"analogy-portfolio-raw/portfolio_revised"}[args.arm]
     run=args.root/path
     plan=read(run/"protocol.json")
     sealed=read(run/"sealed.json")
@@ -56,8 +57,8 @@ def make(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered","discovered_default","original","revised","close"),required=True)
-    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores","discovered-ordinary-scores","analogy-raw-scores","analogy-close-scores"),
+    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered","discovered_default","original","revised","close","portfolio_control","portfolio_revised"),required=True)
+    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores","discovered-ordinary-scores","analogy-raw-scores","analogy-close-scores","analogy-portfolio-scores"),
                    default="delivery_scores")
     for name in ("root","features","weights","notices","source","output"):
         p.add_argument("--"+name,type=lambda x:Path(x).resolve(),required=True)

@@ -9,17 +9,18 @@ from scripts.score_followup_entry import prediction_file
 from scripts.unified_released_study import archive, read, require, sha, title_rows
 
 
-def score(root,course):
-    source=root/'analogy-raw'
-    output=root/'analogy-raw-scores'
+def score(root,course,*,portfolio=False):
+    source=root/('analogy-portfolio-raw' if portfolio else 'analogy-raw')
+    output=root/('analogy-portfolio-scores' if portfolio else 'analogy-raw-scores')
     output.mkdir(exist_ok=True)
-    cases=('original','revised')
+    cases=('portfolio_control','portfolio_revised') if portfolio else ('original','revised')
+    ceiling=22 if portfolio else 16
     predictions={}
     seals={}
     for arm in cases:
         folder=source/arm
         seals[arm],predictions[arm]=prediction_file(folder)
-        require(seals[arm]['protocol_sha256']==sha(folder/'protocol.json') and seals[arm]['fits']<=16
+        require(seals[arm]['protocol_sha256']==sha(folder/'protocol.json') and seals[arm]['fits']<=ceiling
                 and seals[arm]['api']==0 and seals[arm]['rows']==8301,'Incomplete treatment')
     baseline=root/'discovered-ordinary/discovered_default'
     base_seal,base_predictions=prediction_file(baseline)
@@ -27,17 +28,23 @@ def score(root,course):
                ('discovered','discovered-raw/discovered','discovered-raw-scores'),('resource_default','resource-raw/resource_default','delivery_scores'),
                ('legacy_long','long-cold/original','delivery_scores'),('auto_portfolio','auto-raw/auto_portfolio','delivery_scores'),
                ('frontier','frontier-raw/frontier','delivery_scores'),('frontier_scale','frontier-raw/frontier_scale','delivery_scores')]
+    if portfolio:
+        originals.extend([('original','analogy-raw/original','analogy-raw-scores'),('close','analogy-close-raw/close','analogy-close-scores')])
     prior={}
+    references={}
     for name,relative,scoring in originals:
         folder=root/relative
         scored=read(root/scoring/'results.json')
         fix=root/scoring/'evaluation_lock.json'
         require(sha(fix)==scored['lock_sha256'] and read(fix)['seals'][name]==sha(folder/'sealed.json'),'Broken previous score linkage')
         record=read(folder/'sealed.json')
-        prior.setdefault(record['prediction_sha256'],(name,scored['completed'][name]['correct']))
+        correct=scored['completed'][name]['correct']
+        prior.setdefault(record['prediction_sha256'],(name,correct))
+        if portfolio and name in ('original','close'):
+            references[name]=(prediction_file(folder)[1],correct)
     default_correct=prior[base_seal['prediction_sha256']][1]
-    source_protocol=read(source/'original/protocol.json')
-    revised=read(source/'revised/protocol.json')
+    source_protocol=read(source/cases[0]/'protocol.json')
+    revised=read(source/cases[1]/'protocol.json')
     require(all(source_protocol[k]==revised[k] for k in ('plan_sha256','raw_sha256','features_sha256','fit_limit','wall_seconds','model_hint','policy_hint')),'Unequal conditions')
     lock(output/'evaluation_lock.json',dict(seals={a:sha(source/a/'sealed.json') for a in cases},
         training_plan=source_protocol['plan_sha256'],base_receipt=sha(baseline/'sealed.json'),reference_scores={s:sha(root/s/'results.json') for _,_,s in originals}))
@@ -60,7 +67,9 @@ def score(root,course):
         completed[arm]=dict(rows=len(base_predictions),correct=pct,accuracy=pct/len(base_predictions),fits=seals[arm]['fits'],
              members=seals[arm]['members'],matches_existing_score=historical,
              vs_ordinary=comparison(predictions[arm],pct,base_predictions,default_correct))
-    effect=comparison(predictions['revised'],completed['revised']['correct'],predictions['original'],completed['original']['correct'])
+        if references:
+            completed[arm]['vs_previous_sixteen']={k:comparison(predictions[arm],pct,v,n) for k,(v,n) in references.items()}
+    effect=comparison(predictions[cases[1]],completed[cases[1]]['correct'],predictions[cases[0]],completed[cases[0]]['correct'])
     result=dict(lock_sha256=sha(output/'evaluation_lock.json'),completed=completed,paired_vs_equal_budget=effect,
           designated_validation_new_read=need_labels,official_test_opened=False,H2_opened=False,new_model_requests=0)
     lock(output/'results.json',result)
@@ -71,5 +80,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('root','course'):
         parser.add_argument('--'+name,type=lambda s:Path(s).resolve(),required=True)
+    parser.add_argument('--portfolio',action='store_true')
     a=parser.parse_args()
-    score(a.root,a.course)
+    score(a.root,a.course,portfolio=a.portfolio)

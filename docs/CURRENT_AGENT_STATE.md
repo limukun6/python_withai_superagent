@@ -1,5 +1,19 @@
 # 当前接续状态
 
+## 2026-11-27：SA19最小恢复控制器＋正式路径3/3交付
+
+基线0769d22。新增recovery.py和structure_tools.py；正式_train把同一失败/证据/预算/已有成果状态贯穿接入与B调度。语义循环不再固定两次拒绝退出，仍共享最多3次Flash、两次工具；fallback预测预检失败也可交语义修复。NPY/NPZ键/shape/dtype和图像尺寸/模式工具不返回值；20个reader绑定新artifact。B方法排序和失败换候选保留。
+
+303/303无fit/API检查25.437秒；真实四条件一次冻结后运行：R1字段映射、R2未知NPZ键、R3首方法启动前受控故障均完整交付，各3fit/3API，新进程各36行一致；R4目标确实没指定，0fit/3API，保留未决。可恢复3/3、四条件错误完成0、运行中人工介入0。合计9fit/12API/¥.083642/372.515秒。独立审计4/4，39054输入/11147输出token与真ledger逐条绑定；旧行SHA不变。
+
+注意R3故障发生时Flash额度已用完，由B既有本地规则恢复，不能说LLM看见训练故障后改善了选择，也不能把B能力算A新增因果收益。R1/R2本地同输入接入0/2 vs恢复2/2，只证明开发条件接入，不是预测质量消融。全是同一公开Wine来源，不是3个独立未知任务；图像工具本批未新增真实恢复。ask内部JSON解析/坏文件异常分类/最终预测失败等尚未统一恢复，不能保证任意阶段或任意任务。
+
+证据research/sa19_recovery_checks_03、sa19_recovery_prepared_02、sa19_recovery_live_02、sa19_recovery_audit_01；计划与报告docs/batches/SA19_RECOVERY_*_20261127_zh.md；可复跑scripts/run_sa19_recovery_live.py、scripts/audit_sa19_recovery.py。首次live因scope大写在预检前失败0fit/API，新目录修正运行；所有旧失败保留，不重试已发请求。
+
+当前canonical ledger497/known8.213083/unknown16/pending0，无训练/API队列，未冻结。原16未知仍null，预算合规未核验；新增未知仍停当批付费。SA7–SA19自动窗口累计35fit/36API/¥.246688，非全项目累计。
+
+下一批：同3请求预算下组合结构探查，减少接入耗尽B额度；按未决字段＋证据增量识别R4式语义空转，允许明确未决报告；补已计量JSON和最终预测阶段恢复。先落盘计划/代码再运行。继续独立来源多模态演练，不追Task1旧分数，不重复本批。
+
 ## 2026-11-27：用户纠正主目标，SA18改为自主恢复与正确交付
 
 用户明确不是要增加阻断，而是LLM介入后任务继续运行。已更新AGENTS和主计划docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md：失败动作→FailureRecord/RecoveryState→LLM查证/改适配/换路线→验证→继续。单个动作拒绝不能结束整个Agent；主验收是无人干预恢复后正确交付、错误完成率和资源代价。

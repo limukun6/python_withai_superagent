@@ -1,0 +1,127 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "model_exported",
+  "status": "training_completed",
+  "goal": {
+    "task_kind": "numeric_tabular",
+    "metric": {
+      "name": "balanced_accuracy",
+      "labels": [
+        0,
+        1,
+        2
+      ],
+      "direction": "maximize"
+    }
+  },
+  "observed_evidence": [
+    {
+      "member": "packed.npz",
+      "source": "training",
+      "values_disclosed": false,
+      "format": "npz",
+      "arrays": [
+        {
+          "key": "cinder",
+          "shape": [
+            142,
+            13
+          ],
+          "dtype": "<f8",
+          "fortran_order": false,
+          "values_disclosed": false
+        },
+        {
+          "key": "opal",
+          "shape": [
+            142
+          ],
+          "dtype": "<i8",
+          "fortran_order": false,
+          "values_disclosed": false
+        }
+      ],
+      "package_source": "task",
+      "requested_source": "training",
+      "source_resolution": "explicit"
+    },
+    {
+      "member": "arrivals.npz",
+      "source": "prediction",
+      "values_disclosed": false,
+      "format": "npz",
+      "arrays": [
+        {
+          "key": "pollen",
+          "shape": [
+            36,
+            13
+          ],
+          "dtype": "<f8",
+          "fortran_order": false,
+          "values_disclosed": false
+        }
+      ],
+      "package_source": "external_prediction",
+      "requested_source": "prediction",
+      "source_resolution": "explicit"
+    }
+  ],
+  "unresolved_fields": [],
+  "failed_actions": [
+    {
+      "stage": "task_adaptation",
+      "diagnostic": {
+        "stage": "task_adaptation",
+        "code": "TaskFormatError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "signature": "d3aed127d2510be8113684264d829741219605f250bdf5afd5d66f04963264d9",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "inspect_array",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "inspect_array",
+      "outcome": "new_structure_observation"
+    },
+    {
+      "action": "cited_contract_and_prediction_preflight",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    },
+    {
+      "action": "method_executed",
+      "outcome": "verified",
+      "stage": "training_method"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "repair_adapter",
+    "revise_interpretation",
+    "alternate_method"
+  ],
+  "available_artifacts": [
+    "selected_model.joblib",
+    "task_spec.json",
+    "final_selection.json"
+  ],
+  "attempted_classifier_fits": 3,
+  "remaining_requests": 0,
+  "remaining_fits": 1,
+  "remaining_seconds": 263.655999999959
+}

@@ -79,7 +79,7 @@ def planner_observation(bundle, facts, record, metric):
                 row_key=evidence['evaluation_payload_sha256'])
 
 
-def choose_with_flash(client, logger, menu, caps, profile, metric, history, remaining):
+def choose_with_flash(client, logger, menu, caps, profile, metric, history, remaining, recovery_context=None):
     # The provider sees anonymous capabilities, training scores and feasible actions. It never sees raw rows.
     brief = [{k:a[k] for k in ('action','members','split','evidence')} for a in menu]
     payload = dict(instruction='Choose the next experiment, corroboration or final model, considering uncertainty, '
@@ -92,6 +92,7 @@ def choose_with_flash(client, logger, menu, caps, profile, metric, history, rema
                    methods={m:dict(estimator=caps[m]['estimator'],representation=caps[m]['representation'],
                                    resource=caps[m]['resource'],configuration=caps[m]['params'])
                             for m in sorted({n for action in menu for n in action['members']})},options=brief)
+    if recovery_context is not None:payload['recovery_state']=recovery_context
     proposal=client.ask(payload,logger,'experiment_planner')
     index=proposal.get('option')
     refs=proposal.get('evidence_trials')
@@ -183,6 +184,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     if flash_setup_issue:
         log.event('planner_preflight_unavailable', reason=flash_setup_issue)
     start = time.monotonic()
+    from .recovery import RecoveryController
+    recovery=RecoveryController(log,client=flash,fit_limit=fit_limit,deadline=start+wall)
     if flash is not None:
         flash.set_deadline(start+wall)
     manifest = dict(policy='anonymous-sequential-v1',self_review=self_review,fit_limit=fit_limit,seed=seed,wall_seconds=wall,
@@ -213,14 +216,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             raise UnsupportedFormat('Automatic semantic review unavailable; deployment preflight did not pass')
         intake_client=flash if interpretation=='proactive' or opening_enabled or not feedback_reflection else None
         task=resolve_training_task(package,intake_client,log,mode=interpretation,prediction_package=prediction_package,
-                                   artifact_from=semantic_artifact_from)
+                                   artifact_from=semantic_artifact_from,recovery=recovery)
         if opening_enabled:
             task,lines,origin=instructions(package,task)
         spec, metric = TaskSpec.from_task(task).record(), MetricSpec.for_task(task)
         log.event('selection_metric_resolved', **spec['goal_resolution']['fields']['primary_metric'])
     except DECODE_ERRORS as error:
+        recovery.exhausted('Task interpretation did not yield a verified contract within the available recovery route and allowance')
         return record_input_failure(package,directory,log,error,phase,
                                     api_usage=api_accounting(flash,log), resolved_task=task)
+    recovery.advance('training_method',goal=dict(task_kind=task.kind,metric=metric.record()))
     from .proposal_value import MODES as proposal_modes, DELIVERED_MODES, ProposalStudy, split_search
     pilot=None
     core_limit=min(10,fit_limit) if opening_enabled else fit_limit
@@ -275,6 +280,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 opening=TaskOpening(feedback_reflection,task,metric,folds,lines,origin,log,flash,start,wall)
                 opening.launch()
             while True:
+                recovery.advance('training_method',accounting=executor.accounting(),artifacts=['selected_model.joblib','task_spec.json'])
                 caps, generation=generator.refresh(history,static)
                 from .output_recipe import needs_scores
                 if needs_scores(task.spec.get('output_recipe')):
@@ -310,7 +316,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     log.write_json('reflection.json',reflection)
                 if flash_available and flash.request_count<flash.max_requests and len(menu)>1:
                     try:
-                        choice=choose_with_flash(flash,log,menu,caps,profile,metric,history,remaining)
+                        choice=choose_with_flash(flash,log,menu,caps,profile,metric,history,remaining,
+                                                 recovery_context=recovery.context())
                         source='DeepSeek planner'
                     except (ValueError,RuntimeError,TimeoutError,OSError) as err:
                         flash_available=False
@@ -351,6 +358,9 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if executor.accounting()['unknown_failed_attempts']:
                         raise
                     blocked.add(name)
+                    recovery.failure('training_method',dict(code=type(error).__name__,
+                        message='Selected candidate failed in the worker; blocked for this run. Choose another executable method.',
+                        candidate=name),action=dict(candidate=name,split=fold))
                     if review is not None:
                         review.ticket=None
                         log.write_json('policy_review.json',review.record())
@@ -360,6 +370,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                         scheduled.after(monitor['trial'],checkpoint,observed,task,metric,history,payloads['primary'],directory,failed=True)
                     continue
                 bundle=joblib.load(destination)
+                recovery.accepted('method_executed',stage='training_method')
                 observation=planner_observation(bundle,facts,payload,metric)
                 if review is not None:
                     review.observed(monitor['trial'],observation['score'])
@@ -427,8 +438,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 pilot.snapshot(selection,sum(r['status']=='completed' for r in history)+pilot.tail_completed,final=True)
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
+            recovery.advance('model_exported',accounting=executor.accounting(),
+                             artifacts=['selected_model.joblib','task_spec.json','final_selection.json'],status='training_completed')
         except Exception as error:
             outcome=dict(status='failed',model_available=False,error=type(error).__name__+': '+str(error))
+            recovery.exhausted('Training did not complete; retain separately verified checkpoints if available')
             raise
         finally:
             if opening is not None:

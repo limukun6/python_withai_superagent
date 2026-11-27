@@ -106,12 +106,11 @@ class SemanticContractTests(unittest.TestCase):
         self.assertFalse(receipt['semantic_truth_certified'])
         self.assertEqual(len(task.y_train), 8)
 
-    def test_two_failed_probes_do_not_create_third_call(self):
+    def test_two_failed_probes_allow_final_budgeted_repair(self):
         wrong = proposal(); wrong['plan']['target'] = 'absent'
         client = Client([wrong, wrong, proposal()])
-        with self.assertRaises(UnsupportedFormat):
-            semantic_training(self.path, client, None, ValueError('decode'))
-        self.assertEqual(client.request_count, 2)
+        semantic_training(self.path, client, None, ValueError('decode'))
+        self.assertEqual(client.request_count, 3)
 
     def test_shared_remaining_allowance_applies_to_repair(self):
         wrong = proposal(); wrong['plan']['target'] = 'absent'

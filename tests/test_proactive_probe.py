@@ -56,7 +56,7 @@ class ProactiveProbeTests(unittest.TestCase):
         task = load_training_task  # Native reader is mocked to prove the control-flow distinction.
         with patch('superagent.semantic_contract.load_training_task', return_value=task) as native:
             result, client = self.resolve([output_proposal()])
-        native.assert_not_called()
+        native.assert_called_once()
         self.assertEqual(client.request_count, 1)
         self.assertEqual(result.spec['output_recipe'], recipe())
 
@@ -157,16 +157,16 @@ class ProactiveProbeTests(unittest.TestCase):
         log.write_json.side_effect=OSError('disk full')
         with self.assertRaisesRegex(OSError,'disk full'):
             resolve_training_task(self.path,client,log,mode='proactive')
-        self.assertEqual(client.request_count,1)
+        self.assertEqual(client.request_count,0)
 
     def test_template_id_mismatch_is_pre_fit_failure(self):
         answer = output_proposal(); answer['plan']['output'] = recipe(template=True)
         rewrite(self.path, {'sample.csv':'Ticket;Answer\nwrong;\n0010;\n'})
-        client = Client([answer,answer])
+        client = Client([answer,answer,answer])
         with self.assertRaises(UnsupportedFormat):
             resolve_training_task(self.path,client,mode='proactive')
         self.assertIn('ID sets differ',client.payloads[1]['diagnostic']['message'])
-        self.assertEqual(client.request_count,2)
+        self.assertEqual(client.request_count,3)
 
     def test_header_tool_then_plan_shares_client_and_does_not_disclose_values(self):
         task, client = self.resolve([inspection(),output_proposal()])
@@ -264,7 +264,7 @@ class ProactiveProbeTests(unittest.TestCase):
         self.assertEqual(client.payloads[0]['authoritative_contract']['metric']['name'],'accuracy')
 
     def test_manifest_mutation_is_rejected_instead_of_silently_applied(self):
-        path=self.manifest_package(); client=Client([output_proposal(),output_proposal()])
+        path=self.manifest_package(); client=Client([output_proposal(),output_proposal(),output_proposal()])
         with self.assertRaises(UnsupportedFormat): resolve_training_task(path,client,mode='proactive')
         self.assertIn('only an output overlay',client.payloads[1]['diagnostic']['message'])
 

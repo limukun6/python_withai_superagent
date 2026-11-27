@@ -95,7 +95,7 @@ class FeedbackReflectionTests(unittest.TestCase):
         from superagent.autonomous_run import _train
         with TemporaryDirectory() as directory:
             for mode in (None,'flash'):
-                flash = Mock()
+                flash = Mock(max_requests=3,request_count=0)
                 with patch('superagent.semantic_contract.load_training_task',side_effect=ValueError('unknown schema')), \
                         patch('superagent.semantic_contract.adapt_training',side_effect=ValueError('unknown target')) as adapt, \
                         patch('superagent.partial_classification.record_input_failure',return_value=1):

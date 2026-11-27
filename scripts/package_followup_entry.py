@@ -52,7 +52,7 @@ def make(args):
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio"),required=True)
-    p.add_argument("--evaluation",choices=("followup_scores","portfolio_scores"),default="portfolio_scores")
+    p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores"),default="portfolio_scores")
     for name in ("root","features","weights","notices","source","output"):
         p.add_argument("--"+name,type=lambda x:Path(x).resolve(),required=True)
     make(p.parse_args())

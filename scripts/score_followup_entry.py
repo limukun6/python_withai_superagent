@@ -22,11 +22,13 @@ def prediction_file(folder):
     return receipt, predictions
 
 
-def score(root, course, reference, *, include_portfolio=False):
+def score(root, course, reference, *, include_portfolio=False, frontier_pair=False):
     paths = {"legacy_long": root/"long-cold/original", "frontier": root/"frontier-raw/frontier",
              "frontier_scale": root/"frontier-raw/frontier_scale"}
     if include_portfolio:
         paths["auto_portfolio"]=root/"auto-raw/auto_portfolio"
+    if frontier_pair:
+        del paths["legacy_long"]
     raw = root/"raw"
     known_results = read(raw/"validation.json")
     previous = read(raw/"evaluation_lock.json")
@@ -39,6 +41,19 @@ def score(root, course, reference, *, include_portfolio=False):
     for name, folder in old.items():
         seal, outputs[name] = prediction_file(folder)
         known[seal["prediction_sha256"]] = name
+    previous_pair = root/"frontier_scores"
+    carried = {}
+    if not frontier_pair and (previous_pair/"results.json").is_file():
+        pair_lock=read(previous_pair/"evaluation_lock.json")
+        pair_results=read(previous_pair/"results.json")
+        require(pair_results["lock_sha256"]==sha(previous_pair/"evaluation_lock.json") and
+                pair_lock["reference_scores"]==sha(raw/"validation.json"),"Pair scoring history differs")
+        for name,data in pair_results["completed"].items():
+            require(pair_lock["seals"][name]==sha(paths[name]/"sealed.json"),"Frozen pair prediction changed")
+            prior_tag="previous_batch_"+name
+            seal,outputs[prior_tag]=prediction_file(paths[name])
+            known.setdefault(seal["prediction_sha256"],prior_tag)
+            carried[prior_tag]=data
     original_protocol = read(raw/"default/protocol.json")
     for name, folder in paths.items():
         plan = read(folder/"protocol.json")
@@ -49,10 +64,12 @@ def score(root, course, reference, *, include_portfolio=False):
     require(all(r["api"]==0 and r["rows"]==8301 and r["fits"]<=read(paths[n]/"protocol.json")["fit_limit"]
                 for n,(r,_) in records.items()),
             "Unexpected resources or partial training")
-    target=root/("portfolio_scores" if include_portfolio else "followup_scores")
+    target=root/("frontier_scores" if frontier_pair else "portfolio_scores" if include_portfolio else "followup_scores")
     target.mkdir(exist_ok=True)
     lock = dict(seals={name:sha(folder/"sealed.json") for name,folder in paths.items()},
                 reference_lock=sha(raw/"evaluation_lock.json"), reference_scores=sha(raw/"validation.json"))
+    if carried:
+        lock["prior_frontier_scores"]=sha(previous_pair/"results.json")
     save(target/"evaluation_lock.json",lock)
     if (target/"results.json").exists():
         saved=read(target/"results.json")
@@ -71,7 +88,10 @@ def score(root, course, reference, *, include_portfolio=False):
         previous_name = known.get(seal["prediction_sha256"])
         if previous_name is not None:
             require(np.array_equal(values,outputs[previous_name]),"Sealed prediction identity differs")
-        if truth is None:
+        if previous_name in carried:
+            matched=carried[previous_name]
+            correct,gained,lost=(matched[k] for k in ("correct","gained_vs_default","lost_vs_default"))
+        elif previous_name is not None:
             matched = known_results[previous_name]
             correct = matched["correct"]
             if np.array_equal(values,baseline):
@@ -85,7 +105,7 @@ def score(root, course, reference, *, include_portfolio=False):
             correct=int(current.sum())
             gained=int(sum(current & ~incumbent))
             lost=int(sum(~current & incumbent))
-        if previous_name is not None:
+        if previous_name is not None and previous_name not in carried:
             require(known_results[previous_name]["correct"]==correct,"Reused score differs")
         compared[name]=dict(correct=correct,rows=len(values),accuracy=correct/len(values),gained_vs_default=gained,
                             lost_vs_default=lost,identical_to=previous_name,trace=trace(paths[name]))
@@ -99,8 +119,10 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     for key in ("root","course","reference"):
         parser.add_argument("--"+key,type=lambda x:Path(x).resolve(),required=True)
-    parser.add_argument("--include-portfolio",action="store_true")
+    batch=parser.add_mutually_exclusive_group()
+    batch.add_argument("--include-portfolio",action="store_true")
+    batch.add_argument("--frontier-pair",action="store_true")
     args=parser.parse_args()
-    result=score(args.root,args.course,args.reference,include_portfolio=args.include_portfolio)
+    result=score(args.root,args.course,args.reference,include_portfolio=args.include_portfolio,frontier_pair=args.frontier_pair)
     for name,receipt in result["completed"].items():
         print(name,receipt["correct"],receipt["rows"],receipt["trace"]["members"],receipt["identical_to"])

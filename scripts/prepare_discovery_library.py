@@ -16,7 +16,7 @@ def read_public(url, path):
                     '--max-time','420','--output',str(path),url],check=True)
 
 
-def prepare(weights, expanded, record):
+def prepare(weights, expanded, record, revisions=None):
     expanded.mkdir(parents=True,exist_ok=True)
     for source in weights.rglob('*'):
         if not source.is_file() or any(p.startswith('.') for p in source.relative_to(weights).parts):
@@ -25,7 +25,7 @@ def prepare(weights, expanded, record):
         target.parent.mkdir(parents=True,exist_ok=True)
         if not target.exists():
             os.link(source,target)
-    revisions = {'sentence-transformers/all-mpnet-base-v2':'e8c3b32edf5434bc2275fc9bab85f82640a19130',
+    revisions = revisions or {'sentence-transformers/all-mpnet-base-v2':'e8c3b32edf5434bc2275fc9bab85f82640a19130',
                  'sentence-transformers/all-distilroberta-v1':'842eaed40bee4d61673a81c92d5689a8fed7a09f',
                  'sentence-transformers/paraphrase-MiniLM-L3-v2':'4ca70771034acceecb2e72475f72050fcdde4ddc'}
     result = json.loads(record.read_text()) if record.exists() else {}
@@ -36,10 +36,10 @@ def prepare(weights, expanded, record):
             meta = json.loads(Path(file.name).read_text())
         revision = meta['sha']
         require(meta['id']==repo and len(revision)==40 and (use=='main' or revision==use),'Invalid publisher revision')
-        required = {'modules.json','1_Pooling/config.json','sentence_bert_config.json','config.json','tokenizer.json','model.safetensors'}
+        required = {'modules.json','1_Pooling/config.json','config.json','tokenizer.json','model.safetensors'}
         present = {item['rfilename']:item for item in meta['siblings']}
         require(required<=present.keys(),'Incomplete model metadata')
-        names = sorted(required | ({'config_sentence_transformers.json','tokenizer_config.json'} & present.keys()))
+        names = sorted(required | ({'sentence_bert_config.json','config_sentence_transformers.json','tokenizer_config.json'} & present.keys()))
         folder = expanded / repo.split('/')[-1]
         entries = {}
         for name in names:
@@ -73,5 +73,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for k in ('weights','expanded','record'):
         parser.add_argument('--'+k,type=Path,required=True)
+    parser.add_argument('--causal-install',action='store_true')
     args=parser.parse_args()
-    prepare(args.weights,args.expanded,args.record)
+    revisions={'Qwen/Qwen3-Embedding-0.6B':'97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3'} if args.causal_install else None
+    prepare(args.weights,args.expanded,args.record,revisions)

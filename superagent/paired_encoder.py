@@ -6,6 +6,8 @@ from pathlib import Path
 
 import numpy as np
 from scipy.sparse import csr_matrix, vstack
+from sklearn.decomposition import PCA
+from sklearn.kernel_approximation import Nystroem
 from sklearn.linear_model import LogisticRegression
 
 from .ab_preference_output import CanonicalPreferencePipeline
@@ -15,8 +17,13 @@ from .word_familiarity import WordFamiliarity
 
 
 VARIANTS = ("gte", "electra")
-NAMES = {f"{variant}_paired_{head}": (variant, head)
-         for variant in VARIANTS for head in ("linear", "quadratic")}
+def method_names(heads):
+    return {f"{variant}_paired_{head}": (variant, head) for variant in VARIANTS for head in heads}
+
+
+BASE_HEADS = method_names(("linear", "quadratic"))
+CONTEXT_HEADS = method_names(("context", "landmark"))
+NAMES = {**BASE_HEADS, **CONTEXT_HEADS}
 
 
 @lru_cache(maxsize=1)
@@ -117,20 +124,41 @@ class PairedEncoderFeatures(AlternativeSentenceFeatures):
         vectors = vectors_for(self.variant, texts)
         self.center_ = vectors.mean(axis=0)
         self.scale_ = np.maximum(vectors.std(axis=0), 1e-4)
+        if self.head in ("landmark", "context"):
+            z = self.standardize(vectors)
+            if self.head == "context":
+                rank = min(12, len(z), z.shape[1])
+                self.project_ = PCA(n_components=rank, svd_solver="randomized", random_state=42).fit(z)
+                self.axes_scale_ = np.maximum(np.nan_to_num(np.sqrt(self.project_.explained_variance_)), 1e-3)
+            else:
+                self.landmarks_ = [Nystroem(gamma=width/z.shape[1], n_components=min(128, len(z)),
+                                           random_state=42).fit(z) for width in (.5, 2.)]
         self.familiarity_ = WordFamiliarity().fit(texts)
         distances = self.familiarity_.differences(rows)
         self.familiarity_scale_ = float(np.sqrt(np.mean(distances ** 2))) or 1.
         return self
 
+    def standardize(self, vectors):
+        return np.clip((vectors - self.center_) / self.scale_, -6., 6.)
+
     def semantic_blocks(self, rows, texts):
-        dense = vectors_for(self.variant, texts)
-        z = np.clip((dense - self.center_) / self.scale_, -6., 6.)
+        z = self.standardize(vectors_for(self.variant, texts))
         left, right = z[::2], z[1::2]
         delta = left - right
         scale = np.sqrt(z.shape[1])
         blocks = [csr_matrix(delta / scale)]
         if self.head == "quadratic":
             blocks.append(csr_matrix(delta * (left + right) / (2. * scale)))
+        elif self.head == "landmark":
+            for kernel in self.landmarks_:
+                mapped = kernel.transform(z)
+                blocks.append(csr_matrix((mapped[::2] - mapped[1::2]) / np.sqrt(len(self.landmarks_))))
+        elif self.head == "context":
+            axes = np.clip(self.project_.transform(z) / self.axes_scale_, -5., 5.)
+            a, b = axes[::2], axes[1::2]
+            # The midpoint is unchanged on a swap; every signed comparison reverses.
+            interaction = (.5*(a+b))[:, :, None] * (a-b)[:, None, :]
+            blocks.append(csr_matrix(interaction.reshape(len(rows), -1) / axes.shape[1]))
         familiarity = self.familiarity_.differences(rows) / self.familiarity_scale_
         blocks.append(csr_matrix(familiarity[:, None]))
         return blocks, 0

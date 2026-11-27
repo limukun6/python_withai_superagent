@@ -12,11 +12,12 @@ import numpy as np
 from scripts.cache_paired_encoders import configure_weights
 from scripts.unified_released_study import ROOT, env, read, require, save, sha
 from superagent.ab_methods import PREFERENCE_CATALOG_ENV
-from superagent.paired_encoder import NAMES
+from superagent.paired_encoder import BASE_HEADS, CONTEXT_HEADS
 from superagent.prediction_evidence import fingerprint
 
 
 PLAN = ROOT / "research/paired_encoder_search_1127/protocol.json"
+SECOND_PLAN = PLAN.with_name("context_protocol.json")
 
 
 def order_key(option):
@@ -35,10 +36,20 @@ def evaluate(members, columns, labels, incumbent):
 
 def run_study(args):
     agent = args.source / "titles/run/agent"
-    incumbent = read(agent/"final_selection.json")["single_candidate"]
-    winning = next(row for row in read(agent/"history.json") if row["candidate"]==incumbent)
-    require(winning["split_id"]=="primary","Expected a known primary baseline")
-    inherited = {"primary":agent/f"trial_{winning['trial']}.joblib", "confirmation_1":args.confirmed}
+    if args.reference_study:
+        previous = read(args.reference_study/"results.json")
+        require(previous["advance_to_raw_solve"] and len(previous["candidate_locked"])==1,
+                "A verified single-model reference is required for matched comparisons")
+        incumbent = previous["candidate_locked"][0]
+        inherited = {fold: args.reference_study/fold/incumbent/"trial.joblib"
+                     for fold in ("primary", "confirmation_1", "confirmation_2")}
+        methods, plan = CONTEXT_HEADS, SECOND_PLAN
+    else:
+        incumbent = read(agent/"final_selection.json")["single_candidate"]
+        winning = next(row for row in read(agent/"history.json") if row["candidate"]==incumbent)
+        require(winning["split_id"]=="primary" and args.confirmed is not None,"Expected matched reference runs")
+        inherited = {"primary":agent/f"trial_{winning['trial']}.joblib", "confirmation_1":args.confirmed}
+        methods, plan = BASE_HEADS, PLAN
     args.output.mkdir(parents=True, exist_ok=True)
     configure_weights(args.weights)
     settings = env(args.weights, args.output/"observed_fits.jsonl")
@@ -48,9 +59,9 @@ def run_study(args):
         split=read(agent/f"{name}_split.json")
         used[name]=set(split["held"])
     assert all(not (a & b) for a,b in combinations(used.values(),2))
-    save(args.output/"study_identity.json",dict(plan_sha256=sha(PLAN), baseline=incumbent,
+    save(args.output/"study_identity.json",dict(plan_sha256=sha(plan), baseline=incumbent,
          original_primary_sha256=sha(inherited["primary"]), original_confirmation_sha256=sha(inherited["confirmation_1"]),
-         visible_methods=sorted(NAMES)))
+         visible_methods=sorted(methods)))
 
     def fold_data(fold, names):
         payload=agent/f"{fold}.joblib"
@@ -91,9 +102,9 @@ def run_study(args):
             columns[name]=probs
         return columns,labels
 
-    columns,labels=fold_data("primary",[incumbent,*NAMES])
+    columns,labels=fold_data("primary",[incumbent,*methods])
     discovery=[evaluate([incumbent],columns,labels,incumbent)]
-    for name in sorted(NAMES):
+    for name in sorted(methods):
         for members in ([name],[incumbent,name]):
             discovery.append(evaluate(members,columns,labels,incumbent))
     choices=sorted(discovery[1:],key=order_key)[:2]
@@ -127,6 +138,6 @@ def run_study(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ("source","confirmed","output","weights","cache"):
-        p.add_argument("--"+name,required=True,type=lambda s:Path(s).resolve())
+    for name in ("source","confirmed","reference-study","output","weights","cache"):
+        p.add_argument("--"+name,required=name not in ("confirmed","reference-study"),type=lambda s:Path(s).resolve())
     run_study(p.parse_args())

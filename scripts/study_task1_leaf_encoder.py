@@ -10,10 +10,12 @@ from sklearn.model_selection import StratifiedGroupKFold
 from scripts.study_task1_candidates import ROLES, bound, paired
 from scripts.study_task1_tabm import elect
 from scripts.unified_released_study import ROOT, read, require, save, sha
-from superagent.joint_context import ContextTokenTree
+from superagent.field_interactions import InteractionTree
+from superagent.joint_context import ContextTokenTree, blocks
 from superagent.splits import sample_groups
 
 PLAN = ROOT / "research/task1_feedback_extension_1127/honest_leaf_encoder.json"
+ADAPTER = PLAN.with_name("leaf_encoder_adapter.json")
 NEIGHBOURS = (32, 96)
 METHODS = tuple(f"k{k}" for k in NEIGHBOURS)
 
@@ -57,7 +59,7 @@ def train(out):
     all_query = np.concatenate(panels)
     bounds = np.cumsum([0] + [len(p) for p in panels])
     corrections = {k: np.zeros(len(all_query)) for k in NEIGHBOURS}
-    shared = out / "leaf_encoder_components"
+    shared = out / "leaf_encoder_components_02"
     shared.mkdir(exist_ok=False)
     audit = []
     splitter = StratifiedGroupKFold(2, shuffle=True, random_state=73931)
@@ -65,7 +67,15 @@ def train(out):
         require(not set(groups[train_index]).intersection(groups[memory_index]), "Overlapping supervised encoder and memory")
         save(shared / f"fit_{i}.json", dict(protocol=sha(PLAN), inputs=sha(out / "inputs.json"),
              encoder_rows=len(train_index), memory_rows=len(memory_index)))
-        encoder = ContextTokenTree(dict(pair_limit=3)).fit(x[train_index], y[train_index])
+        try:
+            blocks(x[train_index])
+        except ValueError as exc:
+            if str(exc) != "No supported recurring profile and varying context":
+                raise
+            encoder = InteractionTree(dict(pair_limit=3, backbone_params=dict(depth=6, l2_leaf_reg=3.0)))
+        else:
+            encoder = ContextTokenTree(dict(pair_limit=3))
+        encoder.fit(x[train_index], y[train_index])
         require(np.array_equal(encoder.classes_, [0, 1]), "Unexpected probability order")
         cat = encoder.classifier
         tree_count = cat.tree_count_
@@ -79,8 +89,9 @@ def train(out):
         for k, values in estimates.items():
             corrections[k] += values / 2
         audit.append(dict(fold=i, encoder_rows=len(train_index), memory_rows=len(memory_index), trees=int(tree_count),
-                          sampled_trees=len(chosen), unique_reference_groups=len(set(groups[memory_index]))))
-    save(shared / "sealed.json", dict(protocol=sha(PLAN), inputs=sha(out / "inputs.json"), folds=audit,
+                          sampled_trees=len(chosen), encoder=type(encoder).__name__,
+                          unique_reference_groups=len(set(groups[memory_index]))))
+    save(shared / "sealed.json", dict(protocol=sha(PLAN), adapter=sha(ADAPTER), inputs=sha(out / "inputs.json"), folds=audit,
          classifier_fits=len(audit), indexed_reference_sets=len(audit), encoder_memory_group_overlap=0, api_requests=0))
     source = out / "trial_anchor"
     base = read(source / "sealed.json")

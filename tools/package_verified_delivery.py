@@ -104,6 +104,9 @@ def package(args):
         for name in ('task_contract.json', 'run_manifest.json', 'decisions.json', 'history.json',
                      'classifier_fits.json', 'events.jsonl', 'recovery_state.json', 'run_outcome.json', 'llm_usage.jsonl'):
             shutil.copyfile(agent / name, logs / name)
+        for name in ('analogy_review.json','analogy_incumbent.json','analogy_selection.json'):
+            if (agent/name).is_file():
+                shutil.copyfile(agent/name,logs/name)
         shutil.copyfile(args.run / 'titles/physical.jsonl', logs / 'observed_classifier_fits.jsonl')
         (tree / 'README.md').write_text(
             '# Released Task2 离线交接包\n\n'

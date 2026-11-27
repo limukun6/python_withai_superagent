@@ -17,19 +17,33 @@ def make(args):
           "resource_default":"resource-raw/resource_default","anonymous_default":"anonymous-choice/anonymous_default",
           "discovered":"discovered-raw/discovered","discovered_default":"discovered-ordinary/discovered_default",
           "original":"analogy-raw/original","revised":"analogy-raw/revised","close":"analogy-close-raw/close",
-          "portfolio_control":"analogy-portfolio-raw/portfolio_control","portfolio_revised":"analogy-portfolio-raw/portfolio_revised"}[args.arm]
+          "portfolio_control":"analogy-portfolio-raw/portfolio_control","portfolio_revised":"analogy-portfolio-raw/portfolio_revised",
+          "corrected_delivery":"corrected-delivery/corrected_delivery"}[args.arm]
     run=args.root/path
     plan=read(run/"protocol.json")
     sealed=read(run/"sealed.json")
     evidence=args.root/args.evaluation
     lock=read(evidence/"evaluation_lock.json")
     scored=read(evidence/"results.json")
-    require(sha(evidence/"evaluation_lock.json")==scored["lock_sha256"] and
-            lock["seals"][args.arm]==sha(run/"sealed.json"),"Score is not bound to this run")
+    require(sha(evidence/"evaluation_lock.json")==scored["lock_sha256"],"Evaluation lock changed")
+    scored_arm=args.arm
+    if args.arm=="corrected_delivery":
+        comparison=read(run/"comparison.json")
+        scored_arm="portfolio_revised"
+        previous=args.root/"analogy-portfolio-raw"/scored_arm
+        require(comparison["identical_predictions"] and not comparison["designated_labels_opened"]
+                and comparison["input_seal"]==sha(run/"sealed.json")
+                and comparison["original_seal"]==sha(previous/"sealed.json")==lock["seals"][scored_arm]
+                and comparison["previous_score"]==sha(evidence/"results.json")
+                and read(previous/"sealed.json")["prediction_sha256"]==sealed["prediction_sha256"],
+                "The earlier score requires identical sealed predictions in the same row order")
+        lock={**lock,"corrected_run_seal":comparison["input_seal"],"prediction_equivalence":sha(run/"comparison.json")}
+    else:
+        require(lock["seals"][args.arm]==sha(run/"sealed.json"),"Score is not bound to this run")
     require(source_identity(args.source)==plan["runtime_sha256"] and sha(args.features)==plan["features_sha256"] and
             sha(run/"delivery/predictions.csv")==sealed["prediction_sha256"] and sealed["independent_reload"],
             "Runtime, features or predictions differ")
-    measure=scored["completed"][args.arm]
+    measure=scored["completed"][scored_arm]
     env=dict(os.environ)
     models={s["env"]:s["model"] for s in ALTERNATIVES.values()}
     models.update({DEEP_ENV:DEEP_MODEL,"SUPERAGENT_MINILM_WEIGHTS":MODEL})
@@ -57,7 +71,7 @@ def make(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered","discovered_default","original","revised","close","portfolio_control","portfolio_revised"),required=True)
+    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","discovered","discovered_default","original","revised","close","portfolio_control","portfolio_revised","corrected_delivery"),required=True)
     p.add_argument("--evaluation",choices=("frontier_scores","followup_scores","portfolio_scores","delivery_scores","anonymous-choice-scores","discovered-raw-scores","discovered-ordinary-scores","analogy-raw-scores","analogy-close-scores","analogy-portfolio-scores"),
                    default="delivery_scores")
     for name in ("root","features","weights","notices","source","output"):

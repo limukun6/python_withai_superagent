@@ -17,7 +17,11 @@ PLAN=ROOT/'research/paired_encoder_search_1127/analogy_raw_protocol.json'
 
 def run(root, impl, source, features, arm):
     limit=16
-    if arm.startswith('portfolio_'):
+    if arm=='corrected_delivery':
+        study=ROOT/'research/paired_encoder_search_1127/corrected_delivery_protocol.json'
+        folder=root/'corrected-delivery'/arm
+        limit=22
+    elif arm.startswith('portfolio_'):
         study=ROOT/'research/paired_encoder_search_1127/portfolio_adviser_raw_protocol.json'
         require(read(root/'analogy-portfolio-complement/results.json')['advance'],'Portfolio study did not earn a raw comparison')
         folder=root/'analogy-portfolio-raw'/arm
@@ -69,6 +73,18 @@ def run(root, impl, source, features, arm):
             and sha(prediction)==sha(replay) and sha(agent/selected['model_file'])==selected['model_sha256'],'Incomplete raw delivery')
     lock(folder/'sealed.json',dict(protocol_sha256=sha(folder/'protocol.json'),prediction_sha256=sha(prediction),model_sha256=selected['model_sha256'],
         members=outcome['members'],rows=selected['training_rows'],fits=count,opened=observed,independent_reload=True,api=outcome['new_api_requests']))
+    if arm=='corrected_delivery':
+        prior=ROOT/'research/paired_encoder_search_1127/portfolio_adviser_seal.json'
+        scored=ROOT/'research/paired_encoder_search_1127/portfolio_adviser_score.json'
+        earlier=read(scored)['completed']['portfolio_revised']
+        with prediction.open() as stream:
+            rows=sum(1 for _ in stream)-1
+        require(rows==earlier['rows'],'Incomplete prediction output')
+        identical=(sha(prediction)==read(prior)['prediction_sha256'])
+        lock(folder/'comparison.json',dict(input_seal=sha(folder/'sealed.json'),original_seal=sha(prior),previous_score=sha(scored),
+             rows=rows,identical_predictions=identical,carried_correct=earlier['correct'] if identical else None,
+             carried_accuracy=earlier['accuracy'] if identical else None,designated_labels_opened=False,
+             official_test_opened=False,H2_opened=False))
     print(arm,count,outcome['members'],read(folder/'sealed.json')['prediction_sha256'],flush=True)
 
 
@@ -76,6 +92,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('root','impl','course','features'):
         parser.add_argument('--'+name,type=lambda v:Path(v).resolve(),required=True)
-    parser.add_argument('--arm',choices=('original','revised','close','portfolio_control','portfolio_revised'),required=True)
+    parser.add_argument('--arm',choices=('original','revised','close','portfolio_control','portfolio_revised','corrected_delivery'),required=True)
     args=parser.parse_args()
     run(args.root,args.impl,args.course,args.features,args.arm)

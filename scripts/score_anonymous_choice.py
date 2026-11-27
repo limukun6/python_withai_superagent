@@ -12,11 +12,11 @@ PATHS={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier","fr
        "auto_portfolio":"auto-raw/auto_portfolio","resource_default":"resource-raw/resource_default"}
 
 
-def score(root,course,portfolio=False):
-    series="anonymous-large" if portfolio else "anonymous-choice"
+def score(root,course,portfolio=False,discovery=False):
+    series="discovered-raw" if discovery else "anonymous-large" if portfolio else "anonymous-choice"
     output=root/(series+"-scores")
     output.mkdir(exist_ok=True)
-    name="anonymous_portfolio" if portfolio else "anonymous_default"
+    name="discovered" if discovery else "anonymous_portfolio" if portfolio else "anonymous_default"
     run=root/series/name
     audit_path=root/series/"alias_audit.json"
     audit=read(audit_path)["new_cases"]["task2"]
@@ -85,6 +85,7 @@ if __name__=="__main__":
     for key in ("root","course"):
         p.add_argument("--"+key,type=lambda s:Path(s).resolve(),required=True)
     p.add_argument("--portfolio-only",action="store_true")
+    p.add_argument("--discovery",action="store_true")
     args=p.parse_args()
-    row=next(iter(score(args.root,args.course,args.portfolio_only)["completed"].values()))
+    row=next(iter(score(args.root,args.course,args.portfolio_only or args.discovery,args.discovery)["completed"].values()))
     print(row["correct"],row["rows"],row["identical_to"],row["trace"]["members"])

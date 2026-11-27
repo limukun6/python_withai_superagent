@@ -149,15 +149,17 @@ if __name__=="__main__":
     for key in ("root","weights"):
         p.add_argument("--"+key,required=True,type=lambda s:Path(s).resolve())
     p.add_argument("--portfolio-only",action="store_true")
+    p.add_argument("--discovery",action="store_true")
     args=p.parse_args()
     activate_resource_directory(args.weights)
-    if args.portfolio_only:
-        out=args.root/"anonymous-large"
-        result=audit(out/"anonymous_portfolio")
+    if args.portfolio_only or args.discovery:
+        out=args.root/("discovered-raw" if args.discovery else "anonymous-large")
+        result=audit(out/("discovered" if args.discovery else "anonymous_portfolio"))
+        protocol="discovery_protocol.json" if args.discovery else "anonymous_portfolio_protocol.json"
         require(result["automatic_finalist_race"] and result["matched_opaque_replays"]==3*result["decisions"],
                 "Expanded-budget decisions were not independently reconstructed")
         save(out/"alias_audit.json",dict(new_cases={"task2":result},salts=list(SALTS),
-             protocol_sha256=sha(ROOT/"research/paired_encoder_search_1127/anonymous_portfolio_protocol.json"),
+             protocol_sha256=sha(ROOT/"research/paired_encoder_search_1127"/protocol),
              external_targets_opened=False,new_model_api_requests=0))
         print(result["decisions"],result["matched_opaque_replays"],result["actual_classifier_fits"])
         raise SystemExit(0)

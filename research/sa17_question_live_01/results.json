@@ -1,0 +1,140 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "case": "U1",
+      "status": "passed",
+      "controlled_question_activated": true,
+      "expected_acceptance": true,
+      "actual_acceptance": true,
+      "executor_mechanism_matches_expectation": true,
+      "resolution": {
+        "version": "scoped-questions-v1",
+        "items": [
+          {
+            "field": "positive_label",
+            "question": "No positive class is specified.",
+            "evidence_refs": [
+              "doc:README.md:0"
+            ],
+            "status": "not_required_for_compiled_task",
+            "reason": "multiclass_metric_has_no_single_positive_class",
+            "decision_source": "executor_decoded_training_kind_and_metric",
+            "facts": {
+              "task_kind": "numeric_tabular",
+              "metric": "balanced_accuracy",
+              "class_count": 3,
+              "positive_label_declared": false
+            }
+          }
+        ],
+        "status": "all_reported_questions_not_required",
+        "semantic_truth_certified": false
+      },
+      "diagnostics": [],
+      "error": null,
+      "non_document_members_read": [
+        "observations.npy",
+        "decisions.npy",
+        "arrivals.npy",
+        "arrivals.npy"
+      ],
+      "real_API_requests": 1,
+      "known_course_cost_rmb": 0.005791,
+      "actual_classifier_fits": 0,
+      "elapsed_seconds": 15.890999999945052
+    },
+    {
+      "case": "U2",
+      "status": "passed",
+      "controlled_question_activated": true,
+      "expected_acceptance": false,
+      "actual_acceptance": false,
+      "executor_mechanism_matches_expectation": true,
+      "resolution": null,
+      "diagnostics": [
+        {
+          "stage": "contract_probe",
+          "code": "ContractProbeError",
+          "message": "Unresolved required task semantics: positive_label",
+          "uncertainty_fields": [
+            "positive_label"
+          ],
+          "uncertainty_dependency": {
+            "task_kind": "numeric_tabular",
+            "metric": "roc_auc",
+            "class_count": 2,
+            "positive_label_declared": false
+          }
+        }
+      ],
+      "error": {
+        "type": "UnsupportedFormat",
+        "message": "Semantic contract probe did not pass within the shared repair allowance"
+      },
+      "non_document_members_read": [
+        "observations.npy",
+        "decisions.npy"
+      ],
+      "real_API_requests": 1,
+      "known_course_cost_rmb": 0.007135,
+      "actual_classifier_fits": 0,
+      "elapsed_seconds": 24.78200000000652
+    },
+    {
+      "case": "U3",
+      "status": "passed",
+      "controlled_question_activated": true,
+      "expected_acceptance": false,
+      "actual_acceptance": false,
+      "executor_mechanism_matches_expectation": true,
+      "resolution": null,
+      "diagnostics": [
+        {
+          "stage": "contract_probe",
+          "code": "ContractProbeError",
+          "message": "Unresolved required task semantics: target",
+          "uncertainty_fields": [
+            "target"
+          ],
+          "uncertainty_dependency": {
+            "required_by": "core_task_contract"
+          }
+        }
+      ],
+      "error": {
+        "type": "UnsupportedFormat",
+        "message": "Semantic contract probe did not pass within the shared repair allowance"
+      },
+      "non_document_members_read": [],
+      "real_API_requests": 1,
+      "known_course_cost_rmb": 0.004296999999999999,
+      "actual_classifier_fits": 0,
+      "elapsed_seconds": 11.170999999972992
+    }
+  ],
+  "actual_classifier_fits": 0,
+  "real_API_requests": 3,
+  "known_course_cost_rmb": 0.017223,
+  "ledger_before": {
+    "requests": 482,
+    "known_course_cost_rmb": 8.112218,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "ledger_after": {
+    "requests": 485,
+    "known_course_cost_rmb": 8.129441,
+    "unresolved_requests": 16,
+    "pending_requests": 0,
+    "complete_course_cost_rmb": null,
+    "actual_account_debit_rmb": null
+  },
+  "historical_rows_unchanged": true,
+  "elapsed_seconds": 51.875,
+  "course_budget_compliance": "unverified_history",
+  "scope": "controlled field activation, not natural unknown-task or accuracy/cost-saving evidence",
+  "source_unchanged": true
+}

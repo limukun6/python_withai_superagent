@@ -1,5 +1,17 @@
 # 实验持续工作记录
 
+## 2026-11-27：SA17字段疑问＋执行依赖核对完成，受控3/3
+
+基线1ecc4c9。新增task_questions.py：LLM报告{field,question,evidence_refs}，程序根据实际类别/指标/类型决定是否必需；不让模型自报低风险，不按文本关键词跳过。新协议task-v3/native-v2/output-v2，老空列表兼容、旧非空文字仍阻断；18个reader＋resolution摘要入缓存/迁移。292/292相关检查23.047秒、0fit/API（18新＋274原）。
+
+改前封存SA15原拒绝提案：plan与后来接受plan完全一致，历史修复25.25秒/¥.005597。改后旧文字仍阻断；开发者显式字段化的事后回放可接受，不冒充原模型回复或已省费用。
+
+三例受控真实Flash接口各1请求、0fit：U1实际3类balanced_accuracy的positive_label疑问保留并通过；U2实际2类ROC-AUC的正类疑问阻断；U3 target未定在读取数组前阻断。3/3指按预期判定，不是3个训练任务交付。输入6939/输出2571，¥.017223/51.875秒。独立审计回复/usage/真ledger绑定、U3读前阻断、真实U1新协议缓存与显式迁移一致；0新fit/API。报告batches/SA17_scoped_questions_results_20261127_zh.md；证据research/sa17_question_live_01、sa17_question_audit_01。
+
+账本485/known8.129441/unknown16/pending0，原行SHA/null保留。SA7–SA17累计26fit/24API/¥.163046，无队列、未冻结。未证明自然任务省钱/准确率/字段误标可自动识别；仅两个已实现可核对的非必需字段，其他疑问保守阻断。
+
+下一优先：结构元数据工具（NPY/NPZ shape/dtype/keys及图像结构，不披露行值/预测标签），再冻结后引入独立自然任务，别重复同一Iris包装充当泛化。旧16未知不再问，新未知停当批付费。
+
 ## 2026-11-27：SA16人用CLI默认auto，补“本地可读但输出未理解”
 
 SA15已推送b620b83。SA16改前封存两微案例：本地都读入输入，完整输出0/2。CLI train/solve和superagent unified默认auto：有模型client和文档则读题，显式manifest只允许输出overlay；显式fallback/proactive、程序化API旧默认、legacy和local/control对照保留。无client/无文档日志说明本地，预检失败/blocked/耗尽不冒称已完成模型复核。274/274零fit/API检查13.063秒，模拟机制两例修后2/2（不是两次真实模型样本）。

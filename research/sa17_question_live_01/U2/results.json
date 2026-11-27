@@ -1,0 +1,37 @@
+{
+  "case": "U2",
+  "status": "passed",
+  "controlled_question_activated": true,
+  "expected_acceptance": false,
+  "actual_acceptance": false,
+  "executor_mechanism_matches_expectation": true,
+  "resolution": null,
+  "diagnostics": [
+    {
+      "stage": "contract_probe",
+      "code": "ContractProbeError",
+      "message": "Unresolved required task semantics: positive_label",
+      "uncertainty_fields": [
+        "positive_label"
+      ],
+      "uncertainty_dependency": {
+        "task_kind": "numeric_tabular",
+        "metric": "roc_auc",
+        "class_count": 2,
+        "positive_label_declared": false
+      }
+    }
+  ],
+  "error": {
+    "type": "UnsupportedFormat",
+    "message": "Semantic contract probe did not pass within the shared repair allowance"
+  },
+  "non_document_members_read": [
+    "observations.npy",
+    "decisions.npy"
+  ],
+  "real_API_requests": 1,
+  "known_course_cost_rmb": 0.007135,
+  "actual_classifier_fits": 0,
+  "elapsed_seconds": 24.78200000000652
+}

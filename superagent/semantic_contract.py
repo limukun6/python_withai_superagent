@@ -20,11 +20,11 @@ from .metrics import MetricSpec
 from .record_streams import decode_records, fields, scalar
 
 
-VERSION = 'semantic-task-v2'
+VERSION = 'semantic-task-v3'
 INSTRUCTION = (
     'Interpret the classification task jointly from the supplied document blocks. '
     'Resolve paraphrases and cross-sentence definitions; lexical identity is not required. '
-    'Return JSON with exactly version="semantic-task-v2", plan, evidence, uncertainties. '
+    'Return JSON with exactly version="semantic-task-v3", plan, evidence, uncertainties. '
     'plan has exactly training, prediction, target, columns, metric, positive_label, split, output. '
     'training and prediction have member, collection, delimiter (null where unused). '
     'prediction may additionally carry field_map mapping canonical feature names to actual prediction fields. '
@@ -125,20 +125,22 @@ def _diagnostic(error, stage):
                   'Prediction records do not match the frozen model')
     if not (isinstance(error,ContractProbeError) or message.startswith('Output contract:') or message in structural):
         message = 'Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation'
-    return dict(stage=stage,code=type(error).__name__,message=message[:700])
+    diagnostic=dict(stage=stage,code=type(error).__name__,message=message[:700])
+    if getattr(error,'uncertainty_fields',None):diagnostic['uncertainty_fields']=error.uncertainty_fields
+    if getattr(error,'uncertainty_dependency',None):diagnostic['uncertainty_dependency']=error.uncertainty_dependency
+    return diagnostic
 
 
 def compile_plan(files, workspace, response, *, prediction_files=None):
     """Actually decode training rows and compile a replayable existing input recipe."""
     _require(isinstance(response, dict) and set(response) == {'version','plan','evidence','uncertainties'},
              'Malformed semantic response envelope')
-    _require(response['version'] in (VERSION, 'semantic-task-v1'), 'Unknown semantic response version')
-    _require(isinstance(response['uncertainties'], list)
-             and all(isinstance(s, str) for s in response['uncertainties']), 'Invalid uncertainty list')
-    _require(not response['uncertainties'], 'Unresolved required task semantics')
+    _require(response['version'] in (VERSION, 'semantic-task-v2','semantic-task-v1'), 'Unknown semantic response version')
+    from .task_questions import parse_questions,resolve_questions
+    questions=parse_questions(response,workspace)
     plan, evidence = response['plan'], response['evidence']
     required = {'training','prediction','target','columns','metric','positive_label','split'}
-    if response['version'] == VERSION: required.add('output')
+    if response['version'] in (VERSION,'semantic-task-v2'): required.add('output')
     _require(isinstance(plan, dict) and set(plan) == required, 'Malformed adaptation plan')
     _require(isinstance(evidence, dict), 'Missing task evidence citations')
     known = {d['id'] for d in workspace['documents']}
@@ -218,6 +220,7 @@ def compile_plan(files, workspace, response, *, prediction_files=None):
     spec['goal_sources']['primary_metric'] = 'declared_task_readme'
     task = TrainingTask(kind, x, y, spec)
     metric = MetricSpec.for_task(task)
+    resolve_questions(task,response,questions)
     if plan.get('output') is not None:
         refs = evidence.get('output')
         _require(isinstance(refs, list) and refs and all(isinstance(r, str) and r in known for r in refs),
@@ -309,12 +312,14 @@ def probe_prediction_input(path, task, log=None):
 
 def _output_overlay(task, workspace, response):
     _require(isinstance(response,dict) and set(response)=={'version','output','evidence_refs','uncertainties'}
-             and response['version']=='semantic-output-v1', 'An explicit input contract permits only an output overlay')
-    _require(response['uncertainties']==[], 'Unresolved output semantics')
+             and response['version'] in ('semantic-output-v1','semantic-output-v2'), 'An explicit input contract permits only an output overlay')
+    from .task_questions import parse_questions,resolve_questions
+    questions=parse_questions(response,workspace)
     refs = response['evidence_refs']; known = {d['id'] for d in workspace['documents']}
     _require(isinstance(refs,list) and all(isinstance(r,str) and r in known for r in refs)
              and (response['output'] is None or refs), 'Missing or fabricated output citations')
     result = TrainingTask(task.kind, task.X_train, task.y_train, deepcopy(task.spec))
+    resolve_questions(result,response,questions)
     if response['output'] is not None:
         from .output_recipe import validate_recipe
         result.spec['output_recipe'] = validate_recipe(response['output'],list(MetricSpec.for_task(task).labels))
@@ -344,14 +349,16 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             if client.blocked or client.request_count >= client.max_requests:
                 break
             from .native_semantics import INSTRUCTION as NATIVE_INSTRUCTION
+            from .task_questions import INSTRUCTION as QUESTION_INSTRUCTION,SCHEMA as QUESTION_SCHEMA
             instruction = INSTRUCTION + ' ' + NATIVE_INSTRUCTION
             if base_task is not None:
                 instruction = ('The explicit input/target/metric contract is authoritative. Interpret only submission requirements. '
-                    'Return exactly {version:"semantic-output-v1",output:<output-csv-v1 recipe or null>,evidence_refs:[],uncertainties:[]}. '
+                    'Return exactly {version:"semantic-output-v2",output:<output-csv-v1 recipe or null>,evidence_refs:[],uncertainties:<field-scoped question list>}. '
                     'Do not replace task fields. ' + INSTRUCTION.split(' output is null',1)[1] +
                     ' You may request the same inspect_header tool before replying.')
-            payload = dict(instruction=instruction, evidence_workspace=workspace, diagnostic=diagnostic,
+            payload = dict(instruction=instruction+' '+QUESTION_INSTRUCTION, evidence_workspace=workspace, diagnostic=diagnostic,
                            tool_observations=observations, output_contract_schema=deepcopy(OUTPUT_SCHEMA),
+                           uncertainty_schema=deepcopy(QUESTION_SCHEMA),
                            inspection_source_rule='Explicit source is respected. If omitted, a member must occur in only one package; duplicate names require source. Use prediction for external query headers.')
             if base_task is not None:
                 payload['authoritative_contract'] = dict(input_schema=base_task.spec.get('input_schema'),
@@ -373,7 +380,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                     continue
                 if base_task is not None:
                     task=_output_overlay(base_task,workspace,response)
-                elif isinstance(response,dict) and response.get('version')=='semantic-native-v1':
+                elif isinstance(response,dict) and response.get('version') in ('semantic-native-v1','semantic-native-v2'):
                     from .native_semantics import compile_native
                     task=compile_native(files,workspace,response,prediction_files=query_files)
                 else:
@@ -398,7 +405,8 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
             if log:
                 if preflight is not None: log.write_json('prediction_preflight.json',preflight)
                 log.write_json('semantic_contract.json', dict(proposal=response, source_citations_checked=True,
-                    semantic_truth_certified=False, probe='passed', attempt=attempt, structure_steps=tool_steps))
+                    semantic_truth_certified=False, probe='passed', attempt=attempt, structure_steps=tool_steps,
+                    uncertainty_resolution=task.spec.get('uncertainty_resolution')))
                 log.event('semantic_contract_accepted', attempt=attempt, task_kind=task.kind,
                           training_rows=len(task.y_train))
                 from .semantic_artifact import write_artifact,last_usage,ArtifactUnavailable

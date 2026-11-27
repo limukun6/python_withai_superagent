@@ -68,11 +68,11 @@ def migrate(package,prediction,accepted_receipt,ledger_path,destination):
     from contextlib import ExitStack
     with ExitStack() as stack:
         files=stack.enter_context(package_files(package));workspace=evidence_workspace(files)
-        if proposal.get('version')=='semantic-output-v1':
+        if proposal.get('version') in ('semantic-output-v1','semantic-output-v2'):
             try:base=load_training_task(package,read_declarations=True)
             except DECODE_ERRORS:base=adapt_training(package)
             task=_output_overlay(base,workspace,proposal)
-        elif proposal.get('version')=='semantic-native-v1':
+        elif proposal.get('version') in ('semantic-native-v1','semantic-native-v2'):
             from superagent.native_semantics import compile_native
             other=stack.enter_context(package_files(prediction)) if prediction is not None and Path(prediction).resolve()!=Path(package).resolve() else None
             task=compile_native(files,workspace,proposal,prediction_files=other)

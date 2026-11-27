@@ -12,7 +12,7 @@ VERSION='semantic-artifact-v1'
 MAX_BYTES=1024*1024
 READERS=('semantic_artifact.py','semantic_contract.py','format_intake.py','format_sources.py',
          'record_streams.py','schema.py','native_schema.py','data.py','metrics.py','metric_declarations.py',
-         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py','native_semantics.py')
+         'table_input.py','task_files.py','shared_table.py','image_files.py','folder_images.py','output_recipe.py','native_semantics.py','task_questions.py')
 
 
 class ArtifactUnavailable(ValueError):pass
@@ -54,7 +54,8 @@ def task_digest(task):
     return digest(dict(kind=task.kind,X=array_digest(task.X_train),y=array_digest(task.y_train),
         input_schema=task.spec.get('input_schema'),metric=MetricSpec.for_task(task).record(),
         positive_label=task.spec.get('positive_label'),input_recipe=task.spec.get('input_recipe'),native_input_recipe=task.spec.get('native_input_recipe'),
-        output_recipe=task.spec.get('output_recipe'),evaluation_protocol=task.spec.get('evaluation_protocol')))
+        output_recipe=task.spec.get('output_recipe'),evaluation_protocol=task.spec.get('evaluation_protocol'),
+        uncertainty_resolution=task.spec.get('uncertainty_resolution')))
 
 
 def last_usage(log):
@@ -116,11 +117,11 @@ def load_artifact(path,package,prediction_package=None,log=None):
     from contextlib import ExitStack
     with ExitStack() as stack:
         files=stack.enter_context(package_files(package));workspace=evidence_workspace(files)
-        if payload['proposal'].get('version')=='semantic-output-v1':
+        if payload['proposal'].get('version') in ('semantic-output-v1','semantic-output-v2'):
             try:base=load_training_task(package,read_declarations=True)
             except DECODE_ERRORS:base=adapt_training(package)
             task=_output_overlay(base,workspace,payload['proposal'])
-        elif payload['proposal'].get('version')=='semantic-native-v1':
+        elif payload['proposal'].get('version') in ('semantic-native-v1','semantic-native-v2'):
             from .native_semantics import compile_native
             other=stack.enter_context(package_files(query)) if query is not None and mode=='external' else None
             task=compile_native(files,workspace,payload['proposal'],prediction_files=other)

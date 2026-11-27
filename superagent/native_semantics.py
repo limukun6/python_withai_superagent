@@ -14,11 +14,11 @@ from .metrics import MetricSpec
 from .schema import load_manifest_split,read_manifest
 from .task_files import TrainingMembers,evaluation_path
 
-VERSION='semantic-native-v1'
+VERSION='semantic-native-v2'
 RECIPE_VERSION='semantic-native-input-v1'
 INSTRUCTION=(
     'For numeric numpy arrays or class-folder images without manifest.json you may instead return '
-    '{version:"semantic-native-v1",plan:{modality,training,prediction,metric,positive_label,image_preprocessing,output},'
+    '{version:"semantic-native-v2",plan:{modality,training,prediction,metric,positive_label,image_preprocessing,output},'
     'evidence:{training:[],target:[],modality:[],metric:[],prediction:[],positive_label:[],image_preprocessing:[],output:[]},uncertainties:[]}. '
     'modality is tabular or image. training/prediction are existing reader descriptors, NOT code: '
     'npy training={format:"npy",path:<feature member>,target_path:<label member>}, prediction={format:"npy",path}; '
@@ -90,9 +90,10 @@ def manifest_for(recipe,split):
 
 def compile_native(files,workspace,response,*,prediction_files=None):
     require(not explicit_manifest(files),'explicit manifest cannot be overridden')
-    require(isinstance(response,dict) and set(response)=={'version','plan','evidence','uncertainties'} and response['version']==VERSION,
+    require(isinstance(response,dict) and set(response)=={'version','plan','evidence','uncertainties'} and response['version'] in (VERSION,'semantic-native-v1'),
             'invalid response envelope')
-    require(response['uncertainties']==[],'unresolved required semantics')
+    from .task_questions import parse_questions,resolve_questions
+    questions=parse_questions(response,workspace)
     plan=response['plan'];keys={'modality','training','prediction','metric','positive_label','image_preprocessing','output'}
     require(isinstance(plan,dict) and set(plan)==keys,'invalid plan fields')
     require(plan['modality'] in ('tabular','image') and isinstance(plan['metric'],str),'explicit modality/metric required')
@@ -122,12 +123,13 @@ def compile_native(files,workspace,response,*,prediction_files=None):
     kind,x,y,spec=load_manifest_split(archive,manifest_for(recipe,'train'),'train')
     require(len(np.unique(y))>=2,'training requires two observed classes')
     if plan['positive_label'] is not None and y.dtype.kind in 'US':spec['positive_label']=str(plan['positive_label'])
-    spec.update(native_input_recipe=recipe,semantic_interpretation=dict(version=VERSION,evidence=deepcopy(evidence),
+    spec.update(native_input_recipe=recipe,semantic_interpretation=dict(version=response['version'],evidence=deepcopy(evidence),
                 claims_status='source_citations_checked; interpretation_requires_evaluation'))
     spec['goal_sources']['primary_metric']='declared_task_readme'
     # Preserve source meaning separately from inference-time columns.
     spec['semantic_target_source']=training.get('target_path',training.get('target_key','immediate_class_directory'))
     task=TrainingTask(kind,x,y,spec);metric=MetricSpec.for_task(task)
+    resolve_questions(task,response,questions)
     if plan['output'] is not None:
         from .output_recipe import validate_recipe
         spec['output_recipe']=validate_recipe(plan['output'],list(metric.labels));spec['output_recipe_evidence']=deepcopy(evidence['output'])

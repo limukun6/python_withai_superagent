@@ -98,5 +98,26 @@ class SemanticMigrationTests(unittest.TestCase):
         (self.run/'semantic_artifact.json').unlink();metadata=self.migrate()
         self.assertEqual(metadata['provider_provenance']['original_source_binding'],'not_recorded_in_legacy_receipt')
 
+    def test_three_scoped_question_versions_migrate_with_bound_synthetic_receipts(self):
+        from tests.test_auto_semantics import standard_case
+        for i,version in enumerate(['semantic-native-v2','semantic-task-v3','semantic-output-v2']):
+            directory=self.root/f'new_version_{i}';directory.mkdir()
+            if version=='semantic-native-v2':self.task,self.query,answer,_=npy_case(directory)
+            else:
+                self.task,answer,_=standard_case(directory/'task.zip',version=='semantic-output-v2');self.query=self.task
+            answer.update(version=version,uncertainties=[dict(field='positive_label',question='No positive class is supplied.',evidence_refs=['doc:README.md:0'])])
+            self.run=directory/'original';self.run.mkdir()
+            resolve_training_task(self.task,Client([answer]),RunLogger(self.run),mode='proactive',prediction_package=self.query)
+            self.key=self.ledger.reserve('fixture',.02,'SYNTHETIC',self.model);self.ledger.settle(self.key,self.model,100,30)
+            with self.ledger._db() as db:units=db.execute('SELECT course_units FROM requests WHERE id=?',(self.key,)).fetchone()[0]
+            self.events=[dict(kind='llm_request',role='task_semantic_interpretation',budget_request_id=self.key),
+                         dict(kind='llm_response',content=json.dumps(answer)),dict(kind='semantic_contract_accepted',attempt=1)]
+            self.usage=[dict(event='llm_call',budget_request_id=self.key,input_tokens=100,output_tokens=30,
+                             served_model=self.model,course_cost_rmb=units/1e9,persistent_settlement_complete=True)]
+            self.write();self.destination=directory/'new_artifact.json';metadata=self.migrate()
+            restored=load_artifact(self.destination,self.task,self.query)
+            self.assertEqual(restored.spec['uncertainty_resolution']['status'],'all_reported_questions_not_required')
+            self.assertEqual(metadata['provider_provenance']['original_request_id'],self.key)
+
 
 if __name__=='__main__':unittest.main()

@@ -1,5 +1,7 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+**11月27日，字段疑问由实际任务判定是否阻断。** LLM报告问题字段，执行器核对类别数、指标和类型，保留不适用的疑问继续执行。292项检查，真实受控面板1放行/2阻断均符合预期，0fit/3API/课程¥0.017223；尚未证明自然任务节省费用。[结构、原始误阻断与证据边界](docs/batches/SA17_scoped_questions_results_20261127_zh.md)
+
 **11月27日，人用CLI默认自动读题。** 本地能读输入也会在模型已配置且有文档时复核输出要求；显式manifest输入保持权威。274项检查，裸solve自主完成原ID、三类映射、指定类别概率和管道/BOM输出，2fit/2API/课程¥0.008978、27.781秒。程序化API和显式fallback保留旧默认，不代表独立未知任务全成功。[结构、兼容约定和实际证据](docs/batches/SA16_auto_semantic_review_results_20261127_zh.md)
 
 **11月27日，无manifest数组与图像任务接入通过。** LLM从原文选择非标准NPZ成员/键、图像目录、指标和像素处理；正式proactive solve两条首次提案均通过。245项检查，新增4fit/2API/课程¥0.015720，54行新进程预测逐字节一致。结果是开发输入覆盖改善，未比较准确率。[结构与证据边界](docs/batches/SA14_native_semantics_results_20261127_zh.md)

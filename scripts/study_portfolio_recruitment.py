@@ -30,8 +30,8 @@ from superagent.splits import sample_groups, take
 PLAN=ROOT/"research/paired_encoder_search_1127/recruitment_protocol.json"
 
 
-def prepare(root,control):
-    out=root/"portfolio-recruitment"
+def prepare(root,control,*,out=None,fold_index=0,comparison_only=False,plan=PLAN,trigger=None):
+    out=out or root/"portfolio-recruitment"
     out.mkdir(exist_ok=True)
     library=root/"arctic-library"
     specs=inventory(library)
@@ -44,11 +44,19 @@ def prepare(root,control):
     info={}
     for name,kind,metric,rows,y in (("comparison","pair_text","accuracy",d["X_train"],np.asarray(d["y_train"])),
             ("table","numeric_tabular","macro_f1",wine.data,wine.target)):
+        if name=="table" and comparison_only:
+            continue
         folder=out/name
         folder.mkdir(exist_ok=True)
         groups=sample_groups(TrainingTask(kind,rows,y),"shared_text")
         splits=StratifiedGroupKFold(5,shuffle=True,random_state=seed)
-        fit,held=next(splits.split(groups,y,groups))
+        assignments=list(splits.split(groups,y,groups))
+        fit,held=assignments[fold_index]
+        if fold_index:
+            original=read(root/"portfolio-recruitment/inputs.json")["cases"][name]
+            previous=assignments[0][1]
+            require(fingerprint(previous)==original["held"] and not set(groups[previous])&set(groups[held]),
+                    "New audit groups overlap the previous audit")
         require(not set(groups[fit])&set(groups[held]),"Overlap across outer groups")
         p,q,truth=folder/"p.zip",folder/"q.zip",folder/"truth.joblib"
         if not p.exists():
@@ -88,13 +96,13 @@ def prepare(root,control):
             with np.load(f,allow_pickle=False) as z:
                 require(set(z["keys"].tolist())==allowed,"Cache contains outer texts")
         info[name]["fit_vector_texts"]=len(allowed)
-    lock(out/"inputs.json",dict(plan=sha(PLAN),trigger=sha(sealed),seed=seed,cases=info,
+    lock(out/"inputs.json",dict(plan=sha(plan),trigger=sha(trigger or sealed),seed=seed,cases=info,
         control=source_identity(control),challenger=source_identity(ROOT),resources=sorted(specs),fit_cap=32,seconds=1800))
     print({n:(v["fit_rows"],v["held_rows"]) for n,v in info.items()},flush=True)
 
 
-def solve(root,control,case,arm):
-    out=root/"portfolio-recruitment"
+def solve(root,control,case,arm,*,out=None,library=None):
+    out=out or root/"portfolio-recruitment"
     plan=read(out/"inputs.json")
     impl=control if arm=="control" else ROOT
     folder=out/case
@@ -103,7 +111,7 @@ def solve(root,control,case,arm):
             "Changed source or inputs")
     base=folder/arm
     base.mkdir(exist_ok=False)
-    library=root/"arctic-library"
+    library=library or root/"arctic-library"
     require(sorted(inventory(library))==plan["resources"],"Changed resource inventory")
     physical=base/"physical.jsonl"
     settings=env(library,physical)
@@ -159,11 +167,11 @@ def solve(root,control,case,arm):
     print(case,arm,count,outcome["members"],protected,flush=True)
 
 
-def score(root,case):
-    out=root/"portfolio-recruitment"
+def score(root,case,*,out=None,own_incumbent_only=False):
+    out=out or root/"portfolio-recruitment"
     folder=out/case
     info=read(out/"inputs.json")["cases"][case]
-    arms=["control","challenger"] if case=="comparison" else ["challenger"]
+    arms=["control","challenger"] if case=="comparison" and not own_incumbent_only else ["challenger"]
     seals={a:read(folder/a/"sealed.json") for a in arms}
     paths={a:(folder/a/"solve.csv",s["predictions"]) for a,s in seals.items()}
     paths["protected"]=(folder/"challenger/protected.csv",seals["challenger"]["protected"]["sha"])

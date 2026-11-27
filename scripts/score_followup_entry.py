@@ -22,11 +22,16 @@ def prediction_file(folder):
     return receipt, predictions
 
 
-def score(root, course, reference, *, include_portfolio=False, frontier_pair=False):
+def score(root, course, reference, *, include_portfolio=False, frontier_pair=False, include_resource_default=False):
     paths = {"legacy_long": root/"long-cold/original", "frontier": root/"frontier-raw/frontier",
              "frontier_scale": root/"frontier-raw/frontier_scale"}
-    if include_portfolio:
+    if include_portfolio or include_resource_default:
         paths["auto_portfolio"]=root/"auto-raw/auto_portfolio"
+    if include_resource_default:
+        paths["resource_default"]=root/"resource-raw/resource_default"
+        launch=read(paths["resource_default"]/"launch.json")
+        require(launch==dict(individual_model_variables=[],model_hint=None,review_flag=[],limits=[],
+                             resource_directory_argument=True),"The ordinary entry received extra instructions")
     if frontier_pair:
         del paths["legacy_long"]
     raw = root/"raw"
@@ -64,7 +69,8 @@ def score(root, course, reference, *, include_portfolio=False, frontier_pair=Fal
     require(all(r["api"]==0 and r["rows"]==8301 and r["fits"]<=read(paths[n]/"protocol.json")["fit_limit"]
                 for n,(r,_) in records.items()),
             "Unexpected resources or partial training")
-    target=root/("frontier_scores" if frontier_pair else "portfolio_scores" if include_portfolio else "followup_scores")
+    target=root/("frontier_scores" if frontier_pair else "delivery_scores" if include_resource_default
+                 else "portfolio_scores" if include_portfolio else "followup_scores")
     target.mkdir(exist_ok=True)
     lock = dict(seals={name:sha(folder/"sealed.json") for name,folder in paths.items()},
                 reference_lock=sha(raw/"evaluation_lock.json"), reference_scores=sha(raw/"validation.json"))
@@ -122,7 +128,9 @@ if __name__=="__main__":
     batch=parser.add_mutually_exclusive_group()
     batch.add_argument("--include-portfolio",action="store_true")
     batch.add_argument("--frontier-pair",action="store_true")
+    batch.add_argument("--include-resource-default",action="store_true")
     args=parser.parse_args()
-    result=score(args.root,args.course,args.reference,include_portfolio=args.include_portfolio,frontier_pair=args.frontier_pair)
+    result=score(args.root,args.course,args.reference,include_portfolio=args.include_portfolio,frontier_pair=args.frontier_pair,
+                 include_resource_default=args.include_resource_default)
     for name,receipt in result["completed"].items():
         print(name,receipt["correct"],receipt["rows"],receipt["trace"]["members"],receipt["identical_to"])

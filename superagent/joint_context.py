@@ -41,7 +41,7 @@ class ContextTokenTree(InteractionTree):
         conditional = [tokens(np.column_stack((p, x[:, j]))) for j in self.context]
         return np.column_stack((base, p, c, *conditional))
 
-    def fit(self, rows, labels):
+    def fit(self, rows, labels, sample_weight=None):
         x = _clean_categories(rows)
         self.profile, self.context = blocks(x)
         self.pairs = choose_pairs(rank_pairs(x, labels), self.params['pair_limit'])
@@ -49,7 +49,8 @@ class ContextTokenTree(InteractionTree):
         self.classifier = _tabular_catboost(labels, 6, 3.)
         settings = self.params.get('tree_params', {})
         self.classifier.set_params(thread_count=6, **settings)
-        self.classifier.fit(features, labels, cat_features=list(range(features.shape[1])))
+        weights = {} if sample_weight is None else {"sample_weight": sample_weight}
+        self.classifier.fit(features, labels, cat_features=list(range(features.shape[1])), **weights)
         self.classes_ = self.classifier.classes_
         return self
 

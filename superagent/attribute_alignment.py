@@ -97,7 +97,7 @@ def aligned_columns(rows,routes):
 
 
 class AttributeAlignmentTree(ContextTokenTree):
-    def fit(self,rows,labels):
+    def fit(self,rows,labels,sample_weight=None):
         x=_clean_categories(rows)
         y=np.asarray(labels)
         self.profile,self.context=blocks(x)
@@ -123,7 +123,8 @@ class AttributeAlignmentTree(ContextTokenTree):
             base=np.column_stack((base,added))
         self.classifier=_tabular_catboost(y,6,3.)
         self.classifier.set_params(thread_count=6,**self.params.get("tree_params",{}))
-        self.classifier.fit(base,y,cat_features=list(range(base.shape[1])))
+        weights = {} if sample_weight is None else {"sample_weight": sample_weight}
+        self.classifier.fit(base,y,cat_features=list(range(base.shape[1])),**weights)
         self.classes_=self.classifier.classes_
         return self
 

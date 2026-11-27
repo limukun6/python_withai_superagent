@@ -1,0 +1,883 @@
+{
+  "validation": {
+    "delivered_10_fits": {
+      "status": "completed",
+      "correct": 684,
+      "rows": 940,
+      "accuracy": 0.7276595744680852,
+      "fixed": 0,
+      "lost": 0
+    },
+    "original": {
+      "status": "partial",
+      "correct": 669,
+      "rows": 940,
+      "accuracy": 0.7117021276595744,
+      "fixed": 27,
+      "lost": 42
+    },
+    "original_compute_matched": {
+      "status": "compute_matched_replay",
+      "correct": 697,
+      "rows": 940,
+      "accuracy": 0.7414893617021276,
+      "fixed": 43,
+      "lost": 30
+    },
+    "expanded": {
+      "status": "completed",
+      "correct": 687,
+      "rows": 940,
+      "accuracy": 0.7308510638297873,
+      "fixed": 53,
+      "lost": 50
+    },
+    "race": {
+      "status": "completed",
+      "correct": 687,
+      "rows": 940,
+      "accuracy": 0.7308510638297873,
+      "fixed": 53,
+      "lost": 50
+    },
+    "default": {
+      "status": "completed",
+      "correct": 687,
+      "rows": 940,
+      "accuracy": 0.7308510638297873,
+      "fixed": 53,
+      "lost": 50
+    },
+    "official_test_opened": false,
+    "paired_comparisons": [
+      {
+        "reference": "delivered_10_fits",
+        "candidate": "original",
+        "fixed": 27,
+        "lost": 42,
+        "both_correct": 642,
+        "both_incorrect": 229
+      },
+      {
+        "reference": "delivered_10_fits",
+        "candidate": "original_compute_matched",
+        "fixed": 43,
+        "lost": 30,
+        "both_correct": 654,
+        "both_incorrect": 213
+      },
+      {
+        "reference": "delivered_10_fits",
+        "candidate": "expanded",
+        "fixed": 53,
+        "lost": 50,
+        "both_correct": 634,
+        "both_incorrect": 203
+      },
+      {
+        "reference": "delivered_10_fits",
+        "candidate": "race",
+        "fixed": 53,
+        "lost": 50,
+        "both_correct": 634,
+        "both_incorrect": 203
+      },
+      {
+        "reference": "delivered_10_fits",
+        "candidate": "default",
+        "fixed": 53,
+        "lost": 50,
+        "both_correct": 634,
+        "both_incorrect": 203
+      },
+      {
+        "reference": "original",
+        "candidate": "original_compute_matched",
+        "fixed": 66,
+        "lost": 38,
+        "both_correct": 631,
+        "both_incorrect": 205
+      },
+      {
+        "reference": "original",
+        "candidate": "expanded",
+        "fixed": 71,
+        "lost": 53,
+        "both_correct": 616,
+        "both_incorrect": 200
+      },
+      {
+        "reference": "original",
+        "candidate": "race",
+        "fixed": 71,
+        "lost": 53,
+        "both_correct": 616,
+        "both_incorrect": 200
+      },
+      {
+        "reference": "original",
+        "candidate": "default",
+        "fixed": 71,
+        "lost": 53,
+        "both_correct": 616,
+        "both_incorrect": 200
+      },
+      {
+        "reference": "original_compute_matched",
+        "candidate": "expanded",
+        "fixed": 27,
+        "lost": 37,
+        "both_correct": 660,
+        "both_incorrect": 216
+      },
+      {
+        "reference": "original_compute_matched",
+        "candidate": "race",
+        "fixed": 27,
+        "lost": 37,
+        "both_correct": 660,
+        "both_incorrect": 216
+      },
+      {
+        "reference": "original_compute_matched",
+        "candidate": "default",
+        "fixed": 27,
+        "lost": 37,
+        "both_correct": 660,
+        "both_incorrect": 216
+      },
+      {
+        "reference": "expanded",
+        "candidate": "race",
+        "fixed": 0,
+        "lost": 0,
+        "both_correct": 687,
+        "both_incorrect": 253
+      },
+      {
+        "reference": "expanded",
+        "candidate": "default",
+        "fixed": 0,
+        "lost": 0,
+        "both_correct": 687,
+        "both_incorrect": 253
+      },
+      {
+        "reference": "race",
+        "candidate": "default",
+        "fixed": 0,
+        "lost": 0,
+        "both_correct": 687,
+        "both_incorrect": 253
+      }
+    ]
+  },
+  "cold_runs": {
+    "original": {
+      "status": "partial",
+      "members": [
+        "minilm_l12_with_corpus_familiarity"
+      ],
+      "physical_fits": 16,
+      "training_rows": 6608,
+      "model_requests": 0,
+      "training_members": [
+        "Released_Task2-Headlines_CTR/README.md",
+        "Released_Task2-Headlines_CTR/train.csv"
+      ],
+      "independent_uncached_reload": true,
+      "raw_predictions_sha256": "fb3905bf727f229687162e2ec4f9d5b819fa92564bfa14b158c2ed7342954f44",
+      "raw_model_sha256": "6cb06b39ed13bcdaf260b8203fe81932c2ff87528f6892a40d60e4905c3d874e",
+      "first_menu_size": 63,
+      "generated_methods_actually_trained": [
+        "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1"
+      ],
+      "choices": [
+        {
+          "step": 1,
+          "action": "explore",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7164796219728293
+        },
+        {
+          "step": 2,
+          "action": "explore",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7117542823390431
+        },
+        {
+          "step": 3,
+          "action": "explore",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7046662728883638
+        },
+        {
+          "step": 4,
+          "action": "explore",
+          "member": "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.5233313644418193
+        },
+        {
+          "step": 5,
+          "action": "explore",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.707028942705257
+        },
+        {
+          "step": 6,
+          "action": "explore",
+          "member": "minilm_l12_with_edit_context",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7023036030714708
+        },
+        {
+          "step": 7,
+          "action": "explore",
+          "member": "word_char_stats_C3.0",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6526875369167159
+        },
+        {
+          "step": 8,
+          "action": "explore",
+          "member": "minilm_l12_with_corpus_familiarity",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7206142941523922
+        },
+        {
+          "step": 9,
+          "action": "explore",
+          "member": "minilm_l12_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7011222681630243
+        },
+        {
+          "step": 10,
+          "action": "confirm",
+          "member": "minilm_l12_with_corpus_familiarity",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.703951367781155
+        },
+        {
+          "step": 11,
+          "action": "confirm",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7015197568389058
+        },
+        {
+          "step": 12,
+          "action": "confirm",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.711854103343465
+        },
+        {
+          "step": 13,
+          "action": "confirm",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7088145896656535
+        },
+        {
+          "step": 14,
+          "action": "confirm",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7088145896656535
+        },
+        {
+          "step": 15,
+          "action": "confirm",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "confirmation_2",
+          "status": "completed",
+          "score": 0.7116898849182314
+        },
+        {
+          "step": 16,
+          "action": "confirm",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "confirmation_2",
+          "status": "failed",
+          "score": null
+        }
+      ],
+      "full_refit": false
+    },
+    "expanded": {
+      "status": "completed",
+      "members": [
+        "gte_paired_linear"
+      ],
+      "physical_fits": 20,
+      "training_rows": 8301,
+      "model_requests": 0,
+      "training_members": [
+        "Released_Task2-Headlines_CTR/README.md",
+        "Released_Task2-Headlines_CTR/train.csv"
+      ],
+      "independent_uncached_reload": true,
+      "raw_predictions_sha256": "b4f080e5ae402ab3ba6f898eef90adaa8ccb219e6709670e636eac2534c84ca1",
+      "raw_model_sha256": "0778dc609fc6b9894ed26323f5c0a31934eb84570411014a2834008058f7c0ce",
+      "first_menu_size": 67,
+      "generated_methods_actually_trained": [
+        "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1"
+      ],
+      "choices": [
+        {
+          "step": 1,
+          "action": "explore",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7164796219728293
+        },
+        {
+          "step": 2,
+          "action": "explore",
+          "member": "electra_paired_quadratic",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6816302421736562
+        },
+        {
+          "step": 3,
+          "action": "explore",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7046662728883638
+        },
+        {
+          "step": 4,
+          "action": "explore",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7117542823390431
+        },
+        {
+          "step": 5,
+          "action": "explore",
+          "member": "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.5233313644418193
+        },
+        {
+          "step": 6,
+          "action": "explore",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.707028942705257
+        },
+        {
+          "step": 7,
+          "action": "explore",
+          "member": "gte_paired_linear",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7235676314235086
+        },
+        {
+          "step": 8,
+          "action": "explore",
+          "member": "minilm_l12_with_edit_context",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7023036030714708
+        },
+        {
+          "step": 9,
+          "action": "explore",
+          "member": "word_char_stats_C3.0",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6526875369167159
+        },
+        {
+          "step": 10,
+          "action": "explore",
+          "member": "gte_paired_quadratic",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7182516243354992
+        },
+        {
+          "step": 11,
+          "action": "confirm",
+          "member": "gte_paired_linear",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7191489361702128
+        },
+        {
+          "step": 12,
+          "action": "confirm",
+          "member": "gte_paired_quadratic",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7106382978723405
+        },
+        {
+          "step": 13,
+          "action": "confirm",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7015197568389058
+        },
+        {
+          "step": 14,
+          "action": "confirm",
+          "member": "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.5495440729483283
+        },
+        {
+          "step": 15,
+          "action": "confirm",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.711854103343465
+        },
+        {
+          "step": 16,
+          "action": "confirm",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7088145896656535
+        },
+        {
+          "step": 17,
+          "action": "confirm",
+          "member": "electra_paired_quadratic",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.6936170212765957
+        },
+        {
+          "step": 18,
+          "action": "confirm",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7088145896656535
+        },
+        {
+          "step": 19,
+          "action": "explore",
+          "member": "minilm_l12_with_corpus_familiarity",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7206142941523922
+        }
+      ],
+      "full_refit": true
+    },
+    "race": {
+      "status": "completed",
+      "members": [
+        "gte_paired_linear"
+      ],
+      "physical_fits": 15,
+      "training_rows": 8301,
+      "model_requests": 0,
+      "training_members": [
+        "Released_Task2-Headlines_CTR/README.md",
+        "Released_Task2-Headlines_CTR/train.csv"
+      ],
+      "independent_uncached_reload": true,
+      "raw_predictions_sha256": "b4f080e5ae402ab3ba6f898eef90adaa8ccb219e6709670e636eac2534c84ca1",
+      "raw_model_sha256": "48a8f8f546f65bae597b71699568d23344004390f28cb8b9e715c7b436968eca",
+      "first_menu_size": 67,
+      "generated_methods_actually_trained": [
+        "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1"
+      ],
+      "choices": [
+        {
+          "step": 1,
+          "action": "explore",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7164796219728293
+        },
+        {
+          "step": 2,
+          "action": "explore",
+          "member": "electra_paired_quadratic",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6816302421736562
+        },
+        {
+          "step": 3,
+          "action": "explore",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7046662728883638
+        },
+        {
+          "step": 4,
+          "action": "explore",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7117542823390431
+        },
+        {
+          "step": 5,
+          "action": "explore",
+          "member": "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.5233313644418193
+        },
+        {
+          "step": 6,
+          "action": "explore",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.707028942705257
+        },
+        {
+          "step": 7,
+          "action": "explore",
+          "member": "gte_paired_linear",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7235676314235086
+        },
+        {
+          "step": 8,
+          "action": "explore",
+          "member": "minilm_l12_with_edit_context",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7023036030714708
+        },
+        {
+          "step": 9,
+          "action": "explore",
+          "member": "word_char_stats_C3.0",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6526875369167159
+        },
+        {
+          "step": 10,
+          "action": "explore",
+          "member": "gte_paired_quadratic",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7182516243354992
+        },
+        {
+          "step": 11,
+          "action": "confirm",
+          "member": "gte_paired_linear",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7191489361702128
+        },
+        {
+          "step": 12,
+          "action": "confirm",
+          "member": "gte_paired_quadratic",
+          "fold": "confirmation_1",
+          "status": "completed",
+          "score": 0.7106382978723405
+        },
+        {
+          "step": 13,
+          "action": "confirm",
+          "member": "gte_paired_linear",
+          "fold": "confirmation_2",
+          "status": "completed",
+          "score": 0.7213809812235009
+        },
+        {
+          "step": 14,
+          "action": "confirm",
+          "member": "gte_paired_quadratic",
+          "fold": "confirmation_2",
+          "status": "completed",
+          "score": 0.7189582071471835
+        }
+      ],
+      "full_refit": true,
+      "finalists_frozen": {
+        "anchor": [
+          "gte_paired_linear"
+        ],
+        "challenger": [
+          "gte_paired_quadratic"
+        ],
+        "groups": [
+          [
+            "gte_paired_linear"
+          ],
+          [
+            "gte_paired_quadratic"
+          ]
+        ],
+        "members": [
+          "gte_paired_linear",
+          "gte_paired_quadratic"
+        ],
+        "fresh": [
+          "confirmation_1",
+          "confirmation_2"
+        ],
+        "reserve": 1,
+        "primary_comparison": {
+          "fold": "primary",
+          "rows": 1693,
+          "incumbent": 0.7235676314235086,
+          "challenger": 0.7182516243354992,
+          "delta": -0.005316007088009389,
+          "gained": 41,
+          "lost": 50
+        },
+        "remaining_at_lock": 10,
+        "legal_measured_singles": 10
+      },
+      "matched_result": {
+        "status": "completed",
+        "selected": [
+          "gte_paired_linear"
+        ],
+        "anchor": [
+          "gte_paired_linear"
+        ],
+        "folds": [
+          "primary",
+          "confirmation_1",
+          "confirmation_2"
+        ],
+        "comparisons": [
+          {
+            "members": [
+              "gte_paired_linear"
+            ],
+            "scores": {
+              "primary": 0.7235676314235086,
+              "confirmation_1": 0.7191489361702128,
+              "confirmation_2": 0.7213809812235009
+            },
+            "pooled": 0.7213870515133293
+          },
+          {
+            "members": [
+              "gte_paired_quadratic"
+            ],
+            "scores": {
+              "primary": 0.7182516243354992,
+              "confirmation_1": 0.7106382978723405,
+              "confirmation_2": 0.7189582071471835
+            },
+            "pooled": 0.7159751453197033
+          }
+        ]
+      }
+    },
+    "default": {
+      "status": "completed",
+      "members": [
+        "gte_paired_linear"
+      ],
+      "physical_fits": 10,
+      "training_rows": 8301,
+      "model_requests": 0,
+      "training_members": [
+        "Released_Task2-Headlines_CTR/README.md",
+        "Released_Task2-Headlines_CTR/train.csv"
+      ],
+      "independent_uncached_reload": true,
+      "raw_predictions_sha256": "b4f080e5ae402ab3ba6f898eef90adaa8ccb219e6709670e636eac2534c84ca1",
+      "raw_model_sha256": "66a5580f35ce2cf1d3a0dee277d3087390b9ec3c5da1fa134506bd71c2c13809",
+      "first_menu_size": 67,
+      "generated_methods_actually_trained": [
+        "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1"
+      ],
+      "choices": [
+        {
+          "step": 1,
+          "action": "explore",
+          "member": "minilm_l12_topic_style_interactions",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7164796219728293
+        },
+        {
+          "step": 2,
+          "action": "explore",
+          "member": "electra_paired_quadratic",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6816302421736562
+        },
+        {
+          "step": 3,
+          "action": "explore",
+          "member": "minilm_text_with_nonlinear_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7046662728883638
+        },
+        {
+          "step": 4,
+          "action": "explore",
+          "member": "bge_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7117542823390431
+        },
+        {
+          "step": 5,
+          "action": "explore",
+          "member": "open_ExtraTreeClassifier_9ba4d2ed14862cbb40f1",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.5233313644418193
+        },
+        {
+          "step": 6,
+          "action": "explore",
+          "member": "e5_small_text_with_lexical_features",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.707028942705257
+        },
+        {
+          "step": 7,
+          "action": "explore",
+          "member": "gte_paired_linear",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7235676314235086
+        },
+        {
+          "step": 8,
+          "action": "explore",
+          "member": "minilm_l12_with_edit_context",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.7023036030714708
+        },
+        {
+          "step": 9,
+          "action": "explore",
+          "member": "word_char_stats_C3.0",
+          "fold": "primary",
+          "status": "completed",
+          "score": 0.6526875369167159
+        }
+      ],
+      "full_refit": true
+    }
+  },
+  "training_only_studies": {
+    "frozen": {
+      "fits": 7,
+      "advanced": true,
+      "result_sha256": "1ec46cb6fd913727524e3b60c16ba5bf1010b0ad7ec6c06b9cf2906413a8c37f"
+    },
+    "context": {
+      "fits": 5,
+      "advanced": false,
+      "result_sha256": "eb2b9aab32557651b64bc72fdcb4a69008ad313c6d2df1d50f3709aedc48120c"
+    },
+    "token": {
+      "fits": 2,
+      "advanced": false,
+      "result_sha256": "fbbf004bf613365b25fd6a814a7ff388d90978c53939daab6656f02fcaec5669"
+    },
+    "cross": {
+      "fits": 1,
+      "advanced": false,
+      "result_sha256": "6b78b7d06ea6258c3cb6340cacd1e90383ab75af2a8e6bf903d38527c88db9e0"
+    },
+    "multiview": {
+      "fits": 3,
+      "advanced": false,
+      "result_sha256": "cb311da2866751672faf383c365ee4457f19ef62d1761cbdde17632680874e8a"
+    },
+    "strength": {
+      "fits": 2,
+      "advanced": false,
+      "result_sha256": "c17636067796f1128f9ef17bb816a0f11143d796faff5ab8292aa6bb02da215c"
+    },
+    "low-rank": {
+      "fits": 1,
+      "advanced": false,
+      "result_sha256": "c8c1790ae7ed04bee51b548bf056200a39ebb26dae2234f058445ae3621c585a"
+    },
+    "scale": {
+      "fits": 3,
+      "advanced": true,
+      "result_sha256": "f069b13ad9193030e7d44a82cc21388dc6ff3d16f2faa8faa67ad1cc5db77bb8"
+    }
+  },
+  "image_development": {
+    "fits": 12,
+    "members": [
+      "image_gradient_histograms_logistic",
+      "open_HistGradientBoostingClassifier_3120832306f74bca1f53",
+      "open_RandomForestClassifier_8742e883e7db523d7235"
+    ],
+    "exported_rows": 350,
+    "training_rows": 1100,
+    "external_labels_opened": false
+  },
+  "new_model_api_calls": 0,
+  "official_test_opened": false,
+  "H2_opened": false,
+  "total_cold_task2_physical_fits": 61,
+  "total_research_screen_physical_fits": 24,
+  "image_demonstration_physical_fits": 12,
+  "compute_matched_control": {
+    "status": "compute_matched_replay",
+    "members": [
+      "bge_small_text_with_lexical_features",
+      "minilm_l12_with_corpus_familiarity"
+    ],
+    "model_sha256": "aabb0f46ab9ac3cb5d597d6e2c28b2dae7be760721d3ee47ff414fc31c09b010",
+    "prediction_sha256": "fae79eb35751747f91d5dcd6dce7be067ca08d6801fee9677095219237572cce",
+    "independent_reload": true,
+    "rows": 8301,
+    "fits": 20,
+    "reused_fits": 15,
+    "additional_physical_fits": 5,
+    "shared_prefix_decisions": 15,
+    "study_plan_sha256": "3a35cf30b0328ab37bd929280ab3e59417b2a8182a4d66602ef9bc6218d62f57",
+    "api": 0
+  }
+}

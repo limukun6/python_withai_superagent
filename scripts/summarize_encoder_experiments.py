@@ -37,7 +37,7 @@ def summarize(root):
     scores=read(raw/"validation.json")
     cases={n:trace(raw/n) for n in ("original","expanded","race","default")}
     studies={}
-    for n in ("frozen","context","token","cross","multiview","strength","low-rank"):
+    for n in ("frozen","context","token","cross","multiview","strength","low-rank","scale"):
         location=root/(n+"-screen")/"results.json"
         if location.is_file():
             d=read(location)

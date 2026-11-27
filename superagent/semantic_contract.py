@@ -411,11 +411,20 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
 
 
 def resolve_training_task(package, client=None, log=None, *, mode='fallback', prediction_package=None,artifact_from=None):
-    if mode not in ('fallback','proactive'):
+    if mode not in ('fallback','proactive','auto'):
         raise ValueError('Unknown task interpretation mode')
     if artifact_from is not None:
         from .semantic_artifact import load_artifact
         return load_artifact(artifact_from,package,prediction_package,log)
+    if mode=='auto':
+        documented=False
+        if client is not None:
+            with package_files(package) as files:documented=bool(evidence_workspace(files)['documents'])
+        selected='proactive' if documented else 'fallback'
+        reason='configured_model_and_task_documents' if documented else 'no_configured_model' if client is None else 'no_task_documents'
+        if log:log.event('semantic_mode_selected',requested_mode='auto',selected_mode=selected,reason=reason,
+                         semantic_truth_certified=False)
+        return resolve_training_task(package,client,log,mode=selected,prediction_package=prediction_package)
     if mode == 'proactive':
         base = None
         with package_files(package) as files:

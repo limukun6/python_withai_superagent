@@ -201,13 +201,16 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     from .opening_evidence import instructions, verified_windows
     opening_enabled=feedback_reflection in opening_modes
     if opening_enabled and flash is not None:
-        ceiling=3 if interpretation=='proactive' else 1
+        ceiling=3 if interpretation in ('proactive','auto') else 1
         flash.max_requests=ceiling if flash.max_requests is None else min(flash.max_requests,ceiling)
     opening=None
     phase='training schema'
     task = None
     try:
         from .semantic_contract import resolve_training_task
+        if interpretation=='auto' and flash_setup_issue:
+            from .format_sources import UnsupportedFormat
+            raise UnsupportedFormat('Automatic semantic review unavailable; deployment preflight did not pass')
         intake_client=flash if interpretation=='proactive' or opening_enabled or not feedback_reflection else None
         task=resolve_training_task(package,intake_client,log,mode=interpretation,prediction_package=prediction_package,
                                    artifact_from=semantic_artifact_from)

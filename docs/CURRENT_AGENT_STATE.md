@@ -1,5 +1,15 @@
 # 当前接续状态
 
+## 2026-11-27：SA16人用CLI默认auto，补“本地可读但输出未理解”
+
+SA15已推送b620b83。SA16改前封存两微案例：本地都读入输入，完整输出0/2。CLI train/solve和superagent unified默认auto：有模型client和文档则读题，显式manifest只允许输出overlay；显式fallback/proactive、程序化API旧默认、legacy和local/control对照保留。无client/无文档日志说明本地，预检失败/blocked/耗尽不冒称已完成模型复核。274/274零fit/API检查13.063秒，模拟机制两例修后2/2（不是两次真实模型样本）。
+
+正式裸solve A1（Iris原96/24开发行标准CSV/manifest重封装）自动复核原文输出：Case原ID前导零、Result三类映射、ScoreFor2、管道/BOM/行序全部成立，manifest输入/目标/指标逐项不变。首次真实语义提案通过，B默认Flash选RandomForest，2fit/2API/¥.008978/27.781秒，5674输入/826输出。语义¥.003157＋B规划¥.005821分开。新进程24行CSV完全一致；usage与真ledger绑定，后续B请求不串用。报告batches/SA16_auto_semantic_review_results_20261127_zh.md；证据research/sa16_auto_live_01和sa16_auto_audit_01。
+
+当前账本482/known8.112218/unknown16/pending0，所有旧行SHA保留，无活动队列，未冻结。SA15＋SA16本次4fit/5API/¥.028677；自动窗口SA7–SA16累计26fit/21API/¥.145823。无预测答案读取/新评分，仍不是独立未知任务迁移。
+
+下一优先：有作用域的疑问状态（SA15把可选正类当阻断，额外花一次修复）、数组/图像结构元数据工具，再做独立封存新任务。人用CLI已补auto，别重复该实现；程序化API默认fallback是显式兼容选择，local/control仍无付费读题，要A付费+B本地用proactive组合。旧16未知不再问，新未知停当批付费。
+
 ## 2026-11-27：SA15默认NativeContract接管＋真实迁移验收完成
 
 无manifest的专用reader认领不再阻止默认fallback交给已配置LLM；显式manifest仍权威，无client/blocked/耗尽不请求，本地成功仍本地。迁移工具新增native编译和原包/proposal/已结算model-token-cost绑定，选语义接受之前的对应请求，避免串用后续B调用。261/261零fit/API检查13.484秒。

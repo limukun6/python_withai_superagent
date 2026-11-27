@@ -1,5 +1,7 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+**11月27日，人用CLI默认自动读题。** 本地能读输入也会在模型已配置且有文档时复核输出要求；显式manifest输入保持权威。274项检查，裸solve自主完成原ID、三类映射、指定类别概率和管道/BOM输出，2fit/2API/课程¥0.008978、27.781秒。程序化API和显式fallback保留旧默认，不代表独立未知任务全成功。[结构、兼容约定和实际证据](docs/batches/SA16_auto_semantic_review_results_20261127_zh.md)
+
 **11月27日，无manifest数组与图像任务接入通过。** LLM从原文选择非标准NPZ成员/键、图像目录、指标和像素处理；正式proactive solve两条首次提案均通过。245项检查，新增4fit/2API/课程¥0.015720，54行新进程预测逐字节一致。结果是开发输入覆盖改善，未比较准确率。[结构与证据边界](docs/batches/SA14_native_semantics_results_20261127_zh.md)
 
 **11月27日，A线正式实时读题和工具闭环验收通过。** 229项检查；Flash自主请求预测字段，再填写正确ID输出契约，正式solve完成2次训练与60行独立进程预测。2次API，课程¥0.008981，52.375秒。此前SA12失败保留；这是单条已使用开发任务的部署证据，非任意未知任务保证。[结构、实际工具轨迹和资源边界](docs/batches/SA13_tool_source_results_20261127_zh.md)

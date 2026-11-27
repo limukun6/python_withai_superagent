@@ -123,6 +123,7 @@ def train(package, run_dir, policy='autonomous', *, fit_limit=None, time_limit=N
           exploration_rule=None, feedback_reflection=None, reflection_history=None,
           task_interpretation='fallback',prediction_input=None,semantic_artifact_from=None):
     if policy == 'legacy':
+        if task_interpretation=='auto':task_interpretation='fallback'
         if (fit_limit is not None or time_limit is not None or self_review or exploration_rule is not None
                 or feedback_reflection or reflection_history or task_interpretation!='fallback' or prediction_input is not None
                 or semantic_artifact_from is not None):
@@ -231,7 +232,8 @@ def main():
             command.add_argument('--fit-limit',type=int)
             command.add_argument('--time-limit',type=float)
             add_review_arguments(command)
-            command.add_argument('--task-interpretation',choices=['fallback','proactive'],default='fallback')
+            command.add_argument('--task-interpretation',choices=['auto','fallback','proactive'],default='auto',
+                                 help='auto reviews documents when a model is configured; fallback keeps the local-first path')
             command.add_argument('--semantic-artifact-from',type=Path)
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)

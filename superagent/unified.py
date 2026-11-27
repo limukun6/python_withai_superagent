@@ -117,7 +117,7 @@ def command(args):
     if getattr(args,'policy','autonomous')=='legacy':
         if getattr(args,'self_review',False) or getattr(args,'exploration_rule',None) or reflection or getattr(args,'reflection_history',None):
             raise ValueError('Planner self-review uses the autonomous entry point')
-        if (getattr(args,'task_interpretation','fallback')!='fallback' or getattr(args,'prediction_input',None) is not None
+        if (getattr(args,'task_interpretation','fallback') not in ('fallback','auto') or getattr(args,'prediction_input',None) is not None
                 or getattr(args,'semantic_artifact_from',None) is not None):
             raise ValueError('Semantic interpretation and pre-fit input checks require the autonomous policy')
         return legacy_command(args)

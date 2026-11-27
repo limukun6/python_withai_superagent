@@ -139,7 +139,8 @@ def run(a):
     require(sha(replay) == sha(output) and len(physical.read_text().splitlines()) == fit_count, 'Reload changed output or refit')
     decisions=read(agent/'decisions.json')
     seal=dict(case=case,arm=arm,seconds=round(elapsed,2),fits=fit_count,requests=outcome['new_api_requests'],
-              course_cost_rmb=outcome.get('course_cost_rmb'),model=selected['selected_experiment'],model_sha=selected['model_sha256'],
+              course_cost_rmb=outcome['complete_run_course_cost_rmb'],unresolved_requests=outcome['unresolved_api_requests'],
+              model=selected['selected_experiment'],model_sha=selected['model_sha256'],
               output_sha=sha(output),early_sha=first['prediction_sha256'],fresh_reload=True,
               core_actions=[(d['choice']['action'],d['choice']['split'],d['choice']['members']) for d in decisions],
               core=opening['incumbent_members'],opportunity=opening.get('opportunity'),check=opening.get('check'),

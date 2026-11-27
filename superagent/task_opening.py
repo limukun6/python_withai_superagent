@@ -235,7 +235,11 @@ class TaskOpening:
         remaining=executor.limit-spent
         self.record.update(fits_at_delivery=spent,remaining_at_delivery=remaining,result='retained')
         self.save()
-        self.collect(min(75.,max(0.,(self.deadline-time.monotonic())/4)) if remaining>0 else 0.)
+        has_local_feedback = self.mode == 'opening-feedback-flash' and self.record.get('local_hypothesis') is not None
+        wait = 0. if has_local_feedback or remaining <= 0 else min(75., max(0., (self.deadline-time.monotonic())/4))
+        self.collect(wait)
+        if has_local_feedback:
+            self.record['campus_pending_when_local_ready'] = self.record['interpretation_status'] == 'pending'
         self.record.update(decision_time_status=self.record['interpretation_status'],decision_seconds=time.monotonic()-self.start)
         base=choice['members']
         confirmations=[f for f in self.folds if f!='primary' and group_observation(observed[f],base,self.metric) is not None

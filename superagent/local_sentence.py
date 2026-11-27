@@ -6,6 +6,7 @@ import inspect
 import json
 import os
 from pathlib import Path
+import time
 
 import numpy as np
 from scipy.sparse import csr_matrix, vstack
@@ -131,7 +132,7 @@ def installed():
 
 
 @lru_cache(maxsize=2)
-def backbone(root,length,identity,causal=False):
+def backbone(root,length,identity,causal=False,device="cpu"):
     import torch
     from tokenizers import Tokenizer
     from transformers import AutoConfig, AutoModel
@@ -149,16 +150,16 @@ def backbone(root,length,identity,causal=False):
     if info['missing_keys'] or info.get('mismatched_keys') or info.get('error_msgs'):
         raise ValueError('Incomplete local sentence encoder')
     torch.set_num_threads(min(3,torch.get_num_threads()))
-    return tokenizer,model.eval().requires_grad_(False)
+    return tokenizer,model.eval().requires_grad_(False).to(device)
 
 
-def encode(spec,texts,*,return_tokens=False):
+def _encode(spec,texts,device,return_tokens=False):
     import torch
     root=Path(os.environ[spec['environment_variable']])
     if describe(root)!=spec:
         raise ValueError('Local sentence encoder bytes or behavior have changed')
     causal=spec['pooling']=='last'
-    tokenizer,model=backbone(root,spec['max_length'],spec['signature'],causal)
+    tokenizer,model=backbone(root,spec['max_length'],spec['signature'],causal,device)
     pad_id=model.config.pad_token_id
     if pad_id is None:
         raw=metadata(root/'tokenizer_config.json').get('pad_token')
@@ -185,11 +186,12 @@ def encode(spec,texts,*,return_tokens=False):
                 tokens=chunks[i].ids
                 ids[row,:len(tokens)]=torch.as_tensor(tokens)
                 mask[row,:len(tokens)]=1
+            ids,mask=ids.to(device),mask.to(device)
             options={'use_cache':False} if causal else {}
             hidden=model(input_ids=ids,attention_mask=mask,**options).last_hidden_state
             if causal:
                 last=mask.sum(dim=1)-1
-                pooled=hidden[torch.arange(len(indices)),last].float()
+                pooled=hidden[torch.arange(len(indices),device=device),last].float()
             elif spec['pooling']=='cls':
                 pooled=hidden[:,0,:]
             elif spec['pooling']=='max':
@@ -198,10 +200,72 @@ def encode(spec,texts,*,return_tokens=False):
                 pooled=(hidden*mask.unsqueeze(-1)).sum(1)/mask.sum(1,keepdim=True).clamp(min=1)
             if spec['normalize']:
                 pooled=torch.nn.functional.normalize(pooled,p=2,dim=1)
-            result[indices]=pooled.numpy()
+            result[indices]=pooled.float().cpu().numpy()
     if not np.isfinite(result).all():
         raise ValueError('Nonfinite local sentence representation')
     return (result,sum(len(item.ids) for item in chunks)) if return_tokens else result
+
+
+BACKEND_CHOICES={}
+
+
+def note_device(event):
+    path=os.environ.get('SUPERAGENT_ENCODING_DEVICE_LOG')
+    if path:
+        with Path(path).open('a',encoding='utf-8') as stream:
+            stream.write(json.dumps(event,allow_nan=False)+'\n')
+
+
+def choose_backend(spec,texts):
+    import torch
+    if spec['pooling']!='last':
+        return 'cpu'
+    signature=spec['signature']
+    if signature in BACKEND_CHOICES:
+        return BACKEND_CHOICES[signature]
+    devices=[]
+    if torch.cuda.is_available():
+        devices.append('cuda')
+    if torch.backends.mps.is_available():
+        devices.append('mps')
+    if not devices or len(texts)<8:
+        return 'cpu'
+    sample=sorted(set(texts),key=lambda t:hashlib.sha256(t.encode()).digest())[:12]
+    results={}
+    reference=None
+    for device in ['cpu',*devices]:
+        try:
+            _encode(spec,sample[:2],device)
+            begin=time.perf_counter()
+            observed=_encode(spec,sample,device)
+            elapsed=time.perf_counter()-begin
+            if device=='cpu':
+                reference=observed
+            cosine=np.sum(reference*observed,axis=1)/np.maximum(1e-12,np.linalg.norm(reference,axis=1)*np.linalg.norm(observed,axis=1))
+            results[device]=dict(seconds=elapsed,min_cosine=float(cosine.min()),
+                                 maximum_absolute_error=float(np.max(np.abs(reference-observed))))
+        except (RuntimeError,NotImplementedError,TypeError) as error:
+            if device=='cpu':
+                raise
+            results[device]=dict(unavailable=type(error).__name__)
+    better=[d for d in devices if 'seconds' in results[d] and results[d]['seconds']<=results['cpu']['seconds']*.85
+            and results[d]['min_cosine']>=.999 and results[d]['maximum_absolute_error']<=.01]
+    selected=min(better,key=lambda d:results[d]['seconds']) if better else 'cpu'
+    BACKEND_CHOICES[signature]=selected
+    note_device(dict(event='measured',encoder=signature,samples=len(sample),devices=results,selected=selected))
+    return selected
+
+
+def encode(spec,texts,*,return_tokens=False):
+    device=choose_backend(spec,texts)
+    try:
+        return _encode(spec,texts,device,return_tokens)
+    except (RuntimeError,NotImplementedError,TypeError) as error:
+        if device=='cpu':
+            raise
+        BACKEND_CHOICES[spec['signature']]='cpu'
+        note_device(dict(event='fallback',encoder=spec['signature'],device=device,reason=type(error).__name__,selected='cpu'))
+        return _encode(spec,texts,'cpu',return_tokens)
 
 
 def bank_path(directory,spec):

@@ -85,11 +85,11 @@ def prepare(a):
          upstream_sha256={p.name:sha(p) for p in sorted((a.root/'sources').iterdir()) if p.is_file()}))
 
 
-def run(a):
+def run(a, *, expected_fingerprint=None, additional_sealed_directory=None):
     study = a.root/'development'
     arm, case = a.arm, a.case
     registration = read(study/'registered.json')
-    require(registration['frozen'] == frozen_runtime(), 'Runner or agent changed after registration')
+    require(registration['frozen'] == (expected_fingerprint or frozen_runtime()), 'Runner or agent changed after registration')
     files = study/case
     meta = registration['cases'][case]
     train, query = files/'task.zip', files/'query.zip'
@@ -109,6 +109,8 @@ def run(a):
         JOINT_OUTER_ANSWERS=str(study/'evaluation'), JOINT_UPSTREAM_SOURCES=str(a.root/'sources'),
         JOINT_PREDICTION_INPUT=str(query), REFLECTION_STUDY_LIVE='0', OMP_NUM_THREADS='1',
         OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
+    if additional_sealed_directory is not None:
+        settings['JOINT_ADDITIONAL_SEALED_DIRECTORY'] = str(additional_sealed_directory)
     if arm == CAMPUS:
         settings.update(REFLECTION_STUDY_LIVE='1', SUPERAGENT_PLANNER_KEY_FILE=str(a.key_file),
                         SUPERAGENT_RESEARCH_REFLECTION_OUTBOX=str(a.outbox), SUPERAGENT_TASK_BUDGET_ID='joint-nov27-'+case)

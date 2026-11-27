@@ -9,7 +9,9 @@ import sqlite3
 
 from .opening_evidence import subset
 
-MODES = ('opening-feedback-local', 'opening-feedback-flash')
+DESIGN_MODES = ('opening-feedback-design', 'opening-feedback-design-flash')
+FLASH_MODES = ('opening-feedback-flash', 'opening-feedback-design-flash')
+MODES = ('opening-feedback-local', 'opening-feedback-flash', *DESIGN_MODES)
 PROMPT = (
     'Read the anonymous task facts and the actual first training experiment in first_trial. '
     'Return exactly goal, metric, citations, uncertainty, check, hypothesis, if_false. '

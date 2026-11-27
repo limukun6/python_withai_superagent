@@ -233,8 +233,9 @@ def candidates_for(kind: str) -> list[Candidate]:
 
 def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
     """Apply an already-fitted portfolio model without accessing labels."""
+    from .confusion_specialist import ClassPairModel
     from .generated_pipeline import GeneratedModel
-    if isinstance(model,GeneratedModel):return np.asarray(model.predict(inputs)).reshape(-1)
+    if isinstance(model,(GeneratedModel,ClassPairModel)):return np.asarray(model.predict(inputs)).reshape(-1)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return np.asarray(model.predict(inputs)).reshape(-1)
@@ -272,8 +273,9 @@ def predict_with_model(kind: str, model: Any, inputs: Any) -> np.ndarray:
 
 def probability_with_model(kind, model, inputs):
     """Return fitted class labels with probability columns in that same order."""
+    from .confusion_specialist import ClassPairModel
     from .generated_pipeline import GeneratedModel
-    if isinstance(model,GeneratedModel):return model.classes_,model.predict_proba(inputs)
+    if isinstance(model,(GeneratedModel,ClassPairModel)):return model.classes_,model.predict_proba(inputs)
     from .trainable_pair import NeuralPairModel, LearnedPairStack
     if isinstance(model, (NeuralPairModel, LearnedPairStack)):
         return model.classes_, model.predict_proba(inputs)

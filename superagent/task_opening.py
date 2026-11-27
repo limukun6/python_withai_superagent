@@ -142,7 +142,7 @@ class TaskOpening:
         """Read any ready answer without waiting and track how the ordinary measurements affect it."""
         if self.mode in feedback_hypothesis.MODES and 'first_trial' not in self.brief['facts'] and observed['primary']:
             local=feedback_hypothesis.start_feedback(self,trial,observed)
-            if self.mode=='opening-feedback-flash' and local['check']!='keep':
+            if self.mode in feedback_hypothesis.FLASH_MODES and local['check']!='keep':
                 self.request(feedback_hypothesis.PROMPT,'feedback_hypothesis',trial)
             # The local, evidence-based hypothesis also works when the campus client is unavailable or late.
             self.answer=feedback_hypothesis.validate_feedback(local,self.brief)
@@ -235,7 +235,7 @@ class TaskOpening:
         remaining=executor.limit-spent
         self.record.update(fits_at_delivery=spent,remaining_at_delivery=remaining,result='retained')
         self.save()
-        has_local_feedback = self.mode == 'opening-feedback-flash' and self.record.get('local_hypothesis') is not None
+        has_local_feedback = self.mode in feedback_hypothesis.FLASH_MODES and self.record.get('local_hypothesis') is not None
         wait = 0. if has_local_feedback or remaining <= 0 else min(75., max(0., (self.deadline-time.monotonic())/4))
         self.collect(wait)
         if has_local_feedback:
@@ -265,6 +265,12 @@ class TaskOpening:
             measured = observed['primary']
             local = min((n for n in measured if n not in base and n in caps and n not in blocked and affordable(n)),
                         key=lambda n: (-measured[n]['score'], identity(n)), default=None)
+        if self.mode in feedback_hypothesis.DESIGN_MODES:
+            from .confusion_specialist import design_experiment
+            result = design_experiment(self, choice, incumbent, bases, names, observed, profile,
+                                       executor, timeout, blocked, local)
+            if result is not None:
+                return result
         targeted=target is not None and target in caps and target not in blocked and affordable(target)
         candidate=target if targeted else local
         self.record.update(local_experiment=local,tested_candidate=candidate,changed_experiment=bool(targeted and target!=local),

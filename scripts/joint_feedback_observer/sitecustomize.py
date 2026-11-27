@@ -6,6 +6,8 @@ import sys
 
 if os.environ.get('AB_B1_OFFLINE') == '1':
     denied = [Path(os.environ[key]).resolve() for key in ('JOINT_OUTER_ANSWERS', 'JOINT_UPSTREAM_SOURCES')]
+    if os.environ.get('JOINT_ADDITIONAL_SEALED_DIRECTORY'):
+        denied.append(Path(os.environ['JOINT_ADDITIONAL_SEALED_DIRECTORY']).resolve())
     query = Path(os.environ['JOINT_PREDICTION_INPUT']).resolve()
     worker = 'superagent.experiment_worker' in sys.orig_argv
 

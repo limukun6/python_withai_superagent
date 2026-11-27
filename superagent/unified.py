@@ -93,7 +93,7 @@ def reflection_client(directory,mode='flash'):
     from .task_budget import TaskBudgetAccount, TaskBudgetLedger
     path = os.getenv('SUPERAGENT_RESEARCH_REFLECTION_OUTBOX')
     if not path:
-        return configured_flash(directory,thinking_mode='disabled' if mode in ('opening-flash','opening-feedback-flash') else None)
+        return configured_flash(directory,thinking_mode='disabled' if mode in ('opening-flash','opening-feedback-flash','opening-feedback-design-flash') else None)
     if os.getenv('SUPERAGENT_OFFLINE') == '1' or os.getenv('SUPERAGENT_PLANNER_LEDGER'):
         raise ValueError('Explicit online research outbox or the team ledger must be chosen separately')
     ledger = TaskBudgetLedger(path)
@@ -106,7 +106,7 @@ def reflection_client(directory,mode='flash'):
     if not key:
         raise ValueError('A campus key file is required')
     return ExperimentLLM(ENDPOINT,key,MODEL,.12,max_requests=1,allowed_served_models={MODEL},
-                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash','opening-feedback-flash') else None,
+                         thinking_mode='disabled' if mode in ('proposal-flash','delivered-flash','opening-flash','opening-feedback-flash','opening-feedback-design-flash') else None,
                          account=TaskBudgetAccount(ledger,scope,str(directory),fresh_outbox_scope=True,paired_arm=arm),streaming=True)
 
 
@@ -125,7 +125,7 @@ def command(args):
             return legacy_command(args)
     issue = None
     try:
-        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash','opening-feedback-flash'):
+        if reflection in ('flash','conditional-flash','scheduled-flash','proposal-flash','delivered-flash','opening-flash','opening-feedback-flash','opening-feedback-design-flash'):
             flash = reflection_client(args.run_dir,reflection)
         else:
             flash = None if getattr(args,'semantic_artifact_from',None) or reflection and getattr(args,'task_interpretation','fallback') not in ('auto','proactive') else configured_flash(args.run_dir)

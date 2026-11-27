@@ -11,7 +11,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 
 from superagent.ab_run import sha
-from superagent.analogy_review import blend_counts, can_review, promoted, review
+from superagent.analogy_review import blend_counts, can_review, nominate, promoted, review
 from superagent.data import TrainingTask
 from superagent.events import RunLogger
 from superagent.preference_analogy import AnalogyIndex,WeightedProbabilityVote
@@ -104,3 +104,18 @@ class Comparison(unittest.TestCase):
             self.assertEqual(sha(folder/'final_selection.json'),frozen)
             self.assertEqual(sha(path),incumbent['model_sha256'])
             self.assertIn('retained_after_failed_opportunity',(folder/'analogy_review.json').read_text())
+
+
+    def test_one_close_loss_can_earn_evidence_but_cannot_deploy_itself(self):
+        truth=np.ones(7,dtype=int)
+        def obs(pos):
+            v=np.asarray(pos)
+            return dict(row_key='same ordered rows',labels=truth,probabilities=np.column_stack((1-v,v)))
+        before=obs([.55,.55,.55,.55,.45,.45,.95])
+        near=obs([.05,.05,.05,.05,.95,.95,.95])
+        decision=nominate(before,near,truth)
+        self.assertEqual(decision['reason'],'paired_near_tie')
+        self.assertGreater(decision['weight'],0)
+        self.assertEqual(nominate(before,before,truth)['weight'],0)
+        self.assertFalse(promoted(-2,[dict(rows=1000,gain=20),dict(rows=1000,gain=0)],primary_rows=1000))
+        self.assertTrue(promoted(-2,[dict(rows=1000,gain=9),dict(rows=1000,gain=2)],primary_rows=1000))

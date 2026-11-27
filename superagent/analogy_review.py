@@ -7,6 +7,7 @@ import numpy as np
 from .ab_run import sha
 from .preference_analogy import WeightedProbabilityVote, derived_candidate
 from .experiment_policy import identity
+from .finalist_race import paired_error
 from .splits import sample_groups
 from .task_constraints import permitted
 
@@ -40,10 +41,36 @@ def blend_counts(anchor,neighbour,truth,shares):
     return [int(np.sum(np.argmax((1-w)*matrices[0]+w*matrices[1],axis=1)==truth)) for w in shares]
 
 
-def promoted(primary_gain,confirmations):
-    return (primary_gain>0 and len(confirmations)==2
-            and all(v['gain']>=0 for v in confirmations)
-            and sum(v['gain'] for v in confirmations)>=.003*sum(v['rows'] for v in confirmations))
+def nominate(anchor,neighbour,truth):
+    scores=blend_counts(anchor,neighbour,truth,SHARES)
+    position=1+int(np.argmax(scores[1:]))
+    weight=SHARES[position]
+    base=np.asarray(anchor['probabilities'])
+    alt=(1-weight)*base+weight*np.asarray(neighbour['probabilities'])
+    before,after=base.argmax(axis=1)==truth,alt.argmax(axis=1)==truth
+    changed=dict(rows=len(truth),gained=int((after&~before).sum()),lost=int((before&~after).sum()))
+    gain=scores[position]-scores[0]
+    uncertainty=paired_error(changed)
+    if gain>0:
+        reason='primary_improvement'
+    elif changed['gained']>0 and -gain<=len(truth)*uncertainty:
+        reason='paired_near_tie'
+    else:
+        reason='outside_sampling_uncertainty'
+        weight=0.
+    return dict(weight=weight,reason=reason,scores=scores,primary_gain=gain,
+                paired=changed,paired_standard_error=uncertainty)
+
+
+def promoted(primary_gain,confirmations,*,primary_rows=None):
+    if len(confirmations)!=2:
+        return False
+    gain=sum(v['gain'] for v in confirmations)
+    rows=sum(v['rows'] for v in confirmations)
+    if primary_gain>0:
+        return all(v['gain']>=0 for v in confirmations) and gain>=.003*rows
+    return (primary_rows is not None and all(v['gain']>0 for v in confirmations)
+            and gain+primary_gain>=.003*(rows+primary_rows))
 
 
 def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,payloads):
@@ -101,14 +128,13 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
         record('evaluating',candidate=name,derived_configuration=candidate.params,remaining_fits=executor.limit-spent)
         primary=observed['primary'][anchor_name]
         first=measure(name,'primary',needed-1)
-        scores=blend_counts(primary,first,payloads['primary']['labels'],SHARES)
-        position=int(np.argmax(scores))
-        share=SHARES[position]
-        gain=scores[position]-scores[0]
-        measured_scores={'primary':scores[position]/len(first['labels'])}
-        report.update(primary=dict(row_key=primary['row_key'],rows=len(first['labels']),scores=scores),locked_weight=share)
+        proposal=nominate(primary,first,payloads['primary']['labels'])
+        share,gain,scores=proposal['weight'],proposal['primary_gain'],proposal['scores']
+        measured_scores={'primary':scores[SHARES.index(share)]/len(first['labels'])}
+        report.update(primary=dict(row_key=primary['row_key'],rows=len(first['labels']),scores=scores),locked_weight=share,
+                      transparent_nomination=proposal)
         record('weight_locked',already_observed_folds={f:sorted(observed[f]) for f in wanted})
-        if gain<=0:
+        if share==0.:
             record('retained_primary')
             return result
         for j,fold in enumerate(wanted[1:]):
@@ -122,7 +148,7 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
                                               incumbent=base_count,candidate=vote_count,gain=vote_count-base_count))
             measured_scores[fold]=vote_count/len(truth)
             record('confirming')
-        if not promoted(gain,report['allocations']):
+        if not promoted(gain,report['allocations'],primary_rows=len(first['labels'])):
             record('retained_confirmation')
             return result
         model,_=executor.worker(directory/'refit_data.joblib',name,directory/'analogy_full.joblib',timeout)

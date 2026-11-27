@@ -33,7 +33,21 @@ def export(out):
     if release:
         paths["designated"] = out / "designated_result.json"
         records["designated"] = read(paths["designated"])
-        counts["qualified_raw_run"] = read(out / "release/result.json")["actual_fits"]
+        release_files = {key:out / "release" / name for key,name in
+                         (("entry","result.json"),("inputs","inputs.json"),("decision","run/agent/seed_replication.json"))}
+        raw = read(release_files["entry"])
+        require(raw["local_prediction_sha256"] == sha(out / "release/solve.csv") == sha(out / "release/replay.csv")
+                and not raw["designated_labels_opened"] and read(release_files["decision"])["model"] == raw["model"],
+                "Raw delivery or decision hash differs")
+        counts["qualified_raw_run"] = raw["actual_fits"]
+        release_material = {**release_files, "designated":paths["designated"], "qualified_by":out / "seed_policy/result.json",
+                            "local_original":out / "anchor/result.json"}
+        save(REGISTRY / "designated_release.json", dict(
+             verified_solver_git_commit="f214f8b33b7066fb4c670379fc6bbb4920553dab",
+             receipt_sha256={k:sha(p) for k,p in release_material.items()},
+             records={k:read(p) for k,p in release_material.items() if k!="qualified_by"},
+             exact_source_match=(read(release_files["inputs"])["source"] ==
+                  prospective["folds"][0]["methods"]["replicated"]["source"]), opened_course_test=False))
     retrieval = {str(k):read(dev / f"tabretrieve_k{k}/sealed.json") for k in (128,512)}
     prior = REGISTRY / "catalogue_encoder_results.json"
     before = read(prior)["cumulative"]

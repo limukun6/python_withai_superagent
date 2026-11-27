@@ -42,12 +42,18 @@ def main() -> None:
                    'semantic_check':semantic_check}
     start = time.perf_counter()
     from .fit_guard import admitted_fits
+    from .training_randomness import fitted_seed, training_seed
+    repeat_seed = payload.get("supervised_random_seed")
     runtime_estimator=None
     if candidate.params.get('runtime_composed') and origin=='registry':
         from .runtime_inventory import runtime_classifiers
         runtime_estimator=runtime_classifiers()[candidate.params['class']]
-    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache:
+    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache, training_seed(repeat_seed):
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
+        if repeat_seed is not None:
+            if fitted_seed(model) != repeat_seed:
+                raise ValueError("Fitted classifier did not use the requested replicate seed")
+            configuration["training_random_seed"] = repeat_seed
         if payload.get("mode") != "refit":
             training_predictions = predict_with_model(payload["kind"], model, payload["X_train"])
         cache_report=cache.report() if cache else {'enabled':False}

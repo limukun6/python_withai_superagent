@@ -14,7 +14,7 @@ def add_review_arguments(parser):
     control.add_argument('--task-analysis',choices=('local','flash','feedback-control','feedback-local','feedback-flash','feedback-confirm','feedback-design','feedback-design-flash'),
                          help='Check a task interpretation at opening or after observing a real training experiment')
     control.add_argument('--feedback-reflection', choices=('control','local','flash','conditional-flash','scheduled-flash',
-                        'fusion-holdout','near-full-confirmation','remaining-folds','evidence-control','evidence-local','proposal-flash','delivered-local','delivered-flash','opening-local','opening-flash','opening-feedback-control','opening-feedback-local','opening-feedback-flash','opening-feedback-confirm','opening-feedback-design','opening-feedback-design-flash'),
+                        'fusion-holdout','near-full-confirmation','remaining-folds','seed-replication','evidence-control','evidence-local','proposal-flash','delivered-local','delivered-flash','opening-local','opening-flash','opening-feedback-control','opening-feedback-local','opening-feedback-flash','opening-feedback-confirm','opening-feedback-design','opening-feedback-design-flash'),
                         help='Review an early action or a measured disagreement that could change the delivered model')
     parser.add_argument('--reflection-history', help='Verified anonymous prior outcome counts')
     parser.add_argument('--exploration-rule', metavar='JSON',

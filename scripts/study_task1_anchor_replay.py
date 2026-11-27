@@ -71,9 +71,9 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     for n in ("source","archive","out"):
         p.add_argument("--"+n,type=lambda s:Path(s).resolve(),required=True)
-    p.add_argument("--cap",type=int,choices=[10,32,48],default=10)
+    p.add_argument("--cap",type=int,choices=[10,32,48,64],default=10)
     p.add_argument("--table-weight",type=lambda s:Path(s).resolve())
     p.add_argument("--optional-runtime",type=lambda s:Path(s).resolve())
-    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation","remaining-folds"])
+    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation","remaining-folds","seed-replication"])
     args=p.parse_args()
     run(args.source,args.archive,args.out,args.cap,args.table_weight,args.optional_runtime,args.feedback_mode)

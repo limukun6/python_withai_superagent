@@ -83,6 +83,10 @@ def valid_spec(kind,spec):
 
 def fit_pipeline(spec,x,y,query):
     estimator=valid_spec(spec['kind'],spec)
+    from .training_randomness import selected_seed
+    seed = selected_seed()
+    if seed is not None and "random_state" in estimator.get_params(deep=False):
+        estimator.set_params(random_state=seed)
     pref=spec['semantics']=='preference'
     base=(UnorderedPairFeatures(('word','char'),bins=4096) if spec['semantics']=='symmetric' else make_preprocessor(spec['kind']))
     steps=[('features',base)]

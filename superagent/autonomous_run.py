@@ -177,8 +177,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
           interpretation='fallback', prediction_package=None, semantic_artifact_from=None, await_first_delivery=False):
     from . import feedback_reflection as feedback
     prior_feedback = feedback.load_memory(reflection_history)
-    if type(fit_limit) is not int or not 2<=fit_limit<=48 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
-        raise ValueError('Need 2–48 physical fits including refits and positive finite deadlines')
+    if type(fit_limit) is not int or not 2<=fit_limit<=64 or not all(math.isfinite(t) and t>0 for t in (wall,timeout)):
+        raise ValueError('Need 2–64 physical fits including refits and positive finite deadlines')
     directory = Path(directory).resolve()
     rule = load_rule(exploration_rule) if exploration_rule is not None else None
     directory.mkdir(parents=True,exist_ok=False)
@@ -314,7 +314,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds') and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds','seed-replication') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
@@ -505,6 +505,10 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .fusion_holdout import review as review_fusion
                 choice=review_fusion(task,metric,choice,history,observed,sealed,directory,log)
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
+            if feedback_reflection == 'seed-replication' and fit_limit > 16:
+                from .seed_replication import after_refit
+                selection = after_refit(task, spec, metric, choice, selection, observed, history,
+                                        payloads, executor, directory, log, timeout)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,
@@ -522,7 +526,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             outcome=dict(status='completed',model_available=True,winner=selection['family'],
                          members=choice['members'],training_rows=len(task.y_train),training_only=True)
             recovery.advance('model_exported',accounting=executor.accounting(),
-                             artifacts=['selected_model.joblib','task_spec.json','final_selection.json'],status='training_completed')
+                             artifacts=[selection['model_file'],'task_spec.json','final_selection.json'],status='training_completed')
         except Exception as error:
             outcome=dict(status='failed',model_available=False,error=type(error).__name__+': '+str(error))
             recovery.exhausted('Training did not complete; retain separately verified checkpoints if available')

@@ -66,6 +66,7 @@ def _tabular_catboost(y_train, depth, l2_leaf_reg):
     # Imported lazily so a missing optional accelerator does not prevent the
     # transparent sklearn fallback portfolio from completing.
     from catboost import CatBoostClassifier
+    from .training_randomness import selected_seed
 
     return CatBoostClassifier(
         iterations=600,
@@ -75,7 +76,7 @@ def _tabular_catboost(y_train, depth, l2_leaf_reg):
         loss_function="Logloss" if len(np.unique(y_train))==2 else "MultiClass",
         eval_metric="Accuracy",
         verbose=False,
-        random_seed=42,
+        random_seed=selected_seed(42),
         thread_count=-1,
         allow_writing_files=False,
     )

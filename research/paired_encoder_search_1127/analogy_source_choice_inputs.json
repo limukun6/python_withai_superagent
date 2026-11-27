@@ -1,0 +1,57 @@
+{
+  "plan": "3cb7cadcd6e13bc86be120065d542c8ea9dd15a5b8e758137b8d3a9c37a95d1e",
+  "actual_election": "3b08815d59546505739aae5c77d96d1ddf558cf15fe837ec9e3fd19add427dc1",
+  "previous_election": "57353d758460155517ef8423d0c022a36b15da3cbd1ec840517dae88843b9a13",
+  "supported_sources": {
+    "preference_analogy_67565188e89ebf27ba91": {
+      "member": "bge_small_text_with_lexical_features",
+      "params": {
+        "encoder": "BAAI/bge-small-en-v1.5",
+        "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+        "classifier": "preference_analogy",
+        "representation": "direction and midpoint of individual frozen embeddings",
+        "independent_training_groups": true,
+        "orientation": "complement",
+        "neighbors": "clipped_sqrt_groups_3_40"
+      }
+    },
+    "preference_analogy_45cb39291ca5c8321d9e": {
+      "member": "gte_base_paired_linear",
+      "params": {
+        "encoder": "thenlper/gte-base",
+        "revision": "c078288308d8dee004ab72c6191778064285ec0c",
+        "classifier": "preference_analogy",
+        "representation": "direction and midpoint of individual frozen embeddings",
+        "independent_training_groups": true,
+        "orientation": "complement",
+        "neighbors": "clipped_sqrt_groups_3_40"
+      }
+    }
+  },
+  "folds": {
+    "primary": {
+      "payload": "067d761fa8911567cf814a4e0cb8b2fa734d2e791b2f9d70c4e606e2c7130bd7",
+      "fitted_members": [
+        "b9d8d46b4ecb30799e8900a1c3b59d330b5874e66710abfadb33383e61588693",
+        "7f7bf90e5dc344243266e6ab3cbc442bcca954d70b595e0e8e8fe85cc0a2fd99"
+      ],
+      "old_adviser": "a5a27fc817bb4c143050fc9f1f2dfe3497df57f641d6dbe5f7a713c8a3627d38"
+    },
+    "confirmation_1": {
+      "payload": "8eae64e3dfaaf9f9af24365e3a454746e2d67d7e1273f721797d4c1bf90da43e",
+      "fitted_members": [
+        "e802d5a8f8cdd12541f711ff7bc4e583a859ad2a3d5bf44a8a262a0f2a1d7b6f",
+        "ce3e02730d61b64f5806aee1cfe0481badc3b05d7b42fd670740f7c4b32d75a6"
+      ],
+      "old_adviser": "e91bf22f14f85456b8d1ce1a8f0e4af68662421a542679c50667805792f2959a"
+    },
+    "confirmation_2": {
+      "payload": "64342aae9c1cc7ccee265f25d2a4ef8912e0377800a9a57d0ee54ab02cfc65d5",
+      "fitted_members": [
+        "1e2e0e23c0f426fffcdd02fefd0274f39f5429fe9e057608e2198064287ae21c",
+        "c6fb75602a641436cd24f728ac495b04d51429247f7216601838ad53faeaba5b"
+      ],
+      "old_adviser": "13fc36b5d2249d59b1364a736b7b5739b80412cd3db2cdf41027470d4414db88"
+    }
+  }
+}

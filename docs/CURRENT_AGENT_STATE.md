@@ -1,5 +1,17 @@
 # 当前接续状态
 
+## 2026-11-27：Task1 独立性能探索，当前统一入口 76.31%
+
+用户交接后重新授权 A 探索 TaskA/优惠券 Task1 的 80% 目标。本分支 codex/task1-profile-research-1127 从 f0f3593 隔离开发，不写 B 已接管的付费账本。SA26 仍按原交接由 B 接手。
+
+已完成四轮，共 31 次分类器拟合、0API/token/¥0。训练内画像均值不晋级，情境 token 树相对同折字段交叉树三折平均 +1.48pp；核、双塔和固定融合均无稳定正收益。统一 solve 自主探索与两次复核后选中 catboost_recurring_context，指定验证 1549/2030=76.3054%，相对历史1533多16题，距80%还差75题。10次物理fit对账一致，新进程重载相同，正式test未开。34项零fit兼容检查通过。详见 batches/TASK1_PROFILE_RESULTS_20261127_zh.md。
+
+新增候选只根据主拟合特征的重复结构开放，工厂在 ab_methods、目录在 ab_catalog，控制器只传支持标志，不强选赢家。模型参数保持600轮/深度6，SA26源码不改。模型/数据/逐行输出位于忽略的runs/task1_context_agent_01，脱敏结果 research/task1_context_agent_01。
+
+第五轮 TASK1_CONTEXT_CAPACITY_PLAN 已登记，将在同一18643的前两折比较 incumbent/deeper/ordered，最多6fit、0API，指定验证封存。尚未以计划冒称已完成，接续先读其 completion。
+
+
+
 ## 2026-11-27：用户将A剩余工作转交B；SA26尚未实跑
 
 本轮用户因安排明确要求交接给队友。A只完成交接，不再启动训练/API或写付费账本；B核对附件后接管唯一写入。主交接文件docs/A_TO_B_REMAINING_WORK_HANDOFF_20261127_zh.md；不从旧PR3覆盖入口。

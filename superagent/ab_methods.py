@@ -17,6 +17,7 @@ from . import ab_varied_preferences
 
 
 FIELDS = 'supported_field_interactions'
+CONTEXT = 'catboost_recurring_context'
 TEXT = 'minilm_text_with_lexical_features'
 TEXT_KERNEL = 'minilm_text_with_nonlinear_lexical_features'
 TEXT_DEEP = 'minilm_l12_text_with_lexical_features'
@@ -34,6 +35,7 @@ ROUTES = {FIELDS:'field_interactions', TEXT:'minilm_lexical', TEXT_KERNEL:'minil
 ROUTES.update({f'symmetric_{representation}_C{c}':f'symmetric_{representation}'
                for representation in ('word','word_char') for c in (.3,3.)})
 ROUTES.update(ab_text_recipes.ROUTES)
+ROUTES[CONTEXT] = 'catboost_recurring_context'
 ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
@@ -45,6 +47,17 @@ def _field_tree(rows, labels, query):
     from .field_interactions import InteractionTree
     model = InteractionTree({'pair_limit':3,'backbone_params':{'depth':6,'l2_leaf_reg':3.0}}).fit(rows, labels)
     return model, model.predict(query)
+
+
+def _context_tree(rows, labels, query):
+    from .joint_context import ContextTokenTree
+    model = ContextTokenTree(dict(pair_limit=3)).fit(rows, labels)
+    return model, model.predict(query)
+
+
+def context_candidate():
+    return Candidate(CONTEXT, dict(pair_limit=3, depth=6, l2_leaf_reg=3., iterations=600,
+                     representation='native categorical fields with repeated profile and context tokens'), _context_tree)
 
 
 class GradientHistograms(TransformerMixin, BaseEstimator):
@@ -112,8 +125,12 @@ def additions(kind, *, include_legacy_methods=True):
         return [Candidate(RELATION, dict(C=1.0, hash_bins=32768, max_iter=2000,
                           representation='ordered columns with word and character pair interactions'), _ordered_relation)]
     if kind=='categorical_tabular' and find_spec('catboost') is not None:
-        return [Candidate(FIELDS,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
-                          representation='training-selected categorical field interactions'),_field_tree)]
+        methods = [Candidate(FIELDS,dict(pair_limit=3,depth=6,l2_leaf_reg=3.,iterations=600,
+                             representation='training-selected categorical field interactions'),_field_tree)]
+        # The worker resolves from 'all'. Controllers admit the extra method using fitting rows.
+        if not include_legacy_methods:
+            methods.append(context_candidate())
+        return methods
     if kind=='image':
         methods = [Candidate(IMAGE,dict(grid=4,orientation_bins=8,C=1.,representation='gradient histograms and cell means'),_image)]
         if ab_vision.weights_file() is not None:

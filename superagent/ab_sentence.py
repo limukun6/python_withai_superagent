@@ -197,7 +197,7 @@ class SentenceFeatures(TransformerMixin,BaseEstimator):
         dense,tokens=encode(texts)
         return self.embedding_features(dense),tokens
 
-    def transform(self,rows):
+    def feature_blocks(self,rows):
         if self.kind=='pair_text':
             texts=[s for pair in rows for s in pair]
             left, right = zip(*rows)
@@ -210,7 +210,10 @@ class SentenceFeatures(TransformerMixin,BaseEstimator):
         blocks,n=self.semantic_blocks(rows,texts)
         self.usage_['input_tokens']+=n
         self.usage_['feature_transform_calls']+=1
-        return hstack([*matrices,*blocks],format='csr')
+        return [*matrices,*blocks]
+
+    def transform(self,rows):
+        return hstack(self.feature_blocks(rows),format='csr')
 
 
 class DeepPreferenceFeatures(SentenceFeatures):

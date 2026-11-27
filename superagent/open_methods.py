@@ -210,7 +210,11 @@ def resolve(kind,name,document):
         spec=document['entries'][name]
         if spec['kind']!=kind:
             raise ValueError('Runtime pipeline has the wrong modality')
-        method=materialize(spec)
+        if spec.get("operator")=="weight_feature_blocks":
+            from .view_weighting import materialize as weighted_method
+            method=weighted_method(spec)
+        else:
+            method=materialize(spec)
         if method.family!=name:
             raise ValueError('Runtime configuration digest differs')
         return method

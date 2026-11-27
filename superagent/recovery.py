@@ -15,8 +15,8 @@ class RecoveryController:
         self.fit_limit = fit_limit
         self.state = dict(version='recovery-state-v1',stage='task_adaptation',status='running',
             goal=None,observed_evidence=[],unresolved_fields=[],failed_actions=[],actions=[],
-            installed_capabilities=['inspect_header','inspect_array','inspect_image',
-                                    'repair_adapter','revise_interpretation','alternate_method'],
+            installed_capabilities=['inspect_header','inspect_array','inspect_image','inspect_batch',
+                                    'repair_adapter','revise_interpretation','alternate_method','report_unresolved'],
             available_artifacts=[],attempted_classifier_fits=0)
 
     def context(self):
@@ -48,6 +48,12 @@ class RecoveryController:
         record=dict(stage=stage,diagnostic=deepcopy(diagnostic),action_sha256=hashlib.sha256(
             json.dumps(action,sort_keys=True,default=str).encode()).hexdigest(),signature=signature,
             evidence_count=len(self.state['observed_evidence']),repeated_without_new_evidence=repeated)
+        fields=sorted(diagnostic.get('uncertainty_fields',[]))
+        evidence_sha=self.evidence_identity()
+        record.update(unresolved_fields=fields,evidence_sha256=evidence_sha,
+            repeated_unresolved_without_new_evidence=bool(fields) and any(
+                r.get('unresolved_fields')==fields and r.get('evidence_sha256')==evidence_sha
+                for r in self.state['failed_actions']))
         self.state['failed_actions'].append(record)
         self.state['stage']=stage
         self.state['unresolved_fields']=list(diagnostic.get('uncertainty_fields',[]))
@@ -59,6 +65,18 @@ class RecoveryController:
         self.state['actions'].append(dict(action=action,outcome='new_structure_observation'))
         self.state['observed_evidence'].append(deepcopy(observation))
         self.save()
+
+    def evidence_identity(self):
+        keys=('member','source','codec','collection','delimiter','fields','format','arrays','shape','dtype','width','height','mode')
+        facts={json.dumps({k:o[k] for k in keys if k in o},sort_keys=True,ensure_ascii=False)
+               for o in self.state['observed_evidence']}
+        return hashlib.sha256(json.dumps(sorted(facts),ensure_ascii=False).encode()).hexdigest()
+
+    def report_unresolved(self, report):
+        self.state['unresolved_report']=deepcopy(report)
+        self.state['unresolved_fields']=[q['field'] for q in report['questions']]
+        self.state['actions'].append(dict(action='report_unresolved',outcome='model_report_not_verified_completion'))
+        self.exhausted('Model reported that supplied evidence cannot define the remaining task fields')
 
     def accepted(self, action, *, stage):
         self.state['actions'].append(dict(action=action,outcome='verified',stage=stage))

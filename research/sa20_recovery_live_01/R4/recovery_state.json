@@ -1,0 +1,64 @@
+{
+  "version": "recovery-state-v1",
+  "stage": "task_adaptation",
+  "status": "unresolved",
+  "goal": null,
+  "observed_evidence": [],
+  "unresolved_fields": [
+    "target"
+  ],
+  "failed_actions": [
+    {
+      "stage": "task_adaptation",
+      "diagnostic": {
+        "stage": "task_adaptation",
+        "code": "TaskFormatError",
+        "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+      },
+      "action_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "signature": "d3aed127d2510be8113684264d829741219605f250bdf5afd5d66f04963264d9",
+      "evidence_count": 0,
+      "repeated_without_new_evidence": false,
+      "unresolved_fields": [],
+      "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "repeated_unresolved_without_new_evidence": false
+    }
+  ],
+  "actions": [
+    {
+      "action": "report_unresolved",
+      "outcome": "model_report_not_verified_completion"
+    }
+  ],
+  "installed_capabilities": [
+    "inspect_header",
+    "inspect_array",
+    "inspect_image",
+    "inspect_batch",
+    "repair_adapter",
+    "revise_interpretation",
+    "alternate_method",
+    "report_unresolved"
+  ],
+  "available_artifacts": [],
+  "attempted_classifier_fits": 0,
+  "unresolved_report": {
+    "reason": "The supplied README states that packed.npz contains two different class annotations, annotation_a and annotation_b, but neither is identified as the requested prediction target. The target definition is explicitly missing, and structural inspection cannot determine which annotation is intended. Selecting one would invent label meaning.",
+    "questions": [
+      {
+        "field": "target",
+        "question": "Which annotation in packed.npz, annotation_a or annotation_b, is the requested classification target, or is the target defined elsewhere?",
+        "evidence_refs": [
+          "doc:README.md:0"
+        ]
+      }
+    ],
+    "source_citations_checked": true,
+    "semantic_insufficiency_certified": false,
+    "delivery_status": "unresolved"
+  },
+  "stop_reason": "Task interpretation did not yield a verified contract within the available recovery route and allowance",
+  "remaining_requests": 2,
+  "remaining_fits": 4,
+  "remaining_seconds": 342.81300000008196
+}

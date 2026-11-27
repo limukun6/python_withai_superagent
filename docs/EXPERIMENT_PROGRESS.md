@@ -1,5 +1,19 @@
 # 实验持续工作记录
 
+## 2026-11-27：SA20组合结构探查＋未决报告完成
+
+基线85550b5。inspect_batch将两次底层元数据探查合成一次Flash往返（仍总2工具/3请求）；RecoveryState按未决字段＋去重事实指纹识别语义空转，增加有来源的report_unresolved；已正常stop且持久结算的坏JSON可带新诊断修复，timeout/截断/未结算仍不重试。A改接入/恢复/LLM解析，不改B排序。
+
+317/317无fit/API检查26.093秒（14新）；原SA19同字节R1/R2/R4自然真实solve一次运行：R1/R2完整2/2，各接入3→2调用、B0→1调用，各3fit/3API，新进程72行一致；R4首次真实回复明确target未决，3→1API、0fit。错误完成0、阳性过早未决0、运行中人工介入0。独立审计3/3，7请求真实回复/model/token/cost/canonical行绑定。
+
+合计6fit/7API/¥.051030/202.734秒。相同三条件旧9API/¥.060365，本次少2API、课程折算少¥.009335（15.46%），主要是R4省空转；R1/R2因新增B规划总费用各略增，不能称每条都省钱或预测质量提高。单次顺序开发对照，不是独立泛化或单因子因果实验。坏JSON恢复只有模拟已结算HTTP验证，非本批自然真实出错样本。
+
+报告docs/batches/SA20_EFFICIENT_RECOVERY_RESULTS_20261127_zh.md，证据research/sa20_recovery_checks_01、sa20_recovery_prepared_02、sa20_recovery_live_01、sa20_recovery_audit_01；脚本scripts/run_sa20_recovery_live.py、scripts/audit_sa20_recovery.py。prepared_01仅准备、未运行，新_02补了baseline哈希绑定。无失败HTTP重试，密钥/模型/包/SQLite不进Git。
+
+当前canonical ledger504/known8.264113/unknown16/pending0，无训练/API队列，未冻结；旧16仍null，实际学校扣费/预算合规未核验。SA7–SA20自动窗口累计41fit/43API/¥.297718，非全项目累计。
+
+下一优先：failed_actions现在主要是提案SHA，补有界、结构化失败动作摘要，使LLM能看见上一次适配与具体失败检查；再做独立原包多模态完整恢复及最终预测阶段修复。先计划/复跑代码，不以工具检查数量或未决报告替代完整任务成果，不重复SA20付费路径。
+
 ## 2026-11-27：SA19最小恢复控制器＋正式路径3/3交付
 
 基线0769d22。新增recovery.py和structure_tools.py；正式_train把同一失败/证据/预算/已有成果状态贯穿接入与B调度。语义循环不再固定两次拒绝退出，仍共享最多3次Flash、两次工具；fallback预测预检失败也可交语义修复。NPY/NPZ键/shape/dtype和图像尺寸/模式工具不返回值；20个reader绑定新artifact。B方法排序和失败换候选保留。

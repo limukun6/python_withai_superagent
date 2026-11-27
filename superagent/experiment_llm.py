@@ -17,6 +17,13 @@ from .pricing import resolve_pricing
 from .runtime_budget import PlanningTimeExhausted
 
 
+class MeteredResponseFormatError(ValueError):
+    """A completed response was metered; its content was not the requested JSON."""
+    def __init__(self, message, *, settlement_complete=False):
+        super().__init__(message)
+        self.settlement_complete=settlement_complete
+
+
 def read_chat_stream(response, deadline, started, progress):
     """Collect choice zero and the final usage event from a campus SSE response."""
     body = {}
@@ -242,13 +249,19 @@ class ExperimentLLM:
             raise ValueError("Output token limit reached; response is incomplete; no automatic retry")
         if self.streaming and first.get('finish_reason') != 'stop':
             raise ValueError('Completion stream did not finish normally')
+        def format_error(message):
+            if first.get('finish_reason')=='stop':
+                return MeteredResponseFormatError(message,settlement_complete=ticket is not None and not settlement_failed)
+            return ValueError(message)
         if not isinstance(content, str):
-            raise ValueError("Missing text response.")
+            raise format_error("Missing text response.")
         if content.strip().startswith("```"):
             content = "\n".join(content.strip().splitlines()[1:-1])
-        decision = json.loads(content)
+        try:decision = json.loads(content)
+        except json.JSONDecodeError as error:
+            raise format_error('Completed metered response is not valid JSON; revise the requested format') from error
         if not isinstance(decision, dict):
-            raise ValueError("Expected a JSON object.")
+            raise format_error("Expected a JSON object.")
         return decision
 
 

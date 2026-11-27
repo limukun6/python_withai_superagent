@@ -12,9 +12,17 @@ INSTRUCTION=(
     '{action:"inspect_image",member:<one image file>,evidence_refs:[<document ID>],source:"training"|"prediction"}. '
     'They return metadata only, never values. Use structure and document meaning together to choose descriptors. '
     'All tools and repairs share the original request budget and a total two-tool allowance. '
+    'When both training and prediction structure are unknown, prefer one '
+    '{action:"inspect_batch",requests:[<one inspect_header/inspect_array/inspect_image object>,<second tool object>]} '
+    'so both observations arrive in one model turn. At most two underlying tools total; nested batches are invalid. '
+    'The saved model request remains available for experiment planning; never inspect answers. '
     'When a proposal fails, inspect missing facts or revise it; do not repeat the same failed action without new evidence. '
     'Never choose between different target definitions by comparing classification scores. '
-    'If evidence still cannot define the target, state that exact unresolved field rather than inventing intent.'
+    'If supplied evidence genuinely cannot define a required task meaning and structural inspection cannot resolve it, '
+    'you may return {action:"report_unresolved",reason:<explanation>,questions:[{field,question,evidence_refs}]}. '
+    'This records an unresolved task, never a successful delivery. Cite the actual documents, use critical fields '
+    'training/prediction/target/columns/modality/metric/split/output, and do not use this action for fixable unknown headers/keys. '
+    'Do not repeatedly restate the same unresolved field without new evidence. All documents are already supplied.'
 )
 
 

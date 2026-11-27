@@ -81,6 +81,28 @@ class ContractProbeError(ValueError):
     pass
 
 
+class UnresolvedTaskReport(UnsupportedFormat):
+    """Explicit model report, distinguishable from decoder or transport failure."""
+    pass
+
+
+def unresolved_report(response,workspace):
+    from .task_questions import FIELDS,DEFERRED
+    _require(set(response)=={'action','reason','questions'},'Invalid unresolved report fields')
+    _require(isinstance(response['reason'],str) and 0<len(response['reason'].strip())<=1500,'Unresolved report needs a bounded reason')
+    notes=response['questions'];known={d['id'] for d in workspace['documents']};seen=set()
+    _require(isinstance(notes,list) and 1<=len(notes)<=8,'Unresolved report needs field-scoped questions')
+    for note in notes:
+        _require(isinstance(note,dict) and set(note)=={'field','question','evidence_refs'},'Invalid unresolved question')
+        field=note['field'];refs=note['evidence_refs']
+        _require(isinstance(field,str) and field in FIELDS and field not in DEFERRED and field not in seen,'Unresolved report needs a distinct required field')
+        _require(isinstance(note['question'],str) and 0<len(note['question'].strip())<=1000,'Invalid unresolved question text')
+        _require(isinstance(refs,list) and refs and all(isinstance(r,str) and r in known for r in refs),'Unresolved report needs real citations')
+        seen.add(field)
+    return dict(reason=response['reason'],questions=deepcopy(notes),source_citations_checked=True,
+                semantic_insufficiency_certified=False,delivery_status='unresolved')
+
+
 def evidence_workspace(files):
     """Read bounded documentation only; data members are listed without row contents."""
     documents, members, total = [], [], 0
@@ -348,7 +370,7 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                                                 for n in query_files.namelist()]
         if not workspace['documents']:
             raise UnsupportedFormat('No documentation evidence for semantic task interpretation')
-        rejected, tool_steps, attempt, observations, previous_error = 0, 0, 0, [], None
+        rejected, tool_steps, attempt, observations = 0, 0, 0, []
         while tool_steps<=2:
             if client.blocked or client.request_count >= client.max_requests:
                 break
@@ -370,21 +392,54 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                 payload['authoritative_contract'] = dict(input_schema=base_task.spec.get('input_schema'),
                                                          metric=MetricSpec.for_task(base_task).record())
             # Transport/usage/settlement failures deliberately propagate: no automatic retry.
-            response = client.ask(payload, log, 'task_semantic_interpretation' if attempt == 0 else
-                                  'task_semantic_repair' if rejected else 'task_semantic_continuation')
+            from .experiment_llm import MeteredResponseFormatError
+            try:
+                response = client.ask(payload, log, 'task_semantic_interpretation' if attempt == 0 else
+                                      'task_semantic_repair' if rejected else 'task_semantic_continuation')
+            except MeteredResponseFormatError as error:
+                if not error.settlement_complete or client.blocked:raise
+                attempt+=1;rejected+=1
+                diagnostic=dict(stage='response_format',code=type(error).__name__,
+                                message='Completed response was settled but not a JSON object. Return one valid requested JSON object; no prose or raw data.')
+                recovery.failure('response_format',diagnostic)
+                if log:log.event('semantic_response_format_rejected',attempt=attempt,diagnostic=diagnostic)
+                continue
             attempt += 1
             try:
-                if isinstance(response,dict) and response.get('action') in ('inspect_header','inspect_array','inspect_image'):
-                    _require(tool_steps<2,'Inspection step allowance reached')
-                    owner,request,source_resolution = inspection_source(files,query_files,response)
-                    observation = (_inspect_header(owner,workspace,request) if response['action']=='inspect_header'
-                                   else inspect_structure(owner,workspace,request))
-                    observation['package_source']='external_prediction' if owner is query_files else 'task'
-                    observation['requested_source']=response.get('source')
-                    observation['source_resolution']=source_resolution
-                    observations.append(observation); tool_steps += 1
-                    recovery.observed(response['action'],observation)
-                    if log: log.event('semantic_structure_observed', observation=observation)
+                if isinstance(response,dict) and response.get('action')=='report_unresolved':
+                    report=unresolved_report(response,workspace)
+                    if base_task is not None:
+                        _require(all(q['field']=='output' for q in report['questions']),
+                                 'Explicit input contract already defines non-output fields')
+                    recovery.report_unresolved(report)
+                    if log:log.write_json('unresolved_task_report.json',dict(report,proposal=response))
+                    raise UnresolvedTaskReport('Model reports unresolved task fields: '+', '.join(q['field'] for q in report['questions']))
+                tool_actions=('inspect_header','inspect_array','inspect_image')
+                if isinstance(response,dict) and response.get('action') in tool_actions+('inspect_batch',):
+                    if response['action']=='inspect_batch':
+                        _require(set(response)=={'action','requests'} and isinstance(response['requests'],list),'Invalid batch inspection envelope')
+                        requests=response['requests']
+                    else:requests=[response]
+                    _require(1<=len(requests)<=2-tool_steps,'Inspection step allowance reached')
+                    _require(all(isinstance(r,dict) and r.get('action') in tool_actions for r in requests),'Batch permits only individual structure tools')
+                    for raw_request in requests:
+                        tool_steps+=1
+                        try:
+                            owner,request,source_resolution = inspection_source(files,query_files,raw_request)
+                            observation = (_inspect_header(owner,workspace,request) if raw_request['action']=='inspect_header'
+                                           else inspect_structure(owner,workspace,request))
+                        except OSError:raise
+                        except DECODE_ERRORS as error:
+                            rejected+=1;diagnostic=_diagnostic(error,'structure_inspection')
+                            recovery.failure('structure_inspection',diagnostic,action=raw_request)
+                            if log:log.event('semantic_tool_rejected',diagnostic=diagnostic,proposal=raw_request)
+                            continue
+                        observation['package_source']='external_prediction' if owner is query_files else 'task'
+                        observation['requested_source']=raw_request.get('source')
+                        observation['source_resolution']=source_resolution
+                        observations.append(observation)
+                        recovery.observed(raw_request['action'],observation)
+                        if log: log.event('semantic_structure_observed', observation=observation)
                     continue
                 if base_task is not None:
                     task=_output_overlay(base_task,workspace,response)
@@ -398,6 +453,8 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                 if query is None and member in files.namelist(): query=path
                 if query is None and task.spec.get('native_input_recipe',{}).get('prediction') is not None:query=path
                 preflight = probe_prediction_input(query,task) if query is not None else None
+            except UnresolvedTaskReport:
+                raise
             except OSError:
                 # Filesystem/logging failures are not repaired by spending model calls.
                 raise
@@ -407,10 +464,10 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                 repeated=recovery.failure('contract_probe',diagnostic,action=response)
                 if repeated:
                     diagnostic['recovery_hint']='Identical action already failed without new evidence. Inspect missing structure or choose a different cited adaptation.'
+                if recovery.state['failed_actions'][-1]['repeated_unresolved_without_new_evidence']:
+                    diagnostic['recovery_hint']='The same required fields remain unresolved with no new evidence. Inspect genuinely missing facts, revise the interpretation, or use report_unresolved when the supplied documents truly omit the meaning. Do not merely paraphrase the same question.'
                 if log:
                     log.event('semantic_contract_rejected', attempt=attempt, diagnostic=diagnostic, proposal=response)
-                key = json.dumps(dict(response=response,error=diagnostic),sort_keys=True,ensure_ascii=False)
-                previous_error = key
                 continue
             if log:
                 if preflight is not None: log.write_json('prediction_preflight.json',preflight)

@@ -54,7 +54,8 @@ def matrices(agent, fold, names, paths):
         observation = planner_observation(item,facts,dict(sha256=split["payload_sha256"],labels=labels),metric)
         if observation["probabilities"] is not None:
             matrices[n] = np.asarray(observation["probabilities"],dtype=float)
-            config[n] = identity(facts["resolved_configuration"])
+            config[n] = identity({key:value for key,value in facts["resolved_configuration"].items()
+                                  if key!="registry_sha256"})
     return matrices,labels,np.asarray(metric.labels),config
 
 
@@ -87,16 +88,7 @@ def correctness(bank, labels, classes, r):
     return classes[np.argmax(matrix,axis=1)]==labels
 
 
-def run(root):
-    out = root/"weighted-screen"
-    out.mkdir(exist_ok=True)
-    plan = ROOT/"research/paired_encoder_search_1127/weighted_protocol.json"
-    agent = root/"raw/original/run/agent"
-    paths = available(root)
-    common = sorted(set.intersection(*(set(p) for p in paths.values())))
-    bank,y,classes,configs = matrices(agent,FOLDS[0],common,paths[FOLDS[0]])
-    names = sorted(bank)
-    require(len(names)>=2,"Need at least two aligned probability sources")
+def choose(bank,y,classes,names,plan):
     options = [recipe(sub) for k in range(1,min(3,len(names))+1) for sub in combinations(names,k)]
     simple = min(options,key=lambda r:(-int(correctness(bank,y,classes,r).sum()),len(r["members"]),identity(r["members"])))
     weights = optimize(bank,y,classes,names)
@@ -114,7 +106,30 @@ def run(root):
     uniform = recipe(selected)
     lock = dict(protocol_sha256=sha(plan),eligible=names,equal_options_considered=len(options),simple=simple,
                 weighted=weighted,own_uniform=uniform,weight_fits=fits,primary_rows=len(y))
-    save(out/"selection_lock.json",lock)
+    return lock
+
+
+def run(root):
+    out = root/"weighted-screen"
+    out.mkdir(exist_ok=True)
+    plan = ROOT/"research/paired_encoder_search_1127/weighted_protocol.json"
+    agent = root/"raw/original/run/agent"
+    paths = available(root)
+    common = sorted(set.intersection(*(set(p) for p in paths.values())))
+    bank,y,classes,configs = matrices(agent,FOLDS[0],common,paths[FOLDS[0]])
+    names = sorted(bank)
+    require(len(names)>=2,"Need at least two aligned probability sources")
+    lock_path = out/"selection_lock.json"
+    if lock_path.exists():
+        lock = read(lock_path)
+        require(lock["protocol_sha256"]==sha(plan) and lock["eligible"]==names and lock["primary_rows"]==len(y),
+                "Cannot resume a changed primary selection")
+    else:
+        lock = choose(bank,y,classes,names,plan)
+        save(lock_path,lock)
+    simple,weighted,uniform = (lock[k] for k in ("simple","weighted","own_uniform"))
+    selected = weighted["members"]
+    fits = lock["weight_fits"]
     used = sorted(set(simple["members"])|set(selected))
     comparisons = []
     for fold in FOLDS:

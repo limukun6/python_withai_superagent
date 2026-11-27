@@ -210,7 +210,11 @@ def resolve(kind,name,document):
         spec=document['entries'][name]
         if spec['kind']!=kind:
             raise ValueError('Runtime pipeline has the wrong modality')
-        method=materialize(spec)
+        if spec.get("operator")=="retune_strength":
+            from .evidence_strength import materialize as build_strength
+            method=build_strength(spec)
+        else:
+            method=materialize(spec)
         if method.family!=name:
             raise ValueError('Runtime configuration digest differs')
         return method
@@ -218,11 +222,12 @@ def resolve(kind,name,document):
 
 
 class MethodSpace:
-    def __init__(self,spec,profile,folder):
+    def __init__(self,spec,profile,folder,*,refine_strength=False):
         self.spec,self.profile,self.folder=spec,profile,Path(folder)
         self.entries={}
         self.frontier=()
         self.generations={}
+        self.refine_strength=refine_strength
 
     def refresh(self,history,baseline):
         key=tuple(r['trial'] for r in history if r['split_id']=='primary' and r['status']=='completed')
@@ -233,6 +238,12 @@ class MethodSpace:
                 allowed={n:s for n,s in proposals.items() if permitted(capability(s),restrictions)}
                 why['excluded_by_task_restrictions']=sorted(proposals.keys()-allowed.keys())
                 proposals=allowed
+            if self.refine_strength:
+                from .evidence_strength import propose as strength_proposals
+                refinements,reference=strength_proposals(self.spec["kind"],baseline,history,
+                                                        self.profile["statistics"]["train_rows"])
+                proposals.update(refinements)
+                why["strength_reference"]=reference
             new=sorted(proposals.keys()-self.entries.keys())
             self.entries.update(proposals)
             self.frontier=tuple(proposals)
@@ -248,5 +259,9 @@ class MethodSpace:
             self.generations[key]=dict(file=version.name,sha256=hashlib.sha256(payload).hexdigest(),
                                        generated=list(proposals),newly_seen=new,evidence=why)
         visible=set(self.frontier)|{r['candidate'] for r in history}
-        caps={**baseline,**{n:capability(self.entries[n]) for n in sorted(visible&self.entries.keys())}}
+        from .evidence_strength import capability as strength_capability
+        caps=dict(baseline)
+        for name in sorted(visible&self.entries.keys()):
+            spec=self.entries[name]
+            caps[name]=strength_capability(spec,baseline) if spec.get("operator")=="retune_strength" else capability(spec)
         return {n:c for n,c in caps.items() if permitted(c,self.spec.get('method_restrictions',()))},self.generations[key]

@@ -270,7 +270,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
     with installed_methods():
         widths=task.X_train.shape[1] if task.kind=='numeric_tabular' else None
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths)
-        generator=MethodSpace(spec,profile,directory)
+        generator=MethodSpace(spec,profile,directory,refine_strength=feedback_reflection=="adaptive-heads")
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
         observed={f:{} for f in folds}
@@ -278,7 +278,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         reflection = None
         scheduled = None
         from .finalist_race import FinalistRace
-        race = FinalistRace(log,folds) if feedback_reflection=='matched-finalists' else None
+        race = FinalistRace(log,folds) if feedback_reflection in ('matched-finalists','adaptive-heads') else None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)

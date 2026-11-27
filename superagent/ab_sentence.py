@@ -281,7 +281,7 @@ class KernelSentenceFeatures(SentenceFeatures):
         return [*original,csr_matrix(extra)]
 
 
-def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False,topic_style=False):
+def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=False,alternative=None,familiarity=False,topic_style=False,regularization=.3):
     if topic_style:
         from .ab_varied_preferences import TopicStyleFeatures
         features=TopicStyleFeatures(kind)
@@ -300,7 +300,7 @@ def fit_sentence(rows,labels,query,kind,nonlinear=False,deep=False,edit_context=
             raise ValueError('Preference labels must encode the declared binary sides')
         x=vstack([x,-x])
         labels=np.r_[labels,1-np.asarray(labels)]
-    classifier=LogisticRegression(C=.3,max_iter=2000,random_state=42).fit(x,labels)
+    classifier=LogisticRegression(C=regularization,max_iter=2000,random_state=42).fit(x,labels)
     model=Pipeline([('features',features),('classifier',classifier)])
     model.training_metadata={'frozen_downstream_encoder':features.encoder_model,
                              'revision':features.encoder_revision,'usage':features.usage_}

@@ -136,13 +136,13 @@ class PairedEncoderFeatures(AlternativeSentenceFeatures):
         return blocks, 0
 
 
-def fit_ranker(rows, labels, query, *, variant, head):
+def fit_ranker(rows, labels, query, *, variant, head, regularization=.3):
     labels = np.asarray(labels)
     if not np.array_equal(np.unique(labels), [0, 1]):
         raise ValueError("Pair preferences require a binary side label")
     features = PairedEncoderFeatures(variant, head).fit(rows)
     matrix = features.transform(rows)
-    classifier = LogisticRegression(C=.3, fit_intercept=False, max_iter=2000, random_state=42)
+    classifier = LogisticRegression(C=regularization, fit_intercept=False, max_iter=2000, random_state=42)
     classifier.fit(vstack([matrix, -matrix]), np.r_[labels, 1-labels])
     model = CanonicalPreferencePipeline([("features", features), ("classifier", classifier)])
     return model, model.predict(query)

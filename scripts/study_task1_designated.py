@@ -17,6 +17,8 @@ def grade(archive,out):
     required_mode="fusion-holdout" if qualified=="separate" else None
     require(read(out/"release/inputs.json")["selection_policy"]==required_mode and read(out/"release/inputs.json")["fit_cap"]==32,
             "Release differs from the policy that qualified")
+    source_ids={read(out/"fusion_match"/str(i)/qualified/"launch.json")["source"] for i in range(3)}
+    require(source_ids=={read(out/"release/inputs.json")["source"]},"Release is not the qualified runtime")
     predictions={}
     locks={}
     for arm in ("anchor","release"):

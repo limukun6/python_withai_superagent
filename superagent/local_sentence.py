@@ -46,27 +46,41 @@ def describe(root):
     pool_path = pools+'/config.json'
     pool = metadata(root/pool_path)
     flags = [k for k,v in pool.items() if k.startswith('pooling_mode_') and v]
-    legacy_modes = {'pooling_mode_mean_tokens':'mean','pooling_mode_cls_token':'cls','pooling_mode_max_tokens':'max'}
+    legacy_modes = {'pooling_mode_mean_tokens':'mean','pooling_mode_cls_token':'cls','pooling_mode_max_tokens':'max',
+                    'pooling_mode_lasttoken':'last'}
     if 'pooling_mode' in pool and not flags:
         pooling=pool['pooling_mode']
     else:
         pooling=legacy_modes.get(flags[0]) if len(flags)==1 else None
-    if pooling not in ('mean','cls','max'):
+    if pooling not in ('mean','cls','max','last'):
         raise ValueError('Unsupported or ambiguous pooling operation')
     config = metadata(root/'config.json')
     width = config.get('hidden_size',config.get('dim'))
     topology = config.get('model_type')
-    if (topology not in ENCODER_FAMILIES or config.get('auto_map') or config.get('is_encoder_decoder')
-            or config.get('is_decoder') or type(width) is not int or width<=0
+    if ((topology not in ENCODER_FAMILIES and not (topology=='qwen3' and pooling=='last'))
+            or config.get('auto_map') or config.get('is_encoder_decoder')
+            or (config.get('is_decoder') and pooling!='last') or type(width) is not int or width<=0
             or pool.get('word_embedding_dimension',pool.get('embedding_dimension'))!=width):
         raise ValueError('Unsupported local text backbone')
-    settings = metadata(root/'sentence_bert_config.json')
-    length = settings.get('max_seq_length')
+    settings_file=root/'sentence_bert_config.json'
+    if settings_file.is_file():
+        settings=metadata(settings_file)
+        length=settings.get('max_seq_length')
+    else:
+        settings={}
+        tokenizer_info=metadata(root/'tokenizer_config.json')
+        tokenizer_limit=tokenizer_info.get('model_max_length')
+        model_limit=config.get('max_position_embeddings')
+        if type(tokenizer_limit) is not int or type(model_limit) is not int:
+            raise ValueError('No finite declared input length')
+        length=min(tokenizer_limit,model_limit)
     if type(length) is not int or not 1<=length<=config.get('max_position_embeddings',0):
         raise ValueError('Invalid declared sentence length')
     if set(settings)-{'max_seq_length','do_lower_case'} or type(settings.get('do_lower_case',False)) is not bool:
         raise ValueError('Unsupported tokenizer settings')
-    files = ['modules.json',pool_path,'sentence_bert_config.json','config.json','tokenizer.json','model.safetensors']
+    files = ['modules.json',pool_path,'config.json','tokenizer.json','model.safetensors']
+    if settings_file.is_file():
+        files.append('sentence_bert_config.json')
     for optional in ('config_sentence_transformers.json','tokenizer_config.json'):
         if (root/optional).is_file():
             item=metadata(root/optional)
@@ -79,9 +93,13 @@ def describe(root):
         stat=path.stat()
         records[name]=dict(bytes=stat.st_size,sha256=_checksum(path,(stat.st_size,stat.st_ino,stat.st_mtime_ns,stat.st_ctime_ns)))
     signature=hashlib.sha256(json.dumps(records,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-    return dict(signature=signature,environment_variable=PREFIX+signature.upper()+'_WEIGHTS',width=width,
+    descriptor=dict(signature=signature,environment_variable=PREFIX+signature.upper()+'_WEIGHTS',width=width,
                 family=topology,pooling=pooling,normalize=len(stages)==3,max_length=length,
                 lower_case=settings.get('do_lower_case',False),files=records)
+    if pooling=='last':
+        descriptor['publisher_max_length']=length
+        descriptor['max_length']=min(1024,length)
+    return descriptor
 
 
 def discover(root,env):
@@ -113,7 +131,7 @@ def installed():
 
 
 @lru_cache(maxsize=2)
-def backbone(root,length,identity):
+def backbone(root,length,identity,causal=False):
     import torch
     from tokenizers import Tokenizer
     from transformers import AutoConfig, AutoModel
@@ -124,6 +142,8 @@ def backbone(root,length,identity):
     conf=AutoConfig.from_pretrained(root,local_files_only=True,trust_remote_code=False)
     model_cls=AutoModel._model_mapping[type(conf)]
     options={'add_pooling_layer':False} if 'add_pooling_layer' in inspect.signature(model_cls).parameters else {}
+    if causal:
+        options['torch_dtype']='auto'
     model,info=AutoModel.from_pretrained(root,config=conf,local_files_only=True,trust_remote_code=False,
                                          use_safetensors=True,output_loading_info=True,**options)
     if info['missing_keys'] or info.get('mismatched_keys') or info.get('error_msgs'):
@@ -132,27 +152,45 @@ def backbone(root,length,identity):
     return tokenizer,model.eval().requires_grad_(False)
 
 
-def encode(spec,texts):
+def encode(spec,texts,*,return_tokens=False):
     import torch
     root=Path(os.environ[spec['environment_variable']])
     if describe(root)!=spec:
         raise ValueError('Local sentence encoder bytes or behavior have changed')
-    tokenizer,model=backbone(root,spec['max_length'],spec['signature'])
+    causal=spec['pooling']=='last'
+    tokenizer,model=backbone(root,spec['max_length'],spec['signature'],causal)
+    pad_id=model.config.pad_token_id
+    if pad_id is None:
+        raw=metadata(root/'tokenizer_config.json').get('pad_token')
+        if isinstance(raw,dict):
+            raw=raw.get('content')
+        pad_id=tokenizer.token_to_id(raw) if isinstance(raw,str) else None
+    if pad_id is None:
+        raise ValueError('The local encoder has no declared pad token')
     chunks=tokenizer.encode_batch([s.strip().lower() if spec['lower_case'] else s.strip() for s in texts])
     order=sorted(range(len(chunks)),key=lambda i:len(chunks[i].ids))
     result=np.zeros((len(texts),spec['width']),dtype=np.float32)
     with torch.inference_mode():
-        for start in range(0,len(order),40):
-            indices=order[start:start+40]
+        start=0
+        while start<len(order):
+            limit=min(len(order),start+40)
+            while limit>start+1 and (limit-start)*len(chunks[order[limit-1]].ids)>4096:
+                limit-=1
+            indices=order[start:limit]
+            start=limit
             size=len(chunks[indices[-1]].ids)
-            ids=torch.full((len(indices),size),model.config.pad_token_id,dtype=torch.long)
+            ids=torch.full((len(indices),size),pad_id,dtype=torch.long)
             mask=torch.zeros_like(ids)
             for row,i in enumerate(indices):
                 tokens=chunks[i].ids
                 ids[row,:len(tokens)]=torch.as_tensor(tokens)
                 mask[row,:len(tokens)]=1
-            hidden=model(input_ids=ids,attention_mask=mask).last_hidden_state
-            if spec['pooling']=='cls':
+            options={'use_cache':False} if causal else {}
+            hidden=model(input_ids=ids,attention_mask=mask,**options).last_hidden_state
+            if causal:
+                last=mask.sum(dim=1)-1
+                pooled=hidden[torch.arange(len(indices)),last].float()
+            elif spec['pooling']=='cls':
                 pooled=hidden[:,0,:]
             elif spec['pooling']=='max':
                 pooled=hidden.masked_fill(~mask.bool().unsqueeze(-1),float('-inf')).amax(1)
@@ -163,7 +201,7 @@ def encode(spec,texts):
             result[indices]=pooled.numpy()
     if not np.isfinite(result).all():
         raise ValueError('Nonfinite local sentence representation')
-    return result
+    return (result,sum(len(item.ids) for item in chunks)) if return_tokens else result
 
 
 def bank_path(directory,spec):
@@ -179,7 +217,7 @@ def load_bank(path,stamp,width):
     return dict(zip(keys.tolist(),vectors))
 
 
-def vectors(spec,texts):
+def vectors(spec,texts,*,return_tokens=False):
     directory=os.environ.get('SUPERAGENT_PAIRED_FEATURE_CACHE')
     unique=list(dict.fromkeys(texts))
     known={}
@@ -189,9 +227,12 @@ def vectors(spec,texts):
             saved=load_bank(path,path.stat().st_mtime_ns,spec['width'])
             known={s:saved[h] for s in unique if (h:=text_key(s)) in saved}
     missing=[s for s in unique if s not in known]
+    tokens=0
     if missing:
-        known.update(zip(missing,encode(spec,missing)))
-    return np.stack([known[s] for s in texts])
+        computed,tokens=encode(spec,missing,return_tokens=True)
+        known.update(zip(missing,computed))
+    output=np.stack([known[s] for s in texts])
+    return (output,tokens) if return_tokens else output
 
 
 class LocalSentenceFeatures(SentenceFeatures):
@@ -199,10 +240,19 @@ class LocalSentenceFeatures(SentenceFeatures):
         super().__init__(kind)
         self.spec=spec
 
+    @property
+    def encoder_model(self):
+        return 'local-sentence-'+self.spec['signature'][:20]
+
+    @property
+    def encoder_revision(self):
+        return self.spec['signature']
+
     def fit(self,rows,y=None):
         super().fit(rows,y)
         texts=list(dict.fromkeys(s for pair in rows for s in pair)) if self.kind=='pair_text' else list(dict.fromkeys(rows))
-        dense=vectors(self.spec,texts)
+        dense,count=vectors(self.spec,texts,return_tokens=True)
+        self.usage_['input_tokens']+=count
         self.center_=dense.mean(axis=0)
         self.scale_=np.maximum(dense.std(axis=0),1e-4)
         if self.kind=='pair_text':
@@ -211,11 +261,12 @@ class LocalSentenceFeatures(SentenceFeatures):
         return self
 
     def semantic_blocks(self,rows,texts):
-        z=np.clip((vectors(self.spec,texts)-self.center_)/self.scale_,-6.,6.)/np.sqrt(self.spec['width'])
+        values,count=vectors(self.spec,texts,return_tokens=True)
+        z=np.clip((values-self.center_)/self.scale_,-6.,6.)/np.sqrt(self.spec['width'])
         if self.kind=='single_text':
-            return [csr_matrix(z)],0
+            return [csr_matrix(z)],count
         familiarity=self.familiarity_.differences(rows)/self.familiarity_scale_
-        return [csr_matrix(z[::2]-z[1::2]),csr_matrix(familiarity[:,None])],0
+        return [csr_matrix(z[::2]-z[1::2]),csr_matrix(familiarity[:,None])],count
 
     def resource(self):
         s=self.spec

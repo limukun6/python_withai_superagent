@@ -1,5 +1,17 @@
 # 后续自动推进队列
 
+## 2026-11-27：用户将A剩余工作转交B；SA26尚未实跑
+
+本轮用户因安排明确要求交接给队友。A只完成交接，不再启动训练/API或写付费账本；B核对附件后接管唯一写入。主交接文件docs/A_TO_B_REMAINING_WORK_HANDOFF_20261127_zh.md；不从旧PR3覆盖入口。
+
+SA26实现代码888801bbb225db8b516e1226357182e2290561ab，在P0整合91f1a8c之上。semantic-rules-v1有引文的未知限制/指标规范化接入原解析点，实时/缓存/迁移共用compile_response，保持manifest和已知规则；条件/复杂冲突仍不能任意自动解决。14项新增检查，相关410/410通过、36.266秒、0fit/API。真实三例R1/R2/N1的计划和脚本已保存，两份prepared仅准备状态，本轮实际训练0、校园API0、sa26_*已付费scope0；不得称真实恢复已成功。
+
+接手顺序：SA26真实三例及独立审计（后者尚未写）→图像文件名/侧表ID→原生数值数组/记录互转→不同真实来源表格/文本/图像原包无人干预验收。详细预算、命令、验收、约7–12有效小时排期和边界都在主交接文件。B模型目录/调度与历史Task2研究可复用，不重跑166次旧实验，不打开H2或正式测试。
+
+A真实canonical526/known8.428396/unknown17/pending0、旧行不变，无训练/API队列。私有交接包runs/handoff_to_b_20261127.zip，zip SHA ec729117abd816003566892bcf2fa4e4b8323592f21a3bb5f93322a462b1c3f9；内ledger.sqlite SHA 7bac5c701762a28a4116c889ec839ef36665b34f1cc749a407d4ce8e63a8b6ea；不含key/模型/任务包。B有原增量记录未到A账本（至少b77d6d15-a6cc-4eb5-a1d7-6fcd8a830070），先按原ID/行SHA去重，再生成本机父快照。用户已授权保留未知继续预登记小额研究，不等官网；新失败停当批不重试，分析后另立计划。
+
+新增prepare_sa26_team_history支持真实未知数按显式清单验证；run_sa26_rule_live不再硬编码17。已用A真实账本无请求演练快照创建，原行不改。B在自己的新源码/依赖环境重跑零fit检查并fresh prepare，不跨机器硬用旧source SHA/ZIP SHA或A绝对路径。
+
 ## 2026-11-27：P0完成，PR3与A SA22–24已在独立分支整合
 
 当前工作区runs/pr3_joint_1127、分支codex/a-pr3-joint-1127。合并父提交A7e9d142/B4d4222a，保留B早期/最终交付、方法/调度/资产/限制绑定与A预测恢复、共享请求额度、独立凭据、native-v3设计记录。普通/分阶段预测共用selected_prediction，恢复优先于partial保底，发布错误不降级覆盖。迁移工具也绑定B限制；显式local/control不误建付费client。

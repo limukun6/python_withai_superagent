@@ -2,6 +2,8 @@
 
 ## 11 月 27 日研发版
 
+本地整合版在两个课程原包上分别复现 **75.52%** 和 **72.77%**。三个独立公开分类任务均完成同预算反馈对照和新进程重载。图像任务发现了可复现的难点，测得的两种干预均未通过采用门槛。[整合版结果、资源与复现方式](docs/JOINT_FEEDBACK_RESULTS_20261127_zh.md)
+
 统一入口现在能在首次拟合前交付逐行预测，可选的反馈模式会从真实训练错误提出下一项核查。两份课程原包和三种公开分类任务已在本机复跑。[运行与验收结果](docs/RELIABLE_DELIVERY_FEEDBACK_1127_zh.md)
 
 **11月27日，A线主线纠正为失败后自主恢复。** 用户明确要求LLM查证、修复或换路线使任务继续，不能以“阻断正确”替代完整Agent交付。已审计跨阶段恢复的缺口，并解除内部AUC的一条误阻断；完整RecoveryController仍待实现。本批0fit/0API。[恢复架构与主验收](docs/batches/SA18_RECOVERY_REALIGNMENT_20261127_zh.md) · [首项纠偏证据](docs/batches/SA18_RECOVERY_CORRECTION_RESULTS_20261127_zh.md)

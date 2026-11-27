@@ -13,11 +13,11 @@ from superagent.ab_sentence import ALTERNATIVES,DEEP_ENV,DEEP_MODEL,MODEL
 
 def make(args):
     path={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier",
-          "frontier_scale":"frontier-raw/frontier_scale"}[args.arm]
+          "frontier_scale":"frontier-raw/frontier_scale","auto_portfolio":"auto-raw/auto_portfolio"}[args.arm]
     run=args.root/path
     plan=read(run/"protocol.json")
     sealed=read(run/"sealed.json")
-    evidence=args.root/"followup_scores"
+    evidence=args.root/args.evaluation
     lock=read(evidence/"evaluation_lock.json")
     scored=read(evidence/"results.json")
     require(sha(evidence/"evaluation_lock.json")==scored["lock_sha256"] and
@@ -51,7 +51,8 @@ def make(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale"),required=True)
+    p.add_argument("--arm",choices=("legacy_long","frontier","frontier_scale","auto_portfolio"),required=True)
+    p.add_argument("--evaluation",choices=("followup_scores","portfolio_scores"),default="portfolio_scores")
     for name in ("root","features","weights","notices","source","output"):
         p.add_argument("--"+name,type=lambda x:Path(x).resolve(),required=True)
     make(p.parse_args())

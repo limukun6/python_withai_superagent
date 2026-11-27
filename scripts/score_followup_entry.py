@@ -22,9 +22,11 @@ def prediction_file(folder):
     return receipt, predictions
 
 
-def score(root, course, reference):
+def score(root, course, reference, *, include_portfolio=False):
     paths = {"legacy_long": root/"long-cold/original", "frontier": root/"frontier-raw/frontier",
              "frontier_scale": root/"frontier-raw/frontier_scale"}
+    if include_portfolio:
+        paths["auto_portfolio"]=root/"auto-raw/auto_portfolio"
     raw = root/"raw"
     known_results = read(raw/"validation.json")
     previous = read(raw/"evaluation_lock.json")
@@ -44,9 +46,10 @@ def score(root, course, reference):
                 plan["raw_sha256"] == original_protocol["raw_sha256"] and plan["candidate_hint"] is None,
                 "Replication changed the input or supplied a model hint")
     records = {name:prediction_file(folder) for name,folder in paths.items()}
-    require(all(r["api"]==0 and r["rows"]==8301 and r["fits"]<=20 for r, _ in records.values()),
+    require(all(r["api"]==0 and r["rows"]==8301 and r["fits"]<=read(paths[n]/"protocol.json")["fit_limit"]
+                for n,(r,_) in records.items()),
             "Unexpected resources or partial training")
-    target=root/"followup_scores"
+    target=root/("portfolio_scores" if include_portfolio else "followup_scores")
     target.mkdir(exist_ok=True)
     lock = dict(seals={name:sha(folder/"sealed.json") for name,folder in paths.items()},
                 reference_lock=sha(raw/"evaluation_lock.json"), reference_scores=sha(raw/"validation.json"))
@@ -96,7 +99,8 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     for key in ("root","course","reference"):
         parser.add_argument("--"+key,type=lambda x:Path(x).resolve(),required=True)
+    parser.add_argument("--include-portfolio",action="store_true")
     args=parser.parse_args()
-    result=score(args.root,args.course,args.reference)
+    result=score(args.root,args.course,args.reference,include_portfolio=args.include_portfolio)
     for name,receipt in result["completed"].items():
         print(name,receipt["correct"],receipt["rows"],receipt["trace"]["members"],receipt["identical_to"])

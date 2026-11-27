@@ -1,5 +1,23 @@
 # 当前接续状态
 
+## 2026-11-27：SA22预测恢复首轮失败，SA22B离线续跑2/2
+
+基线5f820bc。新增prediction_adapter.py/delivery_recovery.py，正式predict/solve的输入和输出来源预检失败进入恢复；只改预测成员/集合/分隔符/映射/原生描述符/既有ID来源，不改模型、目标、指标、类别、训练列/顺序/预处理及可见输出含义。适配器绑定model/spec/query/reader SHA，缓存跨进程复用。training_protocol绑定原包SHA和scope/ledger，同一训练＋交付scope合计≤3请求，local/control不启动付费恢复。模型损坏、文件写入错误不重训。
+
+首轮真实两路径各从SA21解释缓存迁移后自主训练2fit，训练/参考预测0API；D1由真实Flash一次适配JSONL→改名CSV/ID，预测正确，但第二进程同名delivery_receipt.json独占创建退出；D2前两条回复是工具标记非JSON，第三次因120秒阶段期限在HTTP200/67事件后未收到usage。完整验收0/2，4fit/4请求，已知¥.020981＋1未知，216.750秒。D1旧false_completion=true是未完成验收的暂存标记，事后核验无输出语义错误，原JSON保留，不能直接当错任务样本。
+
+新增未知请求d5663eee-60d5-47df-9410-1b0d4d227a17，费用/token仍null。canonical现514/known8.332160/unknown17/pending0。原16授权不扩到第17，不重试旧HTTP，不再启动新付费；不要求官网对账才继续离线工作。新增未知行SHA见research/sa22b_offline_audit_01/new_unknown_preserved.json。
+
+SA22B先立离线计划：凭据每次独立文件；补JSON工具完整范例，prediction_recovery限4096token、不足30秒不发新请求（仅模拟检查，未重测付费）。本地唯一结构恢复对单一NPY/NPZ容器、单一数值数组、冻结shape匹配、有新包说明、无ID来源变化的原生数值模型，按结构事实继续；多个候选不猜，不声称LLM决定。
+
+347/347最终无fit/API检查34.390秒。使用原两个模型和新输出目录，移除计费配置且OFFLINE=1：D1复用原真实LLM适配器；D2按唯一结构发现NPZ键，均两次独立predict成功，共80行与原参考逐字节一致，特征FP正确，模型/task_spec/selection/fit记录SHA不变。续跑0新fit/API/费用，22.344秒；独立审计2/2、514条账本行均未改。不能混称首轮付费2/2或D2是LLM修复。
+
+报告docs/batches/SA22_DELIVERY_RECOVERY_RESULTS_20261127_zh.md；计划SA22及SA22B_*PLAN。证据research/sa22_delivery_checks_05、sa22_delivery_live_01、sa22_failure_diagnosis、sa22b_offline_recovery_01、sa22b_offline_audit_01。首轮三份修改源码按运行前SHA事后精确重建于research/sa22_initial_source，verification记录全量匹配，不伪称事前归档。脚本run_sa22b_offline_recovery.py/audit_sa22b_offline.py可在原模型上0API续跑，禁止重用原付费scope。
+
+当前无训练/API队列，未冻结。SA7–SA22自动窗口累计53fit/53API，已知课程折算¥.365765，另1条新增未知；非全项目累计，不能当完整费用或预算合规。
+
+下一步继续无需付费的多模态/原包兼容与任务事实vsAgent设计选择盘点，补歧义/原生-记录互转/定宽/无recipe旧模型等边界；有真实API修复增益的部分仍待验证。任何后续付费需先显式覆盖新增第17条未知的授权，不能默默扩大原清单或新建空账本。
+
 ## 2026-11-27：SA21失败动作摘要＋新来源2/2完整交付
 
 基线0b0f5c9。新增action_context.py：白名单文件/键/列映射/输出/引用等结构摘要，≤8192 UTF-8字节、明确不可执行/截断，最近两份送下一LLM请求，保留原提案SHA与expected_check。recovery/semantic_contract接入，21个reader绑定新artifact，B方法/排序未改。

@@ -11,6 +11,7 @@ CHECKS=dict(task_adaptation='Decode the documented training input with an instal
     structure_inspection='Inspect the cited member in the correct package and role without exposing values.',
     training_method='Execute the selected registered candidate and account for its actual classifier fits.',
     response_format='Return one requested JSON object after the preceding completed response was settled.')
+CHECKS['prediction_delivery']='Replay the new input and output ID sources against the unchanged frozen model contract; do not train.'
 
 
 def summarize_action(action):
@@ -69,6 +70,9 @@ def summarize_action(action):
         values=action.get('requests');values=values if isinstance(values,list) else []
         result.update(kind='structure_batch',requests=[tool(r) for r in values[:2]],request_count=len(values))
         if len(values)>2:truncated=True
+    elif version=='prediction-adapter-v1':
+        result.update(kind='prediction_adapter',selected_input=descriptor(action.get('input')),
+                      id_fields=mapping(action.get('id_fields')))
     elif version in VERSIONS:
         result.update(kind='task_contract',proposal_version=action['version'])
         plan=action.get('plan')

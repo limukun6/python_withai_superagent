@@ -165,7 +165,13 @@ def prepare_training(package,run_dir,fit_limit=None,time_limit=None,self_review=
     if time_limit is not None:
         flags.extend(['--time-limit',str(time_limit)])
     arguments=build_parser().parse_args(flags)
+    import os
+    from superagent.prediction_adapter import sha as package_sha
+    task_path=Path(package).resolve()
     save(run_dir/'training_protocol.json',dict(policy='anonymous-sequential-v1',
+         task_package=str(task_path),task_package_sha256=package_sha(task_path) if task_path.is_file() else None,
+         task_budget_id=os.getenv('SUPERAGENT_TASK_BUDGET_ID'),
+         budget_ledger=str(Path(os.environ['SUPERAGENT_PLANNER_LEDGER']).resolve()) if os.getenv('SUPERAGENT_PLANNER_LEDGER') else None,
          entrypoint_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          selection_data='training-only groups',final_refit='all supplied training rows',time_limit=arguments.time_limit,
          fit_limit=arguments.fit_limit,self_review=self_review,task_interpretation=task_interpretation,
@@ -237,6 +243,7 @@ def main():
             command.add_argument('--semantic-artifact-from',type=Path)
         if action in ("predict","solve"):
             command.add_argument("--output", required=True, type=Path)
+            command.add_argument('--prediction-adapter-from',type=Path,help='Reuse a query/model-bound prediction adapter without model requests')
         if action == "solve":
             command.add_argument("--prediction-input", required=True, type=Path,
                                  help="Unlabeled features for pre-fit schema checks and frozen-model prediction")
@@ -262,7 +269,17 @@ def main():
     from superagent.format_intake import DECODE_ERRORS
     attempt = args.output.parent / 'prediction_attempt.json'
     try:
-        path = create_predictions(str(source), args.run_dir / "agent", args.output)
+        from superagent.delivery_recovery import find_cached,recover_prediction
+        from superagent.predict import PredictionAdaptationError
+        adapter=args.prediction_adapter_from or find_cached(source,args.run_dir)
+        try:
+            path=(create_predictions(str(source),args.run_dir/'agent',args.output,prediction_adapter=adapter) if adapter is not None
+                  else create_predictions(str(source),args.run_dir/'agent',args.output))
+        except PredictionAdaptationError as error:
+            if args.prediction_adapter_from is not None:raise
+            adapter=recover_prediction(source,args.run_dir,args.output,error)
+            if adapter is None:raise
+            path=create_predictions(str(source),args.run_dir/'agent',args.output,prediction_adapter=adapter)
     except DECODE_ERRORS + (RuntimeError,) as error:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         attempt.write_text(json.dumps(dict(delivery_status='unavailable', generated_by_this_attempt=False,
@@ -271,6 +288,12 @@ def main():
         print(attempt)
         return 2
     receipt = json.loads((args.output.parent/'prediction_manifest.json').read_text(encoding='utf-8'))
+    if adapter is not None:
+        import uuid
+        receipt_dir=Path(adapter).parent/'deliveries';receipt_dir.mkdir(exist_ok=True)
+        completion=receipt_dir/(uuid.uuid4().hex+'.json')
+        save(completion,dict(status='completed',prediction_sha256=receipt['prediction_sha256'],
+             prediction_count=receipt['prediction_count'],model_retrained=False))
     attempt.write_text(json.dumps(dict(delivery_status=receipt.get('delivery_status','completed'),
         generated_by_this_attempt=True,prediction_count=receipt['prediction_count']),indent=2),encoding='utf-8')
     print(path)

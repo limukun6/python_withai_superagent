@@ -17,6 +17,11 @@ from .models import predict_with_model,probability_with_model
 from .metrics import MetricSpec
 
 
+class PredictionAdaptationError(ValueError):
+    """Only input or output-source preflight failed; the frozen model remains valid."""
+    pass
+
+
 def validate_prediction_outputs(predictions, rows, specification, classes=None, scores=None):
     """Check unlabeled delivery against the frozen training contract before writing."""
     predictions=np.asarray(predictions)
@@ -46,7 +51,7 @@ def validate_prediction_outputs(predictions, rows, specification, classes=None, 
                                       'probability_contract_checked':require_scores}
 
 
-def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path) -> Path:
+def create_predictions(task_package: str, run_dir: str | Path, output_path: str | Path, *, prediction_adapter=None) -> Path:
     run_path = Path(run_dir).resolve()
     selection = json.loads((run_path / "final_selection.json").read_text(encoding="utf-8"))
     specification = json.loads((run_path / "task_spec.json").read_text(encoding="utf-8"))
@@ -85,7 +90,19 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         model = model['model']
     elif model_format != "bare_model":
         raise ValueError(f"Unsupported model format: {model_format}")
-    features = load_prediction_features(task_package, kind_to_loader[kind], specification)
+    if prediction_adapter is not None:
+        from .prediction_adapter import load_adapter
+        specification=load_adapter(prediction_adapter,task_package,run_path,specification,selection)
+    from .format_intake import DECODE_ERRORS
+    try:
+        features = load_prediction_features(task_package, kind_to_loader[kind], specification)
+        if specification.get('output_recipe') is not None:
+            from .output_recipe import probe_output_context
+            probe_output_context(task_package,specification,len(features))
+    except DECODE_ERRORS as error:
+        from .semantic_contract import _diagnostic
+        diagnostic=_diagnostic(error,'prediction_delivery')
+        raise PredictionAdaptationError('Prediction preflight: '+diagnostic['message']) from error
     predictions = predict_with_model(kind_to_loader[kind], model, features)
     scores=classes=None
     from .output_recipe import needs_scores, write_export
@@ -116,6 +133,7 @@ def create_predictions(task_package: str, run_dir: str | Path, output_path: str 
         'score_class_order':classes.tolist() if classes is not None else None,
         'prediction_contract':contract_check,
         'output_contract':output_contract,
+        'prediction_adapter_sha256':hashlib.sha256(Path(prediction_adapter).read_bytes()).hexdigest() if prediction_adapter is not None else None,
     }
     RunLogger(destination.parent).write_json("prediction_manifest.json",manifest)
     return destination

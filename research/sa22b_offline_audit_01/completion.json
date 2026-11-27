@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "id": "D1",
+      "passed": true,
+      "checks": {
+        "features": true,
+        "exports": true,
+        "frozen_files": true,
+        "immutable_goal": true,
+        "no_new_fit": true,
+        "no_new_API": true,
+        "repeat_receipts": true,
+        "real_LLM_adapter": true
+      },
+      "rows": 40,
+      "decision_source": "existing_real_LLM_adapter"
+    },
+    {
+      "id": "D2",
+      "passed": true,
+      "checks": {
+        "features": true,
+        "exports": true,
+        "frozen_files": true,
+        "immutable_goal": true,
+        "no_new_fit": true,
+        "no_new_API": true,
+        "repeat_receipts": true,
+        "local_provenance": true,
+        "no_local_LLM": true,
+        "single_array": true,
+        "frozen_shape": true
+      },
+      "rows": 40,
+      "decision_source": "unique_structural_candidate"
+    }
+  ],
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "ledger_unchanged": true,
+  "new_unknown_preserved": true,
+  "evidence_boundary": "successful offline continuation after a failed initial paid batch; array recovery is a local structural decision"
+}

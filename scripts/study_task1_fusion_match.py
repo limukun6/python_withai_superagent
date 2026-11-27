@@ -14,6 +14,7 @@ from superagent.splits import sample_groups
 
 PLAN=ROOT/"research/task1_feedback_extension_1127/fusion_holdout.json"
 ARMS=("regular","separate")
+REUSE=("weighted","replicas")
 
 
 def prepare(previous,out):
@@ -67,24 +68,36 @@ def grade(out):
             predictions[i,arm]=prediction_csv(path/"solve.csv",seal["rows"])
             locked[str((i,arm))]=sha(path/"sealed.json")
             methods[arm]=dict(members=seal["members"],fits=seal["fits"])
+        reuse=fold/"reuse"
+        extra=read(reuse/"sealed.json")
+        require(extra["old_prediction_rebuilt"] and extra["rows"]==info["roles"]["external"]["rows"],
+                "Unverified reconstruction")
+        locked[str((i,"reuse"))]=sha(reuse/"sealed.json")
+        for arm in REUSE:
+            p=reuse/(arm+".npy")
+            require(sha(p)==extra["predictions"][arm],"Changed cached-inference predictions")
+            predictions[i,arm]=np.load(p,allow_pickle=False).astype(str)
         guard=read(fold/"separate/run/agent/fusion_check.json")
-        summary.append(dict(fold=i,methods=methods,guard=guard))
-    save(out/"score_lock.json",dict(inputs=sha(out/"prepared.json"),results=locked,protocol=sha(PLAN)))
-    total={a:[] for a in ARMS}
+        summary.append(dict(fold=i,methods=methods,guard=guard,reuse=read(reuse/"decision.json")))
+    save(out/"score_lock.json",dict(inputs=sha(out/"prepared.json"),results=locked,protocol=sha(PLAN),
+        additional_inference_protocol=sha(PLAN.with_name("inference_reuse.json"))))
+    total={a:[] for a in (*ARMS,*REUSE)}
     groups=[]
     for i,row in enumerate(summary):
         answer=joblib.load(out/str(i)/"outer_answers.joblib")
         y=answer["y"].astype(str)
-        scores={arm:predictions[i,arm]==y for arm in ARMS}
+        scores={arm:predictions[i,arm]==y for arm in total}
         row.update(rows=len(y),correct={a:int(v.sum()) for a,v in scores.items()},
-                   paired=compare(scores["separate"],scores["regular"],answer["groups"]))
-        for a in ARMS:
+                   paired=compare(scores["separate"],scores["regular"],answer["groups"]),
+                   diagnostic_comparisons={a:compare(scores[a],scores["regular"],answer["groups"]) for a in REUSE})
+        for a in total:
             total[a].extend(scores[a])
         groups.extend(answer["groups"])
     d=compare(np.array(total["separate"]),np.array(total["regular"]),groups)
     gains=[v["paired"]["gain"] for v in summary]
     result=dict(score_lock=sha(out/"score_lock.json"),folds=summary,pooled=d,
         correct={a:int(np.sum(x)) for a,x in total.items()},rows=len(groups),
+        diagnostic_comparisons={a:compare(np.array(total[a]),np.array(total["regular"]),groups) for a in REUSE},
         advance=sum(delta>0 for delta in gains)>=2 and min(gains)>=-.003 and d["gain"]>=.003,
         api_requests=0,designated_validation_opened=False,official_test_opened=False)
     save(out/"result.json",result)

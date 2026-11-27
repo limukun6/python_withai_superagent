@@ -11,8 +11,8 @@ from sklearn.kernel_approximation import Nystroem
 from sklearn.linear_model import LogisticRegression
 
 from .ab_preference_output import CanonicalPreferencePipeline
-from .ab_sentence import (ALTERNATIVES, DEEP_REVISION, AlternativeSentenceFeatures, _encoder, encode,
-                          encode_frozen, verified_files)
+from .ab_sentence import (ALTERNATIVES, DEEP_MODEL, DEEP_REVISION, AlternativeSentenceFeatures, _encoder, encode,
+                          encode_frozen, verified_directory, verified_files)
 from .models import Candidate
 from .word_familiarity import WordFamiliarity
 
@@ -25,6 +25,8 @@ def method_names(heads):
 BASE_HEADS = method_names(("linear", "quadratic"))
 CONTEXT_HEADS = method_names(("context", "landmark"))
 NAMES = {**BASE_HEADS, **CONTEXT_HEADS}
+COMPLEMENTS = {f"{base}_plus_{second}_residual": (base, second)
+               for base in VARIANTS for second in (*VARIANTS,"minilm_l12") if base!=second}
 
 
 @lru_cache(maxsize=1)
@@ -168,11 +170,41 @@ class PairedEncoderFeatures(AlternativeSentenceFeatures):
         return blocks, 0
 
 
-def fit_ranker(rows, labels, query, *, variant, head):
+class ResidualEncoderFeatures(PairedEncoderFeatures):
+    def __init__(self, variant, second):
+        super().__init__(variant,"linear")
+        self.second=second
+
+    def fit(self, rows, y=None):
+        super().fit(rows,y)
+        texts=list(dict.fromkeys(s for pair in rows for s in pair))
+        a=self.standardize(vectors_for(self.variant,texts)).astype(np.float64)
+        b=vectors_for(self.second,texts)
+        self.second_mean_=b.mean(axis=0)
+        self.second_scale_=np.maximum(b.std(axis=0),1e-4)
+        b=np.clip((b-self.second_mean_)/self.second_scale_,-6.,6.)
+        gram=a.T@a
+        gram.flat[::len(gram)+1]+=.05*len(a)
+        self.transfer_=np.linalg.solve(gram,a.T@b).astype(np.float32)
+        residual=b-a@self.transfer_
+        self.axes_=PCA(n_components=min(32,*residual.shape),svd_solver="randomized",random_state=42).fit(residual)
+        self.residual_scale_=np.maximum(np.nan_to_num(np.sqrt(self.axes_.explained_variance_)),1e-4)
+        return self
+
+    def semantic_blocks(self, rows, texts):
+        blocks,tokens=super().semantic_blocks(rows,texts)
+        a=self.standardize(vectors_for(self.variant,texts))
+        b=np.clip((vectors_for(self.second,texts)-self.second_mean_)/self.second_scale_,-6.,6.)
+        directions=np.clip(self.axes_.transform(b-a@self.transfer_)/self.residual_scale_,-5.,5.)
+        blocks.append(csr_matrix((directions[::2]-directions[1::2])/np.sqrt(directions.shape[1])))
+        return blocks,tokens
+
+
+def fit_ranker(rows, labels, query, *, variant, head, second=None):
     labels = np.asarray(labels)
     if not np.array_equal(np.unique(labels), [0, 1]):
         raise ValueError("Pair preferences require a binary side label")
-    features = PairedEncoderFeatures(variant, head).fit(rows)
+    features = (ResidualEncoderFeatures(variant,second) if second else PairedEncoderFeatures(variant,head)).fit(rows)
     matrix = features.transform(rows)
     classifier = LogisticRegression(C=.3, fit_intercept=False, max_iter=2000, random_state=42)
     classifier.fit(vstack([matrix, -matrix]), np.r_[labels, 1-labels])
@@ -190,4 +222,15 @@ def candidates():
                       representation=f"word_char_{variant}_scaled_{head}_familiarity", C=.3,
                       classifier="logistic", swap_augmentation=True)
         result.append(Candidate(name, params, partial(fit_ranker, variant=variant, head=head)))
+    for name,(base,second) in COMPLEMENTS.items():
+        spec=ALTERNATIVES[base]
+        extra=ALTERNATIVES.get(second)
+        secondary_weights=verified_files(extra["env"],extra["files"]) if extra else verified_directory(deep=True)
+        if not secondary_weights or not verified_files(spec["env"],spec["files"]):
+            continue
+        params=dict(encoder=spec["model"]+" + "+(extra["model"] if extra else DEEP_MODEL),
+                    revisions=[spec["revision"],extra["revision"] if extra else DEEP_REVISION],
+                    representation="word_char_style_two_encoder_residual_familiarity",classifier="logistic",
+                    residual_directions=32,projection_regularization=.05,C=.3,swap_augmentation=True)
+        result.append(Candidate(name,params,partial(fit_ranker,variant=base,head="linear",second=second)))
     return result

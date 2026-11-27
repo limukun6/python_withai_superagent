@@ -12,7 +12,7 @@ import numpy as np
 from scripts.cache_paired_encoders import configure_weights
 from scripts.unified_released_study import ROOT, env, read, require, save, sha
 from superagent.ab_methods import PREFERENCE_CATALOG_ENV
-from superagent.paired_encoder import BASE_HEADS, CONTEXT_HEADS
+from superagent.paired_encoder import BASE_HEADS, CONTEXT_HEADS, COMPLEMENTS
 from superagent.prediction_evidence import fingerprint
 
 
@@ -43,7 +43,11 @@ def run_study(args):
         incumbent = previous["candidate_locked"][0]
         inherited = {fold: args.reference_study/fold/incumbent/"trial.joblib"
                      for fold in ("primary", "confirmation_1", "confirmation_2")}
-        methods, plan = CONTEXT_HEADS, SECOND_PLAN
+        if args.multiview:
+            methods = [name for name,(base,_) in COMPLEMENTS.items() if base=="gte"]
+            plan = PLAN.with_name("multiview_protocol.json")
+        else:
+            methods, plan = CONTEXT_HEADS, SECOND_PLAN
     else:
         incumbent = read(agent/"final_selection.json")["single_candidate"]
         winning = next(row for row in read(agent/"history.json") if row["candidate"]==incumbent)
@@ -138,6 +142,7 @@ def run_study(args):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--multiview",action="store_true")
     for name in ("source","confirmed","reference-study","output","weights","cache"):
         p.add_argument("--"+name,required=name not in ("confirmed","reference-study"),type=lambda s:Path(s).resolve())
     run_study(p.parse_args())

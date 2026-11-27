@@ -10,12 +10,14 @@ def model_resources(model):
     from .ab_symmetric import UnorderedSentenceFeatures
     from .ab_vision import FrozenVisionFeatures, WEIGHT_ID, WEIGHT_BYTES, WEIGHT_SHA256, WEIGHT_ENV
     from .confusion_specialist import ClassPairModel
+    from .paired_encoder import ResidualEncoderFeatures
 
     found=set();visited=set()
     def walk(value):
         if id(value) in visited:return
         visited.add(id(value))
-        if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
+        if isinstance(value,ResidualEncoderFeatures):found.update((value.variant,value.second))
+        elif isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenVisionFeatures):found.add('vision')

@@ -38,7 +38,7 @@ ROUTES.update(ab_text_recipes.ROUTES)
 ROUTES[numeric_kernel.NAME] = 'numeric_fourier_features'
 ROUTES.update({TEXT_DEEP:'minilm_l12_lexical',TEXT_EDIT:'minilm_l12_edit_context'})
 ROUTES[TEXT_FAMILIARITY] = 'minilm_l12_corpus_familiarity'
-ROUTES.update({name:name for name in paired_encoder.NAMES})
+ROUTES.update({name:name for name in (*paired_encoder.NAMES,*paired_encoder.COMPLEMENTS)})
 ROUTES.update({name:variant+'_lexical' for variant,name in TRANSFER_METHODS.values()})
 ROUTES.update({name:name for name in (ab_varied_preferences.TOPIC,ab_varied_preferences.BINARY)})
 

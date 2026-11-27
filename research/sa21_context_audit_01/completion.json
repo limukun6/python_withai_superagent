@@ -1,0 +1,212 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "id": "C1",
+      "passed": true,
+      "checks": {
+        "receipts": true,
+        "fits_bounded": true,
+        "requests_bounded": true,
+        "has_recovery_state": true,
+        "no_oracle_in_prompt": true,
+        "shared_state_in_prompts": true,
+        "source_bound": true,
+        "history_preserved": true,
+        "real_accepted_reply": true,
+        "fresh_process_equal": true,
+        "semantic_oracle": true,
+        "recorded_prior_failure": true,
+        "training_completed": true,
+        "physical_structure_tools_bounded": true,
+        "summary_byte_cap": true,
+        "summary_not_executable": true,
+        "summary_window": true,
+        "repair_instruction_present": true,
+        "structure_values_not_disclosed": true,
+        "no_premature_unresolved": true,
+        "total_budget_not_expanded": true
+      },
+      "receipts": [
+        {
+          "request_id": "63c29b48-d414-4f40-86b1-8d09a50662f4",
+          "role": "task_semantic_interpretation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "69b78a10-5e95-4b28-adba-58401ad9963c",
+          "role": "task_semantic_continuation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "0e686494-6bba-41c8-8fcd-b6241bf5f3cb",
+          "role": "experiment_planner",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        }
+      ],
+      "actions": [
+        {
+          "role": "task_semantic_interpretation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 3
+        },
+        {
+          "role": "task_semantic_continuation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 2
+        },
+        {
+          "role": "experiment_planner",
+          "action": null,
+          "remaining": 1
+        }
+      ],
+      "structure_tools": [
+        {
+          "member": "observations.jsonl",
+          "source": "training",
+          "format": "json-lines"
+        },
+        {
+          "member": "arrivals.jsonl",
+          "source": "prediction",
+          "format": "json-lines"
+        }
+      ],
+      "natural_contract_failures": 0,
+      "natural_tool_failures": 0,
+      "prompt_summary_records": 0,
+      "repeated_failures": 0
+    },
+    {
+      "id": "C2",
+      "passed": true,
+      "checks": {
+        "receipts": true,
+        "fits_bounded": true,
+        "requests_bounded": true,
+        "has_recovery_state": true,
+        "no_oracle_in_prompt": true,
+        "shared_state_in_prompts": true,
+        "source_bound": true,
+        "history_preserved": true,
+        "real_accepted_reply": true,
+        "fresh_process_equal": true,
+        "semantic_oracle": true,
+        "recorded_prior_failure": true,
+        "training_completed": true,
+        "physical_structure_tools_bounded": true,
+        "summary_byte_cap": true,
+        "summary_not_executable": true,
+        "summary_window": true,
+        "repair_instruction_present": true,
+        "structure_values_not_disclosed": true,
+        "no_premature_unresolved": true,
+        "total_budget_not_expanded": true
+      },
+      "receipts": [
+        {
+          "request_id": "15be5ba1-2cef-4b78-bb84-0cb840620ab7",
+          "role": "task_semantic_interpretation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "531f5dbc-ce77-4946-8977-dcbf5dfc7099",
+          "role": "task_semantic_continuation",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        },
+        {
+          "request_id": "cd7b56b7-af27-4ffa-80b9-6e1008448148",
+          "role": "experiment_planner",
+          "checks": {
+            "canonical_row": true,
+            "settled": true,
+            "model": true,
+            "tokens": true,
+            "cost": true
+          }
+        }
+      ],
+      "actions": [
+        {
+          "role": "task_semantic_interpretation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 3
+        },
+        {
+          "role": "task_semantic_continuation",
+          "action": {
+            "stage": "task_adaptation",
+            "code": "TaskFormatError",
+            "message": "Installed reader rejected the proposed structure or field types; inspect headers and revise the cited adaptation"
+          },
+          "remaining": 2
+        },
+        {
+          "role": "experiment_planner",
+          "action": null,
+          "remaining": 1
+        }
+      ],
+      "structure_tools": [
+        {
+          "member": "archive.npz",
+          "source": "training",
+          "format": "npz"
+        }
+      ],
+      "natural_contract_failures": 0,
+      "natural_tool_failures": 0,
+      "prompt_summary_records": 0,
+      "repeated_failures": 0
+    }
+  ],
+  "audited_course_cost_rmb": 0.047066,
+  "input_tokens": 25882,
+  "output_tokens": 5296,
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "elapsed_seconds": 0.07800000009592623
+}

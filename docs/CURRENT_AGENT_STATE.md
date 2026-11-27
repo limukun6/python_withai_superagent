@@ -7,6 +7,22 @@
 
 **11 月 26 日，已接入题面声明与方法限制。** 原始 Task1 的 21 个输入字段及两类标签含义进入正式契约。匿名对照覆盖只准线性、禁用预训练资产、禁用外部数据，以及以标签 0 为目标的召回率。两次校园抽取试验合计 ¥0.001096，有回执。任务限制在本地执行。[修复与验收](TASK_CONTRACT_EVIDENCE_20261126_zh.md)
 
+## 2026-11-27：SA21失败动作摘要＋新来源2/2完整交付
+
+基线0b0f5c9。新增action_context.py：白名单文件/键/列映射/输出/引用等结构摘要，≤8192 UTF-8字节、明确不可执行/截断，最近两份送下一LLM请求，保留原提案SHA与expected_check。recovery/semantic_contract接入，21个reader绑定新artifact，B方法/排序未改。
+
+最终332/332无fit/API检查26.578秒（新增15项）；历史SA12真实input_id缺field回复不改，当前编译仍拒绝，摘要正确显示错误选择；回放0新fit/API，旧费用不重复记。_01回放初始把overlay当plan，选择阶段失败，事后凭据保留；修正后_02/_03通过，原包/回复/账本不改。
+
+新Breast Cancer公开来源，两种无manifest包装各240训练/40预测：C1 JSONL 30列字段改名和物理逆序、原ID/BOM/tab/指定B类概率；C2未知NPZ键＋NPY，分号/0起索引。两条正式自然solve均完整交付，九项语义oracle各全通过，新进程共80行一致；本地无LLM接入0/2，对组合系统2/2，只是接入工程对照。各4fit/3API（接入2＋B1），合计8fit/6API/¥.047066/213.359秒。无人工选路、错误完成0、过早未决0、无外层答案/评分。
+
+关键边界：两条模型契约/工具自然失败0、非空失败提案摘要暴露0；不能说本轮证实摘要提高了真实LLM修复率。该机制目前证据是模拟修复＋历史真实失败回放，新来源证明整体接入/交付兼容，且是一个来源两种包装，不是两个独立任务或严格未见泛化。
+
+独立审计2/2，6条真实回复、usage/model/token/cost/canonical行绑定（输入25882/输出5296）；旧行SHA/null不变。报告docs/batches/SA21_ACTION_CONTEXT_RESULTS_20261127_zh.md；证据research/sa21_context_checks_03、sa21_context_replay_03、sa21_context_prepared_01、sa21_context_live_01、sa21_context_audit_01。脚本scripts/run_sa21_context_live.py、scripts/replay_sa21_failure_context.py、scripts/audit_sa21_context.py，可复跑但禁止重复原scope。
+
+当前canonical ledger510/known8.311179/unknown16/pending0，无训练/API队列，未冻结；学校实际扣费/历史预算合规未核验。SA7–SA21自动窗口累计49fit/49API/¥.344784，非全项目累计。新增unknown仍停当批，不重试失败HTTP。
+
+下一优先：最终预测/导出失败回到恢复控制器并保留已有模型，避免盲目重训；同时盘点图像等“必须由任务定义的事实”与“Agent可自主决定的预处理选择”，再推进真正独立原包多模态演练。摘要真实修复收益仍待专门评估，不为制造失败反复重跑自然输入，不据此冻结或保证任意未知任务。
+
 ## 2026-11-27：SA20组合结构探查＋未决报告完成
 
 基线85550b5。inspect_batch将两次底层元数据探查合成一次Flash往返（仍总2工具/3请求）；RecoveryState按未决字段＋去重事实指纹识别语义空转，增加有来源的report_unresolved；已正常stop且持久结算的坏JSON可带新诊断修复，timeout/截断/未结算仍不重试。A改接入/恢复/LLM解析，不改B排序。

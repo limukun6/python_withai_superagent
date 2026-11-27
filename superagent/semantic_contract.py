@@ -419,6 +419,11 @@ def semantic_training(path, client, log, prior_error, *, prediction_package=None
                            recovery_state=recovery.context(),
                            uncertainty_schema=deepcopy(QUESTION_SCHEMA),
                            inspection_source_rule='Explicit source is respected. If omitted, a member must occur in only one package; duplicate names require source. Use prediction for external query headers.')
+            payload['recovery_instruction']=('Recent failed_actions carry action_summary, expected_check and the original action SHA. '
+                'They describe your previous unsuccessful choice, not new evidence or an executable replacement. '
+                'Compare its files/keys/columns/mapping/output choices with the diagnostic and observations; '
+                'repair the failed part while retaining choices still supported by cited documents. '
+                'A truncated summary omits information: do not invent the omitted fields. Return a full revised proposal or a useful tool action.')
             if base_task is not None:
                 payload['authoritative_contract'] = dict(input_schema=base_task.spec.get('input_schema'),
                                                          metric=MetricSpec.for_task(base_task).record())

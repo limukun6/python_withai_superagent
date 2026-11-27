@@ -21,6 +21,9 @@ class RecoveryController:
 
     def context(self):
         state = deepcopy(self.state)
+        # The complete journal stays on disk; only two structural previews reach
+        # each stateless model request. Old hashes/diagnostics remain available.
+        for record in state['failed_actions'][:-2]:record.pop('action_summary',None)
         client = self.client
         state['remaining_requests'] = max(0,client.max_requests-client.request_count) if client and client.max_requests is not None else 0
         state['remaining_fits'] = max(0,self.fit_limit-state['attempted_classifier_fits']) if self.fit_limit is not None else None
@@ -39,8 +42,7 @@ class RecoveryController:
         self.save()
 
     def failure(self, stage, diagnostic, *, action=None):
-        # Proposals may contain misspelled fields but no row values. Keep their
-        # identity rather than copying arbitrary caller content into the journal.
+        from .action_context import summarize_action,CHECKS
         signature=hashlib.sha256(json.dumps(dict(stage=stage,action=action,diagnostic=diagnostic),
             sort_keys=True,ensure_ascii=False,default=str).encode()).hexdigest()
         repeated=any(r['signature']==signature and r['evidence_count']==len(self.state['observed_evidence'])
@@ -48,6 +50,8 @@ class RecoveryController:
         record=dict(stage=stage,diagnostic=deepcopy(diagnostic),action_sha256=hashlib.sha256(
             json.dumps(action,sort_keys=True,default=str).encode()).hexdigest(),signature=signature,
             evidence_count=len(self.state['observed_evidence']),repeated_without_new_evidence=repeated)
+        record.update(action_summary=summarize_action(action),
+                      expected_check=CHECKS.get(stage,'Verify the declared operation using installed capabilities.'))
         fields=sorted(diagnostic.get('uncertainty_fields',[]))
         evidence_sha=self.evidence_identity()
         record.update(unresolved_fields=fields,evidence_sha256=evidence_sha,

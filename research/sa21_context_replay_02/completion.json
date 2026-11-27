@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "actual_classifier_fits": 0,
+  "real_API_requests": 0,
+  "course_cost_rmb": 0,
+  "original_request_id": "82cdd1f1-6855-4fe0-abfe-ca15feeaf78d",
+  "source_unchanged": true,
+  "old_ledger_unchanged": true,
+  "record": {
+    "stage": "contract_probe",
+    "diagnostic": {
+      "stage": "contract_probe",
+      "code": "ValueError",
+      "message": "Output contract: invalid ID source"
+    },
+    "action_sha256": "7241db74f4cf548a5aee1e25f5356f11742392fc276ffd32babab1b04b0334fb",
+    "signature": "873584f604645a274470bdd5b2107c0a370d4c8225504857d3561f3696318a95",
+    "evidence_count": 0,
+    "repeated_without_new_evidence": false,
+    "action_summary": {
+      "version": "failed-action-summary-v1",
+      "not_executable": true,
+      "kind": "task_contract",
+      "proposal_version": "semantic-output-v1",
+      "selected_output": {
+        "version": "output-csv-v1",
+        "delimiter": ",",
+        "encoding": "utf-8",
+        "header": true,
+        "columns": [
+          {
+            "name": "Ticket",
+            "kind": "input_id"
+          },
+          {
+            "name": "Verdict",
+            "kind": "label",
+            "mapping": {
+              "0": "0",
+              "1": "1"
+            }
+          },
+          {
+            "name": "PositiveScore",
+            "kind": "probability",
+            "class_label": "1"
+          }
+        ],
+        "column_count": 3,
+        "order": {
+          "mode": "input"
+        }
+      },
+      "truncated": false
+    },
+    "expected_check": "Compile the cited task contract and replay prediction features and output rules before fitting.",
+    "unresolved_fields": [],
+    "evidence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "repeated_unresolved_without_new_evidence": false
+  },
+  "scope": "historical real failure replay; does not demonstrate a new live repair or accuracy improvement"
+}

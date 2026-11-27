@@ -1,5 +1,13 @@
 # 实验持续工作记录
 
+## 2026-11-26：按用户新要求设计LLM语义适配结构，0新增实验
+
+还有四天、继续A结构开发，B负责菜单。审查B d501807的format_guidance/intake/sources、native_schema、metric_declarations、autonomous_run和predict：现有LLM仅局部解释且证据先过词面规则，多说明文件/非常规命名/指标/提交表头仍可能直接拒绝。设计EvidenceWorkspace→TaskInterpreter→适配试读→RepairController→B训练→OutputRecipe→独立核验，不把合法JSON当正确理解。四天先实现理解/输出/修复，再预登记最多8次机制调用、条件60fit/9调用真实流程，最后无人干预演练；全部未来预算，尚未执行。详细方案docs/LLM_SEMANTIC_ADAPTATION_4DAY_PLAN_20261126_zh.md。当前未改生产/默认/账本，新增fit/API均0。
+
+## 2026-11-26：用户明确未知任务无人干预要求，调整冻结门槛，0新增实验
+
+读取B最终d501807入口与7974113工程包说明，收尾优先改为原始任务无人值守演练，而非继续模型提分。计划docs/UNSEEN_TASK_FREEZE_GATE_20261126_zh.md：精确工程包/环境/四权重→原包全流程→冻结候选后的三类型盲封装→故障与独立提交格式检查。静态待验点含Windows子worker退出、预测总时限、默认row_id/prediction与老师输出契约、真实Flash准入及待并账请求。未拿到并在本机验B大包，不宣称可冻结；本次0fit/0API，未改生产/账本/提交正式测试。
+
 ## 2026-11-25：A线最终候选Git交接与历史归属追溯，0新增fit/API
 
 按用户要求fetch核对GitHub；历史1532/2030与689/940的原包复现由B线Jingle He于165b100提交，更早统一记录9fe68c8亦同作者。A当前完整自主Task1为1527/2030，与历史身份分开。提交前24无fit定向回归通过，实际模型/预测SHA与manifest匹配；receipt位于research/final_a_line_intake_20261125。最终候选交接docs/FINAL_A_LINE_HANDOFF_20261125_zh.md，推送A持续分支与固定发布候选分支；Task2资产/同版核准未完成，未向学校提交或冒称全项目最终验收。生产/默认/模型/账本不改，新增fit/API均0。

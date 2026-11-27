@@ -88,9 +88,7 @@ def correctness(bank, labels, classes, r):
     return classes[np.argmax(matrix,axis=1)]==labels
 
 
-def choose(bank,y,classes,names,plan):
-    options = [recipe(sub) for k in range(1,min(3,len(names))+1) for sub in combinations(names,k)]
-    simple = min(options,key=lambda r:(-int(correctness(bank,y,classes,r).sum()),len(r["members"]),identity(r["members"])))
+def learned_recipe(bank,y,classes,names):
     weights = optimize(bank,y,classes,names)
     ranked = sorted(zip(names,weights),key=lambda pair:(-pair[1],identity(pair[0])))
     selected = [n for n,w in ranked[:3] if w>1e-7]
@@ -102,8 +100,14 @@ def choose(bank,y,classes,names,plan):
         fits += 1
     else:
         weights = [dict(zip(names,weights))[n] for n in selected]
-    weighted = recipe(selected,weights)
-    uniform = recipe(selected)
+    return recipe(selected,weights),fits
+
+
+def choose(bank,y,classes,names,plan):
+    options = [recipe(sub) for k in range(1,min(3,len(names))+1) for sub in combinations(names,k)]
+    simple = min(options,key=lambda r:(-int(correctness(bank,y,classes,r).sum()),len(r["members"]),identity(r["members"])))
+    weighted,fits = learned_recipe(bank,y,classes,names)
+    uniform = recipe(weighted["members"])
     lock = dict(protocol_sha256=sha(plan),eligible=names,equal_options_considered=len(options),simple=simple,
                 weighted=weighted,own_uniform=uniform,weight_fits=fits,primary_rows=len(y))
     return lock

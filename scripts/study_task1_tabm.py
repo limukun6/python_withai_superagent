@@ -75,12 +75,12 @@ def train(out,name):
     print(name,result,flush=True)
 
 
-def elect(out):
+def elect(out, methods=METHODS, prefix="tabm", protocol=PLAN):
     info=read(out/"inputs.json")
-    folder=out/"tabm_election"
+    folder=out/(prefix+"_election")
     folder.mkdir(exist_ok=False)
     paths={"aligned":out/"trial_attribute_alignment","icl":out/"trial_pretrained_icl",
-           **{n:out/("tabm_"+n) for n in METHODS}}
+           **{n:out/(prefix+"_"+n) for n in methods}}
     seals={k:read(p/"sealed.json") for k,p in paths.items()}
     classes=np.asarray(seals["aligned"]["classes"])
     require(all(d["classes"]==classes.tolist() for d in seals.values()),"Changed class order")
@@ -98,10 +98,10 @@ def elect(out):
             pred=ref if not w else (1-w)*ref+w*bank[n]
             results[n,w]=paired(classes[pred.argmax(1)]==y,base)
         return results,len(y),int(base.sum())
-    choices=[("retain",0.)]+[(n,w) for n in METHODS for w in (.125,.25,.5,1.)]
+    choices=[("retain",0.)]+[(n,w) for n in methods for w in (.125,.25,.5,1.)]
     measured,size,ref=panel("nomination",choices)
     winner=min(choices,key=lambda v:(-measured[v]["net"],v[1],v[0]))
-    save(folder/"locked.json",dict(protocol=sha(PLAN),winner=list(winner),rows=size,reference=ref,
+    save(folder/"locked.json",dict(protocol=sha(protocol),winner=list(winner),rows=size,reference=ref,
          alternatives=[dict(method=n,share=w,**r) for (n,w),r in measured.items()]))
     subsequent=[]
     for role in ROLES[1:]:

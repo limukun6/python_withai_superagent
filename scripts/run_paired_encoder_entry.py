@@ -22,7 +22,8 @@ PROTOCOL=ROOT/"research/paired_encoder_search_1127/raw_protocol.json"
 def solve(args):
     folder=args.output/args.arm
     folder.mkdir(parents=True,exist_ok=False)
-    policy=read(PROTOCOL)
+    study_plan=PROTOCOL.with_name("race_protocol.json") if args.arm=="race" else PROTOCOL
+    policy=read(study_plan)
     course=archive(args.course,"titles")
     raw_files=read(ROOT/"research/b_task2_handoff_1127/protocol.json")["input"]
     require(sha(course)==raw_files["raw"] and sha(args.features)==raw_files["features"],"Unknown input")
@@ -47,9 +48,10 @@ def solve(args):
                            stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,check=True,timeout=1400)
     run=folder/"run"
     result=folder/"delivery/predictions.csv"
-    save(folder/"protocol.json",dict(runtime_sha256=source_identity(ROOT),plan_sha256=sha(PROTOCOL),arm=args.arm,
+    save(folder/"protocol.json",dict(runtime_sha256=source_identity(ROOT),plan_sha256=sha(study_plan),arm=args.arm,
          candidate_hint=None,fit_limit=policy["fit_limit_each_including_refit"],raw_sha256=sha(course),features_sha256=sha(args.features)))
-    execute(["solve",course,"--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"],
+    review=["--feedback-reflection","matched-finalists"] if args.arm=="race" else []
+    execute(["solve",course,*review,"--fit-limit",policy["fit_limit_each_including_refit"],"--time-limit",policy["wall_seconds_each"],
              "--run-dir",run,"--prediction-input",args.features,"--output",result],"solve.log",settings)
     agent=run/"agent"
     outcome,chosen=read(agent/"run_outcome.json"),read(agent/"final_selection.json")
@@ -97,7 +99,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","adapted"])
+    parser.add_argument("--arm",choices=["original","expanded","race"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

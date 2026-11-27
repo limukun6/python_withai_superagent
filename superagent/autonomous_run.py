@@ -277,6 +277,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         scheduled = None
+        from .finalist_race import FinalistRace
+        race = FinalistRace(log,folds) if feedback_reflection=='matched-finalists' else None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)
@@ -315,6 +317,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if race is not None:
+                    finalist = race.consider(menu, caps, observed, metric, remaining, blocked,
+                                             'linear_only' not in profile.get('method_restrictions',()))
+                    if finalist is not None:
+                        choice, source = finalist, 'matched training finalists'
+                        menu = [finalist, *menu]
                 if opening is not None:
                     corroborate = opening.protect_confirmation(menu,caps,observed,remaining)
                     if corroborate is not None:

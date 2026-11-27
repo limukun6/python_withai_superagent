@@ -24,7 +24,8 @@ def solve(args):
     folder.mkdir(parents=True,exist_ok=False)
     plans={"race":"race_protocol.json","default":"default_protocol.json",
            "frontier":"frontier_protocol.json","frontier_scale":"frontier_scale_protocol.json",
-           "auto_portfolio":"auto_portfolio_protocol.json","resource_default":"resource_root_protocol.json","anonymous_default":"anonymous_choice_protocol.json"}
+           "auto_portfolio":"auto_portfolio_protocol.json","resource_default":"resource_root_protocol.json","anonymous_default":"anonymous_choice_protocol.json",
+           "anonymous_portfolio":"anonymous_portfolio_protocol.json"}
     study_plan=PROTOCOL.with_name(plans[args.arm]) if args.arm in plans else PROTOCOL
     policy=read(study_plan)
     course=archive(args.course,"titles")
@@ -45,7 +46,7 @@ def solve(args):
     if args.arm != "original":
         settings["SUPERAGENT_PAIRED_FEATURE_CACHE"]=str(args.cache)
     shared_root = []
-    if args.arm in ("resource_default","anonymous_default"):
+    if args.arm in ("resource_default","anonymous_default","anonymous_portfolio"):
         for key in list(settings):
             if key.startswith("SUPERAGENT_") and key.endswith("_WEIGHTS"):
                 settings.pop(key)
@@ -128,7 +129,7 @@ def score(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode",choices=["solve","score"])
-    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default"])
+    parser.add_argument("--arm",choices=["original","expanded","race","default","frontier","frontier_scale","auto_portfolio","resource_default","anonymous_default","anonymous_portfolio"])
     parser.add_argument("--sealed-arms",nargs="+")
     for name in ("course","features","weights","cache","output","reference"):
         parser.add_argument("--"+name,type=lambda s:Path(s).resolve(),required=name in ("course","output"))

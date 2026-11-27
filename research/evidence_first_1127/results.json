@@ -1,0 +1,475 @@
+{
+  "registration": {
+    "frozen": {
+      "agent": "e69c6cc719f41a605c82fe2538b4e4a1c8a377f8e42f6fb00d1bac6b63331d57",
+      "runner": "fd6c8800dac682ebebb212097717648353d6bf449c66a5a2db052534a7110f8c",
+      "parent_runner": "50d1f12607a8ec2fc4252237f0bffdfb64f9af577775f9198b60f775f204e7ca",
+      "entry_runner": "27c250cd44817eea50c611424e545500e83d74b992624e769844b511047fd0af",
+      "guard": "bbe0dac2198e2c1b1414bdc42e358cc64a434a559b9b515985b9ab4584371fb6",
+      "protocol": "a14ad1f45b657be3ca4318ebd72aa5bf9ca5fbe6e962b5f9a88fd3aef5553b73"
+    },
+    "cases": {
+      "v21a": {
+        "train_rows": 1100,
+        "held_rows": 350,
+        "metric": "balanced_accuracy",
+        "modality": "tabular",
+        "excluded_earlier_registered_rows": 2640,
+        "train_ids_sha256": "b78320485dab333b9e174fe02c00848b37b6103584d168546a0412548e40672d",
+        "held_ids_sha256": "b0ae16382a4e8e25e7bedc73a5bd75bd96e63b4c109cc177163ab4255cf2787b",
+        "train_sha256": "6cb2aa8428dbd79f1b53b497b6e04aaf9207a195c260dae631e22aee02fdd812",
+        "query_sha256": "6ff2f8f745d42074ba8a6de6404cee00a004b811d935991b83dd2490bcf93f12",
+        "truth_sha256": "0e39f86176d6d51c45f2d337c4693741973f4358e6d59a7df08bd239c7b68ce2"
+      },
+      "v21b": {
+        "train_rows": 1100,
+        "held_rows": 350,
+        "metric": "balanced_accuracy",
+        "modality": "tabular",
+        "excluded_earlier_registered_rows": 2640,
+        "train_ids_sha256": "e5f77f612893596dd12e7a3c48e9416f018c76122d3d47e7f250883f3c5a8ad2",
+        "held_ids_sha256": "1836405ed876d06f172f6cfbbc132804b49267fb9e830c99de0d83711afbf29e",
+        "train_sha256": "2c5e5fd8d2d4f471fb068ea7d03cfb602845ded4e823e17a7dce325ade3ddf0e",
+        "query_sha256": "6e093c61ef4c30c30dee5bdadfe015292982334bccc469c5e159aa469a755c85",
+        "truth_sha256": "6937fc8a8a854b2dbaea98855a77e51782ccb1cff8232eac1fea0098e66d4bc1"
+      },
+      "v83a": {
+        "train_rows": 1100,
+        "held_rows": 350,
+        "metric": "accuracy",
+        "modality": "image",
+        "excluded_earlier_registered_rows": 3840,
+        "train_ids_sha256": "1edaef12669cf20d7e06ec7736e1ae25d05d6c1e79126b5b60e0e1b110bbbe63",
+        "held_ids_sha256": "b3f9456733e84c7e62114e01720f5bb046e76aaec7bcab3c35cf432a952db5c7",
+        "train_sha256": "567ec495028e03b3a1f9f7a71ba2711c61aa27261bf5851b0a1e5f77bd40a25a",
+        "query_sha256": "9f8df31187bd4c3928e293c81c0bed9642f4a98bb2cdb0927312b1217d298d00",
+        "truth_sha256": "c8caf5a2701bebe102daf33da237e09dd5f7efb9c696e806bd46e1bfd21a4176"
+      },
+      "v83b": {
+        "train_rows": 1100,
+        "held_rows": 350,
+        "metric": "accuracy",
+        "modality": "image",
+        "excluded_earlier_registered_rows": 3840,
+        "train_ids_sha256": "95633b13b1ee977043aed26d6bdf48f27faebb2128962793d3b7860a2945a603",
+        "held_ids_sha256": "39c736cc5e06cde79d74456009b1ad663ff73403e603f25060001c1ef86fe691",
+        "train_sha256": "a4fe2045e40afb0fceab79beae0b98e182e916e8403f437255e5d456f0237e16",
+        "query_sha256": "8e70f473dd949c570b0cc6f641ed809f0305b19db956f1ebd87b1c4c4b2d4f69",
+        "truth_sha256": "30214ab74c2036113a19fee7a6274c87098d3fd01b4cc6e20f1c7d972829d3ad"
+      }
+    },
+    "earlier_registrations": [
+      "f098967481c877dcb325fead308f474139d8cb3252164d3cef596260e8444c33",
+      "6806840b91621f2b03be03c028c36383c53cc3d6879ceea4f81deaac33fc97d9"
+    ]
+  },
+  "replication": {
+    "pilot_status": {
+      "v21": "rejected",
+      "v83": "rejected"
+    },
+    "run": [],
+    "outer_opened": false
+  },
+  "results": {
+    "v21a": {
+      "metric": "balanced_accuracy",
+      "rows": 350,
+      "arms": {
+        "feedback-local": {
+          "primary_score": 0.8509861932938855,
+          "correct": 299,
+          "protected_confirmations": [],
+          "design": null,
+          "core": [
+            "numeric_tabular_rbf_svm_C10.0"
+          ],
+          "tested": "numeric_tabular_rbf_svm_C1.0",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 50,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.7977799977799978,
+              "challenger": 0.748906648906649,
+              "delta": -0.04887334887334871,
+              "gained": 5,
+              "lost": 16
+            },
+            {
+              "fold": "confirmation_1",
+              "rows": 221,
+              "incumbent": 0.8325112921266767,
+              "challenger": 0.7538664327125866,
+              "delta": -0.07864485941409016,
+              "gained": 6,
+              "lost": 25
+            }
+          ],
+          "fits": 10,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 31.48,
+          "model_sha": "78bfdac46cde10225496a1742e78cb0e7e9bda6b9b5bfe4961be2100f6b5aad8",
+          "output_sha": "b4e35acd34110def9e6682499a489edd14c8749083cb8845a7e707fdcbf4d9e4"
+        },
+        "feedback-confirm": {
+          "primary_score": 0.8509861932938855,
+          "correct": 299,
+          "protected_confirmations": [],
+          "design": null,
+          "core": [
+            "numeric_tabular_rbf_svm_C10.0"
+          ],
+          "tested": "numeric_tabular_rbf_svm_C1.0",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 50,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.7977799977799978,
+              "challenger": 0.748906648906649,
+              "delta": -0.04887334887334871,
+              "gained": 5,
+              "lost": 16
+            },
+            {
+              "fold": "confirmation_1",
+              "rows": 221,
+              "incumbent": 0.8325112921266767,
+              "challenger": 0.7538664327125866,
+              "delta": -0.07864485941409016,
+              "gained": 6,
+              "lost": 25
+            }
+          ],
+          "fits": 10,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 31.44,
+          "model_sha": "78bfdac46cde10225496a1742e78cb0e7e9bda6b9b5bfe4961be2100f6b5aad8",
+          "output_sha": "b4e35acd34110def9e6682499a489edd14c8749083cb8845a7e707fdcbf4d9e4"
+        },
+        "feedback-design": {
+          "primary_score": 0.8509861932938855,
+          "correct": 299,
+          "protected_confirmations": [],
+          "design": {
+            "version": 1,
+            "status": "rejected",
+            "evidence_scope": "primary training holdout only",
+            "pair": [
+              1,
+              3
+            ],
+            "gate": "predicted_member",
+            "recoverable_errors": 2,
+            "primary_rows": 20,
+            "opportunity_bound": 0.012820512820512664,
+            "method": "open_ExtraTreesClassifier_71b3775151a194097b57",
+            "eligible_methods": 31,
+            "observed_methods": 5,
+            "direct_pair_skill": 0.7840909090909092,
+            "forecast_score": 0.7844755679245885,
+            "classes": [
+              "B",
+              "D"
+            ],
+            "method_id": "pair_refinement_5b4c654b1249f17d",
+            "incumbent_model_sha256": "78bfdac46cde10225496a1742e78cb0e7e9bda6b9b5bfe4961be2100f6b5aad8",
+            "physical_training_rows": {
+              "primary": 73,
+              "confirmation_1": 68
+            },
+            "reason": "No positive whole-fold gain on confirmation_1"
+          },
+          "core": [
+            "numeric_tabular_rbf_svm_C10.0"
+          ],
+          "tested": "pair_refinement_5b4c654b1249f17d",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 50,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.7977799977799978,
+              "challenger": 0.8041902541902541,
+              "delta": 0.0064102564102563875,
+              "gained": 1,
+              "lost": 0,
+              "routed_rows": 20,
+              "outside_changes": 0
+            },
+            {
+              "fold": "confirmation_1",
+              "rows": 221,
+              "incumbent": 0.8325112921266767,
+              "challenger": 0.8325112921266767,
+              "delta": 0.0,
+              "gained": 0,
+              "lost": 0,
+              "routed_rows": 17,
+              "outside_changes": 0
+            }
+          ],
+          "fits": 10,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 34.75,
+          "model_sha": "78bfdac46cde10225496a1742e78cb0e7e9bda6b9b5bfe4961be2100f6b5aad8",
+          "output_sha": "b4e35acd34110def9e6682499a489edd14c8749083cb8845a7e707fdcbf4d9e4"
+        }
+      },
+      "paired": {
+        "feedback-local to feedback-confirm": {
+          "gained": 0,
+          "lost": 0,
+          "disagreements": 0,
+          "primary_gain": 0.0
+        },
+        "feedback-confirm to feedback-design": {
+          "gained": 0,
+          "lost": 0,
+          "disagreements": 0,
+          "primary_gain": 0.0
+        }
+      }
+    },
+    "v83a": {
+      "metric": "accuracy",
+      "rows": 350,
+      "arms": {
+        "feedback-local": {
+          "primary_score": 0.8571428571428571,
+          "correct": 300,
+          "protected_confirmations": [],
+          "design": null,
+          "core": [
+            "image_gradient_histograms_logistic",
+            "open_HistGradientBoostingClassifier_3120832306f74bca1f53"
+          ],
+          "tested": "open_HistGradientBoostingClassifier_017813b04b1eff615f7c",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 51,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.85,
+              "challenger": 0.8136363636363636,
+              "delta": -0.036363636363636376,
+              "gained": 11,
+              "lost": 19,
+              "subset_net_rescues": 0
+            },
+            {
+              "fold": "confirmation_1",
+              "rows": 220,
+              "incumbent": 0.8181818181818182,
+              "challenger": 0.7772727272727272,
+              "delta": -0.040909090909091006,
+              "gained": 14,
+              "lost": 23,
+              "subset_net_rescues": -1
+            }
+          ],
+          "fits": 10,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 92.56,
+          "model_sha": "c245fd35a2234c67d7d1ab3ab96e38dc38fbad0dc9f23cc950a3f78f9ed364d4",
+          "output_sha": "98284a4108353048ba762f9e8ed8505681923a919f7bf5c983005a6c601cbb49"
+        },
+        "feedback-confirm": {
+          "primary_score": 0.8571428571428571,
+          "correct": 300,
+          "protected_confirmations": [],
+          "design": null,
+          "core": [
+            "image_gradient_histograms_logistic",
+            "open_HistGradientBoostingClassifier_3120832306f74bca1f53"
+          ],
+          "tested": "open_HistGradientBoostingClassifier_017813b04b1eff615f7c",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 51,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.85,
+              "challenger": 0.8136363636363636,
+              "delta": -0.036363636363636376,
+              "gained": 11,
+              "lost": 19,
+              "subset_net_rescues": 0
+            },
+            {
+              "fold": "confirmation_1",
+              "rows": 220,
+              "incumbent": 0.8181818181818182,
+              "challenger": 0.7772727272727272,
+              "delta": -0.040909090909091006,
+              "gained": 14,
+              "lost": 23,
+              "subset_net_rescues": -1
+            }
+          ],
+          "fits": 10,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 92.61,
+          "model_sha": "c245fd35a2234c67d7d1ab3ab96e38dc38fbad0dc9f23cc950a3f78f9ed364d4",
+          "output_sha": "98284a4108353048ba762f9e8ed8505681923a919f7bf5c983005a6c601cbb49"
+        },
+        "feedback-design": {
+          "primary_score": 0.8571428571428571,
+          "correct": 300,
+          "protected_confirmations": [],
+          "design": {
+            "version": 1,
+            "status": "rejected",
+            "evidence_scope": "primary training holdout only",
+            "pair": [
+              0,
+              6
+            ],
+            "gate": "top_two",
+            "recoverable_errors": 4,
+            "primary_rows": 15,
+            "opportunity_bound": 0.018181818181818188,
+            "method": "open_HistGradientBoostingClassifier_3120832306f74bca1f53",
+            "eligible_methods": 20,
+            "observed_methods": 3,
+            "direct_pair_skill": 0.7196969696969697,
+            "forecast_score": 0.7206174753406881,
+            "classes": [
+              0,
+              6
+            ],
+            "method_id": "pair_refinement_dd6e49012aa75290",
+            "incumbent_model_sha256": "c245fd35a2234c67d7d1ab3ab96e38dc38fbad0dc9f23cc950a3f78f9ed364d4",
+            "physical_training_rows": {
+              "primary": 184
+            },
+            "reason": "No positive whole-fold gain on primary"
+          },
+          "core": [
+            "image_gradient_histograms_logistic",
+            "open_HistGradientBoostingClassifier_3120832306f74bca1f53"
+          ],
+          "tested": "pair_refinement_dd6e49012aa75290",
+          "opportunity": {
+            "after_fits": 1,
+            "errors": 51,
+            "folds": [
+              "primary",
+              "confirmation_1"
+            ],
+            "incumbent_completion_fits": 2,
+            "lowest_alternative_fits": 3,
+            "reserved_fits": 3
+          },
+          "remaining": 3,
+          "result": "retained",
+          "comparisons": [
+            {
+              "fold": "primary",
+              "rows": 220,
+              "incumbent": 0.85,
+              "challenger": 0.85,
+              "delta": 0.0,
+              "gained": 2,
+              "lost": 2,
+              "routed_rows": 15,
+              "outside_changes": 0
+            }
+          ],
+          "fits": 9,
+          "requests": 0,
+          "course_cost_rmb": 0,
+          "fresh_reload": true,
+          "seconds": 90.01,
+          "model_sha": "c245fd35a2234c67d7d1ab3ab96e38dc38fbad0dc9f23cc950a3f78f9ed364d4",
+          "output_sha": "98284a4108353048ba762f9e8ed8505681923a919f7bf5c983005a6c601cbb49"
+        }
+      },
+      "paired": {
+        "feedback-local to feedback-confirm": {
+          "gained": 0,
+          "lost": 0,
+          "disagreements": 0,
+          "primary_gain": 0.0
+        },
+        "feedback-confirm to feedback-design": {
+          "gained": 0,
+          "lost": 0,
+          "disagreements": 0,
+          "primary_gain": 0.0
+        }
+      }
+    }
+  }
+}

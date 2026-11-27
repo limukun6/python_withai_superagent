@@ -98,9 +98,17 @@ def package(args):
         for src, dst in [(original, 'validation_predictions.csv'), (args.run / 'validation.json', 'validation.json'),
                          (args.run / 'protocol.json', 'run_protocol.json')]:
             shutil.copyfile(src, results / dst)
+        logs = results / 'run_logs'
+        logs.mkdir()
+        agent = args.run / 'titles/run/agent'
+        for name in ('task_contract.json', 'run_manifest.json', 'decisions.json', 'history.json',
+                     'classifier_fits.json', 'events.jsonl', 'recovery_state.json', 'run_outcome.json', 'llm_usage.jsonl'):
+            shutil.copyfile(agent / name, logs / name)
+        shutil.copyfile(args.run / 'titles/physical.jsonl', logs / 'observed_classifier_fits.jsonl')
         (tree / 'README.md').write_text(
             '# Released Task2 离线交接包\n\n'
-            '本包对应一次从课程训练原包开始的自主运行。指定验证集逐行输出和分数在 results 目录。\n\n'
+            '本包对应一次从课程训练原包开始的自主运行。指定验证集逐行输出和分数在 results 目录。'
+            'run_logs 保存决策、训练、计费和交付记录。\n\n'
             '环境为 CPython 3.11。用同一环境依次运行下面两行，把 features.zip 换成待预测的特征包。'
             '依赖安装好后，预测时可断网，包内已经带有所选模型的权重。\n\n'
             '```sh\npython -m pip install -r requirements.txt\n'

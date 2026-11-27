@@ -28,3 +28,15 @@ python -m unified_agent solve "$TASK_PACKAGE" --weights-dir "$WEIGHTS_DIR" \
 ```
 
 使用交付环境中相同的资源目录可以重跑上述预算。仓库包含运行实现、评分与重载回执。含权重和已拟合索引的本地交付包为 `Released-Task2-validation-95c3d7f5c681.zip`，331,792,378 字节。整包移到新目录、禁网、新进程加载后逐字节重现 940 行预测。[包及模型 SHA-256](../research/paired_encoder_search_1127/portfolio_adviser_portable.json) · [上一版的复现说明](B_TASK2_NEAR_TIE_20261127_zh.md)
+
+### 从相似案例学习权重的试验
+
+另一条路线让分类器学习哪些类似的比较更有参考价值。它用冻结的编码器计算两句话的改动方向和上下文，再从训练组抽取代表样本，学习这些样本对预测的影响。两种向量来源都取自 Agent 实际选出的成员。首轮 1,693 条中，GTE-base 方案多答对 12 条，BGE-small 方案多答对 6 条。程序锁定前者和 50% 权重。换到 1,645 条复核数据，原组合答对 1,196 条，加新模型后只答对 1,175 条，触发事先写好的淘汰规则。正式模型继续使用原权重。
+
+共发生 4 次本地分类器拟合。其中 3 次产生可评分预测，首次拟合因保存校验值时的数组维度错误，需要补跑一次。这 4 次都已计数，模型 API 为 0。此轮只比较训练内表现。[预设试验与方法来源](../research/paired_encoder_search_1127/preference_kernel_protocol.json) · [完整结果](../research/paired_encoder_search_1127/preference_kernel_results.json) · [首次拟合记录](../research/paired_encoder_search_1127/preference_kernel_first_attempt.json)
+
+### 同一个入口处理电影台词
+
+在 Cornell Movie-Quotes 开发任务上，从 526 部电影的 1,744 对台词学习，预测另外 136 部电影的 450 对。训练和评分之间没有共享电影、连通组或规格化台词。两组起始都看到 71 个可用动作，训练上限均为 16 次。这个公开来源此前用于项目开发，此处检验这版调度在另一种偏好目标上的表现。[数据来源](https://aclanthology.org/P12-1094/) · [事前协议](../research/paired_encoder_search_1127/analogy_movie_transfer_protocol.json)
+
+原调度实际用 14 次拟合，选择 GTE-base，答对 **348/450（77.33%）**。新版用 16 次，选择 ELECTRA 和 GTE-base。首份训练留出集上，给相似案例 25% 票权前后均答对 280/348，另两批分别提高 6/349 和 2/350，Agent 判定可以使用。最终权重为两个编码器各 37.5%、案例投票 25%，外部开发留出答对 **354/450（78.67%）**。相对原调度改对 19 条、改错 13 条。按所留 136 个电影连通组计，18 组净增、10 组净减、108 组打平。两份模型在单独进程中各复现 450 行，封存后才统一揭分，合计 30 次本地拟合、模型 API 0 次。[实际选择](../research/paired_encoder_search_1127/movie_adviser_decision.json) · [成绩与重载回执](../research/paired_encoder_search_1127/movie_adviser_results.json)

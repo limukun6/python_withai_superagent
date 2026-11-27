@@ -1,0 +1,120 @@
+{
+  "incumbent_members": [
+    "electra_paired_quadratic",
+    "gte_base_paired_linear"
+  ],
+  "incumbent_model": "10dc9020c2bf25de0d69310004dda6473495f027a5aa4a308d0b9d46a3de26df",
+  "before_fits": 10,
+  "permitted_weights": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "allocations": [
+    {
+      "fold": "confirmation_1",
+      "row_key": "24e9b71c6112401318b942d3220500b1f3bb627a5638191fc3703da767812d71",
+      "rows": 349,
+      "incumbent": 273,
+      "candidate": 279,
+      "gain": 6
+    },
+    {
+      "fold": "confirmation_2",
+      "row_key": "004714dc3570a6ab5842f172c0287bc65e07b238aebf04bcc4fa11ccab395a0f",
+      "rows": 350,
+      "incumbent": 270,
+      "candidate": 272,
+      "gain": 2
+    }
+  ],
+  "all_decisions_training_only": true,
+  "incumbent_weights": [
+    0.5,
+    0.5
+  ],
+  "source_member": "gte_base_paired_linear",
+  "source_candidates": [
+    {
+      "member": "gte_base_paired_linear",
+      "adviser": "preference_analogy_45cb39291ca5c8321d9e",
+      "measured_primary": 0.7701149425287356,
+      "execution_key": "798f94999dec942c76efffebcba399aa72b89d027aa3fec7393548796a3faa3e"
+    },
+    {
+      "member": "electra_paired_quadratic",
+      "adviser": "preference_analogy_d57586297b0acc20e805",
+      "measured_primary": 0.7672413793103449,
+      "execution_key": "6b0c1721650bba86710ce253f0514cc1757151fd163e93ea140ffe42464c37a3"
+    }
+  ],
+  "status": "accepted",
+  "candidate": "preference_analogy_45cb39291ca5c8321d9e",
+  "derived_configuration": {
+    "encoder": "thenlper/gte-base",
+    "revision": "c078288308d8dee004ab72c6191778064285ec0c",
+    "classifier": "preference_analogy",
+    "representation": "direction and midpoint of individual frozen embeddings",
+    "independent_training_groups": true,
+    "orientation": "complement",
+    "neighbors": "clipped_sqrt_groups_3_40"
+  },
+  "remaining_fits": 6,
+  "extra_fits": 6,
+  "primary": {
+    "row_key": "647183a5f72e5f0158c1bbd290802dc0b1767bf87dc40c78714e1fb9ffbaa47b",
+    "rows": 348,
+    "scores": [
+      280,
+      280,
+      278,
+      240
+    ]
+  },
+  "locked_weight": 0.25,
+  "transparent_nomination": {
+    "weight": 0.25,
+    "reason": "paired_near_tie",
+    "scores": [
+      280,
+      280,
+      278,
+      240
+    ],
+    "primary_gain": 0,
+    "paired": {
+      "rows": 348,
+      "gained": 5,
+      "lost": 5
+    },
+    "paired_standard_error": 0.009100089017506157
+  },
+  "already_observed_folds": {
+    "primary": [
+      "bge_small_text_with_lexical_features",
+      "electra_paired_quadratic",
+      "gte_base_paired_linear",
+      "local_sentence_fb8ba2cc889cb4eef506",
+      "minilm_l12_topic_style_interactions",
+      "minilm_text_with_nonlinear_lexical_features",
+      "preference_analogy_45cb39291ca5c8321d9e"
+    ],
+    "confirmation_1": [
+      "electra_paired_quadratic",
+      "gte_base_paired_linear"
+    ],
+    "confirmation_2": []
+  },
+  "final_members": [
+    "electra_paired_quadratic",
+    "gte_base_paired_linear",
+    "preference_analogy_45cb39291ca5c8321d9e"
+  ],
+  "weights": [
+    0.375,
+    0.375,
+    0.25
+  ],
+  "model_sha256": "99c4c7926c33d31769d1561c2d56dc0408bf60aadf50f799c9f81a4776a29b97"
+}

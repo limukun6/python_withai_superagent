@@ -73,6 +73,8 @@ def solve(args):
 
 def score(args):
     folders=[args.reference,*[args.output/name for name in args.sealed_arms]]
+    require(len(args.sealed_arms)==len(set(args.sealed_arms)) and set(args.sealed_arms)=={"original","expanded","race"},
+            "The three registered autonomous cold runs must be sealed before evaluation")
     predictions=[]
     for folder in folders:
         saved=read(folder/"sealed.json")
@@ -91,7 +93,15 @@ def score(args):
         right=labels==truth
         report[name]=dict(correct=int(sum(right)),rows=len(right),accuracy=float(right.mean()),
                           fixed=int(sum(right & ~base)),lost=int(sum(base & ~right)))
-    report["official_test_opened"]=False
+    names=["delivered_10_fits",*args.sealed_arms]
+    paired=[]
+    for i,first in enumerate(predictions):
+        for j,second in enumerate(predictions[i+1:],i+1):
+            before,after=first==truth,second==truth
+            paired.append(dict(reference=names[i],candidate=names[j],fixed=int(sum(after & ~before)),
+                               lost=int(sum(before & ~after)),both_correct=int(sum(before & after)),
+                               both_incorrect=int(sum(~before & ~after))))
+    report.update(official_test_opened=False,paired_comparisons=paired)
     save(args.output/"validation.json",report)
     print(report,flush=True)
 

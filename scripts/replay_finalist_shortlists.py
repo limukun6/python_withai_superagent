@@ -16,6 +16,8 @@ class MemoryLog(dict):
 
 
 def replay(agent):
+    if not (agent/"task_contract.json").is_file():
+        return dict(status="no_archived_run",nomination=None)
     contract=read(agent/"task_contract.json")
     metric=MetricSpec.from_payload(dict(metric_spec=contract["metric"]))
     data,observed,windows={},{},{}
@@ -64,4 +66,4 @@ if __name__=="__main__":
     args.output.mkdir(parents=True,exist_ok=False)
     save(args.output/"results.json",dict(cases=cases,fits=0,requests=0,
          protocol_sha256=sha(ROOT/"research/paired_encoder_search_1127/replay_protocol.json")))
-    print([(k,v["modality"],v["nomination"],v.get("fully_matched_confirmation",[])) for k,v in cases.items()])
+    print([(k,v.get("modality",v.get("status")),v["nomination"],v.get("fully_matched_confirmation",[])) for k,v in cases.items()])

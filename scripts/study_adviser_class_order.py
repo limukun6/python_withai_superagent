@@ -21,6 +21,15 @@ from superagent.metrics import MetricSpec
 PLAN = ROOT/"research/paired_encoder_search_1127/adviser_class_order_protocol.json"
 
 
+def deployed_share(selection, candidate):
+    if candidate is None:
+        return 0.0
+    members = selection.get("ensemble_components", [])
+    if candidate in members:
+        return selection["weights"][members.index(candidate)]
+    return float(selection.get("single_candidate") == candidate)
+
+
 def replay(root, out):
     agent = root/"analogy-portfolio-raw/portfolio_revised/run/agent"
     report = read(agent/"analogy_review.json")
@@ -96,9 +105,11 @@ def solve(root, source, out):
     require(outcome["status"] == "completed" and outcome["completed_classifier_fits"] == fits <= 16
             and outcome["attempted_classifier_fits"] == fits and outcome["new_api_requests"] == 0
             and sha(out/"solve.csv") == sha(out/"reload.csv"), "Incomplete delivery")
+    selection = read(agent/"final_selection.json")
     lock(out/"seal.json", dict(protocol=sha(out/"launch.json"), metric=contract["metric"], adviser=review["status"],
-         actual_share=review.get("locked_weight"), members=outcome["members"], fits=fits, api_requests=0,
-         predictions=sha(out/"solve.csv"), independent_reload=True, final_model=read(agent/"final_selection.json")["model_sha256"]))
+         nominated_share=review.get("locked_weight"), deployed_share=deployed_share(selection, review.get("candidate")),
+         members=outcome["members"], fits=fits, api_requests=0, predictions=sha(out/"solve.csv"),
+         independent_reload=True, final_model=selection["model_sha256"]))
     print("reordered movie task",read(out/"seal.json"),flush=True)
 
 
@@ -119,9 +130,30 @@ def compare(root, out):
     print(record["rows"],record["predictions_changed"],flush=True)
 
 
+def explain(root, out):
+    record = {}
+    histories = {}
+    for key, folder in (("ordinary", root/"movie-adviser/revised"), ("reordered", out)):
+        agent = folder/"run/agent"
+        selection = read(agent/"final_selection.json")
+        review = read(agent/"analogy_review.json")
+        partition = read(agent/"primary_split.json")
+        histories[key] = read(agent/"history.json")
+        record[key] = dict(selection=sha(agent/"final_selection.json"), review=sha(agent/"analogy_review.json"),
+            primary_rows=partition["row_sha256"], primary_labels=partition["label_sha256"],
+            nominated_share=review.get("locked_weight"), deployed_share=deployed_share(selection, review["candidate"]))
+    fields = ("trial", "candidate", "status", "search_score")
+    for first, second in zip(histories["ordinary"], histories["reordered"]):
+        if any(first.get(k)!=second.get(k) for k in fields):
+            record["first_different_trial"] = {name:{k:row.get(k) for k in (*fields, "error")}
+                for name,row in (("ordinary",first),("reordered",second))}
+            break
+    lock(out/"route_evidence.json",dict(comparison=sha(out/"comparison.json"), details=record, held_labels_opened=False))
+
+
 if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action",choices=("run","compare"))
+    parser.add_argument("action",choices=("run","compare","explain"))
     parser.add_argument("--root",type=lambda p:Path(p).resolve(),required=True)
     parser.add_argument("--source",type=lambda p:Path(p).resolve())
     args=parser.parse_args()
@@ -130,5 +162,7 @@ if __name__ == "__main__":
         study.mkdir(exist_ok=False)
         replay(args.root,study)
         solve(args.root,args.source,study)
-    else:
+    elif args.action=="compare":
         compare(args.root,study)
+    else:
+        explain(args.root,study)

@@ -12,11 +12,15 @@ PATHS={"legacy_long":"long-cold/original","frontier":"frontier-raw/frontier","fr
        "auto_portfolio":"auto-raw/auto_portfolio","resource_default":"resource-raw/resource_default"}
 
 
-def score(root,course,portfolio=False,discovery=False):
+def score(root,course,portfolio=False,discovery=False,discovery_default=False):
     series="discovered-raw" if discovery else "anonymous-large" if portfolio else "anonymous-choice"
+    if discovery_default:
+        series="discovered-ordinary"
     output=root/(series+"-scores")
     output.mkdir(exist_ok=True)
     name="discovered" if discovery else "anonymous_portfolio" if portfolio else "anonymous_default"
+    if discovery_default:
+        name="discovered_default"
     run=root/series/name
     audit_path=root/series/"alias_audit.json"
     audit=read(audit_path)["new_cases"]["task2"]
@@ -58,6 +62,19 @@ def score(root,course,portfolio=False,discovery=False):
         if seal["prediction_sha256"]==frozen["prediction_sha256"]:
             require(np.array_equal(values,predicted),"Prediction identity differs")
             matched=prior
+    modular_correct=None
+    if discovery_default:
+        capsule=root/"discovered-raw/discovered"
+        receipt,other=prediction_file(capsule)
+        scores=root/"discovered-raw-scores"
+        fixed=read(scores/"results.json")
+        require(fixed["lock_sha256"]==sha(scores/"evaluation_lock.json")
+                and read(scores/"evaluation_lock.json")["seals"]["discovered"]==sha(capsule/"sealed.json"),
+                "Earlier modular delivery is not locked")
+        if receipt["prediction_sha256"]==frozen["prediction_sha256"]:
+            require(np.array_equal(other,predicted),"Modular prediction identity differs")
+            matched="discovered"
+            modular_correct=fixed["completed"]["discovered"]["correct"]
     if matched is None:
         raw=archive(course,"titles")
         require(sha(raw)==plan["raw_sha256"],"Unexpected course archive")
@@ -65,7 +82,7 @@ def score(root,course,portfolio=False,discovery=False):
         require(len(truth)==len(predicted) and np.isin(truth,[0,1]).all(),"Invalid reference classes or size")
         correct=int(np.sum(truth==predicted))
     else:
-        correct=historical["completed"][matched]["correct"]
+        correct=modular_correct if matched=="discovered" else historical["completed"][matched]["correct"]
     base_correct=historical["completed"]["resource_default"]["correct"]
     disagreement=int(np.sum(predicted!=baseline))
     # On a binary task every disagreement changes exactly one of two correctness indicators.
@@ -86,6 +103,7 @@ if __name__=="__main__":
         p.add_argument("--"+key,type=lambda s:Path(s).resolve(),required=True)
     p.add_argument("--portfolio-only",action="store_true")
     p.add_argument("--discovery",action="store_true")
+    p.add_argument("--discovery-default",action="store_true")
     args=p.parse_args()
-    row=next(iter(score(args.root,args.course,args.portfolio_only or args.discovery,args.discovery)["completed"].values()))
+    row=next(iter(score(args.root,args.course,args.portfolio_only or args.discovery,args.discovery,args.discovery_default)["completed"].values()))
     print(row["correct"],row["rows"],row["identical_to"],row["trace"]["members"])

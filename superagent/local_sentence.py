@@ -204,6 +204,14 @@ class LocalSentenceFeatures(SentenceFeatures):
         super().__init__(kind)
         self.spec=spec
 
+    @property
+    def encoder_model(self):
+        return 'local-sentence-'+self.spec['signature'][:20]
+
+    @property
+    def encoder_revision(self):
+        return self.spec['signature']
+
     def fit(self,rows,y=None):
         super().fit(rows,y)
         texts=list(dict.fromkeys(s for pair in rows for s in pair)) if self.kind=='pair_text' else list(dict.fromkeys(rows))
@@ -225,8 +233,8 @@ class LocalSentenceFeatures(SentenceFeatures):
     def resource(self):
         s=self.spec
         return dict(name='sentence_'+s['signature'][:20],environment_variable=s['environment_variable'],
-                    path_kind='directory',model='local-sentence-'+s['signature'][:20],
-                    revision=s['signature'],files=s['files'])
+                    path_kind='directory',model=self.encoder_model,
+                    revision=self.encoder_revision,files=s['files'])
 
 
 def fit_model(rows,labels,query,*,kind,spec):

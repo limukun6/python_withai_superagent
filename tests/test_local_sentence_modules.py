@@ -5,8 +5,11 @@ from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import patch
 
+from sklearn.pipeline import Pipeline
+
 from superagent.external_assets import model_resources, verify_resources
 from superagent.local_sentence import LocalSentenceFeatures, candidates, describe, discover
+from superagent.preference_analogy import derived_candidate
 from superagent.task_constraints import permitted
 
 
@@ -23,6 +26,23 @@ def package(root):
 
 
 class LocalSentenceModules(TestCase):
+    def test_each_discovered_encoder_lends_its_own_representation(self):
+        with TemporaryDirectory() as tmp, patch.dict(os.environ,{},clear=True):
+            root=Path(tmp)
+            for name in ('first','second'):
+                package(root/name)
+                (root/name/'model.safetensors').write_bytes(name.encode())
+            discover(root,os.environ)
+            adviser_ids=[]
+            for name in ('first','second'):
+                trained_source=LocalSentenceFeatures('pair_text',describe(root/name))
+                adviser=derived_candidate(Pipeline([('features',trained_source)]))
+                self.assertEqual(adviser.params['revision'],trained_source.resource()['revision'])
+                self.assertEqual(adviser.params['encoder'],trained_source.resource()['model'])
+                self.assertEqual(adviser.fit_predict.keywords['feature'].spec,trained_source.spec)
+                adviser_ids.append(adviser.family)
+            self.assertEqual(len(set(adviser_ids)),2)
+
     def test_declared_pooler_option_matches_the_supported_backbone_setting(self):
         with TemporaryDirectory() as tmp:
             root=Path(tmp)/'opaque'

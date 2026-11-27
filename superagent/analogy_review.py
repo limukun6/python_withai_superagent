@@ -113,7 +113,7 @@ def incumbent_evidence(records,shares,metric):
     return dict(first,probabilities=probabilities,predictions=predictions,score=float(np.mean(predictions==first['labels'])))
 
 
-def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,payloads):
+def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,payloads,*,ceiling=None):
     from .autonomous_run import planner_observation
     anchor_names=stop['members']
     spent=executor.accounting()['attempted_classifier_fits']
@@ -159,11 +159,12 @@ def review(task,metric,stop,incumbent,executor,directory,log,timeout,observed,pa
         def anchor_cost(fold):
             return sum(executor.caps[m]['classifier_fits'] for m in anchor_names if m not in observed[fold])
         needed=1+sum(anchor_cost(f)+1 for f in wanted)
-        if needed>executor.limit-spent:
+        available=(executor.limit if ceiling is None else min(ceiling,executor.limit))-spent
+        if needed>available:
             record('retained_insufficient_budget',required=needed)
             return result
         executor.caps[name]=cap
-        record('evaluating',candidate=name,derived_configuration=candidate.params,remaining_fits=executor.limit-spent)
+        record('evaluating',candidate=name,derived_configuration=candidate.params,remaining_fits=available)
         primary=incumbent_evidence([observed['primary'][m] for m in anchor_names],anchor_shares,metric)
         first=measure(name,'primary',needed-1)
         proposal=nominate(primary,first,payloads['primary']['labels'],classes=metric.labels)

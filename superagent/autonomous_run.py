@@ -43,7 +43,10 @@ def installed_methods():
             os.environ[PREFERENCE_CATALOG_ENV] = previous
 
 
-def partitions(task, seed):
+STANDARD_FOLDS = ('primary','confirmation_1','confirmation_2')
+
+
+def partitions(task, seed, *, names=STANDARD_FOLDS):
     declared = explicit_windows(task, seed)
     if declared is not None:
         return declared
@@ -60,7 +63,7 @@ def partitions(task, seed):
                   if set(y[a].tolist())==labels and set(y[b].tolist())==labels]
         if usable:
             return {name:(a,b,dict(protocol=protocol,fold_count=count,shared_groups=0))
-                    for name,(a,b) in zip(('primary','confirmation_1','confirmation_2'),usable)}
+                    for name,(a,b) in zip(names,usable)}
     raise ValueError('No class-preserving holdout of independent training groups is available')
 
 
@@ -242,6 +245,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             release_training()
         return selected
 
+    recruitment_folds={}
     if feedback_reflection in proposal_modes+DELIVERED_MODES:
         pilot=ProposalStudy(feedback_reflection,directory,log,flash,start,wall)
         core_limit=fit_limit-min(5,fit_limit//3)
@@ -255,7 +259,14 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         pilot.snapshot(checkpoint,0)
     else:
         checkpoint = standby_for(task)
-        folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
+        from .portfolio_review import EXTRA_FOLDS, reserve_fits
+        if (not opening_enabled and feedback_reflection is None and not self_review and rule is None and flash is None
+                and 'linear_only' not in spec.get('method_restrictions',()) and reserve_fits(fit_limit,len(STANDARD_FOLDS))):
+            expanded=partitions(task,seed,names=(*STANDARD_FOLDS,*EXTRA_FOLDS))
+            recruitment_folds={k:expanded[k] for k in EXTRA_FOLDS if k in expanded}
+            folds={k:v for k,v in expanded.items() if k not in recruitment_folds}
+        else:
+            folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -281,6 +292,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             # At most three supervised indices, two matched control comparisons and one final index.
             core_limit=fit_limit-6
             log.event('representation_review_opportunity',core_fit_limit=core_limit,reserved_fits=6)
+        recruitment_reserve=0
+        if len(recruitment_folds)==2:
+            recruitment_reserve=reserve_fits(fit_limit,len(folds),other_reserve=fit_limit-core_limit)
+            if recruitment_reserve:
+                core_limit-=recruitment_reserve
+                log.event('postselection_review_available',reserved_fits=recruitment_reserve,core_fit_limit=core_limit)
         generator=MethodSpace(spec,profile,directory)
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
@@ -473,7 +490,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
             if analogy_available:
                 from .analogy_review import review as review_analogy
-                selection,choice=review_analogy(task,metric,choice,selection,executor,directory,log,timeout,observed,payloads)
+                selection,choice=review_analogy(task,metric,choice,selection,executor,directory,log,timeout,observed,payloads,
+                                                ceiling=fit_limit-recruitment_reserve)
+            if recruitment_reserve:
+                from .portfolio_review import review_portfolio
+                selection,choice=review_portfolio(task,metric,selection,choice,executor,directory,log,timeout,
+                                                  observed['primary'],recruitment_folds,blocked)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,

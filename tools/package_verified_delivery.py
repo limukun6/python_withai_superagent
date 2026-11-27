@@ -67,13 +67,18 @@ def copy_resources(resources, destination, notices):
 def package(args):
     receipt = read(args.run / 'validation.json')
     require(receipt['runtime_sha256'] == source_identity(ROOT) and receipt['independent_reload'],
-            'Use the frozen training source and the scored, reloaded validation delivery')
+            'Use the frozen training source and the reloaded delivery')
+    unscored = receipt.get('status') == 'sealed_predictions_without_designated_score'
+    if unscored:
+        require(receipt['accuracy'] is None and receipt['correct'] is None and receipt['designated_labels_opened'] is False,
+                'The research package requires explicitly unscored predictions')
     input_spec = read(args.run / 'protocol.json')['packages']['titles']
     features = args.run / 'titles/features.zip'
     original = args.run / 'titles/delivery/predictions.csv'
     require(sha(features) == input_spec['features'] and sha(original) == receipt['prediction_sha256'],
             'Registered validation input or predictions changed')
-    archive_name = 'Released-Task2-validation-' + receipt['runtime_sha256'][:12] + '.zip'
+    track = 'research-unscored' if unscored else 'validation'
+    archive_name = f"Released-Task2-{track}-{receipt['runtime_sha256'][:12]}.zip"
     args.output.mkdir(parents=True, exist_ok=True)
     archive = args.output / archive_name
     require(not archive.exists() and not (args.output / 'portable_receipt.json').exists(),
@@ -95,7 +100,9 @@ def package(args):
         (tree / 'predict.py').write_text(LAUNCH, encoding='utf-8')
         results = tree / 'results'
         results.mkdir()
-        for src, dst in [(original, 'validation_predictions.csv'), (args.run / 'validation.json', 'validation.json'),
+        prediction_file = 'unlabelled_predictions.csv' if unscored else 'validation_predictions.csv'
+        receipt_file = 'unscored_delivery.json' if unscored else 'validation.json'
+        for src, dst in [(original, prediction_file), (args.run / 'validation.json', receipt_file),
                          (args.run / 'protocol.json', 'run_protocol.json')]:
             shutil.copyfile(src, results / dst)
         logs = results / 'run_logs'
@@ -104,13 +111,16 @@ def package(args):
         for name in ('task_contract.json', 'run_manifest.json', 'decisions.json', 'history.json',
                      'classifier_fits.json', 'events.jsonl', 'recovery_state.json', 'run_outcome.json', 'llm_usage.jsonl'):
             shutil.copyfile(agent / name, logs / name)
-        for name in ('analogy_review.json','analogy_incumbent.json','analogy_selection.json'):
+        for name in ('analogy_review.json','analogy_incumbent.json','analogy_selection.json',
+                     'portfolio_review.json','portfolio_incumbent.json'):
             if (agent/name).is_file():
                 shutil.copyfile(agent/name,logs/name)
         shutil.copyfile(args.run / 'titles/physical.jsonl', logs / 'observed_classifier_fits.jsonl')
+        description = (f"本包保存从课程原包自主跑出的研发候选。results 目录中有 {receipt['rows']} 行无标签预测和核对记录。"
+                       '该候选的指定验证准确率尚未评分。' if unscored else
+                       '本包对应一次从课程训练原包开始的自主运行。指定验证集逐行输出和分数在 results 目录。')
         (tree / 'README.md').write_text(
-            '# Released Task2 离线交接包\n\n'
-            '本包对应一次从课程训练原包开始的自主运行。指定验证集逐行输出和分数在 results 目录。'
+            '# Released Task2 离线交接包\n\n' + description +
             'run_logs 保存决策、训练、计费和交付记录。\n\n'
             '环境为 CPython 3.11。用同一环境依次运行下面两行，把 features.zip 换成待预测的特征包。'
             '依赖安装好后，预测时可断网，包内已经带有所选模型的权重。\n\n'
@@ -142,6 +152,8 @@ def package(args):
                        installed_python=sys.version.split()[0], resource_models=[
                            dict(name=r['model'], revision=r.get('revision')) for r in manifest['external_resources']],
                        network_forbidden_for_prediction=True, new_classifier_fits=0, new_model_requests=0)
+        if unscored:
+            summary.update(designated_accuracy=None,designated_labels_opened=False)
         staged.rename(archive)
         save(args.output / 'portable_receipt.json', summary)
         print(json.dumps(summary, ensure_ascii=False), flush=True)

@@ -97,12 +97,24 @@ class FrozenTableClassifier:
         return self
 
     def __getstate__(self):
-        # TabICL supplies CPU-serializable caches. Replace the absolute checkpoint
-        # path and choose hardware on the receiving computer during the first prediction.
-        state=self.classifier.__getstate__() if self.classifier is not None else dict(self._saved)
-        state["model_path"]=None
-        state["device"]=None
-        return dict(kind=self.kind,classes_=self.classes_,training_metadata=self.training_metadata,classifier=None,_saved=state)
+        if self.classifier is None:
+            if self._saved is None:
+                return self.__dict__.copy()
+            state = self._saved.copy()
+        else:
+            # Ask the pinned estimator for its portable state without transferring
+            # the device-specific attention cache to CPU during serialization.
+            estimator = type(self.classifier).__new__(type(self.classifier))
+            estimator.__dict__ = self.classifier.__dict__.copy()
+            estimator._save_kv_cache = False
+            state = estimator.__getstate__()
+        metadata = state["_persistence_metadata"].copy()
+        if metadata["saved_training_data"]:
+            state["model_kv_cache_"] = None
+            metadata["saved_kv_cache"] = False
+        state.update(_persistence_metadata=metadata, model_path=None, device=None)
+        return dict(kind=self.kind, classes_=self.classes_, training_metadata=self.training_metadata,
+                    classifier=None, _saved=state)
 
     def predict_proba(self,x):
         if self.classifier is None:
@@ -113,6 +125,9 @@ class FrozenTableClassifier:
             state=dict(self._saved,model_path=path,device=device(),allow_auto_download=False)
             restored=TabICLClassifier.__new__(TabICLClassifier)
             restored.__setstate__(state)
+            if restored.kv_cache and restored.model_kv_cache_ is None:
+                # Recreate cached projections from the saved fitted context, without fitting.
+                restored._build_kv_cache()
             self.classifier=restored
             self._saved=None
         return self.classifier.predict_proba(self._data(x))

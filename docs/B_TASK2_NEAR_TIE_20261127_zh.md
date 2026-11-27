@@ -15,3 +15,5 @@ Task2 原包从头独立训练，Agent 先选出 GTE-base，再从这个实际�
 此次还做了四次额外的训练内拟合，单独核对这项复核是否值得启动整条路径。正式运行自身的账本为 16 次。预测文件在无缓存新进程中逐行复现。模型 API 0 次，课程正式测试与 H2 保持封存。
 
 [事前规则](../research/paired_encoder_search_1127/analogy_near_tie_protocol.json) · [训练决策及所用权重](../research/paired_encoder_search_1127/analogy_close_full_decision.json) · [独立证据及反事实](../research/paired_encoder_search_1127/analogy_close_autonomy.json) · [验证成绩和改对改错数量](../research/paired_encoder_search_1127/analogy_close_score.json)
+
+交付包随附 GTE-base 权重和完整监督索引，换到不同目录后由新进程在禁网条件下重现全部 940 行。重跑时使用统一命令，传入实际任务包、通用权重目录、预测输入，并设置 `--fit-limit 16 --time-limit 1800`。[交付回执](../research/paired_encoder_search_1127/analogy_close_portable.json) · [此前 701 版的运行记录](B_TASK2_SIXTEEN_FIT_RELEASE_20261127_zh.md)

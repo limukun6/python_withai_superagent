@@ -1,0 +1,51 @@
+{
+  "protocol_sha256": "2c9d565638415a9683fbc74630e501ed60938dddaca5e2410524e8340de74ea8",
+  "training_sha256": "84a622fc5e5aecae57f58f84e79e2c74b2a68783d29d687cd780e1fc1ec0c761",
+  "members": [
+    "bge_small_text_with_lexical_features",
+    "gte_base_paired_linear",
+    "gte_paired_linear",
+    "minilm_l12_with_corpus_familiarity"
+  ],
+  "recipes": {
+    "ordinary": {
+      "members": [
+        "gte_base_paired_linear"
+      ],
+      "weights": [
+        1.0
+      ]
+    },
+    "expanded_budget": {
+      "members": [
+        "gte_base_paired_linear",
+        "gte_paired_linear"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    "previous_inventory": {
+      "members": [
+        "bge_small_text_with_lexical_features",
+        "minilm_l12_with_corpus_familiarity"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "original_seals": {
+    "ordinary": "aa29f746251a6f4002f4dd4759f633520ac7bec49fe22e1b6f09fef06b5c4809",
+    "expanded_budget": "764a99bf9f2caacc36bd2c08e3b6be89611cade0351775fa83220629fd18bbec",
+    "previous_inventory": "c3da7c7a796f1d80ea15b2c419174a64cd18249ec91ba0105aed5cafaffa7fb2"
+  },
+  "seeds": [
+    3147477511,
+    588076745
+  ],
+  "unique_rows": 8301,
+  "components": 6119
+}

@@ -1,7 +1,7 @@
 """Optional pinned, offline in-context classifier for numeric or categorical tables."""
-from functools import lru_cache,partial
+from functools import lru_cache, partial
 import hashlib
-from importlib.metadata import PackageNotFoundError,version
+from importlib.metadata import PackageNotFoundError, version
 from importlib.util import find_spec
 import os
 from pathlib import Path
@@ -22,22 +22,38 @@ VIEWS=4
 
 
 @lru_cache(maxsize=8)
-def _verified(path,identity):
+def _verified(path, identity):
+    digest = hashlib.sha256()
     with path.open("rb") as stream:
-        return hashlib.file_digest(stream,"sha256").hexdigest()==SHA256
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest() == SHA256
 
 
-def checkpoint():
-    value=os.environ.get(WEIGHT_ENV)
-    if not value or not find_spec("tabicl") or not find_spec("torch"):
+def checkpoint(environment=None):
+    environment = os.environ if environment is None else environment
+    if not find_spec("tabicl") or not find_spec("torch"):
         return None
-    path=Path(value).expanduser().resolve()
     try:
-        stat=path.stat()
-        if version("tabicl")!="2.0.3" or not path.is_file() or stat.st_size!=SIZE:
+        if version("tabicl") != "2.0.3":
             return None
-        return path if _verified(path,(stat.st_ino,stat.st_mtime_ns,stat.st_ctime_ns)) else None
-    except (OSError,PackageNotFoundError):
+        value = environment.get(WEIGHT_ENV)
+        if not value:
+            # A pinned local cache lookup never downloads or contacts the provider.
+            from huggingface_hub import try_to_load_from_cache
+            cache = environment.get("HF_HUB_CACHE")
+            if not cache and environment.get("HF_HOME"):
+                cache = Path(environment["HF_HOME"]).expanduser() / "hub"
+            value = try_to_load_from_cache(MODEL, FILENAME, revision=REVISION, cache_dir=cache)
+            if not isinstance(value, str):
+                return None
+        path = Path(value).expanduser().resolve()
+        stat = path.stat()
+        if not path.is_file() or stat.st_size != SIZE:
+            return None
+        identity = (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns)
+        return path if _verified(path, identity) else None
+    except (OSError, ImportError, PackageNotFoundError):
         return None
 
 

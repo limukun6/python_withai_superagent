@@ -64,6 +64,9 @@ def verify_resources(resources, environment=None):
     environment=os.environ if environment is None else environment
     for resource in resources:
         env=resource['environment_variable'];provided=environment.get(env)
+        if not provided and resource.get('name') == 'tabicl_v2':
+            from .table_foundation import checkpoint
+            provided = checkpoint(environment)
         if not provided:raise ValueError('Missing frozen encoder resource: set '+env)
         root=Path(provided).expanduser().resolve()
         entries=[(root/name,record) for name,record in resource['files'].items()] if resource['path_kind']=='directory' else [(root,resource['file'])]

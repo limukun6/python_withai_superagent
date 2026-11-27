@@ -38,7 +38,9 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
         if comparable_context:
             methods.append(aligned_candidate())
     if (kind in ("numeric_tabular","categorical_tabular") and train_rows is not None and 2 <= train_rows <= 12000
-            and len(metric.labels)<=10 and table_foundation.checkpoint() is not None):
+            and len(metric.labels)<=10
+            and not {"no_pretrained_assets","no_external_data","linear_only"}.intersection(task.get("method_restrictions",()))
+            and table_foundation.checkpoint() is not None):
         methods.append(table_foundation.candidate(kind))
     for candidate in methods:
         name, params = candidate.family, candidate.params

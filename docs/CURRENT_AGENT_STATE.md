@@ -1,5 +1,15 @@
 # 当前接续状态
 
+## 2026-11-27：SA15默认NativeContract接管＋真实迁移验收完成
+
+无manifest的专用reader认领不再阻止默认fallback交给已配置LLM；显式manifest仍权威，无client/blocked/耗尽不请求，本地成功仍本地。迁移工具新增native编译和原包/proposal/已结算model-token-cost绑定，选语义接受之前的对应请求，避免串用后续B调用。261/261零fit/API检查13.484秒。
+
+SA14两真实回复显式迁移，原artifact不改、两旧模型54行新进程CSV一致，0fit/API。正式裸solve（无解释/开题覆盖）D1原Iris96/24行重封装NPY成功接管；首次提案把不适用正类记为阻断，第二次修复通过，第三次B规划选RandomForest。2fit/3API/¥.019699/82.938秒；9883输入/2454输出。语义¥.012498＋B规划¥.007201分开。9项契约通过，24行新进程一致；真实后续B调用存在时迁移绑定语义第二条而非B第三条。证据research/sa15_default_live_01、sa15_default_audit_01；报告batches/SA15_default_handoff_results_20261127_zh.md。
+
+账本480/known8.103240/unknown16/pending0，旧行SHA保留，无活动队列；SA7–SA15累计24fit/19API/¥.136845。未看预测答案/新评分，数据重封装不是独立泛化；未冻结。
+
+下一优先：本地可读≠任务语义完整，默认fallback仍可能漏自定义输出。预登记自动模式审计/兼容策略，保留显式fallback与本地对照；另处理flat uncertainties将可选信息误当阻断的空转。别再重复SA15的原scope，旧未知不问，新未知停付费。
+
 ## 2026-11-27：SA14无manifest数组/图像正式交付2/2
 
 基线dee7140。新增semantic-native-v1，LLM选择任意安全数组成员/键或图像类目录、指标/正类/像素处理与输出，既有reader执行；native_input_recipe冻结重放，artifact纳入新reader/recipe。245/245零fit/API检查12.735秒（16新＋229原）；两条预检/准备脚本错误原样保留，无训练/付费。

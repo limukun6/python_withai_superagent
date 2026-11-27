@@ -436,7 +436,16 @@ def resolve_training_task(package, client=None, log=None, *, mode='fallback', pr
         try:
             task = adapt_training(package, client, log)
         except NativeContract:
-            raise native_error
+            # A specialized reader's filename claim is not an explicit task
+            # contract. Without a manifest, a configured semantic reader may
+            # still resolve nonstandard arrays or incomplete local inference.
+            if client is None or client.blocked or client.request_count>=client.max_requests:
+                raise native_error
+            with package_files(package) as files:
+                if any(PurePosixPath(n).name.casefold()=='manifest.json' for n in files.namelist()):
+                    raise native_error
+            if log:log.event('semantic_reader_handoff',reason='unowned_native_layout',explicit_manifest=False)
+            return semantic_training(package,client,log,native_error,prediction_package=prediction_package)
         except DECODE_ERRORS as adaptive_error:
             if client is None or client.blocked:
                 raise

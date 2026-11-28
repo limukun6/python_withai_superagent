@@ -75,7 +75,7 @@ class JointKernel:
         for i in range(0,n,128):
             gram[i:i+128] = self.kernel(self.x[i:i+128])
         gram.flat[::n+1] += 1.8
-        with threadpool_limits(limits=6):
+        with threadpool_limits(limits=cpu_threads(6)):
             factor = cho_factor(gram, lower=True, overwrite_a=True, check_finite=False)
             self.coef = cho_solve(factor, (y-self.prior).astype(np.float32), check_finite=False)
         return self
@@ -98,7 +98,7 @@ class JointKernel:
 
     def predict_proba(self, rows):
         query = self.encoder.transform(_clean_categories(rows))
-        with threadpool_limits(limits=6):
+        with threadpool_limits(limits=cpu_threads(6)):
             scores = np.concatenate([self.kernel(query[i:i+128]) @ self.coef for i in range(0,len(query),128)])
         p = np.clip(self.prior + scores, 0., 1.)
         return np.column_stack((1-p,p))

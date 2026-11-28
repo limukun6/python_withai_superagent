@@ -7,6 +7,7 @@ import math
 
 import numpy as np
 
+from .compute_resources import cpu_threads
 from .data import TrainingTask
 from .models import Candidate,_clean_categories
 from .splits import inner_split,overlap_audit
@@ -49,7 +50,7 @@ def fit_adaptive_catboost(x_train,y_train,x_search,depth=8,l2_leaf_reg=3.,max_it
     if audit['search_duplicate_rows']!=0:raise ValueError('Normalized duplicate rows cross the iteration-selection boundary')
     loss='Logloss' if len(classes)==2 else 'MultiClass'
     common={'depth':depth,'learning_rate':.05,'l2_leaf_reg':l2_leaf_reg,'loss_function':loss,
-        'eval_metric':loss,'random_seed':42,'thread_count':2,'verbose':False,'allow_writing_files':False}
+        'eval_metric':loss,'random_seed':42,'thread_count':cpu_threads(2),'verbose':False,'allow_writing_files':False}
     columns=list(range(x.shape[1]))
     selector=CatBoostClassifier(iterations=max_iterations,**common)
     selector.fit(x[fit_indices],y[fit_indices],cat_features=columns,

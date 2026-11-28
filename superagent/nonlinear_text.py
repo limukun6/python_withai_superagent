@@ -4,6 +4,7 @@ from functools import partial
 
 import numpy as np
 
+from .compute_resources import cpu_threads
 from .models import Candidate,text_statistics,_word_char_stats_text,probability_with_model
 from .supervised_text import _pair_labels
 
@@ -71,7 +72,7 @@ def fit_style_tree(x_train,y_train,x_search,depth=3):
     y=_pair_labels(y_train,len(x_train));reverse=_reverse(x_train)
     matrix=np.vstack([style_matrix(x_train),style_matrix(reverse)]);labels=np.concatenate([y,1-y])
     classifier=CatBoostClassifier(iterations=300,depth=depth,learning_rate=.05,l2_leaf_reg=5.,
-        loss_function='Logloss',random_seed=42,thread_count=2,verbose=False,allow_writing_files=False)
+        loss_function='Logloss',random_seed=42,thread_count=cpu_threads(2),verbose=False,allow_writing_files=False)
     classifier.fit(matrix,labels)
     if np.asarray(classifier.classes_).tolist()!=[0,1]:raise ValueError('Unexpected fitted class order')
     model=StyleTreePairModel(classifier);return model,model.predict(x_search)

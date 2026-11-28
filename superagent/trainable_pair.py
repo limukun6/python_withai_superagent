@@ -18,6 +18,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedGroupKFold
 
+from .compute_resources import cpu_threads
 from .data import TrainingTask
 from .splits import inner_split, overlap_audit, sample_groups, take
 
@@ -63,7 +64,7 @@ def torch_context(seed):
     import torch
     previous = torch.are_deterministic_algorithms_enabled()
     threads = torch.get_num_threads()
-    torch.set_num_threads(2)
+    torch.set_num_threads(min(threads,cpu_threads(2)))
     try:
         with torch.random.fork_rng(devices=[]):
             torch.manual_seed(seed)

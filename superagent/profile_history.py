@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import GroupKFold
 
+from .compute_resources import cpu_threads
 from .field_interactions import InteractionTree, choose_pairs, rank_pairs
 from .models import _clean_categories, _tabular_catboost
 
@@ -127,7 +128,7 @@ class ProfileTree(InteractionTree):
         features = pd.concat([pd.DataFrame(cats), pd.DataFrame(extra)], axis=1, ignore_index=True)
         base = self.params['backbone_params']
         self.classifier = _tabular_catboost(labels, base['depth'], base['l2_leaf_reg'])
-        self.classifier.set_params(thread_count=6)
+        self.classifier.set_params(thread_count=cpu_threads(6))
         self.classifier.fit(features, labels, cat_features=list(range(cats.shape[1])))
         self.classes_ = self.classifier.classes_
         return self

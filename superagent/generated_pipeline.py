@@ -153,6 +153,9 @@ def checked_factory(code,kind):
     pipeline=environment['build_model'](kind)
     if not isinstance(pipeline,Pipeline) or type(pipeline.named_steps['classifier']) is not cls:
         raise ValueError('Constructed pipeline differs from checked declaration')
+    if effective.get('n_jobs'):
+        from .compute_resources import cpu_threads
+        pipeline.set_params(classifier__n_jobs=cpu_threads(effective['n_jobs']))
     return pipeline,{'classifier':cls.__name__,'classifier_module':cls.__module__,'parameters':params,
                      'generation_language':'checked_sklearn_pipeline_factory','unrestricted_python':False}
 

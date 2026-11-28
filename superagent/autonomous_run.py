@@ -256,7 +256,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             and 'linear_only' not in spec.get('method_restrictions',())
             and (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified')=='grouped_stratified'):
         feedback_reflection='encoder-portfolio'
-        log.event('autonomous_representation_review_available',kind=task.kind,rows=len(task.y_train),
+        log.event('autonomous_representation_review_available',input_kind=task.kind,rows=len(task.y_train),
                   columns=task.X_train.shape[1],fit_ceiling=fit_limit)
     recruitment_folds={}
     fusion_holdout = (feedback_reflection == 'fusion-holdout' and len(task.y_train) >= 1000 and

@@ -14,6 +14,29 @@
 | 表示：全情境列 | 情境块扩到全部 9 列 | **−0.10pp** | 1/3 |
 | 表示：小画像块 | 画像只保留 7 列 | **−0.43pp** | 1/3 |
 
+## 1b 再补四个模型族
+
+| 模型 | 三折均值 | 上升折数 |
+|---|---:|---:|
+| CategoricalNB（拉普拉斯平滑） | **−10.41pp** | 0/3 |
+| 线性 SVM（one-hot） | **−9.67pp** | 0/3 |
+| MLP（one-hot，早停） | **−3.53pp** | 0/3 |
+| 逻辑回归（one-hot） | 求解器编码错误，未完成 | — |
+
+## 1c 更大的预训练权重：被许可挡住
+
+`TabPFN-v2.5`（更强的一档）经镜像尝试直接报：
+
+```
+TabPFNHuggingFaceGatedRepoError: HuggingFace authentication error
+downloading from 'Prior-Labs/tabpfn_2_5'. This model is gated and requires you
+to accept its terms.
+```
+
+需要有人用 HuggingFace 账号访问 `https://huggingface.co/Prior-Labs/tabpfn_2_5` 接受条款并配置 `HF_TOKEN`。
+**即使拿到，预期也不乐观**：已跑通的 v2 在同一批折上是 **−4.13 / −4.93pp**，而目标是 +1.72pp。
+
+
 ## 2 累计搜索台账（本会话）
 
 | 方法族 | 最好结果 |

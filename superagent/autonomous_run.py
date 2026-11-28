@@ -392,7 +392,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 spent = executor.accounting()['attempted_classifier_fits']
                 if opening is not None and opening.mode in PAIRED_MODES:
                     core_limit = fit_limit - opening.reserve_opportunity(caps, observed, blocked, fit_limit, spent)
-                remaining=core_limit-spent
+                from .compute_resources import affordable_fits, protect_refit
+                remaining,pacing=affordable_fits(core_limit-spent,start+wall-time.monotonic(),history,caps)
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
                     raise ValueError('No admissible action with known fit cost or deployable observation')
@@ -445,7 +446,11 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                             menu = [*menu, choice]
                     if coverage.incumbent is not None:
                         log.write_json('coverage_review.json',coverage.record())
+                protected=protect_refit(choice,menu,history,caps,pacing)
+                if protected is not choice:
+                    choice,source=protected,'measured refit time on this host'
                 decisions.append(dict(step=len(decisions)+1,source=source,choice=choice,remaining_fits=remaining,
+                     time_planning=pacing,
                      observed_trials=[r['trial'] for r in history],registry=generation['file'],
                      registry_sha256=generation['sha256'],alternatives=menu))
                 if rule is not None:

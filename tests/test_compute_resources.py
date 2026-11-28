@@ -57,3 +57,21 @@ class ComputeTests(unittest.TestCase):
             with self.subTest(cpu=cpu,gib=gib), patch.object(cr,'cpu_threads',return_value=cpu), \
                     patch.object(cr,'available_memory',return_value=gib*1024*cr.MIB):
                 self.assertEqual(cr.default_fit_ceiling(),ceiling)
+
+    def test_wall_time_estimate_leaves_expensive_confirmations_and_refits_affordable(self):
+        rows = [dict(status='completed',candidate='method',training_seconds=t) for t in (20.,125.,170.)]
+        cap = {'method':dict(classifier_fits=1)}
+        self.assertEqual(cr.affordable_fits(40,1500,rows[:2],cap)[0],40)
+        self.assertEqual(cr.affordable_fits(40,1500,rows,cap)[0],7)
+        self.assertEqual(cr.affordable_fits(5,1500,rows,cap)[0],5)
+        self.assertEqual(cr.affordable_fits(40,15,rows,cap)[0],1)
+        self.assertEqual(cr.affordable_fits(0,15,rows,cap)[0],0)
+
+    def test_time_protection_selects_the_highest_ranked_affordable_refit(self):
+        caps={n:dict(classifier_fits=1,refit_classifier_fits=1) for n in ('fast','slow')}
+        history=[dict(status='completed',candidate=n,training_seconds=t) for n,t in [('fast',5.),('slow',120.)]]
+        exploration=dict(action='explore',members=['slow'])
+        menu=[exploration,dict(action='stop',members=['slow']),dict(action='stop',members=['fast'])]
+        chosen=cr.protect_refit(exploration,menu,history,caps,dict(seconds_left=80.,estimated_seconds_per_fit=30.))
+        self.assertEqual((chosen['action'],chosen['members']),('stop',['fast']))
+        self.assertIs(cr.protect_refit(exploration,menu,history,caps,dict(seconds_left=1000.,estimated_seconds_per_fit=30.)),exploration)

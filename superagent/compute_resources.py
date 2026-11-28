@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import statistics
 import subprocess
 import sys
 
@@ -96,6 +97,43 @@ def default_fit_ceiling():
     if cpu<=4 or ram<4*1024*MIB:
         return 24
     return 64
+
+
+def affordable_fits(remaining, seconds_left, history, capabilities):
+    """Estimate how many more fits this host can finish before its wall-clock deadline."""
+    times = [r['training_seconds'] / max(1, capabilities.get(r['candidate'],{}).get('classifier_fits',1))
+             for r in history if r['status']=='completed' and r.get('training_seconds',0)>0]
+    if len(times) < 3 or remaining <= 0:
+        return remaining, {}
+    # A full-data refit is generally larger than a training fold. Account for worker startup and export.
+    upper_quartile = statistics.quantiles(times,n=4,method='inclusive')[2]
+    estimate = 2.0 + 1.3 * upper_quartile
+    budget = min(remaining,max(1,int((seconds_left-8.0)/estimate)))
+    return budget, dict(seconds_left=round(seconds_left,2), measured_trials=len(times),
+                        estimated_seconds_per_fit=round(estimate,2), hard_fits_remaining=remaining,
+                        planning_fits=budget)
+
+
+def protect_refit(choice, menu, history, capabilities, pacing):
+    if not pacing or choice['action']=='stop':
+        return choice
+    stops=[item for item in menu if item['action']=='stop']
+    if not stops:
+        return choice
+    def cost(name, field):
+        cap=capabilities[name]
+        measured=[r['training_seconds']/max(1,cap['classifier_fits']) for r in history
+                  if r['candidate']==name and r['status']=='completed' and r.get('training_seconds',0)>0]
+        unit=2.0+1.3*statistics.median(measured) if measured else pacing['estimated_seconds_per_fit']
+        return unit*cap[field]
+    costs=[sum(cost(n,'refit_classifier_fits') for n in s['members']) for s in stops]
+    seconds=pacing['seconds_left']-8
+    feasible=[i for i,t in enumerate(costs) if t<=seconds]
+    index=feasible[0] if feasible else min(range(len(stops)),key=costs.__getitem__)
+    next_cost=sum(cost(n,'classifier_fits') for n in choice['members'])
+    if costs[index]+next_cost<=seconds:
+        return choice
+    return dict(stops[index],reason='Reserve measured time to refit a validated candidate and produce its predictions.')
 
 
 def worker_environment():

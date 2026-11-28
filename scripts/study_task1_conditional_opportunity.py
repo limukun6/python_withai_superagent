@@ -14,8 +14,10 @@ from scripts.study_task1_extensions import key
 from scripts.study_task1_outer import arrays, compare, prediction_csv
 from scripts.study_task1_seed_completion import origin
 from scripts.unified_released_study import ROOT, read, require, save, sha
+from superagent.attribute_alignment import comparable_fields
 from superagent.candidate_refinement import resolve_registered
-from superagent.models import probability_with_model
+from superagent.joint_context import blocks
+from superagent.models import _clean_categories, probability_with_model
 from superagent.splits import sample_groups
 from superagent.training_randomness import fitted_seed, training_seed
 
@@ -154,15 +156,36 @@ def finish_control(out,i):
     print("control",i,n,flush=True)
 
 
+def applicable_methods(rows,labels):
+    if len(np.unique(labels))!=2:
+        return set()
+    x=_clean_categories(rows)
+    try:
+        profile,_=blocks(x)
+    except ValueError:
+        return set()
+    methods={"crossed"}
+    if comparable_fields(x,profile):
+        methods.add("posterior")
+    return methods
+
+
 def challengers(out,i):
     fold,src,x,y,q,_=sources(out,i)
     root=out/STUDY/str(i)
     classes=np.unique(y)
     parts=panels(src,x,y)
+    available=applicable_methods(x,y)
+    for fit,_ in parts.values():
+        available.intersection_update(applicable_methods(x[fit],y[fit]))
     for name,model_type in METHODS.items():
         area=root/name
         area.mkdir(parents=True,exist_ok=False)
         save(area/"launch.json",dict(protocol=sha(PLAN),inputs=sha(fold/"inputs.json"),candidate=name))
+        if name not in available:
+            save(area/"sealed.json",dict(launch=sha(area/"launch.json"),available=False,classifier_fits=0,tables=0,
+                 reason="Required recurring or comparable fields were absent from at least one fitting partition"))
+            continue
         for role in (*ROLES,"external"):
             if role=="external":
                 fit=np.arange(len(y))
@@ -202,8 +225,9 @@ def elect(out,i):
     area=out/STUDY/str(i)
     parts=panels(src,x,y)
     classes=np.unique(y)
-    bank={n:{r:load_matrix(area/n,r) for r in (*ROLES,"external")} for n in ("control",*METHODS)}
-    for n in METHODS:
+    available=[n for n in METHODS if read(area/n/"sealed.json").get("available",True)]
+    bank={n:{r:load_matrix(area/n,r) for r in (*ROLES,"external")} for n in ("control",*available)}
+    for n in available:
         model_path=area/n/"model.joblib"
         meta=read(area/n/"external.json")
         require(sha(model_path)==meta["model"],"Unbound full-data challenger")
@@ -214,7 +238,7 @@ def elect(out,i):
             review=read(area/n/(r+".json"))
             require(review["train"]==key(fit) and review["held"]==key(held)==read(area/"control"/(r+".json"))["held"],
                     "Mismatched experiment rows")
-    options=[("control",0.)]+[(n,w) for n in METHODS for w in (.125,.25,.5,1.)]
+    options=[("control",0.)]+[(n,w) for n in available for w in (.125,.25,.5,1.)]
     def mixture(n,w,r):
         return (1-w)*bank["control"][r]+w*bank[n][r]
     def evaluate(n,w,r):
@@ -231,8 +255,9 @@ def elect(out,i):
          nomination=first,confirmation=second,action="adopt" if accept else "retain"))
     predictions={"control":bank["control"]["external"],"chosen":mixture(nominee,weight if accept else 0.,"external")}
     for n in METHODS:
-        predictions[n]=bank[n]["external"]
-        predictions[n+"_quarter"]=mixture(n,.25,"external")
+        candidate=n if n in bank else "control"
+        predictions[n]=bank[candidate]["external"]
+        predictions[n+"_quarter"]=mixture(candidate,.25,"external")
     seals={}
     for tag,p in predictions.items():
         dst=area/(tag+"_prediction.npy")
@@ -240,7 +265,7 @@ def elect(out,i):
         seals[tag]=sha(dst)
     added=read(area/"control/sealed.json")["additional_control_fits"]
     research_cost=added+sum(read(area/n/"sealed.json")["classifier_fits"] for n in METHODS)
-    path_cost=rc["fits"]+added+2*len(METHODS)+int(accept)
+    path_cost=rc["fits"]+added+2*len(available)+int(accept)
     require(path_cost<=64 and rc["fits"]+research_cost<=64,"Exceeded per-arm experimental ceiling")
     save(area/"sealed.json",dict(decision=sha(area/"decision.json"),predictions=seals,base_fits=rc["fits"],
          actual_new_classifier_fits=research_cost,simulated_path_fits=path_cost,independent_challenger_reload=True,api_requests=0))

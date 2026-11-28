@@ -1,6 +1,7 @@
 """Test an opt-in correction on genuinely unseen groups from released training rows."""
 import argparse
 from pathlib import Path
+import shutil
 
 import joblib
 import numpy as np
@@ -32,7 +33,7 @@ def combine(control, expert, eligible, weight):
 def rebuild_control(src, members, fit, held, x, y, classes, area, name):
     registry = read(src / "candidate_registry.json")
     repeat = read(src / "seed_replication.json")
-    components = []
+    components, original = [], []
     fits = 0
     for j, member in enumerate(members):
         seeds = [None]
@@ -49,10 +50,11 @@ def rebuild_control(src, members, fit, held, x, y, classes, area, name):
             del model
             fits += 1
         components.append(np.mean(per_seed, axis=0))
-    return np.mean(components, axis=0), fits
+        original.append(per_seed[0])
+    return np.mean(components, axis=0), np.mean(original, axis=0), fits
 
 
-def build(out, i):
+def build(out, i, deployment_from=None):
     fold = out / STUDY / str(i)
     side = completed_arm(fold)
     src = side / "run/agent"
@@ -79,7 +81,7 @@ def build(out, i):
     extra_fits = 0
     for name, (fit, held) in zip(PHASES, kept, strict=True):
         require(set(groups[held]).isdisjoint(groups[fit]), "Inner training contains held profiles")
-        base, n_fits = rebuild_control(src, rc["members"], fit, held, x, y, classes, area, name)
+        base, default, n_fits = rebuild_control(src, rc["members"], fit, held, x, y, classes, area, name)
         mask = novel_queries(x[fit], x[held])
         pred = base
         extra_fits += n_fits
@@ -91,6 +93,9 @@ def build(out, i):
             extra_fits += 1
             audits[name] = expert.audit
         truth = y[held] == classes[1]
+        original = np.where(mask, default, base)
+        save(area / f"{name}-seed-review.json", dict(protocol=sha(PLAN.with_name("novel_seed_feedback.json")),
+             fitted=key(fit), held=key(held), novel=int(mask.sum()), before_pilot=metrics(original, truth, base)))
         scores[name] = {w: metrics(combine(base, pred, mask, w), truth, base) for w in SHARES}
         save(area / f"{name}-feedback.json", dict(rows=len(held), eligible=int(mask.sum()),
              reference_fits=n_fits, feedback={str(w): v for w, v in scores[name].items()}))
@@ -110,25 +115,40 @@ def build(out, i):
     require(np.array_equal(classes[(base > .5).astype(int)].astype(str), prediction_csv(side / "solve.csv", len(q))),
             "Incumbent labels differ")
     model_hash = None
+    reused = None
     mask = novel_queries(x, q)
     pred = base
     if mask.any():
-        save(area / "deployment-expert.json", dict(fit=sha(train), query=sha(query)))
-        model = PopulationTree().fit(x, y)
+        path = area / "expert.joblib"
+        if deployment_from is None:
+            save(area / "deployment-expert.json", dict(fit=sha(train), query=sha(query)))
+            model = PopulationTree().fit(x, y)
+            joblib.dump(model, path, compress=3)
+            extra_fits += 1
+            audits["deployment"] = model.audit
+        else:
+            old = deployment_from / STAGE / str(i)
+            previous = read(old / "built.json")
+            origin_record = read(old / "launch.json")
+            old_model = old / "expert.joblib"
+            require(origin_record["protocol"] == sha(PLAN) and origin_record["train"] == sha(train)
+                    and origin_record["query"] == sha(query) and previous["model"] == sha(old_model)
+                    and read(old / "sealed.json")["build"] == sha(old / "built.json"), "Unmatched expert for reuse")
+            shutil.copyfile(old_model, path)
+            require(sha(path) == previous["model"], "Saved population tree differs")
+            reused = sha(old / "sealed.json")
+            save(area / "deployment-reuse.json", dict(fit=sha(train), query=sha(query), model=previous["model"], source=reused))
+            model = joblib.load(path)
         require(np.array_equal(mask, model.novel(q)), "Exported model eligibility differs")
         pred = ordered(model, q, classes)
-        path = area / "expert.joblib"
-        joblib.dump(model, path, compress=3)
         model_hash = sha(path)
-        extra_fits += 1
-        audits["deployment"] = model.audit
     file = area / "sealed_features.npz"
     np.savez(file, base=base, expert=pred, novel=mask, classes=classes.astype(str))
-    all_fits = extra_fits + rc["fits"]
+    all_fits = extra_fits + rc["fits"] + int(reused is not None)
     require(all_fits <= 64, "Per-arm training ceiling exceeded")
     save(area / "built.json", dict(decision=sha(area / "decision.json"), probabilities=sha(file), model=model_hash,
          query=sha(query), base_fits=rc["fits"], new_fits=extra_fits, upper_bound_path_fits=all_fits,
-         eligible=int(mask.sum()), expert_audits=audits))
+         eligible=int(mask.sum()), expert_audits=audits, reused_deployment=reused))
     print("population", i, "share", share, "panel nets", [r["net"] for r in panels], "fits", extra_fits, flush=True)
 
 
@@ -218,9 +238,10 @@ if __name__ == "__main__":
     parser.add_argument("action", choices=("build", "seal", "grade"))
     parser.add_argument("--out", required=True, type=lambda p: Path(p).resolve())
     parser.add_argument("--folds", type=int, nargs="+", default=list(FOLDS))
+    parser.add_argument("--deployment-from", type=lambda p: Path(p).resolve())
     args = parser.parse_args()
     if args.action == "build":
         for i in args.folds:
-            build(args.out, i)
+            build(args.out, i, args.deployment_from)
     else:
         {"seal": seal, "grade": grade}[args.action](args.out, args.folds)

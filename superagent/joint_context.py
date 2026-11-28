@@ -1,4 +1,6 @@
 """Inductive categorical recommendation candidates with inferred attribute blocks."""
+from .compute_resources import cpu_threads
+
 import numpy as np
 import pandas as pd
 from scipy.linalg import cho_factor, cho_solve
@@ -48,7 +50,7 @@ class ContextTokenTree(InteractionTree):
         features = self.transform(x)
         self.classifier = _tabular_catboost(labels, 6, 3.)
         settings = self.params.get('tree_params', {})
-        self.classifier.set_params(thread_count=6, **settings)
+        self.classifier.set_params(thread_count=cpu_threads(6), **settings)
         weights = {} if sample_weight is None else {"sample_weight": sample_weight}
         self.classifier.fit(features, labels, cat_features=list(range(features.shape[1])), **weights)
         self.classes_ = self.classifier.classes_

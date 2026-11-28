@@ -7,6 +7,8 @@ from functools import partial
 from typing import Any, Callable
 import re
 
+from .compute_resources import cpu_threads
+
 import numpy as np
 from scipy.sparse import hstack
 from sklearn.dummy import DummyClassifier
@@ -55,7 +57,7 @@ def _extra_trees_tabular(
         ("one_hot", OneHotEncoder(handle_unknown="ignore")),
         ("model", ExtraTreesClassifier(
             n_estimators=400, min_samples_leaf=min_samples_leaf, max_features=0.8,
-            n_jobs=-1, random_state=42, class_weight="balanced",
+            n_jobs=cpu_threads(), random_state=42, class_weight="balanced",
         )),
     ])
     model.fit(_clean_categories(x_train), y_train)
@@ -77,7 +79,7 @@ def _tabular_catboost(y_train, depth, l2_leaf_reg):
         eval_metric="Accuracy",
         verbose=False,
         random_seed=selected_seed(42),
-        thread_count=-1,
+        thread_count=cpu_threads(),
         allow_writing_files=False,
     )
 

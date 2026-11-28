@@ -58,12 +58,8 @@ def checkpoint(environment=None):
 
 
 def device():
-    import torch
-    if torch.cuda.is_available():
-        return "cuda"
-    if torch.backends.mps.is_available():
-        return "mps"
-    return "cpu"
+    from .compute_resources import MIB, device_for
+    return device_for(1024*MIB)
 
 
 def resource():
@@ -87,7 +83,9 @@ class FrozenTableClassifier:
         path=checkpoint()
         if path is None:
             raise ValueError("Verified TabICLv2 weights are unavailable")
+        from .compute_resources import note
         hardware=device()
+        note("tabular in-context fit",hardware)
         self.classifier=TabICLClassifier(n_estimators=VIEWS,batch_size=1,model_path=path,allow_auto_download=False,
                 device=hardware,use_amp=False,use_fa3=False,kv_cache=True,n_jobs=1,random_state=173)
         self.classifier.fit(self._data(x),y)
@@ -116,13 +114,13 @@ class FrozenTableClassifier:
         return dict(kind=self.kind, classes_=self.classes_, training_metadata=self.training_metadata,
                     classifier=None, _saved=state)
 
-    def predict_proba(self,x):
+    def _restore(self, device_name):
         if self.classifier is None:
             from tabicl import TabICLClassifier
             path=checkpoint()
             if path is None:
                 raise ValueError("Verified TabICLv2 weights are required for this fitted solution")
-            state=dict(self._saved,model_path=path,device=device(),allow_auto_download=False)
+            state=dict(self._saved,model_path=path,device=device_name,allow_auto_download=False)
             restored=TabICLClassifier.__new__(TabICLClassifier)
             restored.__setstate__(state)
             if restored.kv_cache and restored.model_kv_cache_ is None:
@@ -130,7 +128,23 @@ class FrozenTableClassifier:
                 restored._build_kv_cache()
             self.classifier=restored
             self._saved=None
-        return self.classifier.predict_proba(self._data(x))
+    def predict_proba(self,x):
+        from .compute_resources import device_error, disable, note
+        preferred = str(self.classifier.device) if self.classifier is not None else device()
+        try:
+            self._restore(preferred)
+            out=self.classifier.predict_proba(self._data(x))
+        except (RuntimeError,NotImplementedError) as error:
+            if preferred=='cpu' or not device_error(error):
+                raise
+            disable(preferred,'tabular in-context inference',error)
+            state=self.__getstate__()
+            self.classifier,self._saved=None,state['_saved']
+            self._restore('cpu')
+            preferred='cpu'
+            out=self.classifier.predict_proba(self._data(x))
+        note('tabular in-context inference',preferred,len(x))
+        return out
 
     def predict(self,x):
         return self.classes_[np.asarray(self.predict_proba(x)).argmax(axis=1)]

@@ -121,17 +121,22 @@ def encode_frozen(texts,tokenizer,model,*,prefix='',pool='mean'):
     lengths=np.array([len(x.ids) for x in encoded])
     order=np.argsort(lengths,kind='stable')
     vectors=np.empty((len(unique),model.config.hidden_size),dtype=np.float32)
+    from .compute_resources import batched_forward
+
+    def forward(idx,device):
+        tokens=torch.zeros((len(idx),int(lengths[idx].max())),dtype=torch.long)
+        mask=torch.zeros_like(tokens)
+        for row,j in enumerate(idx):
+            tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)
+            mask[row,:lengths[j]]=1
+        tokens,mask=tokens.to(device),mask.to(device)
+        hidden=model(input_ids=tokens,attention_mask=mask).last_hidden_state
+        pooled=hidden[:,0] if pool=='cls' else (hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
+        return torch.nn.functional.normalize(pooled,dim=1).cpu().numpy()
+
     with torch.inference_mode():
-        for offset in range(0,len(order),48):
-            idx=order[offset:offset+48]
-            tokens=torch.zeros((len(idx),int(lengths[idx].max())),dtype=torch.long)
-            mask=torch.zeros_like(tokens)
-            for row,j in enumerate(idx):
-                tokens[row,:lengths[j]]=torch.tensor(encoded[j].ids)
-                mask[row,:lengths[j]]=1
-            hidden=model(input_ids=tokens,attention_mask=mask).last_hidden_state
-            pooled=hidden[:,0] if pool=='cls' else (hidden*mask[:,:,None]).sum(1)/mask.sum(1,keepdim=True)
-            vectors[idx]=torch.nn.functional.normalize(pooled,dim=1).numpy()
+        for idx,values in batched_forward(model,order,lengths,48,forward,workload='frozen text encoder'):
+            vectors[idx]=values
     if not np.isfinite(vectors).all():
         raise ValueError('Nonfinite frozen features')
     indices={s:i for i,s in enumerate(unique)}

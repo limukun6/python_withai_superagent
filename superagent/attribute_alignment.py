@@ -2,6 +2,8 @@
 import hashlib
 from types import SimpleNamespace
 
+from .compute_resources import cpu_threads
+
 import numpy as np
 from sklearn.model_selection import GroupKFold
 
@@ -122,7 +124,7 @@ class AttributeAlignmentTree(ContextTokenTree):
                 distinct_fields_per_gate=[len(set(r.values())) for _,r,_ in self.routes_])
             base=np.column_stack((base,added))
         self.classifier=_tabular_catboost(y,6,3.)
-        self.classifier.set_params(thread_count=6,**self.params.get("tree_params",{}))
+        self.classifier.set_params(thread_count=cpu_threads(6),**self.params.get("tree_params",{}))
         weights = {} if sample_weight is None else {"sample_weight": sample_weight}
         self.classifier.fit(base,y,cat_features=list(range(base.shape[1])),**weights)
         self.classes_=self.classifier.classes_

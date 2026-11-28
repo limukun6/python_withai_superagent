@@ -4,6 +4,8 @@ from importlib.util import find_spec
 import os
 from pathlib import Path
 
+from .compute_resources import cpu_threads
+
 import numpy as np
 from scipy.sparse import csr_matrix
 
@@ -92,7 +94,7 @@ class CellGeometryTree:
             coords = (u[:, :rank] * s[:rank]).astype(np.float32)
             self.encoded.append((dict(zip(field.tolist(), coords)), rank))
         self.classifier = _tabular_catboost(labels, depth=6, l2_leaf_reg=3.)
-        self.classifier.set_params(thread_count=4)
+        self.classifier.set_params(thread_count=cpu_threads(4))
         self.classifier.fit(self.matrix(x), labels, cat_features=list(range(x.shape[1])))
         self.classes_ = self.classifier.classes_
         self.training_metadata = dict(cell_representation=asset['name'], identity=key,

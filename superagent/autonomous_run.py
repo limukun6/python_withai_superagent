@@ -200,6 +200,8 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         manifest['exploration_rule_digest'] = identity(rule)
     if feedback_reflection:
         manifest.update(feedback_reflection=feedback_reflection,reflection_history_digest=identity(prior_feedback))
+    from .compute_resources import inventory
+    log.write_json('compute_environment.json', inventory())
     log.write_json('run_manifest.json',manifest)
     from .partial_classification import record_input_failure
     from .format_intake import DECODE_ERRORS
@@ -464,7 +466,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 history.append(dict(monitor,status='completed',primary_metric=metric.name,
                     train_score=facts['train_score'],search_score=facts['search_score'],search_accuracy=facts['search_accuracy'],
                     class_recall=facts['class_recall'],paired_errors=paired,training_seconds=facts['training_seconds'],
-                    resolved_configuration=facts['resolved_configuration']))
+                    resolved_configuration=facts['resolved_configuration'],compute=facts.get('compute',[])))
                 meanings=profile.get('label_meanings',{})
                 if meanings:
                     history[-1]['documented_class_recall']=[

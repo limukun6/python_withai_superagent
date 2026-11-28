@@ -1,5 +1,7 @@
 """Small modality-driven portfolios with preprocessing inside fitted pipelines."""
 from functools import partial
+from .compute_resources import cpu_threads
+
 import numpy as np
 from sklearn.base import BaseEstimator,TransformerMixin
 from sklearn.compose import ColumnTransformer
@@ -99,7 +101,7 @@ def _fit(kind,algorithm,x_train,y_train,x_search,c=1.,leaf=1):
         from .numeric_kernel import NumericKernelFeatures
         steps.append(('kernel', NumericKernelFeatures()))
     if algorithm in ('logistic','fourier_logistic'):classifier=LogisticRegression(C=c,max_iter=2000,random_state=42)
-    elif algorithm=='extra_trees':classifier=ExtraTreesClassifier(n_estimators=300,min_samples_leaf=leaf,n_jobs=-1,random_state=42)
+    elif algorithm=='extra_trees':classifier=ExtraTreesClassifier(n_estimators=300,min_samples_leaf=leaf,n_jobs=cpu_threads(),random_state=42)
     elif algorithm=='rbf_svm':classifier=SVC(C=c,kernel='rbf',gamma='scale')
     else:raise ValueError('Unknown generic algorithm')
     model=Pipeline([*steps,('classifier',classifier)])

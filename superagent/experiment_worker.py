@@ -50,7 +50,9 @@ def main() -> None:
     if candidate.params.get('runtime_composed') and origin=='registry':
         from .runtime_inventory import runtime_classifiers
         runtime_estimator=runtime_classifiers()[candidate.params['class']]
-    with admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache, training_seed(repeat_seed):
+    from threadpoolctl import threadpool_limits
+    from .compute_resources import cpu_threads, decisions
+    with threadpool_limits(limits=cpu_threads()), admitted_fits(fit_admission, candidate_id, runtime_estimator=runtime_estimator) as fit_counts, using_feature_cache(payload.get('feature_cache_dir')) as cache, training_seed(repeat_seed):
         model, predictions = candidate.fit_predict(payload["X_train"], payload["y_train"], payload["X_search"])
         if repeat_seed is not None:
             if fitted_seed(model) != repeat_seed:
@@ -74,7 +76,7 @@ def main() -> None:
         joblib.dump({"model": model, "metrics": {"training_rows": len(payload["y_train"]),
                      "training_seconds": time.perf_counter() - start,'feature_cache':cache_report,
                      'classifier_fits':classifier_fits,
-                     'training_metadata':training_metadata,'selected_iterations':selected_iterations,
+                     'compute':decisions(),'training_metadata':training_metadata,'selected_iterations':selected_iterations,
                      'estimator':observed,'resolved_configuration':configuration,'metric_spec':metric.record()}}, output_path)
         return
     train_metrics=metric.evaluate_model(payload['kind'],model,payload['X_train'],payload['y_train'],training_predictions)
@@ -111,7 +113,7 @@ def main() -> None:
         "training_seconds": time.perf_counter() - start,
         'feature_cache':cache_report,
         'classifier_fits':classifier_fits,
-        'training_metadata':training_metadata,'selected_iterations':selected_iterations,
+        'compute':decisions(),'training_metadata':training_metadata,'selected_iterations':selected_iterations,
         'estimator':observed,'resolved_configuration':configuration,
     }}, output_path)
 

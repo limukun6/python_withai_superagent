@@ -102,6 +102,7 @@ class Policy:
 
 
 def train_candidate(payload_path, candidate, destination, timeout, *, fit_admission_path=None):
+    from .compute_resources import worker_environment
     started = time.monotonic()
     command = [sys.executable, "-m", "superagent.experiment_worker", str(payload_path), candidate, str(destination)]
     registry=Path(destination).parent/'candidate_registry.json'
@@ -110,7 +111,7 @@ def train_candidate(payload_path, candidate, destination, timeout, *, fit_admiss
         command.extend(['--fit-admission', str(fit_admission_path)])
     try:
         result = subprocess.run(command, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=timeout,
-                                cwd=Path(__file__).resolve().parents[1])
+                                cwd=Path(__file__).resolve().parents[1],env=worker_environment())
     except subprocess.TimeoutExpired:
         elapsed=time.monotonic()-started
         return None, {"status": "timeout", "error": "Training time limit reached", "training_seconds": elapsed,"worker_wall_seconds":elapsed}

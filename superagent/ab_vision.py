@@ -87,14 +87,16 @@ class FrozenVisionFeatures(TransformerMixin, BaseEstimator):
             raise ValueError('Image dimensions or frozen vision runtime versions differ from training')
         net, preprocess = _network(path)
         output = np.empty((len(data), 576), dtype=np.float32)
+        from .compute_resources import batched_forward
+        def forward(ids,device):
+            raw=np.ascontiguousarray(data[ids].transpose(0,3,1,2))
+            tensor=torch.from_numpy(raw)
+            if tensor.shape[1]==1:
+                tensor=tensor.expand(-1,3,-1,-1)
+            return torch.nn.functional.normalize(net(preprocess(tensor).to(device)),dim=1).cpu().numpy()
         with torch.inference_mode():
-            for start in range(0, len(data), 24):
-                raw = np.ascontiguousarray(data[start:start+24].transpose(0,3,1,2))
-                tensor = torch.from_numpy(raw)
-                if tensor.shape[1] == 1:
-                    tensor = tensor.expand(-1,3,-1,-1)
-                features = net(preprocess(tensor))
-                output[start:start+len(raw)] = torch.nn.functional.normalize(features, dim=1).numpy()
+            for ids,values in batched_forward(net,np.arange(len(data)),[224],24,forward,workload='frozen image encoder'):
+                output[ids]=values
         if not np.isfinite(output).all():
             raise ValueError('Frozen vision extractor produced nonfinite features')
         return output

@@ -197,17 +197,54 @@ def grade(root):
     print(json.dumps(regimes,indent=2), 'advance',eligible,flush=True)
 
 
+def handoff(root, destination):
+    from scripts.study_task1_outer import arrays
+    study = root/'cell_portfolio_1128'
+    grades = read(study/'results.json')
+    routes = read(study/'conditional_results.json')
+    prior = ROOT/'research/task1_feedback_extension_1127/novel_profile_decision_followup_results.json'
+    previous = read(prior)['cumulative']
+    current = source_identity(ROOT)
+    cases = {}
+    for key, result in grades['panels'].items():
+        panel, folder = study/key, study/key/'portfolio'
+        report = read(folder/'run/agent/cell_encoder_review.json')
+        launch = read(folder/'launch.json')
+        require(launch['source']==current, 'Solver changed after the registered experiments')
+        x, = arrays(panel/'anonymous/training.zip',['C_train.npy'])
+        q, = arrays(panel/'anonymous/queries.zip',['C_test.npy'])
+        new_levels = np.column_stack([~np.isin(q[:,j],np.unique(x[:,j])) for j in range(x.shape[1])])
+        cases[key] = dict(result,mode='resume frozen delivery' if 'original' in launch else 'complete anonymous solve',
+            seen_cells=dict(columns=x.shape[1],unseen_cells=int(new_levels.sum()),
+                            rows_with_unseen_cells=int(new_levels.any(axis=1).sum())),
+            measured_recipes=report['alternatives'],confirmation_replay=routes['panels'][key])
+    added = sum(c['new_fits'] for c in cases.values())
+    value = dict(solver_source_sha256=current,protocol=sha(PLAN),secondary_protocol=routes['protocol'],
+                 outer_lock=read(study/'outer_lock.json'),primary_grading_sha256=sha(study/'results.json'),
+                 secondary_grading_sha256=sha(study/'conditional_results.json'),panels=cases,regimes=grades['regimes'],
+                 uniform_advances=grades['advances'],conditional_advances=routes['advances'],
+                 previous_accounting_sha256=sha(prior),previous_fit_units=previous,new_physical_fits=added,
+                 new_router_fits=routes['fits'],cumulative_research_fit_units=previous+added,
+                 model_api_requests=sum(c['model_api_requests'] for c in cases.values())+routes['api_calls'],
+                 course_validation_opened=False,official_test_opened=False,h2_opened=False)
+    save(destination, value)
+
+
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('action', choices=['resume','boundary','grade'])
+    p.add_argument('action', choices=['resume','boundary','grade','handoff'])
     p.add_argument('--root',type=lambda v:Path(v).resolve(),required=True)
     p.add_argument('--case',choices=tuple(CASES))
     for name in ('weight','library','runtime'):
         p.add_argument('--'+name,type=lambda v:Path(v).resolve())
+    p.add_argument('--destination', type=Path)
     args=p.parse_args()
     if args.action=='resume':
         resume(args)
     elif args.action=='boundary':
         boundary(args)
-    else:
+    elif args.action=='grade':
         grade(args.root)
+    else:
+        handoff(args.root,args.destination)

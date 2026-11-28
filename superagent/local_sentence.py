@@ -108,6 +108,8 @@ def descriptor(root,files,**behavior):
 def discover(root,env):
     if not all(find_spec(k) is not None for k in ('tokenizers','safetensors')):
         return
+    from .compute_resources import available_memory, can_load_frozen
+    free=available_memory()
     contextual=all(find_spec(k) is not None for k in ('torch','transformers'))
     candidates = [root/'modules.json',*sorted(root.glob('*/modules.json')),*sorted(root.glob('*/*/modules.json'))]
     for path in candidates:
@@ -117,7 +119,7 @@ def discover(root,env):
             spec=describe(path.parent)
         except (KeyError,ValueError,IndexError,TypeError,OSError,AttributeError):
             continue
-        if contextual or spec['family']=='static_embedding':
+        if (contextual or spec['family']=='static_embedding') and can_load_frozen(max(v['bytes'] for v in spec['files'].values()),free):
             env[spec['environment_variable']]=str(path.parent.resolve())
 
 

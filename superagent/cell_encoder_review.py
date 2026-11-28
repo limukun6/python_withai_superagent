@@ -115,8 +115,10 @@ def after_delivery(task, spec, metric, selection, choice, observed, payloads, ex
         seeds, repeated = seed_info.get('seeds', []), seed_info.get('members_repeated', [])
         # Preserve room to reconstruct the deployed incumbent and confirm/refit even a two-encoder nominee.
         reserve = 2*len(seeds)*len(repeated) + 6
+        from .compute_resources import available_memory, can_load_frozen
+        free_memory=available_memory()
         eligible = [k for k in sorted(assets, key=lambda k: (assets[k]['bytes'], k))
-                    if (k == SCRATCH or words >= 3) and permitted(capability(k), executor.restrictions)]
+                    if (k == SCRATCH or words >= 3 and can_load_frozen(assets[k]['bytes'],free_memory)) and permitted(capability(k), executor.restrictions)]
         def free():
             return executor.limit - executor.accounting()['attempted_classifier_fits']
         if not eligible or free() <= reserve or executor.accounting()['unknown_failed_attempts']:

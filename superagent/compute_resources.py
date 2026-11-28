@@ -83,6 +83,12 @@ def inventory():
     return info
 
 
+def can_load_frozen(size, available=None):
+    # Allow CPU weights plus a working copy and input workspace before admitting a new fit.
+    capacity=available_memory() if available is None else available
+    return 2*size+192*MIB<=capacity
+
+
 def default_fit_ceiling():
     cpu,ram=cpu_threads(),available_memory()
     if cpu<=2 or ram<2*1024*MIB:

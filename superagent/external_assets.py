@@ -20,10 +20,12 @@ def activate_resource_directory(directory, environment=None):
         if table_variable not in env and location.is_file() and checkpoint({**env,table_variable:str(location)}) is not None:
             env[table_variable]=str(location)
             break
+    from .compute_resources import available_memory, can_load_frozen
+    free=available_memory()
     text = [("minilm","SUPERAGENT_MINILM_WEIGHTS",MODEL,FILES),("minilm_l12",DEEP_ENV,DEEP_MODEL,DEEP_FILES)]
     text.extend((k,s["env"],s["model"],s["files"]) for k,s in ALTERNATIVES.items())
     for alias,variable,model,files in text:
-        if env.get(variable):
+        if env.get(variable) or not can_load_frozen(max(size for size,_ in files.values()),free):
             continue
         for relative in dict.fromkeys((model,model.split("/")[-1],alias)):
             location=root/relative

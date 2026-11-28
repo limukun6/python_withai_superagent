@@ -1,0 +1,5 @@
+{
+  "purpose": "After reviewing the existing five-fold outcomes, diagnose which guard rejected a proposed change and whether removing the probability-quality veto alone would have helped the declared accuracy. This is post-hoc mechanism analysis on the same development predictions, not new confirmation.",
+  "design": "For each saved training fold recompute the original two-panel accuracy checks and recorded Brier aggregation. Replay the same decision a second time with only the aggregate Brier <= 0 eligibility condition removed. Keep the original nomination, grid, 0.20-percentage-point accuracy threshold, nonnegative improvement on both panels, and tie breakers. For the correction heads, reselect among accuracy-eligible heads exactly as originally ranked. Seal all proposed labels before scoring. Use archived probabilities and fitted predictions, with zero new fits and zero API calls.",
+  "boundary": "Give paired corrections, regressions and interval for each of the two mechanisms. A favorable diagnostic result can suggest a new experiment but cannot promote a policy, open course validation, or change the frozen entry."
+}

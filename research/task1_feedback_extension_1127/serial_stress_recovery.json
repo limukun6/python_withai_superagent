@@ -1,0 +1,5 @@
+{
+  "reason": "The host restarted before either initial cold solve had a completed run outcome or a final prediction receipt. Both already delivered partial prediction files. No stress outcomes or held labels were consulted to choose this recovery.",
+  "recovery": "Keep the interrupted directories unmodified and count the physical classifier invocations in each. Use one new empty output directory per fold; run the same frozen solve, packets, resources, no hint, 64-fit option and seed policy. Run heavy processes serially with a bounded MPS allocation (high watermark 0.95) to reduce pressure on the 16-GiB host. Native handling of any resource failure still applies. Accept only completed, independently reloaded runs. An interrupted run's partial predictions are not a stand-in for completed performance.",
+  "accounting": "Separate the two interrupted attempts from the two scored solves in both fit accounting and elapsed-time reporting. Include the former in total research consumption. On a partially written regular-fold panel with all component receipts present, verify the stored probabilities and finish inference without repeating any fits."
+}

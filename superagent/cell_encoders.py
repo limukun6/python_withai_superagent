@@ -10,7 +10,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 from . import ab_sentence as sentence
-from . import local_sentence_backbone as local
+from . import local_sentence as local
 from .models import Candidate, _clean_categories, _tabular_catboost
 
 LIBRARY = 'SUPERAGENT_CELL_ENCODER_LIBRARY'
@@ -21,13 +21,16 @@ SCRATCH = 'cooccurrence'
 def resources():
     found = {SCRATCH: {'name': 'Across-field co-occurrence', 'bytes': 0}}
     location = os.environ.get(LIBRARY)
-    if not location or any(find_spec(p) is None for p in ('torch', 'transformers', 'tokenizers', 'safetensors')):
+    if not location or any(find_spec(p) is None for p in ('tokenizers', 'safetensors')):
         return found
     root = Path(location)
     known = [dict(model=sentence.MODEL, files=sentence.FILES, pool='mean', prefix='', limit=256),
              dict(model=sentence.DEEP_MODEL, files=sentence.DEEP_FILES, pool='mean', prefix='', limit=128),
              *(dict(spec, limit=512) for spec in sentence.ALTERNATIVES.values())]
+    neural=all(find_spec(p) is not None for p in ('torch','transformers'))
     for spec in known:
+        if not neural or 'model.safetensors' not in spec['files'] or spec.get('pool') not in ('mean','cls'):
+            continue
         path = root / spec['model'].split('/')[-1]
         if all((path / n).is_file() and (path / n).stat().st_size == size for n, (size, _) in spec['files'].items()):
             key = spec['files']['model.safetensors'][1]
@@ -37,7 +40,9 @@ def resources():
             definition = local.describe(package.parent)
         except (ValueError, TypeError, KeyError, IndexError, AttributeError, OSError):
             continue
-        weights = definition['files']['model.safetensors']
+        if not neural and definition['family']!='static_embedding':
+            continue
+        weights=next(v for n,v in definition['files'].items() if n.endswith('model.safetensors'))
         if weights['sha256'] not in found:
             found[definition['signature']] = dict(name=package.parent.name, path=package.parent,
                                                    definition=definition, bytes=weights['bytes'])
@@ -46,7 +51,7 @@ def resources():
 
 def cell_vectors(asset, values):
     if 'definition' in asset:
-        return local.encode(asset['path'], asset['definition'], values)
+        return local.encode_at(asset['path'], asset['definition'], values)
     spec, root = asset['pinned'], asset['path']
     for name, (size, digest) in spec['files'].items():
         path = root / name

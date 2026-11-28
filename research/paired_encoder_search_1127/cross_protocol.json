@@ -1,0 +1,7 @@
+{
+  "question": "Does a general retrieval cross-encoder reading both alternatives together add signal to a sentence encoder that reads them separately?",
+  "source": "Frozen cross-encoder/ms-marco-TinyBERT-L2-v2, revision 81d1926f67cb8eee2c2be17ca9f793c7c3bd20cc. General English passage-ranking pretraining as documented by the publisher. Verify git object hashes for text files and SHA256 for weights. No examples are sent to the provider.",
+  "features": "Read each pair in both directions. Add the signed difference of joint CLS states, signed segment-mean contrasts averaged over the two orders, and the directional relevance-score difference to the previous GTE linear pipeline. Estimate feature scales from fitting rows only. Reuse exactly its regularization and swap augmentation. One new supervised model per fold.",
+  "gates": "Before viewing any new cross-encoder result, register comparison of the extension alone and its equal vote with the frozen GTE reference on primary. Lock the best strictly positive alternative, breaking ties in favor of a single. Require positive gain also on each of two held training folds and pooled gain of at least .003. Stop at the first failed confirmation. Up to three fresh fits. No released validation or official test data. A promotion would still require autonomous selection and a separate cold solve.",
+  "timing": "This is a separate internal-only study from the three blind raw solves. Its outcomes cannot change those already registered runs."
+}

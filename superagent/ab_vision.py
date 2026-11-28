@@ -6,6 +6,8 @@ from importlib.util import find_spec
 import os
 from pathlib import Path
 
+from .compute_resources import cpu_threads
+
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.linear_model import LogisticRegression
@@ -52,7 +54,7 @@ def _network(path):
     import torch
     from torchvision.models import MobileNet_V3_Small_Weights, mobilenet_v3_small
 
-    torch.set_num_threads(min(3, torch.get_num_threads()))
+    torch.set_num_threads(min(cpu_threads(3), torch.get_num_threads()))
     network = mobilenet_v3_small(weights=None)
     state = torch.load(path, map_location='cpu', weights_only=True)
     network.load_state_dict(state, strict=True)

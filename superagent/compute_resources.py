@@ -83,6 +83,15 @@ def inventory():
     return info
 
 
+def default_fit_ceiling():
+    cpu,ram=cpu_threads(),available_memory()
+    if cpu<=2 or ram<2*1024*MIB:
+        return 12
+    if cpu<=4 or ram<4*1024*MIB:
+        return 24
+    return 64
+
+
 def worker_environment():
     return dict(os.environ, **{_WORKER_PROFILE:json.dumps(inventory(),separators=(',',':'))})
 

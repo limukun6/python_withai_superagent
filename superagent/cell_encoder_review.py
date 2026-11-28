@@ -1,4 +1,5 @@
 """Audition categorical representations against a delivered model on matched training evidence."""
+from importlib.util import find_spec
 from itertools import combinations
 import json
 import re
@@ -61,7 +62,7 @@ def after_delivery(task, spec, metric, selection, choice, observed, payloads, ex
 
     folds = ('primary', 'confirmation_1', 'confirmation_2')
     members = choice['members']
-    if (task.kind != 'categorical_tabular' or not 200 <= len(task.y_train) <= 25000 or
+    if (task.kind != 'categorical_tabular' or find_spec('catboost') is None or not 200 <= len(task.y_train) <= 25000 or
             not 2 <= task.X_train.shape[1] <= 64 or
             (spec.get('evaluation_protocol') or {}).get('kind', 'grouped_stratified') != 'grouped_stratified' or
             'linear_only' in spec.get('method_restrictions', ())):

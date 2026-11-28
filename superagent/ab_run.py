@@ -40,7 +40,9 @@ def registered_capabilities(task_spec, train_rows, scope='full', *, numeric_kern
     """A-owned study projection of B's registry; never constructs new methods."""
     if scope not in ('baseline','full'):
         raise ValueError('Unknown candidate catalogue scope')
+    from .compute_resources import MIB, available_memory
     caps=capabilities_for(task_spec,train_rows=train_rows,numeric_kernel_width=numeric_kernel_width,
+                          kernel_memory_bytes=min(512*MIB,available_memory()//4),
                           repeated_context=repeated_context, comparable_context=comparable_context, table_extensions=table_extensions)
     if scope=='baseline':
         if any(c.get('origin') not in ('shared_baseline','b_port') for c in caps.values()):

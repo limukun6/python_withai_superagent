@@ -30,17 +30,24 @@ from .task_semantics import declared_semantics
 @contextmanager
 def installed_methods():
     previous = os.environ.get(PREFERENCE_CATALOG_ENV)
+    previous_reuse = os.environ.get("SUPERAGENT_FROZEN_BATCH_REUSE")
     os.environ[PREFERENCE_CATALOG_ENV] = 'all-installed'
+    os.environ.setdefault("SUPERAGENT_FROZEN_BATCH_REUSE","1")
     try:
         yield
     finally:
+        if previous_reuse is None:
+            os.environ.pop("SUPERAGENT_FROZEN_BATCH_REUSE",None)
         if previous is None:
             os.environ.pop(PREFERENCE_CATALOG_ENV, None)
         else:
             os.environ[PREFERENCE_CATALOG_ENV] = previous
 
 
-def partitions(task, seed, *, names=("primary", "confirmation_1", "confirmation_2")):
+STANDARD_FOLDS = ('primary','confirmation_1','confirmation_2')
+
+
+def partitions(task, seed, *, names=STANDARD_FOLDS):
     declared = explicit_windows(task, seed)
     if declared is not None:
         return declared
@@ -241,6 +248,17 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
             release_training()
         return selected
 
+    # Admit a table audition from the observed modality, sample size, feature width and contract.
+    # The models, weights and stop action are elected later from held-out training scores.
+    if (feedback_reflection is None and not self_review and rule is None and flash is None
+            and fit_limit>16 and task.kind=='categorical_tabular' and 200<=len(task.y_train)<=25000
+            and 2<=task.X_train.shape[1]<=64 and find_spec('catboost') is not None
+            and 'linear_only' not in spec.get('method_restrictions',())
+            and (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified')=='grouped_stratified'):
+        feedback_reflection='encoder-portfolio'
+        log.event('autonomous_representation_review_available',kind=task.kind,rows=len(task.y_train),
+                  columns=task.X_train.shape[1],fit_ceiling=fit_limit)
+    recruitment_folds={}
     fusion_holdout = (feedback_reflection == 'fusion-holdout' and len(task.y_train) >= 1000 and
                       (task.spec.get('evaluation_protocol') or {}).get('kind','grouped_stratified') == 'grouped_stratified')
     high_fidelity = (feedback_reflection == 'near-full-confirmation' and fit_limit >= 12 and len(task.y_train) >= 1000 and
@@ -269,7 +287,14 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         pilot.snapshot(checkpoint,0)
     else:
         checkpoint = standby_for(task)
-        folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
+        from .portfolio_review import EXTRA_FOLDS, reserve_fits
+        if (not opening_enabled and feedback_reflection is None and not self_review and rule is None and flash is None
+                and 'linear_only' not in spec.get('method_restrictions',()) and reserve_fits(fit_limit,len(STANDARD_FOLDS))):
+            expanded=partitions(task,seed,names=(*STANDARD_FOLDS,*EXTRA_FOLDS))
+            recruitment_folds={k:expanded[k] for k in EXTRA_FOLDS if k in expanded}
+            folds={k:v for k,v in expanded.items() if k not in recruitment_folds}
+        else:
+            folds=verified_windows(task,seed,partitions) if opening_enabled else partitions(task,seed)
     payloads = {}
     for name,(fit,held,resource) in folds.items():
         path = directory/(name+'.joblib')
@@ -309,6 +334,19 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         static=registered_capabilities(spec,len(task.y_train),numeric_kernel_width=widths,
                                        repeated_context=bool(context_columns), comparable_context=comparable_context,
                                        table_extensions=table_extensions)
+        from .analogy_review import can_review as can_review_analogy
+        analogy_available=(feedback_reflection is None and not self_review and rule is None and flash is None
+                           and can_review_analogy(task,metric,folds,static,fit_limit))
+        if analogy_available:
+            # At most three supervised indices, two matched control comparisons and one final index.
+            core_limit=fit_limit-6
+            log.event('representation_review_opportunity',core_fit_limit=core_limit,reserved_fits=6)
+        recruitment_reserve=0
+        if len(recruitment_folds)==2:
+            recruitment_reserve=reserve_fits(fit_limit,len(folds),other_reserve=fit_limit-core_limit)
+            if recruitment_reserve:
+                core_limit-=recruitment_reserve
+                log.event('postselection_review_available',reserved_fits=recruitment_reserve,core_fit_limit=core_limit)
         generator=MethodSpace(spec,profile,directory)
         executor=Executor(directory,{},metric,start,wall,timeout,fit_limit,log,restrictions=spec.get('method_restrictions',()))
         history,decisions,blocked=[],[],set()
@@ -316,10 +354,20 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds','seed-replication','encoder-portfolio') and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in ('fusion-holdout','near-full-confirmation','remaining-folds','seed-replication','encoder-portfolio') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
+        from .finalist_race import FinalistRace
+        automatic = (feedback_reflection is None and flash is None and rule is None and not self_review
+                     and len(folds)>=3 and core_limit >= 4*(len(folds)+1))
+        if automatic:
+            race = FinalistRace(log,folds,frontier=True,multiple=True)
+            log.event('automatic_finalist_review_available',fit_limit=core_limit,independent_partitions=len(folds))
+        elif feedback_reflection in ('matched-finalists','complementary-frontier'):
+            race = FinalistRace(log,folds,frontier=feedback_reflection=='complementary-frontier')
+        else:
+            race = None
         if feedback_reflection=='scheduled-flash':
             from .scheduled_review import ScheduledReview
             scheduled=ScheduledReview(log,flash,start+wall)
@@ -358,6 +406,12 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                     if self_review in ('active', 'protected'):
                         menu = review.seek_evidence(menu, remaining, caps)
                 choice,source=menu[0],'local evidence policy'
+                if race is not None:
+                    finalist = race.consider(menu, caps, observed, metric, remaining, blocked,
+                                             'linear_only' not in profile.get('method_restrictions',()))
+                    if finalist is not None:
+                        choice, source = finalist, 'matched training finalists'
+                        menu = [finalist, *menu]
                 if opening is not None:
                     corroborate = opening.protect_confirmation(menu,caps,observed,remaining)
                     if corroborate is not None:
@@ -515,6 +569,14 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .cell_encoder_review import after_delivery
                 selection, choice = after_delivery(task, spec, metric, selection, choice, observed, payloads,
                                                    executor, directory, log, timeout)
+            if analogy_available:
+                from .analogy_review import review as review_analogy
+                selection,choice=review_analogy(task,metric,choice,selection,executor,directory,log,timeout,observed,payloads,
+                                                ceiling=fit_limit-recruitment_reserve)
+            if recruitment_reserve:
+                from .portfolio_review import review_portfolio
+                selection,choice=review_portfolio(task,metric,selection,choice,executor,directory,log,timeout,
+                                                  observed['primary'],recruitment_folds,blocked)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,

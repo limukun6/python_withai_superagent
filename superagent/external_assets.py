@@ -4,6 +4,43 @@ import os
 from pathlib import Path
 
 
+def activate_resource_directory(directory, environment=None):
+    """Expose every verified supported local installation independently of the task and winner."""
+    from .ab_sentence import ALTERNATIVES,DEEP_ENV,DEEP_FILES,DEEP_MODEL,FILES,MODEL,pinned_folder
+    from .ab_vision import WEIGHT_BYTES,WEIGHT_ENV,WEIGHT_SHA256
+
+    env = os.environ if environment is None else environment
+    root = Path(directory).expanduser().resolve()
+    if not root.is_dir():
+        raise ValueError(f"Encoder resource directory does not exist: {root}")
+    from .cell_encoders import LIBRARY
+    from .table_foundation import WEIGHT_ENV as table_variable, FILENAME as table_file, checkpoint
+    env.setdefault(LIBRARY,str(root))
+    for location in (root/table_file,root/'tabicl'/table_file):
+        if table_variable not in env and location.is_file() and checkpoint({**env,table_variable:str(location)}) is not None:
+            env[table_variable]=str(location)
+            break
+    text = [("minilm","SUPERAGENT_MINILM_WEIGHTS",MODEL,FILES),("minilm_l12",DEEP_ENV,DEEP_MODEL,DEEP_FILES)]
+    text.extend((k,s["env"],s["model"],s["files"]) for k,s in ALTERNATIVES.items())
+    for alias,variable,model,files in text:
+        if env.get(variable):
+            continue
+        for relative in dict.fromkeys((model,model.split("/")[-1],alias)):
+            location=root/relative
+            if location.is_dir() and pinned_folder(location,files) is not None:
+                env[variable]=str(location)
+                break
+    from .local_sentence import discover
+    discover(root,env)
+    if not env.get(WEIGHT_ENV):
+        for location in (root/("mobilenet_v3_small-"+WEIGHT_SHA256[:8]+".pth"),root/"vision"/"weights"):
+            if location.is_file() and location.stat().st_size==WEIGHT_BYTES:
+                with location.open("rb") as stream:
+                    if hashlib.file_digest(stream,"sha256").hexdigest()==WEIGHT_SHA256:
+                        env[WEIGHT_ENV]=str(location)
+                        break
+
+
 def model_resources(model):
     from .ab_sentence import (ALTERNATIVES,AlternativeSentenceFeatures,DEEP_ENV, DEEP_FILES, DEEP_MODEL, DEEP_REVISION, DeepPreferenceFeatures,
                               FILES, MODEL, REVISION, SentenceFeatures)
@@ -12,11 +49,14 @@ def model_resources(model):
     from .confusion_specialist import ClassPairModel
     from .table_foundation import FrozenTableClassifier, resource as table_resource
 
+    from .local_sentence import LocalSentenceFeatures
+    modular={}
     found=set();visited=set()
     def walk(value):
         if id(value) in visited:return
         visited.add(id(value))
-        if isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
+        if isinstance(value,LocalSentenceFeatures):modular[value.spec["signature"]]=value.resource()
+        elif isinstance(value,AlternativeSentenceFeatures):found.add(value.variant)
         elif isinstance(value,DeepPreferenceFeatures):found.add('minilm_l12')
         elif isinstance(value,(SentenceFeatures,UnorderedSentenceFeatures)):found.add('minilm')
         if isinstance(value,FrozenTableClassifier):found.add('tabicl_v2')
@@ -38,6 +78,9 @@ def model_resources(model):
     if "tabicl_v2" in found:
         resources.append(table_resource())
         packages.update(("tabicl","torch","einops","pandas"))
+    if modular:
+        resources.extend(modular[k] for k in sorted(modular))
+        packages.update(('torch','transformers','tokenizers','safetensors','huggingface-hub'))
     if 'minilm' in found:
         resources.append(dict(name='minilm',environment_variable='SUPERAGENT_MINILM_WEIGHTS',path_kind='directory',
             model=MODEL,revision=REVISION,files={name:dict(bytes=size,sha256=digest) for name,(size,digest) in FILES.items()}))

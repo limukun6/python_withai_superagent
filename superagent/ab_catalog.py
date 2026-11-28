@@ -10,11 +10,12 @@ from .metrics import MetricSpec
 from .models import search_candidates
 from . import numeric_kernel, table_foundation
 from . import ab_varied_preferences
+from . import paired_encoder
 from .task_semantics import candidate_swap_rule, validate_candidate_semantics
 
 
 ADAPTER_VERSION = '1.5'
-FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*(name for _,name in TRANSFER_METHODS.values())}
+FROZEN_TEXT={TEXT,TEXT_DEEP,TEXT_EDIT,TEXT_FAMILIARITY,TEXT_KERNEL,ENCODER,ab_varied_preferences.TOPIC,*paired_encoder.NAMES,*(name for _,name in TRANSFER_METHODS.values())}
 
 
 def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, numeric_kernel_width=None, repeated_context=False, comparable_context=False, table_extensions=False):
@@ -97,8 +98,8 @@ def common_catalog(task, *, train_rows=None, kernel_memory_bytes=512 * 2**20, nu
                          swap_label_rule=candidate_swap_rule(candidate) if kind == 'pair_text' else 'not_applicable',
                          supports_probabilities=estimator not in ('rbf_svm','linear_svm'), expected_classifier_fits=1,
                          resource=('local_frozen_table' if name==table_foundation.NAME else
-                                   'local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION else 'cpu'),
-                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS else 'shared_baseline'))
+                                   'local_frozen_encoder_cpu' if name in FROZEN_TEXT or name==VISION or route=='local_sentence' else 'cpu'),
+                         origin='b_port' if name in ROUTES or name in ab_varied_preferences.ESTIMATORS or route=='local_sentence' else 'shared_baseline'))
     from .task_constraints import permitted
     return [entry for entry in menu if permitted(entry,task.get('method_restrictions',()))]
 

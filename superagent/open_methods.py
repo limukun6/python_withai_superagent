@@ -218,7 +218,8 @@ def resolve(kind,name,document):
         if method.family!=name:
             raise ValueError('Runtime configuration digest differs')
         return method
-    return next(c for c in search_candidates(kind,'all') if c.family==name)
+    from .models import resolve_static
+    return resolve_static(kind, name)
 
 
 class MethodSpace:

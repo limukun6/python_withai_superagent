@@ -35,7 +35,9 @@ def main() -> None:
         candidate=resolve_registered(payload['kind'],candidate_id,document)
         registry_sha256=hashlib.sha256(registry_bytes).hexdigest()
         if candidate_id in document['entries']:origin='registry'
-    else:candidate = next(c for c in search_candidates(payload["kind"], "all") if c.family == candidate_id)
+    else:
+        from .models import resolve_static
+        candidate = resolve_static(payload["kind"], candidate_id)
     from .task_semantics import validate_candidate_semantics
     semantic_check=validate_candidate_semantics(payload['kind'],payload.get('pair_semantics'),candidate)
     configuration={'id':candidate.family,'params':candidate.params,'origin':origin,'registry_sha256':registry_sha256,

@@ -72,7 +72,7 @@ def prepare(archive,out):
     print({k:v["rows"] for k,v in info["roles"].items()},flush=True)
 
 
-def entry(source, out, arm, cap, table_weight=None, optional_runtime=None, feedback_mode=None):
+def entry(source, out, arm, cap, table_weight=None, optional_runtime=None, feedback_mode=None, cell_library=None):
     data=read(out/"inputs.json")
     inputs=out/"anonymous/training.zip";query=out/"anonymous/queries.zip"
     require(sha(inputs)==data["entry_inputs"] and sha(query)==data["entry_queries"],"Anonymous packet changed")
@@ -90,6 +90,10 @@ def entry(source, out, arm, cap, table_weight=None, optional_runtime=None, feedb
         require(sha(table_weight) == SHA256, "Unverified optional resource")
         settings[WEIGHT_ENV] = str(table_weight)
         resources["tabicl_v2"] = SHA256
+    if cell_library:
+        from superagent.cell_encoders import LIBRARY
+        settings[LIBRARY] = str(cell_library)
+        resources['categorical_encoder_library'] = 'local declared and pinned frozen resources'
     settings.update(PYTHONPATH=os.pathsep.join(map(str, modules)),
                     UNIFIED_RAW_INPUT=str(inputs),UNIFIED_RAW_LOG=str(folder/"opened.jsonl"),
                     UNIFIED_RAW_MEMBERS=json.dumps(["C_train.npy","y_train.npy","Readme.md"]),SUPERAGENT_OFFLINE="1")
@@ -131,9 +135,10 @@ if __name__=="__main__":
     p.add_argument("--cap",type=int,choices=(10,32,48,64))
     p.add_argument("--table-weight", type=lambda s: Path(s).resolve())
     p.add_argument("--optional-runtime", type=lambda s: Path(s).resolve())
-    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation","remaining-folds","seed-replication"])
+    p.add_argument("--feedback-mode",choices=["fusion-holdout","near-full-confirmation","remaining-folds","seed-replication","encoder-portfolio"])
+    p.add_argument("--cell-library", type=lambda s: Path(s).resolve())
     args=p.parse_args()
     if args.action=="prepare":
         prepare(args.archive,args.out)
     else:
-        entry(args.source,args.out,args.arm,args.cap,args.table_weight,args.optional_runtime,args.feedback_mode)
+        entry(args.source,args.out,args.arm,args.cap,args.table_weight,args.optional_runtime,args.feedback_mode,args.cell_library)

@@ -318,10 +318,11 @@ def probability_with_model(kind, model, inputs):
 
 @dataclass
 class SoftVoteModel:
-    """A fixed equal-weight vote, including explicit class-column alignment."""
+    """A fixed probability vote with explicit class-column alignment."""
     kind: str
     models: list[Any]
     classes_: np.ndarray
+    weights: tuple[float, ...] | None = None
 
     def predict_proba(self, inputs):
         if len(self.models) < 2:
@@ -333,10 +334,25 @@ class SoftVoteModel:
                 raise ValueError("Ensemble components have different fitted classes")
             order = [classes.tolist().index(label) for label in self.classes_.tolist()]
             values.append(probabilities[:, order])
-        return np.mean(values, axis=0)
+        if self.weights is None:
+            return np.mean(values, axis=0)
+        weights = np.asarray(self.weights, dtype=float)
+        if weights.shape != (len(values),) or not np.isfinite(weights).all() or np.any(weights <= 0) or not np.isclose(weights.sum(), 1.):
+            raise ValueError("Invalid fixed probability weights")
+        return np.average(values, axis=0, weights=weights)
 
     def predict(self, inputs):
         return self.classes_[np.argmax(self.predict_proba(inputs), axis=1)]
+
+
+def resolve_static(kind, name):
+    if kind == "categorical_tabular" and name.startswith("catboost_cell_"):
+        from .cell_encoders import PREFIX, candidate, resources
+        key = name.removeprefix(PREFIX)
+        if key not in resources():
+            raise ValueError("The selected categorical encoder is unavailable")
+        return candidate(key)
+    return next(method for method in search_candidates(kind, "all") if method.family == name)
 
 
 def search_candidates(kind: str, portfolio: str = "original") -> list[Candidate]:

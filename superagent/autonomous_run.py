@@ -314,7 +314,7 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
         flash_available=flash is not None and not feedback_reflection
         reflection = None
         coverage = None
-        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds','seed-replication') and not self_review and rule is None:
+        if fit_limit > 16 and flash is None and feedback_reflection in (None,'fusion-holdout','near-full-confirmation','remaining-folds','seed-replication','encoder-portfolio') and not self_review and rule is None:
             from .coverage_review import CoverageReview
             coverage = CoverageReview()
         scheduled = None
@@ -505,10 +505,14 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .fusion_holdout import review as review_fusion
                 choice=review_fusion(task,metric,choice,history,observed,sealed,directory,log)
             selection=freeze_model(task,spec,metric,choice,executor,directory,log,timeout)
-            if feedback_reflection == 'seed-replication' and fit_limit > 16:
+            if feedback_reflection in ('seed-replication', 'encoder-portfolio') and fit_limit > 16:
                 from .seed_replication import after_refit
                 selection = after_refit(task, spec, metric, choice, selection, observed, history,
                                         payloads, executor, directory, log, timeout)
+            if feedback_reflection == 'encoder-portfolio':
+                from .cell_encoder_review import after_delivery
+                selection, choice = after_delivery(task, spec, metric, selection, choice, observed, payloads,
+                                                   executor, directory, log, timeout)
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,

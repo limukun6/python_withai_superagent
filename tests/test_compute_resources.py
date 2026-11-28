@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 import numpy as np
 from superagent import compute_resources as cr
 
@@ -36,3 +37,23 @@ class ComputeTests(unittest.TestCase):
             self.assertEqual(cr.cpu_threads(6),2)
         with patch('joblib.cpu_count',return_value=40):
             self.assertEqual(cr.cpu_threads(6),6)
+
+    def test_cuda_that_advertises_but_cannot_execute_is_ineligible(self):
+        from unittest.mock import Mock
+        cuda = SimpleNamespace(is_available=lambda: True, device_count=lambda: 1)
+        backend = SimpleNamespace(cuda=cuda, backends=SimpleNamespace(), float32=object(),
+                                  arange=Mock(side_effect=RuntimeError('no kernel image is available')))
+        with patch.dict('sys.modules', torch=backend):
+            probes = cr.accelerator_probe()
+        self.assertFalse(probes[0]['usable'])
+        self.assertEqual(probes[0]['device'],'cuda:0')
+        self.assertEqual(cr.device_for(0,profile={'accelerators':probes}),'cpu')
+
+    def test_selects_roomiest_working_device_and_sizes_the_default_search(self):
+        profile = {'accelerators':[dict(device='cuda:0',usable=True,free_bytes=128),
+                                   dict(device='cuda:1',usable=True,free_bytes=512)]}
+        self.assertEqual(cr.device_for(120,profile=profile),'cuda:1')
+        for cpu, gib, ceiling in [(2,12,12),(8,1,12),(4,8,24),(8,3,24),(8,16,64)]:
+            with self.subTest(cpu=cpu,gib=gib), patch.object(cr,'cpu_threads',return_value=cpu), \
+                    patch.object(cr,'available_memory',return_value=gib*1024*cr.MIB):
+                self.assertEqual(cr.default_fit_ceiling(),ceiling)

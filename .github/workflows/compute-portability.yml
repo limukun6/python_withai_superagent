@@ -1,0 +1,31 @@
+name: CPU deployment acceptance
+on:
+  push:
+    paths:
+      - ".github/workflows/compute-portability.yml"
+      - "scripts/accept_compute_platform.py"
+      - "superagent/compute_resources.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  solve-and-reload:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install CPU dependencies
+        run: python -m pip install numpy==2.3.4 scipy==1.16.3 scikit-learn==1.7.2 "pandas>=2.2,<4" pillow requests psutil
+      - name: Exercise the resource probe and memory recovery
+        run: python -m unittest tests.test_compute_resources
+      - name: Solve and reload from an independent process
+        run: python -m scripts.accept_compute_platform

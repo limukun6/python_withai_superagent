@@ -23,7 +23,10 @@ for name,digest in manifest['files'].items():
     if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=digest:
         raise ValueError('Prediction bundle integrity check failed')
 for name,version in manifest['dependencies'].items():
-    if importlib.metadata.version(name)!=version:raise ValueError('Dependency version differs: '+name)
+    installed=importlib.metadata.version(name)
+    if name in ('torch','torchvision'):
+        installed=installed.split('+',1)[0]
+    if installed!=version:raise ValueError('Dependency version differs: '+name)
 def offline(event,args):
     if event in ('socket.connect','socket.getaddrinfo','socket.sendto'):raise PermissionError('Network forbidden')
 sys.addaudithook(offline)
@@ -49,6 +52,27 @@ print(json.dumps(dict(status='predicted',project_source_from_bundle=True,trainin
 '''
 
 
+def uses_catboost(model):
+    """Only a frozen estimator that contains CatBoost needs its runtime on the receiver."""
+    pending = [model]
+    visited = set()
+    while pending:
+        obj = pending.pop()
+        if id(obj) in visited:
+            continue
+        visited.add(id(obj))
+        prefix = type(obj).__module__.split('.')[0]
+        if prefix == 'catboost':
+            return True
+        if isinstance(obj, dict):
+            pending.extend(obj.values())
+        elif isinstance(obj, (tuple, list)):
+            pending.extend(obj)
+        elif prefix in ('superagent', 'sklearn') and hasattr(obj, '__dict__'):
+            pending.extend(vars(obj).values())
+    return False
+
+
 def export(run_dir,output):
     run_dir=Path(run_dir).resolve();output=Path(output).resolve();output.mkdir(parents=True,exist_ok=False)
     selected=read(run_dir/'final_selection.json');manifest=read(run_dir/'run_manifest.json')
@@ -64,11 +88,13 @@ def export(run_dir,output):
         target=bundle/'src/superagent'/path.relative_to(ROOT/'superagent');target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,target)
     for name in ('task_spec.json','final_selection.json',selected['model_file']):shutil.copy2(run_dir/name,bundle/name)
     (bundle/'predict.py').write_text(ENTRY,encoding='utf-8')
-    dependencies={name:importlib.metadata.version(name) for name in ('numpy','scipy','scikit-learn','joblib','Pillow','requests')}
-    # Some selected models pickle CatBoost objects; include it when installed, not a downloaded encoder.
-    try:dependencies['catboost']=importlib.metadata.version('catboost')
-    except importlib.metadata.PackageNotFoundError:pass
-    for name in encoder_packages:dependencies[name]=importlib.metadata.version(name)
+    dependencies={name:importlib.metadata.version(name) for name in
+                  ('numpy','scipy','scikit-learn','joblib','Pillow','requests','pandas','psutil','threadpoolctl','pyarrow')}
+    if uses_catboost(fitted):
+        dependencies['catboost']=importlib.metadata.version('catboost')
+    for name in encoder_packages:
+        version=importlib.metadata.version(name)
+        dependencies[name]=version.split('+',1)[0] if name in ('torch','torchvision') else version
     (bundle/'requirements.txt').write_text(''.join(f'{name}=={version}\n' for name,version in dependencies.items()),encoding='utf-8')
     (bundle/'README.md').write_text('Frozen prediction package. Install requirements.txt, then run:\n\n'
         'python -I predict.py --features TASK_FEATURES.zip --output predictions.csv\n\n'

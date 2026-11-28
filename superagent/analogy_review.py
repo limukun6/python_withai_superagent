@@ -83,8 +83,9 @@ def incumbent_parts(members,model):
         return [model],[1.]
     if not isinstance(model,SoftVoteModel) or len(set(members))!=len(members) or len(model.models)!=len(members):
         raise ValueError('Cannot link ensemble constituents to their frozen fitted models')
-    shares=getattr(model,'weights',np.full(len(members),1./len(members)))
-    if len(shares)!=len(members) or min(shares)<0 or not np.isclose(sum(shares),1.):
+    shares=getattr(model,'weights',None)
+    shares=np.full(len(members),1./len(members)) if shares is None else np.asarray(shares,dtype=float)
+    if shares.shape!=(len(members),) or not np.isfinite(shares).all() or min(shares)<0 or not np.isclose(sum(shares),1.):
         raise ValueError('Invalid incumbent weights')
     return model.models,list(map(float,shares))
 

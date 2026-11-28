@@ -13,6 +13,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 from .ab_methods import PREFERENCE_CATALOG_ENV
 from .ab_run import Executor, explicit_windows, registered_capabilities, sha, sources
 from .autonomous_checkpoint import frozen_spec, interrupted, promote, standby
+from .compute_resources import affordable_fits, protect_refit
 from .contracts import TaskSpec
 from .data import TrainingTask, load_training_task
 from .events import RunLogger
@@ -392,7 +393,6 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 spent = executor.accounting()['attempted_classifier_fits']
                 if opening is not None and opening.mode in PAIRED_MODES:
                     core_limit = fit_limit - opening.reserve_opportunity(caps, observed, blocked, fit_limit, spent)
-                from .compute_resources import affordable_fits, protect_refit
                 remaining,pacing=affordable_fits(core_limit-spent,start+wall-time.monotonic(),history,caps)
                 menu=actions(caps,profile,history,observed,metric,list(folds),remaining,blocked)
                 if not menu:
@@ -574,14 +574,20 @@ def _train(package, directory, *, fit_limit=10, seed=18643, wall=1200., timeout=
                 from .cell_encoder_review import after_delivery
                 selection, choice = after_delivery(task, spec, metric, selection, choice, observed, payloads,
                                                    executor, directory, log, timeout)
+            def remaining_review_ceiling(limit):
+                used=executor.accounting()['attempted_classifier_fits']
+                affordable,estimate=affordable_fits(max(0,limit-used),start+wall-time.monotonic(),history,executor.caps)
+                log.event('post_refit_time_allowance',fit_ceiling=limit,used=used,additional=affordable,estimate=estimate)
+                return used+affordable
             if analogy_available:
                 from .analogy_review import review as review_analogy
                 selection,choice=review_analogy(task,metric,choice,selection,executor,directory,log,timeout,observed,payloads,
-                                                ceiling=fit_limit-recruitment_reserve)
+                                                ceiling=remaining_review_ceiling(fit_limit-recruitment_reserve))
             if recruitment_reserve:
                 from .portfolio_review import review_portfolio
                 selection,choice=review_portfolio(task,metric,selection,choice,executor,directory,log,timeout,
-                                                  observed['primary'],recruitment_folds,blocked)
+                                                  observed['primary'],recruitment_folds,blocked,
+                                                  ceiling=remaining_review_ceiling(fit_limit))
             if self_review == 'protected' and pilot is None:
                 from .protected_stop import review_stop
                 selection, choice = review_stop(task, spec, metric, menu, choice, selection, executor,

@@ -74,7 +74,7 @@ def nominate(primary, members, weights, caps, budget, metric, restrictions, bloc
     return base["score"],choices,winner
 
 
-def review_portfolio(task,metric,incumbent,stop,executor,directory,log,timeout,primary,folds,blocked):
+def review_portfolio(task,metric,incumbent,stop,executor,directory,log,timeout,primary,folds,blocked,*,ceiling=None):
     from .autonomous_run import planner_observation
     old=(incumbent,stop)
     spent=executor.accounting()["attempted_classifier_fits"]
@@ -93,7 +93,8 @@ def review_portfolio(task,metric,incumbent,stop,executor,directory,log,timeout,p
         if any(m not in primary or primary[m]["probabilities"] is None for m in members):
             record("retained_without_probability_evidence")
             return old
-        base,trials,winner=nominate(primary,members,weights,executor.caps,executor.limit-spent,
+        available=(executor.limit if ceiling is None else min(ceiling,executor.limit))-spent
+        base,trials,winner=nominate(primary,members,weights,executor.caps,available,
                                     metric,executor.restrictions,blocked)
         log.write_json("portfolio_incumbent.json",incumbent)
         record("nomination_locked",base_primary=base,incumbent_weights=weights,considered=trials,nomination=winner)

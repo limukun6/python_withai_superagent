@@ -30,6 +30,19 @@ class ToyModel(ClassifierMixin,BaseEstimator):
 
 
 class Comparison(unittest.TestCase):
+    def test_optional_review_reads_default_and_explicit_weights_of_integrated_vote(self):
+        from superagent.analogy_review import incumbent_parts
+        from superagent.models import SoftVoteModel
+        members=['first','second']
+        estimators=[object(),object()]
+        model=SoftVoteModel('pair_text',estimators,np.array([0,1]))
+        self.assertEqual(incumbent_parts(members,model),(estimators,[.5,.5]))
+        model.weights=(.25,.75)
+        self.assertEqual(incumbent_parts(members,model),(estimators,[.25,.75]))
+        model.weights=np.nan
+        with self.assertRaises(ValueError):
+            incumbent_parts(members,model)
+
     def test_derived_preference_vote_is_symmetric_and_does_not_count_a_related_group_twice(self):
         vectors={'a':[1.,0,1],'b':[0,1,1],'c':[1,0,2],'d':[0,1,2]}
         def provider(texts):

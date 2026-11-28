@@ -11,8 +11,9 @@ import tempfile
 import zipfile
 
 from scripts.run_planner_self_review import source_identity
-from scripts.unified_released_study import ROOT, read, require, save, sha
+from scripts.unified_released_study import ROOT, read, require, save
 from superagent.external_assets import activate_resource_directory
+from superagent.first_delivery import digest as sha
 from tools.export_model_bundle import export
 from tools.package_verified_delivery import LAUNCH, copy_resources
 
@@ -51,18 +52,26 @@ def package(out, notices):
             resources = [r['model'] for r in manifest['external_resources']]
             save(folder / 'frozen_run.json', dict(evidence=seal, designated_validation=scores[key],
                                                   external_models=resources))
+            native = out / key / 'run/agent'
+            trials = [{field: trial[field] for field in ('trial','candidate','split_id','status','primary_metric',
+                       'search_score','train_score','training_seconds','compute') if field in trial}
+                      for trial in read(native / 'history.json')]
+            fit_observations = [json.loads(line) for line in (out / key / 'physical.jsonl').read_text().splitlines()]
+            save(folder / 'training_log.json', dict(compute=read(native / 'compute_environment.json'),
+                                                   trials=trials, observed_fits=fit_observations))
             rows.append(f"| {name} | {scores[key]['correct']} / {scores[key]['rows']} | "
                         f"{scores[key]['accuracy']:.2%} | {seal['fits']} |")
         (tree / 'README.md').write_text(
             '# Task1 和 Task2 冻结预测包\n\n两个模型从各自的原始训练数据自主选出。'
-            '下表为课程指定验证集成绩。正式测试集待评。\n\n'
+            '下表为课程指定验证集成绩。本包在正式测试前冻结，正式成绩另存于评测回执。\n\n'
             '| 冻结模型 | 验证答对 | 准确率 | 实际拟合次数 |\n| --- | ---: | ---: | ---: |\n'
             + '\n'.join(rows) + '\n\n进入对应的 Task1 或 Task2 目录，用 Python 3.11 安装依赖后，'
             '传入该任务的无标签特征包。在 NVIDIA 机器上可以安装 requirements.txt 所列相同版本的 CUDA 版 PyTorch。'
             '训练选中的外部权重位于 assets，预测阶段可以断网。\n\n'
             '```sh\npython -m pip install -r requirements.txt\n'
             'python -I predict.py --features /path/to/features.zip --output predictions.csv\n```\n\n'
-            'frozen_run.json 记录模型指纹、决策及验证结果。两个 solution/src 目录包含同一份训练源码。'
+            'frozen_run.json 记录模型指纹、决策及验证结果。training_log.json 保存逐项训练反馈和独立拟合记录。'
+            '两个 solution/src 目录包含同一份训练源码。'
             '换机器时需先安装兼容的依赖和驱动，程序随后探测可用设备。\n',
             encoding='utf-8')
         stage = work / archive.name

@@ -1,0 +1,749 @@
+{
+  "training_commit": "ae9c69244a52f14bc4b814acf7d627e4dff3a242",
+  "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+  "independent_protocol": "424e4d42b8373ff8dbd8fe0fac00f5ab65d710f586ea0e6e7b24a314323d6cf2",
+  "parent_sources": {
+    "categorical_branch": "f18c81268110d32773dcedccbf74c9c7076ad9c1",
+    "text_branch": "151e011927921896ca4069e7df5913e9c78c535c"
+  },
+  "scope": {
+    "as_of": "Training and designated validation, before the separately authorised official test.",
+    "training_inputs": "Anonymous training-only packages; same command, weights directory and limits",
+    "classifier_fit_ceiling_per_released_solve": 64,
+    "seconds_per_released_solve": 1800,
+    "official_test_opened": false,
+    "h2_opened": false,
+    "model_api_calls": 0
+  },
+  "mac": {
+    "cpu": "Apple M4",
+    "logical_cpu": 10,
+    "physical_ram_bytes": 17179869184,
+    "profile": {
+      "system": "Darwin",
+      "architecture": "arm64",
+      "cpu_threads": 8,
+      "available_memory_bytes": 5793071104,
+      "accelerators": [
+        {
+          "device": "mps",
+          "usable": true,
+          "free_bytes": 5719130112,
+          "verified": "matrix product and host readback"
+        }
+      ],
+      "probe": "completed"
+    },
+    "decisions": [
+      {
+        "workload": "frozen text encoder",
+        "device": "mps",
+        "batches": 1,
+        "max_batch": 32
+      },
+      {
+        "workload": "frozen text encoder",
+        "device": "cpu",
+        "batches": 1,
+        "max_batch": 32
+      }
+    ],
+    "frozen_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "sentences": 32,
+    "max_abs_delta": 2.0489096641540527e-07
+  },
+  "cpu_only_receiver": {
+    "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+    "machine": {
+      "available": {
+        "torch": false,
+        "transformers": false,
+        "catboost": false,
+        "sklearn": true,
+        "pandas": true
+      },
+      "profile": {
+        "system": "Darwin",
+        "architecture": "arm64",
+        "cpu_threads": 2,
+        "available_memory_bytes": 3261874176,
+        "accelerators": [],
+        "probe": "torch unavailable"
+      },
+      "default_fit_ceiling": 12
+    },
+    "data": "scikit-learn Wine; 133 training and 45 stratified held-out rows, seed 822",
+    "frozen_output": "fc12beb95da513e0f5e6c96fbce3334707d5a1e80213d32d756b878a784d472b",
+    "rows": 45,
+    "correct": 42,
+    "balanced_accuracy": 0.9407407407407407,
+    "independent_reload": true,
+    "fit_ceiling": 12,
+    "actual": {
+      "status": "completed",
+      "model_available": true,
+      "winner": "open_HistGradientBoostingClassifier_5609bbe54d4b59830408",
+      "members": [
+        "open_HistGradientBoostingClassifier_5609bbe54d4b59830408"
+      ],
+      "training_rows": 133,
+      "training_only": true,
+      "attempted_classifier_fits": 5,
+      "completed_classifier_fits": 5,
+      "unknown_failed_attempts": 0,
+      "wall_seconds": 35.33569408400217,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "unresolved_api_requests": 0,
+      "complete_run_course_cost_rmb": 0,
+      "formal_test_accessed": false
+    }
+  },
+  "cpu_only_frozen_bundle": {
+    "dependencies": {
+      "numpy": "2.3.4",
+      "scipy": "1.16.3",
+      "scikit-learn": "1.7.2",
+      "joblib": "1.5.2",
+      "Pillow": "12.3.0",
+      "requests": "2.34.2",
+      "pandas": "3.1.1",
+      "psutil": "7.2.2",
+      "threadpoolctl": "3.8.0",
+      "pyarrow": "21.0.0"
+    },
+    "received_on_cpu_only": true,
+    "bytes_match": true,
+    "model_sha256": "d68dc86d5f8dd64e329534dce13d7e5b530575d045febda6af17047fb13b86c4"
+  },
+  "actual_cross_platform": {
+    "run": "https://github.com/limukun6/python_withai_superagent/actions/runs/46119594472",
+    "commit": "36ca11633905251d2a4e3670413cbf88a7e72ba9",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "job": "solve-and-reload (ubuntu-latest)",
+        "link": "https://github.com/limukun6/python_withai_superagent/actions/runs/46119594472/job/140900942270",
+        "result": "success",
+        "started": "2026-11-28T07:05:40Z",
+        "completed": "2026-11-28T07:06:14Z",
+        "measurement": {
+          "system": "Linux",
+          "architecture": "x86_64",
+          "cpu_threads": 2,
+          "absent": [
+            "torch",
+            "transformers",
+            "catboost"
+          ],
+          "fit_ceiling": 12,
+          "classifier_fits": 5,
+          "members": [
+            "open_HistGradientBoostingClassifier_5609bbe54d4b59830408"
+          ],
+          "correct": 42,
+          "rows": 45,
+          "held_out_balanced_accuracy": 0.9407407407407407,
+          "replay": "fc12beb95da513e0f5e6c96fbce3334707d5a1e80213d32d756b878a784d472b",
+          "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+          "model_api": 0
+        }
+      },
+      {
+        "job": "solve-and-reload (windows-latest)",
+        "link": "https://github.com/limukun6/python_withai_superagent/actions/runs/46119594472/job/140900942425",
+        "result": "success",
+        "started": "2026-11-28T07:05:40Z",
+        "completed": "2026-11-28T07:06:46Z",
+        "measurement": {
+          "system": "Windows",
+          "architecture": "AMD64",
+          "cpu_threads": 2,
+          "absent": [
+            "torch",
+            "transformers",
+            "catboost"
+          ],
+          "fit_ceiling": 12,
+          "classifier_fits": 5,
+          "members": [
+            "open_HistGradientBoostingClassifier_5609bbe54d4b59830408"
+          ],
+          "correct": 42,
+          "rows": 45,
+          "held_out_balanced_accuracy": 0.9407407407407407,
+          "replay": "fc12beb95da513e0f5e6c96fbce3334707d5a1e80213d32d756b878a784d472b",
+          "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+          "model_api": 0
+        }
+      }
+    ]
+  },
+  "controlled_tests": {
+    "passed": 67,
+    "additional_official_feature_projection_tests": 2,
+    "covered": [
+      "CUDA advertises availability but a real probe operation throws",
+      "choose one usable GPU with headroom, skip insufficient free memory or small input",
+      "OOM shrinks the unfinished batch, kernel failure resumes on CPU in order",
+      "limits at 2/4/8 CPUs and low memory",
+      "time-calibrated scheduling and protecting a feasible final refit"
+    ]
+  },
+  "released": {
+    "Task1": {
+      "seal": {
+        "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+        "model": "1a97280a120bb0511b4473452546427c69a0121662c619cc3734680b5d08cc05",
+        "spec": "9d38f6eb46941aa49f9a7efeda5033858fcf18108581f43456118b0caa8ae1b9",
+        "predictions": "080545da199beff0eb22ebf1ac2d3e9705f77bc4c236877bd9ec8989f5cbb5f8",
+        "rows": 2030,
+        "training_rows": 8117,
+        "family": "seed_averaged_vote",
+        "members": [
+          "catboost_context_aligned_fields"
+        ],
+        "fits": 36,
+        "completed_fits": 36,
+        "seconds": 415.55247662499823,
+        "new_model_api": 0,
+        "opened": [
+          "input/C_train.npy",
+          "input/Readme.md",
+          "input/y_train.npy"
+        ],
+        "feedback": {
+          "cell_encoder_review": {
+            "sha256": "cfdaa174ba465e0a8e7c2e616d23b9527bb745d2eb126d2e3b062a700e9d8066",
+            "action": "retain",
+            "reason": "Primary feedback preferred the incumbent"
+          },
+          "seed_replication": {
+            "sha256": "789cdcce940030cb43b59f37411363c6d0377dc0e162f4f7fa8e871d7ba9ce95",
+            "action": "adopt",
+            "reason": null
+          }
+        },
+        "independent_reload": true,
+        "course_test_opened": false
+      },
+      "validation": {
+        "correct": 1561,
+        "rows": 2030,
+        "accuracy": 0.7689655172413793,
+        "basis": "byte-identical to prior scored validation prediction",
+        "previous_correct": 1561,
+        "test_labels_read": false
+      },
+      "approved_input_sha256": "b736e6db778664a8a46c6a32246178619d8f79ce545441f8761137059c8d4414",
+      "queries_sha256": "1d256de3c3e0d1651d626dcc8da90169cb44d7171120dda572f0333e8a51f047",
+      "actual_device_batches": {
+        "mps": 4
+      },
+      "training_trials": 18,
+      "distinct_explored": 10,
+      "fit_observations_by_class": {
+        "CatBoostClassifier": 33,
+        "DecisionTreeClassifier": 1,
+        "TabICLClassifier": 1,
+        "LogisticRegression": 1
+      },
+      "time_planning": [],
+      "unsuccessful_experiments": [],
+      "final_choice": {
+        "family": "seed_averaged_vote",
+        "primary_metric": "accuracy",
+        "ensemble_components": [],
+        "single_candidate": "catboost_context_aligned_fields",
+        "selection_metric": "ordinary training folds and paired repeat pilot",
+        "selection_score": 0.7628841392660208
+      },
+      "representation_audition": {
+        "examined": [
+          "Across-field co-occurrence",
+          "sentence-transformers/all-MiniLM-L6-v2",
+          "sentence-transformers/all-MiniLM-L12-v2",
+          "thenlper/gte-base",
+          "thenlper/gte-small",
+          "intfloat/e5-small-v2",
+          "BAAI/bge-small-en-v1.5",
+          "all-distilroberta-v1",
+          "all-mpnet-base-v2",
+          "bge-large-en-v1.5",
+          "paraphrase-MiniLM-L3-v2",
+          "paraphrase-mpnet-base-v2",
+          "potion-base-8M",
+          "snowflake-arctic-embed-s"
+        ],
+        "scored": 14,
+        "weight_recipes": 421,
+        "incumbent": {
+          "score": 0.7833333333333333,
+          "brier": 0.3148099577126083
+        },
+        "winner": {
+          "encoders": [],
+          "share": 0.0,
+          "score": 0.7833333333333333,
+          "brier": 0.3148099577126083
+        },
+        "action": "retain"
+      },
+      "seed_confirmation": {
+        "seeds": [
+          13291,
+          94723
+        ],
+        "rows": 1625,
+        "action": "adopt",
+        "score_gain": -0.002461538461538515,
+        "brier_increase": -0.0020568120531617674
+      }
+    },
+    "Task2": {
+      "seal": {
+        "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+        "model": "344826cce01a00b4eb609e2a2b229190676c51f0119460d9b870a28beca37f2a",
+        "spec": "bcacde56765a883ee94fe2cc1e0923071aca3a235cc6a901ab72c908b155b1c9",
+        "predictions": "a58923b1ec5fd7fa65e65f7214206b656376f784a1418fb9d95bf7bfbd67022c",
+        "rows": 940,
+        "training_rows": 8301,
+        "family": "equal_soft_vote",
+        "members": [
+          "gte_paired_linear",
+          "gte_base_paired_linear"
+        ],
+        "fits": 23,
+        "completed_fits": 23,
+        "seconds": 1669.0845249589984,
+        "new_model_api": 0,
+        "opened": [
+          "input/README.md",
+          "input/train.csv"
+        ],
+        "feedback": {
+          "analogy_review": {
+            "sha256": "00ea9faf78fac90baecf479175cb8a158018940c3f3a619f80e82883d88d95d1",
+            "action": null,
+            "reason": null
+          },
+          "portfolio_review": {
+            "sha256": "9cf294765070c925c938cba25b0711427e7a4ae171556c2afefb043b2a403925",
+            "action": null,
+            "reason": null
+          }
+        },
+        "independent_reload": true,
+        "course_test_opened": false
+      },
+      "validation": {
+        "correct": 693,
+        "rows": 940,
+        "accuracy": 0.7372340425531915,
+        "basis": "one designated validation score after both models and predictions were frozen",
+        "previous_correct": 710,
+        "test_labels_read": false
+      },
+      "approved_input_sha256": "1cd8ed66a4750bb17965dbc6e2c4c1f4a6a6f0b71a79a61268a4c1d30eb5afd4",
+      "queries_sha256": "aee2bf4abb1d5a48ab5874856f024562c35a48f4769c4d071a4cd031d0e49b3c",
+      "actual_device_batches": {
+        "mps": 11318
+      },
+      "training_trials": 22,
+      "distinct_explored": 13,
+      "fit_observations_by_class": {
+        "LogisticRegression": 22,
+        "RandomForestClassifier": 1
+      },
+      "time_planning": [
+        {
+          "step": 4,
+          "action": "confirm",
+          "members": [
+            "gte_base_paired_linear"
+          ],
+          "seconds_left": 1493.23,
+          "measured_trials": 3,
+          "estimated_seconds_per_fit": 170.02,
+          "hard_fits_remaining": 45,
+          "planning_fits": 8
+        },
+        {
+          "step": 5,
+          "action": "confirm",
+          "members": [
+            "local_sentence_fb8ba2cc889cb4eef506"
+          ],
+          "seconds_left": 1360.18,
+          "measured_trials": 4,
+          "estimated_seconds_per_fit": 186.14,
+          "hard_fits_remaining": 44,
+          "planning_fits": 7
+        },
+        {
+          "step": 6,
+          "action": "explore",
+          "members": [
+            "bge_small_text_with_lexical_features"
+          ],
+          "seconds_left": 1165.04,
+          "measured_trials": 5,
+          "estimated_seconds_per_fit": 239.6,
+          "hard_fits_remaining": 43,
+          "planning_fits": 4
+        },
+        {
+          "step": 7,
+          "action": "explore",
+          "members": [
+            "electra_paired_quadratic"
+          ],
+          "seconds_left": 1131.85,
+          "measured_trials": 6,
+          "estimated_seconds_per_fit": 221.78,
+          "hard_fits_remaining": 42,
+          "planning_fits": 5
+        },
+        {
+          "step": 8,
+          "action": "explore",
+          "members": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "seconds_left": 1089.53,
+          "measured_trials": 7,
+          "estimated_seconds_per_fit": 203.96,
+          "hard_fits_remaining": 41,
+          "planning_fits": 5
+        },
+        {
+          "step": 9,
+          "action": "explore",
+          "members": [
+            "open_RandomForestClassifier_4096604a07ecf7ba7441"
+          ],
+          "seconds_left": 1067.9,
+          "measured_trials": 8,
+          "estimated_seconds_per_fit": 186.14,
+          "hard_fits_remaining": 40,
+          "planning_fits": 5
+        },
+        {
+          "step": 10,
+          "action": "explore",
+          "members": [
+            "e5_small_text_with_lexical_features"
+          ],
+          "seconds_left": 1050.57,
+          "measured_trials": 9,
+          "estimated_seconds_per_fit": 168.32,
+          "hard_fits_remaining": 39,
+          "planning_fits": 6
+        },
+        {
+          "step": 11,
+          "action": "explore",
+          "members": [
+            "local_sentence_be11e84b23253cd8c553"
+          ],
+          "seconds_left": 1017.34,
+          "measured_trials": 10,
+          "estimated_seconds_per_fit": 151.35,
+          "hard_fits_remaining": 38,
+          "planning_fits": 6
+        },
+        {
+          "step": 12,
+          "action": "explore",
+          "members": [
+            "gte_paired_linear"
+          ],
+          "seconds_left": 951.28,
+          "measured_trials": 11,
+          "estimated_seconds_per_fit": 134.38,
+          "hard_fits_remaining": 37,
+          "planning_fits": 7
+        },
+        {
+          "step": 13,
+          "action": "confirm",
+          "members": [
+            "minilm_l12_topic_style_interactions"
+          ],
+          "seconds_left": 909.79,
+          "measured_trials": 12,
+          "estimated_seconds_per_fit": 117.4,
+          "hard_fits_remaining": 36,
+          "planning_fits": 7
+        },
+        {
+          "step": 14,
+          "action": "explore",
+          "members": [
+            "local_sentence_c9ee406531c7dfb98326"
+          ],
+          "seconds_left": 878.67,
+          "measured_trials": 13,
+          "estimated_seconds_per_fit": 100.43,
+          "hard_fits_remaining": 35,
+          "planning_fits": 8
+        },
+        {
+          "step": 15,
+          "action": "explore",
+          "members": [
+            "local_sentence_cd4a57b71b19f27c7161"
+          ],
+          "seconds_left": 578.47,
+          "measured_trials": 13,
+          "estimated_seconds_per_fit": 100.43,
+          "hard_fits_remaining": 35,
+          "planning_fits": 5
+        },
+        {
+          "step": 16,
+          "action": "confirm",
+          "members": [
+            "local_sentence_be11e84b23253cd8c553"
+          ],
+          "seconds_left": 560.77,
+          "measured_trials": 14,
+          "estimated_seconds_per_fit": 95.49,
+          "hard_fits_remaining": 34,
+          "planning_fits": 5
+        },
+        {
+          "step": 17,
+          "action": "explore",
+          "members": [
+            "local_sentence_2153768fd1a817ee2a3e"
+          ],
+          "seconds_left": 497.62,
+          "measured_trials": 15,
+          "estimated_seconds_per_fit": 90.54,
+          "hard_fits_remaining": 33,
+          "planning_fits": 5
+        },
+        {
+          "step": 18,
+          "action": "confirm",
+          "members": [
+            "e5_small_text_with_lexical_features"
+          ],
+          "seconds_left": 471.38,
+          "measured_trials": 16,
+          "estimated_seconds_per_fit": 85.6,
+          "hard_fits_remaining": 32,
+          "planning_fits": 5
+        },
+        {
+          "step": 19,
+          "action": "confirm",
+          "members": [
+            "gte_paired_linear"
+          ],
+          "seconds_left": 441.8,
+          "measured_trials": 17,
+          "estimated_seconds_per_fit": 80.65,
+          "hard_fits_remaining": 31,
+          "planning_fits": 5
+        },
+        {
+          "step": 20,
+          "action": "confirm",
+          "members": [
+            "minilm_text_with_nonlinear_lexical_features"
+          ],
+          "seconds_left": 400.7,
+          "measured_trials": 18,
+          "estimated_seconds_per_fit": 79.31,
+          "hard_fits_remaining": 30,
+          "planning_fits": 4
+        },
+        {
+          "step": 21,
+          "action": "confirm",
+          "members": [
+            "gte_paired_linear"
+          ],
+          "seconds_left": 378.96,
+          "measured_trials": 19,
+          "estimated_seconds_per_fit": 77.98,
+          "hard_fits_remaining": 29,
+          "planning_fits": 4
+        },
+        {
+          "step": 22,
+          "action": "confirm",
+          "members": [
+            "gte_base_paired_linear"
+          ],
+          "seconds_left": 339.65,
+          "measured_trials": 20,
+          "estimated_seconds_per_fit": 76.64,
+          "hard_fits_remaining": 28,
+          "planning_fits": 4
+        },
+        {
+          "step": 23,
+          "action": "stop",
+          "members": [
+            "gte_paired_linear",
+            "gte_base_paired_linear"
+          ],
+          "seconds_left": 231.11,
+          "measured_trials": 21,
+          "estimated_seconds_per_fit": 80.65,
+          "hard_fits_remaining": 27,
+          "planning_fits": 2
+        }
+      ],
+      "unsuccessful_experiments": [
+        {
+          "candidate": "local_sentence_c9ee406531c7dfb98326",
+          "split": "primary",
+          "error": "Worker failed without retry: local_sentence_c9ee406531c7dfb98326: Training time limit reached"
+        }
+      ],
+      "final_choice": {
+        "family": "equal_soft_vote",
+        "primary_metric": "accuracy",
+        "ensemble_components": [
+          "gte_paired_linear",
+          "gte_base_paired_linear"
+        ],
+        "single_candidate": "gte_paired_linear",
+        "selection_metric": "training folds",
+        "selection_score": 0.7261758415789933
+      },
+      "locked_finalists": {
+        "anchor": [
+          "gte_base_paired_linear"
+        ],
+        "challenger": [
+          "local_sentence_fb8ba2cc889cb4eef506",
+          "minilm_l12_topic_style_interactions"
+        ],
+        "members": [
+          "gte_base_paired_linear",
+          "local_sentence_fb8ba2cc889cb4eef506",
+          "minilm_l12_topic_style_interactions"
+        ],
+        "fresh": [
+          "confirmation_1",
+          "confirmation_2"
+        ],
+        "remaining_at_lock": 8,
+        "reserve": 2
+      },
+      "analogy_review": {
+        "incumbent_weights": [
+          0.5,
+          0.5
+        ],
+        "source_member": "gte_base_paired_linear",
+        "status": "retained_insufficient_budget"
+      },
+      "portfolio_review": {
+        "incumbent_weights": [
+          0.5,
+          0.5
+        ],
+        "status": "retained_primary"
+      }
+    }
+  },
+  "portable": {
+    "archive": "Unified-Task1-Task2-Test-Ready.zip",
+    "bytes": 279862169,
+    "archive_sha256": "b870a6c4df96f62479d2035394ad3999b350115a6c920bad42b524d349263754",
+    "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+    "verified": {
+      "Task1": {
+        "rows": 2030,
+        "predictions": "080545da199beff0eb22ebf1ac2d3e9705f77bc4c236877bd9ec8989f5cbb5f8",
+        "selected_model": "1a97280a120bb0511b4473452546427c69a0121662c619cc3734680b5d08cc05"
+      },
+      "Task2": {
+        "rows": 940,
+        "predictions": "a58923b1ec5fd7fa65e65f7214206b656376f784a1418fb9d95bf7bfbd67022c",
+        "selected_model": "344826cce01a00b4eb609e2a2b229190676c51f0119460d9b870a28beca37f2a"
+      }
+    },
+    "model_api": 0,
+    "new_fits": 0,
+    "official_test_opened": false,
+    "evidence": "Extracted archive, independent isolated interpreter, offline, exact row and file match"
+  },
+  "engineering_runs_outside_release": {
+    "before_final_cpu_quota_patch": {
+      "a": 36,
+      "b": 2
+    },
+    "first_cpu_only_smoke_before_final_patch": 5,
+    "engineering_tests": "Unit and infrastructure checks are reported separately from the released solve fit budgets."
+  },
+  "earlier_fit_only_scheduler": {
+    "source": "fe708ed0e655d819a4eeaeb554074510ee1a8114aef9c8404ff4b098ffc80b4a",
+    "retired_before_designated_scoring": true,
+    "Task1_observed_fits": 36,
+    "Task2_observed_fits": 25,
+    "Task2_partial": {
+      "status": "partial",
+      "delivery_status": "partial",
+      "model_available": true,
+      "requested_planner_completed": false,
+      "contract_unresolved": false,
+      "error": "TimeoutError: Shared wall-clock limit reached before worker",
+      "method": "gte_base_paired_linear",
+      "source_trial": 2,
+      "refit": false,
+      "training_rows": 6608,
+      "full_training_rows": 8301,
+      "attempted_classifier_fits": 25,
+      "completed_classifier_fits": 25,
+      "unknown_failed_attempts": 2,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "unresolved_api_requests": 0,
+      "complete_run_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "recovery_classifier_fits": 0,
+      "recovery_api_requests": 0
+    },
+    "Task2_partial_rows": 940,
+    "Task2_scored": false,
+    "Task2_refit": false,
+    "lesson": "Fit counts alone did not protect full-data training on a cold host. A provisional predictor still delivered all validation feature rows."
+  },
+  "pre_fix_equal_vote": {
+    "source": "9c4ad63ffbf5a0570f51208e7eea8049d36af80dccd61cb64757385e91b5d950",
+    "observed_fits": 24,
+    "outcome": {
+      "status": "partial",
+      "delivery_status": "partial",
+      "model_available": true,
+      "requested_planner_completed": false,
+      "contract_unresolved": false,
+      "error": "TypeError: object of type 'NoneType' has no len()",
+      "method": "equal_soft_vote",
+      "source_trial": null,
+      "refit": true,
+      "training_rows": 8301,
+      "full_training_rows": 8301,
+      "attempted_classifier_fits": 24,
+      "completed_classifier_fits": 24,
+      "unknown_failed_attempts": 1,
+      "new_api_requests": 0,
+      "known_course_cost_rmb": 0,
+      "unresolved_api_requests": 0,
+      "complete_run_course_cost_rmb": 0,
+      "formal_test_accessed": false,
+      "recovery_classifier_fits": 0,
+      "recovery_api_requests": 0
+    },
+    "row_count": 940,
+    "designated_score_opened": false,
+    "cause": "Optional reviewer tried to count explicit None weights of an already fully refitted equal vote. Uniform weight and explicit-weight compatibility tested against the saved model."
+  }
+}

@@ -9,8 +9,9 @@ import shutil
 import joblib
 
 from scripts.a_batch_common import save
-from scripts.run_a10_real_task_pilot import read,sha
+from scripts.run_a10_real_task_pilot import read
 from superagent.ab_run import sources
+from superagent.first_delivery import digest as sha
 
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -20,8 +21,11 @@ root=pathlib.Path(__file__).resolve().parent
 manifest=json.loads((root/'bundle_manifest.json').read_text(encoding='utf-8'))
 for name,digest in manifest['files'].items():
     path=(root/name).resolve()
-    if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=digest:
+    if not path.is_relative_to(root):
         raise ValueError('Prediction bundle integrity check failed')
+    with path.open('rb') as stream:
+        if hashlib.file_digest(stream,'sha256').hexdigest()!=digest:
+            raise ValueError('Prediction bundle integrity check failed')
 for name,version in manifest['dependencies'].items():
     installed=importlib.metadata.version(name)
     if name in ('torch','torchvision'):
@@ -76,7 +80,9 @@ def uses_catboost(model):
 def export(run_dir,output):
     run_dir=Path(run_dir).resolve();output=Path(output).resolve();output.mkdir(parents=True,exist_ok=False)
     selected=read(run_dir/'final_selection.json');manifest=read(run_dir/'run_manifest.json')
-    if manifest['source_files']!=sources():raise ValueError('Use the exact model-training project source for export')
+    runtime_sources=sources()
+    if manifest['source_files']!=runtime_sources:
+        raise ValueError('Use the exact model-training project source for export')
     if Path(selected['model_file']).name!=selected['model_file']:raise ValueError('Expected a model filename inside the run')
     if sha(run_dir/selected['model_file'])!=selected['model_sha256']:raise ValueError('Model digest differs')
     from superagent.external_assets import model_resources,verify_resources
@@ -104,7 +110,8 @@ def export(run_dir,output):
         'The recorded partial/full model status is preserved in final_selection.json.\n',encoding='utf-8')
     if external_resources:save(bundle/'external_resources.json',external_resources)
     files={p.relative_to(bundle).as_posix():sha(p) for p in sorted(bundle.rglob('*')) if p.is_file()}
-    save(bundle/'bundle_manifest.json',dict(bundle_version=2,source_files=manifest['source_files'],files=files,dependencies=dependencies,
+    save(bundle/'bundle_manifest.json',dict(bundle_version=2,source_files=runtime_sources,training_source_files=manifest['source_files'],
+        files=files,dependencies=dependencies,
         external_resources=external_resources,external_weights_included=False,
         model_sha256=selected['model_sha256'],delivery_status=selected.get('delivery_status','complete' if selected['refit'] else 'partial'),
         source_run_manifest_sha256=sha(run_dir/'run_manifest.json'),classifier_fits=0,API_requests=0))

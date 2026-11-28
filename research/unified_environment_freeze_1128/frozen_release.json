@@ -1,0 +1,136 @@
+{
+  "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+  "source_commit": "ae9c69244a52f14bc4b814acf7d627e4dff3a242",
+  "timestamp_utc": "2026-11-28T08:04:58.404688+00:00",
+  "primary_arm": "train_only",
+  "arms": {
+    "train_only": {
+      "arm": "train_only",
+      "archive": "Integrated-Train-Only-Task1-Task2.zip",
+      "archive_sha256": "3670ec3b1c5094e05a21f231fa05dd8d9fa8a4ed932b919f15cc2d4150ac9af9",
+      "bytes": 348120657,
+      "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+      "verified": {
+        "Task1": {
+          "selected_model": "1a97280a120bb0511b4473452546427c69a0121662c619cc3734680b5d08cc05",
+          "rows": 2030,
+          "predictions": "080545da199beff0eb22ebf1ac2d3e9705f77bc4c236877bd9ec8989f5cbb5f8",
+          "training_rows": 8117,
+          "designated_correct": 1561,
+          "recorded_fits": 36,
+          "elected_members": [
+            "catboost_context_aligned_fields"
+          ],
+          "resources": []
+        },
+        "Task2": {
+          "selected_model": "5b654465d4fef29bbc56114227505c0dcfeb8a4e1cec066fc4cabdae27ac84f4",
+          "rows": 940,
+          "predictions": "efdd8eeb5ebd9c7016c698085376bc4ae2b971859feb7105f13e21d8c2c27a77",
+          "training_rows": 8301,
+          "designated_correct": 710,
+          "recorded_fits": 20,
+          "elected_members": [
+            "bge_small_text_with_lexical_features",
+            "gte_base_paired_linear",
+            "preference_analogy_45cb39291ca5c8321d9e"
+          ],
+          "resources": [
+            [
+              "thenlper/gte-base",
+              "c078288308d8dee004ab72c6191778064285ec0c"
+            ],
+            [
+              "BAAI/bge-small-en-v1.5",
+              "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+            ]
+          ]
+        }
+      },
+      "independent_offline_reload": true,
+      "new_fits_during_export": 0,
+      "model_api": 0,
+      "official_test_opened": false
+    },
+    "train_plus_validation": {
+      "arm": "train_plus_validation",
+      "archive": "Integrated-Train-Plus-Validation-Task1-Task2.zip",
+      "archive_sha256": "dba5e175bfe13c0422f37902dfec32961100fbd12ae99283be8229272d929bfb",
+      "bytes": 356037237,
+      "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+      "verified": {
+        "Task1": {
+          "selected_model": "22022dd9d714526901f017b012b4f5651e6e4829fae8ca92def6348fc8d25422",
+          "rows": 2030,
+          "predictions": "20c66ee4f7d4cac10587153ee53bebf5e85e58a16cf93e09bc6e096aa3fb1fa3",
+          "training_rows": 10147,
+          "designated_correct": null,
+          "recorded_fits": 3,
+          "elected_members": [
+            "catboost_context_aligned_fields"
+          ],
+          "resources": []
+        },
+        "Task2": {
+          "selected_model": "60c8771be8ca0522530a91c31ec4af11ecbbc6a845e75e6235ad18e10326f848",
+          "rows": 940,
+          "predictions": "12ce98800fd88ed734adc2c8b078200cbf29a2cfbf1453b3de8086cbc7a36f28",
+          "training_rows": 9241,
+          "designated_correct": null,
+          "recorded_fits": 3,
+          "elected_members": [
+            "bge_small_text_with_lexical_features",
+            "gte_base_paired_linear",
+            "preference_analogy_45cb39291ca5c8321d9e"
+          ],
+          "resources": [
+            [
+              "thenlper/gte-base",
+              "c078288308d8dee004ab72c6191778064285ec0c"
+            ],
+            [
+              "BAAI/bge-small-en-v1.5",
+              "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+            ]
+          ]
+        }
+      },
+      "independent_offline_reload": true,
+      "new_fits_during_export": 0,
+      "model_api": 0,
+      "official_test_opened": false
+    }
+  },
+  "designated_validation_complete": true,
+  "designated_validation": {
+    "Task1": {
+      "correct": 1561,
+      "rows": 2030,
+      "accuracy": 0.7689655172413793,
+      "basis": "byte-identical to prior scored validation prediction",
+      "previous_correct": 1561,
+      "test_labels_read": false
+    },
+    "Task2": {
+      "correct": 710,
+      "rows": 940,
+      "accuracy": 0.7553191489361702,
+      "basis": "Independently replayed current-source fit with identical 940 ordered predictions to the historical scored file",
+      "test_labels_read": false
+    }
+  },
+  "augmented_independent_designated_score": null,
+  "official_test_opened_at_freeze": false,
+  "h2_opened_at_freeze": false,
+  "scoring_program_sha256": "6ec61beadf9d342e87cb445fcf561511830cfe9af486eb60c30cf2b2bc2ae153",
+  "formal_test_protocol_sha256": "8a522ecb3e9a8545dbb2b274ff78bf645bb157fb3fd5f9a5339f6f6e5f8860cb",
+  "all_four_model_files_and_both_bundles_verified": true,
+  "both_training_scopes_current_runtime": true,
+  "documents": {
+    "acceptance.json": "ec2a16f5ff396e5f79363c84d8887aeea3d5d9fca606ffe9232e198da2244839",
+    "registered_task2.json": "52c4660e40d00b9fa3a0b058654761307b330cc0716d02a3362da4f06b5b1d8b",
+    "reproduced_710.json": "b362706a885c204a7f5c415286a0b3af86e0056d63bdebc2c3ff29aab871bf62",
+    "training_scope_comparison.json": "1485494f09fe8b79332984a950336293b2b27df9b4f7c3d2d88f63b55e1af79c"
+  },
+  "model_api": 0
+}

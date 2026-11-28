@@ -10,7 +10,8 @@ import tempfile
 import zipfile
 
 from scripts.run_planner_self_review import source_identity
-from scripts.unified_released_study import ROOT, read, require, save, sha
+from scripts.unified_released_study import ROOT, read, require, save
+from superagent.first_delivery import digest as sha
 from tools.export_model_bundle import export
 
 

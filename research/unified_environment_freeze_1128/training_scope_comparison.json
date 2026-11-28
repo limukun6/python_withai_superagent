@@ -1,0 +1,168 @@
+{
+  "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+  "primary": "train_only",
+  "scopes": {
+    "Task1": {
+      "task_kind": "categorical_tabular",
+      "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+      "base_model": "1a97280a120bb0511b4473452546427c69a0121662c619cc3734680b5d08cc05",
+      "new_model": "22022dd9d714526901f017b012b4f5651e6e4829fae8ca92def6348fc8d25422",
+      "original_training_rows": 8117,
+      "added_development_rows": 2030,
+      "total_training_rows": 10147,
+      "same_selected_family": "seed_averaged_vote",
+      "members": [
+        "catboost_context_aligned_fields"
+      ],
+      "outer_weights": null,
+      "seeds": [
+        13291,
+        94723
+      ],
+      "final_fits": [
+        {
+          "candidate": "catboost_context_aligned_fields",
+          "seed": null,
+          "parameters": {
+            "pair_limit": 3,
+            "depth": 6,
+            "l2_leaf_reg": 3.0,
+            "iterations": 600,
+            "representation": "native categorical context and conditionally aligned attributes"
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "c87aef397833ae57ffbc5c5a2371257f013212984996041de22ae59bde7f54b5"
+        },
+        {
+          "candidate": "catboost_context_aligned_fields",
+          "seed": 13291,
+          "parameters": {
+            "pair_limit": 3,
+            "depth": 6,
+            "l2_leaf_reg": 3.0,
+            "iterations": 600,
+            "representation": "native categorical context and conditionally aligned attributes"
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "c370d084030ffc71993a48b154a7f7549fd6daec8047dc01b95eca5495df7917"
+        },
+        {
+          "candidate": "catboost_context_aligned_fields",
+          "seed": 94723,
+          "parameters": {
+            "pair_limit": 3,
+            "depth": 6,
+            "l2_leaf_reg": 3.0,
+            "iterations": 600,
+            "representation": "native categorical context and conditionally aligned attributes"
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "5672245624198794f3f65880736464d49a329e8729c7dc2bb29b9234ca33d2ea"
+        }
+      ],
+      "actual_classifier_fits": 3,
+      "model_api": 0,
+      "additional_packet": "06372c9fe43969e54714615fde604de77c1c28532692c7665518a12b3a859e92",
+      "opened_development_members": [
+        "in_vehicle_coupon_recommendation/C_val.npy",
+        "in_vehicle_coupon_recommendation/y_val.npy"
+      ],
+      "selection_repeated": false,
+      "independent_designated_validation_score": null,
+      "official_test_opened": false
+    },
+    "Task2": {
+      "task_kind": "pair_text",
+      "solver": "70f6207b1fe80ec8b4efe2df808cbc9dc5e3dd041e5be259d6f3fc6d093fa021",
+      "base_model": "5b654465d4fef29bbc56114227505c0dcfeb8a4e1cec066fc4cabdae27ac84f4",
+      "new_model": "60c8771be8ca0522530a91c31ec4af11ecbbc6a845e75e6235ad18e10326f848",
+      "original_training_rows": 8301,
+      "added_development_rows": 940,
+      "total_training_rows": 9241,
+      "same_selected_family": "feedback_weighted_vote",
+      "members": [
+        "bge_small_text_with_lexical_features",
+        "gte_base_paired_linear",
+        "preference_analogy_45cb39291ca5c8321d9e"
+      ],
+      "outer_weights": [
+        0.375,
+        0.375,
+        0.25
+      ],
+      "seeds": [],
+      "final_fits": [
+        {
+          "candidate": "bge_small_text_with_lexical_features",
+          "seed": null,
+          "parameters": {
+            "encoder": "BAAI/bge-small-en-v1.5",
+            "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "C": 0.3,
+            "representation": "word_char_bge",
+            "pooling": "cls",
+            "input_prefix": "",
+            "swap_augmentation": true
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "990eab5cc511609dcc6db6d278aadaf1be80b293089f674830da558c740db08c"
+        },
+        {
+          "candidate": "gte_base_paired_linear",
+          "seed": null,
+          "parameters": {
+            "encoder": "thenlper/gte-base",
+            "revision": "c078288308d8dee004ab72c6191778064285ec0c",
+            "pooling": "mean",
+            "representation": "word_char_gte_base_scaled_linear_familiarity",
+            "C": 0.3,
+            "classifier": "logistic",
+            "swap_augmentation": true
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "8165efa91b130a108719ab446f24aeb0089a7dc1392b50756b0e102609ffc54f"
+        },
+        {
+          "candidate": "preference_analogy_45cb39291ca5c8321d9e",
+          "seed": null,
+          "parameters": {
+            "encoder": "thenlper/gte-base",
+            "revision": "c078288308d8dee004ab72c6191778064285ec0c",
+            "classifier": "preference_analogy",
+            "representation": "direction and midpoint of individual frozen embeddings",
+            "independent_training_groups": true,
+            "orientation": "complement",
+            "neighbors": "clipped_sqrt_groups_3_40"
+          },
+          "fits": 1,
+          "runtime_configuration_equal": true,
+          "source_artifact": "aea09aa0444b447db0ef2ce85b2d971c40c52c9bf84371a11aa3ed0bab47f236"
+        }
+      ],
+      "actual_classifier_fits": 3,
+      "model_api": 0,
+      "additional_packet": "51d0152ec154d5be6ac9c8820fcb85d50d9b9a02ecff604cc0ee9c550d2430c3",
+      "opened_development_members": [
+        "Released_Task2-Headlines_CTR/val.csv"
+      ],
+      "selection_repeated": false,
+      "independent_designated_validation_score": null,
+      "official_test_opened": false
+    }
+  },
+  "truth_for_extra_rows": "Designated development labels used only for the final fixed refit",
+  "designated_results_for_merged": null,
+  "official_test_opened": false,
+  "other_development": {
+    "additional_task2_classifier_fits": 3,
+    "purpose": "Historical-recipe before confirming runtime-matched exact fitting. Excluded from official testing.",
+    "separate_unscored": true
+  },
+  "compatibility_run_classifier_fits": 20,
+  "model_api": 0
+}

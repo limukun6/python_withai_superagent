@@ -1,5 +1,9 @@
 # AIAA 3102 · General Algorithm SuperAgent
 
+## 11 月 28 日统一提交版
+
+Task1 和 Task2 共用一个入口，自动识别机器，按本机实测耗时安排探索和全量重训。可运行的冻结模型与指定验证结果见交接记录。提交时已在真实 Windows、Linux 和 macOS 的 CPU 环境复核独立预测。 [版本、成绩与运行方法](docs/UNIFIED_TEST_READY_20261128_zh.md) · [冻结指纹](research/unified_environment_freeze_1128/frozen_release.json)
+
 ## 11 月 27 日研发版
 
 本地整合版在两个课程原包上分别复现 **75.52%** 和 **72.77%**。三个独立公开分类任务均完成同预算反馈对照和新进程重载。图像任务发现了可复现的难点，测得的两种干预均未通过采用门槛。[整合版结果、资源与复现方式](docs/JOINT_FEEDBACK_RESULTS_20261127_zh.md)
